@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "node server.js"
   },
   "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "antd": "^4.5.2",
+    "babel-plugin-import": "^1.13.0",
+    "express": "^4.17.1",
     "next": "9.5.1",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "null-loader": "^4.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
