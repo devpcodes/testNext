@@ -1,7 +1,10 @@
-const withCss = require('@zeit/next-css')
+const withCss = require('@zeit/next-css');
+const withImages = require('next-images');
+
 const isProd = process.env.NODE_ENV === 'production'
-module.exports = withCss({
+module.exports = withCss(withImages({
     assetPrefix: isProd ? 'http://127.0.0.1:3888' : '',
+    inlineImageLimit: 16384,
     webpack: (config, {
         isServer
     }) => {
@@ -27,4 +30,4 @@ module.exports = withCss({
         }
         return config
     },
-})
+}))
