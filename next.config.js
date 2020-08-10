@@ -1,10 +1,17 @@
 const withCss = require('@zeit/next-css');
 const withImages = require('next-images');
+const withPWA = require('next-pwa');
+// const runtimeCaching = require('next-pwa/cache');
 
 const isProd = process.env.NODE_ENV === 'production'
-module.exports = withCss(withImages({
+module.exports = withPWA(withCss(withImages({
     assetPrefix: isProd ? 'http://127.0.0.1:3888' : '',
     inlineImageLimit: 16384,
+    pwa: {
+        disable: isProd ? false : true,
+        dest: 'public',
+        register: true
+    },
     webpack: (config, {
         isServer
     }) => {
@@ -30,4 +37,4 @@ module.exports = withCss(withImages({
         }
         return config
     },
-}))
+})))
