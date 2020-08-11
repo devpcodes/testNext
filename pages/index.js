@@ -1,6 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useLayoutEffect  } from 'react';
 import Head from 'next/head'
 import Layout from '../components/layouts/layout';
+import dynamic from 'next/dynamic'
+
+const Chart = dynamic(
+    () => import("../components/includes/chart"),
+    { ssr: false }
+);
 
 const Home = function(){
 	let deferredPrompt;
@@ -16,6 +22,7 @@ const Home = function(){
 			return false;
 		});
 	}, []);
+
 	function clickHandler () {
 		if(deferredPrompt != null){
 			deferredPrompt.prompt();
@@ -41,8 +48,9 @@ const Home = function(){
 			<Layout>
 				<main>
 					<h1 onClick={clickHandler}>
-						NEXT.JS CLICK!
+						NEXT.JS PWA CLICK!
 					</h1>
+					<Chart />
 					<h2>環境路徑: {process.env.SUBPATH}</h2>
 				</main>
 			</Layout>

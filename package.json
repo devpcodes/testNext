@@ -8,6 +8,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@amcharts/amcharts4": "^4.9.34",
     "@zeit/next-css": "^1.0.1",
     "antd": "^4.5.2",
     "babel-plugin-import": "^1.13.0",
