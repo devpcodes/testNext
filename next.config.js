@@ -1,12 +1,15 @@
 const withCss = require('@zeit/next-css');
 const withImages = require('next-images');
 const withPWA = require('next-pwa');
-// const runtimeCaching = require('next-pwa/cache');
+require('dotenv').config();
+const path = require('path');
+const Dotenv = require('dotenv-webpack');
+
 
 const isProd = process.env.NODE_ENV === 'production'
 module.exports = withPWA(withCss(withImages({
     assetPrefix: isProd ? 'http://127.0.0.1:3888' : '',
-    inlineImageLimit: 16384,
+    inlineImageLimit: isProd ? 16384 : 0,
     pwa: {
         disable: isProd ? false : true,
         dest: 'public',
@@ -35,6 +38,16 @@ module.exports = withPWA(withCss(withImages({
                 use: 'null-loader',
             })
         }
+
+        config.plugins = config.plugins || [];
+        config.plugins = [
+            ...config.plugins,
+            new Dotenv({
+              path: path.join(__dirname, '.env'),
+              systemvars: true
+            })
+        ]
+
         return config
     },
 })))
