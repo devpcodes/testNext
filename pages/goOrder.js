@@ -8,6 +8,14 @@ function GoOrder(props) {
 		<Layout>
             <DatePicker />
 			<h1 onClick={props.add}>新下單盒：我可以點擊測異步Redux{props.count}</h1>
+			<style jsx>{`
+				h1 {
+					color: black;
+					font-size: 2rem;
+					text-align: center;
+					margin-bottom: 10px;
+				}
+			`}</style>
 		</Layout>
 	)
 }
