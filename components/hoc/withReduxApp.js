@@ -17,7 +17,7 @@ function getOrCreateStore(initialState) {
     return window[__NEXT_REDUX_STORE__]
 }
 
-export default Comp => {
+const withReduxApp = function(Comp){
     class withReduxApp extends React.Component {
         constructor(props) {
             super(props)
@@ -73,3 +73,5 @@ export default Comp => {
 
     return withReduxApp
 }
+
+export default withReduxApp;
