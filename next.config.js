@@ -22,7 +22,4 @@ module.exports = withPWA(withImages({
 
         return config
     },
-    env: {
-        SUBPATH: isProd ? '/newweb/' : '/',
-    }
 }))

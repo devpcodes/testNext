@@ -1,4 +1,3 @@
-const env = require('./env-config.js');
 module.exports = {
     "presets": [
         "next/babel"
@@ -11,6 +10,5 @@ module.exports = {
                 "style": "css"
             }
         ],
-        ['transform-define', env]
     ]
 }

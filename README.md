@@ -5,7 +5,7 @@ yarn dev
 
 ## 正式
 ```bash
-NODE_ENV=production yarn build
+yarn build
 NODE_ENV=production yarn start
 ```
 

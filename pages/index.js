@@ -51,7 +51,7 @@ const Home = function(){
 						Next.JS PWA CLICK!
 					</h1>
 					<Chart />
-					<h2>環境路徑: {process.env.SUBPATH} {process.env.NODE_ENV}</h2>
+					<h2>環境: {process.env.NODE_ENV} 路徑：{process.env.NEXT_PUBLIC_SUBPATH}</h2>
 				</main>
 			</Layout>
 			<style jsx>{`
