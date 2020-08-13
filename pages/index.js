@@ -48,10 +48,10 @@ const Home = function(){
 			<Layout>
 				<main>
 					<h1 onClick={clickHandler}>
-						NEXT.JS PWA CLICK!
+						Next.JS PWA CLICK!
 					</h1>
 					<Chart />
-					<h2>環境路徑: {process.env.SUBPATH}</h2>
+					<h2>環境路徑: {process.env.SUBPATH} {process.env.NODE_ENV}</h2>
 				</main>
 			</Layout>
 			<style jsx>{`

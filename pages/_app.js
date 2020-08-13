@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import withRedux from '../components/hoc/withReduxApp';
 import { Provider } from 'react-redux';
+import 'antd/dist/antd.min.css';
 
 MyApp.getInitialProps = async (ctx) => {
     const { Component } = ctx

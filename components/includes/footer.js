@@ -1,9 +1,9 @@
 import React from 'react';
-import qrCode from '../../static/images/footer/img_ileaderapp.png';
-import logo from '../../static/images/footer/logo_footer.png';
-import fb from '../../static/images/footer/btn_fb.png';
-import youtube from '../../static/images/footer/btn_youtube.png';
-import line from '../../static/images/footer/btn_line.png';
+import qrCode from '../../resorces/images/footer/img_ileaderapp.png';
+import logo from '../../resorces/images/footer/logo_footer.png';
+import fb from '../../resorces/images/footer/btn_fb.png';
+import youtube from '../../resorces/images/footer/btn_youtube.png';
+import line from '../../resorces/images/footer/btn_line.png';
 const footerData = [
     {
         title: '關於永豐金證券',
