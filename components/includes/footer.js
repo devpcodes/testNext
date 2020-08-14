@@ -85,7 +85,7 @@ const footerData = [
         ]
     }
 ]
-const contentWidth = '1024px';
+const contentWidth = '102.4rem';
 const Footer = React.memo((props) => {
     return ( 
         <div className="footer">
@@ -96,6 +96,15 @@ const Footer = React.memo((props) => {
                     <li><span>服務時間</span> (AM7:30~PM10:00)</li>
                 </ul>
                 <a href="https://sinourl.tw/ozBFJI" target="_blank" className="footer__up--signup">快速開戶</a>
+            </div>
+            <div className="mobile__box2">
+                <p className="box2__title">撥打客服專線</p>
+                <p  className="box2__val"><span>服務時間</span>(AM7:30~PM10:00)</p>
+            </div>
+            <div className="mobile__box3">
+                <p>永豐金證券股份有限公司</p>
+                <p>台北市重慶南路一段二號7、18、20樓</p>
+                <p>107年金管證總字第0006號</p>
             </div>
             <div className="footer__middle">
                 <div className="middle__box">
@@ -139,6 +148,52 @@ const Footer = React.memo((props) => {
                     background-color: #172439;
                     font-family: Microsoft JhengHei,Calibri,serif;
                 }
+                .footer .mobile__box2{
+                    display: none;
+                }
+                @media (max-width:800px), print{
+                    .footer .mobile__box2{
+                        display: block;
+                    }
+                }
+                @media (max-width:800px), print{
+                    .box2__title {
+                        font-size: 2rem;
+                        color: #dedede;
+                        text-align: center;
+                        margin: .5rem;
+                        margin-top: 2rem;
+                    }
+                    .box2__val {
+                        color: #dedede;
+                        text-align: center;
+                        font-size: 1.4rem;
+                        margin-top: 0;
+                        margin-bottom: 2rem;
+                    }
+                    .box2__val span{
+                        padding-right: .8rem;
+                    }
+                }
+                .footer .mobile__box3 {
+                    display: none;
+                }
+                @media (max-width:800px){
+                    .footer .mobile__box3{
+                        display: block;
+                        color: #f7f7f7;
+                        text-align: center;
+                        background: #0d1623;
+                        padding: 2rem;
+                        font-size: 1.5rem;
+                        line-height: 2.3rem;
+                        color: #c0c0c0;
+                        border-bottom: 1px solid #172439;
+                    }
+                    .footer .mobile__box3 p{
+                        margin: 0;
+                    }
+                }
 				.footer__up {
                     background-color: #172439;
                     margin: 0 auto;
@@ -146,7 +201,19 @@ const Footer = React.memo((props) => {
                     height: 9rem;
                     position: relative;
                     padding: 0 1.5rem;
-				}
+                }
+                @media (max-width:1024px), print{
+                    .footer__up{
+                        width: 100%;
+                        height: 7rem;
+                        padding: 0 3rem;
+                    }
+                }
+                @media (max-width:800px), print{
+                    .footer__up{
+                        height: 6.5rem;
+                    }
+                }
                 .footer__up ul {
                     list-style: none;
                     padding-left: 0;
@@ -163,6 +230,11 @@ const Footer = React.memo((props) => {
                     margin: 0 1rem 0 0;
                     border-right: 0.1rem solid #f7f7f7
                 }
+                @media (max-width:1024px), print{
+                    .footer__up li{
+                        font-size: 1.8rem;
+                    }
+                }
                 .footer__up li:last-child{
                     border: none;
                 }
@@ -178,6 +250,24 @@ const Footer = React.memo((props) => {
                     line-height: 9rem;
                     transition: background .2s linear;
                     background: #c43826;
+                }
+                @media (max-width:1024px), print{
+                    .footer__up .footer__up--signup{
+                        font-size: 2rem;
+                        height: 7rem;
+                        line-height: 7rem;
+                        right: 3rem;
+                        width: 15rem;
+                    }
+                }
+                @media (max-width:800px), print{
+                    .footer__up .footer__up--signup{
+                        font-size: 2.3rem;
+                        height: 6.5rem;
+                        line-height: 6.5rem;
+                        right: 0;
+                        width: 100%;
+                    }
                 }
                 .footer__up .footer__up--signup:hover{
                     background: #9d1200;
@@ -201,12 +291,30 @@ const Footer = React.memo((props) => {
                     display: flex;
                     flex-direction: row;
                 }
+                @media (max-width:1024px), print{
+                    .footer__middle .middle__box {
+                        width: 100%;
+                        padding: 3rem 3rem 3rem 3rem;
+                        white-space: nowrap;
+                    }
+                }
+                @media (max-width:800px) {
+                    .footer__middle .middle__box {
+                        display: none;
+                    }
+                }
                 .middle--card {
                     display: inline-block;
                     margin: 0 15rem 0 0;
                     vertical-align: top;
 
                     flex: 0.25;
+                }
+                @media (max-width:1024px), print{
+                    .middle--card {
+                        margin: 0;
+                        flex: 0.27;
+                    }
                 }
                 .middle--card:last-child {
                     position: absolute;
@@ -218,6 +326,12 @@ const Footer = React.memo((props) => {
                     font-size: 1.4rem;
 
                     flex: 0.2;
+                }
+                @media (max-width:1024px), print{
+                    .middle--card:last-child {
+                        top: 3rem;
+                        right: 3rem;
+                    }
                 }
                 .middle--card h3 {
                     margin: 0 0 2rem 0;
@@ -260,6 +374,12 @@ const Footer = React.memo((props) => {
                     position: relative;
                     padding: 2.5rem 0;
                 }
+                @media (max-width:1024px), print{
+                    .down__box {
+                        width: 100%;
+                        padding: 1.5rem 0;
+                    }
+                }
                 .down__box::before {
                     position: absolute;
                     left: 1.5rem;
@@ -273,11 +393,34 @@ const Footer = React.memo((props) => {
                     background: url(${logo}) no-repeat center center;
                     background-size: 100% auto;
                 }
+                @media (max-width:1024px), print{
+                    .down__box::before {
+                        width: 13rem;
+                    }
+                }
+                @media (max-width:800px){
+                    .down__box::before {
+                        display: none;
+                        position: static;
+                    }
+                }
                 .down__box ul {
                     list-style: none;
                     display: block;
                     text-align: center;
                     margin-bottom: 0.2rem;
+                }
+                @media (max-width:1024px), print{
+                    .down__box ul {
+                        width: 66%;
+                        margin: 0 auto;
+                        padding: 0;
+                    }
+                }
+                @media (max-width:800px), print{
+                    .down__box ul {
+                        display: none;
+                    }
                 }
                 .down__box ul:first-child {
                     margin-top: 0.8rem;
@@ -291,6 +434,13 @@ const Footer = React.memo((props) => {
                     color: #c0c0c0;
                     font-size: 1.4rem;
                 }
+                @media (max-width:1024px), print{
+                    .down__box li {
+                        padding: 0 .5rem 0 0;
+                        margin: 0 .5rem 0.7rem 0;
+                        font-size: 1.2rem;
+                    }
+                }
                 .down__box li a {
                     color: #c0c0c0;
                     font-size: 1.4rem;
@@ -303,6 +453,18 @@ const Footer = React.memo((props) => {
                     right: 1.5rem;
                     top: 50%;
                     transform: translateY(-50%);
+                }
+                @media (max-width:1024px), print{
+                    .down__social {
+                        right: 3rem;
+                    }
+                }
+                @media (max-width:800px), print{
+                    .down__social {
+                        text-align: center;
+                        position: static;
+                        transform: translateY(0);
+                    }
                 }
                 .down__social .btn__youtube {
                     background-image: url(${youtube});
@@ -325,6 +487,7 @@ const Footer = React.memo((props) => {
                     white-space: nowrap;
                     overflow: hidden;
                 }
+   
 			`}</style>
         </div> 
     );
