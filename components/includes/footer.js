@@ -288,8 +288,8 @@ const Footer = React.memo((props) => {
                     position: relative;
                     border-bottom: 0.1rem solid #172439;
 
-                    display: flex;
-                    flex-direction: row;
+                    /* display: flex; */
+                    /* flex-direction: row; */
                 }
                 @media (max-width:1024px), print{
                     .footer__middle .middle__box {
@@ -308,12 +308,12 @@ const Footer = React.memo((props) => {
                     margin: 0 15rem 0 0;
                     vertical-align: top;
 
-                    flex: 0.25;
+                    /* flex: 0.25; */
                 }
                 @media (max-width:1024px), print{
                     .middle--card {
                         margin: 0;
-                        flex: 0.27;
+                        width: calc((100% - 160px) / 3);
                     }
                 }
                 .middle--card:last-child {
@@ -324,13 +324,12 @@ const Footer = React.memo((props) => {
                     text-align: center;
                     color: #c0c0c0;
                     font-size: 1.4rem;
-
-                    flex: 0.2;
                 }
                 @media (max-width:1024px), print{
                     .middle--card:last-child {
                         top: 3rem;
                         right: 3rem;
+                        width: auto;
                     }
                 }
                 .middle--card h3 {
