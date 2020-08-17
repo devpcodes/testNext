@@ -13,7 +13,7 @@ const Home = function(){
 
 	useEffect(() => {
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('/service-worker.js', {scope: '/'})
+			navigator.serviceWorker.register('/sw.js', {scope: '/'})
 			.then(reg => {
 				// console.log('SW registered!', reg);
 			})
