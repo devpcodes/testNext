@@ -1,16 +1,16 @@
 {
-  "name": "my-app",
+  "name": "new-newweb",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3888",
-    "devServer": "nodemon server.js",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "node server.js"
+    "start": "cross-env NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.9.34",
     "antd": "^4.5.2",
+    "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "framer-motion": "^2.3.0",
     "next": "9.5.1",
