@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { motion } from 'framer-motion';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
+import { connect } from 'react-redux'
+import { resize, isLogin } from '../../actions/components/layouts/action';
+import { checkLogin } from '../../services/components/layouts/checkLogin';
+import { checkMobile } from '../../services/components/layouts/checkMobile';
+
 const Layout = React.memo((props) => {
-    console.log('Layout')
+    useEffect(() => {
+        window.addEventListener('resize', resizeHandler);
+        props.isLogin(checkLogin());
+
+        return () => {
+            window.removeEventListener('resize', resizeHandler, false);
+        };
+    }, []);
+
+    function resizeHandler() {
+        let winWidth = document.body.clientWidth;
+        if(checkMobile(winWidth)){
+            props.resize(winWidth, true);
+        }else{
+            props.resize(winWidth, false);
+        }
+    }
+
     return (
         <>
             <Head>
@@ -17,27 +38,10 @@ const Layout = React.memo((props) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             </Head>
             <Header/>
-                {/* <motion.div  initial="hidden" animate="visible" variants={{
-                    hidden: {
-                        y: '2rem',
-                        opacity: 0,
-                    },
-                    visible: {
-                        y: 0,
-                        opacity: 1,
-                        transition: {
-                            delay: .4,
-                            duration: .3,
-                            ease: "linear",
-                        }
-                    },
-                }}>
-                    {props.children}
-                </motion.div> */}
                 {props.children}
             <Footer/>
         </>
     )
 })
 
-export default Layout;
+export default connect(null, { resize, isLogin })(Layout);
