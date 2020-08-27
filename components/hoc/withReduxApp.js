@@ -17,6 +17,26 @@ function getOrCreateStore(initialState) {
     return window[__NEXT_REDUX_STORE__]
 }
 
+
+
+// 在服务端渲染和客户端路由跳转时会被执行
+// 所以非常适合做redux-store的初始化
+export async function getServerSideProps(ctx) {
+    const reduxStore = getOrCreateStore()
+    ctx.reduxStore = reduxStore
+
+    let appProps = {}
+    if (typeof Comp.getInitialProps === 'function') {
+        appProps = await Comp.getInitialProps(ctx)
+    }
+
+    return {
+        ...appProps,
+        initialReduxState: reduxStore.getState(),
+    }
+}
+
+
 const withReduxApp = function(Comp){
     class withReduxApp extends React.Component {
         constructor(props) {
@@ -35,42 +55,24 @@ const withReduxApp = function(Comp){
                 pageProps,
                 ...rest
             } = this.props
-            return ( <
-                Comp {
-                    ...rest
-                }
-                Component = {
-                    Component
-                }
-                pageProps = {
-                    pageProps
-                }
-                reduxStore = {
-                    this.reduxStore
-                }
+            return ( 
+                <
+                    Comp {
+                        ...rest
+                    }
+                    Component = {
+                        Component
+                    }
+                    pageProps = {
+                        pageProps
+                    }
+                    reduxStore = {
+                        this.reduxStore
+                    }
                 />
             )
         }
     }
-
-    // 这个其实是_app.js的getInitialProps
-    // 在服务端渲染和客户端路由跳转时会被执行
-    // 所以非常适合做redux-store的初始化
-    withReduxApp.getInitialProps = async ctx => {
-        const reduxStore = getOrCreateStore()
-        ctx.reduxStore = reduxStore
-
-        let appProps = {}
-        if (typeof Comp.getInitialProps === 'function') {
-            appProps = await Comp.getInitialProps(ctx)
-        }
-
-        return {
-            ...appProps,
-            initialReduxState: reduxStore.getState(),
-        }
-    }
-
     return withReduxApp
 }
 

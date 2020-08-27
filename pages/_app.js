@@ -3,7 +3,7 @@ import withRedux from '../components/hoc/withReduxApp';
 import { Provider } from 'react-redux';
 import 'antd/dist/antd.min.css';
 
-MyApp.getInitialProps = async (ctx) => {
+export async function getServerSideProps(ctx) {
     const { Component } = ctx
     let pageProps = {}
 
