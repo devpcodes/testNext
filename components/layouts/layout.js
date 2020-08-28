@@ -9,6 +9,7 @@ import { checkMobile } from '../../services/components/layouts/checkMobile';
 
 const Layout = React.memo((props) => {
     useEffect(() => {
+        pwaHandler();
         window.addEventListener('resize', resizeHandler);
         props.isLogin(checkLogin());
 
@@ -17,7 +18,19 @@ const Layout = React.memo((props) => {
         };
     }, []);
 
-    function resizeHandler() {
+    const pwaHandler = function() {
+        if(process.env.NODE_ENV === 'production'){
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js', {scope: '/'})
+                .then(reg => {
+                    // console.log('SW registered!', reg);
+                })
+                .catch(err => console.log('Boo!', err));
+            }
+        }
+    }
+
+    const resizeHandler = function() {
         let winWidth = document.body.clientWidth;
         if(checkMobile(winWidth)){
             props.resize(winWidth, true);
