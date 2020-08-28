@@ -12,21 +12,21 @@ const Home = function(){
 	let deferredPrompt;
 
 	useEffect(() => {
-		// if ('serviceWorker' in navigator) {
-		// 	navigator.serviceWorker.register('/sw.js', {scope: '/'})
-		// 	.then(reg => {
-		// 		// console.log('SW registered!', reg);
-		// 	})
-		// 	.catch(err => console.log('Boo!', err));
-		// }
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/sw.js', {scope: '/'})
+			.then(reg => {
+				// console.log('SW registered!', reg);
+			})
+			.catch(err => console.log('Boo!', err));
+		}
 
 
-		// window.addEventListener('beforeinstallprompt', function(e) {
-		// 	console.log('beforeinstallprompt Event fired');
-		// 	e.preventDefault();
-		// 	deferredPrompt = e;
-		// 	return false;
-		// });
+		window.addEventListener('beforeinstallprompt', function(e) {
+			console.log('beforeinstallprompt Event fired');
+			e.preventDefault();
+			deferredPrompt = e;
+			return false;
+		});
 
 	}, []);
 
