@@ -8,9 +8,10 @@ const Login = function() {
     let account;
 
     const [encryptAccount, setEncryptAccount] = useState('');
-    const [accountColor, setAccountColor] = useState('#737373');
+    const [accountFontSize, setAccountFontSize] = useState('1.8rem');
 
     const fieldsChange = function(changedFields, allFields) {
+        console.log('change')
         if(changedFields.length !== 0){
             if(changedFields[0].name[0] === 'account'){
                 // encryptionHandler(changedFields[0].value)
@@ -39,7 +40,7 @@ const Login = function() {
         if(account){
             const encryptStr = encryptionHandler(account)
             setEncryptAccount(encryptStr)
-            setAccountColor('white')
+            setAccountFontSize('0rem');
         }
     }
 
@@ -48,7 +49,7 @@ const Login = function() {
             account: ''
         })
         setEncryptAccount('');
-        setAccountColor('#737373');
+        setAccountFontSize('1.8rem');
         accountInput.current.focus();
     }
 
@@ -96,7 +97,7 @@ const Login = function() {
                         ]}
                     >
                         <Input 
-                            style={{ width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: '1.8rem', color: accountColor}} 
+                            style={{transition: 'none', width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: accountFontSize}} 
                             placeholder="請輸入身份證字號" 
                             onBlur={blurHandler}
                             ref={accountInput}
