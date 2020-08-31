@@ -1,0 +1,7 @@
+.login__container .ant-btn-primary {
+    background:#c43826;
+    height: 54px;
+    border: none;
+    width: 100%;
+    font-size: 1.8rem;
+}

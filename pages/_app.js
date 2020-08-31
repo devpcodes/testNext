@@ -1,7 +1,10 @@
-import '../styles/globals.css';
+import 'antd/dist/antd.min.css';
+import '../resorces/styles/globals.css';
+import '../resorces/styles/components/login/login.css';//不寫在這壓不掉antd的css
+
 import withRedux from '../components/hoc/withReduxApp';
 import { Provider } from 'react-redux';
-import 'antd/dist/antd.min.css';
+
 
 export async function getServerSideProps(ctx) {
     const { Component } = ctx
