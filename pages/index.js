@@ -2,6 +2,10 @@ import { useEffect, useRef, useLayoutEffect  } from 'react';
 import Head from 'next/head'
 import Layout from '../components/layouts/layout';
 import dynamic from 'next/dynamic'
+import Login from '../components/includes/sinotradeLogin/login';
+import inOutAnimation from '../components/hoc/inOutAnimation';
+
+const NewLogin = inOutAnimation(Login);
 
 const Chart = dynamic(
     () => import("../components/includes/chart"),
@@ -41,6 +45,9 @@ const Home = function(){
 				<title>Create Next App</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
+			<NewLogin isPC={true} onClose={() => {
+				console.log('close')
+			}}/>
 			<Layout>
 				<main>
 					<h1 onClick={clickHandler}>
