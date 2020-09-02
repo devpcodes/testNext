@@ -25,9 +25,9 @@ export async function getServerSideProps(ctx) {
 
 function MyApp({ Component, pageProps, reduxStore }) {
 	return (
-		<Provider store={reduxStore}>
-			<Component {...pageProps} />
-		</Provider>
+        <Provider store={reduxStore}>
+            <Component {...pageProps} />
+        </Provider>
 	)
 }
 

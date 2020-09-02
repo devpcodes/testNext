@@ -11,6 +11,7 @@ const Layout = React.memo((props) => {
     useEffect(() => {
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
+        resizeHandler();
         props.isLogin(checkLogin());
 
         return () => {

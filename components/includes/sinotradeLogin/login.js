@@ -5,7 +5,7 @@ import logo from '../../../resorces/images/components/login/logo.png';
 import check from '../../../resorces/images/components/login/ic-check.png';
 import close from '../../../resorces/images/components/login/ic-closemenu.png';
 
-const Login = function({isPC, onClose}) {
+const Login = function({popup, isPC, onClose}) {
     const [form] = Form.useForm();
     const accountInput = useRef(null);
     let account;
@@ -69,7 +69,7 @@ const Login = function({isPC, onClose}) {
     return (
         <div className="login__container">
             <div className="login__box">
-                {isPC ? 
+                {popup ? 
                     <div className="close" onClick={onClose}>
                         <span className="close__img"></span>
                     </div> : null
@@ -169,11 +169,11 @@ const Login = function({isPC, onClose}) {
                 </Form>
                 <p className="a__box"><a className="a__link">還不是永豐金證券客戶</a></p>
             </div>
-            <div className="overLay" onClick={onClose}></div>
+            {popup ? <div className="overLay" onClick={onClose}></div> : null}
             <style jsx>{`
                 .login__container {
                     position: relative;
-                    
+                    display: ${popup ? 'block' : isPC ? 'inline-block' : 'block'};
                 }
                 .close {
                     width: 52px;
@@ -197,15 +197,17 @@ const Login = function({isPC, onClose}) {
                     transform: scale(0.9, 0.9) translateZ(0);
                 }
                 .login__box {
-                    position: absolute;
+                    position: ${popup ? 'absolute' : 'static'};
                     width: ${isPC ? '512px' : '100%'};
-                    height: 548px;
+                    height: ${isPC ? '548px' : '100vh'};
                     z-index: 9999;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
-                    transform: translate(-50%, 0);
+                    transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};
                     padding: ${isPC ? '0 41px' : '0 20px'};
+                    padding-top: ${popup ? '0' : '1px'};
                     background-color: #f9fbff;
+                    border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
                 }
                 .overLay {
                     position: fixed;
@@ -255,6 +257,7 @@ const Login = function({isPC, onClose}) {
                     font-size: 1.8rem;
                     font-weight: bold;
                     margin-top: -5px;
+                    text-align: left;
                 }
                 .service__item {
                     display: inline-block;
@@ -264,6 +267,7 @@ const Login = function({isPC, onClose}) {
                     font-weight: bold;
                     margin: 17px 0;
                     position: relative;
+                    text-align: left;
                 }
                 .service__item::before {
                     content: url(${check});
@@ -286,6 +290,9 @@ const Login = function({isPC, onClose}) {
                     top: 14px;
                     font-size: 1.8rem;
                     padding-left: 12px;
+                }
+                .remember__box {
+                    text-align: left;
                 }
             `}</style>
         </div>

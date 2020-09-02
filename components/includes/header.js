@@ -20,8 +20,10 @@ class Header extends Component {
 						<a>Home</a>
 					</Link>
 				</Menu.Item>
-				<Menu.Item key="app" disabled icon={<AppstoreOutlined />}>
-					Navigation Two
+				<Menu.Item key="app" icon={<AppstoreOutlined />}>
+					<Link href="/SinoTrade_login">
+						<a>登入</a>
+					</Link>
 				</Menu.Item>
 				<SubMenu icon={<SettingOutlined />} title="Navigation Three - Submenu">
 					<Menu.ItemGroup title="Item 1">
