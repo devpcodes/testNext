@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from "framer-motion";
 import Login from './login';
@@ -6,9 +7,10 @@ import loginImg from '../../../resorces/images/pages/SinoTrade_login/group-3.png
 import logo from '../../../resorces/images/pages/SinoTrade_login/logo-dark.png';
 import close from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
 
+const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
+    const [isPC, setIsPC] = useState(true);
+    const [loginSuccess, setLoginSuccess] = useState(false);
 
-let winWidth
-const SinoTradeLogin = function({ isVisible, onClose }) {
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
@@ -17,15 +19,25 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
             window.removeEventListener('resize', resizeHandler, false);
         };
     }, []);
-
-    const [isPC, setIsPC] = useState(true);
+    
     const resizeHandler = function() {
-        winWidth = document.body.clientWidth;
+        let winWidth = document.body.clientWidth;
         if(winWidth <= 1000){
             setIsPC(false)
         }else{
             setIsPC(true)
         }
+    }
+
+    const loginSuccessFun = function(){
+        notification.success({
+            placement: 'topRight',
+            message: '登入成功',
+            duration: 1
+        });
+        setTimeout(() => {
+            successHandler();
+        }, 200);
     }
 
     const initial = {
@@ -35,17 +47,22 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
     }
 
     const animate = { 
-        scale: 1,       
+        scale: 1, 
+        opacity: 1,      
         originX: "50vw", 
         originY: "50vh",            
         transition: {
-            duration: .3
+            duration: .3,
         }
     }
 
     const exit = {
         scale: 0, 
-        opacity: 0
+        opacity: 0,
+        transition: {
+            duration: .3,
+            ease: 'easeIn'
+        }
     }
 
     return (
@@ -55,7 +72,7 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
                     key="child"
                     initial={isPC ? initial : {x: `-${document != null ? document.body.clientWidth : 0}px`}}
                     animate={isPC ? animate : {x: 0, transition: {duration: .3}}}
-                    exit={isPC? exit : {x: `-${document != null ? document.body.clientWidth + 100 : 100}px`}}
+                    exit={isPC? exit : {x: `-${document != null ? document.body.clientWidth : 100}px`, transition: {ease: 'easeOut',duration: .2}}}
                 >
                     <div className="loginPage__container">
                         <div className="page__box">
@@ -64,7 +81,7 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
                                 <img className="close" src={close} onClick={onClose}/>
                             </div>
                             {isPC ? <img className="login__img" src={loginImg} alt="永豐金證券"/> : null}
-                            <Login popup={false} isPC={isPC} onClose={onClose}/>
+                            <Login popup={false} isPC={isPC} onClose={onClose} successHandler={loginSuccessFun}/>
                         </div>
 
                         <style jsx>{`
@@ -114,7 +131,8 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
 }
 SinoTradeLogin.propTypes = {
     isVisible: PropTypes.bool,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    successHandler: PropTypes.func
 }
 
 export default SinoTradeLogin;

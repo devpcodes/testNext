@@ -1,18 +1,23 @@
 import React, {  useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router'
 import { Form, Input, Button, Checkbox } from 'antd';
 import logo from '../../../resorces/images/components/login/logo.png';
 import check from '../../../resorces/images/components/login/ic-check.png';
 import close from '../../../resorces/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
+import { submit } from '../../../services/components/login/login';
 
-const Login = function({popup, isPC, onClose}) {
+const Login = function({popup, isPC, onClose, successHandler}) {
+    const router = useRouter();
     const [form] = Form.useForm();
+
     const accountInput = useRef(null);
     let account;
 
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
+    const [isLoading, setIsLoading] = useState(false);
 
     const fieldsChange = function(changedFields, allFields) {
         if(changedFields.length !== 0){
@@ -56,15 +61,19 @@ const Login = function({popup, isPC, onClose}) {
         accountInput.current.focus();
     }
 
-    const finishHandler = function(values){
+    const finishHandler = async function(values){
         var errors = form.getFieldsError();
         errors = errors.filter((val) => {
             return val.errors.length !== 0;
         })
         if(errors.length === 0){
-            alert('ajax')
+            setIsLoading(true);
+            const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
+            setIsLoading(false);
+            if(res.data.success){
+                successHandler();
+            }
         }
-        // console.log('success', form.getFieldValue('remember'), values);
     }
 
     return (
@@ -169,7 +178,7 @@ const Login = function({popup, isPC, onClose}) {
                     </div>
 
                     <Form.Item label="">
-                        <Button type="primary" htmlType="submit" style={{marginTop: '20px'}}>
+                        <Button loading={isLoading} type="primary" htmlType="submit" style={{marginTop: '20px'}}>
                             登入
                         </Button>
                     </Form.Item>
@@ -313,7 +322,8 @@ const Login = function({popup, isPC, onClose}) {
 Login.propTypes = {
     isPC: PropTypes.bool,
     popup: PropTypes.bool,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    successHandler: PropTypes.func,
 }
 
 export default Login;

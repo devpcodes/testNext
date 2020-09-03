@@ -48,6 +48,9 @@ const Layout = React.memo((props) => {
         props.showLoginHandler(false);
     }
 
+    const successHandler = function() {
+        props.showLoginHandler(false);
+    }
     return (
         <>
             <Head>
@@ -59,7 +62,7 @@ const Layout = React.memo((props) => {
                 <link rel='manifest' href='/manifest.json' />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             </Head>
-            <SinoTradeLogin isVisible={props.showLogin} onClose={showLoginClose}/>
+            <SinoTradeLogin isVisible={props.showLogin} onClose={showLoginClose} successHandler={successHandler}/>
             <Header showLoginClick={showLoginClick}/>
                 {props.children}
             <Footer/>
