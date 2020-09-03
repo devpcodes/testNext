@@ -3,7 +3,8 @@ import * as actionType from '../../../actions/components/layouts/actionType';
 const initialState = {
     winWidth: 0,
     isMobile: false,
-    isLogin: false
+    isLogin: false,
+    showLogin: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -18,6 +19,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLogin: action.payload,
+            }
+        case actionType.SHOW_LOGIN:
+            return {
+                ...state,
+                showLogin: action.payload,
             }
         default:
             return state

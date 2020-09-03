@@ -17,3 +17,10 @@ export const isLogin = (isLogin) => {
         payload: isLogin
     }
 }
+
+export const showLoginHandler = (bool) => {
+    return {
+        type: actionType.SHOW_LOGIN,
+        payload: bool
+    }
+}

@@ -24,13 +24,11 @@ const Home = function(){
 				<title>Create Next App</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<SinoTradeLogin isVisible={isVisible} onClose={() => {
-				setIsVisible(false);
-			}}/>
+
 			{/* <NewLogin popup={true} isPC={true} onClose={() => {
 				console.log('close')
 			}}/> */}
-			<Layout>
+			{/* <Layout>
 				<main>
 					<h1 onClick={clickHandler}>
 						login click
@@ -38,7 +36,14 @@ const Home = function(){
 					<Chart />
 					<h2>環境: {process.env.NODE_ENV} 路徑：{process.env.NEXT_PUBLIC_SUBPATH}</h2>
 				</main>
-			</Layout>
+			</Layout> */}
+			<main>
+				<h1 onClick={clickHandler}>
+					login click
+				</h1>
+				<Chart />
+				<h2>環境: {process.env.NODE_ENV} 路徑：{process.env.NEXT_PUBLIC_SUBPATH}</h2>
+			</main>
 			<style jsx>{`
 				h1 {
 					color: black;

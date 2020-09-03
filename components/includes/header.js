@@ -7,9 +7,10 @@ class Header extends Component {
     state = {
         current: 'mail',
 	};
-	handleClick = e => {
-		console.log('click ', e);
-		this.setState({ current: e.key });
+	handleClick = ({item, key}) => {
+		if(key === 'shoLogin'){
+			this.props.showLoginClick();
+		}
 	};
     render() {
         const { current } = this.state;
@@ -24,6 +25,9 @@ class Header extends Component {
 					<Link href="/SinoTrade_login">
 						<a>登入</a>
 					</Link>
+				</Menu.Item>
+				<Menu.Item key="shoLogin" icon={<AppstoreOutlined />}>
+					<a>壓登入</a>
 				</Menu.Item>
 				<SubMenu icon={<SettingOutlined />} title="Navigation Three - Submenu">
 					<Menu.ItemGroup title="Item 1">

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from "framer-motion";
-import Head from 'next/head';
 import Login from './login';
 import loginImg from '../../../resorces/images/pages/SinoTrade_login/group-3.png';
 import logo from '../../../resorces/images/pages/SinoTrade_login/logo-dark.png';
 import close from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
 
+
+let winWidth
 const SinoTradeLogin = function({ isVisible, onClose }) {
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
@@ -15,11 +17,10 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
             window.removeEventListener('resize', resizeHandler, false);
         };
     }, []);
-    
-    const [isPC, setIsPC] = useState(false);
 
+    const [isPC, setIsPC] = useState(true);
     const resizeHandler = function() {
-        let winWidth = document.body.clientWidth;
+        winWidth = document.body.clientWidth;
         if(winWidth <= 1000){
             setIsPC(false)
         }else{
@@ -27,41 +28,48 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
         }
     }
 
+    const initial = {
+        scale: 0, 
+        originX: "50vw", 
+        originY: "50vh",  
+    }
+
+    const animate = { 
+        scale: 1,       
+        originX: "50vw", 
+        originY: "50vh",            
+        transition: {
+            duration: .3
+        }
+    }
+
+    const exit = {
+        scale: 0, 
+        opacity: 0
+    }
+
     return (
         <AnimatePresence>
             {isVisible && (
                 <motion.div
                     key="child"
-                    initial={{ 
-                        scale: 0, 
-                        originX: "50vw", 
-                        originY: "50vh",  
-                    }}
-                    animate={{ 
-                        scale: 1,       
-                        originX: "50vw", 
-                        originY: "50vh",            
-                        transition: {
-                            duration: .3
-                        }
-                    }}
-                    exit={{ scale: 0, opacity: 0}}
+                    initial={isPC ? initial : {x: `-${document != null ? document.body.clientWidth : 0}px`}}
+                    animate={isPC ? animate : {x: 0, transition: {duration: .3}}}
+                    exit={isPC? exit : {x: `-${document != null ? document.body.clientWidth + 100 : 100}px`}}
                 >
                     <div className="loginPage__container">
-                        <Head>
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-                        </Head>
                         <div className="page__box">
                             <div className="login__header">
                                 <img src={logo} alt="永豐金證券"/>
                                 <img className="close" src={close} onClick={onClose}/>
                             </div>
                             {isPC ? <img className="login__img" src={loginImg} alt="永豐金證券"/> : null}
-                            <Login popup={false} isPC={isPC}/>
+                            <Login popup={false} isPC={isPC} onClose={onClose}/>
                         </div>
+
                         <style jsx>{`
                             .loginPage__container {
-                                position: ${isPC ? 'fixed' : 'static'};
+                                position: fixed;
                                 width: 100vw;
                                 height: 100vh;
                                 background-color: white;
@@ -103,6 +111,10 @@ const SinoTradeLogin = function({ isVisible, onClose }) {
  
         
     )
+}
+SinoTradeLogin.propTypes = {
+    isVisible: PropTypes.bool,
+    onClose: PropTypes.func
 }
 
 export default SinoTradeLogin;

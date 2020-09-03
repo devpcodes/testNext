@@ -199,7 +199,9 @@ const Footer = React.memo((props) => {
                     margin: 0 auto;
                     width: ${contentWidth};
                     height: 9rem;
-                    position: relative;
+                    /* position: relative; */
+
+                    
                     padding: 0 1.5rem;
                 }
                 @media (max-width:1024px), print{
@@ -212,14 +214,28 @@ const Footer = React.memo((props) => {
                 @media (max-width:800px), print{
                     .footer__up{
                         height: 6.5rem;
+                        padding: 0;
                     }
                 }
                 .footer__up ul {
                     list-style: none;
+                    line-height: 9rem;
                     padding-left: 0;
-                    position: absolute;
+                    display: inline-block;
+                    /* position: absolute;
                     top: 50%;
-                    transform: translateY(-50%);
+                    transform: translateY(-50%); */
+                }
+                @media (max-width:1024px), print{
+                    .footer__up ul{
+                        line-height: 7rem;
+                        display: inline-block;
+                    }
+                }
+                @media (max-width:800px), print{
+                    .footer__up ul{
+                        display: none;
+                    }
                 }
                 .footer__up li {
                     display: inline-block;
@@ -239,10 +255,10 @@ const Footer = React.memo((props) => {
                     border: none;
                 }
                 .footer__up .footer__up--signup{
-                    position: absolute;
+                    /* position: absolute;
                     right: 0;
-                    top: 0;
-                    width: 19rem;
+                    top: 0; */
+                    width: 14.5rem;
                     height: 9rem;
                     color: #f7f7f7;
                     font-size: 2.2rem;
@@ -250,6 +266,7 @@ const Footer = React.memo((props) => {
                     line-height: 9rem;
                     transition: background .2s linear;
                     background: #c43826;
+                    float: right;
                 }
                 @media (max-width:1024px), print{
                     .footer__up .footer__up--signup{

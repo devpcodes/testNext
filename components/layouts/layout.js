@@ -3,10 +3,10 @@ import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
 import { connect } from 'react-redux'
-import { resize, isLogin } from '../../actions/components/layouts/action';
+import { resize, isLogin, showLoginHandler } from '../../actions/components/layouts/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
-
+import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin'
 const Layout = React.memo((props) => {
     useEffect(() => {
         pwaHandler();
@@ -40,6 +40,14 @@ const Layout = React.memo((props) => {
         }
     }
 
+    const showLoginClick = function() {
+        props.showLoginHandler(true);
+    }
+
+    const showLoginClose = function() {
+        props.showLoginHandler(false);
+    }
+
     return (
         <>
             <Head>
@@ -51,11 +59,19 @@ const Layout = React.memo((props) => {
                 <link rel='manifest' href='/manifest.json' />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             </Head>
-            <Header/>
+            <SinoTradeLogin isVisible={props.showLogin} onClose={showLoginClose}/>
+            <Header showLoginClick={showLoginClick}/>
                 {props.children}
             <Footer/>
         </>
     )
 })
 
-export default connect(null, { resize, isLogin })(Layout);
+function mapStateToProps(state) {
+	const { showLogin } = state.layout
+	return {
+        showLogin,
+	}
+}
+
+export default connect(mapStateToProps, { resize, isLogin, showLoginHandler })(Layout);

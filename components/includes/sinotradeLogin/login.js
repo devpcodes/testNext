@@ -4,6 +4,7 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import logo from '../../../resorces/images/components/login/logo.png';
 import check from '../../../resorces/images/components/login/ic-check.png';
 import close from '../../../resorces/images/components/login/ic-closemenu.png';
+import closeMobile from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
 
 const Login = function({popup, isPC, onClose}) {
     const [form] = Form.useForm();
@@ -69,6 +70,12 @@ const Login = function({popup, isPC, onClose}) {
     return (
         <div className="login__container">
             <div className="login__box">
+                {!isPC ? 
+                    <div className="close__box">
+                        <img src={closeMobile} onClick={onClose}/>
+                    </div>
+                    : null
+                }
                 {popup ? 
                     <div className="close" onClick={onClose}>
                         <span className="close__img"></span>
@@ -184,6 +191,10 @@ const Login = function({popup, isPC, onClose}) {
                     right: 0;
                     cursor: pointer;
                 }
+                .close__box {
+                    text-align: right;
+                    padding-top: 10px;
+                }
                 .close__img {
                     background: url(${close}) no-repeat center center;
                     width: 32px;
@@ -206,7 +217,7 @@ const Login = function({popup, isPC, onClose}) {
                     transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};
                     padding: ${isPC ? '0 41px' : '0 20px'};
                     padding-top: ${popup ? '0' : '1px'};
-                    background-color: #f9fbff;
+                    background-color: ${isPC ? '#f9fbff' : 'white'};
                     border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
                 }
                 .overLay {
@@ -227,7 +238,7 @@ const Login = function({popup, isPC, onClose}) {
                     height: 9rem;
                     background: url(${logo}) no-repeat center center;
                     margin: 0 auto;
-                    margin-top: 55px;
+                    margin-top: 37px;
                 }
                 .input::placeholder{
                     font-size: 1.8rem;
@@ -301,6 +312,7 @@ const Login = function({popup, isPC, onClose}) {
 
 Login.propTypes = {
     isPC: PropTypes.bool,
+    popup: PropTypes.bool,
     onClose: PropTypes.func
 }
 
