@@ -315,6 +315,18 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     text-align: left;
                 }
             `}</style>
+            <style global jsx>{`
+                .login__container .ant-btn-primary {
+                    background:#c43826;
+                    height: 54px;
+                    border: none;
+                    width: 100%;
+                    font-size: 1.8rem;
+                }
+                .login__container .ant-btn-primary:hover {
+                    background:#9d1200;
+                }
+            `}</style>
         </div>
     )
 }

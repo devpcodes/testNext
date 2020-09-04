@@ -1,6 +1,5 @@
 import 'antd/dist/antd.min.css';
 import '../resorces/styles/globals.css';
-import '../resorces/styles/components/login/login.css';//不寫在這壓不掉antd的css
 
 import Layout from '../components/layouts/layout';
 import withRedux from '../components/hoc/withReduxApp';
