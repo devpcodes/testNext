@@ -56,6 +56,7 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
         originY: "50vh",            
         transition: {
             duration: .3,
+            delay: .1
         }
     }
 
