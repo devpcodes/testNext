@@ -32,7 +32,7 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
         notification.success({
             placement: 'topRight',
             message: '登入成功',
-            duration: 1
+            duration: 3
         });
         setTimeout(() => {
             successHandler();
@@ -40,7 +40,7 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
     }
 
     const loginFailFun = function(){
-        
+
     }
 
     const initial = {

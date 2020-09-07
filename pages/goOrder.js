@@ -2,7 +2,6 @@ import { DatePicker } from 'antd';
 import { connect } from 'react-redux'
 import { add } from '../actions/goOrder';
 function GoOrder(props) {
-	console.log(props);
 	return (
 		<>
             <DatePicker />
@@ -20,7 +19,6 @@ function GoOrder(props) {
 }
 
 function mapStateToProps(state) {
-	console.log(state);
 	const { count } = state.goOrder
 	return {
 	  	count,
