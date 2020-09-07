@@ -25,7 +25,7 @@ const Home = function(){
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			{/* <NewLogin popup={true} isPC={true} onClose={() => {
+			{/* <NewLogin popup={false} isPC={false} onClose={() => {
 				console.log('close')
 			}}/> */}
 			{/* <Layout>

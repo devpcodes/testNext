@@ -1,7 +1,6 @@
-import React, {  useRef, useState } from 'react';
+import React, {  useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router'
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import logo from '../../../resorces/images/components/login/logo.png';
 import check from '../../../resorces/images/components/login/ic-check.png';
 import close from '../../../resorces/images/components/login/ic-closemenu.png';
@@ -9,16 +8,27 @@ import closeMobile from '../../../resorces/images/pages/SinoTrade_login/ic-close
 import { submit } from '../../../services/components/login/login';
 
 const Login = function({popup, isPC, onClose, successHandler}) {
-    const router = useRouter();
     const [form] = Form.useForm();
-
     const accountInput = useRef(null);
-    let account;
-
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {
+        const account = localStorage.getItem('userID');
+        if(account){
+            form.setFieldsValue({
+                account
+            })
+            const encryptStr = encryptionHandler(account)
+            setEncryptAccount(encryptStr)
+            setAccountFontSize('0rem');
+            form.setFieldsValue({
+                remember: true
+            })
+        }
+    }, []);
 
+    let account;
     const fieldsChange = function(changedFields, allFields) {
         if(changedFields.length !== 0){
             if(changedFields[0].name[0] === 'account'){
@@ -68,10 +78,20 @@ const Login = function({popup, isPC, onClose, successHandler}) {
         })
         if(errors.length === 0){
             setIsLoading(true);
-            const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
-            setIsLoading(false);
-            if(res.data.success){
-                successHandler();
+            try {
+                const res = await submit(form.getFieldValue('account'), form.getFieldValue('password')); 
+                setIsLoading(false);
+                if(res.data.success){
+                    if(form.getFieldValue('remember')){
+                        localStorage.setItem('userID', form.getFieldValue('account'));
+                    }
+                    successHandler();
+                }
+            } catch (error) {
+                if(error.response.data != null){
+                    Modal.error({content: error.response.data.message});
+                }
+                setIsLoading(false);
             }
         }
     }
@@ -325,6 +345,9 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 }
                 .login__container .ant-btn-primary:hover {
                     background:#9d1200;
+                }
+                .ant-modal-confirm-body .ant-modal-confirm-content {
+                    font-size: 1.6rem;
                 }
             `}</style>
         </div>

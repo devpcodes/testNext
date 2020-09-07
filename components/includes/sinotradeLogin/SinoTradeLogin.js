@@ -9,7 +9,6 @@ import close from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
 
 const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
     const [isPC, setIsPC] = useState(true);
-    const [loginSuccess, setLoginSuccess] = useState(false);
 
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
@@ -38,6 +37,10 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
         setTimeout(() => {
             successHandler();
         }, 200);
+    }
+
+    const loginFailFun = function(){
+        
     }
 
     const initial = {
@@ -81,7 +84,7 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
                                 <img className="close" src={close} onClick={onClose}/>
                             </div>
                             {isPC ? <img className="login__img" src={loginImg} alt="永豐金證券"/> : null}
-                            <Login popup={false} isPC={isPC} onClose={onClose} successHandler={loginSuccessFun}/>
+                            <Login popup={false} isPC={isPC} onClose={onClose} successHandler={loginSuccessFun} failedHandler={loginFailFun}/>
                         </div>
 
                         <style jsx>{`
