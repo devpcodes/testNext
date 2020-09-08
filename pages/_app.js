@@ -57,5 +57,11 @@ function MyApp({ Component, pageProps, reduxStore, router }) {
         )
     }
 
+
+    // return (
+    //     <Provider store={reduxStore}>
+    //         {renderComp}
+    //     </Provider>
+    // )
 }
 export default withRedux(MyApp)
