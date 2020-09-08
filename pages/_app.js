@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps, reduxStore, router }) {
         setIsVisible(false);
         setTimeout(() => {
             router.push(oldPathName.current || '/');
-        }, 300);
+        }, 400);
     }
 
     if(router.pathname === '/SinoTrade_login'){

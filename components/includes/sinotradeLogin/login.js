@@ -88,9 +88,13 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     successHandler();
                 }
             } catch (error) {
-                if(error.response.data != null){
-                    Modal.error({content: error.response.data.message});
-                }
+                // if(error.response == null){
+                //     Modal.error({content: '伺服器錯誤，請稍後再試'});
+                // }else{
+                //     if(error.response.data != null){
+                //         Modal.error({content: error.response.data.message});
+                //     }
+                // }
                 setIsLoading(false);
             }
         }
