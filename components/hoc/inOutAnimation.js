@@ -1,25 +1,33 @@
-import { motion } from 'framer-motion';
-const inOutAnimation = function(Comp){
+// import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
+const inOutAnimation = function(Comp, isVisible){
     return class InOutAnimation extends React.Component {
         render() {
             return ( 
-                <motion.div initial="hidden"  animate="visible"  exit="pageExit" variants={{
-                    hidden: {
-                        opacity: 0,
-                    },
-                    visible: {
-                        opacity: 1,
-                        transition: {
-                            delay: .5,
-                            duration: .3,
-                        }
-                    },
-                    pageExit: {
-                        opacity: 0
-                    }
-                }}>
-                    <Comp {...this.props}/>
-                </motion.div> 
+                <AnimatePresence>
+                    {isVisible && (
+                        <motion.div
+                            key="login"
+                            initial={{
+                                opacity: 0, 
+                            }}
+                            animate={{
+                                opacity: 1,
+                            }}
+                            exit={{
+                                opacity: 0, 
+                                transition: {
+                                    delay: .5,
+                                    duration: 1,
+                                    ease: 'easeIn'
+                                }
+                            }}
+                        >
+                            <Comp {...this.props}/>
+                        </motion.div> 
+                    )}
+
+                </AnimatePresence>
             )
         }
     }
