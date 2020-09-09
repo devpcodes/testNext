@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { connect } from 'react-redux'
 import { resize, isLogin, showLoginHandler } from '../../actions/components/layouts/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
-import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin'
+import Login from '../includes/sinotradeLogin/login';
+
 const Layout = React.memo((props) => {
+    const dispatch = useDispatch();
+    const showLogin = useSelector(store => store.layout.showLogin);
+    const isMobile = useSelector(store => store.layout.isMobile);
+
     useEffect(() => {
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
-        props.isLogin(checkLogin());
-
+        dispatch(isLogin(checkLogin()))
         return () => {
             window.removeEventListener('resize', resizeHandler, false);
         };
@@ -34,22 +39,18 @@ const Layout = React.memo((props) => {
     const resizeHandler = function() {
         let winWidth = document.body.clientWidth;
         if(checkMobile(winWidth)){
-            props.resize(winWidth, true);
+            dispatch(resize(winWidth, true));
         }else{
-            props.resize(winWidth, false);
+            dispatch(resize(winWidth, false));
         }
     }
 
     const showLoginClick = function() {
-        props.showLoginHandler(true);
+        dispatch(showLoginHandler(true));
     }
 
-    const showLoginClose = function() {
-        props.showLoginHandler(false);
-    }
-
-    const successHandler = function() {
-        props.showLoginHandler(false);
+    const closeHandler = function(){
+        dispatch(showLoginHandler(false));
     }
     return (
         <>
@@ -62,7 +63,19 @@ const Layout = React.memo((props) => {
                 <link rel='manifest' href='/manifest.json' />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             </Head>
-            <SinoTradeLogin isVisible={props.showLogin} onClose={showLoginClose} successHandler={successHandler}/>
+            <AnimatePresence>
+                {showLogin && (
+                    <motion.div
+                        key="login"
+                        initial={{opacity: 0 }}
+                        animate={{opacity: 1, transition:{duration: .3}}}
+                        exit={{opacity: 0, transition:{duration: .3}}}
+                    >
+                        <Login popup={true} isPC={!isMobile} onClose={closeHandler}/>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            
             <Header showLoginClick={showLoginClick}/>
                 {props.children}
             <Footer/>
@@ -70,11 +83,5 @@ const Layout = React.memo((props) => {
     )
 })
 
-function mapStateToProps(state) {
-	const { showLogin } = state.layout
-	return {
-        showLogin,
-	}
-}
-
-export default connect(mapStateToProps, { resize, isLogin, showLoginHandler })(Layout);
+// export default connect(mapStateToProps, { resize, isLogin, showLoginHandler })(Layout);
+export default Layout;
