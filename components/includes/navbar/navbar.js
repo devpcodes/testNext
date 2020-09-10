@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link'
+import theme from '../../../resources/styles/theme'
 import NavList from "../navbar/navList"
 
 const fakeHeaderData = [
@@ -288,7 +289,7 @@ const Navbar = React.memo((props) => {
                     flex-direction: column;
                     list-style: none;
                     font-size: 18px;
-                    color: #FFF;
+                    color: ${theme.colors.text};
                     height:100%;
                     position:relative;
                 }
@@ -303,7 +304,7 @@ const Navbar = React.memo((props) => {
                     height: 0;
                     border-style: solid;
                     border-width: 0 5.5px 8px 5.5px;
-                    border-color: transparent transparent #daa360 transparent;
+                    border-color: transparent transparent ${theme.colors.secondary} transparent;
                     position: absolute;
                     bottom: 0;
                     left: calc(50% - 6px);
@@ -311,7 +312,7 @@ const Navbar = React.memo((props) => {
                 }
 
                 .navbar__lv1__item__title:hover ,.navbar__lv1__item.active{
-                    color: #daa360;
+                    color: ${theme.colors.secondary};
                 }
                 .navbar__lv1__item__title:hover > .active__mark, .navbar__lv1__item.active .active__mark{
                     display:block;
@@ -329,7 +330,7 @@ const Navbar = React.memo((props) => {
                     left: -180px;
                     width: fit-content;
                     padding: 18px 36px;
-                    border-top: 6px solid #daa360;
+                    border-top: 6px solid ${theme.colors.secondary};
                     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3);
                     background: #FFF;
                     z-index: 1001;

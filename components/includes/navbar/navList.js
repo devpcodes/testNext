@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import theme from '../../../resources/styles/theme'
 import Link from 'next/link'
 
 const NavList = React.memo((props) => {
-    console.log(props.open)
     return (
             <div>
                 <h6 className="navbar__lv2__item__title">{props.lv2Data.title}</h6>
@@ -18,8 +18,8 @@ const NavList = React.memo((props) => {
                 <style jsx>{`  
                     .navbar__lv2__item__title {
                         font-size: 16px;
-                        color: #daa360;
-                        border-bottom: 2px dotted #daa360;
+                        color: ${theme.colors.secondary};
+                        border-bottom: 2px dotted ${theme.colors.secondary};
                         padding: 0 0 10px 0;
                         margin: 0 0 18px 0;
                         font-weight: bold;
@@ -36,7 +36,7 @@ const NavList = React.memo((props) => {
 
                     .navbar__lv3__item__title {
                         font-size: 16px;
-                        color: #0d1623;
+                        color: ${theme.colors.darkBg};
                         display: block;
                     }
                 `}</style>
