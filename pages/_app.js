@@ -1,5 +1,5 @@
 import 'antd/dist/antd.min.css';
-import '../resorces/styles/globals.css';
+import '../resources/styles/globals.css';
 import { useRef, useState, useEffect } from 'react';
 import Layout from '../components/layouts/layout';
 import withRedux from '../components/hoc/withReduxApp';

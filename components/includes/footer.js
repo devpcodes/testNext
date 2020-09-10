@@ -1,10 +1,10 @@
 import React from 'react';
-import qrCode from '../../resorces/images/components/footer/img_ileaderapp.png';
-import logo from '../../resorces/images/components/footer/logo_footer.png';
-import fb from '../../resorces/images/components/footer/btn_fb.png';
-import youtube from '../../resorces/images/components/footer/btn_youtube.png';
-import line from '../../resorces/images/components/footer/btn_line.png';
-import theme from '../../resorces/styles/theme';
+import qrCode from '../../resources/images/components/footer/img_ileaderapp.png';
+import logo from '../../resources/images/components/footer/logo_footer.png';
+import fb from '../../resources/images/components/footer/btn_fb.png';
+import youtube from '../../resources/images/components/footer/btn_youtube.png';
+import line from '../../resources/images/components/footer/btn_line.png';
+import theme from '../../resources/styles/theme';
 const footerData = [
     {
         title: '關於永豐金證券',

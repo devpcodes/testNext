@@ -1,6 +1,6 @@
 const withImages = require('next-images');
 const NextWorkboxPlugin = require ('next-workbox-webpack-plugin');
-const cache = require('./resorces/serviceWorker/cache');
+const cache = require('./resources/serviceWorker/cache');
 
 const isProd = process.env.NODE_ENV === 'production';
 module.exports = withImages({

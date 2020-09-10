@@ -1,10 +1,10 @@
 import React, {  useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
-import logo from '../../../resorces/images/components/login/logo.png';
-import check from '../../../resorces/images/components/login/ic-check.png';
-import close from '../../../resorces/images/components/login/ic-closemenu.png';
-import closeMobile from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
+import logo from '../../../resources/images/components/login/logo.png';
+import check from '../../../resources/images/components/login/ic-check.png';
+import close from '../../../resources/images/components/login/ic-closemenu.png';
+import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png'
 import { submit } from '../../../services/components/login/login';
 
 const Login = function({popup, isPC, onClose, successHandler}) {

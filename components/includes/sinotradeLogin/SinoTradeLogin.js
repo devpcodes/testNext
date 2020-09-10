@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
-import loginImg from '../../../resorces/images/pages/SinoTrade_login/group-3.png';
-import logo from '../../../resorces/images/pages/SinoTrade_login/logo-dark.png';
-import close from '../../../resorces/images/pages/SinoTrade_login/ic-close.png'
+import loginImg from '../../../resources/images/pages/SinoTrade_login/group-3.png';
+import logo from '../../../resources/images/pages/SinoTrade_login/logo-dark.png';
+import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png'
 
 const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
     const [isPC, setIsPC] = useState(true);
