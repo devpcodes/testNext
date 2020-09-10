@@ -24,3 +24,10 @@ export const showLoginHandler = (bool) => {
         payload: bool
     }
 }
+
+export const setAccounts = (accounts) => {
+    return {
+        type: actionType.SET_ACCOUNTS,
+        payload: accounts
+    }
+}

@@ -4,7 +4,8 @@ const initialState = {
     winWidth: 0,
     isMobile: false,
     isLogin: false,
-    showLogin: false
+    showLogin: false,
+    accounts: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -24,6 +25,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 showLogin: action.payload,
+            }
+        case actionType.SET_ACCOUNTS:
+            return {
+                ...state,
+                accounts: action.payload,
             }
         default:
             return state

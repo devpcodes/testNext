@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
+import jwt_decode from "jwt-decode";
 import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, isLogin, showLoginHandler } from '../../actions/components/layouts/action';
+import { resize, isLogin, showLoginHandler, setAccounts } from '../../actions/components/layouts/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
 import MyTransition from '../includes/myTransition';
+import { getCookie } from '../../services/components/layouts/cookieController';
 
 const Layout = React.memo((props) => {
     const dispatch = useDispatch();
@@ -17,7 +19,11 @@ const Layout = React.memo((props) => {
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
-        dispatch(isLogin(checkLogin()))
+        if(checkLogin()){
+            dispatch(isLogin(true));
+            const tokenVal = jwt_decode(getCookie('token'));
+            dispatch(setAccounts(tokenVal.acts_detail));
+        }
         return () => {
             window.removeEventListener('resize', resizeHandler, false);
         };
@@ -51,6 +57,10 @@ const Layout = React.memo((props) => {
     const closeHandler = function(){
         dispatch(showLoginHandler(false));
     }
+
+    const loginSuccessHandler = function(){
+        
+    }
     return (
         <>
             <Head>
@@ -66,7 +76,7 @@ const Layout = React.memo((props) => {
                 isVisible={showLogin}
                 classNames={'opacity'}
             >
-                <Login popup={true} isPC={!isMobile} onClose={closeHandler}/>
+                <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler}/>
             </MyTransition>
             <Header showLoginClick={showLoginClick}/>
                 {props.children}
