@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
 import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
@@ -8,12 +7,12 @@ import { resize, isLogin, showLoginHandler } from '../../actions/components/layo
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
+import MyTransition from '../includes/myTransition';
 
 const Layout = React.memo((props) => {
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
-
     useEffect(() => {
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
@@ -63,19 +62,12 @@ const Layout = React.memo((props) => {
                 <link rel='manifest' href='/manifest.json' />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             </Head>
-            <AnimatePresence>
-                {showLogin && (
-                    <motion.div
-                        key="login"
-                        initial={{opacity: 0 }}
-                        animate={{opacity: 1, transition:{duration: .3}}}
-                        exit={{opacity: 0, transition:{duration: .3}}}
-                    >
-                        <Login popup={true} isPC={!isMobile} onClose={closeHandler}/>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-            
+            <MyTransition
+                isVisible={showLogin}
+                classNames={'opacity'}
+            >
+                <Login popup={true} isPC={!isMobile} onClose={closeHandler}/>
+            </MyTransition>
             <Header showLoginClick={showLoginClick}/>
                 {props.children}
             <Footer/>
