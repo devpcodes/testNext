@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link'
 import NavList from "../navbar/navList"
 
@@ -253,22 +253,24 @@ const fakeHeaderData = [
 ];
 
 const Navbar = React.memo((props) => {
-
-    const handleClick = (e) => {
-        e.currentTarget.classList.add("active");
-    }
-
     return (
         <ul className="navbar">
             {fakeHeaderData.map((lv1Item, lv1Index) => (
-                <li className="navbar__lv1__item" key={lv1Index} onClick={handleClick}>
+                <li className="navbar__lv1__item" key={lv1Index}>
                     <Link href="/">
                         <a className="navbar__lv1__item__title">
-                            <span className="hover__mark"></span>
+                            <span className="active__mark"></span>
                             {lv1Item.title}
                         </a>
                     </Link>
-                    <NavList navItems={lv1Item.items}/>
+                    <ul className="navbar__lv2">
+                        {lv1Item.items.map((lv2Item, lv2Index) => (
+                            <li className="navbar__lv2__item" key={lv2Index} >
+                                <NavList navItems={lv1Item.items} lv2Data={lv2Item}/>
+                            </li>
+                        ))}
+                    </ul>
+                    
                 </li>
             ))}
             <style jsx>{`
@@ -296,7 +298,7 @@ const Navbar = React.memo((props) => {
                     height:100%;
                     line-height:70px;
                 }
-                .hover__mark {
+                .active__mark {
                     width: 0;
                     height: 0;
                     border-style: solid;
@@ -307,16 +309,43 @@ const Navbar = React.memo((props) => {
                     left: calc(50% - 6px);
                     display:none;
                 }
-                .navbar__lv1__item.active > .navbar__lv2 {
-                    display: flex;
-                }
+
                 .navbar__lv1__item__title:hover ,.navbar__lv1__item.active{
                     color: #daa360;
                 }
-                .navbar__lv1__item__title:hover > .hover__mark, .navbar__lv1__item.active .hover__mark{
+                .navbar__lv1__item__title:hover > .active__mark, .navbar__lv1__item.active .active__mark{
                     display:block;
                 }
-                
+                .navbar__lv1__item:hover .navbar__lv2 { 
+                    display:flex;
+                }
+
+                .navbar__lv2 {
+                    margin:0;
+                    padding:0;
+                    display: none;
+                    position:absolute;
+                    top: 70px;
+                    left: -180px;
+                    width: fit-content;
+                    padding: 18px 36px;
+                    border-top: 6px solid #daa360;
+                    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3);
+                    background: #FFF;
+                    z-index: 1001;
+                    text-align: left;
+                }
+    
+                .navbar__lv2__item { 
+                    list-style: none;
+                    width:122px;
+                    padding:0;
+                    margin-right: 37px;
+                    
+                }
+                .navbar__lv2__item:last-child {
+                    margin-right: 0;
+                }
             `}</style>
         </ul>
     )
