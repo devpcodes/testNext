@@ -5,7 +5,7 @@ import Layout from '../components/layouts/layout';
 import withRedux from '../components/hoc/withReduxApp';
 import { Provider } from 'react-redux';
 import SinoTradeLogin from '../components/includes/sinotradeLogin/SinoTradeLogin';
-
+import MyTransition from '../components/includes/myTransition';
 export async function getServerSideProps(ctx) {
     const { Component } = ctx
     let pageProps = {}
@@ -43,7 +43,13 @@ function MyApp({ Component, pageProps, reduxStore, router }) {
     if(router.pathname === '/SinoTrade_login'){
         return (
             <Provider store={reduxStore}>
-                <SinoTradeLogin isVisible={isVisible} onClose={showLoginClose} successHandler={showLoginClose}/>
+                <MyTransition
+                    isVisible={isVisible}
+                    classNames={'login'}
+                >
+                    <SinoTradeLogin onClose={showLoginClose} successHandler={showLoginClose}/>
+                </MyTransition>
+                
                 {currentComp.current}
             </Provider>
         )
