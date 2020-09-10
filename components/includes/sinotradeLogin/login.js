@@ -244,7 +244,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     position: ${popup ? 'absolute' : 'static'};
                     width: ${isPC ? '512px' : '100%'};
                     height: ${isPC ? '548px' : '100vh'};
-                    z-index: 9999;
+                    z-index: 3;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
                     transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};

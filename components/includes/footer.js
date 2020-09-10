@@ -4,6 +4,7 @@ import logo from '../../resorces/images/components/footer/logo_footer.png';
 import fb from '../../resorces/images/components/footer/btn_fb.png';
 import youtube from '../../resorces/images/components/footer/btn_youtube.png';
 import line from '../../resorces/images/components/footer/btn_line.png';
+import theme from '../../resorces/styles/theme';
 const footerData = [
     {
         title: '關於永豐金證券',
@@ -146,7 +147,7 @@ const Footer = React.memo((props) => {
             <style jsx>{`
                 .footer {
                     background-color: #172439;
-                    font-family: Microsoft JhengHei,Calibri,serif;
+                    font-family: ${theme.fontFamily};
                 }
                 .footer .mobile__box2{
                     display: none;

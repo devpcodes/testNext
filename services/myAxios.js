@@ -8,7 +8,7 @@ axios.interceptors.response.use(res => {
         Modal.error({content: '伺服器錯誤，請稍後再試'});
     }else{
         if(error.response.data != null){
-            Modal.error({content: error.response.data.message});
+            Modal.error({content: error.response.data.message || '伺服器錯誤，請稍後再試'});
         }else{
             Modal.error({content: '伺服器錯誤，請稍後再試'});
         }
