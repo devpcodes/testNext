@@ -339,7 +339,6 @@ const Navbar = React.memo((props) => {
     
                 .navbar__lv2__item { 
                     list-style: none;
-                    width:122px;
                     padding:0;
                     margin-right: 37px;
                     

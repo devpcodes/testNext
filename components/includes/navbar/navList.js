@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const NavList = React.memo((props) => {
     return (
-            <div>
+            <div className="navlist">
                 <h6 className="navbar__lv2__item__title">{props.lv2Data.title}</h6>
                 <ul className="navbar__lv3">
                     {props.lv2Data.items.map((lv3Item, lv3Index) => (
@@ -16,6 +16,10 @@ const NavList = React.memo((props) => {
                 </ul>
             
                 <style jsx>{`  
+                    .navlist {
+                        width:122px;
+                    }
+
                     .navbar__lv2__item__title {
                         font-size: 16px;
                         color: ${theme.colors.secondary};
