@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from "../includes/navbar/navbar";
-import logo from "../../resorces/images/components/header/sinopac_securities_logo@3x.png";
+import logo from "../../resources/images/components/header/sinopac_securities_logo@3x.png";
 import Link from 'next/link'
 
 const contentWidth = "102.4rem";
