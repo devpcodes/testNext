@@ -9,6 +9,9 @@ const theme = {
         secondaryHover: '#ad7633',
         loss: '#22a16f',
     },
+    button: {
+        transition: 'all 0.3s ease-out',
+    },
 };
 
 export default theme;
