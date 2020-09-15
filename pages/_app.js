@@ -2,72 +2,46 @@ import 'antd/dist/antd.min.css';
 import '../resources/styles/globals.css';
 import { useRef, useState, useEffect } from 'react';
 import Layout from '../components/layouts/layout';
-import withRedux from '../components/hoc/withReduxApp';
 import { Provider } from 'react-redux';
+import { useStore } from '../store/store';
 import SinoTradeLogin from '../components/includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../components/includes/myTransition';
-export async function getServerSideProps(ctx) {
-    const { Component } = ctx
-    let pageProps = {}
-    // 拿到Component上定义的getInitialProps
-    if (Component.getInitialProps) {
-      	// 执行拿到返回结果`
-      	pageProps = await Component.getInitialProps(ctx)
-    }
-    // 返回给组件
-    return {
-      	pageProps,
-    }
-}
 
-function MyApp({ Component, pageProps, reduxStore, router }) {
+function MyApp({ Component, pageProps, router }) {
+    const store = useStore(pageProps.initialReduxState);
     const [isVisible, setIsVisible] = useState(true);
     const currentComp = useRef(null);
     const oldPathName = useRef(null);
 
-    const getLayout = Component.getLayout || (page => <Layout children={page} />)
-    const renderComp = getLayout(<Component {...pageProps} />)
+    const getLayout = Component.getLayout || ((page) => <Layout children={page} />);
+    const renderComp = getLayout(<Component {...pageProps} />);
     useEffect(() => {
-        if(router.pathname === '/SinoTrade_login'){
+        if (router.pathname === '/SinoTrade_login') {
             setIsVisible(true);
         }
     }, [router.pathname]);
 
-    const showLoginClose = function(){
+    const showLoginClose = function () {
         setIsVisible(false);
         setTimeout(() => {
             router.push(oldPathName.current || '/');
         }, 400);
-    }
+    };
 
-    if(router.pathname === '/SinoTrade_login'){
+    if (router.pathname === '/SinoTrade_login') {
         return (
-            <Provider store={reduxStore}>
-                <MyTransition
-                    isVisible={isVisible}
-                    classNames={'login'}
-                >
-                    <SinoTradeLogin onClose={showLoginClose} successHandler={showLoginClose}/>
+            <Provider store={store}>
+                <MyTransition isVisible={isVisible} classNames={'login'}>
+                    <SinoTradeLogin onClose={showLoginClose} successHandler={showLoginClose} />
                 </MyTransition>
-                
+
                 {currentComp.current}
             </Provider>
-        )
-    }else{
+        );
+    } else {
         currentComp.current = renderComp;
         oldPathName.current = router.pathname;
-        return (
-            <Provider store={reduxStore}>
-                {renderComp}
-            </Provider>
-        )
+        return <Provider store={store}>{renderComp}</Provider>;
     }
-
-
-    // return (
-    //     <Provider store={reduxStore}>
-    //         {renderComp}
-    //     </Provider>
-    // )
 }
-export default withRedux(MyApp)
+export default MyApp;
