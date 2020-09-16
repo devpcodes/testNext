@@ -1,4 +1,5 @@
 import * as actionType from './actionType';
+import { getNav } from '../../../services/components/header/navFetcher';
 
 export const resize = (winWidth, isMobile) => {
     const payload = {
@@ -31,3 +32,13 @@ export const setAccounts = (accounts) => {
         payload: accounts
     }
 }
+
+export const setNavItems = () => async (dispatch) => {
+    const res = await getNav();
+    const navData = res.result;
+
+    return dispatch({
+        type: actionType.SET_NAV_ITEMS,
+        payload: navData,
+    });
+};

@@ -1,14 +1,12 @@
 import 'antd/dist/antd.min.css';
 import '../resources/styles/globals.css';
 import { useRef, useState, useEffect } from 'react';
+import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
-import { Provider } from 'react-redux';
-import { useStore } from '../store/store';
 import SinoTradeLogin from '../components/includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../components/includes/myTransition';
 
 function MyApp({ Component, pageProps, router }) {
-    const store = useStore(pageProps.initialReduxState);
     const [isVisible, setIsVisible] = useState(true);
     const currentComp = useRef(null);
     const oldPathName = useRef(null);
@@ -30,18 +28,17 @@ function MyApp({ Component, pageProps, router }) {
 
     if (router.pathname === '/SinoTrade_login') {
         return (
-            <Provider store={store}>
+            <>
                 <MyTransition isVisible={isVisible} classNames={'login'}>
                     <SinoTradeLogin onClose={showLoginClose} successHandler={showLoginClose} />
                 </MyTransition>
-
                 {currentComp.current}
-            </Provider>
+            </>
         );
     } else {
         currentComp.current = renderComp;
         oldPathName.current = router.pathname;
-        return <Provider store={store}>{renderComp}</Provider>;
+        return <>{renderComp}</>;
     }
 }
-export default MyApp;
+export default wrapper.withRedux(MyApp);

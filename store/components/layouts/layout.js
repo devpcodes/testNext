@@ -5,8 +5,9 @@ const initialState = {
     isMobile: false,
     isLogin: false,
     showLogin: false,
-    accounts: []
-}
+    accounts: [],
+    navData: {},
+};
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -15,24 +16,29 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 winWidth: action.payload.winWidth,
                 isMobile: action.payload.isMobile,
-            }
+            };
         case actionType.IS_LOGIN:
             return {
                 ...state,
                 isLogin: action.payload,
-            }
+            };
         case actionType.SHOW_LOGIN:
             return {
                 ...state,
                 showLogin: action.payload,
-            }
+            };
         case actionType.SET_ACCOUNTS:
             return {
                 ...state,
                 accounts: action.payload,
-            }
+            };
+        case actionType.SET_NAV_ITEMS:
+            return {
+                ...state,
+                navData: action.payload,
+            };
         default:
-            return state
+            return state;
     }
 }
 
