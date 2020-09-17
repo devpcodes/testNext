@@ -86,7 +86,7 @@ const footerData = [
         ]
     }
 ]
-const contentWidth = '102.4rem';
+const contentWidth = '80%';
 const Footer = React.memo((props) => {
     return ( 
         <div className="footer">
@@ -199,11 +199,16 @@ const Footer = React.memo((props) => {
                     background-color: #172439;
                     margin: 0 auto;
                     width: ${contentWidth};
-                    height: 9rem;
+                    height: 7rem;
                     /* position: relative; */
 
                     
                     padding: 0 1.5rem;
+                }
+                @media (max-width:1250px), print{
+                    .footer__up{
+                        width: 90%;
+                    }
                 }
                 @media (max-width:1024px), print{
                     .footer__up{
@@ -220,7 +225,7 @@ const Footer = React.memo((props) => {
                 }
                 .footer__up ul {
                     list-style: none;
-                    line-height: 9rem;
+                    line-height: 7rem;
                     padding-left: 0;
                     display: inline-block;
                     /* position: absolute;
@@ -259,12 +264,12 @@ const Footer = React.memo((props) => {
                     /* position: absolute;
                     right: 0;
                     top: 0; */
-                    width: 14.5rem;
-                    height: 9rem;
+                    width: 19.7rem;
+                    height: 7rem;
                     color: #f7f7f7;
                     font-size: 2.2rem;
                     text-align: center;
-                    line-height: 9rem;
+                    line-height: 7rem;
                     transition: background .2s linear;
                     background: #c43826;
                     float: right;
@@ -309,6 +314,11 @@ const Footer = React.memo((props) => {
                     /* display: flex; */
                     /* flex-direction: row; */
                 }
+                @media (max-width:1250px), print{
+                    .footer__middle .middle__box {
+                        width: 90%;
+                    }
+                }
                 @media (max-width:1024px), print{
                     .footer__middle .middle__box {
                         width: 100%;
@@ -337,7 +347,7 @@ const Footer = React.memo((props) => {
                 .middle--card:last-child {
                     position: absolute;
                     top: 4.5rem;
-                    right: 1.5rem;
+                    right: 3.3rem;
                     margin: 0;
                     text-align: center;
                     color: #c0c0c0;
@@ -361,7 +371,7 @@ const Footer = React.memo((props) => {
                     display: inline-block;
                     text-align: left;
                     line-height: 2.4rem;
-                    font-size: 1.4rem;
+                    font-size: 1.6rem;
                     border: none;
 
                     padding: 0 0 0.1rem 0;
@@ -390,6 +400,11 @@ const Footer = React.memo((props) => {
                     margin: 0 auto;
                     position: relative;
                     padding: 2.5rem 0;
+                }
+                @media (max-width:1250px), print{
+                    .down__box {
+                        width: 90%;
+                    }
                 }
                 @media (max-width:1024px), print{
                     .down__box {
@@ -424,8 +439,15 @@ const Footer = React.memo((props) => {
                 .down__box ul {
                     list-style: none;
                     display: block;
-                    text-align: center;
+                    text-align: left;
+                    margin-left: 18rem;
                     margin-bottom: 0.2rem;
+                }
+                @media (max-width:1100px), print{
+                    .down__box ul {
+                        text-align: center;
+                        margin-left: 0;
+                    }
                 }
                 @media (max-width:1024px), print{
                     .down__box ul {
@@ -467,7 +489,7 @@ const Footer = React.memo((props) => {
                 }
                 .down__social {
                     position: absolute;
-                    right: 1.5rem;
+                    right: 3.3rem;
                     top: 50%;
                     transform: translateY(-50%);
                 }
