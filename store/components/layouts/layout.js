@@ -32,11 +32,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 accounts: action.payload,
             };
-        case actionType.SET_NAV_ITEMS:
-            return {
-                ...state,
-                navData: action.payload,
-            };
+        // case actionType.SET_NAV_ITEMS:
+        //     return {
+        //         ...state,
+        //         navData: action.payload,
+        //     };
         default:
             return state;
     }

@@ -3,6 +3,7 @@ import { HYDRATE, createWrapper } from 'next-redux-wrapper';
 import thunkMiddleware from 'redux-thunk';
 import combinedReducer from './index';
 
+
 const bindMiddleware = (middleware) => {
     if (process.env.NODE_ENV !== 'production') {
         const { composeWithDevTools } = require('redux-devtools-extension');
@@ -16,12 +17,13 @@ const reducer = (state, action) => {
     console.log(`action.payload:`, action.payload);
 
     if (action.type === HYDRATE) {
-        const nextState = {
-            ...action.payload, // apply delta from hydration
-            ...state, // use previous state
-        };
-        console.log(`nextState:`, nextState);
-        return nextState;
+        return {
+            ...state,
+            server: {
+                ...state.server,
+                ...action.payload.server
+            }
+        }
     } else {
         return combinedReducer(state, action);
     }
