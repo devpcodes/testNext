@@ -5,7 +5,6 @@ import { wrapper } from '../store/store';
 import { setNavItems } from '../actions/components/layouts/action';
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store }) => {
-    console.log('store', store.getState());
     await store.dispatch(setNavItems());
 });
 

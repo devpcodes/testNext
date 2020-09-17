@@ -8,7 +8,7 @@ import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';
 
 export const AccountQuickView = ({ isVisible }) => {
-    const personalNav = useSelector((store) => store.layout.navData?.personal);
+    const personalNav = useSelector((store) => store.server.navData?.personal);
 
     return (
         <div className="quickView__container">

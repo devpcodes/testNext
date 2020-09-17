@@ -1,20 +1,19 @@
 import * as actionType from '../actions/components/layouts/actionType';
 
 const initialState = {
-}
+    navData: {},
+};
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionType.SET_NAV_ITEMS:
             return {
-                ...state,
-                server: {
-                    ...state.server,
-                    nav: action.payload
-                }
+                ...state.server,
+                navData: action.payload,
             };
         default:
-            return state
+            return state;
     }
-}
+};
 
 export default reducer;
