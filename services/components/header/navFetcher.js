@@ -1,8 +1,10 @@
 import axios from '../../myAxios';
 
-export const getNav = async function () {
+export const getNav = async function (token = '') {
     // https://servicerd.sinotrade.com.tw/lykan/api/v1/service/getMenu
     const url = '/lykan/api/v1/service/getMenu';
-    const res = await axios.post(url);
+    const res = await axios.post(url, {
+        token,
+    });
     return res.data;
 };

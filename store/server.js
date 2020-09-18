@@ -6,7 +6,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionType.SET_NAV_ITEMS:
+        case actionType.SET_SERVER_NAV_ITEMS:
             return {
                 ...state.server,
                 navData: action.payload,

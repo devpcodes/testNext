@@ -4,7 +4,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, setIsLogin, showLoginHandler, setAccounts } from '../../actions/components/layouts/action';
+import {
+    resize,
+    setIsLogin,
+    showLoginHandler,
+    setAccounts,
+    setNavItems,
+} from '../../actions/components/layouts/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
@@ -16,12 +22,18 @@ const Layout = React.memo((props) => {
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector((store) => store.layout.isLogin);
+    const navData = useSelector((store) => store.layout.navData);
 
     useEffect(() => {
+        const updateNavData = () => {
+            !Object.keys(navData).length && dispatch(setNavItems(getCookie('token')));
+        };
+
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
-        if(checkLogin()){
+        updateNavData();
+        if (checkLogin()) {
             dispatch(setIsLogin(true));
         }
         return () => {
