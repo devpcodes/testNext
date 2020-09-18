@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -7,7 +6,6 @@ import { Avatar } from 'antd';
 import { AccountQuickView } from './AccountQuickView';
 import { HeaderBtn } from '../HeaderBtn';
 
-// import { deleteCookies } from '../../../services/components/layouts/deleteCookies';
 import theme from '../../../resources/styles/theme';
 
 export const HeaderCallToAction = () => {
@@ -17,13 +15,18 @@ export const HeaderCallToAction = () => {
     const isLogin = useSelector((store) => store.layout.isLogin);
 
     const accountElement = (
-        <Avatar style={{ color: theme.colors.text, backgroundColor: theme.colors.primary }} size="large">
+        <Avatar
+            style={{
+                fontSize: '20px',
+                fontWeight: '600',
+            }}
+            size="large"
+        >
             江
         </Avatar>
     );
 
     const goSignUp = () => {
-        console.log('sign up');
         router.push('/OpenAccount');
     };
     const goOrder = () => {
@@ -32,11 +35,6 @@ export const HeaderCallToAction = () => {
     const goLogIn = () => {
         router.push('/SinoTrade_login');
     };
-    // const logOut = () => {
-    //     deleteCookies();
-    //     console.log('logout');
-    //     router.push('/');
-    // };
     const quickViewHandler = () => {
         setIsQuickViewVisible(!isQuickViewVisible);
     };
@@ -60,8 +58,25 @@ export const HeaderCallToAction = () => {
                     position: relative;
                 }
             `}</style>
+            <style jsx global>{`
+                .callToAction__container .ant-avatar-circle,
+                .callToAction__container .ant-avatar-string {
+                    transition: ${theme.button.transition};
+                }
+                .callToAction__container .ant-avatar-circle {
+                    background-color: ${theme.colors.primary};
+                }
+                .callToAction__container .header__btn:hover .ant-avatar-circle,
+                .callToAction__container .header__btn:focus .ant-avatar-circle,
+                .callToAction__container .header__btn:active .ant-avatar-circle {
+                    background-color: #ffffff;
+                }
+                .callToAction__container .header__btn:hover .ant-avatar-string,
+                .callToAction__container .header__btn:focus .ant-avatar-string,
+                .callToAction__container .header__btn:active .ant-avatar-string {
+                    color: ${theme.colors.primary};
+                }
+            `}</style>
         </div>
     );
 };
-
-// HeaderCallToAction.propTypes = {};

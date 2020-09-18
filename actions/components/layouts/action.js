@@ -12,12 +12,12 @@ export const resize = (winWidth, isMobile) => {
     }
 }
 
-export const isLogin = (isLogin) => {
+export const setIsLogin = (isLogin) => {
     return {
         type: actionType.IS_LOGIN,
-        payload: isLogin
-    }
-}
+        payload: isLogin,
+    };
+};
 
 export const showLoginHandler = (bool) => {
     return {
