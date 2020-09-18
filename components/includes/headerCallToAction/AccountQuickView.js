@@ -1,14 +1,25 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
+import { logout } from '../../../services/components/header/logoutFetcher';
+import { setIsLogin } from '../../../actions/components/layouts/action';
 
 import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';
 
 export const AccountQuickView = ({ isVisible }) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const personalNav = useSelector((store) => store.server.navData?.personal);
+
+    const handleLogout = async () => {
+        await logout();
+        dispatch(setIsLogin(false));
+        router.push('/');
+    };
 
     return (
         <div className="quickView__container">
@@ -21,7 +32,7 @@ export const AccountQuickView = ({ isVisible }) => {
                     ))}
                 <AccountDropdown />
             </div>
-            <a href="" className="quickView__logoutBtn">
+            <a className="quickView__logoutBtn" onClick={handleLogout}>
                 <img src={signoutImg} />
                 登出
             </a>
@@ -33,7 +44,6 @@ export const AccountQuickView = ({ isVisible }) => {
                     position: absolute;
                     top: 70px;
                     right: 0;
-                    width: 644px;
 
                     border-top: 6px solid ${theme.colors.secondary};
                     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3);
