@@ -13,7 +13,9 @@ import signoutImg from '../../../resources/images/components/header/ic-signout.p
 export const AccountQuickView = ({ isVisible }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const personalNav = useSelector((store) => store.server.navData?.personal);
+    const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
+    const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
+    const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
 
     const handleLogout = async () => {
         await logout();
