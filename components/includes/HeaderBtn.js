@@ -37,9 +37,11 @@ export const HeaderBtn = ({ content, type, clickHandler }) => {
                     position: absolute;
                     top: 0;
                     left: 0;
-                    transition: all 0.3s ease-out;
+                    transition: ${theme.button.transition};
                 }
-                .header__btn:hover:after {
+                .header__btn:hover:after,
+                .header__btn:focus:after,
+                .header__btn:active:after {
                     height: 100%;
                 }
                 .btn__content {
