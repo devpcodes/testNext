@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, isLogin, showLoginHandler, setAccounts } from '../../actions/components/layouts/action';
+import { resize, setIsLogin, showLoginHandler, setAccounts } from '../../actions/components/layouts/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
@@ -15,19 +15,29 @@ const Layout = React.memo((props) => {
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
+    const isLogin = useSelector((store) => store.layout.isLogin);
+
     useEffect(() => {
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
         if(checkLogin()){
-            dispatch(isLogin(true));
-            const tokenVal = jwt_decode(getCookie('token'));
-            dispatch(setAccounts(tokenVal.acts_detail));
+            dispatch(setIsLogin(true));
         }
         return () => {
             window.removeEventListener('resize', resizeHandler, false);
         };
     }, []);
+
+    useEffect(() => {
+        if (checkLogin()) {
+            const tokenVal = jwt_decode(getCookie('token'));
+            dispatch(setAccounts(tokenVal.acts_detail));
+        } else {
+            dispatch(setAccounts([]));
+        }
+        return () => {};
+    }, [isLogin]);
 
     const pwaHandler = function() {
         if(process.env.NODE_ENV === 'production'){

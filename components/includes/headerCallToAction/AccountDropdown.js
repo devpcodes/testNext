@@ -38,24 +38,6 @@ export const AccountDropdown = () => {
         }
     };
 
-    // const getAccountOptions = (groupedAccount, accType, index) => {
-    //     const accounts = groupedAccount[accType];
-    //     const accText = getAccountText(accType);
-
-    //     return (
-    //         accounts.length && (
-    //             <OptGroup label={accText} key={index}>
-    //                 {accounts.map((account) => (
-    //                     <Option value={String(account)} key={account.datacount.toString()}>
-    //                         <span className="option__accType">{accText} | </span>
-    //                         <span className="option__account">{account.username}</span>
-    //                     </Option>
-    //                 ))}
-    //             </OptGroup>
-    //         )
-    //     );
-    // };
-
     const handleChange = (value) => {
         console.log(`selected ${value}`);
     };
@@ -67,10 +49,9 @@ export const AccountDropdown = () => {
             <Select
                 className="account__select"
                 defaultValue={accounts[0].datacount.toString()}
-                style={{ width: '100%' }}
+                style={{ width: 243 }}
                 onChange={handleChange}
             >
-                {/* {groupedAccountTypes.map((accType, index) => getAccountOptions(groupedAccount, accType, index))} */}
                 {groupedAccountTypes.map((accType, index) => {
                     const accText = getAccountText(accType);
                     const accountsPerGroup = groupedAccount[accType];
@@ -91,7 +72,6 @@ export const AccountDropdown = () => {
             </Select>
             <style jsx>{`
                 .account__container {
-                    width: 100%;
                     position: relative;
                 }
                 .account__container :global(.ant-select-selector) {
