@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import { Avatar } from 'antd';
+import { Avatar, Popover } from 'antd';
 import { AccountQuickView } from './AccountQuickView';
 import { HeaderBtn } from '../HeaderBtn';
 
@@ -10,10 +9,19 @@ import theme from '../../../resources/styles/theme';
 
 export const HeaderCallToAction = () => {
     const router = useRouter();
-    const [isQuickViewVisible, setIsQuickViewVisible] = useState(false);
-
     const isLogin = useSelector((store) => store.layout.isLogin);
 
+    const goSignUp = () => {
+        router.push('/OpenAccount');
+    };
+    const goOrder = () => {
+        router.push('/goOrder');
+    };
+    const goLogIn = () => {
+        router.push('/SinoTrade_login');
+    };
+
+    const loginBtn = <HeaderBtn content={'客戶登入'} type={'primary'} clickHandler={goLogIn} />;
     const accountElement = (
         <Avatar
             style={{
@@ -25,19 +33,18 @@ export const HeaderCallToAction = () => {
             江
         </Avatar>
     );
-
-    const goSignUp = () => {
-        router.push('/OpenAccount');
-    };
-    const goOrder = () => {
-        router.push('/goOrder');
-    };
-    const goLogIn = () => {
-        router.push('/SinoTrade_login');
-    };
-    const quickViewHandler = () => {
-        setIsQuickViewVisible(!isQuickViewVisible);
-    };
+    const accountPopoverContent = (
+        <div>
+            <AccountQuickView />
+        </div>
+    );
+    const accountBtn = (
+        <Popover placement="bottomRight" content={accountPopoverContent} trigger="click">
+            <div>
+                <HeaderBtn content={accountElement} type={'primary'} />
+            </div>
+        </Popover>
+    );
 
     return (
         <div className="callToAction__container">
@@ -46,12 +53,7 @@ export const HeaderCallToAction = () => {
                 type={'secondary'}
                 clickHandler={isLogin ? goOrder : goSignUp}
             />
-            <HeaderBtn
-                content={isLogin ? accountElement : '客戶登入'}
-                type={'primary'}
-                clickHandler={isLogin ? quickViewHandler : goLogIn}
-            />
-            <AccountQuickView isVisible={isQuickViewVisible} />
+            {isLogin ? accountBtn : loginBtn}
             <style jsx>{`
                 .callToAction__container {
                     display: flex;

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -10,7 +9,7 @@ import { setIsLogin } from '../../../actions/components/layouts/action';
 import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';
 
-export const AccountQuickView = ({ isVisible }) => {
+export const AccountQuickView = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
@@ -42,9 +41,8 @@ export const AccountQuickView = ({ isVisible }) => {
                 .quickView__container {
                     margin: 0;
                     padding: 0;
-                    display: ${isVisible ? 'block' : 'none'};
                     position: absolute;
-                    top: 70px;
+                    top: -4px;
                     right: 0;
 
                     border-top: 6px solid ${theme.colors.secondary};
@@ -92,8 +90,4 @@ export const AccountQuickView = ({ isVisible }) => {
             `}</style>
         </div>
     );
-};
-
-AccountQuickView.propTypes = {
-    isVisible: PropTypes.bool.isRequired,
 };
