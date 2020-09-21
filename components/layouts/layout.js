@@ -26,7 +26,7 @@ const Layout = React.memo((props) => {
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector((store) => store.layout.isLogin);
-    const navData = useSelector((store) => store.server.navData);
+    const navData = useSelector((store) => store.layout.navData);
 
     useEffect(() => {
         const updateNavData = () => {
