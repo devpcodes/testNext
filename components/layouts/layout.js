@@ -62,13 +62,13 @@ const Layout = React.memo((props) => {
     const showPageHandler = function(){
         let currentPath = router.pathname.substr(1);
         if(currentPath !== ''){
-            pageVerifiHandler(navData.main, currentPath);
+            pageVerifyHandler(navData.main, currentPath);
         }else{
             setShowPage(true);
         }
     }
 
-    const pageVerifiHandler = function(data, currentPath, getPath) {
+    const pageVerifyHandler = function(data, currentPath, getPath) {
         data.some((obj) => {
             if(obj.url != null) {
                 if(obj.url === currentPath) {
@@ -81,7 +81,7 @@ const Layout = React.memo((props) => {
                     if(getPath){
                         return true;
                     }
-                    pageVerifiHandler(obj.items, currentPath)
+                    pageVerifyHandler(obj.items, currentPath)
                 }
             }
         })
