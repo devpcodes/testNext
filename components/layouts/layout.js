@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
 import jwt_decode from "jwt-decode";
 import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
@@ -18,11 +19,14 @@ import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
 
 const Layout = React.memo((props) => {
+    const router = useRouter();
+    const [showPage, setShowPage] = useState(false);
     const dispatch = useDispatch();
+
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector((store) => store.layout.isLogin);
-    const navData = useSelector((store) => store.layout.navData);
+    const navData = useSelector((store) => store.server.navData);
 
     useEffect(() => {
         const updateNavData = () => {
@@ -50,6 +54,38 @@ const Layout = React.memo((props) => {
         }
         return () => {};
     }, [isLogin]);
+
+    useEffect(() => {
+        showPageHandler();
+    }, [router.pathname]);
+
+    const showPageHandler = function(){
+        let currentPath = router.pathname.substr(1);
+        if(currentPath !== ''){
+            pageVerifiHandler(navData.main, currentPath);
+        }else{
+            setShowPage(true);
+        }
+    }
+
+    const pageVerifiHandler = function(data, currentPath, getPath) {
+        data.some((obj) => {
+            if(obj.url != null) {
+                if(obj.url === currentPath) {
+                    dispatch(showLoginHandler(true));
+                    getPath = true;
+                    return true;
+                }
+            }else{
+                if(obj.items != null){
+                    if(getPath){
+                        return true;
+                    }
+                    pageVerifiHandler(obj.items, currentPath)
+                }
+            }
+        })
+    }
 
     const pwaHandler = function() {
         if(process.env.NODE_ENV === 'production'){
@@ -81,7 +117,8 @@ const Layout = React.memo((props) => {
     }
 
     const loginSuccessHandler = function(){
-        
+        dispatch(showLoginHandler(false));
+        setShowPage(true);
     }
     return (
         <>
@@ -101,7 +138,7 @@ const Layout = React.memo((props) => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler}/>
             </MyTransition>
             <Header showLoginClick={showLoginClick}/>
-                {props.children}
+                {showPage && props.children}
             <Footer/>
         </>
     )
