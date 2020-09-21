@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/components/header/logoutFetcher';
-import { setIsLogin } from '../../../actions/components/layouts/action';
+import { setIsLogin } from '../../../actions/user/action';
 
 import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';

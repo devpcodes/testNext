@@ -9,7 +9,7 @@ import theme from '../../../resources/styles/theme';
 
 export const HeaderCallToAction = () => {
     const router = useRouter();
-    const isLogin = useSelector((store) => store.layout.isLogin);
+    const isLogin = useSelector((store) => store.user.isLogin);
 
     const goSignUp = () => {
         router.push('/OpenAccount');

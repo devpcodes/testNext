@@ -5,13 +5,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import {
-    resize,
-    setIsLogin,
-    showLoginHandler,
-    setAccounts,
-    setNavItems,
-} from '../../actions/components/layouts/action';
+import { resize, showLoginHandler, setNavItems } from '../../actions/components/layouts/action';
+import { setIsLogin, setAccounts } from '../../actions/user/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
@@ -25,7 +20,7 @@ const Layout = React.memo((props) => {
 
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
-    const isLogin = useSelector((store) => store.layout.isLogin);
+    const isLogin = useSelector((store) => store.user.isLogin);
     const navData = useSelector((store) => store.layout.navData);
 
     useEffect(() => {

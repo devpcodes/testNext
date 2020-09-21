@@ -5,7 +5,7 @@ import theme from '../../../resources/styles/theme';
 
 export const AccountDropdown = () => {
     const { Option, OptGroup } = Select;
-    const accounts = useSelector((store) => store.layout.accounts);
+    const accounts = useSelector((store) => store.user.accounts);
 
     const accountGroupBy = (objectArray, property) => {
         return objectArray.reduce(
