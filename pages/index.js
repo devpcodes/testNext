@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../actions/components/layouts/action';
 
-export const getServerSideProps = wrapper.getServerSideProps(async ({ store }) => {
+export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 

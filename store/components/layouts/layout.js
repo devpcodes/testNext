@@ -6,6 +6,7 @@ const initialState = {
     isLogin: false,
     showLogin: false,
     accounts: [],
+    navData: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -31,9 +32,14 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 accounts: action.payload,
             };
+        case actionType.SET_CLIENT_NAV_ITEMS:
+            return {
+                ...state,
+                navData: action.payload,
+            };
         default:
             return state;
     }
-}
+};
 
 export default reducer;

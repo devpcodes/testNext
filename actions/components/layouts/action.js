@@ -33,12 +33,27 @@ export const setAccounts = (accounts) => {
     }
 }
 
-export const setNavItems = () => async (dispatch) => {
-    const res = await getNav();
+export const setNavItems = (token) => async (dispatch) => {
+    const isServer = typeof window === 'undefined';
+    const res = await getNav(token);
     const navData = res.result;
 
-    return dispatch({
-        type: actionType.SET_NAV_ITEMS,
-        payload: navData,
-    });
+    const setServerNavItems = (navData) => {
+        return {
+            type: actionType.SET_SERVER_NAV_ITEMS,
+            payload: navData,
+        };
+    };
+    const setClientNavItems = (navData) => {
+        return {
+            type: actionType.SET_CLIENT_NAV_ITEMS,
+            payload: navData,
+        };
+    };
+
+    if (isServer) {
+        return dispatch(setServerNavItems(navData));
+    } else {
+        return dispatch(setClientNavItems(navData));
+    }
 };
