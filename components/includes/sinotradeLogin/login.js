@@ -207,6 +207,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 .login__container {
                     position: relative;
                     display: ${popup ? 'block' : isPC ? 'inline-block' : 'block'};
+                    z-index: 99;
                 }
                 .close {
                     width: 52px;
