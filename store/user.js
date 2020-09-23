@@ -3,6 +3,7 @@ import * as actionType from '../actions/user/actionType';
 const initialState = {
     isLogin: false,
     accounts: [],
+    userSettings: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 accounts: action.payload,
+            };
+        case actionType.SET_USER_SETTINGS:
+            return {
+                ...state,
+                userSettings: action.payload,
             };
         default:
             return state;
