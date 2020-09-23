@@ -31,7 +31,8 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
         notification.success({
             placement: 'topRight',
             message: '登入成功',
-            duration: 3
+            duration: 3,
+            top: 70
         });
         setTimeout(() => {
             successHandler();

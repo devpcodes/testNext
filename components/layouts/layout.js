@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { notification } from 'antd';
 import { useRouter } from 'next/router'
 import jwt_decode from "jwt-decode";
 import {useSelector, useDispatch} from 'react-redux';
@@ -15,19 +16,23 @@ import { getCookie } from '../../services/components/layouts/cookieController';
 
 const Layout = React.memo((props) => {
     const router = useRouter();
-    const [showPage, setShowPage] = useState(false);
-    const dispatch = useDispatch();
+    const [verifySuccess, setVerifySuccess] = useState(false);
 
+    const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector((store) => store.user.isLogin);
     const navData = useSelector((store) => store.layout.navData);
 
+    const getMenuPath = useRef(false);
+    const needLogin = useRef(false);
+    const prevPathname = useRef(false);
+    const isAuthenticated = useRef(true);
+
     useEffect(() => {
         const updateNavData = () => {
             !Object.keys(navData).length && dispatch(setNavItems(getCookie('token')));
         };
-
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
@@ -51,30 +56,42 @@ const Layout = React.memo((props) => {
     }, [isLogin]);
 
     useEffect(() => {
-        showPageHandler();
-    }, [router.pathname]);
+        if(router.pathname.indexOf('errPage') >= 0 || router.pathname === '/'){
+            setVerifySuccess(true);
+        }else{
+            showPageHandler();
+        }
+    }, [router.pathname, navData]);
 
+    //驗證有沒有瀏覽頁面的權限
     const showPageHandler = function(){
         let currentPath = router.pathname.substr(1);
         if(currentPath !== ''){
-            pageVerifyHandler(navData.main, currentPath);
-        }else{
-            setShowPage(true);
+            if(navData.main != null){
+                pageVerifyHandler(navData.main, currentPath);
+                menuUrlHandler();
+            }
         }
     }
 
+    //查詢當前網址是不是menu裡的url
     const pageVerifyHandler = function(data, currentPath, getPath) {
+        if(data == null){
+            return;
+        }
         data.some((obj) => {
             if(obj.url != null) {
                 if(obj.url === currentPath) {
-                    dispatch(showLoginHandler(true));
-                    getPath = true;
+                    getMenuPath.current = true;
+                    isAuthenticated.current = obj.isAuthenticated;
+                    needLogin.current = obj.needLogin;
+                    getPath = true;//跳出回圈用的
                     return true;
                 }
             }else{
                 if(obj.items != null){
                     if(getPath){
-                        return true;
+                        return true;//跳出回圈用的
                     }
                     pageVerifyHandler(obj.items, currentPath)
                 }
@@ -82,6 +99,48 @@ const Layout = React.memo((props) => {
         })
     }
 
+    //for loop menu選單路徑完成時的處理
+    const menuUrlHandler = function() {
+        if(getMenuPath.current){
+            loginPageHandler(isLogin, needLogin.current)
+        }else{
+            setVerifySuccess(true);
+        }
+    }
+
+    /**
+     * 是否需要登入
+     * @param {bool} isLogin 是否已登入
+     * @param {bool} needLogin 是否需登入
+     */
+    const loginPageHandler = function(isLogin, needLogin) {
+        if(!isLogin && needLogin){
+            noPermissionPage();
+        }else{
+            authPageHandler();
+        }
+    }
+
+    //是否有權限
+    const authPageHandler = function(){
+        if(isAuthenticated.current){
+            setVerifySuccess(true); 
+        }else{
+            noPermissionPage();
+        }
+    }
+
+    //無權限頁面處理
+    const noPermissionPage = function(){
+        prevPathname.current = router.pathname;
+        router.push('errPage');
+        setVerifySuccess(false);
+        setTimeout(() => {
+            dispatch(showLoginHandler(true));
+        }, 500);
+    }
+
+    //pwa註冊
     const pwaHandler = function() {
         if(process.env.NODE_ENV === 'production'){
             if ('serviceWorker' in navigator) {
@@ -94,6 +153,7 @@ const Layout = React.memo((props) => {
         }
     }
 
+    // WINDOW寬度改變處理
     const resizeHandler = function() {
         let winWidth = document.body.clientWidth;
         if(checkMobile(winWidth)){
@@ -103,18 +163,27 @@ const Layout = React.memo((props) => {
         }
     }
 
-    const showLoginClick = function() {
-        dispatch(showLoginHandler(true));
-    }
-
+    // 關閉login popup
     const closeHandler = function(){
         dispatch(showLoginHandler(false));
     }
 
+    // 跳出的登入popup，登入成功後的處理
     const loginSuccessHandler = function(){
+        dispatch(setNavItems(getCookie('token')));
         dispatch(showLoginHandler(false));
-        setShowPage(true);
+        dispatch(setIsLogin(true));
+        setTimeout(() => {
+            notification.success({
+                placement: 'topRight',
+                message: '登入成功',
+                duration: 3,
+                top: 70
+            });
+            router.push(prevPathname.current)
+        }, 500);
     }
+
     return (
         <>
             <Head>
@@ -132,9 +201,16 @@ const Layout = React.memo((props) => {
             >
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler}/>
             </MyTransition>
-            <Header showLoginClick={showLoginClick}/>
-                {showPage && props.children}
+            <Header/>
+                <div className="page__container">
+                    { verifySuccess === true && props.children }
+                </div>
             <Footer/>
+            <style jsx>{`
+                .page__container{
+                    min-height: 500px;
+                }
+            `}</style>
         </>
     )
 })
