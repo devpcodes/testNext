@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { notification } from 'antd';
 import { useRouter } from 'next/router'
 import jwt_decode from "jwt-decode";
@@ -164,12 +164,12 @@ const Layout = React.memo((props) => {
     }
 
     // 關閉login popup
-    const closeHandler = function(){
+    const closeHandler = useCallback(() => {
         dispatch(showLoginHandler(false));
-    }
+    }, [])
 
     // 跳出的登入popup，登入成功後的處理
-    const loginSuccessHandler = function(){
+    const loginSuccessHandler = useCallback(() => {
         dispatch(setNavItems(getCookie('token')));
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
@@ -182,7 +182,7 @@ const Layout = React.memo((props) => {
             });
             router.push(prevPathname.current)
         }, 500);
-    }
+    }, [])
 
     return (
         <>
