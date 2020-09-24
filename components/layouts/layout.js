@@ -133,7 +133,7 @@ const Layout = React.memo((props) => {
     //無權限頁面處理
     const noPermissionPage = function(){
         prevPathname.current = router.pathname;
-        router.push('errPage');
+        router.push('/errPage', `${process.env.NEXT_PUBLIC_SUBPATH}errPage`);
         setVerifySuccess(false);
         setTimeout(() => {
             dispatch(showLoginHandler(true));
@@ -180,7 +180,7 @@ const Layout = React.memo((props) => {
                 duration: 3,
                 top: 70
             });
-            router.push(prevPathname.current)
+            router.push(prevPathname.current, `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`)
         }, 500);
     }, [])
 
