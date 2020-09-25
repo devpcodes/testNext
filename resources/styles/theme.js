@@ -12,6 +12,9 @@ const theme = {
     button: {
         transition: 'all 0.3s ease-out',
     },
+    contentWidth: {
+        pc: '80%',
+    },
 };
 
 export default theme;

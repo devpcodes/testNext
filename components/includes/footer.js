@@ -86,7 +86,7 @@ const footerData = [
         ]
     }
 ]
-const contentWidth = '80%';
+
 const Footer = React.memo((props) => {
     return ( 
         <div className="footer">
@@ -198,7 +198,7 @@ const Footer = React.memo((props) => {
 				.footer__up {
                     background-color: #172439;
                     margin: 0 auto;
-                    width: ${contentWidth};
+                    width: ${theme.contentWidth.pc};
                     height: 7rem;
                     /* position: relative; */
 
@@ -305,7 +305,7 @@ const Footer = React.memo((props) => {
                     font-size: 0;
                 }
                 .footer__middle .middle__box {
-                    width: ${contentWidth};
+                    width: ${theme.contentWidth.pc};
                     margin: 0 auto;
                     padding: 4.5rem 1.5rem 4.5rem 1.5rem;
                     position: relative;
@@ -396,7 +396,7 @@ const Footer = React.memo((props) => {
                     background: #0d1623;
                 }
                 .down__box {
-                    width: ${contentWidth};
+                    width: ${theme.contentWidth.pc};
                     margin: 0 auto;
                     position: relative;
                     padding: 2.5rem 0;
