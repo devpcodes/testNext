@@ -1,4 +1,10 @@
 import { Statistic, Row, Col, Button } from 'antd';
+import { wrapper } from '../store/store';
+import { setNavItems } from '../actions/components/layouts/action';
+
+export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
+    await store.dispatch(setNavItems());
+});
 
 const OpenAccount = () => {
     return (

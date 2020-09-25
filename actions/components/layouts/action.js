@@ -20,26 +20,30 @@ export const showLoginHandler = (bool) => {
 }
 
 export const setNavItems = (token) => async (dispatch) => {
-    const isServer = typeof window === 'undefined';
-    const res = await getNav(token);
-    const navData = res.result;
+    try {
+        const isServer = typeof window === 'undefined';
+        const res = await getNav(token);
+        const navData = res.result;
 
-    const setServerNavItems = (navData) => {
-        return {
-            type: actionType.SET_SERVER_NAV_ITEMS,
-            payload: navData,
+        const setServerNavItems = (navData) => {
+            return {
+                type: actionType.SET_SERVER_NAV_ITEMS,
+                payload: navData,
+            };
         };
-    };
-    const setClientNavItems = (navData) => {
-        return {
-            type: actionType.SET_CLIENT_NAV_ITEMS,
-            payload: navData,
+        const setClientNavItems = (navData) => {
+            return {
+                type: actionType.SET_CLIENT_NAV_ITEMS,
+                payload: navData,
+            };
         };
-    };
 
-    if (isServer) {
-        return dispatch(setServerNavItems(navData));
-    } else {
-        return dispatch(setClientNavItems(navData));
+        if (isServer) {
+            return dispatch(setServerNavItems(navData));
+        } else {
+            return dispatch(setClientNavItems(navData));
+        }
+    } catch (error) {
+        console.error(`error:`, error);
     }
 };

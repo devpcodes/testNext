@@ -7,7 +7,7 @@ import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
 import { resize, showLoginHandler, setNavItems } from '../../actions/components/layouts/action';
-import { setIsLogin, setAccounts } from '../../actions/user/action';
+import { setIsLogin, setAccounts, setUserSettings, getUserSettings } from '../../actions/user/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
@@ -46,13 +46,19 @@ const Layout = React.memo((props) => {
     }, []);
 
     useEffect(() => {
+        const updateUserSettings = () => {
+            const userId = getCookie('user_id');
+            userId && dispatch(getUserSettings(userId));
+        }
+
         if (checkLogin()) {
             const tokenVal = jwt_decode(getCookie('token'));
             dispatch(setAccounts(tokenVal.acts_detail));
+            updateUserSettings();
         } else {
             dispatch(setAccounts([]));
+            dispatch(setUserSettings({}));
         }
-        return () => {};
     }, [isLogin]);
 
     useEffect(() => {
@@ -215,5 +221,4 @@ const Layout = React.memo((props) => {
     )
 })
 
-// export default connect(mapStateToProps, { resize, isLogin, showLoginHandler })(Layout);
 export default Layout;

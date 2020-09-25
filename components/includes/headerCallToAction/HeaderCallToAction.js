@@ -10,6 +10,7 @@ import theme from '../../../resources/styles/theme';
 export const HeaderCallToAction = () => {
     const router = useRouter();
     const isLogin = useSelector((store) => store.user.isLogin);
+    const isMobile = useSelector((store) => store.layout.isMobile);
 
     const goSignUp = () => {
         router.push('/OpenAccount');
@@ -21,14 +22,14 @@ export const HeaderCallToAction = () => {
         router.push('/SinoTrade_login');
     };
 
-    const loginBtn = <HeaderBtn content={'客戶登入'} type={'primary'} clickHandler={goLogIn} />;
+    const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
     const accountElement = (
         <Avatar
             style={{
-                fontSize: '20px',
+                fontSize: `${isMobile ? '15px' : '20px'}`,
                 fontWeight: '600',
             }}
-            size="large"
+            size={isMobile ? 28 : 40}
         >
             江
         </Avatar>
@@ -48,11 +49,13 @@ export const HeaderCallToAction = () => {
 
     return (
         <div className="callToAction__container">
-            <HeaderBtn
-                content={isLogin ? '快速下單' : '快速開戶'}
-                type={'secondary'}
-                clickHandler={isLogin ? goOrder : goSignUp}
-            />
+            {isMobile ? null : (
+                <HeaderBtn
+                    content={isLogin ? '快速下單' : '快速開戶'}
+                    type={'secondary'}
+                    clickHandler={isLogin ? goOrder : goSignUp}
+                />
+            )}
             {isLogin ? accountBtn : loginBtn}
             <style jsx>{`
                 .callToAction__container {

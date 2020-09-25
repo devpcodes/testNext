@@ -12,6 +12,7 @@ const Chart = dynamic(() => import('../components/includes/chart'), { ssr: false
 
 const Home = function () {
     const winWidth = useSelector((store) => store.layout.winWidth);
+    const isMobile = useSelector((store) => store.layout.isMobile);
 
     return (
         <div>
@@ -23,7 +24,7 @@ const Home = function () {
                 <h1>winWidth: {winWidth}</h1>
                 {/* <Chart /> */}
                 <h2>
-                    環境: {process.env.NODE_ENV} 路徑：{process.env.NEXT_PUBLIC_SUBPATH}
+                    環境: {process.env.NODE_ENV}; 路徑：{process.env.NEXT_PUBLIC_SUBPATH}; {isMobile ? 'mobile' : 'PC'}
                 </h2>
             </div>
             <style jsx>{`
