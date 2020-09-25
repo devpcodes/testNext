@@ -11,23 +11,23 @@ const footerData = [
         children: [
             {
                 title: '關於永豐金',
-                link: ''
+                link: 'https://securities.sinopac.com/'
             },
             {
                 title: '投資人訊息',
-                link: ''
+                link: 'https://securities.sinopac.com/currentOperation/20170706160641375000000000000202.html'
             },
             {
                 title: '金融友善服務準則',
-                link: ''
+                link: 'https://www.sinotrade.com.tw/ec/Friendly-service/creterion.html'
             },
             {
                 title: '服務據點',
-                link: ''
+                link: 'https://www.sinotrade.com.tw/newweb/Service_Positions'
             },
             {
                 title: '人力招募',
-                link: ''
+                link: 'http://www.sinopac.com/footer/20170522162509790000000000000025.html'
             }
         ]
     },
@@ -61,27 +61,27 @@ const footerData = [
         children: [
             {
                 title: '永豐金控',
-                link: ''
+                link: 'http://www.sinopac.com/'
             },
             {
                 title: '永豐金證券(亞洲)',
-                link: ''
+                link: 'http://www.sinopacasia.com/'
             },
             {
                 title: '永豐期貨',
-                link: ''
+                link: 'http://www.spf.com.tw/'
             },
             {
                 title: '永豐投信',
-                link: ''
+                link: 'http://sitc.sinopac.com/'
             },
             {
                 title: '永豐MMA交易網',
-                link: ''
+                link: 'https://mma.sinopac.com/MemberPortal/Member/NextWebLogin.aspx'
             },
             {
                 title: '永豐信用卡服務網',
-                link: ''
+                link: 'https://card.sinopac.com/'
             }
         ]
     }
@@ -113,7 +113,7 @@ const Footer = React.memo((props) => {
                         <div className="middle--card" key={index}>
                             <h3>{item.title}</h3>
                             {item.children != null ? item.children.map((link, index2) => (
-                                <p key={index2}><a>{link.title}</a></p>
+                                <p key={index2}><a target="_blank" href={link.link}>{link.title}</a></p>
                             )): null}
                         </div>
                     ))}

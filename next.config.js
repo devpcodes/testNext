@@ -1,11 +1,12 @@
-const withImages = require('next-images');
+// const withImages = require('next-images');
+const withOptimizedImages = require('next-optimized-images');
 const NextWorkboxPlugin = require ('next-workbox-webpack-plugin');
 const cache = require('./resources/serviceWorker/cache');
 
 const isProd = process.env.NODE_ENV === 'production';
-module.exports = withImages({
+module.exports = withOptimizedImages({
     assetPrefix: isProd ? 'http://127.0.0.1:3888' : '',
-    inlineImageLimit: isProd ? 16384 : 0,
+    // inlineImageLimit: isProd ? 16384 : 0,
     webpack: (config, { isServer, buildId, dev }) => {
         const workboxOptions = {
             clientsClaim: true,
