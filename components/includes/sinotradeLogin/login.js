@@ -84,7 +84,9 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 if(res.data.success){
                     if(form.getFieldValue('remember')){
                         localStorage.setItem('userID', form.getFieldValue('account'));
-                    } 
+                    }else{
+                        localStorage.removeItem('userID');
+                    }
                     successHandler();
                 }
             } catch (error) {
@@ -235,8 +237,8 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     transform: scale(0.9, 0.9) translateZ(0);
                 }
                 .login__box {
-                    position: ${popup ? 'absolute' : 'static'};
-                    width: ${isPC ? '512px' : '100%'};
+                    position: ${popup ? 'fixed' : 'static'};
+                    width: ${isPC ? '512px' : '101%'};
                     height: ${isPC ? '548px' : '100vh'};
                     z-index: 3;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
@@ -332,6 +334,8 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 .remember__box {
                     text-align: left;
                 }
+
+
             `}</style>
             <style global jsx>{`
                 .login__container .ant-btn-primary {
@@ -346,6 +350,19 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 }
                 .ant-modal-confirm-body .ant-modal-confirm-content {
                     font-size: 1.6rem;
+                }
+
+                /* Change Autocomplete styles in Chrome*/
+                input:-webkit-autofill,
+                input:-webkit-autofill:hover, 
+                input:-webkit-autofill:focus,
+                textarea:-webkit-autofill,
+                textarea:-webkit-autofill:hover,
+                textarea:-webkit-autofill:focus,
+                select:-webkit-autofill,
+                select:-webkit-autofill:hover,
+                select:-webkit-autofill:focus {
+                    transition: background-color 5000s ease-in-out 0s;
                 }
             `}</style>
         </div>
