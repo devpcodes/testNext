@@ -1,8 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CSSTransition } from "react-transition-group";
 import { useSelector } from 'react-redux';
 const MyTransition = ({ isVisible, children, classNames }) => {
-    const isMobile = useSelector(store => store.layout.isMobile);
+    // const isMobile = useSelector(store => store.layout.isMobile);
+    const [isMobile, setIsMobile] = useState(true);
+    useEffect(() => {
+        let winWidth = document.body.clientWidth;
+        if(winWidth <= 768){
+            setIsMobile(true);
+        }else{
+            setIsMobile(false);
+        }
+    }, []);
     return (
         <>
             <CSSTransition
