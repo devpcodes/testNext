@@ -20,3 +20,16 @@ a {
 	box-sizing: border-box;
 	font-family: Arial, "儷黑 Pro", "LiHei Pro", "微軟正黑體", "Microsoft JhengHei", sans-serif;
 }
+
+/* Overwrite the default to keep the scrollbar always visible */
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
