@@ -32,3 +32,10 @@ export const getUserSettings = (userId) => async (dispatch) => {
         console.error(`error:`, error);
     }
 };
+
+export const setCurrentAccount = (account) => {
+    return {
+        type: actionType.SET_CURRENT_ACCOUNT,
+        payload: account,
+    };
+};
