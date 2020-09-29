@@ -29,7 +29,7 @@ export const AccountDropdown = () => {
     };
 
     const handleChange = (value) => {
-        const selectedAccount = accounts.filter((account) => `${account.broker_id}-${account.account}` === value);
+        const selectedAccount = accounts.find((account) => `${account.broker_id}-${account.account}` === value);
         console.log(`selectedAccount: ${selectedAccount}`);
         dispatch(setCurrentAccount(selectedAccount));
     };

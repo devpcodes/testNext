@@ -70,10 +70,10 @@ const Layout = React.memo((props) => {
         const getDefaultAccount = (accounts) => {
             const groupedAccount = accountGroupByType(accounts);
             if (groupedAccount.S.length) {
-                const defaultStockAccountList = groupedAccount.S.filter(
+                const defaultStockAccount = groupedAccount.S.find(
                     (account) => `${account.broker_id}-${account.account}` === userSettings.defaultStockAccount
                 );
-                return defaultStockAccountList[0] || groupedAccount.S[0];
+                return defaultStockAccount || groupedAccount.S[0];
             } else if (groupedAccount.H.length) {
                 return groupedAccount.H[0];
             } else if (groupedAccount.F.length) {
