@@ -4,6 +4,7 @@ const initialState = {
     isLogin: false,
     accounts: [],
     userSettings: {},
+    currentAccount: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 userSettings: action.payload,
+            };
+        case actionType.SET_CURRENT_ACCOUNT:
+            return {
+                ...state,
+                currentAccount: action.payload,
             };
         default:
             return state;

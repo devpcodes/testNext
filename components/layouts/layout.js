@@ -7,12 +7,14 @@ import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
 import { resize, showLoginHandler, setNavItems } from '../../actions/components/layouts/action';
-import { setIsLogin, setAccounts, setUserSettings, getUserSettings } from '../../actions/user/action';
+import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../actions/user/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
 import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
+import { accountGroupByType } from '../../services/components/layouts/accountGroupByType';
+
 
 const Layout = React.memo((props) => {
     const router = useRouter();
@@ -23,6 +25,8 @@ const Layout = React.memo((props) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector((store) => store.user.isLogin);
     const navData = useSelector((store) => store.layout.navData);
+    const userSettings = useSelector((store) => store.user.userSettings);
+    const accounts = useSelector((store) => store.user.accounts);
 
     const getMenuPath = useRef(false);
     const needLogin = useRef(false);
@@ -51,7 +55,8 @@ const Layout = React.memo((props) => {
             userId && dispatch(getUserSettings(userId));
         }
 
-        if (checkLogin()) {
+        if (isLogin) {
+            console.log('=========================', isLogin);
             const tokenVal = jwt_decode(getCookie('token'));
             dispatch(setAccounts(tokenVal.acts_detail));
             updateUserSettings();
@@ -60,6 +65,27 @@ const Layout = React.memo((props) => {
             dispatch(setUserSettings({}));
         }
     }, [isLogin]);
+
+    useEffect(() => {
+        const getDefaultAccount = (accounts) => {
+            const groupedAccount = accountGroupByType(accounts);
+            if (groupedAccount.S.length) {
+                const defaultStockAccountList = groupedAccount.S.filter(
+                    (account) => `${account.broker_id}-${account.account}` === userSettings.defaultStockAccount
+                );
+                return defaultStockAccountList[0] || groupedAccount.S[0];
+            } else if (groupedAccount.H.length) {
+                return groupedAccount.H[0];
+            } else if (groupedAccount.F.length) {
+                return groupedAccount.F[0];
+            } else {
+                return accounts[0];
+            }
+        };
+        const defaultAccount = getDefaultAccount(accounts) || {};
+        dispatch(setCurrentAccount(defaultAccount));
+        console.log(`defaultAccount:`, defaultAccount);
+    }, [userSettings]);
 
     useEffect(() => {
         if(router.pathname.indexOf('errPage') >= 0 || router.pathname === '/'){

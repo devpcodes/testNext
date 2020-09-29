@@ -25,12 +25,14 @@ export const AccountQuickView = () => {
     return (
         <div className="quickView__container">
             <div className="quickView__content">
-                {personalNav &&
-                    personalNav.map((data, index) => (
-                        <div className="myNav__list" key={index}>
-                            <NavList lv2Data={data} />
-                        </div>
-                    ))}
+                <div className="myNav__container">
+                    {personalNav &&
+                        personalNav.map((data, index) => (
+                            <div className="myNav__list" key={index}>
+                                <NavList lv2Data={data} />
+                            </div>
+                        ))}
+                </div>
                 <AccountDropdown />
             </div>
             <a className="quickView__logoutBtn" onClick={handleLogout}>
@@ -66,6 +68,9 @@ export const AccountQuickView = () => {
                     display: flex;
                     padding: 18px 36px;
                 }
+                .myNav__container {
+                    display: flex;
+                }
                 .myNav__list {
                     margin-right: 37px;
                 }
@@ -86,6 +91,31 @@ export const AccountQuickView = () => {
                 }
                 .quickView__logoutBtn img {
                     margin-right: 5px;
+                }
+                @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .quickView__container {
+                        position: fixed;
+                        width: calc((10 / 12) * 100vw);
+                        height: 100vh;
+                        top: 0px;
+                        border-top: none;
+                        background: ${theme.colors.darkBg};
+                    }
+                    .quickView__content {
+                        flex-wrap: wrap-reverse;
+                    }
+                    .myNav__container {
+                        flex-direction: column;
+                    }
+                    .myNav__list {
+                        margin-right: 0;
+                        width: 100%;
+                    }
+                    .quickView__logoutBtn {
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                    }
                 }
             `}</style>
         </div>

@@ -15,6 +15,7 @@ const theme = {
     contentWidth: {
         pc: '80%',
     },
+    mobileBreakPoint: 768,
 };
 
 export default theme;
