@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -6,6 +7,9 @@ import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/components/header/logoutFetcher';
 import { setIsLogin } from '../../../actions/user/action';
 import { StockQuickView } from './stockQuickView/StockQuickView';
+import { getCookie } from '../../../services/components/layouts/cookieController';
+import { getStockUnRealPrtlos } from '../../../actions/stock/action';
+import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
 
 import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';
@@ -13,9 +17,23 @@ import signoutImg from '../../../resources/images/components/header/ic-signout.p
 export const AccountQuickView = () => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const currentAccount = useSelector((store) => store.user.currentAccount);
+    const unRealPrtlos = useSelector((store) => store.stock.UnRealPrtlos);
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
     const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
+
+    useEffect(() => {
+        const action = "";
+        const bhno = currentAccount.broker_id;
+        const cseq = currentAccount.account;
+        const ctype = 'A';// 全部
+        const sip = getCookie('client_ip');
+        const stock = " ";
+        const token = getCookie('token');
+        const ttype = 'A';
+        dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(action, bhno, cseq, ctype, sip, stock, ttype, token)));
+    }, []);
 
     const handleLogout = async () => {
         await logout();
@@ -23,18 +41,23 @@ export const AccountQuickView = () => {
         router.push('/');
     };
 
+    // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="quickView__container">
             <div className="quickView__content">
-                {personalNav &&
-                    personalNav.map((data, index) => (
-                        <div className="myNav__list" key={index}>
-                            <NavList lv2Data={data} />
-                        </div>
-                    ))}
+                <div className="myNav__container">
+                    {personalNav &&
+                        personalNav.map((data, index) => (
+                            <div className="myNav__list" key={index}>
+                                <NavList lv2Data={data} />
+                            </div>
+                        ))}
+                </div>
                 <div>
                     <AccountDropdown />
-                    <StockQuickView/>
+                    <StockQuickView 
+                        unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1].unreal}
+                    />
                 </div>
             </div>
             <a className="quickView__logoutBtn" onClick={handleLogout}>
@@ -70,6 +93,9 @@ export const AccountQuickView = () => {
                     display: flex;
                     padding: 18px 36px;
                 }
+                .myNav__container {
+                    display: flex;
+                }
                 .myNav__list {
                     margin-right: 37px;
                 }
@@ -90,6 +116,31 @@ export const AccountQuickView = () => {
                 }
                 .quickView__logoutBtn img {
                     margin-right: 5px;
+                }
+                @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .quickView__container {
+                        position: fixed;
+                        width: calc((10 / 12) * 100vw);
+                        height: 100vh;
+                        top: 0px;
+                        border-top: none;
+                        background: ${theme.colors.darkBg};
+                    }
+                    .quickView__content {
+                        flex-wrap: wrap-reverse;
+                    }
+                    .myNav__container {
+                        flex-direction: column;
+                    }
+                    .myNav__list {
+                        margin-right: 0;
+                        width: 100%;
+                    }
+                    .quickView__logoutBtn {
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                    }
                 }
             `}</style>
         </div>

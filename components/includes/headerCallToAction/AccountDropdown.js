@@ -1,28 +1,18 @@
 import { Select } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { accountGroupByType } from '../../../services/components/layouts/accountGroupByType';
+import { setCurrentAccount } from '../../../actions/user/action';
 
 import theme from '../../../resources/styles/theme';
 
 export const AccountDropdown = () => {
     const { Option, OptGroup } = Select;
+    const dispatch = useDispatch();
     const accounts = useSelector((store) => store.user.accounts);
+    const currentAccount = useSelector((store) => store.user.currentAccount);
 
-    const accountGroupBy = (objectArray, property) => {
-        return objectArray.reduce(
-            function (acc, obj) {
-                let key = obj[property];
-                if (!acc[key]) {
-                    acc[key] = [];
-                }
-                acc[key].push(obj);
-                return acc;
-            },
-            { S: [], H: [], F: [] }
-        );
-    };
-
-    const groupedAccount = accountGroupBy(accounts, 'accttype');
-
+    const groupedAccount = accountGroupByType(accounts);
     const groupedAccountTypes = Object.keys(groupedAccount);
 
     const getAccountText = (accType) => {
@@ -34,12 +24,14 @@ export const AccountDropdown = () => {
             case 'F':
                 return '期權';
             default:
-                return '';
+                return '其他';
         }
     };
 
     const handleChange = (value) => {
-        console.log(`selected ${value}`);
+        const selectedAccount = accounts.filter((account) => `${account.broker_id}-${account.account}` === value);
+        console.log(`selectedAccount: ${selectedAccount}`);
+        dispatch(setCurrentAccount(selectedAccount));
     };
 
     if (!accounts.length || (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object)) return null;
@@ -48,7 +40,7 @@ export const AccountDropdown = () => {
         <div className="account__container">
             <Select
                 className="account__select"
-                defaultValue={accounts[0].datacount.toString()}
+                defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
                 style={{ width: 243 }}
                 onChange={handleChange}
             >
@@ -58,11 +50,15 @@ export const AccountDropdown = () => {
 
                     return (
                         accountsPerGroup.length && (
-                            <OptGroup label={accText} key={index}>
+                            <OptGroup label={<span className="optGroup__accType">{accText}</span>} key={index}>
                                 {accountsPerGroup.map((account) => (
-                                    <Option value={account.datacount.toString()} key={account.datacount.toString()}>
+                                    <Option
+                                        value={`${account.broker_id}-${account.account}`}
+                                        key={`${account.broker_id}-${account.account}`}
+                                    >
                                         <span className="option__accType">{accText} | </span>
-                                        <span className="option__account">{account.username}</span>
+                                        <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                        <span className="option__username">經紀部 {account.username}</span>
                                     </Option>
                                 ))}
                             </OptGroup>
@@ -95,6 +91,18 @@ export const AccountDropdown = () => {
                 .option__accType {
                     color: ${theme.colors.secondary};
                 }
+                .option__account {
+                    display: none;
+                }
+                .optGroup__accType,
+                .option__accType,
+                .option__account,
+                .option__username {
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+                @media (max-width: ${theme.mobileBreakPoint}px) {
+                }
             `}</style>
             <style jsx global>{`
                 .account__container .account__select:after {
@@ -115,6 +123,20 @@ export const AccountDropdown = () => {
                     border-bottom: 1px solid #e6ebf5;
                     box-shadow: none;
                 }
+                .ant-select-item-option-content .option__accType {
+                    display: none;
+                }
+                .ant-select-item-option-content .option__account {
+                    display: block;
+                }
+                .ant-select-item.ant-select-item-group .optGroup__accType {
+                    color: ${theme.colors.secondary};
+                }
+                .ant-select-item.ant-select-item-group,
+                .ant-select-item.ant-select-item-option.ant-select-item-option-grouped {
+                    padding-left: 20px;
+                }
+                ant-select-dropdown ant-select-dropdown-placement-bottomLeft  slide-up-leave slide-up-leave-active slide-up ant-select-dropdown-hidden
             `}</style>
         </div>
     );

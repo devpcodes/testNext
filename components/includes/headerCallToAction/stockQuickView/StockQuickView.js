@@ -1,9 +1,11 @@
-export const StockQuickView = () => {
+import { QuickViewTable } from './QuickViewTable';
+
+export const StockQuickView = ({unreal}) => {
     return (
         <>
             <div className="StockQuickView__container">
                 <p>國內證券未實現損益</p>
-                <p className="unrealized">-55213</p>
+                <p className="unrealized">{unreal}</p>
                 <div className="settlementMoney__box">
                     <p>當日交割款</p>
                     <div className="currency__box">
@@ -20,6 +22,7 @@ export const StockQuickView = () => {
                             <p className="amount">-117</p>
                         </div>
                     </div>
+                    <QuickViewTable/>
                 </div>
             </div>
             <style jsx>{`
@@ -51,6 +54,9 @@ export const StockQuickView = () => {
                 .currency__item {
                     width: 50%;
                     display: inline-block;
+                }
+                .currency__box {
+                    margin-bottom: 5px;
                 }
                 /* .currency__box */
             `}</style>
