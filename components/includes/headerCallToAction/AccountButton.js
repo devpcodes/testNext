@@ -13,7 +13,7 @@ export const AccountButton = () => {
     const accountElement = (
         <Avatar
             style={{
-                fontSize: `${isMobile ? '15px' : '20px'}`,
+                fontSize: `${isMobile ? '1.5rem' : '2rem'}`,
                 fontWeight: '600',
             }}
             size={isMobile ? 28 : 40}
