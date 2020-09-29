@@ -372,7 +372,7 @@ const Navbar = React.memo((props) => {
                         position: relative;
                         top: 0;
                         left: 0;
-                        display: flex;
+                        display: none;
                         width: 100%;
                         flex-direction: column;
                     }
