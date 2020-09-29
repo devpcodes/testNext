@@ -37,6 +37,7 @@ const Header = () => {
                     height:70px;
                     background : #FFF; 
                     display: none;
+                    cursor: pointer;
                 }
                 .header__logo {
                     display: inline-block;
@@ -57,6 +58,12 @@ const Header = () => {
 					.header__logo { 
 						margin: 16px 0 16px 10px;
 					}
+                }
+                
+                @media (max-width:1024px) {
+                    .navbar__switch__m {
+                        display:block;
+                    }
 				}
 				
             `}</style>

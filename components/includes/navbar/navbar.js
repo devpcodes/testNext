@@ -281,6 +281,7 @@ const Navbar = React.memo((props) => {
                     padding: 0;
                     margin: 0;
                     vertical-align: top;
+                    z-index: 1001;
                 }
                 .navbar__lv1__item {
                     width: 105px;
@@ -349,7 +350,34 @@ const Navbar = React.memo((props) => {
 
                 @media (max-width:1024px) {
                     .navbar {
-                        display: none;
+                        background : ${theme.colors.darkBg};
+                        flex-direction: column;
+                        position: absolute;
+                        height: auto;
+                        width: 316px;
+                        
+                        top: 70px;
+                    }
+                    .active__mark  {
+                        display : none!important;
+                    }
+                    .navbar__lv1__item {
+                        width:100%;
+                        text-align:left;
+                    }
+                    .navbar__lv1__item__title {
+                        padding: 0 30px;
+                    }
+                    .navbar__lv2 {
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        display: flex;
+                        width: 100%;
+                        flex-direction: column;
+                    }
+                    .navbar__lv2__item {
+                        margin: 0;
                     }
 				}
 

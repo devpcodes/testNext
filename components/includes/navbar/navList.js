@@ -43,6 +43,23 @@ const NavList = React.memo((props) => {
                         color: ${theme.colors.darkBg};
                         display: block;
                     }
+
+                    @media (max-width:1024px) {
+                        .navlist {
+                            width: 100%;
+                            margin-bottom: 27px;
+                        }
+                        .navbar__lv2__item__title {
+                            margin: 0 0 4px 0; 
+                        }
+                        .navbar__lv3__item {
+                            width: 50%;
+                            display: inline-block;
+                        }
+                        .navbar__lv3__item__title:hover {
+                            color: ${theme.colors.secondary};
+                        }
+                    }
                 `}</style>
             </div>
         
