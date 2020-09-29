@@ -276,7 +276,7 @@ const Navbar = React.memo((props) => {
             ))}
             <style jsx>{`
                 .navbar {
-                    display: inline-flex;
+                    display: flex;
                     height: 100%;
                     padding: 0;
                     margin: 0;
@@ -346,6 +346,13 @@ const Navbar = React.memo((props) => {
                 .navbar__lv2__item:last-child {
                     margin-right: 0;
                 }
+
+                @media (max-width:1024px) {
+                    .navbar {
+                        display: none;
+                    }
+				}
+
             `}</style>
         </ul>
     )

@@ -9,7 +9,9 @@ import theme from '../../resources/styles/theme';
 const Header = () => {
     return (
         <header>
+            
             <div className="header__navbar">
+                <div className="navbar__switch__m"></div>
                 <Link href="/">
                     <a className="header__logo">
                         <img src={logo}></img>
@@ -30,6 +32,12 @@ const Header = () => {
                     display: flex;
                     justify-content: space-between;
                 }
+                .navbar__switch__m {
+                    width:70px;
+                    height:70px;
+                    background : #FFF; 
+                    display: none;
+                }
                 .header__logo {
                     display: inline-block;
                     width: 158px;
@@ -45,8 +53,12 @@ const Header = () => {
                 @media (max-width:1112px) {
                     .header__navbar {
                         width: 100%;
-                    }
-                }
+					}
+					.header__logo { 
+						margin: 16px 0 16px 10px;
+					}
+				}
+				
             `}</style>
         </header>
     );
