@@ -75,7 +75,7 @@ export const AccountDropdown = () => {
                     border-bottom: solid 1px #e6ebf5;
                     height: 36px;
                     padding: 0 11px 0 0;
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     font-weight: 600;
                 }
                 .account__container :global(.ant-select-arrow) {
@@ -98,7 +98,7 @@ export const AccountDropdown = () => {
                 .option__accType,
                 .option__account,
                 .option__username {
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     font-weight: 600;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {

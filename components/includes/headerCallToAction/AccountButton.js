@@ -8,16 +8,17 @@ import theme from '../../../resources/styles/theme';
 
 export const AccountButton = () => {
     const isMobile = useSelector((store) => store.layout.isMobile);
+    const currentAccount = useSelector((store) => store.user.currentAccount);
 
     const accountElement = (
         <Avatar
             style={{
-                fontSize: `${isMobile ? '15px' : '20px'}`,
+                fontSize: `${isMobile ? '1.5rem' : '2rem'}`,
                 fontWeight: '600',
             }}
             size={isMobile ? 28 : 40}
         >
-            江
+            {currentAccount.username && currentAccount.username[0]}
         </Avatar>
     );
     const accountPopoverContent = (
