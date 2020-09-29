@@ -187,7 +187,7 @@ const Layout = React.memo((props) => {
 
     // WINDOW寬度改變處理
     const resizeHandler = function() {
-        let winWidth = document.body.clientWidth;
+        let winWidth = window.innerWidth;
         if(checkMobile(winWidth)){
             dispatch(resize(winWidth, true));
         }else{

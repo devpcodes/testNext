@@ -19,7 +19,7 @@ const SinoTradeLogin = function({ isVisible, onClose, successHandler }) {
     }, []);
     
     const resizeHandler = function() {
-        let winWidth = document.body.clientWidth;
+        let winWidth = window.innerWidth;
         if(winWidth <= 1000){
             setIsPC(false)
         }else{
