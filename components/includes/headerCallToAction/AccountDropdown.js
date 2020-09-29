@@ -108,6 +108,13 @@ export const AccountDropdown = () => {
                     border-width: 7px 4.5px 0 4.5px;
                     border-color: #c43826 transparent transparent transparent;
                 }
+                .account__container .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+                    border-color: transparent;
+                }
+                .account__container .ant-select-focused.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    border-bottom: 1px solid #e6ebf5;
+                    box-shadow: none;
+                }
             `}</style>
         </div>
     );

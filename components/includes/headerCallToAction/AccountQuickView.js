@@ -5,6 +5,7 @@ import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/components/header/logoutFetcher';
 import { setIsLogin } from '../../../actions/user/action';
+import { StockQuickView } from './stockQuickView/StockQuickView';
 
 import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';
@@ -31,7 +32,10 @@ export const AccountQuickView = () => {
                             <NavList lv2Data={data} />
                         </div>
                     ))}
-                <AccountDropdown />
+                <div>
+                    <AccountDropdown />
+                    <StockQuickView/>
+                </div>
             </div>
             <a className="quickView__logoutBtn" onClick={handleLogout}>
                 <img src={signoutImg} />
