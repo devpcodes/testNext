@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 
 import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
@@ -14,7 +15,7 @@ import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlo
 import theme from '../../../resources/styles/theme';
 import signoutImg from '../../../resources/images/components/header/ic-signout.png';
 
-export const AccountQuickView = () => {
+export const AccountQuickView = ({quickViewVisible}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const currentAccount = useSelector((store) => store.user.currentAccount);
@@ -22,6 +23,7 @@ export const AccountQuickView = () => {
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
     const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
+    const [quickViewMobileCSS, setQuickViewMobileCSS] = useState({position: 'absolute', top: '-74px'});
 
     useEffect(() => {
         const action = "";
@@ -34,6 +36,17 @@ export const AccountQuickView = () => {
         const ttype = 'A';
         dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(action, bhno, cseq, ctype, sip, stock, ttype, token)));
     }, []);
+
+    // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
+    useEffect(() => {
+        if (quickViewVisible) {
+            setTimeout(() => {
+                setQuickViewMobileCSS({position: 'fixed', top: '0'})
+            }, 350);
+        } else {
+            setQuickViewMobileCSS({position: 'absolute', top: '-74px'})
+        }
+    }, [quickViewVisible])
 
     const handleLogout = async () => {
         await logout();
@@ -119,12 +132,15 @@ export const AccountQuickView = () => {
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .quickView__container {
-                        position: fixed;
+                        position: ${quickViewMobileCSS.position};
                         width: calc((10 / 12) * 100vw);
                         height: 100vh;
-                        top: 0px;
+                        top: ${quickViewMobileCSS.top};
                         border-top: none;
                         background: ${theme.colors.darkBg};
+                    }
+                    .quickView__container:before {
+                        display: none;
                     }
                     .quickView__content {
                         flex-wrap: wrap-reverse;
@@ -145,4 +161,8 @@ export const AccountQuickView = () => {
             `}</style>
         </div>
     );
+};
+
+AccountQuickView.propTypes = {
+    quickViewVisible: PropTypes.bool.isRequired,
 };

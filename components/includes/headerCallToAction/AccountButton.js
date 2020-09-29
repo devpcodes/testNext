@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import { Avatar, Popover } from 'antd';
 import { AccountQuickView } from './AccountQuickView';
@@ -9,6 +10,7 @@ import theme from '../../../resources/styles/theme';
 export const AccountButton = () => {
     const isMobile = useSelector((store) => store.layout.isMobile);
     const currentAccount = useSelector((store) => store.user.currentAccount);
+    const [quickViewVisible, setQuickViewVisible] = useState(false);
 
     const accountElement = (
         <Avatar
@@ -23,13 +25,22 @@ export const AccountButton = () => {
     );
     const accountPopoverContent = (
         <div>
-            <AccountQuickView />
+            <AccountQuickView quickViewVisible={quickViewVisible} />
         </div>
     );
 
+    const handleQuickViewVisible = (visible) => {
+        setQuickViewVisible(visible);
+    };
+
     return (
         <>
-            <Popover placement="bottomRight" content={accountPopoverContent} trigger="click">
+            <Popover
+                placement="bottomRight"
+                content={accountPopoverContent}
+                trigger="click"
+                onVisibleChange={handleQuickViewVisible}
+            >
                 <div>
                     <HeaderBtn content={accountElement} type={'primary'} />
                 </div>
