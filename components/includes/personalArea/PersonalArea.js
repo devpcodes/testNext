@@ -14,6 +14,8 @@ import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlo
 
 import theme from '../../../resources/styles/theme';
 import signOutImg from '../../../resources/images/components/header/ic-signout.png';
+import closeImg from '../../../resources/images/components/header/ic_close.png';
+import openImg from '../../../resources/images/components/header/ic_open.png';
 
 export const PersonalArea = ({ personalAreaVisible }) => {
     const router = useRouter();
@@ -144,9 +146,11 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                     }
                     .personalArea__content {
                         flex-wrap: wrap-reverse;
+                        padding: 0;
                     }
                     .myNav__container {
                         flex-direction: column;
+                        width: 100%;
                     }
                     .myNav__list {
                         margin-right: 0;
@@ -156,6 +160,68 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         position: absolute;
                         bottom: 0;
                         right: 0;
+                    }
+                }
+            `}</style>
+            <style jsx global>{`
+                @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .personalArea__container .navlist {
+                        width: 100%;
+                    }
+                    .personalArea__container .navbar__lv2__item__title {
+                        height: 70px;
+                        padding: 0 36px;
+                        margin: 0;
+                        color: ${theme.colors.secondary};
+                        font-size: 2rem;
+                        border-bottom: none;
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                    }
+                    .personalArea__container .navbar__lv2__item__title:after {
+                        content: '';
+                        width: 32px;
+                        height: 32px;
+                        background-image: url(${closeImg});
+                        margin-left: 4px;
+                    }
+                    .personalArea__container .navbar__lv2__item__title--hide {
+                        color: ${theme.colors.text};
+                    }
+                    .personalArea__container .navbar__lv2__item__title--hide:after {
+                        background-image: url(${openImg});
+                    }
+                    .personalArea__container .navbar__lv3 {
+                        background-color: ${theme.colors.lightBg};
+                        margin: 0;
+                        padding: 14px 0 8px 40px;
+                        position: relative;
+                        display: flex;
+                        flex-wrap: wrap;
+                        transition: transform .1s ease-in;
+                        transform-origin: top center;
+                    }
+                    .personalArea__container .navbar__lv3--hide {
+                        position:absolute;
+                        top: -999px;
+                        width: 100%;
+                        transform: scale(1, 0);
+                    }
+                    .personalArea__container .navbar__lv3:before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 100%;
+                        height: 6px;
+                        background-color: ${theme.colors.secondary};
+                    }
+                    .personalArea__container .navbar__lv3__item {
+                        width: 50%;
+                    }
+                    .personalArea__container .navbar__lv3__item__title {
+                        font-size: 2rem;
                     }
                 }
             `}</style>
