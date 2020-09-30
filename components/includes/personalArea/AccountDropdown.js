@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { accountGroupByType } from '../../../services/components/layouts/accountGroupByType';
+import { accountGroupByType } from '../../../services/user/accountGroupByType';
 import { setCurrentAccount } from '../../../actions/user/action';
 
 import theme from '../../../resources/styles/theme';
@@ -30,7 +30,6 @@ export const AccountDropdown = () => {
 
     const handleChange = (value) => {
         const selectedAccount = accounts.find((account) => `${account.broker_id}-${account.account}` === value);
-        console.log(`selectedAccount: ${selectedAccount}`);
         dispatch(setCurrentAccount(selectedAccount));
     };
 

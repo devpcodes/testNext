@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
-import { logout } from '../../../services/components/header/logoutFetcher';
+import { logout } from '../../../services/user/logoutFetcher';
 import { setIsLogin } from '../../../actions/user/action';
 import { StockQuickView } from './stockQuickView/StockQuickView';
 import { getCookie } from '../../../services/components/layouts/cookieController';
@@ -13,9 +13,9 @@ import { getStockUnRealPrtlos } from '../../../actions/stock/action';
 import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
 
 import theme from '../../../resources/styles/theme';
-import signoutImg from '../../../resources/images/components/header/ic-signout.png';
+import signOutImg from '../../../resources/images/components/header/ic-signout.png';
 
-export const AccountQuickView = ({quickViewVisible}) => {
+export const PersonalArea = ({ personalAreaVisible }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const currentAccount = useSelector((store) => store.user.currentAccount);
@@ -23,15 +23,15 @@ export const AccountQuickView = ({quickViewVisible}) => {
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
     const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
-    const [quickViewMobileCSS, setQuickViewMobileCSS] = useState({position: 'absolute', top: '-74px'});
+    const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
 
     useEffect(() => {
-        const action = "";
+        const action = '';
         const bhno = currentAccount.broker_id;
         const cseq = currentAccount.account;
-        const ctype = 'A';// 全部
+        const ctype = 'A'; // 全部
         const sip = getCookie('client_ip');
-        const stock = " ";
+        const stock = ' ';
         const token = getCookie('token');
         const ttype = 'A';
         dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(action, bhno, cseq, ctype, sip, stock, ttype, token)));
@@ -39,14 +39,14 @@ export const AccountQuickView = ({quickViewVisible}) => {
 
     // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
     useEffect(() => {
-        if (quickViewVisible) {
+        if (personalAreaVisible) {
             setTimeout(() => {
-                setQuickViewMobileCSS({position: 'fixed', top: '0'})
+                setPersonalAreaMobileCSS({ position: 'fixed', top: '0' });
             }, 350);
         } else {
-            setQuickViewMobileCSS({position: 'absolute', top: '-74px'})
+            setPersonalAreaMobileCSS({ position: 'absolute', top: '-74px' });
         }
-    }, [quickViewVisible])
+    }, [personalAreaVisible]);
 
     const handleLogout = async () => {
         await logout();
@@ -56,8 +56,8 @@ export const AccountQuickView = ({quickViewVisible}) => {
 
     // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
-        <div className="quickView__container">
-            <div className="quickView__content">
+        <div className="personalArea__container">
+            <div className="personalArea__content">
                 <div className="myNav__container">
                     {personalNav &&
                         personalNav.map((data, index) => (
@@ -68,17 +68,17 @@ export const AccountQuickView = ({quickViewVisible}) => {
                 </div>
                 <div>
                     <AccountDropdown />
-                    <StockQuickView 
+                    <StockQuickView
                         unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1].unreal}
                     />
                 </div>
             </div>
-            <a className="quickView__logoutBtn" onClick={handleLogout}>
-                <img src={signoutImg} />
+            <a className="personalArea__logoutBtn" onClick={handleLogout}>
+                <img src={signOutImg} />
                 登出
             </a>
             <style jsx>{`
-                .quickView__container {
+                .personalArea__container {
                     margin: 0;
                     padding: 0;
                     position: absolute;
@@ -91,7 +91,7 @@ export const AccountQuickView = ({quickViewVisible}) => {
                     z-index: 1001;
                     text-align: left;
                 }
-                .quickView__container:before {
+                .personalArea__container:before {
                     content: '';
                     position: absolute;
                     top: -14px;
@@ -102,7 +102,7 @@ export const AccountQuickView = ({quickViewVisible}) => {
                     border-width: 0 5.5px 8px 5.5px;
                     border-color: transparent transparent ${theme.colors.secondary} transparent;
                 }
-                .quickView__content {
+                .personalArea__content {
                     display: flex;
                     padding: 18px 36px;
                 }
@@ -112,7 +112,7 @@ export const AccountQuickView = ({quickViewVisible}) => {
                 .myNav__list {
                     margin-right: 37px;
                 }
-                .quickView__logoutBtn {
+                .personalArea__logoutBtn {
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -124,25 +124,25 @@ export const AccountQuickView = ({quickViewVisible}) => {
                     background-color: ${theme.colors.secondary};
                     transition: ${theme.button.transition};
                 }
-                .quickView__logoutBtn:hover {
+                .personalArea__logoutBtn:hover {
                     background-color: ${theme.colors.secondaryHover};
                 }
-                .quickView__logoutBtn img {
+                .personalArea__logoutBtn img {
                     margin-right: 5px;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
-                    .quickView__container {
-                        position: ${quickViewMobileCSS.position};
+                    .personalArea__container {
+                        position: ${personalAreaMobileCSS.position};
                         width: calc((10 / 12) * 100vw);
                         height: 100vh;
-                        top: ${quickViewMobileCSS.top};
+                        top: ${personalAreaMobileCSS.top};
                         border-top: none;
                         background: ${theme.colors.darkBg};
                     }
-                    .quickView__container:before {
+                    .personalArea__container:before {
                         display: none;
                     }
-                    .quickView__content {
+                    .personalArea__content {
                         flex-wrap: wrap-reverse;
                     }
                     .myNav__container {
@@ -152,7 +152,7 @@ export const AccountQuickView = ({quickViewVisible}) => {
                         margin-right: 0;
                         width: 100%;
                     }
-                    .quickView__logoutBtn {
+                    .personalArea__logoutBtn {
                         position: absolute;
                         bottom: 0;
                         right: 0;
@@ -163,6 +163,6 @@ export const AccountQuickView = ({quickViewVisible}) => {
     );
 };
 
-AccountQuickView.propTypes = {
-    quickViewVisible: PropTypes.bool.isRequired,
+PersonalArea.propTypes = {
+    personalAreaVisible: PropTypes.bool.isRequired,
 };

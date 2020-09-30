@@ -1,5 +1,5 @@
 import * as actionType from './actionType';
-import { fetchUserSettings } from '../../services/userSettingsFetcher';
+import { fetchUserSettings } from '../../services/user/userSettingsFetcher';
 
 export const setIsLogin = (isLogin) => {
     return {
