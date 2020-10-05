@@ -7,10 +7,7 @@ import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/user/logoutFetcher';
 import { setIsLogin } from '../../../actions/user/action';
-import { StockQuickView } from './stockQuickView/StockQuickView';
-import { getCookie } from '../../../services/components/layouts/cookieController';
-import { getStockUnRealPrtlos } from '../../../actions/stock/action';
-import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
+import { TradingQuickView } from './TradingQuickView';
 
 import theme from '../../../resources/styles/theme';
 import signOutImg from '../../../resources/images/components/header/ic-signout.png';
@@ -20,24 +17,10 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 export const PersonalArea = ({ personalAreaVisible }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const currentAccount = useSelector((store) => store.user.currentAccount);
-    const unRealPrtlos = useSelector((store) => store.stock.UnRealPrtlos);
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
     const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
     const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
-
-    useEffect(() => {
-        const action = '';
-        const bhno = currentAccount.broker_id;
-        const cseq = currentAccount.account;
-        const ctype = 'A'; // 全部
-        const sip = getCookie('client_ip');
-        const stock = ' ';
-        const token = getCookie('token');
-        const ttype = 'A';
-        dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(action, bhno, cseq, ctype, sip, stock, ttype, token)));
-    }, []);
 
     // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
     useEffect(() => {
@@ -56,7 +39,6 @@ export const PersonalArea = ({ personalAreaVisible }) => {
         router.push('/');
     };
 
-    // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="personalArea__container">
             <div className="personalArea__content">
@@ -70,9 +52,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                 </div>
                 <div>
                     <AccountDropdown />
-                    <StockQuickView
-                        unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1].unreal}
-                    />
+                    <TradingQuickView />
                 </div>
             </div>
             <a className="personalArea__logoutBtn" onClick={handleLogout}>
@@ -199,11 +179,11 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         position: relative;
                         display: flex;
                         flex-wrap: wrap;
-                        transition: transform .1s ease-in;
+                        transition: transform 0.1s ease-in;
                         transform-origin: top center;
                     }
                     .personalArea__container .navbar__lv3--hide {
-                        position:absolute;
+                        position: absolute;
                         top: -999px;
                         width: 100%;
                         transform: scale(1, 0);
