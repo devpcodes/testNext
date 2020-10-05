@@ -9,6 +9,7 @@ const theme = {
         secondary: '#daa360',
         secondaryHover: '#ad7633',
         loss: '#22a16f',
+        accountHover: '#e6ebf5',
     },
     button: {
         transition: 'all 0.3s ease-out',
