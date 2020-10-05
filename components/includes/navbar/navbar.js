@@ -355,6 +355,7 @@ const Navbar = React.memo((props) => {
                         height: auto;
                         width: 316px;
                         top: 70px;
+                        left:0;
                     }
                     .active__mark  {
                         display : none!important;
@@ -364,6 +365,7 @@ const Navbar = React.memo((props) => {
                         text-align:left;
                     }
                     .navbar__lv1__item__title {
+                        height: auto;
                         padding: 0 30px;
                     }
                     .navbar__lv2 {
@@ -371,7 +373,7 @@ const Navbar = React.memo((props) => {
                         top: 0;
                         left: 0;
                         display: none;
-                        width: 100%;
+                        width: 100%!important;
                         flex-direction: column;
                     }
                     .navbar__lv2__item {
