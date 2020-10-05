@@ -13,7 +13,7 @@ import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
 import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
-import { accountGroupByType } from '../../services/components/layouts/accountGroupByType';
+import { accountGroupByType } from '../../services/user/accountGroupByType';
 
 
 const Layout = React.memo((props) => {
