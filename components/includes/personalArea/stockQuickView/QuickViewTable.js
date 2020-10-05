@@ -1,24 +1,24 @@
 import { Table } from 'antd';
-const dataSource = [
-    {
-        key: '1',
-        date: '2020.10.02',
-        amount: -315,
-        cruuency: 'USD',
-    },
-    {
-        key: '2',
-        date: '2020.10.03',
-        amount: 435100,
-        cruuency: 'NTD',
-    },
-    {
-        key: '3',
-        date: '2020.10.04',
-        amount: -117,
-        cruuency: 'CNY',
-    },
-];
+// const dataSource = [
+//     {
+//         key: '1',
+//         date: '2020.10.02',
+//         amount: -315,
+//         cruuency: 'USD',
+//     },
+//     {
+//         key: '2',
+//         date: '2020.10.03',
+//         amount: 435100,
+//         cruuency: 'NTD',
+//     },
+//     {
+//         key: '3',
+//         date: '2020.10.04',
+//         amount: -117,
+//         cruuency: 'CNY',
+//     },
+// ];
   
 const columns = [
     {
@@ -37,13 +37,18 @@ const columns = [
         key: 'cruuency',
     },
 ];
-export const QuickViewTable = () => {
+export const QuickViewTable = ({dataSource}) => {
     return (
         <>
             <div className="stockQuickView__table">
                 <Table pagination={false} dataSource={dataSource} columns={columns} />
+                <div className="rectangle"></div>
             </div>
-            
+            <style jsx>{`
+                @media (max-width:768px){
+
+                }
+            `}</style>
             <style jsx global>{`
                 .stockQuickView__table .ant-table-tbody>tr>td, .ant-table-thead>tr>th, .ant-table tfoot>tr>td, .ant-table tfoot>tr>th {
                     padding: 0;
@@ -61,9 +66,60 @@ export const QuickViewTable = () => {
                 }
                 .stockQuickView__table .ant-table-tbody>tr>td :nth-child(2){
                     font-weight: bold;
+                    text-align: right;
+                }
+                .stockQuickView__table .ant-table-tbody>tr>td :nth-child(3){
+                    text-align: center;
+                }
+                .ant-table-cell :nth-child(2){
+                    text-align: right;
+                }
+                .ant-table-cell :nth-child(3){
+                    text-align: center;
                 }
                 .stockQuickView__table {
                     margin-bottom: 10px;
+                }
+                .stockQuickView__table .ant-empty-normal {
+                    margin: 10px 0;
+                }
+                @media (max-width:768px){
+                    .ant-table-thead{
+                        background: none;
+                    }
+                    .stockQuickView__table .ant-table-thead>tr>th{
+                        background: none;
+                    }
+                    .ant-table-container {
+                        background-image: linear-gradient(to top, #0d1623, #080e16);
+                        padding: 0 30px;
+                        min-height: 65px;
+                    }
+                    .ant-table-thead>tr>th {
+                        border-bottom: solid 1.1px #121f32;
+                        padding: 8px 0;
+                    }
+                    .ant-table-thead>tr>td {
+                        padding: 8px 0;
+                    }
+                    .stockQuickView__table .ant-table-tbody>tr>td {
+                        color: white;
+                    }
+                    .stockQuickView__table .ant-table-tbody>tr>td :nth-child(2){
+                        font-weight: normal;
+                    }
+                    .ant-table{
+                        border-top: 1px solid #17273d;
+                    }
+                    .stockQuickView__table .ant-table-tbody>tr>td {
+                        padding: 8px 0;
+                    }
+                    .rectangle{
+                        transform: rotate(-180deg);
+                        background-image: linear-gradient(to top,#0d1623,#080e16);
+                        width: 99%;
+                        height: 10px;
+                    }
                 }
             `}</style>
         </>

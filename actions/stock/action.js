@@ -8,9 +8,24 @@ export const getStockUnRealPrtlos = (axiosFun) => async (dispatch) => {
         console.error(`error:`, error);
     }
 };
-export const setStockUnRealPrtlos = (unRealPrtlos) => {
+const setStockUnRealPrtlos = (unRealPrtlos) => {
     return {
         type: actionType.SET_UNREAL_PRTLOS,
+        payload: unRealPrtlos,
+    };
+};
+
+export const getStockSummarisePrtlos = (axiosFun) => async (dispatch) => {
+    try {
+        const data = await axiosFun;
+        return dispatch(setStockSummarisePrtlos(data));
+    } catch (error) {
+        console.error(`error:`, error);
+    }
+};
+const setStockSummarisePrtlos = (unRealPrtlos) => {
+    return {
+        type: actionType.SET_SUMMARISE_PRTLOS,
         payload: unRealPrtlos,
     };
 };

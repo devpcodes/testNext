@@ -19,9 +19,10 @@ export const PersonalArea = ({ personalAreaVisible }) => {
     const dispatch = useDispatch();
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
     const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
+    const isMobile = useSelector((store) => store.layout.isMobile);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
     const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
-
+    console.log(isMobile);
     // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
     useEffect(() => {
         if (personalAreaVisible) {
@@ -50,7 +51,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                             </div>
                         ))}
                 </div>
-                <div>
+                <div className="accountInfo__container">
                     <AccountDropdown />
                     <TradingQuickView />
                 </div>
@@ -93,6 +94,9 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                 }
                 .myNav__list {
                     margin-right: 37px;
+                }
+                .accountInfo__container {
+                    width: ${isMobile ? '100%' : 'auto'};
                 }
                 .personalArea__logoutBtn {
                     display: flex;
