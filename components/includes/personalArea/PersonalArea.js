@@ -17,7 +17,6 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 export const PersonalArea = ({ personalAreaVisible }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const isMobile = useSelector((store) => store.layout.isMobile);
     const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
     const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
     const isMobile = useSelector((store) => store.layout.isMobile);
