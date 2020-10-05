@@ -264,8 +264,7 @@ const Navbar = React.memo((props) => {
                             {lv1Item.title}
                         </a>
                     </Link>
-                    {console.log(lv1Item.items.length)}
-                    <ul className="navbar__lv2" style={{ width:168*4 }}>
+                    <ul className="navbar__lv2" style={{ width:168*lv1Item.items.length }}>
                         {lv1Item.items.map((lv2Item, lv2Index) => (
                             <li className="navbar__lv2__item" key={lv2Index} >
                                 <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
