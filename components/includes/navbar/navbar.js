@@ -267,7 +267,7 @@ const Navbar = React.memo((props) => {
                     <ul className="navbar__lv2">
                         {lv1Item.items.map((lv2Item, lv2Index) => (
                             <li className="navbar__lv2__item" key={lv2Index} >
-                                <NavList navItems={lv1Item.items} lv2Data={lv2Item}/>
+                                <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
                             </li>
                         ))}
                     </ul>
@@ -355,7 +355,6 @@ const Navbar = React.memo((props) => {
                         position: absolute;
                         height: auto;
                         width: 316px;
-                        
                         top: 70px;
                     }
                     .active__mark  {

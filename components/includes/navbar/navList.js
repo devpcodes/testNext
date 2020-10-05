@@ -43,8 +43,8 @@ const NavList = React.memo((props) => {
                         color: ${theme.colors.darkBg};
                         display: block;
                     }
-
-                    @media (max-width:1024px) {
+                    
+                    @media (max-width:${props.twoColumnPX}px) {
                         .navlist {
                             width: 100%;
                             margin-bottom: 27px;
