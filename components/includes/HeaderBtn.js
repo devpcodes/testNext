@@ -28,7 +28,7 @@ export const HeaderBtn = ({ content, type, clickHandler }) => {
                     color: ${theme.colors.text};
                     text-align: center;
                     position: relative;
-                    font-size: 18px;
+                    font-size: 1.8rem;
                     font-weight: 600;
                     white-space: nowrap;
                 }

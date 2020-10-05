@@ -13,7 +13,7 @@ import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
 import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
-import { accountGroupByType } from '../../services/components/layouts/accountGroupByType';
+import { accountGroupByType } from '../../services/user/accountGroupByType';
 
 
 const Layout = React.memo((props) => {
@@ -70,10 +70,10 @@ const Layout = React.memo((props) => {
         const getDefaultAccount = (accounts) => {
             const groupedAccount = accountGroupByType(accounts);
             if (groupedAccount.S.length) {
-                const defaultStockAccountList = groupedAccount.S.filter(
+                const defaultStockAccount = groupedAccount.S.find(
                     (account) => `${account.broker_id}-${account.account}` === userSettings.defaultStockAccount
                 );
-                return defaultStockAccountList[0] || groupedAccount.S[0];
+                return defaultStockAccount || groupedAccount.S[0];
             } else if (groupedAccount.H.length) {
                 return groupedAccount.H[0];
             } else if (groupedAccount.F.length) {
@@ -187,7 +187,7 @@ const Layout = React.memo((props) => {
 
     // WINDOW寬度改變處理
     const resizeHandler = function() {
-        let winWidth = document.body.clientWidth;
+        let winWidth = window.innerWidth;
         if(checkMobile(winWidth)){
             dispatch(resize(winWidth, true));
         }else{

@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { accountGroupByType } from '../../../services/components/layouts/accountGroupByType';
+import { accountGroupByType } from '../../../services/user/accountGroupByType';
 import { setCurrentAccount } from '../../../actions/user/action';
 
 import theme from '../../../resources/styles/theme';
@@ -29,8 +29,7 @@ export const AccountDropdown = () => {
     };
 
     const handleChange = (value) => {
-        const selectedAccount = accounts.filter((account) => `${account.broker_id}-${account.account}` === value);
-        console.log(`selectedAccount: ${selectedAccount}`);
+        const selectedAccount = accounts.find((account) => `${account.broker_id}-${account.account}` === value);
         dispatch(setCurrentAccount(selectedAccount));
     };
 
@@ -75,7 +74,7 @@ export const AccountDropdown = () => {
                     border-bottom: solid 1px #e6ebf5;
                     height: 36px;
                     padding: 0 11px 0 0;
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     font-weight: 600;
                 }
                 .account__container :global(.ant-select-arrow) {
@@ -98,7 +97,7 @@ export const AccountDropdown = () => {
                 .option__accType,
                 .option__account,
                 .option__username {
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     font-weight: 600;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
@@ -115,6 +114,13 @@ export const AccountDropdown = () => {
                     border-style: solid;
                     border-width: 7px 4.5px 0 4.5px;
                     border-color: #c43826 transparent transparent transparent;
+                }
+                .account__container .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+                    border-color: transparent;
+                }
+                .account__container .ant-select-focused.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    border-bottom: 1px solid #e6ebf5;
+                    box-shadow: none;
                 }
                 .ant-select-item-option-content .option__accType {
                     display: none;

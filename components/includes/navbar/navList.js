@@ -1,12 +1,20 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import theme from '../../../resources/styles/theme'
 import Link from 'next/link'
 
 const NavList = React.memo((props) => {
+    const isMobile = useSelector((store) => store.layout.isMobile);
+    const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
+    const clickHandler = () => {
+        setLv3MobileVisible(!lv3MobileVisible);
+    }
+
     return (
             <div className="navlist">
-                <h6 className="navbar__lv2__item__title">{props.lv2Data.title}</h6>
-                <ul className="navbar__lv3">
+                <h6 className={`navbar__lv2__item__title ${isMobile && !lv3MobileVisible ? 'navbar__lv2__item__title--hide' : ''}`} onClick={clickHandler}>{props.lv2Data.title}</h6>
+                <ul className={`navbar__lv3 ${isMobile && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                     {props.lv2Data.items.map((lv3Item, lv3Index) => (
                         <li className="navbar__lv3__item" key={lv3Index}>
                             <a className="navbar__lv3__item__title">{lv3Item.title}</a>

@@ -5,7 +5,7 @@ const MyTransition = ({ isVisible, children, classNames }) => {
     // const isMobile = useSelector(store => store.layout.isMobile);
     const [isMobile, setIsMobile] = useState(true);
     useEffect(() => {
-        let winWidth = document.body.clientWidth;
+        let winWidth = window.innerWidth;
         if(winWidth <= 768){
             setIsMobile(true);
         }else{
