@@ -13,6 +13,8 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
             setShowContent(true)
         }
     }, [isMobile]);
+
+    //併上+-符號
     const getUnreal = (unreal) => {
         if(Number(unreal) > 0){
             return '+' + formatNum(unreal)
@@ -22,9 +24,24 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
             return unreal;
         }
     }
+
     const contentBtnClick = () => {
+        if(noData()){
+            return;
+        }
         setShowContent((prevState)=> !prevState)
     }
+
+    //判斷無資料
+    const noData = () => {
+        if(NTDTnetamt == 0 && USDTnetamt == 0 && CNYTnetamt == 0){
+            if(tableInfo[0].key == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
     return (
         <>
             <div className="StockQuickView__container">
@@ -32,9 +49,10 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                 <p className="unrealized">{getUnreal(unreal)}</p>
                 <div className="settlementMoney__box">
                     <p onClick={contentBtnClick} className="content__btn">{isMobile ? '近三日交割款' : '當日交割款'}</p>
-                    {isMobile && <img src={close}/>}
+                    {isMobile && <img onClick={contentBtnClick} src={close}/>}
+                    {isMobile && noData() && <p className="noData">無交割款</p>}
                     <MyTransition
-                        isVisible={showContent}
+                        isVisible={showContent && !noData()}
                         classNames={'maxHeight'}
                     >
                         <div className="settlementMoney__content">
@@ -75,12 +93,19 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                 .content__btn {
                     display: inline-block;
                     margin-bottom: 10px;
+                    cursor: pointer;
                 }
                 img {
                     margin-left: 5px;
                     margin-top: -5px;
                     transition: all .3s;
                     transform: ${showContent ? 'rotate(-180deg)' : 'rotate(0)'};
+                    cursor: pointer;
+                }
+                .StockQuickView__container .noData {
+                    margin-top: 20px;
+                    padding-bottom: 24px;
+                    border-bottom: 1px solid #17273d;
                 }
                 .StockQuickView__container p{
                     margin: 0;
