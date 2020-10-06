@@ -98,12 +98,15 @@ export const QuickViewTable = ({dataSource}) => {
                     .ant-table-thead>tr>th {
                         border-bottom: solid 1.1px #121f32;
                         padding: 8px 0;
+                        font-size: 1.6rem;
+                        padding-top: 15px;
                     }
                     .ant-table-thead>tr>td {
                         padding: 8px 0;
                     }
                     .stockQuickView__table .ant-table-tbody>tr>td {
                         color: white;
+                        font-size: 1.6rem;
                     }
                     .stockQuickView__table .ant-table-tbody>tr>td :nth-child(2){
                         font-weight: normal;

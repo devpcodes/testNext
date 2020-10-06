@@ -77,6 +77,7 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                     margin-bottom: 10px;
                 }
                 img {
+                    margin-left: 5px;
                     margin-top: -5px;
                     transition: all .3s;
                     transform: ${showContent ? 'rotate(-180deg)' : 'rotate(0)'};
