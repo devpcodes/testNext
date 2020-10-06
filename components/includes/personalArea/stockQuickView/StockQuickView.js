@@ -34,6 +34,11 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
 
     //判斷無資料
     const noData = () => {
+        //pc版不做此判斷
+        if(!isMobile){
+            return false;
+        }
+        
         if(NTDTnetamt == 0 && USDTnetamt == 0 && CNYTnetamt == 0){
             if(tableInfo[0].key == 0){
                 return true;
