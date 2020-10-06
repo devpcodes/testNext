@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link'
 import theme from '../../../resources/styles/theme'
 import NavList from "../navbar/navList"
+import { resize } from '../../../actions/components/layouts/action';
 
 const fakeHeaderData = [
     {title : "國內證券", 
@@ -253,9 +254,29 @@ const fakeHeaderData = [
     
 ];
 
+
+
 const Navbar = React.memo((props) => {
+
+    let under1024px = false
+
+    useEffect(() => {
+        window.addEventListener('resize', resizeHandler);
+    }, []);
+
+    const resizeHandler = function(){
+        let winWidth = window.innerWidth;
+        
+        if (winWidth <= 1024){
+            under1024px = true
+        } else {
+            under1024px = false
+        }
+        console.log(under1024px)
+    }
+
     return (
-        <ul className="navbar">
+        <ul className="navbar" >
             {fakeHeaderData.map((lv1Item, lv1Index) => (
                 <li className="navbar__lv1__item" key={lv1Index}>
                     <Link href="/">
@@ -264,7 +285,7 @@ const Navbar = React.memo((props) => {
                             {lv1Item.title}
                         </a>
                     </Link>
-                    <ul className="navbar__lv2" style={{ width:168*lv1Item.items.length }}>
+                    <ul className="navbar__lv2" style={{ width: 168 * lv1Item.items.length }}>
                         {lv1Item.items.map((lv2Item, lv2Index) => (
                             <li className="navbar__lv2__item" key={lv2Index} >
                                 <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
@@ -355,7 +376,7 @@ const Navbar = React.memo((props) => {
                         width: 316px;
                         top: 70px;
                         left:0;
-                        overflow:scroll;
+                        overflow-x:auto;
                         height: auto;
                         min-height: calc(100% - 70px);
                         max-height: calc(100% - 70px);
@@ -377,7 +398,7 @@ const Navbar = React.memo((props) => {
                         top: 0;
                         left: 0;
                         display: none;
-                        width: 100%!important;
+                        width: 316px!important;
                         flex-direction: column;
                     }
                     .navbar__lv2__item {

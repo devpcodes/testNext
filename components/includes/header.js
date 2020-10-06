@@ -4,6 +4,8 @@ import Navbar from './navbar/navbar';
 import { HeaderCallToAction } from './headerCallToAction/HeaderCallToAction';
 
 import logo from '../../resources/images/components/header/sinopac_securities_logo.png';
+import menu from '../../resources/images/components/header/ic_menu.png';
+import closemenu from '../../resources/images/components/header/ic_closemenu.png';
 import theme from '../../resources/styles/theme';
 
 const Header = () => {
@@ -35,7 +37,7 @@ const Header = () => {
                 .navbar__switch__m {
                     width:70px;
                     height:70px;
-                    background : #FFF; 
+                    background : url(${menu}) center center no-repeat;
                     display: none;
                     cursor: pointer;
                 }
