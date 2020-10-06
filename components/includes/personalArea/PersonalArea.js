@@ -11,7 +11,7 @@ import { TradingQuickView } from './TradingQuickView';
 
 import theme from '../../../resources/styles/theme';
 import signOutImg from '../../../resources/images/components/header/ic-signout.png';
-import closeImg from '../../../resources/images/components/header/ic_close.png';
+import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
 import openImg from '../../../resources/images/components/header/ic_open.png';
 
 export const PersonalArea = ({ personalAreaVisible }) => {
@@ -162,6 +162,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         display: flex;
                         align-items: center;
                         cursor: pointer;
+                        transition: all .3s;
                     }
                     .personalArea__container .navbar__lv2__item__title:after {
                         content: '';
@@ -169,12 +170,15 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         height: 32px;
                         background-image: url(${closeImg});
                         margin-left: 4px;
+                        transition: all .3s;
+                        transform: rotate(-180deg);
                     }
                     .personalArea__container .navbar__lv2__item__title--hide {
                         color: ${theme.colors.text};
                     }
                     .personalArea__container .navbar__lv2__item__title--hide:after {
                         background-image: url(${openImg});
+                        transform: rotate(0);
                     }
                     .personalArea__container .navbar__lv3 {
                         background-color: ${theme.colors.lightBg};
