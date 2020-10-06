@@ -352,10 +352,13 @@ const Navbar = React.memo((props) => {
                         background : ${theme.colors.darkBg};
                         flex-direction: column;
                         position: absolute;
-                        height: auto;
                         width: 316px;
                         top: 70px;
                         left:0;
+                        overflow:scroll;
+                        height: auto;
+                        min-height: calc(100% - 70px);
+                        max-height: calc(100% - 70px);
                     }
                     .active__mark  {
                         display : none!important;
@@ -363,6 +366,7 @@ const Navbar = React.memo((props) => {
                     .navbar__lv1__item {
                         width:100%;
                         text-align:left;
+                        height:auto;
                     }
                     .navbar__lv1__item__title {
                         height: auto;
