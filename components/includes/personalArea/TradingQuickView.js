@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
@@ -14,13 +14,20 @@ export const TradingQuickView = () => {
     const currentAccount = useSelector((store) => store.user.currentAccount);
     const unRealPrtlos = useSelector((store) => store.stock.UnRealPrtlos);
     const summarisePrtlos = useSelector((store) => store.stock.SummarisePrtlos);
+    const prevAccount = useRef(false);
 
     useEffect(() => {
+        prevAccount.current = currentAccount;
         getStockUnReal();
         getSummarise();
     }, []);
 
     useEffect(() => {
+        // 修正初次渲染會多發一次請求
+        if(prevAccount.current.account != null && currentAccount.account === prevAccount.current.account){
+            return;
+        }
+        prevAccount.current = currentAccount;
         getStockUnReal();
         getSummarise();
     }, [currentAccount]);
