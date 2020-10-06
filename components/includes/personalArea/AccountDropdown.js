@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -5,8 +7,15 @@ import { accountGroupByType } from '../../../services/user/accountGroupByType';
 import { setCurrentAccount } from '../../../actions/user/action';
 
 import theme from '../../../resources/styles/theme';
+import checkImg from '../../../resources/images/components/login/ic-check.png';
 
 export const AccountDropdown = () => {
+    const selectRef = useRef(null);
+    const dropdownWidth = 243;
+    const selectTop = ReactDOM.findDOMNode(selectRef.current)?.getBoundingClientRect()?.top;
+    const dropdownCssTop = selectTop ? `${selectTop}px !important` : '0px';
+    const dropdownCssWidth = selectTop ? `${dropdownWidth - 28}px !important` : '0px';
+
     const { Option, OptGroup } = Select;
     const dispatch = useDispatch();
     const accounts = useSelector((store) => store.user.accounts);
@@ -36,11 +45,11 @@ export const AccountDropdown = () => {
     if (!accounts.length || (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object)) return null;
 
     return (
-        <div className="account__container">
+        <div className="account__container" ref={selectRef}>
             <Select
                 className="account__select"
                 defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
-                style={{ width: 243 }}
+                style={{ width: dropdownWidth }}
                 onChange={handleChange}
             >
                 {groupedAccountTypes.map((accType, index) => {
@@ -77,16 +86,6 @@ export const AccountDropdown = () => {
                     font-size: 1.6rem;
                     font-weight: 600;
                 }
-                .account__container :global(.ant-select-arrow) {
-                    display: none;
-                }
-                .account__select:after {
-                    content: '123';
-                    width: 9px;
-                    height: 6.4px;
-                    transform: rotate(-180deg);
-                    background-color: #c43826;
-                }
                 .option__accType {
                     color: ${theme.colors.secondary};
                 }
@@ -99,8 +98,6 @@ export const AccountDropdown = () => {
                 .option__username {
                     font-size: 1.6rem;
                     font-weight: 600;
-                }
-                @media (max-width: ${theme.mobileBreakPoint}px) {
                 }
             `}</style>
             <style jsx global>{`
@@ -116,11 +113,16 @@ export const AccountDropdown = () => {
                     border-color: #c43826 transparent transparent transparent;
                 }
                 .account__container .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
-                    border-color: transparent;
+                    border-color: #e6ebf5;
                 }
-                .account__container .ant-select-focused.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                .account__container
+                    .ant-select-focused.ant-select-single:not(.ant-select-customize-input)
+                    .ant-select-selector {
                     border-bottom: 1px solid #e6ebf5;
                     box-shadow: none;
+                }
+                .account__container .ant-select-arrow {
+                    display: none;
                 }
                 .ant-select-item-option-content .option__accType {
                     display: none;
@@ -135,7 +137,26 @@ export const AccountDropdown = () => {
                 .ant-select-item.ant-select-item-option.ant-select-item-option-grouped {
                     padding-left: 20px;
                 }
-                ant-select-dropdown ant-select-dropdown-placement-bottomLeft  slide-up-leave slide-up-leave-active slide-up ant-select-dropdown-hidden
+                .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+                    background-color: ${theme.colors.accountHover};
+                }
+                .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+                    background-color: #ffffff;
+                }
+                .ant-select-item-option-selected:after {
+                    content: '';
+                    position: absolute;
+                    top: 17px;
+                    right: 20px;
+                    width: 19px;
+                    height: 19px;
+                    background-image: url(${checkImg});
+                }
+                .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
+                    width: ${dropdownCssWidth};
+                    min-width: ${dropdownCssWidth};
+                    top: ${dropdownCssTop};
+                }
             `}</style>
         </div>
     );

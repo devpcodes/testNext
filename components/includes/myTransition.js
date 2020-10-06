@@ -58,6 +58,25 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     transition: all 300ms;
                 }
 
+                .maxHeight-enter {
+                    max-height: 0;
+                    overflow: hidden;
+                }
+                .maxHeight-enter-active {
+                    overflow: hidden;
+                    max-height: 490px;
+                    transition: all 400ms ease-in;
+                }
+                .maxHeight-exit {
+                    overflow: hidden;
+                    max-height: 490px;
+                }
+                .maxHeight-exit-active {
+                    overflow: hidden;
+                    max-height: 0;
+                    transition: all 300ms ease-out;
+                }
+
 
             `}</style>
         </>

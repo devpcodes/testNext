@@ -100,7 +100,7 @@ const Footer = React.memo((props) => {
             </div>
             <div className="mobile__box2">
                 <p className="box2__title">撥打客服專線</p>
-                <p  className="box2__val"><span>服務時間</span>(AM7:30~PM10:00)</p>
+                <p className="box2__val"><span>服務時間</span>(AM7:30~PM10:00)</p>
             </div>
             <div className="mobile__box3">
                 <p>永豐金證券股份有限公司</p>
