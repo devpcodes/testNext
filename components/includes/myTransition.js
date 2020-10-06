@@ -64,12 +64,12 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                 }
                 .maxHeight-enter-active {
                     overflow: hidden;
-                    max-height: 400px;
-                    transition: all 300ms ease-in;
+                    max-height: 490px;
+                    transition: all 400ms ease-in;
                 }
                 .maxHeight-exit {
                     overflow: hidden;
-                    max-height: 400px;
+                    max-height: 490px;
                 }
                 .maxHeight-exit-active {
                     overflow: hidden;
