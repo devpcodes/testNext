@@ -56,7 +56,7 @@ const Layout = React.memo((props) => {
         }
 
         if (isLogin) {
-            console.log('=========================', isLogin);
+            // console.log('=========================', isLogin);
             const tokenVal = jwt_decode(getCookie('token'));
             dispatch(setAccounts(tokenVal.acts_detail));
             updateUserSettings();
@@ -84,7 +84,7 @@ const Layout = React.memo((props) => {
         };
         const defaultAccount = getDefaultAccount(accounts) || {};
         dispatch(setCurrentAccount(defaultAccount));
-        console.log(`defaultAccount:`, defaultAccount);
+        // console.log(`defaultAccount:`, defaultAccount);
     }, [userSettings]);
 
     useEffect(() => {
