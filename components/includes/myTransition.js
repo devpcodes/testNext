@@ -76,8 +76,6 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     max-height: 0;
                     transition: all 300ms ease-out;
                 }
-
-
             `}</style>
         </>
     )

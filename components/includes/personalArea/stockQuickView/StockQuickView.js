@@ -4,7 +4,8 @@ import { formatNum } from '../../../../services/formatNum';
 import {useSelector} from 'react-redux';
 import MyTransition from '../../myTransition';
 import close from '../../../../resources/images/components/stockQuickView/close.png';
-export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTnetamt, tableInfo}) => {
+import CurrencyBox from '../CurrencyBox';
+export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [showContent, setShowContent] = useState(false);
 
@@ -38,8 +39,8 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
         if(!isMobile){
             return false;
         }
-        
-        if(NTDTnetamt == 0 && USDTnetamt == 0 && CNYTnetamt == 0){
+
+        if(currencyData.length === 0){
             if(tableInfo[0].key == 0){
                 return true;
             }
@@ -61,20 +62,7 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                         classNames={'maxHeight'}
                     >
                         <div className="settlementMoney__content">
-                            <div className="currency__box">
-                                <div className="currency__item">
-                                    <span className="currency">NTD</span>
-                                    <p className="amount">{formatNum(NTDTnetamt)}</p>
-                                </div>
-                                <div className="currency__item">
-                                    <span className="currency">USD</span>
-                                    <p className="amount">{formatNum(USDTnetamt)}</p>
-                                </div>
-                                <div className="currency__item">
-                                    <span className="currency">CNY</span>
-                                    <p className="amount">{formatNum(CNYTnetamt)}</p>
-                                </div>
-                            </div>
+                            <CurrencyBox currencyData={currencyData}/>
                             <QuickViewTable dataSource={tableInfo}/>
                         </div>
                     </MyTransition>
@@ -132,7 +120,7 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                     }
                 }
 
-                .currency {
+                /* .currency {
                     border: 1px solid #a9b6cb;
                     border-radius: 3px;
                     font-size: 10px;
@@ -148,8 +136,8 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                 .amount {
                     font-size: 2.6rem;
                     font-weight: bold;
-                }
-                .currency__item {
+                } */
+                /* .currency__item {
                     width: 50%;
                     display: inline-block;
                 }
@@ -163,7 +151,7 @@ export const StockQuickView = React.memo(({unreal, NTDTnetamt, USDTnetamt, CNYTn
                     .currency__box{
                         width: 100%;
                     }
-                }
+                } */
                 /* .currency__box */
             `}</style>
         </>

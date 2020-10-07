@@ -9,6 +9,8 @@ import { fetchStockSummarisePrtlos } from '../../../services/stock/stockSummaris
 import { StockQuickView } from './stockQuickView/StockQuickView';
 import { LastUpdatedTime } from './LastUpdatedTime';
 import { formatNum } from '../../../services/formatNum';
+import SBQuickView from './SBQuickView';
+
 export const TradingQuickView = () => {
     const dispatch = useDispatch();
     const currentAccount = useSelector((store) => store.user.currentAccount);
@@ -109,17 +111,39 @@ export const TradingQuickView = () => {
         }
     }
 
+    //當日交割款全幣別
+    const getCurrencyData = () => {
+        const currencyInfo = [];
+        if(summarisePrtlos.length !== 0){
+            summarisePrtlos.forEach((obj) => {
+                if(obj.tnetamt != 0){
+                    let item = {};
+                    item.currency = obj.Currency;
+                    item.amount = obj.tnetamt;
+                    currencyInfo.push(item);
+                }
+            })
+            // console.log(currencyInfo)
+            return currencyInfo;
+        }else{
+            return [];
+        }
+    }
+
     // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="tradingQuickView__container">
             <LastUpdatedTime />
-            <StockQuickView 
-                unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1].unreal}
-                NTDTnetamt={getTnetamt('NTD')}
-                USDTnetamt={getTnetamt('USD')}
-                CNYTnetamt={getTnetamt('CNY')}
-                tableInfo={getSummarisePrtlosInfo()}
-            />
+            {currentAccount.accttype === 'S' &&
+                <StockQuickView 
+                    unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1].unreal}
+                    currencyData={getCurrencyData()}
+                    tableInfo={getSummarisePrtlosInfo()}
+                />
+            }
+            {currentAccount.accttype === 'H' &&
+                <SBQuickView/>
+            }
             <style jsx>{``}</style>
         </div>
     );
