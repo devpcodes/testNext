@@ -1,0 +1,36 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2020, // 支援 ECMAScript2020
+        "sourceType": "module", // 使用 ECMAScript module
+        "ecmaFeatures": {
+            "jsx": true // 支援 JSX
+        }
+    },
+    "settings": {
+        "react": {
+            "version": "detect" // 自動偵測 react version
+        }
+    },
+    "env": {
+        "browser": true, // 允許 browser 全域物件，如：window and document
+        "amd": true, // 允許 require() and define()
+        "node": true // 允許 Node.js 環境全域物件
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:jsx-a11y/recommended",
+        "eslint-config-prettier"
+    ], // 套用第三方事先定義好的規則
+    "rules": {
+        "react/react-in-jsx-scope": "off", // Next.js 不需要引入 react
+        "jsx-a11y/anchor-is-valid": [
+            "error",
+            {
+                "components": ["Link"],
+                "specialLink": ["hrefLeft", "hrefRight"],
+                "aspects": ["invalidHref", "preferButton"]
+            }
+        ] // 符合 Next.js 專案的相關設定
+    }
+}
