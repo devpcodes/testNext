@@ -1,27 +1,21 @@
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
-import { Avatar, Popover } from 'antd';
+import { Popover } from 'antd';
 import { PersonalArea } from '../personalArea/PersonalArea';
 import { HeaderBtn } from '../HeaderBtn';
+import { AccountAvatar } from '../AccountAvatar';
 
 import theme from '../../../resources/styles/theme';
 
 export const AccountButton = () => {
-    const isMobile = useSelector((store) => store.layout.isMobile);
     const currentAccount = useSelector((store) => store.user.currentAccount);
     const [personalAreaVisible, setPersonalAreaVisible] = useState(false);
 
     const accountElement = (
-        <Avatar
-            style={{
-                fontSize: `${isMobile ? '1.5rem' : '2rem'}`,
-                fontWeight: '600',
-            }}
-            size={isMobile ? 28 : 40}
-        >
+        <AccountAvatar>
             {currentAccount.username && currentAccount.username[0]}
-        </Avatar>
+        </AccountAvatar>
     );
     const accountPopoverContent = (
         <div>
