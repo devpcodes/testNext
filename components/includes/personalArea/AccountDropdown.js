@@ -21,15 +21,15 @@ export const AccountDropdown = () => {
 
     const { Option, OptGroup } = Select;
     const dispatch = useDispatch();
-    const isMobile = useSelector((store) => store.layout.isMobile);
-    const accounts = useSelector((store) => store.user.accounts);
-    const currentAccount = useSelector((store) => store.user.currentAccount);
+    const isMobile = useSelector(store => store.layout.isMobile);
+    const accounts = useSelector(store => store.user.accounts);
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const [listVisible, setListVisible] = useState(false);
 
     const groupedAccount = accountGroupByType(accounts);
     const groupedAccountTypes = Object.keys(groupedAccount);
 
-    const getAccountText = (accType) => {
+    const getAccountText = accType => {
         switch (accType) {
             case 'S':
                 return '國內證券';
@@ -43,13 +43,11 @@ export const AccountDropdown = () => {
     };
 
     const dispatchCurrentAccount = (currentAccount, accounts) => {
-        const selectedAccount = accounts.find(
-            (account) => `${account.broker_id}-${account.account}` === currentAccount
-        );
+        const selectedAccount = accounts.find(account => `${account.broker_id}-${account.account}` === currentAccount);
         dispatch(setCurrentAccount(selectedAccount));
     };
 
-    const handleChange = (value) => {
+    const handleChange = value => {
         dispatchCurrentAccount(value, accounts);
     };
 
@@ -57,9 +55,10 @@ export const AccountDropdown = () => {
         setListVisible(!listVisible);
     };
 
-    const currentAccountHandler = (e) => {
+    const currentAccountHandler = e => {
         const selectedAccount = e.currentTarget.getAttribute('data-account');
         dispatchCurrentAccount(selectedAccount, accounts);
+        setListVisible(false);
     };
 
     if (!accounts.length || (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object)) return null;
@@ -76,7 +75,13 @@ export const AccountDropdown = () => {
                                 <div className="select__username">經紀部 {currentAccount.username}</div>
                             </div>
                         </div>
-                        <div className="button__clickToChange" onClick={handleClickToShow}>
+                        <div
+                            className="button__clickToShow"
+                            onClick={handleClickToShow}
+                            role="button"
+                            tabIndex="0"
+                            onKeyDown={handleClickToShow}
+                        >
                             {listVisible ? '確定' : '切換帳號'}
                         </div>
                     </div>
@@ -87,15 +92,18 @@ export const AccountDropdown = () => {
                                 const accText = getAccountText(accType);
                                 const accountsPerGroup = groupedAccount[accType];
                                 return (
-                                    accountsPerGroup.length && (
+                                    !!accountsPerGroup.length && (
                                         <div className="accountList__grouped" key={index}>
                                             <span className="optGroup__accType">{accText}</span>
-                                            {accountsPerGroup.map((account) => (
+                                            {accountsPerGroup.map(account => (
                                                 <div
                                                     key={`${account.broker_id}-${account.account}`}
                                                     className="account__card"
                                                     data-account={`${account.broker_id}-${account.account}`}
                                                     onClick={currentAccountHandler}
+                                                    onKeyDown={currentAccountHandler}
+                                                    role="menuitem"
+                                                    tabIndex="0"
                                                 >
                                                     <div className="account__wrapper">
                                                         <AccountAvatar>{account.username[0]}</AccountAvatar>
@@ -108,7 +116,7 @@ export const AccountDropdown = () => {
                                                     </div>
                                                     {`${currentAccount.broker_id}-${currentAccount.account}` ===
                                                         `${account.broker_id}-${account.account}` && (
-                                                        <img src={checkImg}></img>
+                                                        <img src={checkImg} alt="check"></img>
                                                     )}
                                                 </div>
                                             ))}
@@ -131,9 +139,9 @@ export const AccountDropdown = () => {
                         const accountsPerGroup = groupedAccount[accType];
 
                         return (
-                            accountsPerGroup.length && (
+                            !!accountsPerGroup.length && (
                                 <OptGroup label={<span className="optGroup__accType">{accText}</span>} key={index}>
-                                    {accountsPerGroup.map((account) => (
+                                    {accountsPerGroup.map(account => (
                                         <Option
                                             value={`${account.broker_id}-${account.account}`}
                                             key={`${account.broker_id}-${account.account}`}
@@ -211,7 +219,7 @@ export const AccountDropdown = () => {
                     .select__container {
                         margin-left: 17px;
                     }
-                    .button__clickToChange {
+                    .button__clickToShow {
                         display: flex;
                         align-items: center;
                         width: 32px;
