@@ -4,6 +4,7 @@ const initialState = {
     winWidth: 0,
     isMobile: false,
     showLogin: false,
+    showMenu: false,
     navData: {},
 };
 
@@ -24,6 +25,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 navData: action.payload,
+            };
+        case actionType.SHOW_MENU:
+            return {
+                ...state,
+                showMenu: action.payload,
             };
         default:
             return state;
