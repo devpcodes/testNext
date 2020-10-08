@@ -77,7 +77,20 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     transition: all 300ms ease-out;
                 }
 
-
+                .accounts-enter {
+                    transform: translate(100%, 0);
+                }
+                .accounts-enter-active {
+                    transform: translate(0, 0);
+                    transition: all 300ms;
+                }
+                .accounts-exit {
+                    transform: translate(0, 0);
+                }
+                .accounts-exit-active {
+                    transform: translate(100%, 0);
+                    transition: all 300ms;
+                }
             `}</style>
         </>
     )
