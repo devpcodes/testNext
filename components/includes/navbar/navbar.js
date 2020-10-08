@@ -439,7 +439,7 @@ const Navbar = React.memo((props) => {
                         display: block;
                     }
 
-                    .navbar__shortcuts__li {
+                    .navbar__lv1__item.navbar__shortcuts__li {
                         display: block;
                         height: 70px;
                         position: fixed;
