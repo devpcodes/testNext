@@ -14,7 +14,8 @@
     "env": {
         "browser": true, // 允許 browser 全域物件，如：window and document
         "amd": true, // 允許 require() and define()
-        "node": true // 允許 Node.js 環境全域物件
+        "node": true, // 允許 Node.js 環境全域物件
+        "es6": true
     },
     "extends": [
         "eslint:recommended",
