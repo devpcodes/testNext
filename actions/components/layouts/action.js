@@ -19,6 +19,13 @@ export const showLoginHandler = (bool) => {
     }
 }
 
+export const setMenuOpen = (bool) => {
+    return {
+        type: actionType.SHOW_MENU,
+        payload: bool
+    }
+}
+
 export const setNavItems = (token) => async (dispatch) => {
     try {
         const isServer = typeof window === 'undefined';

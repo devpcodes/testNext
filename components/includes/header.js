@@ -2,20 +2,28 @@ import Link from 'next/link';
 
 import Navbar from './navbar/navbar';
 import { HeaderCallToAction } from './headerCallToAction/HeaderCallToAction';
-
+// import React, { useState } from 'react';
 import logo from '../../resources/images/components/header/sinopac_securities_logo.png';
 import menu from '../../resources/images/components/header/ic_menu.png';
-import closemenu from '../../resources/images/components/header/ic_closemenu.png';
 import theme from '../../resources/styles/theme';
+import { useSelector, useDispatch } from 'react-redux';
+import { setMenuOpen } from '../../actions/components/layouts/action';
 
 const Header = () => {
+
+    const showMenu = useSelector(store => store.layout.showMenu);
+    const dispatch = useDispatch();
+
+    const menuClickHandler = function(){
+        dispatch(setMenuOpen(true));
+    }
+
     return (
         <header>
-            
             <div className="header__navbar">
-                <div className="navbar__switch__m"></div>
+                <div className="navbar__switch__m" onClick={menuClickHandler}></div>
                 <Link href="/">
-                    <a className="header__logo">
+                    <a className={`header__logo ${showMenu ? 'header__logo--hide' : ''}` } >
                         <img src={logo}></img>
                     </a>
                 </Link>
@@ -48,6 +56,7 @@ const Header = () => {
                     margin: 16px 0;
                     background-size: 158px 38px;
                 }
+
                 @media (max-width:1250px) {
                     .header__navbar {
                         width: 90%;
@@ -63,6 +72,9 @@ const Header = () => {
                 }
                 
                 @media (max-width:1024px) {
+                    .header__logo--hide {
+                        display: none;
+                    }
                     .navbar__switch__m {
                         display:block;
                     }
