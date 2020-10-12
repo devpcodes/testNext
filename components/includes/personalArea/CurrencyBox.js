@@ -36,7 +36,7 @@ const CurrencyBox = ({ currencyData, autoColor } = { autoColor: false }) => {
     return (
         <>
             <div className="currency__box">
-                {currencyData.length > 0 ? (
+                {currencyData?.length > 0 ? (
                     currencyData.map((item, index) => (
                         <div className="currency__item" key={index}>
                             <span className="currency">{item.currency}</span>
