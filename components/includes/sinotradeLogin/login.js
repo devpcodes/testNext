@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Checkbox, Modal } from 'antd';
+import { Form, Input, Button, Checkbox } from 'antd';
 import logo from '../../../resources/images/components/login/logo.png';
 import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
@@ -26,15 +26,31 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 remember: true,
             });
         }
+        window.addEventListener('keypress', winKeyDownHandler, false);
+        return () => {
+            window.removeEventListener('keypress', winKeyDownHandler, false);
+        };
     }, []);
 
     let account;
-    const fieldsChange = function (changedFields, allFields) {
+    const fieldsChange = function (changedFields) {
         if (changedFields.length !== 0) {
             if (changedFields[0].name[0] === 'account') {
                 // encryptionHandler(changedFields[0].value)
                 account = changedFields[0].value;
             }
+        }
+    };
+
+    const winKeyDownHandler = function (e) {
+        if (e.key === 'Enter') {
+            form.validateFields()
+                .then(() => {
+                    finishHandler();
+                })
+                .catch(() => {
+                    console.log('err');
+                });
         }
     };
 
@@ -71,7 +87,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         accountInput.current.focus();
     };
 
-    const finishHandler = async function (values) {
+    const finishHandler = async function () {
+        if (isLoading) {
+            return false;
+        }
         var errors = form.getFieldsError();
         errors = errors.filter(val => {
             return val.errors.length !== 0;
@@ -99,12 +118,32 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         <div className="login__container">
             <div className="login__box">
                 {!isPC ? (
-                    <div className="close__box">
-                        <img src={closeMobile} onClick={onClose} />
+                    <div
+                        className="close__box"
+                        onClick={onClose}
+                        onKeyDown={event => {
+                            if (event.key === 'Enter') {
+                                onClose();
+                            }
+                        }}
+                        role="button"
+                        tabIndex="0"
+                    >
+                        <img alt="關閉" src={closeMobile} />
                     </div>
                 ) : null}
                 {popup ? (
-                    <div className="close" onClick={onClose}>
+                    <div
+                        className="close"
+                        onClick={onClose}
+                        onKeyDown={event => {
+                            if (event.key === 'Enter') {
+                                onClose();
+                            }
+                        }}
+                        role="button"
+                        tabIndex="0"
+                    >
                         <span className="close__img"></span>
                     </div>
                 ) : null}
@@ -164,6 +203,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             />
                         </Form.Item>
                         <span
+                            role="presentation"
                             style={{ display: encryptAccount ? 'block' : 'none', color: '#737373', width: '100%' }}
                             onClick={accClickHandler}
                         >
@@ -214,7 +254,19 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     <a className="a__link">還不是永豐金證券客戶</a>
                 </p>
             </div>
-            {popup ? <div className="overLay" onClick={onClose}></div> : null}
+            {popup ? (
+                <div
+                    className="overLay"
+                    onClick={onClose}
+                    onKeyDown={event => {
+                        if (event.key === 'Enter') {
+                            onClose();
+                        }
+                    }}
+                    role="button"
+                    tabIndex="0"
+                ></div>
+            ) : null}
             <style jsx>{`
                 .login__container {
                     position: relative;

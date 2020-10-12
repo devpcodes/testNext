@@ -49,28 +49,29 @@ const Navbar = React.memo(props => {
                     </Link>
                 </span>
             </li>
-            {mainNav.map((lv1Item, lv1Index) => (
-                <li className="navbar__lv1__item" key={lv1Index}>
-                    <Link href="/">
-                        <a className="navbar__lv1__item__title">
-                            <span className="active__mark"></span>
-                            {lv1Item.title}
-                        </a>
-                    </Link>
-                    <ul
-                        className={`navbar__lv2 ${lv2MobileVisible ? 'navbar__lv2--show' : ''} ${
-                            lv1Index > mainNav.length / 2 ? 'right' : ''
-                        }`}
-                        style={{ width: 168 * lv1Item.items.length }}
-                    >
-                        {lv1Item.items.map((lv2Item, lv2Index) => (
-                            <li className="navbar__lv2__item" key={lv2Index}>
-                                <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024} />
-                            </li>
-                        ))}
-                    </ul>
-                </li>
-            ))}
+            {mainNav != null &&
+                mainNav.map((lv1Item, lv1Index) => (
+                    <li className="navbar__lv1__item" key={lv1Index}>
+                        <Link href="/">
+                            <a className="navbar__lv1__item__title">
+                                <span className="active__mark"></span>
+                                {lv1Item.title}
+                            </a>
+                        </Link>
+                        <ul
+                            className={`navbar__lv2 ${lv2MobileVisible ? 'navbar__lv2--show' : ''} ${
+                                lv1Index > mainNav.length / 2 ? 'right' : ''
+                            }`}
+                            style={{ width: 168 * lv1Item.items.length }}
+                        >
+                            {lv1Item.items.map((lv2Item, lv2Index) => (
+                                <li className="navbar__lv2__item" key={lv2Index}>
+                                    <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024} />
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                ))}
             <li className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
                     <Link href="/">

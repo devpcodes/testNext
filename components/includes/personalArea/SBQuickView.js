@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import CurrencyBox from './CurrencyBox';
 const SBQuickView = ({ unreal, deliveryTrial }) => {
     return (
@@ -44,5 +45,8 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
         </>
     );
 };
-
+SBQuickView.propTypes = {
+    unreal: PropTypes.array,
+    deliveryTrial: PropTypes.array,
+};
 export default SBQuickView;

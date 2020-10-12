@@ -49,6 +49,7 @@ export const TradingQuickView = () => {
             case 'H':
                 getSBUnrealizedPrtLos();
                 getDeliveryTrial();
+                break;
             default:
                 break;
         }

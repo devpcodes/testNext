@@ -118,40 +118,6 @@ export const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) =
                         margin-bottom: 20px;
                     }
                 }
-
-                /* .currency {
-                    border: 1px solid #a9b6cb;
-                    border-radius: 3px;
-                    font-size: 10px;
-                    color: #a9b6cb;
-                    padding: 0 1px;
-                }
-                @media (max-width:768px){
-                    .currency{
-                        border: 1px solid white;
-                        color: white;
-                    }
-                }
-                .amount {
-                    font-size: 2.6rem;
-                    font-weight: bold;
-                } */
-                /* .currency__item {
-                    width: 50%;
-                    display: inline-block;
-                }
-                @media (max-width:768px){
-                    .currency__item{
-                        float: left;
-                    }
-                }
-
-                @media (max-width:768px){
-                    .currency__box{
-                        width: 100%;
-                    }
-                } */
-                /* .currency__box */
             `}</style>
         </>
     );

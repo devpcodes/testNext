@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
@@ -21,7 +22,7 @@ import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 
-const Layout = React.memo(props => {
+const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
 
@@ -183,7 +184,7 @@ const Layout = React.memo(props => {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
                     .register('/sw.js', { scope: '/' })
-                    .then(reg => {
+                    .then(() => {
                         // console.log('SW registered!', reg);
                     })
                     .catch(err => console.log('Boo!', err));
@@ -247,7 +248,7 @@ const Layout = React.memo(props => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
             <Header />
-            <div className="page__container">{verifySuccess === true && props.children}</div>
+            <div className="page__container">{verifySuccess === true && children}</div>
             <Footer />
             <style jsx>{`
                 .page__container {
@@ -257,5 +258,7 @@ const Layout = React.memo(props => {
         </>
     );
 });
-
+Layout.propTypes = {
+    children: PropTypes.element,
+};
 export default Layout;

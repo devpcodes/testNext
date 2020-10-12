@@ -106,6 +106,7 @@ const CurrencyBox = ({ currencyData, autoColor } = { autoColor: false }) => {
     );
 };
 CurrencyBox.propTypes = {
+    autoColor: PropTypes.bool,
     currencyData: function (props) {
         const err = [];
         if (props.currencyData == null) {

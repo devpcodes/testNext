@@ -6,7 +6,7 @@ import loginImg from '../../../resources/images/pages/SinoTrade_login/group-3.pn
 import logo from '../../../resources/images/pages/SinoTrade_login/logo-dark.png';
 import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 
-const SinoTradeLogin = function ({ isVisible, onClose, successHandler }) {
+const SinoTradeLogin = function ({ onClose, successHandler }) {
     const [isPC, setIsPC] = useState(true);
 
     useEffect(() => {
@@ -46,7 +46,9 @@ const SinoTradeLogin = function ({ isVisible, onClose, successHandler }) {
             <div className="page__box">
                 <div className="login__header">
                     <img src={logo} alt="永豐金證券" />
-                    <img className="close" src={close} onClick={onClose} />
+                    <a onClick={onClose} href="#close" role="button">
+                        <img className="close" src={close} alt="關閉" />
+                    </a>
                 </div>
                 {isPC ? <img className="login__img" src={loginImg} alt="永豐金證券" /> : null}
                 <Login
@@ -98,7 +100,6 @@ const SinoTradeLogin = function ({ isVisible, onClose, successHandler }) {
     );
 };
 SinoTradeLogin.propTypes = {
-    // isVisible: PropTypes.bool,
     onClose: PropTypes.func,
     successHandler: PropTypes.func,
 };

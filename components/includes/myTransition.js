@@ -1,6 +1,6 @@
+import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { useSelector } from 'react-redux';
 const MyTransition = ({ isVisible, children, classNames }) => {
     // const isMobile = useSelector(store => store.layout.isMobile);
     const [isMobile, setIsMobile] = useState(true);
@@ -88,5 +88,9 @@ const MyTransition = ({ isVisible, children, classNames }) => {
         </>
     );
 };
-
+MyTransition.propTypes = {
+    isVisible: PropTypes.bool,
+    children: PropTypes.element,
+    classNames: PropTypes.string,
+};
 export default MyTransition;
