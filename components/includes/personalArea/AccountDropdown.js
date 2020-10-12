@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import ReactDOM from 'react-dom';
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -15,7 +14,7 @@ import checkImg from '../../../resources/images/components/login/ic-check.png';
 export const AccountDropdown = () => {
     const selectRef = useRef(null);
     const dropdownWidth = 243;
-    const selectTop = ReactDOM.findDOMNode(selectRef.current)?.getBoundingClientRect()?.top;
+    const selectTop = selectRef.current?.getBoundingClientRect()?.top;
     const dropdownCssTop = selectTop ? `${selectTop}px !important` : '0px';
     const dropdownCssWidth = selectTop ? `${dropdownWidth - 28}px !important` : '0px';
 
@@ -42,6 +41,16 @@ export const AccountDropdown = () => {
         }
     };
 
+    const toggleListVisible = () => {
+        setListVisible(!listVisible);
+    };
+
+    const keyPressedToToggle = e => {
+        if (e.key === 'Enter') {
+            toggleListVisible();
+        }
+    };
+
     const dispatchCurrentAccount = (currentAccount, accounts) => {
         const selectedAccount = accounts.find(account => `${account.broker_id}-${account.account}` === currentAccount);
         dispatch(setCurrentAccount(selectedAccount));
@@ -51,14 +60,16 @@ export const AccountDropdown = () => {
         dispatchCurrentAccount(value, accounts);
     };
 
-    const handleClickToShow = () => {
-        setListVisible(!listVisible);
-    };
-
     const currentAccountHandler = e => {
         const selectedAccount = e.currentTarget.getAttribute('data-account');
         dispatchCurrentAccount(selectedAccount, accounts);
         setListVisible(false);
+    };
+
+    const keyPressed = e => {
+        if (e.key === 'Enter') {
+            currentAccountHandler(e);
+        }
     };
 
     if (!accounts.length || (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object)) return null;
@@ -77,10 +88,10 @@ export const AccountDropdown = () => {
                         </div>
                         <div
                             className="button__clickToShow"
-                            onClick={handleClickToShow}
+                            onClick={toggleListVisible}
+                            onKeyDown={keyPressedToToggle}
                             role="button"
                             tabIndex="0"
-                            onKeyDown={handleClickToShow}
                         >
                             {listVisible ? '確定' : '切換帳號'}
                         </div>
@@ -101,7 +112,7 @@ export const AccountDropdown = () => {
                                                     className="account__card"
                                                     data-account={`${account.broker_id}-${account.account}`}
                                                     onClick={currentAccountHandler}
-                                                    onKeyDown={currentAccountHandler}
+                                                    onKeyDown={keyPressed}
                                                     role="menuitem"
                                                     tabIndex="0"
                                                 >
