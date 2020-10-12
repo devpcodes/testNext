@@ -1,13 +1,13 @@
-import React, {  useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import logo from '../../../resources/images/components/login/logo.png';
 import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
-import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png'
+import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 import { submit } from '../../../services/components/login/login';
 
-const Login = function({popup, isPC, onClose, successHandler}) {
+const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [form] = Form.useForm();
     const accountInput = useRef(null);
     const [encryptAccount, setEncryptAccount] = useState('');
@@ -15,36 +15,36 @@ const Login = function({popup, isPC, onClose, successHandler}) {
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         const account = localStorage.getItem('userID');
-        if(account){
+        if (account) {
             form.setFieldsValue({
-                account
-            })
-            const encryptStr = encryptionHandler(account)
-            setEncryptAccount(encryptStr)
+                account,
+            });
+            const encryptStr = encryptionHandler(account);
+            setEncryptAccount(encryptStr);
             setAccountFontSize('0rem');
             form.setFieldsValue({
-                remember: true
-            })
+                remember: true,
+            });
         }
     }, []);
 
     let account;
-    const fieldsChange = function(changedFields, allFields) {
-        if(changedFields.length !== 0){
-            if(changedFields[0].name[0] === 'account'){
+    const fieldsChange = function (changedFields, allFields) {
+        if (changedFields.length !== 0) {
+            if (changedFields[0].name[0] === 'account') {
                 // encryptionHandler(changedFields[0].value)
                 account = changedFields[0].value;
             }
         }
-    }
+    };
 
-    const encryptionHandler = function(str){
-        if(str.length > 3){
+    const encryptionHandler = function (str) {
+        if (str.length > 3) {
             const firstStr = str.substr(0, 3);
-            const lastStr = str.substr(7,9);
+            const lastStr = str.substr(7, 9);
             let star = '';
-            for (let index = 0; index < str.length - 3 ; index++) {
-                if(index >= 4){
+            for (let index = 0; index < str.length - 3; index++) {
+                if (index >= 4) {
                     break;
                 }
                 star += '*';
@@ -52,39 +52,39 @@ const Login = function({popup, isPC, onClose, successHandler}) {
             str = firstStr + star + lastStr;
         }
         return str;
-    }
+    };
 
-    const blurHandler = function(){
-        if(account){
-            const encryptStr = encryptionHandler(account)
-            setEncryptAccount(encryptStr)
+    const blurHandler = function () {
+        if (account) {
+            const encryptStr = encryptionHandler(account);
+            setEncryptAccount(encryptStr);
             setAccountFontSize('0rem');
         }
-    }
+    };
 
-    const accClickHandler = function(){
+    const accClickHandler = function () {
         form.setFieldsValue({
-            account: ''
-        })
+            account: '',
+        });
         setEncryptAccount('');
         setAccountFontSize('1.8rem');
         accountInput.current.focus();
-    }
+    };
 
-    const finishHandler = async function(values){
+    const finishHandler = async function (values) {
         var errors = form.getFieldsError();
-        errors = errors.filter((val) => {
+        errors = errors.filter(val => {
             return val.errors.length !== 0;
-        })
-        if(errors.length === 0){
+        });
+        if (errors.length === 0) {
             setIsLoading(true);
             try {
-                const res = await submit(form.getFieldValue('account'), form.getFieldValue('password')); 
+                const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
-                if(res.data.success){
-                    if(form.getFieldValue('remember')){
+                if (res.data.success) {
+                    if (form.getFieldValue('remember')) {
                         localStorage.setItem('userID', form.getFieldValue('account'));
-                    }else{
+                    } else {
                         localStorage.removeItem('userID');
                     }
                     successHandler();
@@ -93,25 +93,24 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 setIsLoading(false);
             }
         }
-    }
+    };
 
     return (
         <div className="login__container">
             <div className="login__box">
-                {!isPC ? 
+                {!isPC ? (
                     <div className="close__box">
-                        <img src={closeMobile} onClick={onClose}/>
+                        <img src={closeMobile} onClick={onClose} />
                     </div>
-                    : null
-                }
-                {popup ? 
+                ) : null}
+                {popup ? (
                     <div className="close" onClick={onClose}>
                         <span className="close__img"></span>
-                    </div> : null
-                }
+                    </div>
+                ) : null}
                 {isPC ? null : <div className="login__logo"></div>}
                 <p className="login__title">歡迎來到永豐金證券</p>
-                {isPC ? 
+                {isPC ? (
                     <div className="loginService__box">
                         <span className="service__title">登入後享受更多服務</span>
                         <div className="service__infoBox">
@@ -119,44 +118,57 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                             <span className="service__item">帳務損益</span>
                             <span className="service__item">更多個人化服務</span>
                         </div>
-                    </div>: 
-                    null
-                }
-                <Form form={form} name="complex-form" 
-                    onFieldsChange={fieldsChange} 
-                    onFinish={finishHandler} 
-                    initialValues={{remember: false}}
+                    </div>
+                ) : null}
+                <Form
+                    form={form}
+                    name="complex-form"
+                    onFieldsChange={fieldsChange}
+                    onFinish={finishHandler}
+                    initialValues={{ remember: false }}
                 >
                     <div className="account__box">
-                        <Form.Item 
+                        <Form.Item
                             hasFeedback
-                            name="account" 
+                            name="account"
                             label=""
                             validateFirst
                             rules={[
                                 {
-                                    required: true, message: '請輸入身份證字號' 
+                                    required: true,
+                                    message: '請輸入身份證字號',
                                 },
                                 {
                                     validator: (rule, value) => {
-                                        const patt = /^[a-zA-Z0-9]{0,}$/
-                                        if(patt.test(value)){
-                                            return Promise.resolve()
-                                        }else{
+                                        const patt = /^[a-zA-Z0-9]{0,}$/;
+                                        if (patt.test(value)) {
+                                            return Promise.resolve();
+                                        } else {
                                             return Promise.reject('含錯誤字元');
                                         }
-                                    }
-                                }
+                                    },
+                                },
                             ]}
                         >
-                            <Input 
-                                style={{transition: 'none', width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: accountFontSize}} 
-                                placeholder="請輸入身份證字號" 
+                            <Input
+                                style={{
+                                    transition: 'none',
+                                    width: '100%',
+                                    height: '54px',
+                                    border: 'solid 1px #e6ebf5',
+                                    fontSize: accountFontSize,
+                                }}
+                                placeholder="請輸入身份證字號"
                                 onBlur={blurHandler}
                                 ref={accountInput}
                             />
                         </Form.Item>
-                        <span style={{display: encryptAccount ? 'block' : 'none', color: '#737373', width: '100%'}} onClick={accClickHandler}>{encryptAccount}</span>
+                        <span
+                            style={{ display: encryptAccount ? 'block' : 'none', color: '#737373', width: '100%' }}
+                            onClick={accClickHandler}
+                        >
+                            {encryptAccount}
+                        </span>
                     </div>
 
                     <Form.Item
@@ -171,45 +183,43 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                             },
                             {
                                 validator: (rule, value) => {
-                                    if(value.length >= 4 && value.length <= 12){
-                                        return Promise.resolve()
-                                    }else{
-                                        return Promise.reject('輸入字數錯誤')
+                                    if (value.length >= 4 && value.length <= 12) {
+                                        return Promise.resolve();
+                                    } else {
+                                        return Promise.reject('輸入字數錯誤');
                                     }
-                                }
-                            }
+                                },
+                            },
                         ]}
                     >
-                        <Input.Password placeholder="密碼(7-12位元)"  style={{ width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: '1.8rem'}}/>
+                        <Input.Password
+                            placeholder="密碼(7-12位元)"
+                            style={{ width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: '1.8rem' }}
+                        />
                     </Form.Item>
-                    <div className='remember__box'>
-                        <Form.Item
-                            name='remember'
-                            rules={[]}
-                            noStyle
-                            valuePropName= 'checked'
-                        >
-                            <Checkbox style={{fontSize: '1.8rem', color: '#0d1623'}}>
-                                記住我的身份證字號
-                            </Checkbox>
+                    <div className="remember__box">
+                        <Form.Item name="remember" rules={[]} noStyle valuePropName="checked">
+                            <Checkbox style={{ fontSize: '1.8rem', color: '#0d1623' }}>記住我的身份證字號</Checkbox>
                         </Form.Item>
                         <span className="a__link forgetPassword">忘記密碼</span>
                     </div>
 
                     <Form.Item label="">
-                        <Button loading={isLoading} type="primary" htmlType="submit" style={{marginTop: '20px'}}>
+                        <Button loading={isLoading} type="primary" htmlType="submit" style={{ marginTop: '20px' }}>
                             登入
                         </Button>
                     </Form.Item>
                 </Form>
-                <p className="a__box"><a className="a__link">還不是永豐金證券客戶</a></p>
+                <p className="a__box">
+                    <a className="a__link">還不是永豐金證券客戶</a>
+                </p>
             </div>
             {popup ? <div className="overLay" onClick={onClose}></div> : null}
             <style jsx>{`
                 .login__container {
                     position: relative;
                     display: ${popup ? 'block' : isPC ? 'inline-block' : 'block'};
-                    z-index: 99;
+                    z-index: 9999;
                 }
                 .close {
                     width: 52px;
@@ -231,7 +241,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     margin-top: 10px;
                     margin-left: 10px;
                     display: inline-block;
-                    transition: all .1s;
+                    transition: all 0.1s;
                 }
                 .close__img:hover {
                     transform: scale(0.9, 0.9) translateZ(0);
@@ -240,7 +250,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     position: ${popup ? 'fixed' : 'static'};
                     width: ${isPC ? '512px' : '101%'};
                     height: ${isPC ? '548px' : '100vh'};
-                    z-index: 3;
+                    z-index: 9999;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
                     transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};
@@ -258,7 +268,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background-color: rgba(0,0,0,0.5);
+                    background-color: rgba(0, 0, 0, 0.5);
                     z-index: 2;
                     cursor: pointer;
                 }
@@ -269,7 +279,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     margin: 0 auto;
                     margin-top: 37px;
                 }
-                .input::placeholder{
+                .input::placeholder {
                     font-size: 1.8rem;
                 }
                 .forgetPassword {
@@ -279,7 +289,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                     font-size: 1.8rem;
                     color: #c43826;
                 }
-                p{
+                p {
                     text-align: center;
                     font-size: 2.4rem;
                     font-weight: bold;
@@ -322,10 +332,10 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 .a__box {
                     margin-top: -10px;
                 }
-                .account__box{
+                .account__box {
                     position: relative;
                 }
-                .account__box span{
+                .account__box span {
                     position: absolute;
                     top: 14px;
                     font-size: 1.8rem;
@@ -334,19 +344,17 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 .remember__box {
                     text-align: left;
                 }
-
-
             `}</style>
             <style global jsx>{`
                 .login__container .ant-btn-primary {
-                    background:#c43826;
+                    background: #c43826;
                     height: 54px;
                     border: none;
                     width: 100%;
                     font-size: 1.8rem;
                 }
                 .login__container .ant-btn-primary:hover {
-                    background:#9d1200;
+                    background: #9d1200;
                 }
                 .ant-modal-confirm-body .ant-modal-confirm-content {
                     font-size: 1.6rem;
@@ -354,7 +362,7 @@ const Login = function({popup, isPC, onClose, successHandler}) {
 
                 /* Change Autocomplete styles in Chrome*/
                 input:-webkit-autofill,
-                input:-webkit-autofill:hover, 
+                input:-webkit-autofill:hover,
                 input:-webkit-autofill:focus,
                 textarea:-webkit-autofill,
                 textarea:-webkit-autofill:hover,
@@ -366,14 +374,14 @@ const Login = function({popup, isPC, onClose, successHandler}) {
                 }
             `}</style>
         </div>
-    )
-}
+    );
+};
 
 Login.propTypes = {
     isPC: PropTypes.bool,
     popup: PropTypes.bool,
     onClose: PropTypes.func,
     successHandler: PropTypes.func,
-}
+};
 
 export default Login;
