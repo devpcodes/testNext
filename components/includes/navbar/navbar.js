@@ -4,264 +4,17 @@ import { setMenuOpen } from '../../../actions/components/layouts/action';
 import Link from 'next/link'
 import theme from '../../../resources/styles/theme'
 import NavList from "../navbar/navList"
-import { resize } from '../../../actions/components/layouts/action';
 import logo from '../../../resources/images/components/header/sinopac_securities_logo.png';
 import closemenu from '../../../resources/images/components/header/ic_closemenu.png';
-const fakeHeaderData = [
-    {title : "國內證券", 
-        items: [
-            {title: "下單", 
-                items: [
-                    {title : "豐存台股", iconType: "HOT" },
-                    {title : "借券專區", iconType: null },
-                    {title : "股票申購", iconType: null },
-                    {title : "競價拍賣", iconType: null },
-                    {title : "公開收購", iconType: null },
-                ]
-            },
-            {title: "報價", 
-                items: [
-                    {title : "大盤報價", iconType: null },
-                    {title : "類股報價", iconType: null },
-                    {title : "個股報價", iconType: null },
-                    {title : "權證報價", iconType: null },
-                    {title : "智慧選股", iconType: null },
-                    {title : "Ai幫你顧", iconType: null },
-                ]
-            },
-            {title: "商品", 
-                items: [
-                    {title : "國內債券", iconType: null },
-                    {title : "ETN專區", iconType: null },
-                    {title : "結構型商品", iconType: null },
-                    {title : "投顧台股報告", iconType: null },
-                    {title : "豐TV", iconType: null },
-                    {title : "豐雲學堂", iconType: null },
-                ]
-            },
-            {title: "資訊", 
-                items: [
-                    {title : "台股公佈欄", iconType: null },
-                    {title : "理財行事曆", iconType: null },
-                    {title : "財經新聞", iconType: null },
-                    {title : "台股公告", iconType: null },
-                ]
-            },
-        ]
-    },
-    {title : "海外投資",
-        items: [
-            {title: "下單", 
-                items: [
-                    {title : "豐存台股", iconType: "HOT" },
-                    {title : "借券專區", iconType: null },
-                    {title : "股票申購", iconType: null },
-                    {title : "競價拍賣", iconType: null },
-                    {title : "公開收購", iconType: null },
-                ]
-            },
-            {title: "報價", 
-                items: [
-                    {title : "大盤報價", iconType: null },
-                    {title : "類股報價", iconType: null },
-                    {title : "個股報價", iconType: null },
-                    {title : "權證報價", iconType: null },
-                    {title : "智慧選股", iconType: null },
-                    {title : "Ai幫你顧", iconType: null },
-                ]
-            },
-            {title: "商品", 
-                items: [
-                    {title : "國內債券", iconType: null },
-                    {title : "ETN專區", iconType: null },
-                    {title : "結構型商品", iconType: null },
-                    {title : "投顧台股報告", iconType: null },
-                    {title : "豐TV", iconType: null },
-                    {title : "豐雲學堂", iconType: null },
-                ]
-            },
-            {title: "資訊", 
-                items: [
-                    {title : "台股公佈欄", iconType: null },
-                    {title : "理財行事曆", iconType: null },
-                    {title : "財經新聞", iconType: null },
-                    {title : "台股公告", iconType: null },
-                ]
-            },
-        ]
-    },
-    {title : "期貨選擇權",
-    items: [
-        {title: "下單", 
-            items: [
-                    {title : "豐存台股", iconType: "HOT" },
-                    {title : "借券專區", iconType: null },
-                    {title : "股票申購", iconType: null },
-                    {title : "競價拍賣", iconType: null },
-                    {title : "公開收購", iconType: null },
-                ]
-            },
-            {title: "報價", 
-                items: [
-                    {title : "大盤報價", iconType: null },
-                    {title : "類股報價", iconType: null },
-                    {title : "個股報價", iconType: null },
-                    {title : "權證報價", iconType: null },
-                    {title : "智慧選股", iconType: null },
-                    {title : "Ai幫你顧", iconType: null },
-                ]
-            },
-            {title: "商品", 
-                items: [
-                    {title : "國內債券", iconType: null },
-                    {title : "ETN專區", iconType: null },
-                    {title : "結構型商品", iconType: null },
-                    {title : "投顧台股報告", iconType: null },
-                    {title : "豐TV", iconType: null },
-                    {title : "豐雲學堂", iconType: null },
-                ]
-            },
-            {title: "資訊", 
-                items: [
-                    {title : "台股公佈欄", iconType: null },
-                    {title : "理財行事曆", iconType: null },
-                    {title : "財經新聞", iconType: null },
-                    {title : "台股公告", iconType: null },
-                ]
-            },
-        ]
-    },
-    {title : "財富管理", 
-    items: [
-        {title: "下單", 
-            items: [
-                    {title : "豐存台股", iconType: "HOT" },
-                    {title : "借券專區", iconType: null },
-                    {title : "股票申購", iconType: null },
-                    {title : "競價拍賣", iconType: null },
-                    {title : "公開收購", iconType: null },
-                ]
-            },
-            {title: "報價", 
-                items: [
-                    {title : "大盤報價", iconType: null },
-                    {title : "類股報價", iconType: null },
-                    {title : "個股報價", iconType: null },
-                    {title : "權證報價", iconType: null },
-                    {title : "智慧選股", iconType: null },
-                    {title : "Ai幫你顧", iconType: null },
-                ]
-            },
-            {title: "商品", 
-                items: [
-                    {title : "國內債券", iconType: null },
-                    {title : "ETN專區", iconType: null },
-                    {title : "結構型商品", iconType: null },
-                    {title : "投顧台股報告", iconType: null },
-                    {title : "豐TV", iconType: null },
-                    {title : "豐雲學堂", iconType: null },
-                ]
-            },
-            {title: "資訊", 
-                items: [
-                    {title : "台股公佈欄", iconType: null },
-                    {title : "理財行事曆", iconType: null },
-                    {title : "財經新聞", iconType: null },
-                    {title : "台股公告", iconType: null },
-                ]
-            },
-        ]
-    },
-    {title : "客戶支援", 
-    items: [
-        {title: "下單", 
-            items: [
-                    {title : "豐存台股", iconType: "HOT" },
-                    {title : "借券專區", iconType: null },
-                    {title : "股票申購", iconType: null },
-                    {title : "競價拍賣", iconType: null },
-                    {title : "公開收購", iconType: null },
-                ]
-            },
-            {title: "報價", 
-                items: [
-                    {title : "大盤報價", iconType: null },
-                    {title : "類股報價", iconType: null },
-                    {title : "個股報價", iconType: null },
-                    {title : "權證報價", iconType: null },
-                    {title : "智慧選股", iconType: null },
-                    {title : "Ai幫你顧", iconType: null },
-                ]
-            },
-            {title: "商品", 
-                items: [
-                    {title : "國內債券", iconType: null },
-                    {title : "ETN專區", iconType: null },
-                    {title : "結構型商品", iconType: null },
-                    {title : "投顧台股報告", iconType: null },
-                    {title : "豐TV", iconType: null },
-                    {title : "豐雲學堂", iconType: null },
-                ]
-            },
-            {title: "資訊", 
-                items: [
-                    {title : "台股公佈欄", iconType: null },
-                    {title : "理財行事曆", iconType: null },
-                    {title : "財經新聞", iconType: null },
-                    {title : "台股公告", iconType: null },
-                ]
-            },
-        ]
-    },
-    {title : "法人專區",
-    items: [
-        {title: "下單22", 
-            items: [
-                    {title : "豐存台股", iconType: "HOT" },
-                    {title : "借券專區", iconType: null },
-                    {title : "股票申購", iconType: null },
-                    {title : "競價拍賣", iconType: null },
-                    {title : "公開收購", iconType: null },
-                ]
-            },
-            {title: "報價", 
-                items: [
-                    {title : "大盤報價", iconType: null },
-                    {title : "類股報價", iconType: null },
-                    {title : "個股報價", iconType: null },
-                    {title : "權證報價", iconType: null },
-                    {title : "智慧選股", iconType: null },
-                    {title : "Ai幫你顧", iconType: null },
-                ]
-            },
-            {title: "商品", 
-                items: [
-                    {title : "國內債券", iconType: null },
-                    {title : "ETN專區", iconType: null },
-                    {title : "結構型商品", iconType: null },
-                    {title : "投顧台股報告", iconType: null },
-                    {title : "豐TV", iconType: null },
-                    {title : "豐雲學堂", iconType: null },
-                ]
-            },
-            {title: "資訊", 
-                items: [
-                    {title : "台股公佈欄", iconType: null },
-                    {title : "理財行事曆", iconType: null },
-                    {title : "財經新聞", iconType: null },
-                    {title : "台股公告", iconType: null },
-                ]
-            },
-        ]
-    }
-    
-];
+
 
 
 
 const Navbar = React.memo((props) => {
 
-
+    const serverMainlNav = useSelector((store) => store.server.navData?.main);
+    const clientMainlNav = useSelector((store) => store.layout.navData?.main);
+    const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
 
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
@@ -285,10 +38,7 @@ const Navbar = React.memo((props) => {
     }
 
     const [lv2MobileVisible, setLv2MobileVisible] = useState(false);
-    const subMenuClickHandler = (a,b) => {
-        console.log(a.target)
-        setLv2MobileVisible(!lv2MobileVisible);
-    }
+
 
     return (
         <ul className={`navbar ${showMenu ? '' : 'navbar--hide'}`} >
@@ -307,7 +57,7 @@ const Navbar = React.memo((props) => {
                     </Link>
                 </span> 
             </li>
-            {fakeHeaderData.map((lv1Item, lv1Index) => (
+            {mainNav.map((lv1Item, lv1Index) => (
                 
                 <li className="navbar__lv1__item" key={lv1Index}>
                     <Link href="/">
@@ -316,7 +66,7 @@ const Navbar = React.memo((props) => {
                             {lv1Item.title}
                         </a>
                     </Link>
-                    <ul className={`navbar__lv2 ${lv2MobileVisible ? "navbar__lv2--show" : ""} ` } style={{ width: 168 * lv1Item.items.length }}>
+                    <ul className={`navbar__lv2 ${lv2MobileVisible ? "navbar__lv2--show" : ""} ${lv1Index > (mainNav.length/2) ? "right" : "" }` } style={{ width: 168 * lv1Item.items.length }}>
                         {lv1Item.items.map((lv2Item, lv2Index) => (
                             <li className="navbar__lv2__item" key={lv2Index} >
                                 <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
@@ -399,13 +149,17 @@ const Navbar = React.memo((props) => {
                     display: none;
                     position:absolute;
                     top: 70px;
-                    left: -180px;
+                    left: 0;
                     padding: 18px 36px;
                     border-top: 6px solid ${theme.colors.secondary};
                     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3);
                     background: #FFF;
                     z-index: 1001;
                     text-align: left;
+                }
+                .navbar__lv2.right {
+                    left: unset;
+                    right: 0;
                 }
     
                 .navbar__lv2__item { 
