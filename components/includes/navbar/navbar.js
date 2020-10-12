@@ -14,7 +14,12 @@ const Navbar = React.memo((props) => {
 
     const serverMainlNav = useSelector((store) => store.server.navData?.main);
     const clientMainlNav = useSelector((store) => store.layout.navData?.main);
+    const showMenu = useSelector(store => store.layout.showMenu);
+
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
+    const [lv2MobileVisible, setLv2MobileVisible] = useState(false);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
@@ -26,19 +31,11 @@ const Navbar = React.memo((props) => {
         if (winWidth <= 1024){
             dispatch(setMenuOpen(false));
         }
-
     }
-
-
-    const showMenu = useSelector(store => store.layout.showMenu);
-    const dispatch = useDispatch();
 
     const menuClickHandler = function(){
         dispatch(setMenuOpen(false));
     }
-
-    const [lv2MobileVisible, setLv2MobileVisible] = useState(false);
-
 
     return (
         <ul className={`navbar ${showMenu ? '' : 'navbar--hide'}`} >
