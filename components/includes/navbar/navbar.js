@@ -346,7 +346,7 @@ const Navbar = React.memo((props) => {
                     z-index: 1001;
                 }
                 .navbar--hide {
-                    display: none;
+                    display: flex;
                 }
                 .navbar__lv1__item.mobile__menu__ctrl {
                     display:none;
@@ -434,6 +434,9 @@ const Navbar = React.memo((props) => {
                     }
                     .close__menu {
                         float:right;
+                    }
+                    .navbar--hide {
+                        display: none;
                     }
                     .navbar__lv1__item.mobile__menu__ctrl {
                         display: block;
