@@ -1,16 +1,16 @@
-import errImg from '../resources/images/components/errPage/img-loading-m.png'
+import errImg from '../resources/images/components/errPage/img-loading-m.png';
 function ErrPage() {
-	return (
-		<>
+    return (
+        <>
             <div className="errPage__container">
                 <div className="errPage__box">
                     <div className="err__img"></div>
                     <p>很抱歉，您的權限不足...</p>
                 </div>
             </div>
-			
-			<style jsx>{`
-                .errPage__container{
+
+            <style jsx>{`
+                .errPage__container {
                     width: 100%;
                     text-align: center;
                     height: 500px;
@@ -26,16 +26,15 @@ function ErrPage() {
                     width: 132px;
                     height: 120px;
                     margin: 0 auto;
-                    background-image: url(${errImg})
+                    background-image: url(${errImg});
                 }
                 .errPage__box p {
                     margin-top: 20px;
                     font-size: 1.6rem;
                 }
-			`}</style>
-		</>
-	)
+            `}</style>
+        </>
+    );
 }
-
 
 export default ErrPage;

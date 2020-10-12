@@ -9,21 +9,17 @@ import { AccountAvatar } from '../AccountAvatar';
 import theme from '../../../resources/styles/theme';
 
 export const AccountButton = () => {
-    const currentAccount = useSelector((store) => store.user.currentAccount);
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const [personalAreaVisible, setPersonalAreaVisible] = useState(false);
 
-    const accountElement = (
-        <AccountAvatar>
-            {currentAccount.username && currentAccount.username[0]}
-        </AccountAvatar>
-    );
+    const accountElement = <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>;
     const accountPopoverContent = (
         <div>
             <PersonalArea personalAreaVisible={personalAreaVisible} />
         </div>
     );
 
-    const handlePersonalAreaVisible = (visible) => {
+    const handlePersonalAreaVisible = visible => {
         setPersonalAreaVisible(visible);
     };
 

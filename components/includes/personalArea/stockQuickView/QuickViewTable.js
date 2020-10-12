@@ -19,7 +19,7 @@ import { Table } from 'antd';
 //         cruuency: 'CNY',
 //     },
 // ];
-  
+
 const columns = [
     {
         title: '日期',
@@ -37,7 +37,7 @@ const columns = [
         key: 'cruuency',
     },
 ];
-export const QuickViewTable = ({dataSource}) => {
+export const QuickViewTable = ({ dataSource }) => {
     return (
         <>
             <div className="stockQuickView__table">
@@ -45,36 +45,38 @@ export const QuickViewTable = ({dataSource}) => {
                 <div className="rectangle"></div>
             </div>
             <style jsx>{`
-                @media (max-width:768px){
-
+                @media (max-width: 768px) {
                 }
             `}</style>
             <style jsx global>{`
-                .stockQuickView__table .ant-table-tbody>tr>td, .ant-table-thead>tr>th, .ant-table tfoot>tr>td, .ant-table tfoot>tr>th {
+                .stockQuickView__table .ant-table-tbody > tr > td,
+                .ant-table-thead > tr > th,
+                .ant-table tfoot > tr > td,
+                .ant-table tfoot > tr > th {
                     padding: 0;
                 }
-                .stockQuickView__table .ant-table-thead>tr>th {
+                .stockQuickView__table .ant-table-thead > tr > th {
                     font-weight: bold;
                     color: #a9b6cb;
                 }
-                .stockQuickView__table .ant-table-thead>tr>th {
+                .stockQuickView__table .ant-table-thead > tr > th {
                     background: white;
                 }
-                .stockQuickView__table .ant-table-tbody>tr>td {
+                .stockQuickView__table .ant-table-tbody > tr > td {
                     border: none;
                     color: #0d1623;
                 }
-                .stockQuickView__table .ant-table-tbody>tr>td :nth-child(2){
+                .stockQuickView__table .ant-table-tbody > tr > td :nth-child(2) {
                     font-weight: bold;
                     text-align: right;
                 }
-                .stockQuickView__table .ant-table-tbody>tr>td :nth-child(3){
+                .stockQuickView__table .ant-table-tbody > tr > td :nth-child(3) {
                     text-align: center;
                 }
-                .ant-table-cell :nth-child(2){
+                .ant-table-cell :nth-child(2) {
                     text-align: right;
                 }
-                .ant-table-cell :nth-child(3){
+                .ant-table-cell :nth-child(3) {
                     text-align: center;
                 }
                 .stockQuickView__table {
@@ -83,11 +85,11 @@ export const QuickViewTable = ({dataSource}) => {
                 .stockQuickView__table .ant-empty-normal {
                     margin: 10px 0;
                 }
-                @media (max-width:768px){
-                    .ant-table-thead{
+                @media (max-width: 768px) {
+                    .ant-table-thead {
                         background: none;
                     }
-                    .stockQuickView__table .ant-table-thead>tr>th{
+                    .stockQuickView__table .ant-table-thead > tr > th {
                         background: none;
                     }
                     .ant-table-container {
@@ -95,31 +97,31 @@ export const QuickViewTable = ({dataSource}) => {
                         padding: 0 30px;
                         min-height: 65px;
                     }
-                    .ant-table-thead>tr>th {
+                    .ant-table-thead > tr > th {
                         border-bottom: solid 1.1px #121f32;
                         padding: 8px 0;
                         font-size: 1.6rem;
                         padding-top: 15px;
                     }
-                    .ant-table-thead>tr>td {
+                    .ant-table-thead > tr > td {
                         padding: 8px 0;
                     }
-                    .stockQuickView__table .ant-table-tbody>tr>td {
+                    .stockQuickView__table .ant-table-tbody > tr > td {
                         color: white;
                         font-size: 1.6rem;
                     }
-                    .stockQuickView__table .ant-table-tbody>tr>td :nth-child(2){
+                    .stockQuickView__table .ant-table-tbody > tr > td :nth-child(2) {
                         font-weight: normal;
                     }
-                    .ant-table{
+                    .ant-table {
                         border-top: 1px solid #17273d;
                     }
-                    .stockQuickView__table .ant-table-tbody>tr>td {
+                    .stockQuickView__table .ant-table-tbody > tr > td {
                         padding: 8px 0;
                     }
-                    .rectangle{
+                    .rectangle {
                         transform: rotate(-180deg);
-                        background-image: linear-gradient(to top,#0d1623,#080e16);
+                        background-image: linear-gradient(to top, #0d1623, #080e16);
                         width: 99%;
                         height: 10px;
                     }

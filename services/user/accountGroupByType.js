@@ -1,4 +1,4 @@
-export const accountGroupByType = (objectArray) => {
+export const accountGroupByType = objectArray => {
     return objectArray.reduce(
         function (acc, obj) {
             let key = obj.accttype;
@@ -10,6 +10,6 @@ export const accountGroupByType = (objectArray) => {
             acc[key].push(obj);
             return acc;
         },
-        { S: [], H: [], F: [] }
+        { S: [], H: [], F: [] },
     );
 };

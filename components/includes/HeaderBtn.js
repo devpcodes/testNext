@@ -6,7 +6,7 @@ import theme from '../../resources/styles/theme';
 export const HeaderBtn = ({ content, type, clickHandler }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
-    const handleClick = (e) => {
+    const handleClick = e => {
         e.preventDefault();
         clickHandler && clickHandler();
     };
@@ -21,7 +21,7 @@ export const HeaderBtn = ({ content, type, clickHandler }) => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: ${isMobile? 'auto':'105px'};
+                    width: ${isMobile ? 'auto' : '105px'};
                     padding: 0 15px;
                     height: 100%;
                     background-color: ${theme.colors.darkBg};
@@ -42,7 +42,7 @@ export const HeaderBtn = ({ content, type, clickHandler }) => {
                     top: 0;
                     left: 0;
                     transition: ${theme.button.transition};
-                    display: ${isMobile ? 'none' : 'block'}
+                    display: ${isMobile ? 'none' : 'block'};
                 }
                 .header__btn:hover:after,
                 .header__btn:focus:after,

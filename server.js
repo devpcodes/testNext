@@ -14,7 +14,6 @@ app.prepare().then(() => {
 
     server.use('/nossr', express.static('./no_ssr/testPage'));
 
-
     server.get('*', (req, res) => {
         if (req.url.includes('/sw')) {
             const filePath = join(__dirname, 'static', 'workbox', 'sw.js');
@@ -29,7 +28,7 @@ app.prepare().then(() => {
     //     return handle(req, res);
     // });
 
-    server.listen(port, (err) => {
+    server.listen(port, err => {
         if (err) throw err;
         console.log(`> Ready on http://localhost:${port}`);
     });

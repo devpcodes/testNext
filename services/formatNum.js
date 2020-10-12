@@ -7,5 +7,5 @@ export const formatNum = function (num, precision, separator) {
         parts[0] = parts[0].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + (separator || ','));
         return parts.join('.');
     }
-    return "--";
-}
+    return '--';
+};

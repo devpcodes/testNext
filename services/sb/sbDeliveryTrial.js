@@ -6,11 +6,11 @@ export const fetchSBDeliveryTrialFetcher = async function (market, stock_id, has
         market,
         stock_id,
         hasData,
-        token
+        token,
     });
-    if(res.data.success != null && res.data.success === true){
+    if (res.data.success != null && res.data.success === true) {
         return res.data.result;
-    }else{
+    } else {
         return [];
     }
 };

@@ -6,11 +6,11 @@ export const fetchStockSummarisePrtlos = async function (bhno, cseq, sip, token)
         bhno,
         cseq,
         sip,
-        token
+        token,
     });
-    if(res.data.success != null && res.data.success === 'True'){
+    if (res.data.success != null && res.data.success === 'True') {
         return res.data.result.profit_sums.profit_sum;
-    }else{
+    } else {
         return [];
     }
 };

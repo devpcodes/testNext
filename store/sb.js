@@ -1,8 +1,8 @@
 import * as actionType from '../actions/sb/actionType';
 
 const initialState = {
-    SBUnRealPrtlos: {}, 
-    SBDeliveryTrial: {}
+    SBUnRealPrtlos: {},
+    SBDeliveryTrial: {},
 };
 
 const reducer = (state = initialState, action) => {

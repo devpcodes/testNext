@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps, router }) {
     const currentComp = useRef(null);
     const oldPathName = useRef(null);
 
-    const getLayout = Component.getLayout || ((page) => <Layout children={page} />);
+    const getLayout = Component.getLayout || (page => <Layout children={page} />);
     const renderComp = getLayout(<Component {...pageProps} />);
     useEffect(() => {
         if (router.pathname === '/SinoTrade_login') {

@@ -1,6 +1,6 @@
 // const withImages = require('next-images');
 const withOptimizedImages = require('next-optimized-images');
-const NextWorkboxPlugin = require ('next-workbox-webpack-plugin');
+const NextWorkboxPlugin = require('next-workbox-webpack-plugin');
 const cache = require('./resources/serviceWorker/cache');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -16,7 +16,7 @@ module.exports = withOptimizedImages({
                 '.next': '/_next',
             },
             runtimeCaching: cache,
-            globIgnores: ['**/webpack-hmr']
+            globIgnores: ['**/webpack-hmr'],
         };
         if (!isServer && !dev) {
             config.plugins.push(
@@ -26,6 +26,6 @@ module.exports = withOptimizedImages({
                 }),
             );
         }
-        return config
+        return config;
     },
-})
+});

@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition } from 'react-transition-group';
 import { useSelector } from 'react-redux';
 const MyTransition = ({ isVisible, children, classNames }) => {
     // const isMobile = useSelector(store => store.layout.isMobile);
     const [isMobile, setIsMobile] = useState(true);
     useEffect(() => {
         let winWidth = window.innerWidth;
-        if(winWidth <= 768){
+        if (winWidth <= 768) {
             setIsMobile(true);
-        }else{
+        } else {
             setIsMobile(false);
         }
     }, []);
     return (
         <>
-            <CSSTransition
-                unmountOnExit
-                in={isVisible}
-                timeout={300}
-                classNames={classNames}
-                appear
-            >
+            <CSSTransition unmountOnExit in={isVisible} timeout={300} classNames={classNames} appear>
                 {children}
             </CSSTransition>
 
@@ -39,14 +33,13 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     opacity: 0;
                     transition: opacity 300ms;
                 }
-                
+
                 .login-enter {
                     transform: ${isMobile && classNames === 'login' ? 'translate(-100%, 0)' : 'scale(0)'};
                 }
                 .login-enter-active {
                     transform: ${isMobile && classNames === 'login' ? 'translate(0, 0)' : 'scale(1)'};
                     transition: all 300ms;
-                    
                 }
                 .login-exit {
                     transform: ${isMobile && classNames === 'login' ? 'translate(0, 0)' : 'scale(1)'};
@@ -93,7 +86,7 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                 }
             `}</style>
         </>
-    )
-}
+    );
+};
 
-export default MyTransition
+export default MyTransition;

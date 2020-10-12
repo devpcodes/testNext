@@ -4,41 +4,41 @@ import { getNav } from '../../../services/components/header/navFetcher';
 export const resize = (winWidth, isMobile) => {
     const payload = {
         winWidth,
-        isMobile
-    }
+        isMobile,
+    };
     return {
         type: actionType.RESIZE_EVENT,
-        payload
-    }
-}
+        payload,
+    };
+};
 
-export const showLoginHandler = (bool) => {
+export const showLoginHandler = bool => {
     return {
         type: actionType.SHOW_LOGIN,
-        payload: bool
-    }
-}
+        payload: bool,
+    };
+};
 
-export const setMenuOpen = (bool) => {
+export const setMenuOpen = bool => {
     return {
         type: actionType.SHOW_MENU,
-        payload: bool
-    }
-}
+        payload: bool,
+    };
+};
 
-export const setNavItems = (token) => async (dispatch) => {
+export const setNavItems = token => async dispatch => {
     try {
         const isServer = typeof window === 'undefined';
         const res = await getNav(token);
         const navData = res.result;
 
-        const setServerNavItems = (navData) => {
+        const setServerNavItems = navData => {
             return {
                 type: actionType.SET_SERVER_NAV_ITEMS,
                 payload: navData,
             };
         };
-        const setClientNavItems = (navData) => {
+        const setClientNavItems = navData => {
             return {
                 type: actionType.SET_CLIENT_NAV_ITEMS,
                 payload: navData,

@@ -11,96 +11,104 @@ const footerData = [
         children: [
             {
                 title: '關於永豐金',
-                link: 'https://securities.sinopac.com/'
+                link: 'https://securities.sinopac.com/',
             },
             {
                 title: '投資人訊息',
-                link: 'https://securities.sinopac.com/currentOperation/20170706160641375000000000000202.html'
+                link: 'https://securities.sinopac.com/currentOperation/20170706160641375000000000000202.html',
             },
             {
                 title: '金融友善服務準則',
-                link: 'https://www.sinotrade.com.tw/ec/Friendly-service/creterion.html'
+                link: 'https://www.sinotrade.com.tw/ec/Friendly-service/creterion.html',
             },
             {
                 title: '服務據點',
-                link: 'https://www.sinotrade.com.tw/newweb/Service_Positions'
+                link: 'https://www.sinotrade.com.tw/newweb/Service_Positions',
             },
             {
                 title: '人力招募',
-                link: 'http://www.sinopac.com/footer/20170522162509790000000000000025.html'
-            }
-        ]
+                link: 'http://www.sinopac.com/footer/20170522162509790000000000000025.html',
+            },
+        ],
     },
     {
         title: '數位服務',
         children: [
             {
                 title: '新理財網下單',
-                link: ''
+                link: '',
             },
             {
                 title: 'iLeader App下單',
-                link: ''
+                link: '',
             },
             {
                 title: 'eLeader AP下單',
-                link: ''
+                link: '',
             },
             {
                 title: '好神通 AP下單',
-                link: ''
+                link: '',
             },
             {
                 title: '豐管家服務App',
-                link: ''
-            }
-        ]
+                link: '',
+            },
+        ],
     },
     {
         title: '企業團網站',
         children: [
             {
                 title: '永豐金控',
-                link: 'http://www.sinopac.com/'
+                link: 'http://www.sinopac.com/',
             },
             {
                 title: '永豐金證券(亞洲)',
-                link: 'http://www.sinopacasia.com/'
+                link: 'http://www.sinopacasia.com/',
             },
             {
                 title: '永豐期貨',
-                link: 'http://www.spf.com.tw/'
+                link: 'http://www.spf.com.tw/',
             },
             {
                 title: '永豐投信',
-                link: 'http://sitc.sinopac.com/'
+                link: 'http://sitc.sinopac.com/',
             },
             {
                 title: '永豐MMA交易網',
-                link: 'https://mma.sinopac.com/MemberPortal/Member/NextWebLogin.aspx'
+                link: 'https://mma.sinopac.com/MemberPortal/Member/NextWebLogin.aspx',
             },
             {
                 title: '永豐信用卡服務網',
-                link: 'https://card.sinopac.com/'
-            }
-        ]
-    }
-]
+                link: 'https://card.sinopac.com/',
+            },
+        ],
+    },
+];
 
-const Footer = React.memo((props) => {
-    return ( 
+const Footer = React.memo(props => {
+    return (
         <div className="footer">
             <div className="footer__up">
                 <ul>
-                    <li><span>客服專線</span> 0800-038-123</li>
+                    <li>
+                        <span>客服專線</span> 0800-038-123
+                    </li>
                     <li> 02-6630-8899</li>
-                    <li><span>服務時間</span> (AM7:30~PM10:00)</li>
+                    <li>
+                        <span>服務時間</span> (AM7:30~PM10:00)
+                    </li>
                 </ul>
-                <a href="https://sinourl.tw/ozBFJI" target="_blank" className="footer__up--signup">快速開戶</a>
+                <a href="https://sinourl.tw/ozBFJI" target="_blank" className="footer__up--signup">
+                    快速開戶
+                </a>
             </div>
             <div className="mobile__box2">
                 <p className="box2__title">撥打客服專線</p>
-                <p className="box2__val"><span>服務時間</span>(AM7:30~PM10:00)</p>
+                <p className="box2__val">
+                    <span>服務時間</span>(AM7:30~PM10:00)
+                </p>
             </div>
             <div className="mobile__box3">
                 <p>永豐金證券股份有限公司</p>
@@ -112,9 +120,15 @@ const Footer = React.memo((props) => {
                     {footerData.map((item, index) => (
                         <div className="middle--card" key={index}>
                             <h3>{item.title}</h3>
-                            {item.children != null ? item.children.map((link, index2) => (
-                                <p key={index2}><a target="_blank" href={link.link}>{link.title}</a></p>
-                            )): null}
+                            {item.children != null
+                                ? item.children.map((link, index2) => (
+                                      <p key={index2}>
+                                          <a target="_blank" href={link.link}>
+                                              {link.title}
+                                          </a>
+                                      </p>
+                                  ))
+                                : null}
                         </div>
                     ))}
                     <div className="middle--card">
@@ -131,16 +145,48 @@ const Footer = React.memo((props) => {
                         <li>107年金管證總字第0006號</li>
                     </ul>
                     <ul>
-                        <li><a href="https://www.taiwanresearch.com/index.asp" target="_blank">Taiwan Research</a></li>
-                        <li><a href="http://www.sinopac.com/footer/20170512111026126000000000000863.html" target="_blank">客戶資料保密措施</a></li>
-                        <li><a href="https://www.sinotrade.com.tw/newweb/index_privacy" target="_blank">隱私權保護聲明</a></li>
-                        <li><a href="https://securities.sinopac.com/footer/list15d1c4072970000085d381a2b549a2dc.html" target="_blank">共同行銷商品契約</a></li>
-                        <li><a href="https://www.sinotrade.com.tw/newweb/index_disclaimer" target="_blank">網站免責聲明</a></li>
+                        <li>
+                            <a href="https://www.taiwanresearch.com/index.asp" target="_blank">
+                                Taiwan Research
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="http://www.sinopac.com/footer/20170512111026126000000000000863.html"
+                                target="_blank"
+                            >
+                                客戶資料保密措施
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.sinotrade.com.tw/newweb/index_privacy" target="_blank">
+                                隱私權保護聲明
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://securities.sinopac.com/footer/list15d1c4072970000085d381a2b549a2dc.html"
+                                target="_blank"
+                            >
+                                共同行銷商品契約
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.sinotrade.com.tw/newweb/index_disclaimer" target="_blank">
+                                網站免責聲明
+                            </a>
+                        </li>
                     </ul>
                     <div className="down__social">
-                        <a href="https://www.youtube.com/user/SinoEC" target="_blank" className="btn__youtube">Youtube</a>
-                        <a href="https://www.facebook.com/SinoPacSecurities/" target="_blank" className="btn__fb">Facebook</a>
-                        <a href="https://line.me/R/ti/p/@dhq6620j" target="_blank" className="btn__line">Line</a>
+                        <a href="https://www.youtube.com/user/SinoEC" target="_blank" className="btn__youtube">
+                            Youtube
+                        </a>
+                        <a href="https://www.facebook.com/SinoPacSecurities/" target="_blank" className="btn__fb">
+                            Facebook
+                        </a>
+                        <a href="https://line.me/R/ti/p/@dhq6620j" target="_blank" className="btn__line">
+                            Line
+                        </a>
                     </div>
                 </div>
             </div>
@@ -149,20 +195,20 @@ const Footer = React.memo((props) => {
                     background-color: #172439;
                     font-family: ${theme.fontFamily};
                 }
-                .footer .mobile__box2{
+                .footer .mobile__box2 {
                     display: none;
                 }
-                @media (max-width:800px), print{
-                    .footer .mobile__box2{
+                @media (max-width: 800px), print {
+                    .footer .mobile__box2 {
                         display: block;
                     }
                 }
-                @media (max-width:800px), print{
+                @media (max-width: 800px), print {
                     .box2__title {
                         font-size: 2rem;
                         color: #dedede;
                         text-align: center;
-                        margin: .5rem;
+                        margin: 0.5rem;
                         margin-top: 2rem;
                     }
                     .box2__val {
@@ -172,15 +218,15 @@ const Footer = React.memo((props) => {
                         margin-top: 0;
                         margin-bottom: 2rem;
                     }
-                    .box2__val span{
-                        padding-right: .8rem;
+                    .box2__val span {
+                        padding-right: 0.8rem;
                     }
                 }
                 .footer .mobile__box3 {
                     display: none;
                 }
-                @media (max-width:800px){
-                    .footer .mobile__box3{
+                @media (max-width: 800px) {
+                    .footer .mobile__box3 {
                         display: block;
                         color: #f7f7f7;
                         text-align: center;
@@ -191,34 +237,33 @@ const Footer = React.memo((props) => {
                         color: #c0c0c0;
                         border-bottom: 1px solid #172439;
                     }
-                    .footer .mobile__box3 p{
+                    .footer .mobile__box3 p {
                         margin: 0;
                     }
                 }
-				.footer__up {
+                .footer__up {
                     background-color: #172439;
                     margin: 0 auto;
                     width: ${theme.contentWidth.pc};
                     height: 7rem;
                     /* position: relative; */
 
-                    
                     padding: 0 1.5rem;
                 }
-                @media (max-width:1250px), print{
-                    .footer__up{
+                @media (max-width: 1250px), print {
+                    .footer__up {
                         width: 90%;
                     }
                 }
-                @media (max-width:1024px), print{
-                    .footer__up{
+                @media (max-width: 1024px), print {
+                    .footer__up {
                         width: 100%;
                         height: 7rem;
                         padding: 0 3rem;
                     }
                 }
-                @media (max-width:800px), print{
-                    .footer__up{
+                @media (max-width: 800px), print {
+                    .footer__up {
                         height: 6.5rem;
                         padding: 0;
                     }
@@ -232,14 +277,14 @@ const Footer = React.memo((props) => {
                     top: 50%;
                     transform: translateY(-50%); */
                 }
-                @media (max-width:1024px), print{
-                    .footer__up ul{
+                @media (max-width: 1024px), print {
+                    .footer__up ul {
                         line-height: 7rem;
                         display: inline-block;
                     }
                 }
-                @media (max-width:800px), print{
-                    .footer__up ul{
+                @media (max-width: 800px), print {
+                    .footer__up ul {
                         display: none;
                     }
                 }
@@ -250,17 +295,17 @@ const Footer = React.memo((props) => {
                     line-height: 1.5rem;
                     padding: 0 1rem 0 0;
                     margin: 0 1rem 0 0;
-                    border-right: 0.1rem solid #f7f7f7
+                    border-right: 0.1rem solid #f7f7f7;
                 }
-                @media (max-width:1024px), print{
-                    .footer__up li{
+                @media (max-width: 1024px), print {
+                    .footer__up li {
                         font-size: 1.8rem;
                     }
                 }
-                .footer__up li:last-child{
+                .footer__up li:last-child {
                     border: none;
                 }
-                .footer__up .footer__up--signup{
+                .footer__up .footer__up--signup {
                     /* position: absolute;
                     right: 0;
                     top: 0; */
@@ -270,12 +315,12 @@ const Footer = React.memo((props) => {
                     font-size: 2.2rem;
                     text-align: center;
                     line-height: 7rem;
-                    transition: background .2s linear;
+                    transition: background 0.2s linear;
                     background: #c43826;
                     float: right;
                 }
-                @media (max-width:1024px), print{
-                    .footer__up .footer__up--signup{
+                @media (max-width: 1024px), print {
+                    .footer__up .footer__up--signup {
                         font-size: 2rem;
                         height: 7rem;
                         line-height: 7rem;
@@ -283,8 +328,8 @@ const Footer = React.memo((props) => {
                         width: 15rem;
                     }
                 }
-                @media (max-width:800px), print{
-                    .footer__up .footer__up--signup{
+                @media (max-width: 800px), print {
+                    .footer__up .footer__up--signup {
                         font-size: 2.3rem;
                         height: 6.5rem;
                         line-height: 6.5rem;
@@ -292,7 +337,7 @@ const Footer = React.memo((props) => {
                         width: 100%;
                     }
                 }
-                .footer__up .footer__up--signup:hover{
+                .footer__up .footer__up--signup:hover {
                     background: #9d1200;
                 }
                 .footer__up a {
@@ -314,19 +359,19 @@ const Footer = React.memo((props) => {
                     /* display: flex; */
                     /* flex-direction: row; */
                 }
-                @media (max-width:1250px), print{
+                @media (max-width: 1250px), print {
                     .footer__middle .middle__box {
                         width: 90%;
                     }
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .footer__middle .middle__box {
                         width: 100%;
                         padding: 3rem 3rem 3rem 3rem;
                         white-space: nowrap;
                     }
                 }
-                @media (max-width:800px) {
+                @media (max-width: 800px) {
                     .footer__middle .middle__box {
                         display: none;
                     }
@@ -338,7 +383,7 @@ const Footer = React.memo((props) => {
 
                     /* flex: 0.25; */
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .middle--card {
                         margin: 0;
                         width: calc((100% - 160px) / 3);
@@ -353,7 +398,7 @@ const Footer = React.memo((props) => {
                     color: #c0c0c0;
                     font-size: 1.4rem;
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .middle--card:last-child {
                         top: 3rem;
                         right: 3rem;
@@ -376,8 +421,8 @@ const Footer = React.memo((props) => {
 
                     padding: 0 0 0.1rem 0;
                     color: #c7c7c7;
-                    transition: border .1s linear;
-                    border-bottom: 0.1rem solid rgba(0,0,0,0);
+                    transition: border 0.1s linear;
+                    border-bottom: 0.1rem solid rgba(0, 0, 0, 0);
                     margin-bottom: 0.7rem;
                 }
                 .middle--card a:hover {
@@ -388,7 +433,7 @@ const Footer = React.memo((props) => {
                     width: 14.5rem;
                     height: 14.5rem;
                     margin: 0 0 2rem 0;
-                    content: "";
+                    content: '';
                     background: url(${qrCode}) no-repeat center center;
                     background-size: 100% auto;
                 }
@@ -401,12 +446,12 @@ const Footer = React.memo((props) => {
                     position: relative;
                     padding: 2.5rem 0;
                 }
-                @media (max-width:1250px), print{
+                @media (max-width: 1250px), print {
                     .down__box {
                         width: 90%;
                     }
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .down__box {
                         width: 100%;
                         padding: 1.5rem 0;
@@ -418,19 +463,19 @@ const Footer = React.memo((props) => {
                     top: 50%;
                     transform: translateY(-50%);
                     display: block;
-                    content: "";
+                    content: '';
                     width: 15.6rem;
                     height: 3.6rem;
                     vertical-align: middle;
                     background: url(${logo}) no-repeat center center;
                     background-size: 100% auto;
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .down__box::before {
                         width: 13rem;
                     }
                 }
-                @media (max-width:800px){
+                @media (max-width: 800px) {
                     .down__box::before {
                         display: none;
                         position: static;
@@ -443,20 +488,20 @@ const Footer = React.memo((props) => {
                     margin-left: 18rem;
                     margin-bottom: 0.2rem;
                 }
-                @media (max-width:1100px), print{
+                @media (max-width: 1100px), print {
                     .down__box ul {
                         text-align: center;
                         margin-left: 0;
                     }
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .down__box ul {
                         width: 66%;
                         margin: 0 auto;
                         padding: 0;
                     }
                 }
-                @media (max-width:800px), print{
+                @media (max-width: 800px), print {
                     .down__box ul {
                         display: none;
                     }
@@ -473,10 +518,10 @@ const Footer = React.memo((props) => {
                     color: #c0c0c0;
                     font-size: 1.4rem;
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .down__box li {
-                        padding: 0 .5rem 0 0;
-                        margin: 0 .5rem 0.7rem 0;
+                        padding: 0 0.5rem 0 0;
+                        margin: 0 0.5rem 0.7rem 0;
                         font-size: 1.2rem;
                     }
                 }
@@ -493,12 +538,12 @@ const Footer = React.memo((props) => {
                     top: 50%;
                     transform: translateY(-50%);
                 }
-                @media (max-width:1024px), print{
+                @media (max-width: 1024px), print {
                     .down__social {
                         right: 3rem;
                     }
                 }
-                @media (max-width:800px), print{
+                @media (max-width: 800px), print {
                     .down__social {
                         text-align: center;
                         position: static;
@@ -526,9 +571,8 @@ const Footer = React.memo((props) => {
                     white-space: nowrap;
                     overflow: hidden;
                 }
-   
-			`}</style>
-        </div> 
+            `}</style>
+        </div>
     );
-})
+});
 export default Footer;

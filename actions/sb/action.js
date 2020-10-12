@@ -1,6 +1,6 @@
 import * as actionType from './actionType';
 
-export const getSBUnRealPrtlos = (axiosFun) => async (dispatch) => {
+export const getSBUnRealPrtlos = axiosFun => async dispatch => {
     try {
         const data = await axiosFun;
         return dispatch(setSBUnRealPrtlos(data));
@@ -8,14 +8,14 @@ export const getSBUnRealPrtlos = (axiosFun) => async (dispatch) => {
         console.error(`error:`, error);
     }
 };
-const setSBUnRealPrtlos = (sbUnRealPrtlos) => {
+const setSBUnRealPrtlos = sbUnRealPrtlos => {
     return {
         type: actionType.SET_SB_UNREAL_PRTLOS,
         payload: sbUnRealPrtlos,
     };
 };
 
-export const getSBDeliveryTrial = (axiosFun) => async (dispatch) => {
+export const getSBDeliveryTrial = axiosFun => async dispatch => {
     try {
         const data = await axiosFun;
         return dispatch(setSBDeliveryTrial(data));
@@ -23,7 +23,7 @@ export const getSBDeliveryTrial = (axiosFun) => async (dispatch) => {
         console.error(`error:`, error);
     }
 };
-const setSBDeliveryTrial = (sbDeliveryTrial) => {
+const setSBDeliveryTrial = sbDeliveryTrial => {
     return {
         type: actionType.SET_SB_DELIVERY_TRIAL,
         payload: sbDeliveryTrial,

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Modal } from 'antd';
 
-
 const a8DefaultVersion = 'v1';
 const a8Auth = {
     username: 'nweb',
@@ -20,31 +19,36 @@ const createA8Instance = (version = a8DefaultVersion, auth = a8Auth) =>
     });
 export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth) => {
     const a8Ins = createA8Instance(version, auth);
-    a8Ins.interceptors.response.use((response) => {
-        return response;
-    }, error => {
-        return Promise.reject(error)
-    });
+    a8Ins.interceptors.response.use(
+        response => {
+            return response;
+        },
+        error => {
+            return Promise.reject(error);
+        },
+    );
     return a8Ins;
 };
 
+axios.interceptors.response.use(
+    res => {
+        return res;
+    },
+    error => {
+        const isServer = typeof window === 'undefined';
+        const defaultErrorMsg = '伺服器錯誤，請稍後再試';
 
-axios.interceptors.response.use(res => {
-    return res;
-}, error=>{
-    const isServer = typeof window === 'undefined';
-    const defaultErrorMsg = '伺服器錯誤，請稍後再試';
-
-    if(error.response == null){
-        !isServer && Modal.error({content: defaultErrorMsg});
-    }else{
-        if(error.response.data != null){
-            !isServer && Modal.error({content: error.response.data.message || defaultErrorMsg});
-        }else{
-            !isServer && Modal.error({content: defaultErrorMsg});
+        if (error.response == null) {
+            !isServer && Modal.error({ content: defaultErrorMsg });
+        } else {
+            if (error.response.data != null) {
+                !isServer && Modal.error({ content: error.response.data.message || defaultErrorMsg });
+            } else {
+                !isServer && Modal.error({ content: defaultErrorMsg });
+            }
         }
-    }
-    return Promise.reject(error)
-});
+        return Promise.reject(error);
+    },
+);
 
 export default axios;

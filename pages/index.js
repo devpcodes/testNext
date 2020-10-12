@@ -11,8 +11,8 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 const Chart = dynamic(() => import('../components/includes/chart'), { ssr: false });
 
 const Home = function () {
-    const winWidth = useSelector((store) => store.layout.winWidth);
-    const isMobile = useSelector((store) => store.layout.isMobile);
+    const winWidth = useSelector(store => store.layout.winWidth);
+    const isMobile = useSelector(store => store.layout.isMobile);
 
     return (
         <div>

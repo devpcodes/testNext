@@ -1,6 +1,6 @@
 import * as actionType from './actionType';
 
-export const getStockUnRealPrtlos = (axiosFun) => async (dispatch) => {
+export const getStockUnRealPrtlos = axiosFun => async dispatch => {
     try {
         const data = await axiosFun;
         return dispatch(setStockUnRealPrtlos(data));
@@ -8,14 +8,14 @@ export const getStockUnRealPrtlos = (axiosFun) => async (dispatch) => {
         console.error(`error:`, error);
     }
 };
-const setStockUnRealPrtlos = (unRealPrtlos) => {
+const setStockUnRealPrtlos = unRealPrtlos => {
     return {
         type: actionType.SET_UNREAL_PRTLOS,
         payload: unRealPrtlos,
     };
 };
 
-export const getStockSummarisePrtlos = (axiosFun) => async (dispatch) => {
+export const getStockSummarisePrtlos = axiosFun => async dispatch => {
     try {
         const data = await axiosFun;
         return dispatch(setStockSummarisePrtlos(data));
@@ -23,7 +23,7 @@ export const getStockSummarisePrtlos = (axiosFun) => async (dispatch) => {
         console.error(`error:`, error);
     }
 };
-const setStockSummarisePrtlos = (unRealPrtlos) => {
+const setStockSummarisePrtlos = unRealPrtlos => {
     return {
         type: actionType.SET_SUMMARISE_PRTLOS,
         payload: unRealPrtlos,

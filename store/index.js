@@ -16,5 +16,5 @@ const reducers = combineReducers({
     user,
     stock,
     sb,
-})
+});
 export default reducers;

@@ -6,8 +6,8 @@ import { AccountButton } from './AccountButton';
 
 export const HeaderCallToAction = () => {
     const router = useRouter();
-    const isLogin = useSelector((store) => store.user.isLogin);
-    const isMobile = useSelector((store) => store.layout.isMobile);
+    const isLogin = useSelector(store => store.user.isLogin);
+    const isMobile = useSelector(store => store.layout.isMobile);
 
     const goSignUp = () => {
         router.push('/OpenAccount');

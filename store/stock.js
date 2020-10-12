@@ -1,8 +1,8 @@
 import * as actionType from '../actions/stock/actionType';
 
 const initialState = {
-    UnRealPrtlos: [], 
-    SummarisePrtlos: []
+    UnRealPrtlos: [],
+    SummarisePrtlos: [],
 };
 
 const reducer = (state = initialState, action) => {

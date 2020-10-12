@@ -1,52 +1,52 @@
 import { useState, useEffect } from 'react';
 import { QuickViewTable } from './QuickViewTable';
 import { formatNum } from '../../../../services/formatNum';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import MyTransition from '../../myTransition';
 import close from '../../../../resources/images/components/stockQuickView/close.png';
 import CurrencyBox from '../CurrencyBox';
-export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => {
+export const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [showContent, setShowContent] = useState(false);
 
     useEffect(() => {
-        if(!isMobile){
-            setShowContent(true)
+        if (!isMobile) {
+            setShowContent(true);
         }
     }, [isMobile]);
 
     //併上+-符號
-    const getUnreal = (unreal) => {
-        if(Number(unreal) > 0){
-            return '+' + formatNum(unreal)
-        }else if(Number(unreal) <= 0){
-            return formatNum(unreal)
-        }else{
+    const getUnreal = unreal => {
+        if (Number(unreal) > 0) {
+            return '+' + formatNum(unreal);
+        } else if (Number(unreal) <= 0) {
+            return formatNum(unreal);
+        } else {
             return unreal;
         }
-    }
+    };
 
     const contentBtnClick = () => {
-        if(noData()){
+        if (noData()) {
             return;
         }
-        setShowContent((prevState)=> !prevState)
-    }
+        setShowContent(prevState => !prevState);
+    };
 
     //判斷無資料
     const noData = () => {
         //pc版不做此判斷
-        if(!isMobile){
+        if (!isMobile) {
             return false;
         }
 
-        if(currencyData.length === 0){
-            if(tableInfo[0].key == 0){
+        if (currencyData.length === 0) {
+            if (tableInfo[0].key == 0) {
                 return true;
             }
         }
         return false;
-    }
+    };
 
     return (
         <>
@@ -54,16 +54,15 @@ export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => 
                 <p>國內證券未實現損益</p>
                 <p className="unrealized">{getUnreal(unreal)}</p>
                 <div className="settlementMoney__box">
-                    <p onClick={contentBtnClick} className="content__btn">{isMobile ? '近三日交割款' : '當日交割款'}</p>
-                    {isMobile && <img onClick={contentBtnClick} src={close}/>}
+                    <p onClick={contentBtnClick} className="content__btn">
+                        {isMobile ? '近三日交割款' : '當日交割款'}
+                    </p>
+                    {isMobile && <img onClick={contentBtnClick} src={close} />}
                     {isMobile && noData() && <p className="noData">無交割款</p>}
-                    <MyTransition
-                        isVisible={showContent && !noData()}
-                        classNames={'maxHeight'}
-                    >
+                    <MyTransition isVisible={showContent && !noData()} classNames={'maxHeight'}>
                         <div className="settlementMoney__content">
-                            <CurrencyBox currencyData={currencyData}/>
-                            <QuickViewTable dataSource={tableInfo}/>
+                            <CurrencyBox currencyData={currencyData} />
+                            <QuickViewTable dataSource={tableInfo} />
                         </div>
                     </MyTransition>
                 </div>
@@ -75,8 +74,8 @@ export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => 
                     color: #0d1623;
                     /* padding: 0 30px; */
                 }
-                @media (max-width:768px){
-                    .StockQuickView__container{
+                @media (max-width: 768px) {
+                    .StockQuickView__container {
                         width: 100%;
                         text-align: center;
                         color: white;
@@ -91,7 +90,7 @@ export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => 
                 img {
                     margin-left: 5px;
                     margin-top: -5px;
-                    transition: all .3s;
+                    transition: all 0.3s;
                     transform: ${showContent ? 'rotate(-180deg)' : 'rotate(0)'};
                     cursor: pointer;
                 }
@@ -100,11 +99,11 @@ export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => 
                     padding-bottom: 24px;
                     border-bottom: 1px solid #17273d;
                 }
-                .StockQuickView__container p{
+                .StockQuickView__container p {
                     margin: 0;
                 }
-                @media (max-width:768px){
-                    .StockQuickView__container p{
+                @media (max-width: 768px) {
+                    .StockQuickView__container p {
                         font-size: 2rem;
                     }
                 }
@@ -114,7 +113,7 @@ export const StockQuickView = React.memo(({unreal, currencyData, tableInfo}) => 
                     margin-top: 0.2rem;
                     font-weight: bold;
                 }
-                @media (max-width:768px){
+                @media (max-width: 768px) {
                     .StockQuickView__container .unrealized {
                         margin-bottom: 20px;
                     }

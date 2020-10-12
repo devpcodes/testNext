@@ -1,5 +1,5 @@
 export const getCookie = function (cname) {
-    var name = cname + "=";
+    var name = cname + '=';
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
     for (var i = 0; i < ca.length; i++) {
@@ -11,5 +11,5 @@ export const getCookie = function (cname) {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
-}
+    return '';
+};

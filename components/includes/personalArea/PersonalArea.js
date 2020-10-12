@@ -17,9 +17,9 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 export const PersonalArea = ({ personalAreaVisible }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const serverPersonalNav = useSelector((store) => store.server.navData?.personal);
-    const clientPersonalNav = useSelector((store) => store.layout.navData?.personal);
-    const isMobile = useSelector((store) => store.layout.isMobile);
+    const serverPersonalNav = useSelector(store => store.server.navData?.personal);
+    const clientPersonalNav = useSelector(store => store.layout.navData?.personal);
+    const isMobile = useSelector(store => store.layout.isMobile);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
     const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
     console.log(isMobile);
@@ -162,7 +162,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         display: flex;
                         align-items: center;
                         cursor: pointer;
-                        transition: all .3s;
+                        transition: all 0.3s;
                     }
                     .personalArea__container .navbar__lv2__item__title:after {
                         content: '';
@@ -170,7 +170,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         height: 32px;
                         background-image: url(${closeImg});
                         margin-left: 4px;
-                        transition: all .3s;
+                        transition: all 0.3s;
                         transform: rotate(-180deg);
                     }
                     .personalArea__container .navbar__lv2__item__title--hide {

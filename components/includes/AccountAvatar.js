@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 import { Avatar } from 'antd';
 
 import theme from '../../resources/styles/theme';
 
-export const AccountAvatar = ({children}) => {
-    const isMobile = useSelector((store) => store.layout.isMobile);
+export const AccountAvatar = ({ children }) => {
+    const isMobile = useSelector(store => store.layout.isMobile);
 
     return (
         <>
