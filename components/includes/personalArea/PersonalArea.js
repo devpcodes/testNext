@@ -22,7 +22,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
     const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
-    console.log(isMobile);
+    // console.log(isMobile);
     // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
     useEffect(() => {
         if (personalAreaVisible) {
@@ -35,9 +35,13 @@ export const PersonalArea = ({ personalAreaVisible }) => {
     }, [personalAreaVisible]);
 
     const handleLogout = async () => {
-        await logout();
-        dispatch(setIsLogin(false));
-        router.push('/');
+        try {
+            await logout();
+            dispatch(setIsLogin(false));
+            router.push('/');
+        } catch (error) {
+            console.error(`logout error:`, error);
+        }
     };
 
     return (
@@ -52,7 +56,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         ))}
                 </div>
                 <div className="accountInfo__container">
-                    <AccountDropdown />
+                    <AccountDropdown personalAreaVisible={personalAreaVisible} />
                     <TradingQuickView />
                 </div>
             </div>

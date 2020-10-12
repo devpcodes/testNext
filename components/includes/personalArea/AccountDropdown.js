@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { accountGroupByType } from '../../../services/user/accountGroupByType';
 import { setCurrentAccount } from '../../../actions/user/action';
@@ -11,7 +12,7 @@ import MyTransition from '../myTransition';
 import theme from '../../../resources/styles/theme';
 import checkImg from '../../../resources/images/components/login/ic-check.png';
 
-export const AccountDropdown = () => {
+export const AccountDropdown = ({ personalAreaVisible }) => {
     const selectRef = useRef(null);
     const dropdownWidth = 243;
     const selectTop = selectRef.current?.getBoundingClientRect()?.top;
@@ -40,6 +41,12 @@ export const AccountDropdown = () => {
                 return '其他';
         }
     };
+
+    useEffect(() => {
+        if (!personalAreaVisible || !isMobile) {
+            setListVisible(false);
+        }
+    }, [personalAreaVisible, isMobile]);
 
     const toggleListVisible = () => {
         setListVisible(!listVisible);
@@ -314,4 +321,8 @@ export const AccountDropdown = () => {
             `}</style>
         </div>
     );
+};
+
+AccountDropdown.propTypes = {
+    personalAreaVisible: PropTypes.bool.isRequired,
 };
