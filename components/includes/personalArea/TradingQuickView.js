@@ -11,7 +11,7 @@ import { fetchStockSummarisePrtlos } from '../../../services/stock/stockSummaris
 import { fetchSBUnRealPrtlosFetcher } from '../../../services/sb/sbUnrealizedPrtLosFetcher';
 import { fetchSBDeliveryTrialFetcher } from '../../../services/sb/sbDeliveryTrial';
 
-import { StockQuickView } from './stockQuickView/StockQuickView';
+import StockQuickView from './stockQuickView/StockQuickView';
 import { LastUpdatedTime } from './LastUpdatedTime';
 import { formatNum } from '../../../services/formatNum';
 import SBQuickView from './SBQuickView';

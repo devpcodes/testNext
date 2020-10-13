@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { QuickViewTable } from './QuickViewTable';
 import { formatNum } from '../../../../services/formatNum';
 import { useSelector } from 'react-redux';
 import MyTransition from '../../myTransition';
 import close from '../../../../resources/images/components/stockQuickView/close.png';
 import CurrencyBox from '../CurrencyBox';
-export const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
+// eslint-disable-next-line react/display-name
+const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [showContent, setShowContent] = useState(false);
 
@@ -122,3 +124,9 @@ export const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) =
         </>
     );
 });
+StockQuickView.propTypes = {
+    unreal: PropTypes.string,
+    currencyData: PropTypes.array,
+    tableInfo: PropTypes.array,
+};
+export default StockQuickView;
