@@ -15,6 +15,7 @@ import StockQuickView from './stockQuickView/StockQuickView';
 import { LastUpdatedTime } from './LastUpdatedTime';
 import { formatNum } from '../../../services/formatNum';
 import SBQuickView from './SBQuickView';
+import { FutureQuickView } from './FutureQuickView';
 
 export const TradingQuickView = () => {
     const dispatch = useDispatch();
@@ -49,6 +50,8 @@ export const TradingQuickView = () => {
             case 'H':
                 getSBUnrealizedPrtLos();
                 getDeliveryTrial();
+                break;
+            case 'F':
                 break;
             default:
                 break;
@@ -195,10 +198,10 @@ export const TradingQuickView = () => {
     // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="tradingQuickView__container">
-            <LastUpdatedTime />
+            <LastUpdatedTime time={new Date().toISOString()} />
             {currentAccount.accttype === 'S' && (
                 <StockQuickView
-                    unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1].unreal}
+                    unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal}
                     currencyData={getStockCurrencyData()}
                     tableInfo={getStockSummarisePrtlosInfo()}
                 />
@@ -206,7 +209,11 @@ export const TradingQuickView = () => {
             {currentAccount.accttype === 'H' && (
                 <SBQuickView unreal={getSBCurrencyData()} deliveryTrial={getDeliveryCurrencyData()} />
             )}
-            <style jsx>{``}</style>
+            {currentAccount.accttype === 'F' && (
+                <FutureQuickView
+                // unreal={getSBCurrencyData()}
+                />
+            )}
         </div>
     );
 };
