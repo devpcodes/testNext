@@ -107,6 +107,7 @@ const Layout = React.memo(({ children }) => {
         if (currentPath !== '') {
             if (navData.main != null) {
                 pageVerifyHandler(navData.main, currentPath);
+                pageVerifyHandler(navData.personal, currentPath);
                 menuUrlHandler();
             }
         }

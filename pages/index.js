@@ -16,7 +16,7 @@ const Home = function () {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="https://webrd.sinotrade.com.tw/" title="永豐金證券" />
+                <NewWebIframe iframeSrc="/webrd" title="永豐金證券" />
             </div>
             <style jsx>{`
                 iframe {

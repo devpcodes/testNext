@@ -23,7 +23,15 @@ const NewWebIframe = function ({ iframeSrc, title }) {
     };
     return (
         <>
-            <iframe title={title} ref={iframeDom} id="mainframe" width="100%" src={iframeSrc} scrolling="No">
+            <iframe
+                title={title}
+                ref={iframeDom}
+                id="nweWebiFrame"
+                name="newWebiFrame"
+                width="100%"
+                src={iframeSrc}
+                scrolling="No"
+            >
                 你的瀏覽器不支援 iframe
             </iframe>
             <style jsx>{`
