@@ -47,4 +47,4 @@ NewWebIframe.propTypes = {
     title: PropTypes.string,
 };
 NewWebIframe.displayName = NewWebIframe;
-export default NewWebIframe;
+export default React.memo(NewWebIframe);

@@ -10,10 +10,7 @@ const TradingCenter_TWStocks_Self = function () {
     return (
         <div>
             <div>
-                <NewWebIframe
-                    iframeSrc="https://webrd.sinotrade.com.tw/TradingCenter_TWStocks_Self"
-                    title="永豐金證券"
-                />
+                <NewWebIframe iframeSrc={'/webrd/TradingCenter_TWStocks_Self'} title="永豐金證券" />
             </div>
             <style jsx>{`
                 iframe {
