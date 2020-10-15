@@ -18,11 +18,6 @@ const Home = function () {
             <div>
                 <NewWebIframe iframeSrc="/webrd" title="永豐金證券" />
             </div>
-            <style jsx>{`
-                iframe {
-                    border: none;
-                }
-            `}</style>
         </div>
     );
 };

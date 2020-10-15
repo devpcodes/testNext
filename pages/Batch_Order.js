@@ -6,7 +6,7 @@ import { setNavItems } from '../actions/components/layouts/action';
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
-function GoOrder() {
+function Batch_Order() {
     return (
         <>
             <Head>
@@ -14,16 +14,10 @@ function GoOrder() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/goOrder" title="永豐金證券" />
+                <NewWebIframe iframeSrc="/webrd/Batch_Order" title="永豐金證券" />
             </div>
         </>
     );
 }
-// eslint-disable-next-line react/display-name
-// GoOrder.getLayout = page => (
-//     <>
-//       <GoOrder>{page}</GoOrder>
-//     </>
-// )
 
-export default GoOrder;
+export default Batch_Order;

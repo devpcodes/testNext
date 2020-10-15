@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
 const NewWebIframe = function ({ iframeSrc, title }) {
     const iframeDom = useRef(null);
-    const [iframeHeight, setIframeHeight] = useState(500);
+    const [iframeHeight, setIframeHeight] = useState(1);
 
     useEffect(() => {
         window.addEventListener('message', receiveMessage, false);
@@ -18,7 +18,7 @@ const NewWebIframe = function ({ iframeSrc, title }) {
 
     const receiveMessage = e => {
         if (e.data.iframeHeight) {
-            setIframeHeight(e.data.iframeHeight);
+            setIframeHeight(e.data.iframeHeight + 30);
         }
     };
     return (
@@ -30,7 +30,11 @@ const NewWebIframe = function ({ iframeSrc, title }) {
                 name="newWebiFrame"
                 width="100%"
                 src={iframeSrc}
-                scrolling="No"
+                // scrolling="No"
+                style={{
+                    overflowX: 'auto',
+                    overflowY: 'hidden',
+                }}
             >
                 你的瀏覽器不支援 iframe
             </iframe>
