@@ -16,7 +16,7 @@ import { LastUpdatedTime } from './LastUpdatedTime';
 import { formatNum } from '../../../services/formatNum';
 import SBQuickView from './SBQuickView';
 import { FutureQuickView } from './FutureQuickView';
-
+import errImg from '../../../resources/images/components/errPage/img-loading-m.png';
 export const TradingQuickView = () => {
     const dispatch = useDispatch();
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -198,22 +198,64 @@ export const TradingQuickView = () => {
     // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="tradingQuickView__container">
-            <LastUpdatedTime time={new Date().toISOString()} />
             {currentAccount.accttype === 'S' && (
-                <StockQuickView
-                    unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal}
-                    currencyData={getStockCurrencyData()}
-                    tableInfo={getStockSummarisePrtlosInfo()}
-                />
+                <>
+                    {typeof unRealPrtlos === 'object' && typeof summarisePrtlos === 'object' ? (
+                        <>
+                            <LastUpdatedTime time={new Date().toISOString()} />
+                            <StockQuickView
+                                unreal={
+                                    unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal
+                                }
+                                currencyData={getStockCurrencyData()}
+                                tableInfo={getStockSummarisePrtlosInfo()}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <img className="errImg" src={errImg} alt="永豐金證券" />
+                            <p className="errMsg">損益資料取得錯誤</p>
+                        </>
+                    )}
+                </>
             )}
             {currentAccount.accttype === 'H' && (
-                <SBQuickView unreal={getSBCurrencyData()} deliveryTrial={getDeliveryCurrencyData()} />
+                <>
+                    {typeof SBunRealPrtlos === 'object' && typeof SBdeliveryTrial === 'object' ? (
+                        <>
+                            <LastUpdatedTime time={new Date().toISOString()} />
+                            <SBQuickView unreal={getSBCurrencyData()} deliveryTrial={getDeliveryCurrencyData()} />
+                        </>
+                    ) : (
+                        <>
+                            <img className="errImg" src={errImg} alt="永豐金證券" />
+                            <p className="errMsg">損益資料取得錯誤</p>
+                        </>
+                    )}
+                </>
             )}
             {currentAccount.accttype === 'F' && (
                 <FutureQuickView
                 // unreal={getSBCurrencyData()}
                 />
             )}
+            <style jsx>{`
+                .errImg {
+                    display: block;
+                    margin: 20px auto;
+                    margin-bottom: 10px;
+                }
+                .errMsg {
+                    text-align: center;
+                }
+                @media (max-width: 768px) {
+                    .errMsg {
+                        width: 100%;
+                        text-align: center;
+                        color: white;
+                    }
+                }
+            `}</style>
         </div>
     );
 };

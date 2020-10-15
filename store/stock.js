@@ -12,11 +12,6 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 UnRealPrtlos: action.payload,
             };
-        case actionType.SET_UNREAL_PRTLOS:
-            return {
-                ...state,
-                UnRealPrtlos: action.payload,
-            };
         case actionType.SET_SUMMARISE_PRTLOS:
             return {
                 ...state,
