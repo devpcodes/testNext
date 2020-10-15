@@ -1,15 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
 import { getCookie } from '../../../services/components/layouts/cookieController';
 import { getStockUnRealPrtlos, getStockSummarisePrtlos } from '../../../actions/stock/action';
 import { getSBUnRealPrtlos, getSBDeliveryTrial } from '../../../actions/sb/action';
+import { getOpenProfitLossSum } from '../../../store/future/action';
 
 import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
 import { fetchStockSummarisePrtlos } from '../../../services/stock/stockSummarisePrtlosFetcher';
 import { fetchSBUnRealPrtlosFetcher } from '../../../services/sb/sbUnrealizedPrtLosFetcher';
 import { fetchSBDeliveryTrialFetcher } from '../../../services/sb/sbDeliveryTrial';
+import { fetchOpenPosition } from '../../../services/future/openPositionFetcher';
 
 import StockQuickView from './stockQuickView/StockQuickView';
 import { LastUpdatedTime } from './LastUpdatedTime';
@@ -17,6 +19,7 @@ import { formatNum } from '../../../services/formatNum';
 import SBQuickView from './SBQuickView';
 import { FutureQuickView } from './FutureQuickView';
 import errImg from '../../../resources/images/components/errPage/img-loading-m.png';
+
 export const TradingQuickView = () => {
     const dispatch = useDispatch();
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -24,21 +27,41 @@ export const TradingQuickView = () => {
     const summarisePrtlos = useSelector(store => store.stock.SummarisePrtlos);
     const SBunRealPrtlos = useSelector(store => store.sb.SBUnRealPrtlos);
     const SBdeliveryTrial = useSelector(store => store.sb.SBDeliveryTrial);
-    const prevAccount = useRef(false);
+    const openProfitLossSum = useSelector(store => store.future.openProfitLossSum);
+    // const prevAccount = useRef(false);
+    const prevDate = useRef('');
+    const [updateDate, setUpdateDate] = useState('');
+
+    // useEffect(() => {
+    //     prevAccount.current = currentAccount;
+    //     getDataHandler(currentAccount.accttype);
+    // }, []);
+
+    // useEffect(() => {
+    //     // 修正初次渲染會多發一次請求
+    //     if (prevAccount.current.account != null && currentAccount.account === prevAccount.current.account) {
+    //         return;
+    //     }
+    //     prevAccount.current = currentAccount;
+    //     getDataHandler(currentAccount.accttype);
+    // }, [currentAccount]);
 
     useEffect(() => {
-        prevAccount.current = currentAccount;
-        getDataHandler(currentAccount.accttype);
-    }, []);
+        handleUpdateDate();
+    }, [currentAccount]);
 
     useEffect(() => {
-        // 修正初次渲染會多發一次請求
-        if (prevAccount.current.account != null && currentAccount.account === prevAccount.current.account) {
+        if (updateDate === prevDate.current) {
             return;
         }
-        prevAccount.current = currentAccount;
+        prevDate.current = updateDate;
         getDataHandler(currentAccount.accttype);
-    }, [currentAccount]);
+    }, [updateDate]);
+
+    const handleUpdateDate = () => {
+        const formatDateToken = 'YYYY/MM/DD HH:mm:ss';
+        setUpdateDate(moment().format(formatDateToken));
+    };
 
     //根據證期權取得對應的帳號資料
     const getDataHandler = function (type) {
@@ -52,6 +75,7 @@ export const TradingQuickView = () => {
                 getDeliveryTrial();
                 break;
             case 'F':
+                dispatchOpenProfitLossSum();
                 break;
             default:
                 break;
@@ -94,6 +118,19 @@ export const TradingQuickView = () => {
         const hasData = false;
         const token = getCookie('token');
         dispatch(getSBDeliveryTrial(fetchSBDeliveryTrialFetcher(market, stock_id, hasData, token)));
+    };
+
+    // 期權未平倉損益
+    const dispatchOpenProfitLossSum = function () {
+        const data = {
+            token: getCookie('token'),
+            user_id: currentAccount.idno,
+            account: `${currentAccount.broker_id}${currentAccount.account}`,
+            category: '0',
+            type: '1',
+            call_put: ' ',
+        };
+        dispatch(getOpenProfitLossSum(fetchOpenPosition(data)));
     };
 
     //當日的不拿，有值的才拿
@@ -195,6 +232,16 @@ export const TradingQuickView = () => {
         }
     };
 
+    // 期權未平倉損益轉成 CurrencyBox 的格式
+    const getFutureCurrencyData = openProfitLossSum => {
+        return [
+            {
+                currency: 'NTD',
+                amount: openProfitLossSum,
+            },
+        ];
+    };
+
     // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="tradingQuickView__container">
@@ -202,7 +249,7 @@ export const TradingQuickView = () => {
                 <>
                     {typeof unRealPrtlos === 'object' && typeof summarisePrtlos === 'object' ? (
                         <>
-                            <LastUpdatedTime time={new Date().toISOString()} />
+                            <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
                             <StockQuickView
                                 unreal={
                                     unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal
@@ -223,7 +270,7 @@ export const TradingQuickView = () => {
                 <>
                     {typeof SBunRealPrtlos === 'object' && typeof SBdeliveryTrial === 'object' ? (
                         <>
-                            <LastUpdatedTime time={new Date().toISOString()} />
+                            <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
                             <SBQuickView unreal={getSBCurrencyData()} deliveryTrial={getDeliveryCurrencyData()} />
                         </>
                     ) : (
@@ -235,9 +282,10 @@ export const TradingQuickView = () => {
                 </>
             )}
             {currentAccount.accttype === 'F' && (
-                <FutureQuickView
-                // unreal={getSBCurrencyData()}
-                />
+                <>
+                    <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
+                    <FutureQuickView openProfitLoss={getFutureCurrencyData(openProfitLossSum)} />
+                </>
             )}
             <style jsx>{`
                 .errImg {

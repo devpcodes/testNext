@@ -20,7 +20,7 @@ const CurrencyBox = ({ currencyData, autoColor } = { autoColor: false }) => {
         if (autoColor) {
             amount = Number(amount);
             if (amount > 0) {
-                amount = '+' + formatNum(amount.toFixed(2), 2);
+                amount = formatNum(amount.toFixed(2), 2);
             } else {
                 amount = amount.toFixed(2);
                 amount = formatNum(amount, 2);

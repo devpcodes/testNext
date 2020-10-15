@@ -3,13 +3,28 @@ import PropTypes from 'prop-types';
 import theme from '../../../resources/styles/theme';
 import reloadImg from '../../../resources/images/components/header/ic_reload.png';
 
-export const LastUpdatedTime = ({ time }) => {
+export const LastUpdatedTime = ({ time, handleUpdate }) => {
+    const clickHandler = () => {
+        handleUpdate();
+    };
+    const keyDownHandler = e => {
+        if (e.key === 'Enter') {
+            handleUpdate();
+        }
+    };
+
     return (
         <div className="lastUpdatedTime__container">
             <span>
                 {'更新時間'} {time}
             </span>
-            <div className="button__reload">
+            <div
+                className="button__reload"
+                onClick={clickHandler}
+                role={'button'}
+                tabIndex={0}
+                onKeyDown={keyDownHandler}
+            >
                 <img src={reloadImg} alt="reload"></img>
             </div>
             <style jsx>{`
@@ -39,4 +54,5 @@ export const LastUpdatedTime = ({ time }) => {
 
 LastUpdatedTime.propTypes = {
     time: PropTypes.string.isRequired,
+    handleUpdate: PropTypes.func.isRequired,
 };

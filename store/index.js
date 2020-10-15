@@ -4,6 +4,7 @@ import server from './server';
 import user from './user';
 import stock from './stock';
 import sb from './sb';
+import future from './future/reducer';
 
 import goOrder from './goOrder';
 import testReducer from './testReducer';
@@ -16,5 +17,7 @@ const reducers = combineReducers({
     user,
     stock,
     sb,
+    future,
 });
+
 export default reducers;
