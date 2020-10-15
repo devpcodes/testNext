@@ -104,7 +104,7 @@ const Navbar = React.memo((props) => {
                     padding: 0;
                     margin: 0;
                     vertical-align: top;
-                    z-index: 1001;
+                    z-index: 501;
                 }
                 .navbar--hide {
                     display: flex;
@@ -155,7 +155,7 @@ const Navbar = React.memo((props) => {
                     border-top: 6px solid ${theme.colors.secondary};
                     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3);
                     background: #FFF;
-                    z-index: 1001;
+                    z-index: 501;
                     text-align: left;
                 }
                 .navbar__lv2.right {
@@ -251,7 +251,7 @@ const Navbar = React.memo((props) => {
                         position: fixed;
                         top: 0;
                         background: #000;
-                        z-index: 1003;
+                        z-index: 503;
                         width: 316px;
                     }
                     .active__mark  {
