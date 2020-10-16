@@ -6,18 +6,18 @@ import { setNavItems } from '../actions/components/layouts/action';
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
-function Auction() {
+function TradingCenter_TWStocks_Futures() {
     return (
         <>
             <Head>
-                <title>競價拍賣</title>
+                <title>理財行事曆</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/Auction" title="永豐金證券" />
+                <NewWebIframe iframeSrc="/webrd/TradingCenter_TWStocks_Futures" title="永豐金證券" />
             </div>
         </>
     );
 }
 
-export default Auction;
+export default TradingCenter_TWStocks_Futures;
