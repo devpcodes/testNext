@@ -7,16 +7,16 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
-function TradingCenter_TWStocks_SubBrokerage() {
+function Corporate_Action_Announcement() {
     return (
         <>
             <Head>
-                <title>海外股票</title>
+                <title>股務活動預告</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
                 <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_SubBrokerage`}
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Corporate_Action_Announcement`}
                     title="永豐金證券"
                 />
             </div>
@@ -24,4 +24,4 @@ function TradingCenter_TWStocks_SubBrokerage() {
     );
 }
 
-export default TradingCenter_TWStocks_SubBrokerage;
+export default Corporate_Action_Announcement;
