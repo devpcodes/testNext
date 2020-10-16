@@ -248,7 +248,7 @@ const Navbar = React.memo((props) => {
                     .menu__ctrl {
                         position: fixed;
                         top: 0;
-                        background: #000;
+                        background: ${theme.colors.darkBg};
                         z-index: 503;
                         width: 316px;
                     }
