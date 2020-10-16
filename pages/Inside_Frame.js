@@ -15,7 +15,7 @@ function Inside_Frame() {
             </Head>
             <div>
                 <NewWebIframe
-                    iframeSrc="/webrd/Inside_Frame?URL=https://servicerd.sinotrade.com.tw/pss/personalInfo/trust_login/"
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Inside_Frame?URL=https://servicerd.sinotrade.com.tw/pss/personalInfo/trust_login/`}
                     title="永豐金證券"
                 />
             </div>

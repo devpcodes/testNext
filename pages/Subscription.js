@@ -14,7 +14,7 @@ function Subscription() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/Subscription" title="永豐金證券" />
+                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Subscription`} title="永豐金證券" />
             </div>
         </>
     );

@@ -14,7 +14,7 @@ function Auction() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/Auction" title="永豐金證券" />
+                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Auction`} title="永豐金證券" />
             </div>
         </>
     );

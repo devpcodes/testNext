@@ -14,7 +14,10 @@ function TradingCenter_TWStocks_Stock() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/TradingCenter_TWStocks_Stock" title="永豐金證券" />
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Stock`}
+                    title="永豐金證券"
+                />
             </div>
         </>
     );

@@ -14,7 +14,7 @@ function User_AssetOverview() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/User_AssetOverview" title="永豐金證券" />
+                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/User_AssetOverview`} title="永豐金證券" />
             </div>
         </>
     );

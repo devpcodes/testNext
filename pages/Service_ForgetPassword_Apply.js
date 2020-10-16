@@ -14,7 +14,10 @@ function Service_ForgetPassword_Apply() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/Service_ForgetPassword_Apply" title="永豐金證券" />
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Service_ForgetPassword_Apply`}
+                    title="永豐金證券"
+                />
             </div>
         </>
     );

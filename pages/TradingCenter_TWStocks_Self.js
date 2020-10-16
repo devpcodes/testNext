@@ -10,7 +10,10 @@ const TradingCenter_TWStocks_Self = function () {
     return (
         <div>
             <div>
-                <NewWebIframe iframeSrc={'/webrd/TradingCenter_TWStocks_Self'} title="永豐金證券" />
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Self`}
+                    title="永豐金證券"
+                />
             </div>
             <style jsx>{`
                 iframe {

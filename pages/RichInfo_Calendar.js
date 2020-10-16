@@ -14,7 +14,7 @@ function RichInfo_Calendar() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc="/webrd/RichInfo_Calendar" title="永豐金證券" />
+                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/RichInfo_Calendar`} title="永豐金證券" />
             </div>
         </>
     );
