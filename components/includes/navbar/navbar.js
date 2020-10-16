@@ -59,11 +59,9 @@ const Navbar = React.memo((props) => {
                             <img src={logo}></img>
                         </a>
                     </Link>
-                    <Link href="/">
-                        <a className="close__menu" onClick={menuClickHandler}>
-                            <img src={closeMenu}></img>
-                        </a>
-                    </Link>
+                    <a className="close__menu" onClick={menuClickHandler}>
+                        <img src={closeMenu}></img>
+                    </a>
                 </span> 
             </li>
             {mainNav.map((lv1Item, lv1Index) => (
