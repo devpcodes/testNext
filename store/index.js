@@ -5,6 +5,7 @@ import user from './user';
 import stock from './stock';
 import sb from './sb';
 import future from './future/reducer';
+import general from './general/reducer';
 
 import goOrder from './goOrder';
 import testReducer from './testReducer';
@@ -18,6 +19,7 @@ const reducers = combineReducers({
     stock,
     sb,
     future,
+    general,
 });
 
 export default reducers;

@@ -41,7 +41,7 @@ const Layout = React.memo(({ children }) => {
 
     useEffect(() => {
         const updateNavData = () => {
-            !Object.keys(navData).length && dispatch(setNavItems(getCookie('token')));
+            !Object.keys(navData).length && dispatch(setNavItems({ token: getCookie('token') }));
         };
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
@@ -210,7 +210,7 @@ const Layout = React.memo(({ children }) => {
 
     // 跳出的登入popup，登入成功後的處理
     const loginSuccessHandler = useCallback(() => {
-        dispatch(setNavItems(getCookie('token')));
+        dispatch(setNavItems({ token: getCookie('token') }));
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
         setTimeout(() => {

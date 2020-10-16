@@ -26,10 +26,10 @@ export const setMenuOpen = bool => {
     };
 };
 
-export const setNavItems = token => async dispatch => {
+export const setNavItems = data => async dispatch => {
     try {
         const isServer = typeof window === 'undefined';
-        const res = await getNav(token);
+        const res = await getNav(data);
         const navData = res.result;
 
         const setServerNavItems = navData => {
