@@ -116,7 +116,7 @@ const Navbar = React.memo((props) => {
                     display: flex;
                     flex-direction: column;
                     list-style: none;
-                    font-size: 18px;
+                    font-size: 1.9rem;
                     color: ${theme.colors.text};
                     height:100%;
                     position:relative;
