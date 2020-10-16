@@ -41,7 +41,7 @@ export const LastUpdatedTime = ({ time, handleUpdate }) => {
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .lastUpdatedTime__container {
-                        padding: 8px 20px;
+                        padding: 0 20px 8px 20px;
                         font-size: 1.4rem;
                         color: #a9b6cb;
                         border-bottom: solid 1px #17273d;

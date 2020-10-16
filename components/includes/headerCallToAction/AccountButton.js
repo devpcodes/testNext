@@ -28,7 +28,7 @@ export const AccountButton = () => {
             <Popover
                 placement="bottomRight"
                 content={accountPopoverContent}
-                trigger="click"
+                trigger="hover"
                 onVisibleChange={handlePersonalAreaVisible}
             >
                 <div>
