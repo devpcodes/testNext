@@ -33,11 +33,11 @@ build_newwebrd:
     only:
         - UAT
     tags:
-        - newnewwebrd
+        - nwwebrd
     script:
-        - mkdir Deploy2
-        - cd Deploy2
+        - cd $CI_PROJECT_DIR
         - yarn
         - yarn build
-        - yarn start
+        - mkdir -p ~/build
+        - cp -fRv $CI_PROJECT_DIR/.next ~/build
 
