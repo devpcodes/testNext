@@ -1,0 +1,43 @@
+stages:
+    - build
+    - deploy
+###########################################################################
+# PRODUCTION
+###########################################################################
+# build_push2:
+#     stage: build    
+#     only:
+#         - master
+#     tags:
+#         - nwpush2
+#     script:
+#         - yarn
+#         - yarn build
+
+# deploy_push2:
+#     stage: deploy
+#     only:
+#         - master
+#     tags:
+#         - nwpush2
+#     script:
+#         - cd ~/builds
+#         - scp -rp Deploy/* apuser@172.17.6.6:/ap/nweb/NewWeb
+#         - scp -rp Deploy/* apuser@172.17.2.6:/ap/nweb/NewWeb
+
+###########################################################################
+# UAT
+###########################################################################
+build_webrd:
+    stage: build    
+    only:
+        - UAT
+    tags:
+        - nwwebrd
+    script:
+        - mkdir Deploy2
+        - cd Deploy2
+        - yarn
+        - yarn build
+        - yarn start
+
