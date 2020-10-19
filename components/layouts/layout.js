@@ -6,7 +6,7 @@ import jwt_decode from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
-import Footer from '../includes/Footer';
+import Footer from '../includes/footer';
 import { resize, showLoginHandler, setNavItems } from '../../actions/components/layouts/action';
 import {
     setIsLogin,
