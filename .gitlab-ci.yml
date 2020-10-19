@@ -45,5 +45,5 @@ deploy_newwebrd:
     tags:
         - nwwebrd
     script:
-        - cd ~/build/new-newweb
-        - yarn start:dev
+        - cd ~/build/$CI_PROJECT_NAME
+        - yarn pm2:dev
