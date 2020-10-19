@@ -1,11 +1,8 @@
-stages:
-    - build
-    - deploy
 ###########################################################################
 # PRODUCTION
 ###########################################################################
 # build_push2:
-#     stage: build    
+#     stage: build
 #     only:
 #         - master
 #     tags:
@@ -29,7 +26,7 @@ stages:
 # UAT
 ###########################################################################
 build_newwebrd:
-    stage: build    
+    stage: build
     only:
         - UAT
     tags:
@@ -41,3 +38,12 @@ build_newwebrd:
         - mkdir -p ~/build
         - cp -fRv $CI_PROJECT_DIR ~/build
 
+deploy_newwebrd:
+    stage: deploy
+    only:
+        - UAT
+    tags:
+        - nwwebrd
+    script:
+        - cd ~/build/new-newweb
+        - yarn start:dev
