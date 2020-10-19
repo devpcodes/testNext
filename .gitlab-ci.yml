@@ -39,5 +39,5 @@ build_newwebrd:
         - yarn
         - yarn build
         - mkdir -p ~/build
-        - cp -fRv $CI_PROJECT_DIR/.next ~/build
+        - cp -fRv $CI_PROJECT_DIR ~/build
 
