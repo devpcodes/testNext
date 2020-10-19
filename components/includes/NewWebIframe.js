@@ -7,6 +7,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const [iframeHeight, setIframeHeight] = useState(1);
 
     useEffect(() => {
+        iframeDom.current.contentDocument.location.reload(true);
         if (iHeight != null) {
             setTimeout(() => {
                 iframeDom.current.height = iHeight;
@@ -34,6 +35,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
             setIframeHeight(e.data.iframeHeight + 30);
         }
     };
+
     return (
         <>
             <iframe
