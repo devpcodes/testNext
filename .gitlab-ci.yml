@@ -33,7 +33,7 @@ build_newwebrd:
     only:
         - UAT
     tags:
-        - nwwebrd
+        - newnewwebrd
     script:
         - mkdir Deploy2
         - cd Deploy2
