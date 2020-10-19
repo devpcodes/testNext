@@ -67,21 +67,24 @@ const Navbar = React.memo((props) => {
             {mainNav.map((lv1Item, lv1Index) => (
                 
                 <li className="navbar__lv1__item" key={lv1Index}>
-                    <Link href="/">
-                        <a className="navbar__lv1__item__title" onClick={menuItemClickHandler}>
+                    <Link href={lv1Item.url ? lv1Item.url : "/"}>
+                        <a className={`navbar__lv1__item__title ${lv1Item.url ? "no__lv2" : "" }` } onClick={menuItemClickHandler}>
                             <span className="active__mark"></span>
                             {lv1Item.title} 
 
                         </a>
                     </Link>
-                    
-                    <ul className={`navbar__lv2 ${lv1Index > (mainNav.length/2) ? "right" : "" }` } style={{ width: 168 * lv1Item.items.length }}>
-                        {lv1Item.items.map((lv2Item, lv2Index) => (
-                            <li className="navbar__lv2__item" key={lv2Index} >
-                                <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
-                            </li>
-                        ))}
-                    </ul>
+                    {lv1Item.items && lv1Item.items.length > 0 
+                    ? <ul className={`navbar__lv2 ${lv1Index > (mainNav.length/2) ? "right" : "" }` } style={{ width: 168 * lv1Item.items.length }}>
+                            {lv1Item.items.map((lv2Item, lv2Index) => (
+                                <li className="navbar__lv2__item" key={lv2Index} >
+                                    <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
+                                </li>
+                            ))}
+                      </ul>
+                    : 
+                    ""
+                    }
                     
                 </li>
             ))}
@@ -280,6 +283,10 @@ const Navbar = React.memo((props) => {
                         transform: rotate(-180deg);
                         display: inline-block;
                         vertical-align: middle;
+                    }
+
+                    .navbar__lv1__item__title.no__lv2:after {
+                        display:none;
                     }
 
                     .navbar__lv1__item__title.menu__ctrl:after {
