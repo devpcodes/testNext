@@ -46,4 +46,4 @@ deploy_newwebrd:
         - nwwebrd
     script:
         - cd ~/build/$CI_PROJECT_NAME
-        - yarn pm2:dev
+        - yarn pm2
