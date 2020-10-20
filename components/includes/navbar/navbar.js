@@ -63,7 +63,10 @@ const Navbar = React.memo(props => {
             {!!mainNav &&
                 mainNav.map((lv1Item, lv1Index) => (
                     <li className="navbar__lv1__item" key={lv1Index}>
-                        <Link href={lv1Item.url ? lv1Item.url : '/'}>
+                        <Link
+                            as={lv1Item.url}
+                            href={lv1Item.url ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}` : '#'}
+                        >
                             <a
                                 className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
                                 onClick={menuItemClickHandler}

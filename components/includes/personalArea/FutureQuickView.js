@@ -9,7 +9,7 @@ export const FutureQuickView = ({ openProfitLoss }) => {
         <>
             <div className="FutureQuickView__container">
                 <p className="quickView__title">未平倉總損益</p>
-                <CurrencyBox currencyData={openProfitLoss} autoColor={true} />
+                <CurrencyBox currencyData={openProfitLoss} autoColor={true} digits={0} />
             </div>
             <style jsx>{`
                 .FutureQuickView__container {

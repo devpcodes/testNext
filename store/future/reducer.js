@@ -1,7 +1,7 @@
 import * as actionType from './actionType';
 
 const initialState = {
-    openProfitLossSum: 0,
+    openProfitLossSum: '--',
 };
 
 const reducer = (state = initialState, action) => {

@@ -13,7 +13,7 @@ const Home = function () {
     return (
         <div>
             <Head>
-                <title>Create Next App</title>
+                <title>永豐金理財網</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>

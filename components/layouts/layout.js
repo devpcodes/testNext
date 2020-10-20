@@ -15,6 +15,7 @@ import {
     getUserSettings,
     setCurrentAccount,
 } from '../../actions/user/action';
+// import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
@@ -24,6 +25,7 @@ import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 
 const Layout = React.memo(({ children }) => {
+    const isServer = typeof window === 'undefined';
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
 
@@ -34,20 +36,52 @@ const Layout = React.memo(({ children }) => {
     const navData = useSelector(store => store.layout.navData);
     const userSettings = useSelector(store => store.user.userSettings);
     const accounts = useSelector(store => store.user.accounts);
+    // const domain = useSelector(store => store.general.domain);
 
     const getMenuPath = useRef(false);
     const needLogin = useRef(false);
     const prevPathname = useRef(false);
     const isAuthenticated = useRef(true);
+    const prevIsMobile = useRef(isServer ? false : checkMobile(window.innerWidth));
+
+    // const getUrlParams = () => {
+    //     const params = new URLSearchParams('source=MMA&platform=Line');
+    //     for (const param of params) {
+    //         console.log(param);
+    //     }
+    //     return params;
+    // };
+
+    // const setSource = () => {
+    //     const params = getUrlParams();
+    //     console.log('has key:', params.has('platform'));
+    //     console.log('value', params.get('platform'));
+    //     if (params.has('platform')) {
+    //         dispatch(setDomain(params.get('platform')));
+    //     } else {
+    //         dispatch(setDomain('newweb'));
+    //     }
+    // };
+
+    const updateNavData = () => {
+        const data = {
+            token: getCookie('token'),
+            domain: '',
+            isMobile: prevIsMobile.current,
+        };
+        dispatch(setNavItems(data));
+    };
 
     useEffect(() => {
-        const updateNavData = () => {
-            !Object.keys(navData).length && dispatch(setNavItems({ token: getCookie('token') }));
-        };
         pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
-        updateNavData();
+        if (!Object.keys(navData).length) {
+            updateNavData();
+        }
+
+        // setSource();
+
         if (checkLogin()) {
             dispatch(setIsLogin(true));
         }
@@ -57,13 +91,21 @@ const Layout = React.memo(({ children }) => {
     }, []);
 
     useEffect(() => {
+        if (!Object.keys(navData).length || prevIsMobile.current === isMobile) {
+            return;
+        } else {
+            prevIsMobile.current = isMobile;
+            updateNavData();
+        }
+    }, [isMobile]);
+
+    useEffect(() => {
         const updateUserSettings = () => {
             const userId = getCookie('user_id');
             userId && dispatch(getUserSettings(userId));
         };
 
         if (isLogin) {
-            // console.log('=========================', isLogin);
             const tokenVal = jwt_decode(getCookie('token'));
             dispatch(setAccounts(tokenVal.acts_detail));
             updateUserSettings();
@@ -91,7 +133,6 @@ const Layout = React.memo(({ children }) => {
         };
         const defaultAccount = getDefaultAccount(accounts) || {};
         dispatch(setCurrentAccount(defaultAccount));
-        // console.log(`defaultAccount:`, defaultAccount);
     }, [userSettings]);
 
     useEffect(() => {
@@ -212,7 +253,7 @@ const Layout = React.memo(({ children }) => {
 
     // 跳出的登入popup，登入成功後的處理
     const loginSuccessHandler = useCallback(() => {
-        dispatch(setNavItems({ token: getCookie('token') }));
+        updateNavData();
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
         setTimeout(() => {

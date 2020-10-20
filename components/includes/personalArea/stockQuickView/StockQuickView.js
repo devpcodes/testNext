@@ -18,15 +18,15 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
     }, [isMobile]);
 
     //併上+-符號
-    const getUnreal = unreal => {
-        if (Number(unreal) > 0) {
-            return '+' + formatNum(unreal);
-        } else if (Number(unreal) <= 0) {
-            return formatNum(unreal);
-        } else {
-            return unreal;
-        }
-    };
+    // const getUnreal = unreal => {
+    //     if (Number(unreal) > 0) {
+    //         return '+' + formatNum(unreal);
+    //     } else if (Number(unreal) <= 0) {
+    //         return formatNum(unreal);
+    //     } else {
+    //         return unreal;
+    //     }
+    // };
 
     const contentBtnClick = () => {
         if (noData()) {
@@ -54,7 +54,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
         <>
             <div className="StockQuickView__container">
                 <p>國內證券未實現損益</p>
-                <p className="unrealized">{getUnreal(unreal)}</p>
+                <p className="unrealized">{formatNum(unreal)}</p>
                 <div className="settlementMoney__box">
                     <p onClick={contentBtnClick} className="content__btn">
                         {isMobile ? '近三日交割款' : '當日交割款'}
