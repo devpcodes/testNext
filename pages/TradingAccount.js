@@ -15,7 +15,9 @@ function TradingAccount() {
             </Head>
             <div>
                 <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingAccount?mkt=futuresOptions`}
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingAccount`}
+                    // iframeSrc={'https://webrd.sinotrade.com.tw/TradingAccount'}
+                    iHeight={1000}
                     title="永豐金證券"
                 />
             </div>

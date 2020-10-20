@@ -1,14 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
-const NewWebIframe = function ({ iframeSrc, title }) {
+const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const iframeDom = useRef(null);
+    // const winWidth = useSelector(store => store.layout.winWidth);
     const [iframeHeight, setIframeHeight] = useState(1);
 
     useEffect(() => {
-        window.addEventListener('message', receiveMessage, false);
+        iframeDom.current.contentDocument.location.reload(true);
+        if (iHeight != null) {
+            setTimeout(() => {
+                iframeDom.current.height = iHeight;
+            }, 100);
+        } else {
+            window.addEventListener('message', receiveMessage, false);
+        }
         return () => {
-            window.removeEventListener('message', receiveMessage, false);
+            if (iHeight == null) {
+                window.removeEventListener('message', receiveMessage, false);
+            }
         };
     }, []);
 
@@ -16,11 +26,16 @@ const NewWebIframe = function ({ iframeSrc, title }) {
         iframeDom.current.height = iframeHeight;
     }, [iframeHeight]);
 
+    useEffect(() => {
+        iframeDom.current.height = iHeight;
+    }, [iHeight]);
+
     const receiveMessage = e => {
         if (e.data.iframeHeight) {
             setIframeHeight(e.data.iframeHeight + 30);
         }
     };
+
     return (
         <>
             <iframe
@@ -49,6 +64,7 @@ const NewWebIframe = function ({ iframeSrc, title }) {
 NewWebIframe.propTypes = {
     iframeSrc: PropTypes.string,
     title: PropTypes.string,
+    iHeight: PropTypes.number,
 };
 NewWebIframe.displayName = NewWebIframe;
 export default React.memo(NewWebIframe);

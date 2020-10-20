@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuOpen } from '../../../actions/components/layouts/action';
-import Link from 'next/link'
-import theme from '../../../resources/styles/theme'
-import NavList from "../navbar/navList"
+import Link from 'next/link';
+import theme from '../../../resources/styles/theme';
+import NavList from '../navbar/navList';
 import logo from '../../../resources/images/components/header/sinopac_securities_logo.png';
 import closeMenu from '../../../resources/images/components/header/ic_closemenu.png';
 import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
@@ -12,12 +12,10 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 // firefox 手機板隱藏 navbar scrollBar
 // level(1) 選單點選第二次隱藏
 
-
-const Navbar = React.memo((props) => {
-
-    const serverMainlNav = useSelector((store) => store.server.navData?.main);
-    const clientMainlNav = useSelector((store) => store.layout.navData?.main);
-    const isMobile = useSelector((store) => store.layout.isMobile);
+const Navbar = React.memo(props => {
+    const serverMainlNav = useSelector(store => store.server.navData?.main);
+    const clientMainlNav = useSelector(store => store.layout.navData?.main);
+    const isMobile = useSelector(store => store.layout.isMobile);
     const showMenu = useSelector(store => store.layout.showMenu);
 
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
@@ -27,32 +25,30 @@ const Navbar = React.memo((props) => {
         window.addEventListener('resize', resizeHandler);
     }, []);
 
-    const resizeHandler = function(){
+    const resizeHandler = function () {
         let winWidth = window.innerWidth;
-        if (winWidth <= 1024){
+        if (winWidth <= 1024) {
             dispatch(setMenuOpen(false));
-        } 
-    }
-
-    const menuClickHandler = function(){
-        dispatch(setMenuOpen(false));
-    }
-
-    const menuItemClickHandler = (dom) => {
-        if (dom.target.parentElement.getElementsByClassName("navbar__lv2")[0].classList.contains("navbar__lv2--show")) {
-            dom.target.parentElement.getElementsByClassName("navbar__lv2")[0].classList.remove("navbar__lv2--show")
-            dom.target.parentElement.classList.remove("navbar__lv1__item--show")
-        } else {
-            dom.target.parentElement.getElementsByClassName("navbar__lv2")[0].classList.add("navbar__lv2--show")
-            dom.target.parentElement.classList.add("navbar__lv1__item--show")
         }
-        
-    }
+    };
+
+    const menuClickHandler = function () {
+        dispatch(setMenuOpen(false));
+    };
+
+    const menuItemClickHandler = dom => {
+        if (dom.target.parentElement.getElementsByClassName('navbar__lv2')[0].classList.contains('navbar__lv2--show')) {
+            dom.target.parentElement.getElementsByClassName('navbar__lv2')[0].classList.remove('navbar__lv2--show');
+            dom.target.parentElement.classList.remove('navbar__lv1__item--show');
+        } else {
+            dom.target.parentElement.getElementsByClassName('navbar__lv2')[0].classList.add('navbar__lv2--show');
+            dom.target.parentElement.classList.add('navbar__lv1__item--show');
+        }
+    };
 
     return (
-        <ul className={`navbar ${showMenu ? '' : 'navbar--hide'}`} >
-            
-            <li className="navbar__lv1__item mobile__menu__ctrl" > 
+        <ul className={`navbar ${showMenu ? '' : 'navbar--hide'}`}>
+            <li className="navbar__lv1__item mobile__menu__ctrl">
                 <span className="navbar__lv1__item__title menu__ctrl">
                     <Link href="/">
                         <a className="header__logo">
@@ -62,7 +58,7 @@ const Navbar = React.memo((props) => {
                     <a className="close__menu" onClick={menuClickHandler}>
                         <img src={closeMenu}></img>
                     </a>
-                </span> 
+                </span>
             </li>
             {mainNav.map((lv1Item, lv1Index) => (
                 
@@ -90,12 +86,12 @@ const Navbar = React.memo((props) => {
             ))}
             <li className="navbar__lv1__item navbar__shortcuts__li"> 
                 <div className="navbar__shortcuts">
-                <Link href="/">
-                    <a className="navbar__order">快速下單</a>
-                </Link>
-                <Link href="/">
-                    <a className="navbar__account">我的帳務</a>
-                </Link>
+                    <Link href="/">
+                        <a className="navbar__order">快速下單</a>
+                    </Link>
+                    <Link href="/">
+                        <a className="navbar__account">我的帳務</a>
+                    </Link>
                 </div>
             </li>
             <style jsx>{`
@@ -111,27 +107,27 @@ const Navbar = React.memo((props) => {
                     display: flex;
                 }
                 .navbar__lv1__item.mobile__menu__ctrl {
-                    display:none;
+                    display: none;
                 }
                 .navbar__lv1__item {
                     width: 105px;
-                    text-align:center;
+                    text-align: center;
                     display: flex;
                     flex-direction: column;
                     list-style: none;
                     font-size: 1.9rem;
                     color: ${theme.colors.text};
-                    height:100%;
-                    position:relative;
+                    height: 100%;
+                    position: relative;
                 }
                 .navbar__lv1__item__title {
                     position: relative;
-                    width:100%;
-                    height:100%;
-                    line-height:70px;
+                    width: 100%;
+                    height: 100%;
+                    line-height: 70px;
                 }
                 .navbar__shortcuts__li {
-                    display:none;
+                    display: none;
                 }
                 .active__mark {
                     width: 0;
@@ -142,20 +138,20 @@ const Navbar = React.memo((props) => {
                     position: absolute;
                     bottom: 0;
                     left: calc(50% - 6px);
-                    display:none;
+                    display: none;
                 }
 
                 .navbar__lv2 {
-                    margin:0;
-                    padding:0;
+                    margin: 0;
+                    padding: 0;
                     display: none;
-                    position:absolute;
+                    position: absolute;
                     top: 70px;
                     left: 0;
                     padding: 18px 36px;
                     border-top: 6px solid ${theme.colors.secondary};
                     box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.3);
-                    background: #FFF;
+                    background: #fff;
                     z-index: 501;
                     text-align: left;
                 }
@@ -163,49 +159,49 @@ const Navbar = React.memo((props) => {
                     left: unset;
                     right: 0;
                 }
-    
-                .navbar__lv2__item { 
+
+                .navbar__lv2__item {
                     list-style: none;
-                    padding:0;
+                    padding: 0;
                     margin-right: 37px;
-                    
                 }
                 .navbar__lv2__item:last-child {
                     margin-right: 0;
                 }
 
-                @media (min-width:1024px) {
-                    .navbar__lv1__item:hover .navbar__lv1__item__title ,.navbar__lv1__item.active{
+                @media (min-width: 1024px) {
+                    .navbar__lv1__item:hover .navbar__lv1__item__title,
+                    .navbar__lv1__item.active {
                         color: ${theme.colors.secondary};
                     }
-                    .navbar__lv1__item:hover .active__mark, .navbar__lv1__item.active .active__mark{
-                        display:block;
+                    .navbar__lv1__item:hover .active__mark,
+                    .navbar__lv1__item.active .active__mark {
+                        display: block;
                     }
-                    .navbar__lv1__item:hover .navbar__lv2 { 
-                        display:flex;
+                    .navbar__lv1__item:hover .navbar__lv2 {
+                        display: flex;
                     }
-                    .navbar__lv1__item:hover .navbar__lv1__item__title:after { 
-                        transition: all .3s;
+                    .navbar__lv1__item:hover .navbar__lv1__item__title:after {
+                        transition: all 0.3s;
                         transform: rotate(-0deg);
                     }
                 }
 
-                @media (max-width:1024px) {
-
+                @media (max-width: 1024px) {
                     .navbar__lv2--show {
-                        display:flex;
+                        display: flex;
                     }
 
                     .navbar {
                         -ms-overflow-style: none;
-                        background : ${theme.colors.darkBg};
+                        background: ${theme.colors.darkBg};
                         flex-direction: column;
                         position: fixed;
                         width: 316px;
                         top: 70px;
-                        left:0;
-                        overflow-y:auto;
-                        overflow-x:hidden;
+                        left: 0;
+                        overflow-y: auto;
+                        overflow-x: hidden;
                         height: auto;
                         min-height: calc(100% - 140px);
                         max-height: calc(100% - 140px);
@@ -215,7 +211,7 @@ const Navbar = React.memo((props) => {
                         display: none;
                     }
                     .close__menu {
-                        float:right;
+                        float: right;
                     }
                     .navbar--hide {
                         display: none;
@@ -235,11 +231,12 @@ const Navbar = React.memo((props) => {
                         display: flex;
                         flex-direction: row;
                     }
-                    .navbar__order, .navbar__account {
+                    .navbar__order,
+                    .navbar__account {
                         display: block;
                         height: 65px;
-                        line-height:65px;
-                        width:50%;
+                        line-height: 65px;
+                        width: 50%;
                         text-align: center;
                     }
                     .navbar__order {
@@ -255,42 +252,42 @@ const Navbar = React.memo((props) => {
                         z-index: 503;
                         width: 316px;
                     }
-                    .active__mark  {
-                        display : none!important;
+                    .active__mark {
+                        display: none !important;
                     }
                     .navbar__lv1__item {
-                        width:100%;
-                        text-align:left;
-                        height:auto;
+                        width: 100%;
+                        text-align: left;
+                        height: auto;
                     }
-                    .navbar__lv1__item .navbar__lv2--show { 
-                        display:flex;
-                        transition: all .3s;
+                    .navbar__lv1__item .navbar__lv2--show {
+                        display: flex;
+                        transition: all 0.3s;
                     }
                     .navbar__lv1__item__title {
                         height: auto;
                         padding: 0 30px;
-                        color:#FFF;
+                        color: #fff;
                     }
-                    
+
                     .navbar__lv1__item__title:after {
                         content: '';
                         width: 32px;
                         height: 32px;
                         background-image: url(${openImg});
                         margin-left: 4px;
-                        transition: all .3s;
+                        transition: all 0.3s;
                         transform: rotate(-180deg);
                         display: inline-block;
                         vertical-align: middle;
                     }
 
                     .navbar__lv1__item__title.no__lv2:after {
-                        display:none;
+                        display: none;
                     }
 
                     .navbar__lv1__item__title.menu__ctrl:after {
-                        display:none;
+                        display: none;
                     }
 
                     .navbar__lv1__item--show .navbar__lv1__item__title:after {
@@ -307,18 +304,16 @@ const Navbar = React.memo((props) => {
                         top: 0;
                         left: 0;
                         display: none;
-                        width: 316px!important;
+                        width: 316px !important;
                         flex-direction: column;
                     }
                     .navbar__lv2__item {
                         margin: 0;
                     }
-				}
-
+                }
             `}</style>
         </ul>
-    )
-
+    );
 });
 
 export default Navbar;
