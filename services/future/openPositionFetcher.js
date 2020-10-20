@@ -11,7 +11,6 @@ export const fetchOpenPosition = async function ({ token, user_id, account, cate
         type,
         call_put,
     });
-    console.log('res.data', res.data);
     if (res.data?.success === 'True') {
         return res.data.result;
     } else if (res.data?.success === 'False' && res.data?.result?.msg === '無此資料') {

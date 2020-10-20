@@ -60,31 +60,38 @@ const Navbar = React.memo(props => {
                     </a>
                 </span>
             </li>
-            {mainNav.map((lv1Item, lv1Index) => (
-                
-                <li className="navbar__lv1__item" key={lv1Index}>
-                    <Link as={lv1Item.url} href={lv1Item.url ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}` : "#"}>
-                        <a className={`navbar__lv1__item__title ${lv1Item.url ? "no__lv2" : "" }` } onClick={menuItemClickHandler}>
-                            <span className="active__mark"></span>
-                            {lv1Item.title} 
-
-                        </a>
-                    </Link>
-                    {lv1Item.items && lv1Item.items.length > 0 
-                    ? <ul className={`navbar__lv2 ${lv1Index > (mainNav.length/2) ? "right" : "" }` } style={{ width: 168 * lv1Item.items.length }}>
-                            {lv1Item.items.map((lv2Item, lv2Index) => (
-                                <li className="navbar__lv2__item" key={lv2Index} >
-                                    <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024}/>
-                                </li>
-                            ))}
-                      </ul>
-                    : 
-                    ""
-                    }
-                    
-                </li>
-            ))}
-            <li className="navbar__lv1__item navbar__shortcuts__li"> 
+            {!!mainNav &&
+                mainNav.map((lv1Item, lv1Index) => (
+                    <li className="navbar__lv1__item" key={lv1Index}>
+                        <Link
+                            as={lv1Item.url}
+                            href={lv1Item.url ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}` : '#'}
+                        >
+                            <a
+                                className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
+                                onClick={menuItemClickHandler}
+                            >
+                                <span className="active__mark"></span>
+                                {lv1Item.title}
+                            </a>
+                        </Link>
+                        {lv1Item.items && lv1Item.items.length > 0 ? (
+                            <ul
+                                className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
+                                style={{ width: 168 * lv1Item.items.length }}
+                            >
+                                {lv1Item.items.map((lv2Item, lv2Index) => (
+                                    <li className="navbar__lv2__item" key={lv2Index}>
+                                        <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024} />
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            ''
+                        )}
+                    </li>
+                ))}
+            <li className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
                     <Link href="/">
                         <a className="navbar__order">快速下單</a>

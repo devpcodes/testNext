@@ -233,7 +233,7 @@ export const TradingQuickView = () => {
     //海外交割試算
     const getDeliveryCurrencyData = () => {
         const currencyInfo = [];
-        console.log(SBdeliveryTrial);
+        // console.log(SBdeliveryTrial);
         if (SBdeliveryTrial.sum_data != null && SBdeliveryTrial.sum_data.length !== 0) {
             SBdeliveryTrial.sum_data.forEach(obj => {
                 let item = {};
