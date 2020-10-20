@@ -14,7 +14,11 @@ function Batch_Order() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Batch_Order`} title="永豐金證券" />
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Batch_Order`}
+                    title="永豐金證券"
+                    iHeight={900}
+                />
             </div>
         </>
     );

@@ -2,7 +2,7 @@ import { getA8Instance } from '../myAxios';
 
 export const fetchStockSummarisePrtlos = async function (bhno, cseq, sip, token) {
     try {
-        const url = `https://servicerd.sinotrade.com.tw/api/v1/Equity/SummarisePrtlos`;
+        const url = `/A8/api/v1/Equity/SummarisePrtlos`;
         const res = await getA8Instance().post(url, {
             bhno,
             cseq,

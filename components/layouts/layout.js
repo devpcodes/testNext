@@ -21,6 +21,7 @@ import Login from '../includes/sinotradeLogin/login';
 import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
+import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
@@ -103,7 +104,7 @@ const Layout = React.memo(({ children }) => {
 
     //驗證有沒有瀏覽頁面的權限
     const showPageHandler = function () {
-        let currentPath = router.pathname.substr(1);
+        let currentPath = router.pathname.substr(1) + objectToQueryHandler(router.query);
         if (currentPath !== '') {
             if (navData.main != null) {
                 pageVerifyHandler(navData.main, currentPath);
@@ -121,6 +122,7 @@ const Layout = React.memo(({ children }) => {
         data.some(obj => {
             if (obj.url != null) {
                 if (obj.url === currentPath) {
+                    console.log('GET');
                     getMenuPath.current = true;
                     isAuthenticated.current = obj.isAuthenticated;
                     needLogin.current = obj.needLogin;
@@ -171,7 +173,7 @@ const Layout = React.memo(({ children }) => {
 
     //無權限頁面處理
     const noPermissionPage = function () {
-        prevPathname.current = router.pathname;
+        prevPathname.current = router.pathname + objectToQueryHandler(router.query);
         router.push('/errPage', `${process.env.NEXT_PUBLIC_SUBPATH}errPage`);
         setVerifySuccess(false);
         setTimeout(() => {

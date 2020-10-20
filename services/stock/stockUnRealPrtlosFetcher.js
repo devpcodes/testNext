@@ -2,7 +2,7 @@ import { getA8Instance } from '../myAxios';
 
 export const fetchStockUnRealPrtlos = async function (action, bhno, cseq, ctype, sip, stock, ttype, token) {
     try {
-        const url = `https://servicerd.sinotrade.com.tw/api/v1/Equity/UnRealPrtlos`;
+        const url = `/A8/api/v1/Equity/UnRealPrtlos`;
         const res = await getA8Instance().post(url, {
             action,
             bhno,

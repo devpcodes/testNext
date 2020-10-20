@@ -5,6 +5,7 @@ import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
 import SinoTradeLogin from '../components/includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../components/includes/myTransition';
+import { objectToQueryHandler } from '../services/objectToQueryHandler';
 
 function MyApp({ Component, pageProps, router }) {
     const [isVisible, setIsVisible] = useState(true);
@@ -38,7 +39,7 @@ function MyApp({ Component, pageProps, router }) {
         );
     } else {
         currentComp.current = renderComp;
-        oldPathName.current = router.pathname;
+        oldPathName.current = router.pathname + objectToQueryHandler(router.query);
         return <>{renderComp}</>;
     }
 }
