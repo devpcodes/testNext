@@ -17,7 +17,6 @@ const Home = function () {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <p>路徑: {process.env.NEXT_PUBLIC_NEWWEB}</p>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}`}
                     title="永豐金證券"
