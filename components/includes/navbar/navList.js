@@ -10,8 +10,8 @@ const NavList = React.memo(props => {
     };
 
     const openURL = (url, width, height) => {
-        window.open(url, '', `width=${width},height=${height}`)
-    }
+        window.open(url, '', `width=${width},height=${height}`);
+    };
 
     return (
         <div className="navlist">
@@ -26,13 +26,33 @@ const NavList = React.memo(props => {
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
-                        {console.log(process.env.NEXT_PUBLIC_SUBPATH)}
-                        <Link 
-                            
-                            href={lv3Item.isOpen ? "#" : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` : "#"} 
-                            prefetch={false} 
+                        <Link
+                            as={`${lv3Item.url}`}
+                            href={
+                                lv3Item.isOpen
+                                    ? '#'
+                                    : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
+                                    ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
+                                    : '#'
+                            }
+                            prefetch={false}
                         >
-                            <a onClick={lv3Item.isOpen ? () => openURL(`${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`, lv3Item.openWidth, lv3Item.openHeight) : ""} target={lv3Item.isBlank ? "_blank" : ""} className="navbar__lv3__item__title">{lv3Item.title}</a>
+                            <a
+                                onClick={
+                                    lv3Item.isOpen
+                                        ? () =>
+                                              openURL(
+                                                  `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`,
+                                                  lv3Item.openWidth,
+                                                  lv3Item.openHeight,
+                                              )
+                                        : ''
+                                }
+                                target={lv3Item.isBlank ? '_blank' : ''}
+                                className="navbar__lv3__item__title"
+                            >
+                                {lv3Item.title}
+                            </a>
                         </Link>
                     </li>
                 ))}

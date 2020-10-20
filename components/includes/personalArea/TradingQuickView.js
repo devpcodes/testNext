@@ -31,6 +31,7 @@ export const TradingQuickView = () => {
     // const prevAccount = useRef(false);
     const prevDate = useRef('');
     const [updateDate, setUpdateDate] = useState('');
+    const [isError, setIsError] = useState(false);
 
     // useEffect(() => {
     //     prevAccount.current = currentAccount;
@@ -57,6 +58,20 @@ export const TradingQuickView = () => {
         prevDate.current = updateDate;
         getDataHandler(currentAccount.accttype);
     }, [updateDate]);
+
+    useEffect(() => {
+        if (
+            (currentAccount.accttype === 'S' && typeof unRealPrtlos !== 'object') ||
+            (currentAccount.accttype === 'S' && typeof summarisePrtlos !== 'object') ||
+            (currentAccount.accttype === 'H' && typeof SBunRealPrtlos !== 'object') ||
+            (currentAccount.accttype === 'H' && typeof SBdeliveryTrial !== 'object') ||
+            (currentAccount.accttype === 'F' && openProfitLossSum === 'error')
+        ) {
+            setIsError(true);
+        } else {
+            setIsError(false);
+        }
+    }, [currentAccount.accttype, unRealPrtlos, summarisePrtlos, SBunRealPrtlos, SBdeliveryTrial, openProfitLossSum]);
 
     const handleUpdateDate = () => {
         const formatDateToken = 'YYYY/MM/DD HH:mm:ss';
@@ -218,7 +233,7 @@ export const TradingQuickView = () => {
     //海外交割試算
     const getDeliveryCurrencyData = () => {
         const currencyInfo = [];
-        console.log(SBdeliveryTrial);
+        // console.log(SBdeliveryTrial);
         if (SBdeliveryTrial.sum_data != null && SBdeliveryTrial.sum_data.length !== 0) {
             SBdeliveryTrial.sum_data.forEach(obj => {
                 let item = {};
@@ -242,43 +257,49 @@ export const TradingQuickView = () => {
         ];
     };
 
+    if (isError) {
+        return (
+            <div className="tradingQuickView__container">
+                <img className="errImg" src={errImg} alt="永豐金證券" />
+                <p className="errMsg">損益資料取得錯誤</p>
+                <style jsx>{`
+                    .errImg {
+                        display: block;
+                        margin: 20px auto;
+                        margin-bottom: 10px;
+                    }
+                    .errMsg {
+                        text-align: center;
+                    }
+                    @media (max-width: 768px) {
+                        .errMsg {
+                            width: 100%;
+                            text-align: center;
+                            color: white;
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
     // console.log(unRealPrtlos[unRealPrtlos.length - 1].unreal)
     return (
         <div className="tradingQuickView__container">
             {currentAccount.accttype === 'S' && (
                 <>
-                    {typeof unRealPrtlos === 'object' && typeof summarisePrtlos === 'object' ? (
-                        <>
-                            <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
-                            <StockQuickView
-                                unreal={
-                                    unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal
-                                }
-                                currencyData={getStockCurrencyData()}
-                                tableInfo={getStockSummarisePrtlosInfo()}
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <img className="errImg" src={errImg} alt="永豐金證券" />
-                            <p className="errMsg">損益資料取得錯誤</p>
-                        </>
-                    )}
+                    <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
+                    <StockQuickView
+                        unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal}
+                        currencyData={getStockCurrencyData()}
+                        tableInfo={getStockSummarisePrtlosInfo()}
+                    />
                 </>
             )}
             {currentAccount.accttype === 'H' && (
                 <>
-                    {typeof SBunRealPrtlos === 'object' && typeof SBdeliveryTrial === 'object' ? (
-                        <>
-                            <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
-                            <SBQuickView unreal={getSBCurrencyData()} deliveryTrial={getDeliveryCurrencyData()} />
-                        </>
-                    ) : (
-                        <>
-                            <img className="errImg" src={errImg} alt="永豐金證券" />
-                            <p className="errMsg">損益資料取得錯誤</p>
-                        </>
-                    )}
+                    <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
+                    <SBQuickView unreal={getSBCurrencyData()} deliveryTrial={getDeliveryCurrencyData()} />
                 </>
             )}
             {currentAccount.accttype === 'F' && (
@@ -287,23 +308,6 @@ export const TradingQuickView = () => {
                     <FutureQuickView openProfitLoss={getFutureCurrencyData(openProfitLossSum)} />
                 </>
             )}
-            <style jsx>{`
-                .errImg {
-                    display: block;
-                    margin: 20px auto;
-                    margin-bottom: 10px;
-                }
-                .errMsg {
-                    text-align: center;
-                }
-                @media (max-width: 768px) {
-                    .errMsg {
-                        width: 100%;
-                        text-align: center;
-                        color: white;
-                    }
-                }
-            `}</style>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { formatNum } from '../../../services/formatNum';
-const CurrencyBox = ({ currencyData, autoColor } = { autoColor: false }) => {
+const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false }) => {
     const amountClassName = amount => {
         let amountClassName = 'amount';
         amount = Number(amount);
@@ -20,15 +20,15 @@ const CurrencyBox = ({ currencyData, autoColor } = { autoColor: false }) => {
         if (autoColor) {
             amount = Number(amount);
             if (amount > 0) {
-                amount = formatNum(amount.toFixed(2), 2);
+                amount = formatNum(amount.toFixed(digits), digits);
             } else {
-                amount = amount.toFixed(2);
-                amount = formatNum(amount, 2);
+                amount = amount.toFixed(digits);
+                amount = formatNum(amount, digits);
             }
         } else {
             amount = Number(amount);
-            amount = amount.toFixed(2);
-            amount = formatNum(amount, 2);
+            amount = amount.toFixed(digits);
+            amount = formatNum(amount, digits);
         }
         return amount;
     };
@@ -127,5 +127,11 @@ CurrencyBox.propTypes = {
         }
         return err.length !== 0 && new Error('沒有必要的key: currency, amount');
     },
+    digits: PropTypes.number,
 };
+
+CurrencyBox.defaultProps = {
+    digits: 2,
+};
+
 export default CurrencyBox;

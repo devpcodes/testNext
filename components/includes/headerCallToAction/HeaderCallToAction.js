@@ -10,13 +10,13 @@ export const HeaderCallToAction = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     const goSignUp = () => {
-        router.push('/OpenAccount');
+        router.push('/OpenAccount', `${process.env.NEXT_PUBLIC_SUBPATH}OpenAccount`);
     };
     const goOrder = () => {
-        router.push('/goOrder');
+        router.push('/goOrder', `${process.env.NEXT_PUBLIC_SUBPATH}goOrder`);
     };
     const goLogIn = () => {
-        router.push('/SinoTrade_login');
+        router.push('/SinoTrade_login', `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`);
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
