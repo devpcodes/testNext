@@ -22,7 +22,8 @@ function MyApp({ Component, pageProps, router }) {
     const showLoginClose = function () {
         setIsVisible(false);
         setTimeout(() => {
-            router.push(oldPathName.current || '/');
+            let path = oldPathName.current != null ? oldPathName.current : '/';
+            router.push(path, process.env.NEXT_PUBLIC_SUBPATH + path.substr(1));
         }, 400);
     };
 
