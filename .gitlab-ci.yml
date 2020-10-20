@@ -47,4 +47,4 @@ deploy_newwebrd:
     script:
         - pm2 stop new-newweb
         - cd ~/build/$CI_PROJECT_NAME
-        - yarn pm2
+        - NODE_ENV=production pm2 start server.js
