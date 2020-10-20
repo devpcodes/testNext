@@ -6,6 +6,7 @@ export const getOpenProfitLossSum = axiosFun => async dispatch => {
         return dispatch(setOpenProfitLossSum(data.FlowProfitLossTot ?? '0'));
     } catch (error) {
         console.error(`error:`, error);
+        return dispatch(setOpenProfitLossSum('error'));
     }
 };
 
