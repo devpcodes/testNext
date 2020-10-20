@@ -9,6 +9,10 @@ const NavList = React.memo(props => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
     };
 
+    const openURL = (url, width, height) => {
+        window.open(url, '', `width=${width},height=${height}`)
+    }
+
     return (
         <div className="navlist">
             <h6
@@ -22,10 +26,9 @@ const NavList = React.memo(props => {
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
-                        <Link href={lv3Item.url ? lv3Item.url : "javascript:;"} prefetch={false}>
-                            <a className="navbar__lv3__item__title">{lv3Item.title}</a>
+                        <Link href={lv3Item.isOpen ? "#" : lv3Item.url ? lv3Item.url : "#"} prefetch={false} >
+                            <a onClick={lv3Item.isOpen ? () => openURL(lv3Item.url, lv3Item.openWidth, lv3Item.openHeight) : ""} target={lv3Item.isBlank ? "_blank" : ""} className="navbar__lv3__item__title">{lv3Item.title}</a>
                         </Link>
-                        {/* <h6 className="navbar__lv3__item__title">{lv3Item.title}</h6>  icon*/}
                     </li>
                 ))}
             </ul>
