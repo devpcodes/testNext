@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
-
 const Home = function () {
     const isMobile = useSelector(store => store.layout.isMobile);
     return (
