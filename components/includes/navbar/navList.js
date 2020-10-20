@@ -22,7 +22,7 @@ const NavList = React.memo(props => {
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
-                        <Link href={lv3Item.url} prefetch={false}>
+                        <Link href={lv3Item.url ? lv3Item.url : "javascript:;"} prefetch={false}>
                             <a className="navbar__lv3__item__title">{lv3Item.title}</a>
                         </Link>
                         {/* <h6 className="navbar__lv3__item__title">{lv3Item.title}</h6>  icon*/}
