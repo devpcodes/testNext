@@ -46,4 +46,4 @@ deploy_newwebrd:
         - nwwebrd
     script:
         - cd ~/build/$CI_PROJECT_NAME
-        - NODE_ENV=production pm2 start server.js
+        - NODE_ENV=production pm2 start server.js -n new-newweb
