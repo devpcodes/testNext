@@ -69,6 +69,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     };
     const hideHeaderFooter = () => {
         // document.frames['iView'].document;
+        alert('onload');
     };
 
     return (
