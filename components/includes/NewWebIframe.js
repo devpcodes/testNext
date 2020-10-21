@@ -11,12 +11,11 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
         // iframeDom.current.contentDocument.location.reload(true);
         // const ifdoc = document.getElementById('nweWebiFrame').document;
 
-        var iframeId = document.getElementById('nweWebiFrame');
+        var iframeId = iframeDom.current;
         var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
         if (iframeContent.document) {
             iframeContent = iframeContent.document;
         }
-        console.log('iframe', iframeContent);
         iframeContent.addEventListener('DOMContentLoaded', ready);
 
         if (iHeight != null) {
@@ -57,18 +56,10 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     };
 
     const ready = () => {
-        const ifdoc =
-            iframeDom.current.document || iframeDom.current.contentDocument || iframeDom.current.contentWindow.document;
-        console.log('iframe ready', ifdoc);
-        ifdoc.getElementsByClassName('nav-container')[0].style.display = 'none';
-        ifdoc.getElementsByClassName('footer-container')[0].style.display = 'none';
-        ifdoc.getElementsByClassName('body-container')[0].style.padding = '0';
-        if (isMobile) {
-            ifdoc.getElementsByClassName('homeFooter')[0].style.display = 'none';
-        }
+        alert('ready');
+        hideHeaderFooter();
     };
     const hideHeaderFooter = () => {
-        // document.frames['iView'].document;
         alert('onload');
         var iframeId = document.getElementById('nweWebiFrame');
         var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
