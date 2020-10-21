@@ -10,6 +10,7 @@ const theme = {
         secondaryHover: '#ad7633',
         loss: '#22a16f',
         accountHover: '#e6ebf5',
+        menuTagNew : '#254A91'
     },
     button: {
         transition: 'all 0.3s ease-out',

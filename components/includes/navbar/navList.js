@@ -51,7 +51,7 @@ const NavList = React.memo(props => {
                                 target={lv3Item.isBlank ? '_blank' : ''}
                                 className="navbar__lv3__item__title"
                             >
-                                {lv3Item.title}
+                                <span className={lv3Item.icon ? lv3Item.icon : ""}>{lv3Item.title}</span>
                             </a>
                         </Link>
                     </li>
@@ -85,6 +85,27 @@ const NavList = React.memo(props => {
                     font-size: 16px;
                     color: ${theme.colors.darkBg};
                     display: block;
+                }
+                .NEW::after, .HOT::after {
+                    display:inline-block;
+                    width: 37px;
+                    height: 18px;
+                    text-align: center;
+                    margin-left: 7px;
+                    vertical-align: text-bottom;
+                    font-size:12px;
+                    transform: scale(0.9)
+                }   
+                .NEW::after {
+                    background: ${theme.colors.menuTagNew};
+                    color : ${theme.colors.text};
+                    content : "NEW";
+                }
+
+                .HOT::after {
+                    background: ${theme.colors.primary};
+                    color : ${theme.colors.text};
+                    content : "HOT";
                 }
 
                 @media (max-width: ${props.twoColumnPX}px) {
