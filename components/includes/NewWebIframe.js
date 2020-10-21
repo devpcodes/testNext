@@ -9,9 +9,15 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
 
     useEffect(() => {
         // iframeDom.current.contentDocument.location.reload(true);
-        const ifdoc = document.getElementById('nweWebiFrame').document;
-        console.log('iframe', ifdoc);
-        ifdoc.addEventListener('DOMContentLoaded', ready);
+        // const ifdoc = document.getElementById('nweWebiFrame').document;
+
+        var iframeId = document.getElementById('nweWebiFrame');
+        var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
+        if (iframeContent.document) {
+            iframeContent = iframeContent.document;
+        }
+        console.log('iframe', iframeContent);
+        iframeContent.addEventListener('DOMContentLoaded', ready);
 
         if (iHeight != null) {
             setTimeout(() => {
