@@ -40,6 +40,7 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                 .login-enter-active {
                     transform: ${isMobile && classNames === 'login' ? 'translate(0, 0)' : 'scale(1)'};
                     transition: all 300ms;
+                    transition-delay: 0.1s;
                 }
                 .login-exit {
                     transform: ${isMobile && classNames === 'login' ? 'translate(0, 0)' : 'scale(1)'};
