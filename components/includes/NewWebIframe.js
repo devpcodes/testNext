@@ -7,17 +7,16 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [iframeHeight, setIframeHeight] = useState(1);
 
-    useEffect(() => {
-        // iframeDom.current.contentDocument.location.reload(true);
-        // const ifdoc = document.getElementById('nweWebiFrame').document;
-
-        var iframeId = iframeDom.current;
+    setTimeout(() => {
+        var iframeId = document.getElementById('nweWebiFrame');
         var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
         if (iframeContent.document) {
             iframeContent = iframeContent.document;
         }
         iframeContent.addEventListener('DOMContentLoaded', ready);
+    }, 100);
 
+    useEffect(() => {
         if (iHeight != null) {
             setTimeout(() => {
                 iframeDom.current.height = iHeight;
@@ -41,12 +40,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     }, [iHeight]);
 
     useEffect(() => {
-        if (isMobile) {
-            const ifdoc = iframeDom.current.contentWindow.document;
-            if (ifdoc.getElementsByClassName('homeFooter').length > 0) {
-                ifdoc.getElementsByClassName('homeFooter')[0].style.display = 'none';
-            }
-        }
+        hideHeaderFooter();
     }, [isMobile]);
 
     const receiveMessage = e => {
@@ -56,11 +50,11 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     };
 
     const ready = () => {
-        alert('ready');
+        console.log('ready');
         hideHeaderFooter();
     };
     const hideHeaderFooter = () => {
-        alert('onload');
+        console.log('onload');
         var iframeId = document.getElementById('nweWebiFrame');
         var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
         if (iframeContent.document) {
