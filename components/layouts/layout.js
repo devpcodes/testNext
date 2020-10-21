@@ -8,13 +8,7 @@ import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
 import { resize, showLoginHandler, setNavItems } from '../../store/components/layouts/action';
-import {
-    setIsLogin,
-    setAccounts,
-    setUserSettings,
-    getUserSettings,
-    setCurrentAccount,
-} from '../../actions/user/action';
+import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
 // import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';

@@ -1,4 +1,4 @@
-import * as actionType from '../actions/user/actionType';
+import * as actionType from './actionType';
 
 const initialState = {
     isLogin: false,

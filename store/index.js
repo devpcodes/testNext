@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import layout from './components/layouts/reducer';
 import server from './server';
-import user from './user';
+import user from './user/reducer';
 import stock from './stock';
 import sb from './sb';
 import future from './future/reducer';

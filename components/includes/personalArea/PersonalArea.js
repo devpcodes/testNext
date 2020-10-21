@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import NavList from '../navbar/navList';
 import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/user/logoutFetcher';
-import { setIsLogin } from '../../../actions/user/action';
+import { setIsLogin } from '../../../store/user/action';
 import { TradingQuickView } from './TradingQuickView';
 
 import theme from '../../../resources/styles/theme';
