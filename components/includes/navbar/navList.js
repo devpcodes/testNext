@@ -4,6 +4,7 @@ import theme from '../../../resources/styles/theme';
 import Link from 'next/link';
 
 const NavList = React.memo(props => {
+    const islogin = useSelector(store => store.user.isLogin);
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const clickHandler = () => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
@@ -25,7 +26,8 @@ const NavList = React.memo(props => {
             </h6>
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
-                    <li className="navbar__lv3__item" key={lv3Index}>
+                    (lv3Item.needLogin === true) && (needLogin === false) ? "" 
+                    : <li className="navbar__lv3__item" key={lv3Index}>
                         <Link
                             as={`${lv3Item.url}`}
                             href={
@@ -46,7 +48,7 @@ const NavList = React.memo(props => {
                                                   lv3Item.openWidth,
                                                   lv3Item.openHeight,
                                               )
-                                        : ''
+                                        : () => { return false }
                                 }
                                 target={lv3Item.isBlank ? '_blank' : ''}
                                 className="navbar__lv3__item__title"
@@ -56,6 +58,7 @@ const NavList = React.memo(props => {
                         </Link>
                     </li>
                 ))}
+            
             </ul>
 
             <style jsx>{`

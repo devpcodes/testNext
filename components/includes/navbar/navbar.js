@@ -15,8 +15,11 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 const Navbar = React.memo(props => {
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
+    const islogin = useSelector(store => store.user.isLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const showMenu = useSelector(store => store.layout.showMenu);
+
+
 
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
     const dispatch = useDispatch();
