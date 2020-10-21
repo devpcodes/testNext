@@ -9,8 +9,8 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
 
     useEffect(() => {
         // iframeDom.current.contentDocument.location.reload(true);
-        const ifdoc =
-            document.getElementById('nweWebiFrame').contentWindow.document || iframeDom.current.contentWindow.document;
+        const ifdoc = document.getElementById('nweWebiFrame').document;
+        console.log('iframe', ifdoc);
         ifdoc.addEventListener('DOMContentLoaded', ready);
 
         if (iHeight != null) {
