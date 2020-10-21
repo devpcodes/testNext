@@ -50,7 +50,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     };
 
     const ready = () => {
-        const ifdoc = iframeDom.contentDocument || iframeDom.current.contentWindow.document;
+        const ifdoc = iframeDom.document || iframeDom.contentDocument || iframeDom.current.contentWindow.document;
         ifdoc.getElementsByClassName('nav-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('footer-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('body-container')[0].style.padding = '0';
