@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps, router }) {
         }, 400);
     };
 
-    if (router.pathname === '/SinoTrade_login') {
+    if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
         return (
             <>
                 <MyTransition isVisible={isVisible} classNames={'login'}>
