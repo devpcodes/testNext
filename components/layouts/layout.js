@@ -37,6 +37,7 @@ const Layout = React.memo(({ children }) => {
     const prevPathname = useRef(false);
     const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isServer ? false : checkMobile(window.innerWidth));
+    const prevIsLogin = useRef(isLogin);
 
     // const getUrlParams = () => {
     //     const params = new URLSearchParams('source=MMA&platform=Line');
@@ -106,6 +107,11 @@ const Layout = React.memo(({ children }) => {
         } else {
             dispatch(setAccounts([]));
             dispatch(setUserSettings({}));
+        }
+
+        if (prevIsLogin.current !== isLogin) {
+            prevIsLogin.current = isLogin;
+            updateNavData();
         }
     }, [isLogin]);
 
