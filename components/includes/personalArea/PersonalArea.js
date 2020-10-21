@@ -46,18 +46,20 @@ export const PersonalArea = ({ personalAreaVisible }) => {
 
     return (
         <div className="personalArea__container">
-            <div className="personalArea__content">
-                <div className="myNav__container">
-                    {!!personalNav &&
-                        personalNav.map((data, index) => (
-                            <div className="myNav__list" key={index}>
-                                <NavList lv2Data={data} toggleList={isMobile} />
-                            </div>
-                        ))}
-                </div>
-                <div className="accountInfo__container">
-                    <AccountDropdown personalAreaVisible={personalAreaVisible} />
-                    <TradingQuickView />
+            <div className="personalArea__wrapper">
+                <div className="personalArea__content">
+                    <div className="myNav__container">
+                        {!!personalNav &&
+                            personalNav.map((data, index) => (
+                                <div className="myNav__list" key={index}>
+                                    <NavList lv2Data={data} toggleList={isMobile} />
+                                </div>
+                            ))}
+                    </div>
+                    <div className="accountInfo__container">
+                        <AccountDropdown personalAreaVisible={personalAreaVisible} />
+                        <TradingQuickView />
+                    </div>
                 </div>
             </div>
             <button className="personalArea__logoutBtn" onClick={handleLogout}>
@@ -132,6 +134,16 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                     }
                     .personalArea__container:before {
                         display: none;
+                    }
+                    .personalArea__wrapper {
+                        height: calc(100% - 70px);
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        -ms-overflow-style: none; /* IE and Edge */
+                        scrollbar-width: none; /* Firefox */
+                    }
+                    .personalArea__wrapper::-webkit-scrollbar {
+                        display: none; /* Hide scrollbar for Chrome, Safari and Opera */
                     }
                     .personalArea__content {
                         flex-wrap: wrap-reverse;
