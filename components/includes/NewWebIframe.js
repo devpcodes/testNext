@@ -9,7 +9,8 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
 
     useEffect(() => {
         // iframeDom.current.contentDocument.location.reload(true);
-        const ifdoc = iframeDom.document || iframeDom.contentDocument || iframeDom.current.contentWindow.document;
+        const ifdoc =
+            iframeDom.current.document || iframeDom.current.contentDocument || iframeDom.current.contentWindow.document;
         console.log('iframe', ifdoc);
         ifdoc.addEventListener('DOMContentLoaded', ready);
 
@@ -51,7 +52,8 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     };
 
     const ready = () => {
-        const ifdoc = iframeDom.document || iframeDom.contentDocument || iframeDom.current.contentWindow.document;
+        const ifdoc =
+            iframeDom.current.document || iframeDom.current.contentDocument || iframeDom.current.contentWindow.document;
         console.log('iframe', ifdoc);
         ifdoc.getElementsByClassName('nav-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('footer-container')[0].style.display = 'none';
