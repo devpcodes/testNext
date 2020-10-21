@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
 const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const iframeDom = useRef(null);
-    // const winWidth = useSelector(store => store.layout.winWidth);
+    const isMobile = useSelector(store => store.layout.isMobile);
     const [iframeHeight, setIframeHeight] = useState(1);
 
     useEffect(() => {
@@ -30,15 +31,35 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
         iframeDom.current.height = iHeight;
     }, [iHeight]);
 
+    useEffect(() => {
+        if (isMobile) {
+            const ifdoc = iframeDom.current.contentWindow.document;
+            if (ifdoc.getElementsByClassName('homeFooter').length > 0) {
+                ifdoc.getElementsByClassName('homeFooter')[0].style.display = 'none';
+            }
+        }
+    }, [isMobile]);
+
     const receiveMessage = e => {
         if (e.data.iframeHeight) {
             setIframeHeight(e.data.iframeHeight + 30);
         }
     };
 
+    const hideHeaderFooter = () => {
+        const ifdoc = iframeDom.current.contentWindow.document;
+        ifdoc.getElementsByClassName('nav-container')[0].style.display = 'none';
+        ifdoc.getElementsByClassName('footer-container')[0].style.display = 'none';
+        ifdoc.getElementsByClassName('body-container')[0].style.padding = '0';
+        if (isMobile) {
+            ifdoc.getElementsByClassName('homeFooter')[0].style.display = 'none';
+        }
+    };
+
     return (
         <>
             <iframe
+                onLoad={hideHeaderFooter}
                 title={title}
                 ref={iframeDom}
                 id="nweWebiFrame"
