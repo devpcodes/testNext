@@ -27,12 +27,12 @@ const NavList = React.memo(props => {
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
                         <Link
-                            as={`${lv3Item.url}`}
+                            as={lv3Item.isFullUrl ? `${lv3Item.url}` : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`}
                             href={
                                 lv3Item.isOpen
                                     ? '#'
-                                    : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
-                                    ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
+                                    : `${lv3Item.url}`
+                                    ? `${lv3Item.url}`
                                     : '#'
                             }
                             prefetch={false}
@@ -46,7 +46,7 @@ const NavList = React.memo(props => {
                                                   lv3Item.openWidth,
                                                   lv3Item.openHeight,
                                               )
-                                        : ''
+                                        : () => { return false }
                                 }
                                 target={lv3Item.isBlank ? '_blank' : ''}
                                 className="navbar__lv3__item__title"
