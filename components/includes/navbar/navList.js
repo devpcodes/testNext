@@ -4,7 +4,6 @@ import theme from '../../../resources/styles/theme';
 import Link from 'next/link';
 
 const NavList = React.memo(props => {
-    const islogin = useSelector(store => store.user.isLogin);
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const clickHandler = () => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
@@ -26,15 +25,14 @@ const NavList = React.memo(props => {
             </h6>
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
-                    (lv3Item.needLogin === true) && (islogin === false) ? "" 
-                    : <li className="navbar__lv3__item" key={lv3Index}>
+                    <li className="navbar__lv3__item" key={lv3Index}>
                         <Link
-                            as={`${lv3Item.url}`}
+                            as={lv3Item.isFullUrl ? `${lv3Item.url}` : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`}
                             href={
                                 lv3Item.isOpen
                                     ? '#'
-                                    : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
-                                    ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
+                                    : `${lv3Item.url}`
+                                    ? `${lv3Item.url}`
                                     : '#'
                             }
                             prefetch={false}
@@ -58,7 +56,6 @@ const NavList = React.memo(props => {
                         </Link>
                     </li>
                 ))}
-            
             </ul>
 
             <style jsx>{`
