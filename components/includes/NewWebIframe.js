@@ -10,8 +10,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     useEffect(() => {
         // iframeDom.current.contentDocument.location.reload(true);
         const ifdoc =
-            iframeDom.current.document || iframeDom.current.contentDocument || iframeDom.current.contentWindow.document;
-        console.log('iframe', ifdoc);
+            document.getElementById('nweWebiFrame').contentWindow.document || iframeDom.current.contentWindow.document;
         ifdoc.addEventListener('DOMContentLoaded', ready);
 
         if (iHeight != null) {
@@ -54,7 +53,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const ready = () => {
         const ifdoc =
             iframeDom.current.document || iframeDom.current.contentDocument || iframeDom.current.contentWindow.document;
-        console.log('iframe', ifdoc);
+        console.log('iframe ready', ifdoc);
         ifdoc.getElementsByClassName('nav-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('footer-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('body-container')[0].style.padding = '0';
