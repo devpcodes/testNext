@@ -43,10 +43,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
 
     useEffect(() => {
         if (isMobile) {
-            const ifdoc = iframeDom.current.contentWindow.document;
-            if (ifdoc.getElementsByClassName('homeFooter').length > 0) {
-                ifdoc.getElementsByClassName('homeFooter')[0].style.display = 'none';
-            }
+            hideHeaderFooter();
         }
     }, [isMobile]);
 
