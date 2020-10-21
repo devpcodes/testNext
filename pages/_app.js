@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps, router }) {
     const getLayout = Component.getLayout || (page => <Layout children={page} />);
     const renderComp = getLayout(<Component {...pageProps} />);
     useEffect(() => {
-        if (router.pathname === '/SinoTrade_login') {
+        if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
             setIsVisible(true);
         }
     }, [router.pathname]);

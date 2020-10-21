@@ -35,6 +35,7 @@ function RichInfo_News_Article() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/RichInfo_News_Article${queryStr}`}
                     title="永豐金證券"
+                    iHeight={1500}
                 />
             </div>
         </>

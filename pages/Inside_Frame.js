@@ -13,18 +13,19 @@ function Inside_Frame() {
     const [queryStr, setQueryStr] = useState('');
 
     useEffect(() => {
-        const qStr = objectToQueryHandler(router.query);
-        if (qStr) {
-            setQueryStr(qStr);
-        }
+        queryHandler();
     }, []);
 
     useEffect(() => {
+        queryHandler();
+    }, [router.query]);
+
+    const queryHandler = () => {
         const qStr = objectToQueryHandler(router.query);
         if (qStr) {
             setQueryStr(qStr);
         }
-    }, [router.query]);
+    };
     return (
         <>
             <Head>
@@ -33,7 +34,7 @@ function Inside_Frame() {
             </Head>
             <div>
                 <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Inside_Frame${queryStr}`}
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Inside_Frame${decodeURIComponent(queryStr)}`}
                     title="永豐金證券"
                 />
             </div>
