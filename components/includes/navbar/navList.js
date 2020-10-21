@@ -26,7 +26,7 @@ const NavList = React.memo(props => {
             </h6>
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
-                    (lv3Item.needLogin === true) && (needLogin === false) ? "" 
+                    (lv3Item.needLogin === true) && (islogin === false) ? "" 
                     : <li className="navbar__lv3__item" key={lv3Index}>
                         <Link
                             as={`${lv3Item.url}`}
