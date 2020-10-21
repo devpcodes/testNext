@@ -1,4 +1,4 @@
-import * as actionType from '../actions/components/layouts/actionType';
+import * as actionType from './components/layouts/actionType';
 
 const initialState = {
     navData: {},

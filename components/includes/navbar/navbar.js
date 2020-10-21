@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMenuOpen } from '../../../actions/components/layouts/action';
+import { setMenuOpen } from '../../../store/components/layouts/action';
 import Link from 'next/link';
 import theme from '../../../resources/styles/theme';
 import NavList from '../navbar/navList';

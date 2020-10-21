@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import layout from './components/layouts/layout';
+import layout from './components/layouts/reducer';
 import server from './server';
 import user from './user';
 import stock from './stock';

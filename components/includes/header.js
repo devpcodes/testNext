@@ -7,7 +7,7 @@ import logo from '../../resources/images/components/header/sinopac_securities_lo
 import menu from '../../resources/images/components/header/ic_menu.png';
 import theme from '../../resources/styles/theme';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMenuOpen } from '../../actions/components/layouts/action';
+import { setMenuOpen } from '../../store/components/layouts/action';
 
 const Header = () => {
     const showMenu = useSelector(store => store.layout.showMenu);
