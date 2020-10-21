@@ -8,7 +8,10 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const [iframeHeight, setIframeHeight] = useState(1);
 
     useEffect(() => {
-        iframeDom.current.contentDocument.location.reload(true);
+        // iframeDom.current.contentDocument.location.reload(true);
+        const ifdoc = iframeDom.contentDocument || iframeDom.current.contentWindow.document;
+        ifdoc.addEventListener('DOMContentLoaded', ready);
+
         if (iHeight != null) {
             setTimeout(() => {
                 iframeDom.current.height = iHeight;
@@ -46,14 +49,17 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
         }
     };
 
-    const hideHeaderFooter = () => {
-        const ifdoc = iframeDom.current.contentWindow.document;
+    const ready = () => {
+        const ifdoc = iframeDom.contentDocument || iframeDom.current.contentWindow.document;
         ifdoc.getElementsByClassName('nav-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('footer-container')[0].style.display = 'none';
         ifdoc.getElementsByClassName('body-container')[0].style.padding = '0';
         if (isMobile) {
             ifdoc.getElementsByClassName('homeFooter')[0].style.display = 'none';
         }
+    };
+    const hideHeaderFooter = () => {
+        // document.frames['iView'].document;
     };
 
     return (
