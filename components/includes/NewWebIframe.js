@@ -70,6 +70,17 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const hideHeaderFooter = () => {
         // document.frames['iView'].document;
         alert('onload');
+        var iframeId = document.getElementById('nweWebiFrame');
+        var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
+        if (iframeContent.document) {
+            iframeContent = iframeContent.document;
+        }
+        iframeContent.getElementsByClassName('nav-container')[0].style.display = 'none';
+        iframeContent.getElementsByClassName('footer-container')[0].style.display = 'none';
+        iframeContent.getElementsByClassName('body-container')[0].style.padding = '0';
+        if (isMobile) {
+            iframeContent.getElementsByClassName('homeFooter')[0].style.display = 'none';
+        }
     };
 
     return (
