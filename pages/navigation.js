@@ -43,7 +43,10 @@ const OpenAccount = () => {
             if (canTrustDict[queryStringDict.platform].needLogin) {
                 const res = await submit(queryStringDict.otp);
                 console.log(res)
-                // 導回設定頁面
+                if (res.data.success === true) {
+                    sessionStorage.setItem('source', queryStringDict.platform.toLowerCase());
+                    // 導回設定頁面
+                }
             }
         } catch (e) {
             console.log(e)
