@@ -137,6 +137,7 @@ const Layout = React.memo(({ children }) => {
     }, [userSettings]);
 
     useEffect(() => {
+        console.log('navData update', navData, router.pathname);
         if (router.pathname.indexOf('errPage') >= 0 || router.pathname === '/') {
             setVerifySuccess(true);
         } else {
@@ -148,36 +149,23 @@ const Layout = React.memo(({ children }) => {
     const showPageHandler = function () {
         let currentPath = router.pathname.substr(1) + objectToQueryHandler(router.query);
         if (currentPath !== '') {
-            if (navData.main != null) {
-                pageVerifyHandler(navData.main, currentPath);
-                pageVerifyHandler(navData.personal, currentPath);
+            if (navData.unauthorized != null) {
+                pageVerifyHandler(navData.unauthorized, currentPath);
                 menuUrlHandler();
             }
         }
     };
 
     //查詢當前網址是不是menu裡的url
-    const pageVerifyHandler = function (data, currentPath, getPath) {
+    const pageVerifyHandler = function (data, currentPath) {
+        console.log('currentPath', currentPath);
         if (data == null) {
             return;
         }
-        data.some(obj => {
-            if (obj.url != null) {
-                if (obj.url === currentPath) {
-                    console.log('GET');
-                    getMenuPath.current = true;
-                    isAuthenticated.current = obj.isAuthenticated;
-                    needLogin.current = obj.needLogin;
-                    getPath = true; //跳出回圈用的
-                    return true;
-                }
-            } else {
-                if (obj.items != null) {
-                    if (getPath) {
-                        return true; //跳出回圈用的
-                    }
-                    pageVerifyHandler(obj.items, currentPath);
-                }
+        data.some(url => {
+            if (url === currentPath) {
+                getMenuPath.current = true;
+                return true;
             }
         });
     };
@@ -185,7 +173,7 @@ const Layout = React.memo(({ children }) => {
     //for loop menu選單路徑完成時的處理
     const menuUrlHandler = function () {
         if (getMenuPath.current) {
-            loginPageHandler(isLogin, needLogin.current);
+            noPermissionPage();
         } else {
             setVerifySuccess(true);
         }
@@ -196,22 +184,22 @@ const Layout = React.memo(({ children }) => {
      * @param {bool} isLogin 是否已登入
      * @param {bool} needLogin 是否需登入
      */
-    const loginPageHandler = function (isLogin, needLogin) {
-        if (!isLogin && needLogin) {
-            noPermissionPage();
-        } else {
-            authPageHandler();
-        }
-    };
+    // const loginPageHandler = function (isLogin, needLogin) {
+    //     if (!isLogin && needLogin) {
+    //         noPermissionPage();
+    //     } else {
+    //         authPageHandler();
+    //     }
+    // };
 
     //是否有權限
-    const authPageHandler = function () {
-        if (isAuthenticated.current) {
-            setVerifySuccess(true);
-        } else {
-            noPermissionPage();
-        }
-    };
+    // const authPageHandler = function () {
+    //     if (isAuthenticated.current) {
+    //         setVerifySuccess(true);
+    //     } else {
+    //         noPermissionPage();
+    //     }
+    // };
 
     //無權限頁面處理
     const noPermissionPage = function () {
@@ -257,6 +245,7 @@ const Layout = React.memo(({ children }) => {
         updateNavData();
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
+        getMenuPath.current = false;
         setTimeout(() => {
             notification.success({
                 placement: 'topRight',

@@ -10,22 +10,28 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
 
     setTimeout(() => {
         var iframeId = iframeDom.current;
-        var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
-        if (iframeContent.document) {
-            iframeContent = iframeContent.document;
+        if (iframeId != null) {
+            var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
+            if (iframeContent.document) {
+                iframeContent = iframeContent.document;
+            }
+            iframeContentDoc.current = iframeContent;
+            iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
         }
-        iframeContentDoc.current = iframeContent;
-        iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
     }, 100);
 
     useEffect(() => {
         if (iHeight != null) {
             setTimeout(() => {
-                iframeDom.current.height = iHeight;
+                if (iframeDom.current != null) {
+                    iframeDom.current.height = iHeight;
+                }
             }, 100);
         }
         return () => {
-            iframeContentDoc.current.removeEventListener('DOMContentLoaded', ready, false);
+            if (iframeContentDoc.current != null) {
+                iframeContentDoc.current.removeEventListener('DOMContentLoaded', ready, false);
+            }
         };
     }, []);
 
