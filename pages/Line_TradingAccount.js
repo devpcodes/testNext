@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
-function GoOrder() {
+function Line_TradingAccount() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
 
@@ -28,24 +28,19 @@ function GoOrder() {
     return (
         <>
             <Head>
-                <title>快速下單</title>
+                <title>交易帳務</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
                 <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/goOrder${queryStr}`}
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Line_TradingAccount${queryStr}`}
+                    // iframeSrc={'https://webrd.sinotrade.com.tw/TradingAccount'}
+                    iHeight={1000}
                     title="永豐金證券"
-                    iHeight={830}
                 />
             </div>
         </>
     );
 }
-// eslint-disable-next-line react/display-name
-// GoOrder.getLayout = page => (
-//     <>
-//       <GoOrder>{page}</GoOrder>
-//     </>
-// )
 
-export default GoOrder;
+export default Line_TradingAccount;

@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
 const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const iframeDom = useRef(null);
+    const iframeContentReady = useRef(false);
+    const iframeContentDoc = useRef(null);
     const isMobile = useSelector(store => store.layout.isMobile);
-    const [iframeHeight, setIframeHeight] = useState(1);
 
     setTimeout(() => {
         var iframeId = iframeDom.current;
@@ -13,63 +14,53 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
         if (iframeContent.document) {
             iframeContent = iframeContent.document;
         }
-        iframeContent.addEventListener('DOMContentLoaded', ready);
+        iframeContentDoc.current = iframeContent;
+        iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
     }, 100);
 
     useEffect(() => {
-        // iframeDom.current.contentDocument.location.reload(true);
-        // const ifdoc = document.getElementById('nweWebiFrame').document;
         if (iHeight != null) {
             setTimeout(() => {
                 iframeDom.current.height = iHeight;
             }, 100);
-        } else {
-            window.addEventListener('message', receiveMessage, false);
         }
         return () => {
-            if (iHeight == null) {
-                window.removeEventListener('message', receiveMessage, false);
-            }
+            iframeContentDoc.current.removeEventListener('DOMContentLoaded', ready, false);
         };
     }, []);
-
-    useEffect(() => {
-        iframeDom.current.height = iframeHeight;
-    }, [iframeHeight]);
 
     useEffect(() => {
         iframeDom.current.height = iHeight;
     }, [iHeight]);
 
     useEffect(() => {
-        if (isMobile) {
-            hideHeaderFooter();
+        if (iframeContentReady.current) {
+            if (isMobile) {
+                hideHeaderFooter();
+            }
         }
     }, [isMobile]);
-
-    const receiveMessage = e => {
-        if (e.data.iframeHeight) {
-            setIframeHeight(e.data.iframeHeight + 30);
-        }
-    };
 
     const ready = () => {
         console.log('ready');
         hideHeaderFooter();
     };
+
     const hideHeaderFooter = () => {
         console.log('onload');
-        var iframeId = document.getElementById('nweWebiFrame');
-        var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
-        if (iframeContent.document) {
-            iframeContent = iframeContent.document;
+        console.log('content', iframeContentDoc.current);
+
+        if (iframeContentDoc.current.getElementsByClassName('nav-container').length > 0) {
+            iframeContentDoc.current.getElementsByClassName('nav-container')[0].style.display = 'none';
+            iframeContentDoc.current.getElementsByClassName('footer-container')[0].style.display = 'none';
+            iframeContentDoc.current.getElementsByClassName('body-container')[0].style.padding = '0';
         }
-        iframeContent.getElementsByClassName('nav-container')[0].style.display = 'none';
-        iframeContent.getElementsByClassName('footer-container')[0].style.display = 'none';
-        iframeContent.getElementsByClassName('body-container')[0].style.padding = '0';
         if (isMobile) {
-            iframeContent.getElementsByClassName('homeFooter')[0].style.display = 'none';
+            if (iframeContentDoc.current.getElementsByClassName('homeFooter').length > 0) {
+                iframeContentDoc.current.getElementsByClassName('homeFooter')[0].style.display = 'none';
+            }
         }
+        iframeContentReady.current = true;
     };
 
     return (

@@ -19,9 +19,9 @@ import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 
 const Layout = React.memo(({ children }) => {
-    const isServer = typeof window === 'undefined';
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
+    const [isRendered, setIsRendered] = useState(false);
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
@@ -36,8 +36,7 @@ const Layout = React.memo(({ children }) => {
     const needLogin = useRef(false);
     const prevPathname = useRef(false);
     const isAuthenticated = useRef(true);
-    const prevIsMobile = useRef(isServer ? false : checkMobile(window.innerWidth));
-    const prevIsLogin = useRef(isLogin);
+    const prevIsMobile = useRef(isMobile);
 
     // const getUrlParams = () => {
     //     const params = new URLSearchParams('source=MMA&platform=Line');
@@ -68,31 +67,13 @@ const Layout = React.memo(({ children }) => {
     };
 
     useEffect(() => {
-        pwaHandler();
-        window.addEventListener('resize', resizeHandler);
-        resizeHandler();
-        if (!Object.keys(navData).length) {
+        prevIsMobile.current = isMobile;
+
+        // 不是第一次 render 才更新資料
+        if (Object.keys(navData).length && isRendered) {
             updateNavData();
         }
-
-        // setSource();
-
-        if (checkLogin()) {
-            dispatch(setIsLogin(true));
-        }
-        return () => {
-            window.removeEventListener('resize', resizeHandler, false);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!Object.keys(navData).length || prevIsMobile.current === isMobile) {
-            return;
-        } else {
-            prevIsMobile.current = isMobile;
-            updateNavData();
-        }
-    }, [isMobile]);
+    }, [isMobile, isLogin]);
 
     useEffect(() => {
         const updateUserSettings = () => {
@@ -108,12 +89,32 @@ const Layout = React.memo(({ children }) => {
             dispatch(setAccounts([]));
             dispatch(setUserSettings({}));
         }
-
-        if (prevIsLogin.current !== isLogin) {
-            prevIsLogin.current = isLogin;
-            updateNavData();
-        }
     }, [isLogin]);
+
+    useEffect(() => {
+        pwaHandler();
+        window.addEventListener('resize', resizeHandler);
+        resizeHandler();
+        const timeout = setTimeout(() => {
+            // 第一次 render 且 redux 沒資料時，才 fetch 資料
+            if (!Object.keys(navData).length) {
+                updateNavData();
+            }
+        }, 10);
+
+        // setSource();
+
+        if (checkLogin()) {
+            dispatch(setIsLogin(true));
+        }
+
+        setIsRendered(true);
+
+        return () => {
+            window.removeEventListener('resize', resizeHandler, false);
+            clearTimeout(timeout);
+        };
+    }, []);
 
     useEffect(() => {
         const getDefaultAccount = accounts => {
