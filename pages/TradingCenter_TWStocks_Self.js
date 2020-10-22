@@ -1,5 +1,5 @@
 import { wrapper } from '../store/store';
-import { setNavItems } from '../actions/components/layouts/action';
+import { setNavItems } from '../store/components/layouts/action';
 import NewWebIframe from '../components/includes/NewWebIframe';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {

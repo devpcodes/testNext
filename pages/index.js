@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import Head from 'next/head';
 import { wrapper } from '../store/store';
-import { setNavItems } from '../actions/components/layouts/action';
+import { setNavItems } from '../store/components/layouts/action';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { useSelector } from 'react-redux';
 

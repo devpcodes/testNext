@@ -7,14 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, showLoginHandler, setNavItems } from '../../actions/components/layouts/action';
-import {
-    setIsLogin,
-    setAccounts,
-    setUserSettings,
-    getUserSettings,
-    setCurrentAccount,
-} from '../../actions/user/action';
+import { resize, showLoginHandler, setNavItems } from '../../store/components/layouts/action';
+import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
 // import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
@@ -43,6 +37,7 @@ const Layout = React.memo(({ children }) => {
     const prevPathname = useRef(false);
     const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isServer ? false : checkMobile(window.innerWidth));
+    const prevIsLogin = useRef(isLogin);
 
     // const getUrlParams = () => {
     //     const params = new URLSearchParams('source=MMA&platform=Line');
@@ -112,6 +107,11 @@ const Layout = React.memo(({ children }) => {
         } else {
             dispatch(setAccounts([]));
             dispatch(setUserSettings({}));
+        }
+
+        if (prevIsLogin.current !== isLogin) {
+            prevIsLogin.current = isLogin;
+            updateNavData();
         }
     }, [isLogin]);
 

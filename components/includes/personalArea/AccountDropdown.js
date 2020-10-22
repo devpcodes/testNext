@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { accountGroupByType } from '../../../services/user/accountGroupByType';
-import { setCurrentAccount } from '../../../actions/user/action';
+import { setCurrentAccount } from '../../../store/user/action';
 
 import { AccountAvatar } from '../AccountAvatar';
 import MyTransition from '../myTransition';
