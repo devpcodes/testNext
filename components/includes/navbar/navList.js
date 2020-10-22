@@ -91,7 +91,7 @@ const NavList = React.memo(props => {
                     width: 37px;
                     height: 18px;
                     text-align: center;
-                    margin-left: 7px;
+                    margin-left: 5px;
                     vertical-align: text-bottom;
                     font-size:12px;
                     transform: scale(0.9)

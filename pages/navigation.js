@@ -1,0 +1,59 @@
+import { submit } from '../services/components/login/trustLogin';
+
+const OpenAccount = () => {
+    
+
+    const getQueryString = (name) => {
+        const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        const r = location.search.substr(1).match(reg);
+        if (r != null) return unescape(decodeURI(r[2]));
+        return null;
+    }
+
+    const queryStringDict = {
+        platform: getQueryString("platform"),
+        source: getQueryString("source"),
+        page: getQueryString("page") ? getQueryString("page") : "/",
+        otp: getQueryString("otp")
+    }
+
+    const canTrustDict = {
+        'Bond_Securities' : {
+            target: "/",
+            needLogin: true,
+            errorPage: "/",
+            loginType: 'trust'
+        },
+        'MMA': {
+            target: "/",
+            needLogin: true,
+            errorPage: "/",
+            loginType: 'trust'
+        },
+        'Line': {
+            target: "/",
+            needLogin: false,
+            errorPage: "/",
+            loginType: 'trust'
+        }
+    }
+
+    const doLogin = (async () => {
+        try {
+            if (canTrustDict[queryStringDict.platform].needLogin) {
+                const res = await submit(queryStringDict.otp);
+                console.log(res)
+                // 導回設定頁面
+            }
+        } catch (e) {
+            console.log(e)
+            alert("失敗")
+            // 導回未登入首頁 ??
+        }
+    })();
+    
+    
+    return ""; 
+};
+
+export default OpenAccount;
