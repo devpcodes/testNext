@@ -14,7 +14,11 @@ function RichInfo_News() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/RichInfo_News`} title="永豐金證券" />
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/RichInfo_News`}
+                    title="永豐金證券"
+                    iHeight={2000}
+                />
             </div>
         </>
     );
