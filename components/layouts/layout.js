@@ -9,7 +9,7 @@ import Header from '../includes/header';
 import Footer from '../includes/footer';
 import { resize, showLoginHandler, setNavItems } from '../../store/components/layouts/action';
 import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
-// import { setDomain } from '../../store/general/action';
+import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
@@ -30,50 +30,24 @@ const Layout = React.memo(({ children }) => {
     const navData = useSelector(store => store.layout.navData);
     const userSettings = useSelector(store => store.user.userSettings);
     const accounts = useSelector(store => store.user.accounts);
-    // const domain = useSelector(store => store.general.domain);
+    const domain = useSelector(store => store.general.domain);
 
     const getMenuPath = useRef(false);
     const needLogin = useRef(false);
     const prevPathname = useRef(false);
     const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isMobile);
-
-    // const getUrlParams = () => {
-    //     const params = new URLSearchParams('source=MMA&platform=Line');
-    //     for (const param of params) {
-    //         console.log(param);
-    //     }
-    //     return params;
-    // };
-
-    // const setSource = () => {
-    //     const params = getUrlParams();
-    //     console.log('has key:', params.has('platform'));
-    //     console.log('value', params.get('platform'));
-    //     if (params.has('platform')) {
-    //         dispatch(setDomain(params.get('platform')));
-    //     } else {
-    //         dispatch(setDomain('newweb'));
-    //     }
-    // };
-
-    const updateNavData = () => {
-        const data = {
-            token: getCookie('token'),
-            domain: '',
-            isMobile: prevIsMobile.current,
-        };
-        dispatch(setNavItems(data));
-    };
+    const prevDomain = useRef(domain);
 
     useEffect(() => {
         prevIsMobile.current = isMobile;
+        prevDomain.current = domain;
 
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered) {
             updateNavData();
         }
-    }, [isMobile, isLogin]);
+    }, [isMobile, isLogin, domain]);
 
     useEffect(() => {
         const updateUserSettings = () => {
@@ -101,8 +75,7 @@ const Layout = React.memo(({ children }) => {
                 updateNavData();
             }
         }, 10);
-
-        // setSource();
+        sourceHandler();
 
         if (checkLogin()) {
             dispatch(setIsLogin(true));
@@ -143,6 +116,56 @@ const Layout = React.memo(({ children }) => {
             showPageHandler();
         }
     }, [router.pathname, navData]);
+
+    const getUrlParams = () => {
+        return new URLSearchParams(window.location.search);
+    };
+
+    const getSourceFromQueryString = () => {
+        const params = getUrlParams();
+        let sourceFromQueryString = '';
+
+        if (params.has('platform')) {
+            switch (params.get('platform')) {
+                case 'Line':
+                    sourceFromQueryString = 'line';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return sourceFromQueryString;
+    };
+
+    const sourceHandler = () => {
+        const sourceFromQueryString = getSourceFromQueryString();
+        const sourceFromSessionStorage = sessionStorage.getItem('source');
+        let source = sourceFromQueryString || sourceFromSessionStorage;
+        let domain = 'newweb';
+
+        switch (source) {
+            case 'mma':
+                domain = 'mma';
+                break;
+            case 'line':
+                domain = 'line';
+                break;
+            default:
+                break;
+        }
+
+        dispatch(setDomain(domain));
+    };
+
+    const updateNavData = () => {
+        const data = {
+            token: getCookie('token'),
+            domain: prevDomain.current,
+            isMobile: prevIsMobile.current,
+        };
+        dispatch(setNavItems(data));
+    };
 
     //驗證有沒有瀏覽頁面的權限
     const showPageHandler = function () {

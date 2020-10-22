@@ -1,7 +1,7 @@
 import * as actionType from './actionType';
 
 const initialState = {
-    domain: '',
+    domain: 'newweb',
 };
 
 const reducer = (state = initialState, action) => {
