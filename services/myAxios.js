@@ -42,7 +42,24 @@ axios.interceptors.response.use(
             !isServer && Modal.error({ content: defaultErrorMsg });
         } else {
             if (error.response.data != null) {
-                !isServer && Modal.error({ content: error.response.data.message || defaultErrorMsg });
+                if (!isServer) {
+                    const showConfirm = () => {
+                        Modal.error({
+                            content: '帳號逾時，請重新登入。',
+                            onOk() {
+                                return location.reload();
+                            },
+                        });
+                    };
+
+                    switch (error.response.status) {
+                        case 401:
+                            return showConfirm();
+                        default:
+                            Modal.error({ content: error.response.data.message || defaultErrorMsg });
+                            break;
+                    }
+                }
             } else {
                 !isServer && Modal.error({ content: defaultErrorMsg });
             }
