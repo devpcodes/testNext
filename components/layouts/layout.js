@@ -293,7 +293,7 @@ const Layout = React.memo(({ children }) => {
         if (!currentPath) {
             router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
         } else {
-            router.push(currentPath, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`);
+            router.push(currentPath, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`, { shallow: true });
         }
     };
     return (
