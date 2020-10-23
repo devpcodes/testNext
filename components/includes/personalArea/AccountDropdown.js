@@ -218,7 +218,14 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     }
                     .accountList__container {
                         display: block;
-                        height: auto;
+                        height: calc(100% - 80px);
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        -ms-overflow-style: none; /* IE and Edge */
+                        scrollbar-width: none; /* Firefox */
+                    }
+                    .accountList__container::-webkit-scrollbar {
+                        display: none; /* Hide scrollbar for Chrome, Safari and Opera */
                     }
                     .account__card {
                         display: flex;
