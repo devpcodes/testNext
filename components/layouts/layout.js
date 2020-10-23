@@ -54,7 +54,7 @@ const Layout = React.memo(({ children }) => {
 
     //處理假登入路徑
     useEffect(() => {
-        if (router.asPath.indexOf('Sinotrade_Login') >= 0) {
+        if (router.asPath.indexOf('SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
     }, [router.asPath]);
@@ -292,7 +292,7 @@ const Layout = React.memo(({ children }) => {
         if (!currentPath) {
             router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
         } else {
-            router.push(router.pathname, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`);
+            router.push(currentPath, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`);
         }
     };
     return (
