@@ -21,9 +21,9 @@ const Header = () => {
         <header>
             <div className="header__navbar">
                 <div className="navbar__switch__m" onClick={menuClickHandler}></div>
-                <Link href="/">
+                <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
                     <a className={`header__logo ${showMenu ? 'header__logo--hide' : ''}`}>
-                        <img src={logo}></img>
+                        <img src={logo} alt={'logo'}></img>
                     </a>
                 </Link>
                 <Navbar />

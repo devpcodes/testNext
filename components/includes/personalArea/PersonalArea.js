@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
 import NavList from '../navbar/navList';
@@ -15,7 +15,7 @@ import closeImg from '../../../resources/images/components/header/ic_close_horiz
 import openImg from '../../../resources/images/components/header/ic_open.png';
 
 export const PersonalArea = ({ personalAreaVisible }) => {
-    const router = useRouter();
+    // const router = useRouter();
     const dispatch = useDispatch();
     const serverPersonalNav = useSelector(store => store.server.navData?.personal);
     const clientPersonalNav = useSelector(store => store.layout.navData?.personal);
