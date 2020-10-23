@@ -8,6 +8,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 });
 function TradingCenter_TWStocks_Taiex() {
     const isMobile = useSelector(store => store.layout.isMobile);
+    const isLogin = useSelector(store => store.user.isLogin);
     return (
         <>
             <Head>
@@ -19,6 +20,7 @@ function TradingCenter_TWStocks_Taiex() {
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Taiex`}
                     title="永豐金證券"
                     iHeight={isMobile ? 1600 : 1300}
+                    login={isLogin}
                 />
             </div>
         </>
