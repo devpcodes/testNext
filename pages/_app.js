@@ -14,33 +14,35 @@ function MyApp({ Component, pageProps, router }) {
 
     const getLayout = Component.getLayout || (page => <Layout children={page} />);
     const renderComp = getLayout(<Component {...pageProps} />);
-    useEffect(() => {
-        if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
-            setIsVisible(true);
-        }
-    }, [router.pathname]);
+    // useEffect(() => {
+    //     if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
+    //         setIsVisible(true);
+    //     }
+    // }, [router.pathname]);
 
-    const showLoginClose = function () {
-        setIsVisible(false);
-        setTimeout(() => {
-            let path = oldPathName.current != null ? oldPathName.current : '/';
-            router.push(path, process.env.NEXT_PUBLIC_SUBPATH + path.substr(1));
-        }, 400);
-    };
+    // const showLoginClose = function () {
+    //     setIsVisible(false);
+    //     setTimeout(() => {
+    //         let path = oldPathName.current != null ? oldPathName.current : '/';
+    //         router.push(path, process.env.NEXT_PUBLIC_SUBPATH + path.substr(1));
+    //     }, 400);
+    // };
 
-    if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
-        return (
-            <>
-                <MyTransition isVisible={isVisible} classNames={'login'}>
-                    <SinoTradeLogin onClose={showLoginClose} successHandler={showLoginClose} />
-                </MyTransition>
-                {currentComp.current}
-            </>
-        );
-    } else {
-        currentComp.current = renderComp;
-        oldPathName.current = router.pathname + objectToQueryHandler(router.query);
-        return <>{renderComp}</>;
-    }
+    // if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
+    //     return (
+    //         <>
+    //             <MyTransition isVisible={isVisible} classNames={'login'}>
+    //                 <SinoTradeLogin onClose={showLoginClose} successHandler={showLoginClose} />
+    //             </MyTransition>
+    //             {currentComp.current}
+    //         </>
+    //     );
+    // } else {
+    //     currentComp.current = renderComp;
+    //     oldPathName.current = router.pathname + objectToQueryHandler(router.query);
+    //     return <>{renderComp}</>;
+    // }
+
+    return <>{renderComp}</>;
 }
 export default wrapper.withRedux(MyApp);

@@ -46,7 +46,7 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
             <div className="page__box">
                 <div className="login__header">
                     <img src={logo} alt="永豐金證券" />
-                    <a onClick={onClose} href="#close" role="button">
+                    <a onClick={onClose} role="button">
                         <img className="close" src={close} alt="關閉" />
                     </a>
                 </div>

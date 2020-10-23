@@ -7,7 +7,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const iframeContentReady = useRef(false);
     const iframeContentDoc = useRef(null);
     const isMobile = useSelector(store => store.layout.isMobile);
-
     setTimeout(() => {
         var iframeId = iframeDom.current;
         if (iframeId != null) {
@@ -18,7 +17,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
             iframeContentDoc.current = iframeContent;
             iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
         }
-    }, 100);
+    }, 50);
 
     useEffect(() => {
         if (iHeight != null) {
@@ -55,7 +54,9 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
     const hideHeaderFooter = () => {
         console.log('onload');
         console.log('content', iframeContentDoc.current);
-
+        if (iframeContentDoc.current.getElementsByClassName('nav-container').length === 0) {
+            iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
+        }
         if (iframeContentDoc.current.getElementsByClassName('nav-container').length > 0) {
             iframeContentDoc.current.getElementsByClassName('nav-container')[0].style.display = 'none';
             iframeContentDoc.current.getElementsByClassName('footer-container')[0].style.display = 'none';

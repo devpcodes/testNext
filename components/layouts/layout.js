@@ -13,6 +13,7 @@ import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
 import Login from '../includes/sinotradeLogin/login';
+import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
@@ -22,6 +23,7 @@ const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [isRendered, setIsRendered] = useState(false);
+    const [showBigLogin, setShowBigLogin] = useState(false);
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
@@ -31,6 +33,7 @@ const Layout = React.memo(({ children }) => {
     const userSettings = useSelector(store => store.user.userSettings);
     const accounts = useSelector(store => store.user.accounts);
     const domain = useSelector(store => store.general.domain);
+    const currentPath = useSelector(store => store.general.currentPath);
 
     const getMenuPath = useRef(false);
     const needLogin = useRef(false);
@@ -48,6 +51,13 @@ const Layout = React.memo(({ children }) => {
             updateNavData();
         }
     }, [isMobile, isLogin, domain]);
+
+    //處理假登入路徑
+    useEffect(() => {
+        if (router.asPath.indexOf('Sinotrade_Login') >= 0) {
+            setShowBigLogin(true);
+        }
+    }, [router.asPath]);
 
     useEffect(() => {
         const updateUserSettings = () => {
@@ -110,6 +120,11 @@ const Layout = React.memo(({ children }) => {
     }, [userSettings]);
 
     useEffect(() => {
+        console.log('path', router.pathname);
+        if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
+            setShowBigLogin(true);
+        }
+
         console.log('navData update', navData, router.pathname);
         if (router.pathname.indexOf('errPage') >= 0 || router.pathname === '/') {
             setVerifySuccess(true);
@@ -202,28 +217,6 @@ const Layout = React.memo(({ children }) => {
         }
     };
 
-    /**
-     * 是否需要登入
-     * @param {bool} isLogin 是否已登入
-     * @param {bool} needLogin 是否需登入
-     */
-    // const loginPageHandler = function (isLogin, needLogin) {
-    //     if (!isLogin && needLogin) {
-    //         noPermissionPage();
-    //     } else {
-    //         authPageHandler();
-    //     }
-    // };
-
-    //是否有權限
-    // const authPageHandler = function () {
-    //     if (isAuthenticated.current) {
-    //         setVerifySuccess(true);
-    //     } else {
-    //         noPermissionPage();
-    //     }
-    // };
-
     //無權限頁面處理
     const noPermissionPage = function () {
         prevPathname.current = router.pathname + objectToQueryHandler(router.query);
@@ -283,6 +276,25 @@ const Layout = React.memo(({ children }) => {
         }, 500);
     }, []);
 
+    // 關閉大的login
+    const bigLoginClose = function () {
+        setShowBigLogin(false);
+        bigLoginRouterHandler();
+    };
+
+    const bigLoginSuccess = function () {
+        setShowBigLogin(false);
+        dispatch(setIsLogin(true));
+        bigLoginRouterHandler();
+    };
+
+    const bigLoginRouterHandler = function () {
+        if (!currentPath) {
+            router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
+        } else {
+            router.push(router.pathname, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`);
+        }
+    };
     return (
         <>
             <Head>
@@ -301,6 +313,9 @@ const Layout = React.memo(({ children }) => {
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
                 />
             </Head>
+            <MyTransition isVisible={showBigLogin} classNames={'login'}>
+                <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
+            </MyTransition>
             <MyTransition isVisible={showLogin} classNames={'opacity'}>
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
