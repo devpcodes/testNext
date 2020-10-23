@@ -54,7 +54,8 @@ const Layout = React.memo(({ children }) => {
 
     //處理假登入路徑
     useEffect(() => {
-        if (router.asPath.indexOf('SinoTrade_login') >= 0) {
+        console.log('pa', router.asPath, router.asPath.indexOf('/SinoTrade_login'));
+        if (router.asPath.indexOf('/SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
     }, [router.asPath]);
