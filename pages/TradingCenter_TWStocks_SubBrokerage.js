@@ -11,13 +11,29 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function TradingCenter_TWStocks_SubBrokerage() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
+    const [height, setHeight] = useState(1450);
+
+    const getHeightByTab = query => {
+        switch (query?.tab) {
+            case '2':
+                return 1650;
+            case '3':
+                return 1450;
+            case '4':
+                return 2000;
+            case '5':
+                return 1450;
+            case '7':
+                return 1450;
+            default:
+                return 1450;
+        }
+    };
 
     useEffect(() => {
-        const qStr = objectToQueryHandler(router.query);
-        if (qStr) {
-            setQueryStr(qStr);
-        }
-    }, []);
+        const iFrameHeight = getHeightByTab(router.query);
+        setHeight(iFrameHeight);
+    }, [queryStr]);
 
     useEffect(() => {
         const qStr = objectToQueryHandler(router.query);
@@ -46,10 +62,10 @@ function TradingCenter_TWStocks_SubBrokerage() {
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_SubBrokerage${
-                        queryStr ? '?' + queryStr : ''
+                        queryStr ? `?${queryStr}` : ''
                     }`}
                     title="永豐金證券"
-                    iHeight={1450}
+                    iHeight={height}
                 />
             </div>
         </>
