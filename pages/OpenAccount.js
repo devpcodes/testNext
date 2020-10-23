@@ -1,4 +1,6 @@
-import { Statistic, Row, Col, Button } from 'antd';
+import Head from 'next/head';
+import NewWebIframe from '../components/includes/NewWebIframe';
+
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 
@@ -7,19 +9,21 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 });
 
 const OpenAccount = () => {
+    // const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <>
-            <Row gutter={16}>
-                <Col span={12}>
-                    <Statistic title="Active Users" value={112893} />
-                </Col>
-                <Col span={12}>
-                    <Statistic title="Account Balance (CNY)" value={112893} precision={2} />
-                    <Button style={{ marginTop: 16 }} type="primary">
-                        Recharge
-                    </Button>
-                </Col>
-            </Row>
+            <Head>
+                <title>我要開戶</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <div>
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/OpenAccount`}
+                    title="永豐金證券"
+                    // iHeight={isMobile ? 1950 : 1150}
+                    iHeight={1650}
+                />
+            </div>
         </>
     );
 };
