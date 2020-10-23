@@ -49,6 +49,7 @@ function TradingCenter_TWStocks_SubBrokerage() {
                         queryStr ? '?' + queryStr : ''
                     }`}
                     title="永豐金證券"
+                    iHeight={1450}
                 />
             </div>
         </>
