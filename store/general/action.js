@@ -6,3 +6,10 @@ export const setDomain = domain => {
         payload: domain,
     };
 };
+
+export const setCurrentPath = path => {
+    return {
+        type: actionType.SET_CURRENT_PATH,
+        payload: path,
+    };
+};

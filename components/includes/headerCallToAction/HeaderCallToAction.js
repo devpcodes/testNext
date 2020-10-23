@@ -1,11 +1,15 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import { HeaderBtn } from '../HeaderBtn';
 import { AccountButton } from './AccountButton';
 
+import { setCurrentPath } from '../../../store/general/action';
+
 export const HeaderCallToAction = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
+
     const isLogin = useSelector(store => store.user.isLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
 
@@ -16,7 +20,8 @@ export const HeaderCallToAction = () => {
         router.push('/goOrder', `${process.env.NEXT_PUBLIC_SUBPATH}goOrder`);
     };
     const goLogIn = () => {
-        router.push('/SinoTrade_login', `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`);
+        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+        router.push(router.pathname, 'Sinotrade_Login');
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
