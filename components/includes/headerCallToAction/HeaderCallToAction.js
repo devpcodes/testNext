@@ -21,7 +21,7 @@ export const HeaderCallToAction = () => {
     };
     const goLogIn = () => {
         dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
-        router.push(router.pathname, `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`);
+        router.push('', `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`);
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
