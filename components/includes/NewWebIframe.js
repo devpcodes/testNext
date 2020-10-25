@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
-const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
+const NewWebIframe = function ({ iframeSrc, title, iHeight, login }) {
     const iframeDom = useRef(null);
     const iframeContentReady = useRef(false);
     const iframeContentDoc = useRef(null);
@@ -17,13 +17,14 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
             iframeContentDoc.current = iframeContent;
             iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
         }
-    }, 50);
+    }, 100);
 
     useEffect(() => {
         if (iHeight != null) {
             setTimeout(() => {
                 if (iframeDom.current != null) {
                     iframeDom.current.height = iHeight;
+                    console.log(`[] - iframeDom.current.height:`, iframeDom.current.height);
                 }
             }, 100);
         }
@@ -36,6 +37,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
 
     useEffect(() => {
         iframeDom.current.height = iHeight;
+        console.log(`[iHeight] - iframeDom.current.height:`, iframeDom.current.height);
     }, [iHeight]);
 
     useEffect(() => {
@@ -45,6 +47,24 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
             }
         }
     }, [isMobile]);
+
+    useEffect(() => {
+        if (login != null && login) {
+            setTimeout(() => {
+                var iframeId = iframeDom.current;
+                var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
+                if (iframeContent.document) {
+                    iframeContent = iframeContent.document;
+                }
+                iframeContentDoc.current = iframeContent;
+
+                if (iframeContentDoc.current != null && iframeContentDoc.current.location != null) {
+                    iframeContentDoc.current.location.reload(true);
+                    iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
+                }
+            }, 100);
+        }
+    }, [login]);
 
     const ready = () => {
         console.log('ready');
@@ -69,7 +89,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
         }
         iframeContentReady.current = true;
     };
-
     return (
         <>
             <iframe
@@ -96,10 +115,14 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight }) {
         </>
     );
 };
+
 NewWebIframe.propTypes = {
     iframeSrc: PropTypes.string,
     title: PropTypes.string,
     iHeight: PropTypes.number,
+    login: PropTypes.bool,
 };
+
 NewWebIframe.displayName = NewWebIframe;
-export default React.memo(NewWebIframe);
+
+export default memo(NewWebIframe);

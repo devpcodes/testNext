@@ -8,6 +8,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 function TradingCenter_TWStocks_Stocks() {
+    const isLogin = useSelector(store => store.user.isLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <>
@@ -20,6 +21,7 @@ function TradingCenter_TWStocks_Stocks() {
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Stocks`}
                     title="永豐金證券"
                     iHeight={isMobile ? 1900 : 1450}
+                    login={isLogin}
                 />
             </div>
         </>

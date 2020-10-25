@@ -13,8 +13,8 @@ export const fetchStockUnRealPrtlos = async function (action, bhno, cseq, ctype,
             ttype,
             token,
         });
-        if (res.data.success != null && res.data.success === 'True') {
-            return res.data.result.unreal_sums.unreal_sum;
+        if (res.data?.success === 'True') {
+            return res.data?.result?.unreal_sums?.unreal_sum ?? [];
         } else {
             return [];
         }

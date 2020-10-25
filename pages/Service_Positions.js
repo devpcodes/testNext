@@ -14,7 +14,11 @@ function Service_Positions() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div>
-                <NewWebIframe iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Service_Positions`} title="永豐金證券" />
+                <NewWebIframe
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Service_Positions`}
+                    title="永豐金證券"
+                    iHeight={1000}
+                />
             </div>
         </>
     );
