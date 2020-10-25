@@ -16,7 +16,7 @@ const NavList = React.memo(props => {
 
     const openTrust = async (trustUrl, trustBody) => {
         const res = await trust(trustUrl, trustBody);
-        console.log(res);
+        window.open(res.data.result.url, "_blank")
     }
 
     return (
