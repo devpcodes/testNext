@@ -16,17 +16,9 @@ app.prepare().then(() => {
 
     server.get('*', (req, res) => {
         if (req.url.includes('/sw')) {
-            let filePath;
-            if (dev) {
-                filePath = join(__dirname, 'static', 'workbox', 'sw.js');
-            } else {
-                filePath = join(__dirname, 'newweb', 'static', 'workbox', 'sw.js');
-            }
-
+            const filePath = join(__dirname, 'static', 'workbox', 'sw.js');
             app.serveStatic(req, res, filePath);
         } else if (req.url.startsWith('static/workbox/')) {
-            app.serveStatic(req, res, join(__dirname, req.url));
-        } else if (req.url.startsWith('newweb/static/workbox/')) {
             app.serveStatic(req, res, join(__dirname, req.url));
         } else {
             handle(req, res, req.url);
