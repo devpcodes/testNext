@@ -13,7 +13,7 @@ const TradingCenter_TWStocks_Self = function () {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Self`}
                     title="永豐金證券"
-                    iHeight={1000}
+                    iHeight={1200}
                 />
             </div>
         </div>
