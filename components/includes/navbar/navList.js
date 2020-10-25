@@ -34,7 +34,7 @@ const NavList = React.memo(props => {
                     <li className="navbar__lv3__item" key={lv3Index}>
                         <Link
                             href={
-                                lv3Item.isOpen ? '' : lv3Item.isFullUrl ? `${lv3Item.url}` ? `${lv3Item.url}` : '' : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` 
+                                lv3Item.isOpen ? 'javascript:;' : lv3Item.isFullUrl ? `${lv3Item.url}` ? `${lv3Item.url}` : 'javascript:;' : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` 
                             }
                             prefetch={false}
                         >
