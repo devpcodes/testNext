@@ -4,6 +4,8 @@ import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { objectToQueryHandler } from '../services/objectToQueryHandler';
+
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
@@ -13,8 +15,14 @@ function TradingCenter_TWStocks_SubBrokerage() {
     const [queryStr, setQueryStr] = useState('');
     const [height, setHeight] = useState(1450);
 
+    console.log('------render------');
+
+    console.log(`queryStr:`, queryStr);
+    console.log(`height:`, height);
+
     const getHeightByTab = query => {
-        switch (query?.tab) {
+        const tab = query?.tab;
+        switch (tab) {
             case '2':
                 return 1650;
             case '3':
@@ -33,6 +41,7 @@ function TradingCenter_TWStocks_SubBrokerage() {
     useEffect(() => {
         const iFrameHeight = getHeightByTab(router.query);
         setHeight(iFrameHeight);
+        console.log(`========iFrameHeight:`, iFrameHeight);
     }, [queryStr]);
 
     useEffect(() => {
@@ -40,18 +49,8 @@ function TradingCenter_TWStocks_SubBrokerage() {
         if (qStr) {
             setQueryStr(qStr);
         }
+        console.log(`========qStr:`, qStr);
     }, [router.query]);
-
-    const objectToQueryHandler = obj => {
-        var str = '';
-        for (var key in obj) {
-            if (str != '') {
-                str += '&';
-            }
-            str += key + '=' + encodeURIComponent(obj[key]);
-        }
-        return str;
-    };
 
     return (
         <>
@@ -61,9 +60,7 @@ function TradingCenter_TWStocks_SubBrokerage() {
             </Head>
             <div>
                 <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_SubBrokerage${
-                        queryStr ? `?${queryStr}` : ''
-                    }`}
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_SubBrokerage${queryStr}`}
                     title="永豐金證券"
                     iHeight={height}
                 />
