@@ -1,6 +1,6 @@
 import { submit } from '../services/components/login/trustLogin';
 
-const OpenAccount = () => {
+const Navigation = () => {
     const getQueryString = name => {
         const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
         const isServer = typeof window === 'undefined';
@@ -56,7 +56,13 @@ const OpenAccount = () => {
         }
     })();
 
-    return '';
+    return <></>;
 };
 
-export default OpenAccount;
+Navigation.getLayout = page => (
+    <>
+        <Navigation>{page}</Navigation>
+    </>
+);
+
+export default Navigation;
