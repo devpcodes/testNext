@@ -36,9 +36,9 @@ const Layout = React.memo(({ children }) => {
     const currentPath = useSelector(store => store.general.currentPath);
 
     const getMenuPath = useRef(false);
-    const needLogin = useRef(false);
+    // const needLogin = useRef(false);
     const prevPathname = useRef(false);
-    const isAuthenticated = useRef(true);
+    // const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isMobile);
     const prevDomain = useRef(domain);
 
