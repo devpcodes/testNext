@@ -4,7 +4,7 @@ import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
@@ -13,7 +13,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 
 function TradingCenter_TWStocks_SubBrokerage() {
     const router = useRouter();
-    const isLogin = useSelector(store => store.user.isLogin);
+    // const isLogin = useSelector(store => store.user.isLogin);
     const [queryStr, setQueryStr] = useState('');
     const [height, setHeight] = useState(1450);
 
@@ -42,7 +42,11 @@ function TradingCenter_TWStocks_SubBrokerage() {
 
     useEffect(() => {
         const iFrameHeight = getHeightByTab(router.query);
-        setHeight(iFrameHeight);
+        setTimeout(() => {
+            setHeight(iFrameHeight);
+        }, 100);
+
+        // setHeight(iFrameHeight);
         console.log(`========iFrameHeight:`, iFrameHeight);
     }, [queryStr]);
 
@@ -65,7 +69,7 @@ function TradingCenter_TWStocks_SubBrokerage() {
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_SubBrokerage${queryStr}`}
                     title="永豐金證券"
                     iHeight={height}
-                    login={isLogin}
+                    // login={isLogin}
                 />
             </div>
         </>
