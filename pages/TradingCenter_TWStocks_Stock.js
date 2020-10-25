@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
