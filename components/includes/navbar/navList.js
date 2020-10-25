@@ -1,6 +1,7 @@
 import { useState } from 'react';
-
+import { trust } from '../../../services/components/header/navTurst';
 import theme from '../../../resources/styles/theme';
+
 import Link from 'next/link';
 
 const NavList = React.memo(props => {
@@ -12,6 +13,11 @@ const NavList = React.memo(props => {
     const openURL = (url, width, height) => {
         window.open(url, '', `width=${width},height=${height}`);
     };
+
+    const openTrust = async (trustUrl, trustBody) => {
+        const res = await trust(trustUrl, trustBody);
+        console.log(res);
+    }
 
     return (
         <div className="navlist">
@@ -28,12 +34,18 @@ const NavList = React.memo(props => {
                     <li className="navbar__lv3__item" key={lv3Index}>
                         <Link
                             href={
-                                lv3Item.isOpen ? '#' : lv3Item.isFullUrl ? `${lv3Item.url}` ? `${lv3Item.url}` : '#' : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` 
+                                lv3Item.isOpen ? '#!' : lv3Item.isFullUrl ? `${lv3Item.url}` ? `${lv3Item.url}` : '#!' : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` 
                             }
                             prefetch={false}
                         >
                             <a
                                 onClick={
+                                    lv3Item.isTrust 
+                                        ? () => 
+                                            openTrust(
+                                                lv3Item.trustUrl,
+                                                lv3Item.trustBody
+                                            ) :
                                     lv3Item.isOpen
                                         ? () =>
                                               openURL(
@@ -43,7 +55,7 @@ const NavList = React.memo(props => {
                                               )
                                         : () => { return false }
                                 }
-                                target={lv3Item.isBlank ? '_blank' : ''}
+                                target={(lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen) ? '_blank' : ''}
                                 className="navbar__lv3__item__title"
                             >
                                 <span className={lv3Item.icon ? lv3Item.icon : ""}>{lv3Item.title}</span>
