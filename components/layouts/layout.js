@@ -321,7 +321,7 @@ const Layout = React.memo(({ children }) => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
             <Header />
-            <div className="page__container">{verifySuccess === true && children}</div>
+            <div className="page__container">{children}</div>
             <Footer />
             <style jsx>{`
                 .page__container {
