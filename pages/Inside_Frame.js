@@ -44,7 +44,7 @@ function Inside_Frame() {
         <>
             <PageHead title={'申請服務'} />
             <div>
-                <NewWebIframe iframeSrc={url} title="永豐金證券" iHeight={800} />
+                <NewWebIframe iframeSrc={url} title="永豐金證券" iHeight={1240} />
             </div>
         </>
     );
