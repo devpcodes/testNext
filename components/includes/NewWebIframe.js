@@ -74,20 +74,22 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login }) {
     const hideHeaderFooter = () => {
         console.log('onload');
         console.log('content', iframeContentDoc.current);
-        if (iframeContentDoc.current.getElementsByClassName('nav-container').length === 0) {
-            iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
-        }
-        if (iframeContentDoc.current.getElementsByClassName('nav-container').length > 0) {
-            iframeContentDoc.current.getElementsByClassName('nav-container')[0].style.display = 'none';
-            iframeContentDoc.current.getElementsByClassName('footer-container')[0].style.display = 'none';
-            iframeContentDoc.current.getElementsByClassName('body-container')[0].style.padding = '0';
-        }
-        if (isMobile) {
-            if (iframeContentDoc.current.getElementsByClassName('homeFooter').length > 0) {
-                iframeContentDoc.current.getElementsByClassName('homeFooter')[0].style.display = 'none';
+        if (iframeContentDoc.current != null && !iframeContentReady.current) {
+            if (iframeContentDoc.current.getElementsByClassName('nav-container').length === 0) {
+                iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
             }
+            if (iframeContentDoc.current.getElementsByClassName('nav-container').length > 0) {
+                iframeContentDoc.current.getElementsByClassName('nav-container')[0].style.display = 'none';
+                iframeContentDoc.current.getElementsByClassName('footer-container')[0].style.display = 'none';
+                iframeContentDoc.current.getElementsByClassName('body-container')[0].style.padding = '0';
+            }
+            if (isMobile) {
+                if (iframeContentDoc.current.getElementsByClassName('homeFooter').length > 0) {
+                    iframeContentDoc.current.getElementsByClassName('homeFooter')[0].style.display = 'none';
+                }
+            }
+            iframeContentReady.current = true;
         }
-        iframeContentReady.current = true;
     };
     return (
         <>

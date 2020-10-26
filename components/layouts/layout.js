@@ -18,6 +18,7 @@ import MyTransition from '../includes/myTransition';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
+import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
@@ -121,18 +122,17 @@ const Layout = React.memo(({ children }) => {
     }, [userSettings]);
 
     useEffect(() => {
-        console.log('path', router.pathname);
+        console.log('path', router.pathname, router.query);
         if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
 
-        console.log('navData update', navData, router.pathname);
         if (router.pathname.indexOf('errPage') >= 0 || router.pathname === '/') {
             setVerifySuccess(true);
         } else {
-            showPageHandler();
+            showPageHandler(router.pathname);
         }
-    }, [router.pathname, navData]);
+    }, [router.pathname]);
 
     const getUrlParams = () => {
         return new URLSearchParams(window.location.search);
@@ -185,33 +185,11 @@ const Layout = React.memo(({ children }) => {
     };
 
     //驗證有沒有瀏覽頁面的權限
-    const showPageHandler = function () {
-        let currentPath = router.pathname.substr(1) + objectToQueryHandler(router.query);
-        if (currentPath !== '') {
-            if (navData.unauthorized != null) {
-                pageVerifyHandler(navData.unauthorized, currentPath);
-                menuUrlHandler();
-            }
-        }
-    };
-
-    //查詢當前網址是不是menu裡的url
-    const pageVerifyHandler = function (data, currentPath) {
-        console.log('currentPath', currentPath);
-        if (data == null) {
-            return;
-        }
-        data.some(url => {
-            if (url === currentPath) {
-                getMenuPath.current = true;
-                return true;
-            }
-        });
-    };
-
-    //for loop menu選單路徑完成時的處理
-    const menuUrlHandler = function () {
-        if (getMenuPath.current) {
+    const showPageHandler = async function (pathname) {
+        let currentPath = pathname.substr(1);
+        const token = getCookie('token');
+        const res = await verifyMenu(currentPath, token);
+        if (!res.data.result.isPass) {
             noPermissionPage();
         } else {
             setVerifySuccess(true);
@@ -331,7 +309,7 @@ const Layout = React.memo(({ children }) => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
             <Header />
-            <div className="page__container">{children}</div>
+            <div className="page__container">{verifySuccess && children}</div>
             <Footer />
             <style jsx>{`
                 .page__container {
