@@ -42,7 +42,7 @@ const Layout = React.memo(({ children }) => {
     // const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isMobile);
     const prevDomain = useRef(domain);
-
+    const queryStr = useRef('');
     useEffect(() => {
         prevIsMobile.current = isMobile;
         prevDomain.current = domain;
@@ -134,6 +134,10 @@ const Layout = React.memo(({ children }) => {
         }
     }, [router.pathname]);
 
+    useEffect(() => {
+        queryStr.current = router.query;
+    }, [router.query]);
+
     const getUrlParams = () => {
         return new URLSearchParams(window.location.search);
     };
@@ -198,7 +202,7 @@ const Layout = React.memo(({ children }) => {
 
     //無權限頁面處理
     const noPermissionPage = function () {
-        prevPathname.current = router.pathname + objectToQueryHandler(router.query);
+        prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
         router.push('/errPage', `${process.env.NEXT_PUBLIC_SUBPATH}errPage`);
         setVerifySuccess(false);
         setTimeout(() => {
@@ -314,6 +318,14 @@ const Layout = React.memo(({ children }) => {
             <style jsx>{`
                 .page__container {
                     min-height: 500px;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-modal-mask {
+                    z-index: 9999;
+                }
+                .ant-modal-wrap {
+                    z-index: 10000;
                 }
             `}</style>
         </>
