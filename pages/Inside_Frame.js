@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
-// import { objectToQueryHandler } from '../services/objectToQueryHandler';
 import { PageHead } from '../components/includes/PageHead';
 import { getCookie } from '../services/components/layouts/cookieController';
+import axios from '../services/myAxios';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -14,24 +14,31 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 
 function Inside_Frame() {
     const router = useRouter();
-    // const [queryStr, setQueryStr] = useState('');
     const [url, setUrl] = useState('');
 
     useEffect(() => {
-        // queryHandler();
+        const setEBillUrl = async ({ token = '' } = {}) => {
+            try {
+                const url = '/lykan/api/v1/auth/getEStatementOTP';
+                const res = await axios.post(url, {
+                    token,
+                });
+                return setUrl(res.data?.result?.url);
+            } catch (error) {
+                console.log(`error:`, error);
+            }
+        };
+
+        const target = router.query?.target;
         const URL = router.query?.URL;
         const token = getCookie('token');
-        if (URL && token) {
+
+        if (target === 'ebill' && token) {
+            setEBillUrl({ token });
+        } else if (URL && token) {
             setUrl(`${URL}?platform=newweb&TOKEN=${token}`);
         }
     }, [router.query]);
-
-    // const queryHandler = () => {
-    //     const qStr = objectToQueryHandler(router.query);
-    //     if (qStr) {
-    //         setQueryStr(qStr);
-    //     }
-    // };
 
     return (
         <>
