@@ -1,6 +1,6 @@
-import Head from 'next/head';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
+import { PageHead } from '../components/includes/PageHead';
 import { setNavItems } from '../store/components/layouts/action';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
@@ -9,10 +9,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function TradingCenter_TWStocks_Info() {
     return (
         <>
-            <Head>
-                <title>台股公佈欄</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <PageHead title={'台股公佈欄'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Info`}

@@ -1,6 +1,7 @@
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import NewWebIframe from '../components/includes/NewWebIframe';
+import { PageHead } from '../components/includes/PageHead';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -8,7 +9,8 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 
 const TradingCenter_TWStocks_Self = function () {
     return (
-        <div>
+        <>
+            <PageHead title={'自選報價'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Self`}
@@ -16,9 +18,8 @@ const TradingCenter_TWStocks_Self = function () {
                     iHeight={1200}
                 />
             </div>
-        </div>
+        </>
     );
 };
-TradingCenter_TWStocks_Self.displayName = 'Home';
 
 export default TradingCenter_TWStocks_Self;

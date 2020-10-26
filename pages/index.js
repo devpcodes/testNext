@@ -1,21 +1,18 @@
-/* eslint-disable no-undef */
-import Head from 'next/head';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { useSelector } from 'react-redux';
+import { PageHead } from '../components/includes/PageHead';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
+
 const Home = function () {
     const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div>
-            <Head>
-                <title>永豐金理財網</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <PageHead title={'永豐金理財網'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}`}
@@ -26,6 +23,5 @@ const Home = function () {
         </div>
     );
 };
-Home.displayName = 'Home';
 
 export default Home;

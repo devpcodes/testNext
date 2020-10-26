@@ -1,13 +1,15 @@
-import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
 import { useRouter } from 'next/router';
+import { PageHead } from '../components/includes/PageHead';
+
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
+
 function RichClub_News_Article() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
@@ -25,12 +27,10 @@ function RichClub_News_Article() {
             setQueryStr(qStr);
         }
     }, [router.query]);
+
     return (
         <>
-            <Head>
-                <title>豐雲學堂</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <PageHead title={'豐雲學堂'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/RichClub_News_Article${queryStr}`}

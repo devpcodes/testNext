@@ -1,18 +1,16 @@
-import Head from 'next/head';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
+import { PageHead } from '../components/includes/PageHead';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
+
 function Batch_Order() {
     return (
         <>
-            <Head>
-                <title>快速下單</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <PageHead title={'批次下單'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Batch_Order`}

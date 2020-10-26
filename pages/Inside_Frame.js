@@ -1,13 +1,15 @@
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
 import { useRouter } from 'next/router';
+import { PageHead } from '../components/includes/PageHead';
+
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
+
 function Inside_Frame() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
@@ -26,12 +28,10 @@ function Inside_Frame() {
             setQueryStr(qStr);
         }
     };
+
     return (
         <>
-            <Head>
-                <title>基本資料異動</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <PageHead title={'申請服務'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Inside_Frame${decodeURIComponent(queryStr)}`}
