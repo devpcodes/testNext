@@ -25,6 +25,7 @@ const Layout = React.memo(({ children }) => {
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [isRendered, setIsRendered] = useState(false);
     const [showBigLogin, setShowBigLogin] = useState(false);
+    const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
@@ -194,17 +195,18 @@ const Layout = React.memo(({ children }) => {
         const token = getCookie('token');
         const res = await verifyMenu(currentPath, token);
         if (!res.data.result.isPass) {
-            noPermissionPage();
+            noPermissionPage(res.data.result.message);
         } else {
             setVerifySuccess(true);
         }
     };
 
     //無權限頁面處理
-    const noPermissionPage = function () {
+    const noPermissionPage = function (errMsg) {
         prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
         router.push('/errPage', `${process.env.NEXT_PUBLIC_SUBPATH}errPage`);
         setVerifySuccess(false);
+        setVerifyErrMsg(errMsg);
         setTimeout(() => {
             dispatch(showLoginHandler(true));
         }, 500);
@@ -278,6 +280,18 @@ const Layout = React.memo(({ children }) => {
             router.push(currentPath, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`, { shallow: true });
         }
     };
+
+    //傳錯誤訊息給errpage
+    const renderChildren = function (errMsg) {
+        return React.Children.map(children, child => {
+            if (child.type.name === 'ErrPage') {
+                return React.cloneElement(child, {
+                    errMsg,
+                });
+            } else return child;
+        });
+    };
+
     return (
         <>
             <Head>
@@ -313,7 +327,7 @@ const Layout = React.memo(({ children }) => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
             <Header />
-            <div className="page__container">{verifySuccess && children}</div>
+            <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
             <Footer />
             <style jsx>{`
                 .page__container {

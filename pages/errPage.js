@@ -1,11 +1,11 @@
 import errImg from '../resources/images/components/errPage/img-loading-m.png';
-function ErrPage() {
+function ErrPage({ errMsg }) {
     return (
         <>
             <div className="errPage__container">
                 <div className="errPage__box">
                     <div className="err__img"></div>
-                    <p>很抱歉，您的權限不足...</p>
+                    <p>{errMsg}</p>
                 </div>
             </div>
 
