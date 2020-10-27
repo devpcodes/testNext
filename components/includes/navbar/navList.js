@@ -50,23 +50,10 @@ const NavList = React.memo(props => {
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
-                        <Link
-                            href={
-                                lv3Item.isOpen
-                                    ? '#'
-                                    : lv3Item.isFullUrl
-                                    ? `${lv3Item.url}`
-                                        ? `${lv3Item.url}`
-                                        : '#'
-                                    : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
-                            }
-                            prefetch={false}
-                        >
+                        {lv3Item.isOpen && (
                             <a
                                 onClick={
-                                    lv3Item.isTrust
-                                        ? () => openTrust(lv3Item.trustUrl, lv3Item.trustBody)
-                                        : lv3Item.isOpen
+                                    lv3Item.isOpen
                                         ? () =>
                                               openURL(
                                                   `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`,
@@ -77,12 +64,42 @@ const NavList = React.memo(props => {
                                               return false;
                                           }
                                 }
-                                target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
                                 className="navbar__lv3__item__title"
                             >
                                 <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                             </a>
-                        </Link>
+                        )}
+                        {lv3Item.url && !lv3Item.isOpen && (
+                            <Link
+                                href={
+                                    lv3Item.isFullUrl
+                                        ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
+                                        : `${lv3Item.url}`
+                                }
+                                prefetch={false}
+                            >
+                                <a
+                                    target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
+                                    className="navbar__lv3__item__title"
+                                >
+                                    <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
+                                </a>
+                            </Link>
+                        )}
+                        {lv3Item.isTrust && (
+                            <a
+                                onClick={
+                                    lv3Item.isTrust
+                                        ? () => openTrust(lv3Item.trustUrl, lv3Item.trustBody)
+                                        : () => {
+                                              return false;
+                                          }
+                                }
+                                className="navbar__lv3__item__title"
+                            >
+                                <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
+                            </a>
+                        )}
                     </li>
                 ))}
             </ul>
@@ -137,8 +154,6 @@ const NavList = React.memo(props => {
                     color: ${theme.colors.text};
                     content: 'HOT';
                 }
-
-   }
 
                 @media (max-width: ${props.twoColumnPX}px) {
                     .navlist {
