@@ -13,18 +13,17 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 
 function TradingCenter_TWStocks_SubBrokerage() {
     const router = useRouter();
-    // const isLogin = useSelector(store => store.user.isLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const [queryStr, setQueryStr] = useState('');
     const [height, setHeight] = useState(1450);
+    const [tab, setTab] = useState('');
 
     console.log('------render------');
 
     console.log(`queryStr:`, queryStr);
     console.log(`height:`, height);
 
-    const getHeightByTab = query => {
-        const tab = query?.tab;
+    const getHeightByTab = tab => {
         switch (tab) {
             case '2':
                 return isMobile ? 950 : 1650;
@@ -42,19 +41,20 @@ function TradingCenter_TWStocks_SubBrokerage() {
     };
 
     useEffect(() => {
-        const iFrameHeight = getHeightByTab(router.query);
-        setTimeout(() => {
-            setHeight(iFrameHeight);
-        }, 100);
+        const iFrameHeight = getHeightByTab(tab);
+        // setTimeout(() => {
+        //     setHeight(iFrameHeight);
+        // }, 100);
 
-        // setHeight(iFrameHeight);
+        setHeight(iFrameHeight);
         console.log(`========iFrameHeight:`, iFrameHeight);
-    }, [queryStr, isMobile]);
+    }, [tab, isMobile]);
 
     useEffect(() => {
         const qStr = objectToQueryHandler(router.query);
         if (qStr) {
             setQueryStr(qStr);
+            router.query?.tab && setTab(router.query.tab);
         }
         console.log(`========qStr:`, qStr);
     }, [router.query]);
