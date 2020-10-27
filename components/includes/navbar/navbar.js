@@ -17,7 +17,7 @@ const Navbar = React.memo(props => {
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
     const isMobile = useSelector(store => store.layout.isMobile);
     const showMenu = useSelector(store => store.layout.showMenu);
-    
+
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
     const dispatch = useDispatch();
 
@@ -63,10 +63,7 @@ const Navbar = React.memo(props => {
             {!!mainNav &&
                 mainNav.map((lv1Item, lv1Index) => (
                     <li className="navbar__lv1__item" key={lv1Index}>
-                        <Link
-                            as={lv1Item.isFullUrl ? `${lv1Item.url}` : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`}
-                            href={lv1Item.url ? `${lv1Item.url}` : '#'}
-                        >
+                        {lv1Item.items && lv1Item.items.length ? (
                             <a
                                 className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
                                 onClick={menuItemClickHandler}
@@ -74,8 +71,24 @@ const Navbar = React.memo(props => {
                                 <span className="active__mark"></span>
                                 {lv1Item.title}
                             </a>
-                        </Link>
-                        {lv1Item.items && lv1Item.items.length > 0 ? (
+                        ) : (
+                            <Link
+                                href={
+                                    lv1Item.isFullUrl
+                                        ? `${lv1Item.url}`
+                                        : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`
+                                }
+                            >
+                                <a
+                                    className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
+                                    onClick={menuItemClickHandler}
+                                >
+                                    <span className="active__mark"></span>
+                                    {lv1Item.title}
+                                </a>
+                            </Link>
+                        )}
+                        {lv1Item.items && lv1Item.items.length && (
                             <ul
                                 className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
                                 style={{ width: 168 * lv1Item.items.length }}
@@ -86,8 +99,6 @@ const Navbar = React.memo(props => {
                                     </li>
                                 ))}
                             </ul>
-                        ) : (
-                            ''
                         )}
                     </li>
                 ))}
