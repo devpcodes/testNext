@@ -42,11 +42,11 @@ function TradingCenter_TWStocks_SubBrokerage() {
 
     useEffect(() => {
         const iFrameHeight = getHeightByTab(tab);
-        // setTimeout(() => {
-        //     setHeight(iFrameHeight);
-        // }, 100);
+        setTimeout(() => {
+            setHeight(iFrameHeight);
+        }, 100);
 
-        setHeight(iFrameHeight);
+        // setHeight(iFrameHeight);
         console.log(`========iFrameHeight:`, iFrameHeight);
     }, [tab, isMobile]);
 
