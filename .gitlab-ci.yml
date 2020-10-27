@@ -47,4 +47,4 @@ deploy_newwebrd:
     script:
         - pm2 stop new-newweb
         - cd ~/build/$CI_PROJECT_NAME
-        - NODE_ENV=production pm2 start server.js -n new-newweb
+        - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
