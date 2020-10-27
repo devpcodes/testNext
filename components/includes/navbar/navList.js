@@ -16,8 +16,26 @@ const NavList = React.memo(props => {
 
     const openTrust = async (trustUrl, trustBody) => {
         const res = await trust(trustUrl, trustBody);
-        window.open(res.data.result.url, "_blank")
-    }
+        window.open(res.data.result.url, '_blank');
+    };
+
+    const noHrefLink = lv3Item => {};
+
+    const hrefLink = lv3Item => {
+        return (
+            <Link
+                href={lv3Item.isFullUrl ? `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` : `${lv3Item.url}`}
+                prefetch={false}
+            >
+                <a
+                    target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
+                    className="navbar__lv3__item__title"
+                >
+                    <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
+                </a>
+            </Link>
+        );
+    };
 
     return (
         <div className="navlist">
@@ -32,7 +50,9 @@ const NavList = React.memo(props => {
             <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
                 {props.lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
-                        <Link
+                        {lv3Item.url && hrefLink()}
+
+                        {/* <Link
                             href={
                                 lv3Item.isOpen ? '#' : lv3Item.isFullUrl ? `${lv3Item.url}` ? `${lv3Item.url}` : '#' : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}` 
                             }
@@ -60,7 +80,7 @@ const NavList = React.memo(props => {
                             >
                                 <span className={lv3Item.icon ? lv3Item.icon : ""}>{lv3Item.title}</span>
                             </a>
-                        </Link>
+                        </Link> */}
                     </li>
                 ))}
             </ul>
@@ -93,26 +113,27 @@ const NavList = React.memo(props => {
                     color: ${theme.colors.darkBg};
                     display: block;
                 }
-                .NEW::after, .HOT::after {
-                    display:inline-block;
+                .NEW::after,
+                .HOT::after {
+                    display: inline-block;
                     width: 37px;
                     height: 18px;
                     text-align: center;
                     margin-left: 5px;
                     vertical-align: text-bottom;
-                    font-size:12px;
-                    transform: scale(0.9)
-                }   
+                    font-size: 12px;
+                    transform: scale(0.9);
+                }
                 .NEW::after {
                     background: ${theme.colors.menuTagNew};
-                    color : ${theme.colors.text};
-                    content : "NEW";
+                    color: ${theme.colors.text};
+                    content: 'NEW';
                 }
 
                 .HOT::after {
                     background: ${theme.colors.primary};
-                    color : ${theme.colors.text};
-                    content : "HOT";
+                    color: ${theme.colors.text};
+                    content: 'HOT';
                 }
 
                 @media (max-width: ${props.twoColumnPX}px) {
