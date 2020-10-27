@@ -284,6 +284,7 @@ const Layout = React.memo(({ children }) => {
     //傳錯誤訊息給errpage
     const renderChildren = function (errMsg) {
         return React.Children.map(children, child => {
+            console.log('path', router.pathname.indexOf('errPage'), router.pathname);
             if (router.pathname.indexOf('errPage') != -1) {
                 return React.cloneElement(child, {
                     errMsg,
