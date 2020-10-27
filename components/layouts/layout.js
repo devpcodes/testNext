@@ -284,6 +284,7 @@ const Layout = React.memo(({ children }) => {
     //傳錯誤訊息給errpage
     const renderChildren = function (errMsg) {
         return React.Children.map(children, child => {
+            console.log('name', child.type.name);
             if (child.type.name === 'ErrPage') {
                 return React.cloneElement(child, {
                     errMsg,
