@@ -1,6 +1,11 @@
 import { submit } from '../services/components/login/trustLogin';
+import { useEffect } from 'react';
 
 const Navigation = () => {
+    useEffect(() => {
+        doLogin();
+    }, []);
+
     const getQueryString = name => {
         const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
         const isServer = typeof window === 'undefined';
@@ -39,7 +44,7 @@ const Navigation = () => {
         },
     };
 
-    const doLogin = (async () => {
+    const doLogin = async () => {
         try {
             if (canTrustDict[queryStringDict.platform].needLogin) {
                 const res = await submit(queryStringDict.otp);
@@ -51,10 +56,10 @@ const Navigation = () => {
             }
         } catch (e) {
             console.log(e);
-            alert('失敗');
+            // alert('失敗');
             // 導回未登入首頁 ??
         }
-    })();
+    };
 
     return <></>;
 };
