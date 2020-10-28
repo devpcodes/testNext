@@ -264,7 +264,7 @@ const Layout = React.memo(({ children }) => {
     // 關閉大的login
     const bigLoginClose = function () {
         setShowBigLogin(false);
-        bigLoginRouterHandler();
+        bigLoginRouterHandler('close');
     };
 
     const bigLoginSuccess = function () {
@@ -273,7 +273,14 @@ const Layout = React.memo(({ children }) => {
         bigLoginRouterHandler();
     };
 
-    const bigLoginRouterHandler = function () {
+    const bigLoginRouterHandler = function (type) {
+        if (router.pathname.indexOf('errPage') != -1 && prevPathname.current != null && type == null) {
+            router.push(
+                prevPathname.current,
+                `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
+            );
+            return;
+        }
         if (!currentPath) {
             router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
         } else {
