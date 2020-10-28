@@ -11,6 +11,7 @@ const MyTransition = ({ isVisible, children, classNames }) => {
         } else {
             setIsMobile(false);
         }
+        console.log('mobile', isMobile);
     }, []);
     return (
         <>
@@ -34,21 +35,41 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     transition: opacity 300ms;
                 }
 
+                .loginMobile-enter {
+                    opacity: 0;
+                }
+                .loginMobile-enter-active {
+                    transform: translate(-768px, 0);
+                    opacity: 1;
+                    transition: all 0ms;
+                }
+                .loginMobile-enter-done {
+                    transform: translate(0.1px, 0);
+                    transition: all 300ms;
+                }
+                .loginMobile-exit {
+                    transform: translate(0.1px, 0);
+                    opacity: 1;
+                }
+                .loginMobile-exit-active {
+                    transform: translate(-768px, 0);
+                    transition: all 300ms;
+                }
+
                 .login-enter {
-                    transform: ${isMobile && classNames === 'login' ? 'translate(-100%, 0)' : 'scale(0)'};
+                    transform: scale(0);
                 }
                 .login-enter-active {
-                    transform: ${isMobile && classNames === 'login' ? 'translate(0, 0)' : 'scale(1)'};
+                    transform: scale(1);
                     transition: all 300ms;
-                    transition-delay: 0.1s;
                 }
                 .login-exit {
-                    transform: ${isMobile && classNames === 'login' ? 'translate(0, 0)' : 'scale(1)'};
+                    transform: scale(1);
                     opacity: 1;
                 }
                 .login-exit-active {
-                    transform: ${isMobile && classNames === 'login' ? 'translate(-100%, 0)' : 'scale(0)'};
-                    opacity: ${isMobile ? 1 : 0};
+                    transform: scale(0);
+                    opacity: 0;
                     transition: all 300ms;
                 }
 

@@ -328,7 +328,7 @@ const Layout = React.memo(({ children }) => {
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
                 />
             </Head>
-            <MyTransition isVisible={showBigLogin} classNames={'login'}>
+            <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
                 <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
             </MyTransition>
             <MyTransition isVisible={showLogin} classNames={'opacity'}>
