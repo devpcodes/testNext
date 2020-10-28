@@ -15,10 +15,10 @@ const NavList = React.memo(props => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
     };
 
-    const openURL = (url, popupWinWidth, popupWinHeight) => {
+    const openWindow = (url, popupWinWidth, popupWinHeight, popupWinName) => {
         const left = (screen.width - popupWinWidth) / 2;
         const top = (screen.height - popupWinHeight) / 4;
-        window.open(url, '', `width=${popupWinWidth},height=${popupWinHeight},top=${top},left=${left}`);
+        window.open(url, popupWinName, `width=${popupWinWidth},height=${popupWinHeight},top=${top},left=${left}`);
     };
 
     const openTrust = (trustUrl, trustBody) => {
@@ -48,10 +48,11 @@ const NavList = React.memo(props => {
                                 onClick={
                                     lv3Item.isOpen
                                         ? () =>
-                                              openURL(
+                                              openWindow(
                                                   `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`,
                                                   lv3Item.openWidth,
                                                   lv3Item.openHeight,
+                                                  lv3Item.title,
                                               )
                                         : () => {
                                               return false;
