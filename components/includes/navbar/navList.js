@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { showLoginHandler } from '../../../store/components/layouts/action';
 import { trust } from '../../../services/components/header/navTurst';
 import theme from '../../../resources/styles/theme';
 
@@ -6,6 +8,9 @@ import Link from 'next/link';
 
 const NavList = React.memo(props => {
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
+    const isLogin = useSelector(store => store.user.isLogin);
+    const dispatch = useDispatch();
+
     const clickHandler = () => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
     };
@@ -14,9 +19,13 @@ const NavList = React.memo(props => {
         window.open(url, '', `width=${width},height=${height}`);
     };
 
-    const openTrust = async (trustUrl, trustBody) => {
-        const res = await trust(trustUrl, trustBody);
-        window.open(res.data.result.url, '_blank');
+    const openTrust = (trustUrl, trustBody) => {
+        !isLogin
+            ? dispatch(showLoginHandler(true))
+            : (async () => {
+                  const res = await trust(trustUrl, trustBody);
+                  window.open(res.data.result.url, '_blank');
+              })(trustUrl, trustBody);
     };
 
     // const noHrefLink = (lv3Item) => {};
