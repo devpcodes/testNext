@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
 import { getCookie } from '../../../services/components/layouts/cookieController';
-import { getStockUnRealPrtlos, getStockSummarisePrtlos } from '../../../actions/stock/action';
-import { getSBUnRealPrtlos, getSBDeliveryTrial } from '../../../actions/sb/action';
+import { getStockUnRealPrtlos, getStockSummarisePrtlos } from '../../../store/stock/action';
+import { getSBUnRealPrtlos, getSBDeliveryTrial } from '../../../store/sb/action';
 import { getOpenProfitLossSum } from '../../../store/future/action';
 
 import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
