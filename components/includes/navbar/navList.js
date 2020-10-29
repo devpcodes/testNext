@@ -126,6 +126,9 @@ const NavList = React.memo(props => {
                     color: ${theme.colors.darkBg};
                     display: block;
                 }
+                .navbar__lv3__item__title:hover {
+                    color: ${theme.colors.secondary};
+                }
                 .NEW::after,
                 .HOT::after {
                     display: inline-block;
