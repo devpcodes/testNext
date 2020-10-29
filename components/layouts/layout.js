@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, showLoginHandler, setNavItems } from '../../store/components/layouts/action';
+import { resize, showLoginHandler, setNavItems, setMaskVisible } from '../../store/components/layouts/action';
 import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
 import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
@@ -36,6 +36,7 @@ const Layout = React.memo(({ children }) => {
     const accounts = useSelector(store => store.user.accounts);
     const domain = useSelector(store => store.general.domain);
     const currentPath = useSelector(store => store.general.currentPath);
+    const showMask = useSelector(store => store.layout.showMask);
 
     const getMenuPath = useRef(false);
     // const needLogin = useRef(false);
@@ -138,6 +139,11 @@ const Layout = React.memo(({ children }) => {
     useEffect(() => {
         queryStr.current = router.query;
     }, [router.query]);
+
+    // 由 mask 本身的 click 事件控制隱藏，否則會遇到 click 事件也傳遞到頁面裡的 iframe
+    const maskClickHandler = () => {
+        dispatch(setMaskVisible(false));
+    };
 
     const getUrlParams = () => {
         return new URLSearchParams(window.location.search);
@@ -335,11 +341,23 @@ const Layout = React.memo(({ children }) => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
             <Header />
+            {isMobile && showMask && <div className="page__mask" onClick={maskClickHandler}></div>}
             <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
             <Footer />
             <style jsx>{`
                 .page__container {
                     min-height: 500px;
+                    margin-top: 70px;
+                }
+                .page__mask {
+                    position: fixed;
+                    top: 70px;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 400;
+                    height: calc(100% - 70px);
+                    background-color: rgba(0, 0, 0, 0.7);
                 }
             `}</style>
             <style jsx global>{`

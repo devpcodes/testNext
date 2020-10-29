@@ -26,6 +26,13 @@ export const setMenuOpen = bool => {
     };
 };
 
+export const setMaskVisible = bool => {
+    return {
+        type: actionType.SHOW_MASK,
+        payload: bool,
+    };
+};
+
 export const setNavItems = data => async dispatch => {
     try {
         const isServer = typeof window === 'undefined';

@@ -1,14 +1,17 @@
-import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Popover } from 'antd';
 import { PersonalArea } from '../personalArea/PersonalArea';
 import { HeaderBtn } from '../HeaderBtn';
 import { AccountAvatar } from '../AccountAvatar';
+import { setMaskVisible } from '../../../store/components/layouts/action';
 
 import theme from '../../../resources/styles/theme';
 
 export const AccountButton = () => {
+    const dispatch = useDispatch();
+    const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [personalAreaVisible, setPersonalAreaVisible] = useState(false);
 
@@ -21,6 +24,12 @@ export const AccountButton = () => {
 
     const handlePersonalAreaVisible = visible => {
         setPersonalAreaVisible(visible);
+
+        // Popover 的 visible 為 true，然後顯示 mask。
+        // 但注意 mask 的隱藏不由這裡控制，而是由 mask 本身的 click 事件控制，否則會遇到 click 事件也傳遞到頁面裡的 iframe
+        if (visible) {
+            dispatch(setMaskVisible(visible));
+        }
     };
 
     return (
@@ -28,7 +37,7 @@ export const AccountButton = () => {
             <Popover
                 placement="bottomRight"
                 content={accountPopoverContent}
-                trigger="hover"
+                trigger={isMobile ? 'click' : 'hover'}
                 onVisibleChange={handlePersonalAreaVisible}
             >
                 <div>

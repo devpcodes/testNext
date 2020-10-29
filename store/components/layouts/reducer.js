@@ -6,6 +6,7 @@ const initialState = {
     showLogin: false,
     showMenu: false,
     navData: {},
+    showMask: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -30,6 +31,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 showMenu: action.payload,
+            };
+        case actionType.SHOW_MASK:
+            return {
+                ...state,
+                showMask: action.payload,
             };
         default:
             return state;
