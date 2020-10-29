@@ -274,7 +274,7 @@ const Navbar = React.memo(props => {
                     .navbar__account {
                         border-bottom: 5px solid ${theme.colors.primary};
                     }
-                    .menu__ctrl {
+                    .navbar__lv1__item.menu__ctrl {
                         position: fixed;
                         top: 0;
                         left: 0;
