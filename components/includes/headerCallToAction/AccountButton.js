@@ -30,9 +30,13 @@ export const AccountButton = () => {
         // if (visible) {
         //     dispatch(setMaskVisible(visible));
         // }
-        setTimeout(() => {
+        if (visible) {
             dispatch(setMaskVisible(visible));
-        }, 500);
+        } else {
+            setTimeout(() => {
+                dispatch(setMaskVisible(visible));
+            }, 350);
+        }
     };
 
     return (
