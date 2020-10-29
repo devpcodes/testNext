@@ -82,6 +82,7 @@ const Layout = React.memo(({ children }) => {
     useEffect(() => {
         // pwaHandler();
         window.addEventListener('resize', resizeHandler);
+        window.addEventListener('click', maskClickHandler, true);
         resizeHandler();
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料
@@ -99,6 +100,7 @@ const Layout = React.memo(({ children }) => {
 
         return () => {
             window.removeEventListener('resize', resizeHandler, false);
+            window.removeEventListener('click', maskClickHandler, true);
             clearTimeout(timeout);
         };
     }, []);
@@ -141,10 +143,14 @@ const Layout = React.memo(({ children }) => {
     }, [router.query]);
 
     // 由 mask 本身的 click 事件控制隱藏，否則會遇到 click 事件也傳遞到頁面裡的 iframe
-    // const maskClickHandler = (e) => {
-    //     e.stopPropagation()
-    //     dispatch(setMaskVisible(false));
-    // };
+    const maskClickHandler = e => {
+        console.log(e.target);
+        if (e.target.classList.contains('page__mask')) {
+            console.log('page__mask', e.target.classList.contains('page__mask'));
+            e.stopImmediatePropagation();
+        }
+        // dispatch(setMaskVisible(false));
+    };
 
     const getUrlParams = () => {
         return new URLSearchParams(window.location.search);
