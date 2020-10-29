@@ -49,7 +49,7 @@ const Navbar = React.memo(props => {
     return (
         <div className={`${showMenu ? '' : 'navbar--hide'}`}>
             <div className="navbar__lv1__item navbar__lv1__item__title menu__ctrl">
-                <Link href="/">
+                <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
                     <a className="header__logo">
                         <img src={logo}></img>
                     </a>
@@ -110,10 +110,11 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href="/">
+                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}/goOrder`}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
-                    <Link href="/">
+                    {/* 補上帳號市場 */}
+                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingAccount`}>
                         <a className="navbar__account">我的帳務</a>
                     </Link>
                 </div>
