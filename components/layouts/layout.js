@@ -264,7 +264,7 @@ const Layout = React.memo(({ children }) => {
     // 關閉大的login
     const bigLoginClose = function () {
         setShowBigLogin(false);
-        bigLoginRouterHandler();
+        bigLoginRouterHandler('close');
     };
 
     const bigLoginSuccess = function () {
@@ -273,7 +273,14 @@ const Layout = React.memo(({ children }) => {
         bigLoginRouterHandler();
     };
 
-    const bigLoginRouterHandler = function () {
+    const bigLoginRouterHandler = function (type) {
+        if (router.pathname.indexOf('errPage') != -1 && prevPathname.current != null && type == null) {
+            router.push(
+                prevPathname.current,
+                `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
+            );
+            return;
+        }
         if (!currentPath) {
             router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
         } else {
@@ -284,8 +291,8 @@ const Layout = React.memo(({ children }) => {
     //傳錯誤訊息給errpage
     const renderChildren = function (errMsg) {
         return React.Children.map(children, child => {
-            console.log('name', child.type.name);
-            if (child.type.name === 'ErrPage') {
+            console.log('path', router.pathname.indexOf('errPage'), router.pathname);
+            if (router.pathname.indexOf('errPage') != -1) {
                 return React.cloneElement(child, {
                     errMsg,
                 });
@@ -321,7 +328,7 @@ const Layout = React.memo(({ children }) => {
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
                 />
             </Head>
-            <MyTransition isVisible={showBigLogin} classNames={'login'}>
+            <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
                 <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
             </MyTransition>
             <MyTransition isVisible={showLogin} classNames={'opacity'}>

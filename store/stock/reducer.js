@@ -1,21 +1,21 @@
-import * as actionType from '../actions/sb/actionType';
+import * as actionType from './actionType';
 
 const initialState = {
-    SBUnRealPrtlos: {},
-    SBDeliveryTrial: {},
+    UnRealPrtlos: [],
+    SummarisePrtlos: [],
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionType.SET_SB_UNREAL_PRTLOS:
+        case actionType.SET_UNREAL_PRTLOS:
             return {
                 ...state,
-                SBUnRealPrtlos: action.payload,
+                UnRealPrtlos: action.payload,
             };
-        case actionType.SET_SB_DELIVERY_TRIAL:
+        case actionType.SET_SUMMARISE_PRTLOS:
             return {
                 ...state,
-                SBDeliveryTrial: action.payload,
+                SummarisePrtlos: action.payload,
             };
         default:
             return state;

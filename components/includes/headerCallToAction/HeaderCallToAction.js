@@ -20,7 +20,9 @@ export const HeaderCallToAction = () => {
         router.push('/goOrder', `${process.env.NEXT_PUBLIC_SUBPATH}goOrder`);
     };
     const goLogIn = () => {
-        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+        if (router.pathname !== '/errPage') {
+            dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+        }
         router.push('', `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`, { shallow: true });
     };
 

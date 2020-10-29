@@ -47,38 +47,22 @@ const Navbar = React.memo(props => {
     };
 
     return (
-        <ul className={`navbar ${showMenu ? '' : 'navbar--hide'}`}>
-            <li className="navbar__lv1__item mobile__menu__ctrl">
-                <span className="navbar__lv1__item__title menu__ctrl">
-                    <Link href="/">
-                        <a className="header__logo">
-                            <img src={logo}></img>
-                        </a>
-                    </Link>
-                    <a className="close__menu" onClick={menuClickHandler}>
-                        <img src={closeMenu}></img>
+        <div className={`${showMenu ? '' : 'navbar--hide'}`}>
+            <div className="navbar__lv1__item navbar__lv1__item__title menu__ctrl">
+                <Link href="/">
+                    <a className="header__logo">
+                        <img src={logo}></img>
                     </a>
-                </span>
-            </li>
-            {!!mainNav &&
-                mainNav.map((lv1Item, lv1Index) => (
-                    <li className="navbar__lv1__item" key={lv1Index}>
-                        {lv1Item.items && lv1Item.items.length ? (
-                            <a
-                                className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
-                                onClick={menuItemClickHandler}
-                            >
-                                <span className="active__mark"></span>
-                                {lv1Item.title}
-                            </a>
-                        ) : (
-                            <Link
-                                href={
-                                    lv1Item.isFullUrl
-                                        ? `${lv1Item.url}`
-                                        : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`
-                                }
-                            >
+                </Link>
+                <a className="close__menu" onClick={menuClickHandler}>
+                    <img src={closeMenu}></img>
+                </a>
+            </div>
+            <ul className="navbar">
+                {!!mainNav &&
+                    mainNav.map((lv1Item, lv1Index) => (
+                        <li className="navbar__lv1__item" key={lv1Index}>
+                            {lv1Item.items && lv1Item.items.length ? (
                                 <a
                                     className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
                                     onClick={menuItemClickHandler}
@@ -86,23 +70,39 @@ const Navbar = React.memo(props => {
                                     <span className="active__mark"></span>
                                     {lv1Item.title}
                                 </a>
-                            </Link>
-                        )}
-                        {lv1Item.items && lv1Item.items.length && (
-                            <ul
-                                className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
-                                style={{ width: 168 * lv1Item.items.length }}
-                            >
-                                {lv1Item.items.map((lv2Item, lv2Index) => (
-                                    <li className="navbar__lv2__item" key={lv2Index}>
-                                        <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024} />
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </li>
-                ))}
-            <li className="navbar__lv1__item navbar__shortcuts__li">
+                            ) : (
+                                <Link
+                                    href={
+                                        lv1Item.isFullUrl
+                                            ? `${lv1Item.url}`
+                                            : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`
+                                    }
+                                >
+                                    <a
+                                        className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
+                                        onClick={menuItemClickHandler}
+                                    >
+                                        <span className="active__mark"></span>
+                                        {lv1Item.title}
+                                    </a>
+                                </Link>
+                            )}
+                            {lv1Item.items && lv1Item.items.length && (
+                                <ul
+                                    className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
+                                    style={{ width: 168 * lv1Item.items.length }}
+                                >
+                                    {lv1Item.items.map((lv2Item, lv2Index) => (
+                                        <li className="navbar__lv2__item" key={lv2Index}>
+                                            <NavList navItems={lv1Item.items} lv2Data={lv2Item} twoColumnPX={1024} />
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </li>
+                    ))}
+            </ul>
+            <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
                     <Link href="/">
                         <a className="navbar__order">快速下單</a>
@@ -111,7 +111,7 @@ const Navbar = React.memo(props => {
                         <a className="navbar__account">我的帳務</a>
                     </Link>
                 </div>
-            </li>
+            </div>
             <style jsx>{`
                 .navbar {
                     display: flex;
@@ -124,7 +124,7 @@ const Navbar = React.memo(props => {
                 .navbar--hide {
                     display: flex;
                 }
-                .navbar__lv1__item.mobile__menu__ctrl {
+                .navbar__lv1__item.menu__ctrl {
                     display: none;
                 }
                 .navbar__lv1__item {
@@ -144,6 +144,7 @@ const Navbar = React.memo(props => {
                     height: 100%;
                     line-height: 70px;
                 }
+
                 .navbar__shortcuts__li {
                     display: none;
                 }
@@ -191,6 +192,7 @@ const Navbar = React.memo(props => {
                     .navbar__lv1__item:hover .navbar__lv1__item__title,
                     .navbar__lv1__item.active {
                         color: ${theme.colors.secondary};
+                        line-height: 64px;
                     }
                     .navbar__lv1__item:hover .active__mark,
                     .navbar__lv1__item.active .active__mark {
@@ -234,7 +236,7 @@ const Navbar = React.memo(props => {
                     .navbar--hide {
                         display: none;
                     }
-                    .navbar__lv1__item.mobile__menu__ctrl {
+                    .navbar__lv1__item.menu__ctrl {
                         display: block;
                     }
                     .navbar__lv1__item.navbar__shortcuts__li {
@@ -242,6 +244,7 @@ const Navbar = React.memo(props => {
                         height: 70px;
                         position: fixed;
                         bottom: 0;
+                        left: 0;
                         width: 316px;
                         background: ${theme.colors.darkBg};
                     }
@@ -266,6 +269,7 @@ const Navbar = React.memo(props => {
                     .menu__ctrl {
                         position: fixed;
                         top: 0;
+                        left: 0;
                         background: ${theme.colors.darkBg};
                         z-index: 503;
                         width: 316px;
@@ -330,7 +334,7 @@ const Navbar = React.memo(props => {
                     }
                 }
             `}</style>
-        </ul>
+        </div>
     );
 });
 

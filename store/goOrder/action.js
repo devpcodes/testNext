@@ -1,5 +1,4 @@
-export const add = () => async (dispatch, getState) => {
-    // console.log('state', getState());
+export const add = () => async dispatch => {
     await delay(1000);
     dispatch({ type: 'add' });
 };

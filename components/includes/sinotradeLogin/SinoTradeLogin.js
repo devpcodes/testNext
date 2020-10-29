@@ -65,7 +65,8 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
                     position: fixed;
                     width: 100vw;
                     height: 100vh;
-                    background-color: white;
+                    background-color: ${isPC ? 'white' : 'transparent'};
+                    /* background-color: white; */
                     z-index: 999;
                 }
                 .page__box {
