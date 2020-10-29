@@ -9,7 +9,7 @@ function H5_TradingAccount() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/H5_TradingAccount`}
                     title="永豐金證券"
-                    iHeight={410}
+                    iHeight={1000}
                 />
             </div>
         </>
