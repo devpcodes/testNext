@@ -22,6 +22,10 @@ function H5_goOrder() {
         }
     }, [router.query]);
 
+    const getIframeDom = dom => {
+        console.log('dom', dom);
+    };
+
     return (
         <>
             <PageHead title={'即時盯盤'} />
@@ -30,6 +34,7 @@ function H5_goOrder() {
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/H5_goOrder${queryStr}`}
                     title="永豐金證券"
                     iHeight={88}
+                    getIframeDom={getIframeDom}
                 />
             </div>
         </>

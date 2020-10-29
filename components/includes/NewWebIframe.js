@@ -2,7 +2,7 @@ import { useEffect, useRef, memo } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
-const NewWebIframe = function ({ iframeSrc, title, iHeight, login }) {
+const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom }) {
     const iframeDom = useRef(null);
     const iframeContentReady = useRef(false);
     const iframeContentDoc = useRef(null);
@@ -27,6 +27,9 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login }) {
                     console.log(`[] - iframeDom.current.height:`, iframeDom.current.height);
                 }
             }, 100);
+        }
+        if (getIframeDom != null) {
+            getIframeDom(iframeDom.current);
         }
         return () => {
             if (iframeContentDoc.current != null) {
@@ -91,6 +94,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login }) {
             iframeContentReady.current = true;
         }
     };
+
     return (
         <>
             <iframe
@@ -123,6 +127,7 @@ NewWebIframe.propTypes = {
     title: PropTypes.string,
     iHeight: PropTypes.number,
     login: PropTypes.bool,
+    getIframeDom: PropTypes.func,
 };
 
 NewWebIframe.displayName = NewWebIframe;

@@ -1,4 +1,5 @@
 import errImg from '../resources/images/components/errPage/img-loading-m.png';
+
 function ErrPage({ errMsg }) {
     return (
         <>
@@ -14,13 +15,14 @@ function ErrPage({ errMsg }) {
                     width: 100%;
                     text-align: center;
                     height: 500px;
-                    position: relative;
+                    /* position: relative; */
                 }
                 .errPage__box {
-                    position: absolute;
-                    top: 50%;
+                    padding-top: 150px;
+                    /* position: absolute; */
+                    /* top: 50%;
                     left: 50%;
-                    transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%); */
                 }
                 .err__img {
                     width: 132px;
