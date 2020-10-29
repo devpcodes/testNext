@@ -32,7 +32,7 @@ export const AccountButton = () => {
         // }
         setTimeout(() => {
             dispatch(setMaskVisible(visible));
-        }, 100);
+        }, 500);
     };
 
     return (
