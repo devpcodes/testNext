@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 
 import NavList from '../navbar/navList';
@@ -15,14 +14,13 @@ import closeImg from '../../../resources/images/components/header/ic_close_horiz
 import openImg from '../../../resources/images/components/header/ic_open.png';
 
 export const PersonalArea = ({ personalAreaVisible }) => {
-    // const router = useRouter();
     const dispatch = useDispatch();
     const serverPersonalNav = useSelector(store => store.server.navData?.personal);
     const clientPersonalNav = useSelector(store => store.layout.navData?.personal);
     const isMobile = useSelector(store => store.layout.isMobile);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
     const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
-    // console.log(isMobile);
+
     // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
     useEffect(() => {
         if (personalAreaVisible) {
@@ -130,6 +128,8 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         width: calc((10 / 12) * 100vw);
                         height: 100vh;
                         top: ${personalAreaMobileCSS.top};
+                        right: 0;
+                        bottom: 0;
                         border-top: none;
                         background: ${theme.colors.darkBg};
                     }

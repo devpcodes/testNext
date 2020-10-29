@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import Navbar from './navbar/navbar';
 import { HeaderCallToAction } from './headerCallToAction/HeaderCallToAction';
-// import React, { useState } from 'react';
 import logo from '../../resources/images/components/header/sinopac_securities_logo.png';
 import menu from '../../resources/images/components/header/ic_menu.png';
 import theme from '../../resources/styles/theme';
@@ -32,11 +31,10 @@ const Header = () => {
             <style jsx>{`
                 header {
                     height: 70px;
-                    background: #0d1623;
+                    background: ${theme.colors.darkBg};
                     position: fixed;
                     top: 0;
                     right: 0;
-                    bottom: 0;
                     left: 0;
                 }
                 .header__navbar {
