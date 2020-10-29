@@ -63,6 +63,7 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
             <style jsx>{`
                 .loginPage__container {
                     position: fixed;
+                    top: 0;
                     width: 100vw;
                     height: 100vh;
                     background-color: ${isPC ? 'white' : 'transparent'};
