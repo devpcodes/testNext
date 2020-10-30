@@ -110,11 +110,11 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}/goOrder`}>
+                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
                     {/* 補上帳號市場 */}
-                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingAccount`}>
+                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount`}>
                         <a className="navbar__account">我的帳務</a>
                     </Link>
                 </div>
