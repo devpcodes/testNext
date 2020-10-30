@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo } from 'react';
+import { useEffect, useRef, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line react/display-name
@@ -7,6 +7,9 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
     const iframeContentReady = useRef(false);
     const iframeContentDoc = useRef(null);
     const isMobile = useSelector(store => store.layout.isMobile);
+    const showMask = useSelector(store => store.layout.showMask);
+    const [pointerEvents, setPointerEvents] = useState('auto');
+
     setTimeout(() => {
         var iframeId = iframeDom.current;
         if (iframeId != null) {
@@ -69,6 +72,21 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
         }
     }, [login]);
 
+    /*
+        mask 顯示之後，阻止 iframe 成為點擊事件的 target。
+        因 antd 的 Popover 元件，若要點擊其他區塊收回時，點到 iframe 區塊會失效，且觸發 iframe 內的連結或事件。
+    */
+    useEffect(() => {
+        if (showMask) {
+            setPointerEvents('none');
+        } else {
+            // 延遲是為了避免手機裝置的點擊事件延遲 300ms 左右，mask 收回後馬上觸發到 iframe 內的連結或事件。
+            setTimeout(() => {
+                setPointerEvents('auto');
+            }, 500);
+        }
+    }, [showMask]);
+
     const ready = () => {
         console.log('ready');
         hideHeaderFooter();
@@ -109,6 +127,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
                 style={{
                     overflowX: 'auto',
                     overflowY: 'hidden',
+                    pointerEvents: pointerEvents,
                 }}
             >
                 你的瀏覽器不支援 iframe

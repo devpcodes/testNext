@@ -24,19 +24,7 @@ export const AccountButton = () => {
 
     const handlePersonalAreaVisible = visible => {
         setPersonalAreaVisible(visible);
-
-        // Popover 的 visible 為 true，然後顯示 mask。
-        // 但注意 mask 的隱藏不由這裡控制，而是由 mask 本身的 click 事件控制，否則會遇到 click 事件也傳遞到頁面裡的 iframe
-        // if (visible) {
-        //     dispatch(setMaskVisible(visible));
-        // }
-        if (visible) {
-            dispatch(setMaskVisible(visible));
-        } else {
-            setTimeout(() => {
-                dispatch(setMaskVisible(visible));
-            }, 350);
-        }
+        dispatch(setMaskVisible(visible));
     };
 
     return (
