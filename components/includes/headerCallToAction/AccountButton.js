@@ -5,7 +5,7 @@ import { Popover } from 'antd';
 import { PersonalArea } from '../personalArea/PersonalArea';
 import { HeaderBtn } from '../HeaderBtn';
 import { AccountAvatar } from '../AccountAvatar';
-import { setMaskVisible } from '../../../store/components/layouts/action';
+import { setMaskVisible, setMenuOpen } from '../../../store/components/layouts/action';
 
 import theme from '../../../resources/styles/theme';
 
@@ -25,6 +25,9 @@ export const AccountButton = () => {
     const handlePersonalAreaVisible = visible => {
         setPersonalAreaVisible(visible);
         dispatch(setMaskVisible(visible));
+        if (visible) {
+            dispatch(setMenuOpen(false));
+        }
     };
 
     return (
