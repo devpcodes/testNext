@@ -22,7 +22,7 @@ function H5_Future_Single() {
         }
         if (e.data.product != null) {
             source.current.postMessage(e.data, '*');
-            window.close();
+            // window.close();
         }
     };
 
