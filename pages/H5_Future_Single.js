@@ -17,7 +17,7 @@ function H5_Future_Single() {
     const messageEventHandler = e => {
         if (e.data.length != 0) {
             console.log('dddd', e.data);
-            iframeDom.current.contentWindow.postMessage(e, '*');
+            iframeDom.current.contentWindow.postMessage('abc', '*');
             source.current = e.source;
         }
         if (e.data.optionList == null) {
