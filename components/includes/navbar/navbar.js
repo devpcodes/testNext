@@ -15,10 +15,14 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 const Navbar = React.memo(props => {
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
-    const isMobile = useSelector(store => store.layout.isMobile);
+    const accountMarket = useSelector(store => store.user.currentAccount?.acctype);
     const showMenu = useSelector(store => store.layout.showMenu);
-
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
+    const marketMappingList = {
+        S: 'stock',
+        F: 'futuresOptions',
+        H: 'recommissioned',
+    };
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -113,8 +117,13 @@ const Navbar = React.memo(props => {
                     <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
-                    {/* 補上帳號市場 */}
-                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount`}>
+                    <Link
+                        href={
+                            !!accountMarket
+                                ? `${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount/mkt=${marketMappingList[accountMarket]}`
+                                : `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`
+                        }
+                    >
                         <a className="navbar__account">我的帳務</a>
                     </Link>
                 </div>
@@ -220,6 +229,7 @@ const Navbar = React.memo(props => {
                     }
                     .navbar__content {
                         width: 316px;
+                        height: 100%;
                         min-height: calc(100% - 140px);
                         max-height: calc(100% - 140px);
                         overflow-y: auto;

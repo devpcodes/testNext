@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { PageHead } from '../components/includes/PageHead';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
-    await store.dispatch(setNavItems());
+    await store.dispatch(setNavItems({ domain: 'line' }));
 });
 
 function Line_TradingAccount() {
