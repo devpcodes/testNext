@@ -15,9 +15,9 @@ function H5_Future_Single() {
     }, []);
 
     const messageEventHandler = e => {
+        console.log(e);
         if (e.data.length != 0) {
-            console.log('dddd', e.data);
-            iframeDom.current.contentWindow.postMessage('abc', '*');
+            iframeDom.current.contentWindow.postMessage(e.data, '*');
             source.current = e.source;
         }
         if (e.data.optionList == null) {
