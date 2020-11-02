@@ -20,10 +20,10 @@ function H5_Future_Single() {
             iframeDom.current.contentWindow.postMessage(e.data, '*');
             source.current = e.source;
         }
-        // if (e.data.product != null) {
-        //     source.current.postMessage(e.data, '*');
-        //     window.close();
-        // }
+        if (e.data.product != null) {
+            source.current.postMessage(e.data, '*');
+            window.close();
+        }
     };
 
     const getIframeDom = dom => {
