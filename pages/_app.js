@@ -1,11 +1,20 @@
 import 'antd/dist/antd.min.css';
 import '../resources/styles/globals.css';
 import { useEffect } from 'react';
+import TagManager from 'react-gtm-module';
 import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
 
+const tagManagerArgs = {
+    gtmId: 'GTM-KHJQQ4C',
+};
+
 function MyApp({ Component, pageProps, router }) {
     useEffect(() => {
+        //googletagmanager
+        TagManager.initialize(tagManagerArgs);
+
+        //神策
         let sensorGetCookie = function (cname) {
             var name = cname + '=';
             var decodedCookie = decodeURIComponent(document.cookie);

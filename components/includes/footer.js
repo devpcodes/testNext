@@ -40,19 +40,19 @@ const footerData = [
             },
             {
                 title: 'iLeader App下單',
-                link: '',
+                link: 'https://www.sinotrade.com.tw/Tradecenter/Tradecenter_4',
             },
             {
                 title: 'eLeader AP下單',
-                link: '',
+                link: 'https://www.sinotrade.com.tw/UploadFiles/setup_eLeader.exe',
             },
             {
                 title: '好神通 AP下單',
-                link: '',
+                link: 'https://www.sinotrade.com.tw/UploadFiles/sinosetup.exe',
             },
             {
                 title: '豐管家服務App',
-                link: '',
+                link: 'https://play.google.com/store/apps/details?id=com.softmobile.service.app&amp;hl=zh_TW',
             },
         ],
     },
@@ -114,6 +114,7 @@ const Footer = React.memo(props => {
                 <p>永豐金證券股份有限公司</p>
                 <p>台北市重慶南路一段二號7、18、20樓</p>
                 <p>107年金管證總字第0006號</p>
+                <p>109年金管期總字第008號(委任期貨商永豐期貨)</p>
             </div>
             <div className="footer__middle">
                 <div className="middle__box">
@@ -139,10 +140,11 @@ const Footer = React.memo(props => {
             </div>
             <div className="footer__down">
                 <div className="down__box">
-                    <ul>
+                    <ul className="block1">
                         <li>永豐金證券股份有限公司</li>
                         <li>台北市重慶南路一段二號7、18、20樓</li>
                         <li>107年金管證總字第0006號</li>
+                        <li>109年金管期總字第008號(委任期貨商永豐期貨)</li>
                     </ul>
                     <ul>
                         <li>
@@ -446,11 +448,30 @@ const Footer = React.memo(props => {
                     position: relative;
                     padding: 2.5rem 0;
                 }
+                .down__box block1 {
+                    width: 65%;
+                }
+                @media (max-width: 1600px), print {
+                    .down__box block1 {
+                        width: 65%;
+                        margin-left: 18rem;
+                    }
+                }
                 @media (max-width: 1250px), print {
                     .down__box {
                         width: 90%;
                     }
+                    .down__box block1 {
+                        width: 65%;
+                        margin-left: 18rem;
+                    }
                 }
+                /* @media (max-width: 1500px), print {
+                    .down__box {
+                        width: 80%;
+                        padding: 1.5rem 0;
+                    }
+                } */
                 @media (max-width: 1024px), print {
                     .down__box {
                         width: 100%;
@@ -487,11 +508,12 @@ const Footer = React.memo(props => {
                     text-align: left;
                     margin-left: 18rem;
                     margin-bottom: 0.2rem;
+                    width: 65%;
                 }
                 @media (max-width: 1100px), print {
                     .down__box ul {
                         text-align: center;
-                        margin-left: 0;
+                        margin-left: 18rem;
                     }
                 }
                 @media (max-width: 1024px), print {
