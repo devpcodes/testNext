@@ -15,7 +15,7 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 const Navbar = React.memo(props => {
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
-    const accountMarket = useSelector(store => store.user.currentAccount?.acctype);
+    const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
     const showMenu = useSelector(store => store.layout.showMenu);
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
     const marketMappingList = {
@@ -27,6 +27,7 @@ const Navbar = React.memo(props => {
 
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
+        console.log(accountMarket);
     }, []);
 
     const resizeHandler = function () {
@@ -120,7 +121,7 @@ const Navbar = React.memo(props => {
                     <Link
                         href={
                             !!accountMarket
-                                ? `${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount/mkt=${marketMappingList[accountMarket]}`
+                                ? `${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount?mkt=${marketMappingList[accountMarket]}`
                                 : `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`
                         }
                     >
