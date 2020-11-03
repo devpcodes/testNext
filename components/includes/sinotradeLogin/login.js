@@ -89,6 +89,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         accountInput.current.focus();
     };
 
+    //登入動作處理
     const finishHandler = async function () {
         if (isLoading) {
             return false;
@@ -103,12 +104,19 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
                 if (res.data.success) {
+                    //記身份證字號
                     if (form.getFieldValue('remember')) {
                         localStorage.setItem('userID', form.getFieldValue('account'));
                     } else {
                         localStorage.removeItem('userID');
                     }
-                    successHandler();
+
+                    //iframe登入處理(來自舊理財網)
+                    if (isIframe) {
+                        iframeHandler();
+                    } else {
+                        successHandler();
+                    }
                 }
             } catch (error) {
                 setIsLoading(false);
@@ -116,10 +124,35 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
+    //忘記密碼
     const forgetPassword = function () {
         onClose();
         router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
     };
+
+    //判斷是不是iframe
+    const isIframe = function () {
+        try {
+            return window.self !== window.top;
+        } catch (error) {}
+        return false;
+    };
+
+    //參考舊理財網
+    const iframeHandler = function () {
+        parent.postMessage(
+            {
+                origin: 'NewWeb',
+                redirectURL: location.origin + process.env.NEXT_PUBLIC_SUBPATH,
+                msg: msg,
+            },
+            '*',
+        );
+
+        // postMessage 完之後，清除所有 input 資料。
+        location.reload();
+    };
+
     return (
         <div className="login__container">
             <div className="login__box">
