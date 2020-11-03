@@ -15,14 +15,13 @@ function H5_Future_Single() {
     }, []);
 
     const messageEventHandler = e => {
-        if (e.data.length != 0) {
+        if (e.data.length != null) {
             iframeDom.current.contentWindow.postMessage(e.data, '*');
             source.current = e.source;
         }
         if (e.data.product != null) {
-            console.log('test', e.data, e.source, source.current);
-            source.current.postMessage('aaaaaa', '*');
-            // window.close();
+            source.current.postMessage(e.data, '*');
+            window.close();
         }
     };
 
