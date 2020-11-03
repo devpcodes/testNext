@@ -1,3 +1,8 @@
+stages:
+    - build
+    - stop
+    - deploy
+
 ###########################################################################
 # PRODUCTION
 ###########################################################################
@@ -27,24 +32,33 @@
 ###########################################################################
 build_newwebrd:
     stage: build
-    only:
-        - UAT
     tags:
         - nwwebrd
+    only:
+        - UAT
     script:
-        - cd $CI_PROJECT_DIR
+        - rm -rf ~/new_newweb
+        - cp -fRv $CI_PROJECT_DIR/* ~/new_newweb
+        - cd ~/new_newweb
         - yarn
         - yarn build
-        - mkdir -p ~/build
-        - cp -fRv $CI_PROJECT_DIR ~/build
+
+stop_newwebrd:
+    stage: stop
+    allow_failure: true
+    tags:
+        - nwwebrd
+    only:
+        - UAT
+    script:
+        - pm2 stop new-newweb
 
 deploy_newwebrd:
     stage: deploy
-    only:
-        - UAT
     tags:
         - nwwebrd
+    only:
+        - UAT
     script:
-        - pm2 stop new-newweb
-        - cd ~/build/$CI_PROJECT_NAME
+        - cd ~/new_newweb
         - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
