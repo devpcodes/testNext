@@ -100,7 +100,11 @@ const Footer = React.memo(props => {
                         <span>服務時間</span> (AM7:30~PM10:00)
                     </li>
                 </ul>
-                <a href="https://sinourl.tw/ozBFJI" target="_blank" className="footer__up--signup">
+                <a
+                    href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                    target="_blank"
+                    className="footer__up--signup"
+                >
                     快速開戶
                 </a>
             </div>
