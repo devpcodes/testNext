@@ -110,17 +110,52 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     } else {
                         localStorage.removeItem('userID');
                     }
-
-                    //iframe登入處理(來自舊理財網)
-                    if (isIframe()) {
-                        iframeHandler();
-                    } else {
-                        successHandler();
-                    }
+                    //傳資料給神策
+                    sensorsHandler(form.getFieldValue('account'));
                 }
             } catch (error) {
                 setIsLoading(false);
+                sensors.track('LoginResults', {
+                    is_success: false,
+                    failure_reason: msg,
+                    is_login: false,
+                    page_url: window.location.href,
+                    page_title: document.title,
+                    page_url_path: window.location.pathname,
+                });
             }
+        }
+    };
+
+    //傳資料給神策
+    const sensorsHandler = function (user_id) {
+        try {
+            sensors.login(user_id, function () {
+                sensors.track(
+                    'LoginResults',
+                    {
+                        is_success: true,
+                        failure_reason: '',
+                        is_login: true,
+                        page_url: window.location.href,
+                        page_title: document.title,
+                        page_url_path: window.location.pathname,
+                    },
+                    afterSensors,
+                );
+            });
+        } catch (error) {
+            afterSensors();
+        }
+    };
+
+    //神策傳送成功後 做的事
+    const afterSensors = function () {
+        //iframe登入處理(來自舊理財網)
+        if (isIframe()) {
+            iframeHandler();
+        } else {
+            successHandler();
         }
     };
 
