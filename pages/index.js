@@ -12,6 +12,9 @@ const Home = function () {
     const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div>
+            <h1>
+                {process.env.NEXT_PUBLIC_NEWWEB}....{process.env.NEXT_PUBLIC_SUBPATH}
+            </h1>
             <PageHead title={'永豐金理財網'} />
             <div>
                 <NewWebIframe
