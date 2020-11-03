@@ -112,7 +112,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     }
 
                     //iframe登入處理(來自舊理財網)
-                    if (isIframe) {
+                    if (isIframe()) {
                         iframeHandler();
                     } else {
                         successHandler();
