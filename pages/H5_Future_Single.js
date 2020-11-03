@@ -20,7 +20,7 @@ function H5_Future_Single() {
             source.current = e.source;
         }
         if (e.data.product != null) {
-            console.log(e.data);
+            console.log('test', e.data, e.source);
             source.current.postMessage(e.data, '*');
             // window.close();
         }
