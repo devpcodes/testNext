@@ -16,7 +16,6 @@ build_push2:
         - cd $CI_PROJECT_DIR
         - yarn
         - yarn build
-        - mkdir -p ~/new_newweb
         - ssh apuser@172.17.2.6 'mkdir -p ~/new_newweb'
         - ssh apuser@172.17.6.6 'mkdir -p ~/new_newweb'
         - scp -rp $CI_PROJECT_DIR/. apuser@172.17.2.6:/ap/nweb/new_newweb
