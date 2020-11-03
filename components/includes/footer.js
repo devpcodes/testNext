@@ -97,7 +97,7 @@ const Footer = React.memo(props => {
                     </li>
                     <li> 02-6630-8899</li>
                     <li>
-                        <span>服務時間</span> (AM7:30~PM10:00)
+                        <span>台股營業日</span> (AM7:30~PM10:00)
                     </li>
                 </ul>
                 <a
