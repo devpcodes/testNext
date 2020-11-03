@@ -39,7 +39,7 @@ build_newwebrd:
     script:
         - rm -rf ~/new_newweb
         - mkdir -p ~/new_newweb
-        - cp -fRv $CI_PROJECT_DIR/* ~/new_newweb
+        - cp -fRrv $CI_PROJECT_DIR/* ~/new_newweb
         - cd ~/new_newweb
         - yarn
         - yarn build
@@ -62,5 +62,4 @@ deploy_newwebrd:
         - UAT
     script:
         - cd ~/new_newweb
-        - export NODE_ENV=production
-        - pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
+        - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
