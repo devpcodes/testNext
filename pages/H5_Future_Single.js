@@ -19,8 +19,7 @@ function H5_Future_Single() {
             iframeDom.current.contentWindow.postMessage(e.data, '*');
             source.current = e.source;
         }
-        source.current.postMessage(e.data, '*');
-        if (e.data.product != null) {
+        if (e.data.length == null && e.data.product != null) {
             console.log(e);
             source.current.postMessage(e.data, '*');
             // window.close();
