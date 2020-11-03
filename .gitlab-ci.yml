@@ -39,7 +39,7 @@ build_newwebrd:
     script:
         - rm -rf ~/new_newweb
         - mkdir -p ~/new_newweb
-        - cp -fRv $CI_PROJECT_DIR/*. ~/new_newweb
+        - cp -fRv $CI_PROJECT_DIR/. ~/new_newweb
         - cd ~/new_newweb
         - yarn
         - yarn build
