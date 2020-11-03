@@ -37,12 +37,11 @@ build_newwebrd:
     only:
         - UAT
     script:
-        - rm -rf ~/new_newweb
-        - mkdir -p ~/new_newweb
-        - cp -fRv $CI_PROJECT_DIR/. ~/new_newweb
-        - cd ~/new_newweb
+        - cd $CI_PROJECT_DIR
         - yarn
         - yarn build
+        - mkdir -p ~/new_newweb
+        - cp -fRv $CI_PROJECT_DIR/. ~/new_newweb
 
 stop_newwebrd:
     stage: stop
