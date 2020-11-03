@@ -14,7 +14,10 @@ export const HeaderCallToAction = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     const goSignUp = () => {
-        router.push('/OpenAccount', `${process.env.NEXT_PUBLIC_SUBPATH}OpenAccount`);
+        // router.push('/OpenAccount', `${process.env.NEXT_PUBLIC_SUBPATH}OpenAccount`);
+        return window.open(
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
+        );
     };
     const goOrder = () => {
         router.push('/goOrder', `${process.env.NEXT_PUBLIC_SUBPATH}goOrder`);
