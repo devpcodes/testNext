@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox } from 'antd';
 import logo from '../../../resources/images/components/login/logo.png';
@@ -8,6 +9,7 @@ import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-clos
 import { submit } from '../../../services/components/login/login';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
+    const router = useRouter();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
     const [encryptAccount, setEncryptAccount] = useState('');
@@ -114,6 +116,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
+    const forgetPassword = function () {
+        onClose();
+        router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+    };
     return (
         <div className="login__container">
             <div className="login__box">
@@ -241,7 +247,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         <Form.Item name="remember" rules={[]} noStyle valuePropName="checked">
                             <Checkbox style={{ fontSize: '1.8rem', color: '#0d1623' }}>記住我的身份證字號</Checkbox>
                         </Form.Item>
-                        <span className="a__link forgetPassword">忘記密碼</span>
+                        <a onClick={forgetPassword} className="a__link forgetPassword">
+                            忘記密碼
+                        </a>
                     </div>
 
                     <Form.Item label="">
@@ -251,7 +259,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     </Form.Item>
                 </Form>
                 <p className="a__box">
-                    <a className="a__link">還不是永豐金證券客戶</a>
+                    <a
+                        target="_blank"
+                        href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                        className="a__link"
+                    >
+                        還不是永豐金證券客戶
+                    </a>
                 </p>
             </div>
             {popup ? (
