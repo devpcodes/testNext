@@ -17,8 +17,8 @@ build_push2:
         - yarn build
         - ssh apuser@172.17.2.6 'mkdir -p ~/new_newweb'
         - ssh apuser@172.17.6.6 'mkdir -p ~/new_newweb'
-        - rsync -av --progress $CI_PROJECT_DIR/. apuser@172.17.2.6：~/new_newweb/. --exclude .git
-        - rsync -av --progress $CI_PROJECT_DIR/. apuser@172.17.6.6：~/new_newweb/. --exclude .git
+        - rsync -avz -e -ssh --progress $CI_PROJECT_DIR/. apuser@172.17.2.6:~/new_newweb --exclude .git
+        - rsync -avz -e -ssh --progress $CI_PROJECT_DIR/. apuser@172.17.6.6:~/new_newweb --exclude .git
 
 deploy_push2:
     stage: deploy
