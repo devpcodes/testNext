@@ -5,57 +5,30 @@ stages:
 ###########################################################################
 # PRODUCTION
 ###########################################################################
-build_nwweb1:
+build_push2:
     stage: build
     tags:
-        - nwweb1
+        - nwpush2
     only:
         - master
     script:
         - cd $CI_PROJECT_DIR
         - yarn
         - yarn build
-        - mkdir -p ~/new_newweb
-        - cp -fRv $CI_PROJECT_DIR/. ~/new_newweb
-        - cd ~/new_newweb
-        - mv .env.production.example .env
+        - ssh apuser@172.17.2.6 'mkdir -p ~/new_newweb'
+        - ssh apuser@172.17.6.6 'mkdir -p ~/new_newweb'
+        - rsync -av --progress $CI_PROJECT_DIR/. apuser@172.17.2.6：~/new_newweb/. --exclude .git
+        - rsync -av --progress $CI_PROJECT_DIR/. apuser@172.17.6.6：~/new_newweb/. --exclude .git
 
-deploy_nwweb1:
+deploy_push2:
     stage: deploy
     tags:
-        - nwweb1
+        - nwpush2
     only:
         - master
     script:
-        - pm2 stop new-newweb -s
-        - cd ~/new_newweb
-        - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
-
-build_nwweb2:
-    stage: build
-    tags:
-        - nwweb2
-    only:
-        - master
-    script:
-        - cd $CI_PROJECT_DIR
-        - yarn
-        - yarn build
-        - mkdir -p ~/new_newweb
-        - cp -fRv $CI_PROJECT_DIR/. ~/new_newweb
-        - cd ~/new_newweb
-        - mv .env.production.example .env
-
-deploy_nwweb2:
-    stage: deploy
-    tags:
-        - nwweb2
-    only:
-        - master
-    script:
-        - pm2 stop new-newweb -s
-        - cd ~/new_newweb
-        - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
+        - ssh apuser@172.17.2.6 'cd ~/new_newweb; NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb'
+        - ssh apuser@172.17.6.6 'cd ~/new_newweb; NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb'
 
 ###########################################################################
 # UAT
