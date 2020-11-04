@@ -4,11 +4,13 @@ import { PageHead } from '../components/includes/PageHead';
 
 function PlaceOrderPopupWindow() {
     const iframeDom = useRef(null);
+    // const source = useRef(null);
 
     useEffect(() => {
-        iframeDom.current.contentWindow.placeOrderPopupWindowContent = window.placeOrderPopupWindowContent;
-        iframeDom.current.contentWindow.placeOrderPopupWindowTheme = window.placeOrderPopupWindowTheme;
-        iframeDom.current.contentWindow.placeOrderPopupWindowCallBack = window.placeOrderPopupWindowCallBack;
+        // source.current = window.opener;
+        iframeDom.current.contentWindow.opener = window.opener;
+        console.log(`source:`, iframeDom.current.contentWindow.opener);
+        console.log(`window.opener:`, window.opener);
     }, []);
 
     const getIframeDom = dom => {
