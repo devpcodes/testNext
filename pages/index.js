@@ -14,6 +14,9 @@ const Home = function () {
         <div>
             <PageHead title={'永豐金理財網'} />
             <div>
+                <h1>{`${process.env.NEXT_PUBLIC_LYKAN}`}</h1>
+                <p>123456456789</p>
+                <h1>{`${process.env.NODE_ENV}`}</h1>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}`}
                     title="永豐金證券"

@@ -13,9 +13,9 @@ build_push2:
         - master
     script:
         - cd $CI_PROJECT_DIR
+        - mv .env.production.example .env
         - yarn
         - yarn build
-        - mv .env.production.example .env
         - ssh apuser@172.17.2.6 'mkdir -p ~/new_newweb'
         - ssh apuser@172.17.6.6 'mkdir -p ~/new_newweb'
         - rsync -avz -e ssh --progress $CI_PROJECT_DIR/. apuser@172.17.2.6:~/new_newweb --exclude .git
@@ -44,12 +44,12 @@ build_nwwebrd:
         - UAT
     script:
         - cd $CI_PROJECT_DIR
+        - mv .env.development.example .env
         - yarn
         - yarn build
         - mkdir -p ~/new_newweb
         - cp -fRv $CI_PROJECT_DIR/. ~/new_newweb
         - cd ~/new_newweb
-        - mv .env.development.example .env
 
 deploy_nwwebrd:
     stage: deploy
