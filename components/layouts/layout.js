@@ -218,7 +218,7 @@ const Layout = React.memo(({ children }) => {
         if (process.env.NODE_ENV === 'production') {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
-                    .register('/sw.js', { scope: '/' })
+                    .register(`${process.env.NEXT_PUBLIC_SUBPATH}sw.js`, { scope: '/newweb/' })
                     .then(() => {
                         // console.log('SW registered!', reg);
                     })
