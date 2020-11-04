@@ -27,7 +27,7 @@ deploy_nwweb1:
     only:
         - master
     script:
-        - pm2 stop -s new-newweb
+        - pm2 stop new-newweb -s
         - cd ~/new_newweb
         - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
 
@@ -53,7 +53,7 @@ deploy_nwweb2:
     only:
         - master
     script:
-        - pm2 stop -s new-newweb
+        - pm2 stop new-newweb -s
         - cd ~/new_newweb
         - NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb
 
