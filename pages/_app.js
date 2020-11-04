@@ -94,8 +94,14 @@ function MyApp({ Component, pageProps, router }) {
                 y.parentNode.insertBefore(x, y);
             }
         })({
-            sdk_url: location.protocol + '//' + location.host + '/js/sensorsdata.min.js',
-            heatmap_url: location.protocol + '//' + location.host + '/js/heatmap.min.js',
+            sdk_url:
+                location.protocol +
+                '//' +
+                location.host +
+                `${process.env.NEXT_PUBLIC_SUBPATH}` +
+                'js/sensorsdata.min.js',
+            heatmap_url:
+                location.protocol + '//' + location.host + `${process.env.NEXT_PUBLIC_SUBPATH}` + 'js/heatmap.min.js',
             name: 'sensors',
             server_url: sensorsServerUrl,
             heatmap: {},
