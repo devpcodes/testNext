@@ -117,7 +117,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 setIsLoading(false);
                 sensors.track('LoginResults', {
                     is_success: false,
-                    failure_reason: msg,
+                    failure_reason: '',
                     is_login: false,
                     page_url: window.location.href,
                     page_title: document.title,
@@ -129,7 +129,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //傳資料給神策
     const sensorsHandler = function (user_id) {
-        console.log('sensors');
+        console.log('sensors', user_id);
         try {
             sensors.login(user_id, function () {
                 sensors.track(
