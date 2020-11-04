@@ -27,8 +27,10 @@ deploy_push2:
     only:
         - master
     script:
-        - ssh apuser@172.17.2.6 'cd ~/new_newweb; NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb'
-        - ssh apuser@172.17.6.6 'cd ~/new_newweb; NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb'
+        - ssh apuser@172.17.2.6 'pm2 restart new-newweb'
+        - ssh apuser@172.17.6.6 'pm2 restart new-newweb'
+        # - ssh apuser@172.17.2.6 'cd ~/new_newweb; NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb'
+        # - ssh apuser@172.17.6.6 'cd ~/new_newweb; NODE_ENV=production pm2 start server.js --node-args="--max-http-header-size=16000" -n new-newweb'
 
 ###########################################################################
 # UAT
