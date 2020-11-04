@@ -27,7 +27,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
             setTimeout(() => {
                 if (iframeDom.current != null) {
                     iframeDom.current.height = iHeight;
-                    console.log(`[] - iframeDom.current.height:`, iframeDom.current.height);
                 }
             }, 100);
         }
@@ -43,7 +42,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
 
     useEffect(() => {
         iframeDom.current.height = iHeight;
-        console.log(`[iHeight] - iframeDom.current.height:`, iframeDom.current.height);
     }, [iHeight]);
 
     useEffect(() => {
