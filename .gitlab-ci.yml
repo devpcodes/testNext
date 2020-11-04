@@ -15,6 +15,7 @@ build_push2:
         - cd $CI_PROJECT_DIR
         - yarn
         - yarn build
+        - mv .env.development.example .env
         - ssh apuser@172.17.2.6 'mkdir -p ~/new_newweb'
         - ssh apuser@172.17.6.6 'mkdir -p ~/new_newweb'
         - rsync -avz -e ssh --progress $CI_PROJECT_DIR/. apuser@172.17.2.6:~/new_newweb --exclude .git
