@@ -129,7 +129,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //傳資料給神策
     const sensorsHandler = function (user_id) {
-        console.log('sensors', user_id);
         try {
             sensors.login(user_id, function () {
                 sensors.track(
@@ -152,13 +151,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //神策傳送成功後 做的事
     const afterSensors = function () {
-        console.log('after sensors');
         //iframe登入處理(來自舊理財網)
         if (isIframe()) {
-            console.log('is iframe');
             iframeHandler();
         } else {
-            console.log('not iframe');
             successHandler();
         }
     };
