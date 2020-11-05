@@ -1,10 +1,8 @@
-import axios from '../../myAxios';
-
-const isServer = typeof window === 'undefined';
+import { getLykanInstance } from '../../myAxios';
 
 export const getNav = async function ({ token = '', domain = '', isMobile = false } = {}) {
-    const url = isServer ? `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/getMenu` : '/lykan/api/v1/service/getMenu';
-    const res = await axios.post(url, {
+    const url = '/service/getMenu';
+    const res = await getLykanInstance().post(url, {
         token,
         domain,
         isMobile,
