@@ -80,7 +80,7 @@ const Layout = React.memo(({ children }) => {
     }, [isLogin]);
 
     useEffect(() => {
-        // pwaHandler();
+        pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
         const timeout = setTimeout(() => {
