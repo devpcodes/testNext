@@ -50,7 +50,6 @@ const createA8Instance = (version = a8DefaultVersion, auth = a8Auth) =>
     axios.create({
         baseURL: `${process.env.NEXT_PUBLIC_A8}/${version}/`,
         timeout: 7000,
-        withCredentials: true,
         auth,
         validateStatus: function (status) {
             return status >= 200 && status < 300;
