@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { PageHead } from '../components/includes/PageHead';
@@ -7,15 +7,6 @@ import { objectToQueryHandler } from '../services/objectToQueryHandler';
 function H5_goOrder() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
-    const iframeDom = useRef(null);
-    // const source = useRef(null);
-
-    // useEffect(() => {
-    //     const qStr = objectToQueryHandler(router.query);
-    //     if (qStr) {
-    //         setQueryStr(qStr);
-    //     }
-    // }, []);
 
     useEffect(() => {
         const qStr = objectToQueryHandler(router.query);
@@ -23,11 +14,6 @@ function H5_goOrder() {
             setQueryStr(qStr);
         }
     }, [router.query]);
-
-    const getIframeDom = dom => {
-        console.log('dom', dom);
-        iframeDom.current = dom;
-    };
 
     return (
         <>
@@ -37,7 +23,6 @@ function H5_goOrder() {
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/H5_goOrder${queryStr}`}
                     title="永豐金證券"
                     iHeight={88}
-                    getIframeDom={getIframeDom}
                 />
             </div>
         </>
