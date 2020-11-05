@@ -1,13 +1,10 @@
-import axios from '../../myAxios';
+import { getLykanInstance } from '../../myAxios';
+
 export const verifyMenu = async function (url, token) {
-    axios.defaults.withCredentials = true;
-    const res = await axios({
-        method: 'post',
-        url: '/lykan/api/v1/service/verifyMenu',
-        data: {
-            url,
-            token,
-        },
+    const reqUrl = '/service/verifyMenu';
+    const res = await getLykanInstance().post(reqUrl, {
+        url,
+        token,
     });
     return res;
 };
