@@ -20,7 +20,7 @@ function Subbrokerage() {
             Modal.error({ content: '無可交易帳號' });
             router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
         }
-    }, []);
+    }, [accounts]);
     return (
         <>
             <PageHead title={'海外股票交易帳務整合'} />
