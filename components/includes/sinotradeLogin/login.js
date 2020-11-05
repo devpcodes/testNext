@@ -139,7 +139,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //傳資料給神策
     const sensorsHandler = function (user_id) {
         console.log('browser', checkBrowser());
-        if (checkBrowser() === 'ie') {
+        if (checkBrowser() === 'ie' && process.env.NEXT_PUBLIC_ENV === 'development') {
             afterSensors();
             return;
         }
