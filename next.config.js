@@ -12,11 +12,13 @@ module.exports = withOptimizedImages({
             clientsClaim: true,
             skipWaiting: true,
             globPatterns: ['.next/static/*', '.next/static/commons/*'],
+            //無效
             modifyUrlPrefix: {
-                '.next': '/_next',
+                '.next': '/newweb/_next',
             },
             runtimeCaching: cache,
             globIgnores: ['**/webpack-hmr'],
+            swURLRoot: '/newweb/static/workbox',
         };
         if (!isServer && !dev) {
             config.plugins.push(
