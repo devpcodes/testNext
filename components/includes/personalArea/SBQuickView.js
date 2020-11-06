@@ -11,13 +11,12 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
             </div>
             <style jsx>{`
                 .SBQuickView__container {
-                    margin-top: 18px;
                     font-size: 1.6rem;
                     color: #0d1623;
-                    /* padding: 0 30px; */
                 }
                 @media (max-width: 768px) {
                     .SBQuickView__container {
+                        margin-top: 18px;
                         width: 100%;
                         text-align: center;
                         color: white;
@@ -32,11 +31,6 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
                         color: white;
                         font-size: 2rem;
                     }
-                }
-                .SBQuickView__container {
-                    margin-top: 18px;
-                    font-size: 1.6rem;
-                    color: #0d1623;
                 }
                 .currentDay {
                     margin-top: 20px;
