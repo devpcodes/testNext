@@ -7,6 +7,7 @@ import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 import { submit } from '../../../services/components/login/login';
+import { checkBrowser } from '../../../services/checkBrowser';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
@@ -103,6 +104,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             try {
                 const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
+                console.log('res', res);
                 if (res.data.success) {
                     //記身份證字號
                     if (form.getFieldValue('remember')) {
@@ -110,8 +112,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     } else {
                         localStorage.removeItem('userID');
                     }
-                    //傳資料給神策
-                    sensorsHandler(form.getFieldValue('account'));
+
+                    if (res.data.result.isFirstLogin != null && res.data.result.isFirstLogin) {
+                        console.log('firstLogin');
+                        router.push('/User_ChangePassword', `${process.env.NEXT_PUBLIC_SUBPATH}User_ChangePassword`);
+                        return;
+                    } else {
+                        //傳資料給神策
+                        sensorsHandler(form.getFieldValue('account'));
+                    }
                 }
             } catch (error) {
                 setIsLoading(false);
@@ -129,6 +138,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //傳資料給神策
     const sensorsHandler = function (user_id) {
+        console.log('browser', checkBrowser(), process.env.NEXT_PUBLIC_ENV);
+        if (checkBrowser() === 'ie' && process.env.NEXT_PUBLIC_ENV === 'development') {
+            afterSensors();
+            return;
+        }
         try {
             sensors.login(user_id, function () {
                 sensors.track(
