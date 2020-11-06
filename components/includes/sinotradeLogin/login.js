@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox } from 'antd';
@@ -16,6 +17,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         const account = localStorage.getItem('userID');
         if (account) {
@@ -113,11 +115,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         localStorage.removeItem('userID');
                     }
 
-                    if (res.data.result.isFirstLogin != null && res.data.result.isFirstLogin) {
-                        console.log('firstLogin');
-                        router.push('/User_ChangePassword', `${process.env.NEXT_PUBLIC_SUBPATH}User_ChangePassword`);
-                        return;
-                    } else {
+                    if (!checkFirstLogin(res.data)) {
                         //傳資料給神策
                         sensorsHandler(form.getFieldValue('account'));
                     }
@@ -134,6 +132,21 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 });
             }
         }
+    };
+
+    const checkFirstLogin = function (data) {
+        if (data.result.isFirstLogin != null && data.result.isFirstLogin) {
+            Modal.success({
+                content: `初次登入，請修改密碼後重新登入，謝謝`,
+                onOk() {
+                    onClose();
+                    router.push('/User_ChangePassword', `${process.env.NEXT_PUBLIC_SUBPATH}User_ChangePassword`);
+                },
+            });
+            return true;
+        }
+
+        return false;
     };
 
     //傳資料給神策
