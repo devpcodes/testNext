@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Modal } from 'antd';
+import { checkServer } from './checkServer';
 
 const lykanDefaultVersion = 'v1';
 const a8DefaultVersion = 'v1';
@@ -9,7 +10,7 @@ const a8Auth = {
 };
 
 const errorHandler = error => {
-    const isServer = typeof window === 'undefined';
+    const isServer = checkServer();
     const defaultErrorMsg = '伺服器錯誤，請稍後再試';
 
     if (error.response == null) {

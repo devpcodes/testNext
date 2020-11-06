@@ -1,5 +1,6 @@
 import { submit } from '../services/components/login/trustLogin';
 import { useEffect } from 'react';
+import { checkServer } from '../services/checkServer';
 
 const Navigation = () => {
     useEffect(() => {
@@ -8,7 +9,7 @@ const Navigation = () => {
 
     const getQueryString = name => {
         const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-        const isServer = typeof window === 'undefined';
+        const isServer = checkServer();
         if (!isServer) {
             const r = location.search.substr(1).match(reg);
             if (r != null) return unescape(decodeURI(r[2]));
