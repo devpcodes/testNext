@@ -19,27 +19,29 @@ const Navigation = () => {
     const queryStringDict = {
         platform: getQueryString('platform'),
         source: getQueryString('source'),
-        page: getQueryString('page') ? getQueryString('page') : '/',
+        page: getQueryString('page')
+            ? `${process.env.NEXT_PUBLIC_SUBPATH}${getQueryString('page')}`
+            : `${process.env.NEXT_PUBLIC_SUBPATH}`,
         otp: getQueryString('otp'),
     };
 
     const canTrustDict = {
         Bond_Securities: {
-            target: '/',
+            target: `${process.env.NEXT_PUBLIC_SUBPATH}`,
             needLogin: true,
-            errorPage: '/',
+            errorPage: `${process.env.NEXT_PUBLIC_SUBPATH}`,
             loginType: 'trust',
         },
         MMA: {
-            target: '/',
+            target: `${process.env.NEXT_PUBLIC_SUBPATH}`,
             needLogin: true,
-            errorPage: '/',
+            errorPage: `${process.env.NEXT_PUBLIC_SUBPATH}`,
             loginType: 'trust',
         },
         Line: {
-            target: '/',
+            target: `${process.env.NEXT_PUBLIC_SUBPATH}`,
             needLogin: false,
-            errorPage: '/',
+            errorPage: `${process.env.NEXT_PUBLIC_SUBPATH}`,
             loginType: 'trust',
         },
     };
@@ -48,16 +50,14 @@ const Navigation = () => {
         try {
             if (canTrustDict[queryStringDict.platform].needLogin) {
                 const res = await submit(queryStringDict.otp);
-                console.log(res);
                 if (res.data.success === true) {
                     sessionStorage.setItem('source', queryStringDict.platform.toLowerCase());
-                    // 導回設定頁面
+                    location.href = queryStringDict.page;
                 }
             }
         } catch (e) {
-            console.log(e);
-            // alert('失敗');
-            // 導回未登入首頁 ??
+            location.href = canTrustDict[queryStringDict.platform].errorPage;
+            alert('登入失敗，請重新登入');
         }
     };
 
