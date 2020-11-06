@@ -185,7 +185,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const afterSensors = function () {
         //iframe登入處理(來自舊理財網)
         if (isIframe) {
-            iframeHandler();
+            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
         } else {
             successHandler();
         }
@@ -193,8 +193,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //忘記密碼
     const forgetPassword = function () {
-        onClose();
-        router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+        if (isIframe) {
+            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + 'Service_ForgetPassword');
+        } else {
+            onClose();
+            router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+        }
     };
 
     //判斷是不是iframe
@@ -206,11 +210,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     //參考舊理財網
-    const iframeHandler = function () {
+    const iframeHandler = function (url) {
         parent.postMessage(
             {
                 origin: 'NewWeb',
-                redirectURL: location.origin + process.env.NEXT_PUBLIC_SUBPATH,
+                redirectURL: url,
                 msg: '',
             },
             '*',
@@ -218,6 +222,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
         // postMessage 完之後，清除所有 input 資料。
         location.reload();
+    };
+
+    const signUpHandler = function (e) {
+        e.preventDefault();
+        iframeHandler(
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
+        );
     };
 
     return (
@@ -370,13 +381,24 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     </Form.Item>
                 </Form>
                 <p className="a__box">
-                    <a
-                        target="_blank"
-                        href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
-                        className="a__link"
-                    >
-                        還不是永豐金證券客戶
-                    </a>
+                    {!isIframe ? (
+                        <a
+                            target="_blank"
+                            href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            className="a__link"
+                        >
+                            還不是永豐金證券客戶
+                        </a>
+                    ) : (
+                        <a
+                            target="_blank"
+                            href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            className="a__link"
+                            onClick={signUpHandler}
+                        >
+                            還不是永豐金證券客戶
+                        </a>
+                    )}
                 </p>
             </div>
             {popup ? (
@@ -538,6 +560,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .ant-form-item {
                     margin: ${isIframe ? '0 0 15px' : '0 0 24px'};
+                }
+                .ant-modal {
+                    top: ${isIframe ? '0' : '100px'};
                 }
 
                 /* Change Autocomplete styles in Chrome*/
