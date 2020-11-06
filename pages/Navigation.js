@@ -62,10 +62,6 @@ const Navigation = () => {
     return <></>;
 };
 
-Navigation.getLayout = page => (
-    <>
-        <Navigation>{page}</Navigation>
-    </>
-);
+Navigation.getLayout = Page => Page;
 
 export default Navigation;

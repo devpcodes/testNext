@@ -46,10 +46,6 @@ function H5_Option_Single() {
     );
 }
 
-H5_Option_Single.getLayout = page => (
-    <>
-        <H5_Option_Single>{page}</H5_Option_Single>
-    </>
-);
+H5_Option_Single.getLayout = Page => Page;
 
 export default H5_Option_Single;

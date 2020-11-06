@@ -44,10 +44,6 @@ function H5_Future_Duplex() {
     );
 }
 
-H5_Future_Duplex.getLayout = page => (
-    <>
-        <H5_Future_Duplex>{page}</H5_Future_Duplex>
-    </>
-);
+H5_Future_Duplex.getLayout = Page => Page;
 
 export default H5_Future_Duplex;

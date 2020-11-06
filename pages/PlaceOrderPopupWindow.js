@@ -28,10 +28,6 @@ function PlaceOrderPopupWindow() {
     );
 }
 
-PlaceOrderPopupWindow.getLayout = page => (
-    <>
-        <PlaceOrderPopupWindow>{page}</PlaceOrderPopupWindow>
-    </>
-);
+PlaceOrderPopupWindow.getLayout = Page => Page;
 
 export default PlaceOrderPopupWindow;
