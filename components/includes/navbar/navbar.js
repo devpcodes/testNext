@@ -78,7 +78,8 @@ const Navbar = React.memo(props => {
                                     </a>
                                 ) : (
                                     <Link
-                                        href={
+                                        href={''}
+                                        as={
                                             lv1Item.isFullUrl
                                                 ? `${lv1Item.url}`
                                                 : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`
@@ -115,11 +116,12 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
+                    <Link href={''} as={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
                     <Link
-                        href={
+                        href={''}
+                        as={
                             !!accountMarket
                                 ? `${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount?mkt=${marketMappingList[accountMarket]}`
                                 : `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`
