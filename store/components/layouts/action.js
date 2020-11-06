@@ -1,5 +1,6 @@
 import * as actionType from './actionType';
 import { getNav } from '../../../services/components/header/navFetcher';
+import { checkServer } from '../../../services/checkServer';
 
 export const resize = (winWidth, isMobile) => {
     const payload = {
@@ -35,7 +36,7 @@ export const setMaskVisible = bool => {
 
 export const setNavItems = data => async dispatch => {
     try {
-        const isServer = typeof window === 'undefined';
+        const isServer = checkServer();
         const res = await getNav(data);
         const navData = res.result;
 
