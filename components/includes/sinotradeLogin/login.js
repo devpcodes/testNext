@@ -211,7 +211,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             {
                 origin: 'NewWeb',
                 redirectURL: location.origin + process.env.NEXT_PUBLIC_SUBPATH,
-                msg: msg,
+                msg: '',
             },
             '*',
         );
@@ -271,6 +271,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     onFieldsChange={fieldsChange}
                     onFinish={finishHandler}
                     initialValues={{ remember: false }}
+                    style={{ marginTop: isIframe ? '12px' : 0 }}
                 >
                     <div className="account__box">
                         <Form.Item
@@ -299,7 +300,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 style={{
                                     transition: 'none',
                                     width: '100%',
-                                    height: '54px',
+                                    height: isIframe ? '34px' : '54px',
                                     border: 'solid 1px #e6ebf5',
                                     fontSize: accountFontSize,
                                 }}
@@ -340,7 +341,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     >
                         <Input.Password
                             placeholder="密碼(7-12位元)"
-                            style={{ width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: '1.8rem' }}
+                            style={{
+                                width: '100%',
+                                height: isIframe ? '34px' : '54px',
+                                border: 'solid 1px #e6ebf5',
+                                fontSize: '1.8rem',
+                            }}
                         />
                     </Form.Item>
                     <div className="remember__box">
@@ -353,7 +359,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     </div>
 
                     <Form.Item label="">
-                        <Button loading={isLoading} type="primary" htmlType="submit" style={{ marginTop: '20px' }}>
+                        <Button
+                            loading={isLoading}
+                            type="primary"
+                            htmlType="submit"
+                            style={{ marginTop: isIframe ? '10px' : '20px' }}
+                        >
                             登入
                         </Button>
                     </Form.Item>
@@ -503,7 +514,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .account__box span {
                     position: absolute;
-                    top: 14px;
+                    top: ${isIframe ? '4px' : '14px'};
                     font-size: 1.8rem;
                     padding-left: 12px;
                 }
@@ -514,7 +525,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             <style global jsx>{`
                 .login__container .ant-btn-primary {
                     background: #c43826;
-                    height: 54px;
+                    height: ${isIframe ? '34px' : '54px'};
                     border: none;
                     width: 100%;
                     font-size: 1.8rem;
@@ -524,6 +535,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .ant-modal-confirm-body .ant-modal-confirm-content {
                     font-size: 1.6rem;
+                }
+                .ant-form-item {
+                    margin: ${isIframe ? '0 0 15px' : '0 0 24px'};
                 }
 
                 /* Change Autocomplete styles in Chrome*/
