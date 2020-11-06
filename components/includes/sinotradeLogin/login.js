@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox } from 'antd';
 import logo from '../../../resources/images/components/login/logo.png';
@@ -8,6 +9,7 @@ import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-clos
 import { submit } from '../../../services/components/login/login';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
+    const router = useRouter();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
     const [encryptAccount, setEncryptAccount] = useState('');
@@ -87,6 +89,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         accountInput.current.focus();
     };
 
+    //登入動作處理
     const finishHandler = async function () {
         if (isLoading) {
             return false;
@@ -101,17 +104,88 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
                 if (res.data.success) {
+                    //記身份證字號
                     if (form.getFieldValue('remember')) {
                         localStorage.setItem('userID', form.getFieldValue('account'));
                     } else {
                         localStorage.removeItem('userID');
                     }
-                    successHandler();
+                    //傳資料給神策
+                    sensorsHandler(form.getFieldValue('account'));
                 }
             } catch (error) {
                 setIsLoading(false);
+                sensors.track('LoginResults', {
+                    is_success: false,
+                    failure_reason: '',
+                    is_login: false,
+                    page_url: window.location.href,
+                    page_title: document.title,
+                    page_url_path: window.location.pathname,
+                });
             }
         }
+    };
+
+    //傳資料給神策
+    const sensorsHandler = function (user_id) {
+        try {
+            sensors.login(user_id, function () {
+                sensors.track(
+                    'LoginResults',
+                    {
+                        is_success: true,
+                        failure_reason: '',
+                        is_login: true,
+                        page_url: window.location.href,
+                        page_title: document.title,
+                        page_url_path: window.location.pathname,
+                    },
+                    afterSensors,
+                );
+            });
+        } catch (error) {
+            afterSensors();
+        }
+    };
+
+    //神策傳送成功後 做的事
+    const afterSensors = function () {
+        //iframe登入處理(來自舊理財網)
+        if (isIframe()) {
+            iframeHandler();
+        } else {
+            successHandler();
+        }
+    };
+
+    //忘記密碼
+    const forgetPassword = function () {
+        onClose();
+        router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+    };
+
+    //判斷是不是iframe
+    const isIframe = function () {
+        try {
+            return window.self !== window.top;
+        } catch (error) {}
+        return false;
+    };
+
+    //參考舊理財網
+    const iframeHandler = function () {
+        parent.postMessage(
+            {
+                origin: 'NewWeb',
+                redirectURL: location.origin + process.env.NEXT_PUBLIC_SUBPATH,
+                msg: msg,
+            },
+            '*',
+        );
+
+        // postMessage 完之後，清除所有 input 資料。
+        location.reload();
     };
 
     return (
@@ -241,7 +315,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         <Form.Item name="remember" rules={[]} noStyle valuePropName="checked">
                             <Checkbox style={{ fontSize: '1.8rem', color: '#0d1623' }}>記住我的身份證字號</Checkbox>
                         </Form.Item>
-                        <span className="a__link forgetPassword">忘記密碼</span>
+                        <a onClick={forgetPassword} className="a__link forgetPassword">
+                            忘記密碼
+                        </a>
                     </div>
 
                     <Form.Item label="">
@@ -251,7 +327,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     </Form.Item>
                 </Form>
                 <p className="a__box">
-                    <a className="a__link">還不是永豐金證券客戶</a>
+                    <a
+                        target="_blank"
+                        href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                        className="a__link"
+                    >
+                        還不是永豐金證券客戶
+                    </a>
                 </p>
             </div>
             {popup ? (

@@ -14,10 +14,20 @@ export const HeaderCallToAction = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     const goSignUp = () => {
-        router.push('/OpenAccount', `${process.env.NEXT_PUBLIC_SUBPATH}OpenAccount`);
+        return window.open(
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
+        );
     };
     const goOrder = () => {
-        router.push('/goOrder', `${process.env.NEXT_PUBLIC_SUBPATH}goOrder`);
+        const iHeight = 700;
+        const iWidth = 440;
+        const iTop = (window.screen.availHeight - 30 - iHeight) / 2; //視窗的垂直位置;
+        const iLeft = (window.screen.availWidth - 10 - iWidth) / 2; //視窗的水平位置;
+        return window.open(
+            `${process.env.NEXT_PUBLIC_SUBPATH}goOrder?nav=0`,
+            'goOrder',
+            `height=${iHeight},innerHeight=${iHeight},width=${iWidth},innerWidth=${iWidth},top=${iTop},left=${iLeft}`,
+        );
     };
     const goLogIn = () => {
         if (router.pathname !== '/errPage') {

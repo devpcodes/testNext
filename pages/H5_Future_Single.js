@@ -15,15 +15,13 @@ function H5_Future_Single() {
     }, []);
 
     const messageEventHandler = e => {
-        if (e.data.optionList != null) {
+        if (e.data.length != null) {
             iframeDom.current.contentWindow.postMessage(e.data, '*');
             source.current = e.source;
         }
-        if (e.data.optionList == null) {
-            if (e.data.product != null) {
-                source.current.postMessage(e.data, '*');
-                window.close();
-            }
+        if (e.data.product != null) {
+            source.current.postMessage(e.data, '*');
+            window.close();
         }
     };
 

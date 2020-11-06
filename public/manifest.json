@@ -4,8 +4,8 @@
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
+    "scope": "/newweb/",
+    "start_url": "/newweb/",
     "icons": [
         {
             "src": "images/icons/36.png",

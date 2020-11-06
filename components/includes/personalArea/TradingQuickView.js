@@ -151,7 +151,7 @@ export const TradingQuickView = () => {
     //當日的不拿，有值的才拿
     const getStockSummarisePrtlosInfo = function () {
         const tableInfo = [];
-        if (summarisePrtlos.length !== 0) {
+        if (typeof summarisePrtlos === 'object' && summarisePrtlos.length !== 0) {
             summarisePrtlos.forEach(obj => {
                 if (obj.t1netamt != 0) {
                     tableInfo.push({
@@ -198,7 +198,7 @@ export const TradingQuickView = () => {
     //當日交割款全幣別
     const getStockCurrencyData = () => {
         const currencyInfo = [];
-        if (summarisePrtlos.length !== 0) {
+        if (typeof summarisePrtlos === 'object' && summarisePrtlos.length !== 0) {
             summarisePrtlos.forEach(obj => {
                 if (obj.tnetamt != 0) {
                     let item = {};

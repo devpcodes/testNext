@@ -5,6 +5,8 @@ import { setNavItems } from '../store/components/layouts/action';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
 import { useRouter } from 'next/router';
 import { PageHead } from '../components/includes/PageHead';
+import { checkServer } from '../services/checkServer';
+import { getParamFromQueryString } from '../services/getParamFromQueryString';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -13,13 +15,6 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function GoOrder() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
-
-    useEffect(() => {
-        const qStr = objectToQueryHandler(router.query);
-        if (qStr) {
-            setQueryStr(qStr);
-        }
-    }, []);
 
     useEffect(() => {
         const qStr = objectToQueryHandler(router.query);
@@ -41,11 +36,19 @@ function GoOrder() {
         </>
     );
 }
-// eslint-disable-next-line react/display-name
-// GoOrder.getLayout = page => (
-//     <>
-//       <GoOrder>{page}</GoOrder>
-//     </>
-// )
+
+// nav=0 為無 header，nav=1 為有 header。預設為：有 header。
+const setGoOrderLayout = () => {
+    const isServer = checkServer();
+    if (!isServer) {
+        const nav = getParamFromQueryString('nav');
+        if (nav == '0') {
+            // eslint-disable-next-line react/display-name
+            GoOrder.getLayout = page => <GoOrder>{page}</GoOrder>;
+        }
+    }
+};
+
+setGoOrderLayout();
 
 export default GoOrder;

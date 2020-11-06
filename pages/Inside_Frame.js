@@ -6,7 +6,7 @@ import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { PageHead } from '../components/includes/PageHead';
 import { getCookie } from '../services/components/layouts/cookieController';
-import axios from '../services/myAxios';
+import { getLykanInstance } from '../services/myAxios';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -19,8 +19,8 @@ function Inside_Frame() {
     useEffect(() => {
         const setEBillUrl = async ({ token = '' } = {}) => {
             try {
-                const url = '/lykan/api/v1/auth/getEStatementOTP';
-                const res = await axios.post(url, {
+                const url = '/auth/getEStatementOTP';
+                const res = await getLykanInstance().post(url, {
                     token,
                 });
                 return setUrl(res.data?.result?.url);

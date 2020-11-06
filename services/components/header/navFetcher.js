@@ -1,9 +1,8 @@
-import axios from '../../myAxios';
+import { getLykanInstance } from '../../myAxios';
 
 export const getNav = async function ({ token = '', domain = '', isMobile = false } = {}) {
-    // https://servicerd.sinotrade.com.tw/lykan/api/v1/service/getMenu
-    const url = '/lykan/api/v1/service/getMenu';
-    const res = await axios.post(url, {
+    const url = '/service/getMenu';
+    const res = await getLykanInstance().post(url, {
         token,
         domain,
         isMobile,

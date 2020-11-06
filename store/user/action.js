@@ -30,6 +30,7 @@ export const getUserSettings = userId => async dispatch => {
         return dispatch(setUserSettings(userSettingsData));
     } catch (error) {
         console.error(`error:`, error);
+        return dispatch(setUserSettings({}));
     }
 };
 

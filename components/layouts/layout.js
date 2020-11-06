@@ -80,7 +80,7 @@ const Layout = React.memo(({ children }) => {
     }, [isLogin]);
 
     useEffect(() => {
-        // pwaHandler();
+        pwaHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
         const timeout = setTimeout(() => {
@@ -140,20 +140,18 @@ const Layout = React.memo(({ children }) => {
         queryStr.current = router.query;
     }, [router.query]);
 
-    const getUrlParams = () => {
-        return new URLSearchParams(window.location.search);
-    };
-
+    // 由 queryString 取得來源
     const getSourceFromQueryString = () => {
-        const params = getUrlParams();
-        let sourceFromQueryString = '';
+        const params = new URLSearchParams(window.location.search);
+        let sourceFromQueryString;
 
         if (params.has('platform')) {
             switch (params.get('platform')) {
                 case 'Line':
-                    sourceFromQueryString = 'line';
+                    sourceFromQueryString = 'Line';
                     break;
                 default:
+                    sourceFromQueryString = '';
                     break;
             }
         }
@@ -161,20 +159,22 @@ const Layout = React.memo(({ children }) => {
         return sourceFromQueryString;
     };
 
+    // 依據來源設置 fetch 選單所帶的 domain 值
     const sourceHandler = () => {
         const sourceFromQueryString = getSourceFromQueryString();
-        const sourceFromSessionStorage = sessionStorage.getItem('source');
+        const sourceFromSessionStorage = sessionStorage.getItem('platform') || sessionStorage.getItem('source');
         let source = sourceFromQueryString || sourceFromSessionStorage;
-        let domain = 'newweb';
+        let domain;
 
         switch (source) {
             case 'mma':
                 domain = 'mma';
                 break;
-            case 'line':
+            case 'Line':
                 domain = 'line';
                 break;
             default:
+                domain = 'newweb';
                 break;
         }
 
@@ -218,7 +218,7 @@ const Layout = React.memo(({ children }) => {
         if (process.env.NODE_ENV === 'production') {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
-                    .register('/sw.js', { scope: '/' })
+                    .register(`${process.env.NEXT_PUBLIC_SUBPATH}sw.js`, { scope: '/newweb/' })
                     .then(() => {
                         // console.log('SW registered!', reg);
                     })
