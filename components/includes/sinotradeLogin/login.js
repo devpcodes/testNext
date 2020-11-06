@@ -14,10 +14,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
+
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
-
+    const [isIframe, setIsIframe] = useState(false);
     useEffect(() => {
         const account = localStorage.getItem('userID');
         if (account) {
@@ -32,6 +33,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             });
         }
         window.addEventListener('keypress', winKeyDownHandler, false);
+        if (checkIframe()) {
+            setIsIframe(true);
+        }
+
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
         };
@@ -179,7 +184,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //神策傳送成功後 做的事
     const afterSensors = function () {
         //iframe登入處理(來自舊理財網)
-        if (isIframe()) {
+        if (isIframe) {
             iframeHandler();
         } else {
             successHandler();
@@ -193,7 +198,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     //判斷是不是iframe
-    const isIframe = function () {
+    const checkIframe = function () {
         try {
             return window.self !== window.top;
         } catch (error) {}
@@ -218,7 +223,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     return (
         <div className="login__container">
             <div className="login__box">
-                {!isPC ? (
+                {!isPC && !isIframe ? (
                     <div
                         className="close__box"
                         onClick={onClose}
@@ -248,8 +253,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         <span className="close__img"></span>
                     </div>
                 ) : null}
-                {isPC ? null : <div className="login__logo"></div>}
-                <p className="login__title">歡迎來到永豐金證券</p>
+                {isPC ? null : !isIframe && <div className="login__logo"></div>}
+                {!isIframe && <p className="login__title">歡迎來到永豐金證券</p>}
                 {isPC ? (
                     <div className="loginService__box">
                         <span className="service__title">登入後享受更多服務</span>
