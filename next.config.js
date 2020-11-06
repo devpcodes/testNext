@@ -8,16 +8,22 @@ module.exports = withOptimizedImages({
     assetPrefix: isProd ? '/newweb' : '',
     // inlineImageLimit: isProd ? 16384 : 0,
     webpack: (config, { isServer, buildId, dev }) => {
-        const workboxOptions = {
-            clientsClaim: true,
-            skipWaiting: true,
-            globPatterns: ['.next/static/*', '.next/static/commons/*'],
-            modifyUrlPrefix: {
-                '.next': '/_next',
-            },
-            runtimeCaching: cache,
-            globIgnores: ['**/webpack-hmr'],
-        };
+        let workboxOptions = {};
+        if (isProd) {
+            workboxOptions = {
+                clientsClaim: true,
+                skipWaiting: true,
+                globPatterns: ['.next/static/*', '.next/static/commons/*'],
+                //無效
+                modifyUrlPrefix: {
+                    '.next': '/newweb/_next',
+                },
+                runtimeCaching: cache,
+                globIgnores: ['**/webpack-hmr'],
+                swURLRoot: '/newweb/static/workbox',
+            };
+        }
+
         if (!isServer && !dev) {
             config.plugins.push(
                 new NextWorkboxPlugin({

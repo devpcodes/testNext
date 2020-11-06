@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { PageHead } from '../components/includes/PageHead';
 
@@ -46,10 +46,6 @@ function H5_Option_Single() {
     );
 }
 
-H5_Option_Single.getLayout = page => (
-    <>
-        <H5_Option_Single>{page}</H5_Option_Single>
-    </>
-);
+H5_Option_Single.getLayout = Page => Page;
 
 export default H5_Option_Single;

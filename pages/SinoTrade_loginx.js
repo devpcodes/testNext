@@ -22,9 +22,6 @@ const SinoTradeLoginPage = function () {
     );
 };
 
-// SinoTradeLoginPage.getLayout = page => (
-//     <>
-//       <SinoTradeLoginPage>{page}</SinoTradeLoginPage>
-//     </>
-// )
+// SinoTradeLoginPage.getLayout = Page => Page;
+
 export default SinoTradeLoginPage;

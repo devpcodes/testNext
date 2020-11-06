@@ -54,7 +54,7 @@ const Navbar = React.memo(props => {
     return (
         <div className={`${showMenu ? '' : 'navbar--hide'}`}>
             <div className="navbar__lv1__item navbar__lv1__item__title menu__ctrl">
-                <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
+                <Link href={''} as={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
                     <a className="header__logo">
                         <img src={logo}></img>
                     </a>
@@ -78,7 +78,8 @@ const Navbar = React.memo(props => {
                                     </a>
                                 ) : (
                                     <Link
-                                        href={
+                                        href={''}
+                                        as={
                                             lv1Item.isFullUrl
                                                 ? `${lv1Item.url}`
                                                 : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`
@@ -115,11 +116,12 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
+                    <Link href={''} as={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
                     <Link
-                        href={
+                        href={''}
+                        as={
                             !!accountMarket
                                 ? `${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount?mkt=${marketMappingList[accountMarket]}`
                                 : `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`
@@ -172,7 +174,7 @@ const Navbar = React.memo(props => {
                     border-width: 0 5.5px 8px 5.5px;
                     border-color: transparent transparent ${theme.colors.secondary} transparent;
                     position: absolute;
-                    bottom: 0;
+                    bottom: -6px;
                     left: calc(50% - 6px);
                     display: none;
                 }
@@ -180,8 +182,8 @@ const Navbar = React.memo(props => {
                 .navbar__lv2 {
                     margin: 0;
                     padding: 0;
-                    display: none;
                     position: absolute;
+                    display: flex;
                     top: 70px;
                     left: 0;
                     padding: 18px 36px;
@@ -190,6 +192,9 @@ const Navbar = React.memo(props => {
                     background: #fff;
                     z-index: 501;
                     text-align: left;
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: visibility 0.4s, opacity 0.4s linear;
                 }
                 .navbar__lv2.right {
                     left: unset;
@@ -216,6 +221,8 @@ const Navbar = React.memo(props => {
                         display: block;
                     }
                     .navbar__lv1__item:hover .navbar__lv2 {
+                        visibility: visible;
+                        opacity: 1;
                         display: flex;
                     }
                     .navbar__lv1__item:hover .navbar__lv1__item__title:after {
@@ -226,6 +233,8 @@ const Navbar = React.memo(props => {
 
                 @media (max-width: 1024px) {
                     .navbar__lv2--show {
+                        visibility: visible;
+                        opacity: 1;
                         display: flex;
                     }
                     .navbar__content {

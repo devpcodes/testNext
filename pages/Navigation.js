@@ -1,5 +1,6 @@
 import { submit } from '../services/components/login/trustLogin';
 import { useEffect } from 'react';
+import { checkServer } from '../services/checkServer';
 
 const Navigation = () => {
     useEffect(() => {
@@ -8,7 +9,7 @@ const Navigation = () => {
 
     const getQueryString = name => {
         const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-        const isServer = typeof window === 'undefined';
+        const isServer = checkServer();
         if (!isServer) {
             const r = location.search.substr(1).match(reg);
             if (r != null) return unescape(decodeURI(r[2]));
@@ -19,27 +20,27 @@ const Navigation = () => {
     const queryStringDict = {
         platform: getQueryString('platform'),
         source: getQueryString('source'),
-        page: getQueryString('page') ? getQueryString('page') : '/',
+        page: getQueryString('page') ? getQueryString('page') : ``,
         otp: getQueryString('otp'),
     };
 
     const canTrustDict = {
         Bond_Securities: {
-            target: '/',
+            target: ``,
             needLogin: true,
-            errorPage: '/',
+            errorPage: ``,
             loginType: 'trust',
         },
         MMA: {
-            target: '/',
+            target: ``,
             needLogin: true,
-            errorPage: '/',
+            errorPage: ``,
             loginType: 'trust',
         },
         Line: {
-            target: '/',
+            target: ``,
             needLogin: false,
-            errorPage: '/',
+            errorPage: ``,
             loginType: 'trust',
         },
     };
@@ -48,26 +49,20 @@ const Navigation = () => {
         try {
             if (canTrustDict[queryStringDict.platform].needLogin) {
                 const res = await submit(queryStringDict.otp);
-                console.log(res);
                 if (res.data.success === true) {
                     sessionStorage.setItem('source', queryStringDict.platform.toLowerCase());
-                    // 導回設定頁面
+                    location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${queryStringDict.page}`;
                 }
             }
         } catch (e) {
-            console.log(e);
-            // alert('失敗');
-            // 導回未登入首頁 ??
+            location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${canTrustDict[queryStringDict.platform].errorPage}`;
+            alert('登入失敗，請重新登入');
         }
     };
 
     return <></>;
 };
 
-Navigation.getLayout = page => (
-    <>
-        <Navigation>{page}</Navigation>
-    </>
-);
+Navigation.getLayout = Page => Page;
 
 export default Navigation;

@@ -44,10 +44,6 @@ function H5_Future_Single() {
     );
 }
 
-H5_Future_Single.getLayout = page => (
-    <>
-        <H5_Future_Single>{page}</H5_Future_Single>
-    </>
-);
+H5_Future_Single.getLayout = Page => Page;
 
 export default H5_Future_Single;

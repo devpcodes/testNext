@@ -276,6 +276,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     border-style: solid;
                     border-width: 7px 4.5px 0 4.5px;
                     border-color: #c43826 transparent transparent transparent;
+                    pointer-events: none;
                 }
                 .account__container .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
                     border-color: #e6ebf5;

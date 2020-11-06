@@ -13,12 +13,12 @@ export const FutureQuickView = ({ openProfitLoss }) => {
             </div>
             <style jsx>{`
                 .FutureQuickView__container {
-                    margin-top: 18px;
                     font-size: 1.6rem;
                     color: #0d1623;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .FutureQuickView__container {
+                        margin-top: 18px;
                         width: 100%;
                         text-align: center;
                         color: white;

@@ -4,13 +4,9 @@ import { PageHead } from '../components/includes/PageHead';
 
 function PlaceOrderPopupWindow() {
     const iframeDom = useRef(null);
-    // const source = useRef(null);
 
     useEffect(() => {
-        // source.current = window.opener;
         iframeDom.current.contentWindow.opener = window.opener;
-        console.log(`source:`, iframeDom.current.contentWindow.opener);
-        console.log(`window.opener:`, window.opener);
     }, []);
 
     const getIframeDom = dom => {
@@ -32,10 +28,6 @@ function PlaceOrderPopupWindow() {
     );
 }
 
-PlaceOrderPopupWindow.getLayout = page => (
-    <>
-        <PlaceOrderPopupWindow>{page}</PlaceOrderPopupWindow>
-    </>
-);
+PlaceOrderPopupWindow.getLayout = Page => Page;
 
 export default PlaceOrderPopupWindow;

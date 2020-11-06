@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox } from 'antd';
@@ -7,14 +8,17 @@ import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 import { submit } from '../../../services/components/login/login';
+import { checkBrowser } from '../../../services/checkBrowser';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
+
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
+    const [isIframe, setIsIframe] = useState(false);
     useEffect(() => {
         const account = localStorage.getItem('userID');
         if (account) {
@@ -29,6 +33,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             });
         }
         window.addEventListener('keypress', winKeyDownHandler, false);
+        if (checkIframe()) {
+            setIsIframe(true);
+        }
+
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
         };
@@ -103,6 +111,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             try {
                 const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
+                console.log('res', res);
                 if (res.data.success) {
                     //記身份證字號
                     if (form.getFieldValue('remember')) {
@@ -110,8 +119,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     } else {
                         localStorage.removeItem('userID');
                     }
-                    //傳資料給神策
-                    sensorsHandler(form.getFieldValue('account'));
+
+                    if (!checkFirstLogin(res.data)) {
+                        //傳資料給神策
+                        sensorsHandler(form.getFieldValue('account'));
+                    }
                 }
             } catch (error) {
                 setIsLoading(false);
@@ -127,8 +139,28 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
+    const checkFirstLogin = function (data) {
+        if (data.result.isFirstLogin != null && data.result.isFirstLogin) {
+            Modal.success({
+                content: `初次登入，請修改密碼後重新登入，謝謝`,
+                onOk() {
+                    onClose();
+                    router.push('/User_ChangePassword', `${process.env.NEXT_PUBLIC_SUBPATH}User_ChangePassword`);
+                },
+            });
+            return true;
+        }
+
+        return false;
+    };
+
     //傳資料給神策
     const sensorsHandler = function (user_id) {
+        console.log('browser', checkBrowser(), process.env.NEXT_PUBLIC_ENV);
+        if (checkBrowser() === 'ie' && process.env.NEXT_PUBLIC_ENV === 'development') {
+            afterSensors();
+            return;
+        }
         try {
             sensors.login(user_id, function () {
                 sensors.track(
@@ -152,8 +184,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //神策傳送成功後 做的事
     const afterSensors = function () {
         //iframe登入處理(來自舊理財網)
-        if (isIframe()) {
-            iframeHandler();
+        if (isIframe) {
+            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
         } else {
             successHandler();
         }
@@ -161,12 +193,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //忘記密碼
     const forgetPassword = function () {
-        onClose();
-        router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+        if (isIframe) {
+            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + 'Service_ForgetPassword');
+        } else {
+            onClose();
+            router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+        }
     };
 
     //判斷是不是iframe
-    const isIframe = function () {
+    const checkIframe = function () {
         try {
             return window.self !== window.top;
         } catch (error) {}
@@ -174,12 +210,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     //參考舊理財網
-    const iframeHandler = function () {
+    const iframeHandler = function (url) {
         parent.postMessage(
             {
                 origin: 'NewWeb',
-                redirectURL: location.origin + process.env.NEXT_PUBLIC_SUBPATH,
-                msg: msg,
+                redirectURL: url,
+                msg: '',
             },
             '*',
         );
@@ -188,10 +224,17 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         location.reload();
     };
 
+    const signUpHandler = function (e) {
+        e.preventDefault();
+        iframeHandler(
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
+        );
+    };
+
     return (
         <div className="login__container">
             <div className="login__box">
-                {!isPC ? (
+                {!isPC && !isIframe ? (
                     <div
                         className="close__box"
                         onClick={onClose}
@@ -221,8 +264,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         <span className="close__img"></span>
                     </div>
                 ) : null}
-                {isPC ? null : <div className="login__logo"></div>}
-                <p className="login__title">歡迎來到永豐金證券</p>
+                {isPC ? null : !isIframe && <div className="login__logo"></div>}
+                {!isIframe && <p className="login__title">歡迎來到永豐金證券</p>}
                 {isPC ? (
                     <div className="loginService__box">
                         <span className="service__title">登入後享受更多服務</span>
@@ -239,6 +282,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     onFieldsChange={fieldsChange}
                     onFinish={finishHandler}
                     initialValues={{ remember: false }}
+                    style={{ marginTop: isIframe ? '12px' : 0 }}
                 >
                     <div className="account__box">
                         <Form.Item
@@ -267,7 +311,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 style={{
                                     transition: 'none',
                                     width: '100%',
-                                    height: '54px',
+                                    height: isIframe ? '34px' : '54px',
                                     border: 'solid 1px #e6ebf5',
                                     fontSize: accountFontSize,
                                 }}
@@ -308,7 +352,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     >
                         <Input.Password
                             placeholder="密碼(7-12位元)"
-                            style={{ width: '100%', height: '54px', border: 'solid 1px #e6ebf5', fontSize: '1.8rem' }}
+                            style={{
+                                width: '100%',
+                                height: isIframe ? '34px' : '54px',
+                                border: 'solid 1px #e6ebf5',
+                                fontSize: '1.8rem',
+                            }}
                         />
                     </Form.Item>
                     <div className="remember__box">
@@ -321,19 +370,35 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     </div>
 
                     <Form.Item label="">
-                        <Button loading={isLoading} type="primary" htmlType="submit" style={{ marginTop: '20px' }}>
+                        <Button
+                            loading={isLoading}
+                            type="primary"
+                            htmlType="submit"
+                            style={{ marginTop: isIframe ? '10px' : '20px' }}
+                        >
                             登入
                         </Button>
                     </Form.Item>
                 </Form>
                 <p className="a__box">
-                    <a
-                        target="_blank"
-                        href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
-                        className="a__link"
-                    >
-                        還不是永豐金證券客戶
-                    </a>
+                    {!isIframe ? (
+                        <a
+                            target="_blank"
+                            href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            className="a__link"
+                        >
+                            還不是永豐金證券客戶
+                        </a>
+                    ) : (
+                        <a
+                            target="_blank"
+                            href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            className="a__link"
+                            onClick={signUpHandler}
+                        >
+                            還不是永豐金證券客戶
+                        </a>
+                    )}
                 </p>
             </div>
             {popup ? (
@@ -471,7 +536,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .account__box span {
                     position: absolute;
-                    top: 14px;
+                    top: ${isIframe ? '4px' : '14px'};
                     font-size: 1.8rem;
                     padding-left: 12px;
                 }
@@ -482,7 +547,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             <style global jsx>{`
                 .login__container .ant-btn-primary {
                     background: #c43826;
-                    height: 54px;
+                    height: ${isIframe ? '34px' : '54px'};
                     border: none;
                     width: 100%;
                     font-size: 1.8rem;
@@ -492,6 +557,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .ant-modal-confirm-body .ant-modal-confirm-content {
                     font-size: 1.6rem;
+                }
+                .ant-form-item {
+                    margin: ${isIframe ? '0 0 15px' : '0 0 24px'};
+                }
+                .ant-modal {
+                    top: ${isIframe ? '0' : '100px'};
                 }
 
                 /* Change Autocomplete styles in Chrome*/
