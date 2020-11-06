@@ -1,7 +1,7 @@
 import 'antd/dist/antd.min.css';
 import '../resources/styles/globals.css';
 import { useEffect } from 'react';
-import TagManager from 'react-gtm-module';
+// import TagManager from 'react-gtm-module';
 import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
 
@@ -12,7 +12,7 @@ const tagManagerArgs = {
 function MyApp({ Component, pageProps, router }) {
     useEffect(() => {
         //googletagmanager
-        TagManager.initialize(tagManagerArgs);
+        // TagManager.initialize(tagManagerArgs);
 
         //神策
         let sensorGetCookie = function (cname) {
