@@ -17,10 +17,6 @@ function H5_TradingAccount() {
     );
 }
 
-H5_TradingAccount.getLayout = page => (
-    <>
-        <H5_TradingAccount>{page}</H5_TradingAccount>
-    </>
-);
+H5_TradingAccount.getLayout = Page => Page;
 
 export default H5_TradingAccount;

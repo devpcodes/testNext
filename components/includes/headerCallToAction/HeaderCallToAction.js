@@ -22,7 +22,7 @@ export const HeaderCallToAction = () => {
         const iHeight = 700;
         const iWidth = 440;
         const iTop = (window.screen.availHeight - 30 - iHeight) / 2; //視窗的垂直位置;
-        const iLeft = (window.screen.availWidth - 10 - iWidth) / 2; //視窗的水平位置;
+        const iLeft = window.screen.availLeft + (window.screen.availWidth - 10 - iWidth) / 2; //視窗的水平位置;
         return window.open(
             `${process.env.NEXT_PUBLIC_SUBPATH}goOrder?nav=0`,
             'goOrder',

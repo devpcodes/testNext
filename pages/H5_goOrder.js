@@ -29,10 +29,6 @@ function H5_goOrder() {
     );
 }
 
-H5_goOrder.getLayout = page => (
-    <>
-        <H5_goOrder>{page}</H5_goOrder>
-    </>
-);
+H5_goOrder.getLayout = Page => Page;
 
 export default H5_goOrder;

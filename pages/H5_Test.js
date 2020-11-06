@@ -16,10 +16,6 @@ function H5_Test() {
     );
 }
 
-H5_Test.getLayout = page => (
-    <>
-        <H5_Test>{page}</H5_Test>
-    </>
-);
+H5_Test.getLayout = Page => Page;
 
 export default H5_Test;

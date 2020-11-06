@@ -46,10 +46,6 @@ function H5_Option_Combination() {
     );
 }
 
-H5_Option_Combination.getLayout = page => (
-    <>
-        <H5_Option_Combination>{page}</H5_Option_Combination>
-    </>
-);
+H5_Option_Combination.getLayout = Page => Page;
 
 export default H5_Option_Combination;
