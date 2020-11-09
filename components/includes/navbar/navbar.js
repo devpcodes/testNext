@@ -54,7 +54,7 @@ const Navbar = React.memo(props => {
     return (
         <div className={`${showMenu ? '' : 'navbar--hide'}`}>
             <div className="navbar__lv1__item navbar__lv1__item__title menu__ctrl">
-                <Link href={''} as={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
+                <Link href={'/'} as={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
                     <a className="header__logo">
                         <img src={logo}></img>
                     </a>
@@ -78,7 +78,7 @@ const Navbar = React.memo(props => {
                                     </a>
                                 ) : (
                                     <Link
-                                        href={''}
+                                        href={lv1Item.url}
                                         as={
                                             lv1Item.isFullUrl
                                                 ? `${lv1Item.url}`

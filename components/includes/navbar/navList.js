@@ -65,7 +65,7 @@ const NavList = React.memo(props => {
                         )}
                         {lv3Item.url && !lv3Item.isOpen && (
                             <Link
-                                href={''}
+                                href={lv3Item.url}
                                 as={
                                     lv3Item.isFullUrl
                                         ? `${lv3Item.url}`
