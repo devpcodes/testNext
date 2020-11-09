@@ -90,7 +90,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                             <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>
                             <div className="select__container">
                                 <div className="select__account">{`${currentAccount.broker_id}-${currentAccount.account}`}</div>
-                                <div className="select__username">經紀部 {currentAccount.username}</div>
+                                <div className="select__username">{`${currentAccount.bhname} ${currentAccount.username}`}</div>
                             </div>
                         </div>
                         <div
@@ -128,7 +128,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                                                         <div className="select__container">
                                                             <div className="select__account">{`${account.broker_id}-${account.account}`}</div>
                                                             <div className="select__username">
-                                                                經紀部 {account.username}
+                                                                {`${account.bhname} ${account.username}`}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -166,7 +166,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                                         >
                                             <span className="option__accType">{accText} | </span>
                                             <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
-                                            <span className="option__username">經紀部 {account.username}</span>
+                                            <span className="option__username">{`${account.bhname} ${account.username}`}</span>
                                         </Option>
                                     ))}
                                 </OptGroup>
@@ -276,6 +276,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     border-style: solid;
                     border-width: 7px 4.5px 0 4.5px;
                     border-color: #c43826 transparent transparent transparent;
+                    pointer-events: none;
                 }
                 .account__container .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
                     border-color: #e6ebf5;

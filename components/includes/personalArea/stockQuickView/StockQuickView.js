@@ -17,17 +17,6 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
         }
     }, [isMobile]);
 
-    //併上+-符號
-    // const getUnreal = unreal => {
-    //     if (Number(unreal) > 0) {
-    //         return '+' + formatNum(unreal);
-    //     } else if (Number(unreal) <= 0) {
-    //         return formatNum(unreal);
-    //     } else {
-    //         return unreal;
-    //     }
-    // };
-
     const contentBtnClick = () => {
         if (noData()) {
             return;
@@ -71,13 +60,12 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
             </div>
             <style jsx>{`
                 .StockQuickView__container {
-                    margin-top: 18px;
                     font-size: 1.6rem;
                     color: #0d1623;
-                    /* padding: 0 30px; */
                 }
                 @media (max-width: 768px) {
                     .StockQuickView__container {
+                        margin-top: 18px;
                         width: 100%;
                         text-align: center;
                         color: white;
