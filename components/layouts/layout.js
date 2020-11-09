@@ -23,7 +23,6 @@ import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
-    const [isRendered, setIsRendered] = useState(false);
     const [showBigLogin, setShowBigLogin] = useState(false);
     const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
 
@@ -45,12 +44,14 @@ const Layout = React.memo(({ children }) => {
     const prevIsMobile = useRef(isMobile);
     const prevDomain = useRef(domain);
     const queryStr = useRef('');
+    const isRendered = useRef(false);
+
     useEffect(() => {
         prevIsMobile.current = isMobile;
         prevDomain.current = domain;
 
         // 不是第一次 render 才更新資料
-        if (Object.keys(navData).length && isRendered) {
+        if (Object.keys(navData).length && isRendered.current) {
             updateNavData();
         }
     }, [isMobile, isLogin, domain]);
@@ -84,7 +85,7 @@ const Layout = React.memo(({ children }) => {
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
         const timeout = setTimeout(() => {
-            // 第一次 render 且 redux 沒資料時，才 fetch 資料
+            // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
             if (!Object.keys(navData).length) {
                 updateNavData();
             }
@@ -95,7 +96,7 @@ const Layout = React.memo(({ children }) => {
             dispatch(setIsLogin(true));
         }
 
-        setIsRendered(true);
+        isRendered.current = true;
 
         return () => {
             window.removeEventListener('resize', resizeHandler, false);

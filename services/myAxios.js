@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Modal } from 'antd';
 import { checkServer } from './checkServer';
+import { logout } from './user/logoutFetcher';
 
 const lykanDefaultVersion = 'v1';
 const a8DefaultVersion = 'v1';
@@ -18,18 +19,24 @@ const errorHandler = error => {
     } else {
         if (error.response.data != null) {
             if (!isServer) {
-                const showConfirm = () => {
-                    Modal.error({
-                        content: '帳號逾時，請重新登入。',
-                        onOk() {
-                            return location.reload();
-                        },
-                    });
+                const reLoginHandler = async () => {
+                    try {
+                        await logout();
+                        Modal.error({
+                            content: '帳號逾時，請重新登入。',
+                            onOk() {
+                                window.location = `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`;
+                            },
+                        });
+                    } catch (error) {
+                        console.error(`logout error:`, error);
+                    }
                 };
 
                 switch (error.response.status) {
                     case 401:
-                        return showConfirm();
+                        reLoginHandler();
+                        break;
                     default:
                         Modal.error({ content: error.response.data.message || defaultErrorMsg });
                         break;

@@ -17,17 +17,6 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
         }
     }, [isMobile]);
 
-    //併上+-符號
-    // const getUnreal = unreal => {
-    //     if (Number(unreal) > 0) {
-    //         return '+' + formatNum(unreal);
-    //     } else if (Number(unreal) <= 0) {
-    //         return formatNum(unreal);
-    //     } else {
-    //         return unreal;
-    //     }
-    // };
-
     const contentBtnClick = () => {
         if (noData()) {
             return;

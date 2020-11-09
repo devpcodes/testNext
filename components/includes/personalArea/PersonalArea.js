@@ -97,8 +97,11 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                 .myNav__container {
                     display: flex;
                 }
-                .myNav__list {
-                    margin-right: 37px;
+                .myNav__container + .accountInfo__container {
+                    margin-left: 37px;
+                }
+                .myNav__list ~ .myNav__list {
+                    margin-left: 37px;
                 }
                 .accountInfo__container {
                     width: ${isMobile ? '100%' : 'auto'};
@@ -108,6 +111,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                     align-items: center;
                     justify-content: center;
                     width: 100%;
+                    min-width: 210px;
                     height: 70px;
                     font-size: 1.8rem;
                     font-weight: 600;
@@ -154,14 +158,20 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         flex-direction: column;
                         width: 100%;
                     }
+                    .myNav__container + .accountInfo__container {
+                        margin-left: 0;
+                    }
+                    .myNav__list ~ .myNav__list {
+                        margin-left: 0;
+                    }
                     .myNav__list {
-                        margin-right: 0;
                         width: 100%;
                     }
                     .personalArea__logoutBtn {
                         position: absolute;
                         bottom: 0;
                         right: 0;
+                        min-width: 100%;
                     }
                 }
             `}</style>
