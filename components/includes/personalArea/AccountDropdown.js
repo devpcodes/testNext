@@ -79,7 +79,12 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
         }
     };
 
-    if (!accounts.length || (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object)) return null;
+    if (
+        !accounts.length ||
+        (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object) ||
+        (currentAccount.accttype !== 'S' && currentAccount.accttype !== 'H' && currentAccount.accttype !== 'F')
+    )
+        return null;
 
     return (
         <div className="account__container" ref={selectRef}>
