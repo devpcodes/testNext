@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="HandheldFriendly" content="True"/>
+        <meta name="MobileOptimized" content="320"/>
+        <meta name="robots" content="follow,index"/>
+        <meta name="author" content=""/>
+        <meta name="description" content=""/>
+        <meta name="keywords" content=""/> 
+        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
+        <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
+
+        <script>
+            var that = this;
+            var _WP_PATH = "../";
+
+            $(function () {
+                jQuery.loadScript = function (url, usecache) {
+                    usecache = true;
+                    var _u = _WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
+                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
+
+                };
+                jQuery.loadCSS = function (url) {
+                    var _u = _WP_PATH + url;
+                    //    if (APP_CONFIG.VERSION)
+                    //        _u += "?_=" + APP_CONFIG.VERSION;
+                    if (document.createStyleSheet)
+                        try {
+                            document.createStyleSheet(_u);
+                        } catch (e) {
+                        }
+                    else if ($("head link[href='" + _u + "']").length === 0)
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
+                };
+
+
+                if (typeof (LabCI) === "undefined")
+                    LabCI = {WP: {}};
+                else if (typeof (LabCI.WP) === "undefined")
+                    LabCI.WP = {};
+
+                if (typeof (LabCI.AbstractPageObj) === "undefined")
+                    $.loadScript("js/lib/combined/core.2.0.3.js");
+
+                if (typeof (APP_CONFIG) === "undefined") {
+                    $.loadScript("/js/constant.js");
+                    $.loadCSS("css/common_1.0.3.css");
+                }
+
+                if (typeof (LabCI.WP.AppUtils) === "undefined")
+                    $.loadScript("js/apputils.js");
+
+                //page specific object...
+                if (typeof (LabCI.WP.RankingPageObj) === "undefined") {
+                    $.loadScript("js/ranking.js");
+                }
+                var lang = LabCI.Utils.getURLParameter("lang");
+                if (lang == null || lang == undefined || lang == "") {
+                    lang = "zh_TW";
+                }
+                ;
+                if (lang === "zh_HK")
+                    $.loadScript("js/ranking_zh_HK.js");
+                else if (lang === "zh_CN")
+                    $.loadScript("js/ranking_zh_CN.js");
+                else if (lang === "en")
+                    $.loadScript("js/ranking_en.js");
+                else
+                    $.loadScript("js/ranking_zh_TW.js");
+
+                if (lang === "zh_HK")
+                    $.loadScript("js/commonrc_zh_HK.js");
+                else if (lang === "zh_CN")
+                    $.loadScript("js/commonrc_zh_CN.js");
+                else if (lang === "en")
+                    $.loadScript("js/commonrc_en.js");
+                else
+                    $.loadScript("js/commonrc_zh_TW.js");
+
+
+                var mkt = LabCI.Utils.getURLParameter("mkt");
+                var rank = LabCI.Utils.getURLParameter("rank");
+
+                // For returning the access token
+                LabCI.getToken = function () {
+                    return decodeURIComponent(LabCI.Utils.getURLParameter("token"));
+
+                };
+                LabCI.setDataAPIPath = function (path) {
+                    if (LabCI && LabCI.SSDLConf) {
+                        if (path === undefined)
+                            LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
+                    }
+                };
+                LabCI.setDataAPIPath();
+
+
+                if (mkt != null && rank != null) {
+                    window["lsinopac_ranking"] = LabCI.WP["createrankingpageobj"].call(that).init(lang).show({mkt: mkt, rank: rank});
+                } else {
+                    window["lsinopac_ranking"] = LabCI.WP["createrankingpageobj"].call(that).init(lang).show();
+                }
+
+                // LabCI.WP.WorldNavPageObj.show($.extend({id: id, token: token, lang: lang, wid: wid, mode: mode}));
+                //    $(window).resize(function () {
+                //        window["lsinopac_ranking"].resize();
+                //    });
+
+            });
+        </script>        
+        <style>
+
+            #lsinopac-ranking {
+                padding: 15px;
+            }
+            #lsinopac-ranking .ranking-title-word{
+                font-weight: 700;
+                padding-bottom: 20px;
+            }
+            #lsinopac-ranking .ranking-title span{
+                cursor: pointer;
+            }     
+            #lsinopac-ranking .refreshBtn{
+
+            }            
+            #lsinopac-ranking .btn-refresh{
+                text-align: center;
+                color: #01A57A;
+                border: 1px solid #01A57A;
+                background-color: white;
+                border-radius: 0px;
+                font-size:14px;
+                padding: 3px                
+            }
+
+            #lsinopac-ranking .result-mobile .list-group-item{
+                color: #212529;
+            }
+            #lsinopac-ranking .result-mobile .name{
+                font-weight: 700;
+                color: #084D9F;
+            }
+            #lsinopac-ranking .result-mobile .price{
+                font-weight: 700;
+                font-size: 19px;
+                color: #084D9F;
+            }
+            #lsinopac-ranking .result-mobile .add-watchlist{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            /*    #lsinopac-ranking .result-mobile .btn-add{
+                    text-align: center;
+                    color: #D73B3C;
+                    border: 0px solid #D73B3C;
+                    background-color: white;
+                    border-radius: 0px;
+                    font-size:14px;
+                    width: 28px;
+                    min-width: 28px;
+                    height: 21px;
+                    min-height: 21px;
+                    background-image: url(../images/heart2.png);
+                    background-repeat: no-repeat;
+                    background-position: right 5px center;
+                    cursor:pointer;                
+                }
+            */
+            #lsinopac-ranking .result-desktop .btn-add{
+                text-align: center;
+                color: #D73B3C;
+                border: 1px solid #D73B3C;
+                background-color: white;
+                border-radius: 0px;
+                font-size:14px; 
+                margin-right: 10px;
+
+                /*    background-image: url(../images/heart2.png);
+                    background-repeat: no-repeat;
+                    background-position: right 5px center;
+                    padding-right: 28px;
+                */
+
+            } 
+            #lsinopac-ranking .result-mobile .btn-add{
+                text-align: center;
+                color: #D73B3C;
+                border: 1px solid #D73B3C;
+                background-color: white;
+                border-radius: 0px;
+                font-size: 14px;
+                padding: 0px 3px 0px 3px;
+                margin-bottom: 3px;
+
+                /*    background-image: url(../images/heart2.png);
+                    background-repeat: no-repeat;
+                    background-position: right 5px center;
+                    padding-right: 28px;
+                */
+
+            }
+            #lsinopac-ranking .ranking-subtitle{
+                color: #790007;
+                padding-top:10px;
+            }
+            #lsinopac-ranking .ranking-item{
+                font-size: 14px;
+                color: #788C94;
+                cursor: pointer;
+                text-decoration: none; 
+            }
+            #lsinopac-ranking .result-mobile .buybutton2{
+                text-align: center;
+                color: #D73B3C;
+                border: 1px solid #D73B3C;
+                background-color: white;
+                border-radius: 0px;
+                font-size: 14px;
+                padding: 0px 3px 0px 3px;
+                margin-bottom: 3px;               
+            }
+            #lsinopac-ranking .result-mobile .sellbutton{
+                text-align: center;
+                color: #01A57A;
+                border: 1px solid #01A57A;
+                background-color: white;
+                border-radius: 0px;
+                font-size: 14px;
+                padding: 0px 3px 0px 3px;
+            }
+
+            #lsinopac-ranking .result-desktop .buybutton2{
+                text-align: center;
+                color: #D73B3C;
+                border: 1px solid #D73B3C;
+                background-color: white;
+                border-radius: 0px;
+                font-size: 14px;
+                margin-right: 10px;
+            }
+            #lsinopac-ranking .result-desktop .sellbutton{
+                text-align: center;
+                color: #01A57A;
+                border: 1px solid #01A57A;
+                background-color: white;
+                border-radius: 0px;
+                font-size: 14px;               
+            } 
+            #lsinopac-ranking .ranking-box,
+            #lsinopac-ranking .ranking-box-other{
+                border: 1px solid #D73B3C;
+                color: #D73B3C;
+                font-size: 15px;
+                text-align: center;
+                cursor:pointer;
+                padding: .375rem .75rem;
+            }
+            #lsinopac-ranking .ranking-box .ranking-box-header,
+            #lsinopac-ranking .ranking-box-other .ranking-box-header{
+                font-weight: 700;
+            } 
+            #lsinopac-ranking .ranking-more{
+                font-weight: 700;
+                color: #D73B3C;
+                font-size: 15px;
+                cursor:pointer;
+            }            
+        </style>
+    </head>
+    <body>
+        <div id="lsinopac-ranking" class="lsinopac">
+            <div class="row">
+                <div class="col-6 col-md  pr-0 pb-3">
+                    <div class="ranking-box selected" mkt="HKG" rank="PG">
+                        <div class="ranking-box-header"><div class="lblHKG"></div><div class="lblPG"></div></div>
+                    </div>
+                </div>
+                <div class="col-6 col-md pr-md-0 pb-3">
+                    <div class="ranking-box selected" mkt="HKG" rank="PL">
+                        <div class="ranking-box-header"><div class="lblHKG"></div><div class="lblPL"></div></div>
+                    </div>                     
+                </div>
+                <div class="col-6 col-md  pr-0 pb-3">
+                    <div class="ranking-box selected" mkt="NYSE" rank="PG">
+                        <div class="ranking-box-header"><div class="lblNYSE"></div><div class="lblPG"></div></div>
+                    </div> 
+                </div>
+                <div class="col-6 col-md pr-md-0 pb-3">
+                    <div class="ranking-box selected" mkt="NYSE" rank="PL">
+                        <div class="ranking-box-header"><div class="lblNYSE"></div><div class="lblPL"></div></div>
+                    </div> 
+                </div> 
+                <div class="col-6 col-md  pr-0 pb-3">
+                    <div class="ranking-box selected" mkt="NASDAQ" rank="PG">
+                        <div class="ranking-box-header"><div class="lblNASDAQ"></div><div class="lblPG"></div></div>
+                    </div> 
+                </div>
+                <div class="col-6 col-md pr-md-3 pb-3">
+                    <div class="ranking-box selected" mkt="NASDAQ" rank="PL">
+                        <div class="ranking-box-header"><div class="lblNASDAQ"></div><div class="lblPL"></div></div>
+                    </div> 
+                </div>                  
+            </div>
+            <div class="row">
+                    <div class="col pb-3" data-toggle="modal" data-target="#rankingModel">
+                        <div class="ranking-box-other selected">
+                        <span class="lblmoreranks ranking-box-header">More Ranks</span>
+                        <span>
+                            <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split" style="background-color:white;color: #D73B3C;"></button>
+                        </span>                            
+                        </div>
+
+                    </div>                
+            </div>
+
+
+            <div class="ranking-title-row row">
+                <div class="ranking-title col-9 pr-0">
+                    <span class="ranking-title-word"></span>
+                </div>                
+                <div class="ranking-title col-3 text-right pl-0">
+                    <button class="btn lblrefresh refreshBtn">Refresh</button>
+                    <!--        <button type="button" class="btn btn-refresh lblrefresh">Refresh</button> -->
+                </div> 
+            </div>
+            <div class="d-md-none result-mobile">
+                <ul class="list-group list-group-flush mobile-result-list">
+                </ul>                
+            </div>
+            <div class="d-none d-md-block result-desktop">
+                <table class="table table-striped sinopactable">
+                    <thead>
+                    <td class="code"><span class="lblcode">Code</span></td>
+                    <td class="company"><span class="lblname">Name</span> </td>
+                    <!--        <td class="buysell"></td> -->
+                    <td class="ccy"></td>
+                    <td class="last text-right lbllast">Last</td>
+                    <td class="change text-right lblchange">Change</td>
+                    <td class="pctchange text-right lblchangepct">Change %</td>
+                    <td class="volume text-right lblvolume">Volume</td>
+                    <td class="turnover text-right lblturnover">Turnover</td>
+                    <td class="addwatchlist"></td>
+                    </thead>
+
+                </table> 
+            </div>
+            <div class="result-no-count lblnoresults" style="display:none;text-align:center">No results</div>
+            <div class="modal fade menu-sector" id="rankingModel" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">                        
+                        <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" >&times;</span>
+                            </button>
+                            <div class="container-fluid" style="padding:0px">
+                                <div class="advanced-selection">
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-auto">
+                                            <div class="ranking-subtitle lblTWN">Taiwan TWSE</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="TWN" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="TWN" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="TWN" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="TWN" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="TWN" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="TWN" rank="AM">Top Turnover</div>                                                
+                                            </div>
+
+                                            <div class="ranking-subtitle lblTWN_WNT">Taiwan Warrants</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="TWN_WNT" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="TWN_WNT" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="TWN_WNT" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="TWN_WNT" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="TWN_WNT" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="TWN_WNT" rank="AM">Top Turnover</div>                                                
+                                            </div>                                                         
+                                        </div>
+                                        <div class="col-md-3 col-md-auto">
+                                            <div class="ranking-subtitle lblTWO">Taiwan TAPX</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="TWO" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="TWO" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="TWO" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="TWO" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="TWO" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="TWO" rank="AM">Top Turnover</div>                                                
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-md-3 col-md-auto">
+                                            <div class="ranking-subtitle lblHKG">Hong Kong Market</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="HKG" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="HKG" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="HKG" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="HKG" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="HKG" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="HKG" rank="AM">Top Turnover</div>                                                
+                                            </div>                                                           
+                                            <div class="ranking-subtitle lblHKG_MAIN">Hong Kong Mainboard</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="HKG_MAIN" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="HKG_MAIN" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="HKG_MAIN" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="HKG_MAIN" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="HKG_MAIN" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="HKG_MAIN" rank="AM">Top Turnover</div>                                                
+                                            </div>                                                             
+                                            <!--    <div class="ranking-subtitle lblHKG_GEM">Hong Kong GEM Board</div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblNG col-6 col-md-12" mkt="HKG_GEM" rank="NG">Top Gainers</div>
+                                                    <div class="ranking-item lblNL col-6 col-md-12" mkt="HKG_GEM" rank="NL">Top Losers</div>                                                                
+                                                </div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblPG col-6 col-md-12" mkt="HKG_GEM" rank="PG">Top %Gainers</div>
+                                                    <div class="ranking-item lblPL col-6 col-md-12" mkt="HKG_GEM" rank="PL">Top %Losers</div>                                              
+                                                </div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblAV col-6 col-md-12" mkt="HKG_GEM" rank="AV">Top Volume</div>
+                                                    <div class="ranking-item lblAM col-6 col-md-12" mkt="HKG_GEM" rank="AM">Top Turnover</div>                                                
+                                                </div> 
+                                            -->
+                                        </div>
+                                    <!--    <div class="col-md-3 col-md-auto">
+                                            <div class="ranking-subtitle lblSHH">ShangHai A</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="SHH" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="SHH" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="SHH" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="SHH" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="SHH" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="SHH" rank="AM">Top Turnover</div>                                                
+                                            </div>                                                          
+                                            <div class="ranking-subtitle lblSHZ">ShenZhen A</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="SHZ" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="SHZ" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="SHZ" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="SHZ" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="SHZ" rank="AV">Top Volume</div>
+                                                <div class="ranking-item lblAM col-6 col-md-12" mkt="SHZ" rank="AM">Top Turnover</div>                                                
+                                            </div>                                                           
+                                        </div> 
+                                    -->
+                                        <div class="col-md-3 col-md-auto">
+                                            <div class="ranking-subtitle lblNYSE">NYSE</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="NYSE" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="NYSE" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="NYSE" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="NYSE" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="NYSE" rank="AV">Top Volume</div>
+                                                <div class="col-6 col-md-12"></div>                                                
+                                            </div>                                                            
+                                            <!--    <div class="ranking-subtitle lblNYSE_AMER">NYSE American</div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblNG col-6 col-md-12" mkt="NYSE_AMER" rank="NG">Top Gainers</div>
+                                                    <div class="ranking-item lblNL col-6 col-md-12" mkt="NYSE_AMER" rank="NL">Top Losers</div>                                                                
+                                                </div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblPG col-6 col-md-12" mkt="NYSE_AMER" rank="PG">Top %Gainers</div>
+                                                    <div class="ranking-item lblPL col-6 col-md-12" mkt="NYSE_AMER" rank="PL">Top %Losers</div>                                              
+                                                </div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblAV col-6 col-md-12" mkt="NYSE_AMER" rank="AV">Top Volume</div>
+                                                    <div class="col-6 col-md-12"></div>                                                
+                                                </div>                                                          
+                                                <div class="ranking-subtitle lblNYSE_ARCA">NYSE ARCA</div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblNG col-6 col-md-12" mkt="NYSE_ARCA" rank="NG">Top Gainers</div>
+                                                    <div class="ranking-item lblNL col-6 col-md-12" mkt="NYSE_ARCA" rank="NL">Top Losers</div>                                                                
+                                                </div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblPG col-6 col-md-12" mkt="NYSE_ARCA" rank="PG">Top %Gainers</div>
+                                                    <div class="ranking-item lblPL col-6 col-md-12" mkt="NYSE_ARCA" rank="PL">Top %Losers</div>                                              
+                                                </div>
+                                                <div class="row">
+                                                    <div class="ranking-item lblAV col-6 col-md-12" mkt="NYSE_ARCA" rank="AV">Top Volume</div>
+                                                    <div class="col-6 col-md-12"></div>                                                
+                                                </div> 
+                                            -->
+                                            <div class="ranking-subtitle lblNASDAQ">NASDAQ</div>
+                                            <div class="row">
+                                                <div class="ranking-item lblNG col-6 col-md-12" mkt="NASDAQ" rank="NG">Top Gainers</div>
+                                                <div class="ranking-item lblNL col-6 col-md-12" mkt="NASDAQ" rank="NL">Top Losers</div>                                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblPG col-6 col-md-12" mkt="NASDAQ" rank="PG">Top %Gainers</div>
+                                                <div class="ranking-item lblPL col-6 col-md-12" mkt="NASDAQ" rank="PL">Top %Losers</div>                                              
+                                            </div>
+                                            <div class="row">
+                                                <div class="ranking-item lblAV col-6 col-md-12" mkt="NASDAQ" rank="AV">Top Volume</div>
+                                                <div class="col-6 col-md-12"></div>                                                
+                                            </div>                                                          
+                                        </div>
+                                    </div>
+                                </div>                                    
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="justify-content: center">
+                            <button type="button" class="btn ranking-btn-cancel btn-cancel lblcancel" data-dismiss="modal">Cancel</button>
+                        </div>                         
+                    </div>                       
+                </div>
+            </div>            
+        </div>
+    </body>
+</html>

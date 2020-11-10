@@ -12,7 +12,7 @@ const port = 3888;
 app.prepare().then(() => {
     const server = express();
 
-    server.use('/nossr', express.static('./no_ssr/testPage'));
+    server.use('/widget', express.static('./widget'));
 
     server.get('*', (req, res) => {
         if (req.url.includes('/sw')) {

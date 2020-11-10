@@ -1,0 +1,68 @@
+
+// Resource - en
+LabCI.WP.FinancialPageObj.PAGEOBJ_RESOURCEBUNDLE.en = {
+    summary: {
+    },
+    bal_sheet:{
+        "title": "Balance Sheet",
+        "SCSI": "Cash and Short Term Investments",
+        "ATRC": "Total Receivables, Net",
+        "AITL": "Total Inventory",
+        "SOCA": "Other Current Assets, Total",
+        "ATCA": "Total Current Assets",
+        "ACDB": "Cash & Due from Banks",
+        "ASEC": "Total Investment Securities",
+        "SOEA": "Other Earning Assets, Total",
+        "ANTL": "Net Loans",
+        "APPN": "Property/Plant/Equipment, Total - Net",
+        "AINT": "Intangibles, Net",
+        "SINV": "Long Term Investments",
+        "SOLA": "Other Long Term Assets, Total",
+        "SOAT": "Other Assets, Total",
+        "ATOT": "Total Assets",
+        "LTCL": "Total Current Liabilities",
+        "LTTD": "Total Long Term Debt",
+        "SLTL": "Other Liabilities, Total",
+        "LMIN": "Minority Interest",
+        "LTLL": "Total Liabilities",
+        "SRPR": "Redeemable Preferred Stock, Total",
+        "SPRS": "Preferred Stock - Non Redeemable, Net",
+        "SCMS": "Common Stock, Total",
+        "SOTE": "Other Equity, Total",
+        "QTLE": "Total Equity",
+        "QTLL": "Total Equity & Minority Interest",
+        "QTCO": "Total Common Shares Outstanding",
+        "QTPO": "Total Preferred Shares Outstanding"
+    },
+    income_stat:{
+        "title": "Income Statement",
+        "RTLR": "Total Revenue",
+        "SSGA": "Selling/General/Admin. Expenses, Total",
+        "SDPR": "Depreciation/Amortization",
+        "ETOE": "Total Operating Expense",
+        "SOPI": "Operating Income",
+        "SNII": "Non-Interest Income, Bank",
+        "SNIE": "Non-Interest Expense, Bank",
+        "ENII": "Net Interest Income, Bank",
+        "SBTR": "Bank Total Revenue",
+        "EIBT": "Net Income Before Taxes",
+        "NINC": "Net Income",
+        "SBBF": "Basic EPS Excluding Extraordinary Items",
+        "SBAI": "Basic EPS Including Extraordinary Items"
+    },
+    cashflow:{
+        "title": "Cash flow",
+        "OTLO": "Cash from Operating Activities",
+        "ITLI": "Cash from Investing Activities",
+        "FTLF": "Cash from Financing Activities",
+        "SDED": "Depreciation/Depletion",
+        "SAMT": "Amortization",
+        "SNCI": "Non-Cash Items",
+        "SOCF": "Changes in Working Capital",
+        "SCEX": "Capital Expenditures",
+        "FCDP": "Total Cash Dividends Paid",
+        "SNCC": "Net Change in Cash",
+        "SNCB": "Net Cash - Beginning Balance",
+        "SNCE": "Net Cash - Ending Balance"
+    }
+};

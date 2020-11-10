@@ -1,0 +1,6 @@
+var APP_CONFIG = {
+    VERSION: "1.16.0",
+ DataAPIPath: "/newweb/SinoTrade-Service/ent/sinopacwidget"
+ //DataAPIPath: "https://www5.trkd-hs.com/sinopacwidget"
+ //DataAPIPath: "http://localhost:8080/sinopacwidget"
+};

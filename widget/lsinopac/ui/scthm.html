@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="HandheldFriendly" content="True"/>
+        <meta name="MobileOptimized" content="320"/>
+        <meta name="robots" content="follow,index"/>
+        <meta name="author" content=""/>
+        <meta name="description" content=""/>
+        <meta name="keywords" content=""/> 
+        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
+        <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
+        <script>
+            var that = this;
+            var _WP_PATH = "../";
+
+            $(function () {
+                jQuery.loadScript = function (url, usecache) {
+                    usecache = true;
+                    var _u = _WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
+                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
+
+                };
+                jQuery.loadCSS = function (url) {
+                    var _u = _WP_PATH + url;
+                    //    if (APP_CONFIG.VERSION)
+                    //        _u += "?_=" + APP_CONFIG.VERSION;
+                    if (document.createStyleSheet)
+                        try {
+                            document.createStyleSheet(_u);
+                        } catch (e) {
+                        }
+                    else if ($("head link[href='" + _u + "']").length === 0)
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
+                };
+
+
+                if (typeof (LabCI) === "undefined")
+                    LabCI = {WP: {}};
+                else if (typeof (LabCI.WP) === "undefined")
+                    LabCI.WP = {};
+
+                if (typeof (LabCI.AbstractPageObj) === "undefined")
+                    $.loadScript("js/lib/combined/core.2.0.3.js");
+
+                if (typeof (APP_CONFIG) === "undefined") {
+                    $.loadScript("/js/constant.js");
+                    $.loadCSS("css/common_1.0.3.css");
+                }
+                
+                if (typeof (LabCI.WP.AppUtils) === "undefined")
+                    $.loadScript("js/apputils.js");                
+                
+                $.loadScript("js/pagingbar.js");
+                
+                var lang = LabCI.WP.AppUtils.getLang();
+                
+                
+                // 3rd Party Libraries
+                if (Date.CultureInfo===undefined) $.loadScript("js/misc/date.js", true);
+                if (typeof(JSON)==="undefined") $.loadScript("js/misc/json2.js");
+                if (typeof(NumberFormat)==="undefined") $.loadScript("js/misc/numberformat.js");
+
+                //page specific object...
+                $.loadScript("js/heatmapbox.js");
+                $.loadScript("js/apputils.js");
+                
+                // SSChart
+                $.loadScript("js/lib/sschart/jquery.cookies.2.2.0.min.js");
+                $.loadScript("js/lib/sschart/jquery.ui.sschart.js");
+                $.loadScript("js/lib/sschart/jquery.ui.compareChart.js");
+                $.loadScript("js/lib/sschart/helpers.js");
+                $.loadScript("js/lib/sschart/helpersVAP-002.js");
+                if (lang ==="zh_HK") $.loadScript("js/lib/sschart/TALabels_zh_HK.js"); else if (lang ==="zh_CN") $.loadScript("js/lib/sschart/TALabels_zh_CN.js"); else $.loadScript("js/lib/sschart/TALabels_en.js");
+                
+                // Sector Heatmap PageObj & Resources
+                $.loadCSS("css/scthm.css");
+                $.loadScript("js/scthm.js");
+                
+                
+                if (lang === "zh_HK"){
+                    $.loadScript("js/commonrc_zh_HK.js");
+                    $.loadScript("js/scthm_zh_HK.js");
+                }else if (lang === "zh_CN"){
+                    $.loadScript("js/commonrc_zh_CN.js");
+                    $.loadScript("js/scthm_zh_CN.js");
+                }else if (lang === "en"){
+                    $.loadScript("js/commonrc_en.js");
+                    $.loadScript("js/scthm_en.js");
+                }else{
+                    $.loadScript("js/commonrc_zh_TW.js");
+                    $.loadScript("js/scthm_zh_TW.js");
+                }
+                
+                
+                
+                
+
+                // For returning the access token
+                LabCI.getToken = function () {
+                    return decodeURIComponent(LabCI.Utils.getURLParameter("token"));
+
+                };
+                LabCI.setDataAPIPath = function (path) {
+                    if (LabCI && LabCI.SSDLConf) {
+                        if (path === undefined)
+                            LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
+                    }
+                };
+                
+                LabCI.setDataAPIPath();
+
+
+                window["lsinopac_scthm"] = LabCI.WP["createscthmpageobj"].call(that).init(lang).show();
+            });
+        </script>
+    </head>
+    <body>
+<div id="lsinopac_scthm" class="lsinopac">
+
+
+
+    <div id="lsinopac_funcbar" class="lsinopac_funcbar2 wbox">
+
+        <div id="lsinopac_mktbar" class="lsinopac_funcbar2-lv1">
+
+            <div class="funcbarcell first menulink selected" id="HKG">
+                <div class="cellbody"><div class="lbl"></div><div class="cellhighlight"></div></div>
+            </div><!--
+
+            --><div class="funcbarcell menulink" id="USA">
+                <div class="cellbody"><div class="lbl"></div><div class="cellhighlight"></div></div>
+            </div><!--
+
+            --><div class="funcbarcell menulink" id="TAI">
+                <div class="cellbody"><div class="lbl"></div><div class="cellhighlight"></div></div>
+            </div>
+
+        </div>
+
+        <div id="lsinopac_perbar" class="lsinopac_funcbar2-lv2">
+
+            <div class="funcbarcell first menulink selected" id="p1d">
+
+                <div class="cellbody"><div class="lbl"></div></div>
+
+            </div>
+
+            <div class="funcbarcell menulink" id="p1w">
+
+                <div class="cellbody"><div class="lbl"></div></div>
+
+            </div>
+
+            <div class="funcbarcell menulink" id="p1m">
+
+                <div class="cellbody"><div class="lbl"></div></div>
+
+            </div>
+
+            <div class="funcbarcell last menulink" id="p6m">
+
+                <div class="cellbody"><div class="lbl"></div></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="heatmapbox" class="wbox">
+
+      
+
+
+        <div>
+            <div id="heatmapnavbox" class="datatable">
+                <div id="breadcrumb">
+
+                    <div id="breadcrumb-lv1" class=""></div>
+
+                    <div id="breadcrumb-lv2" style="display:none"></div>
+
+                </div>
+            </div>
+
+            <div id="heatmapnavbox_sub" class="datatable">
+                <div id="heatmaplegend" class="legendtext">
+
+                    <span id="heatmaplegend-n"></span>
+
+                    <div id="heatmaplegend-lbl"></div>
+
+                    <span id="heatmaplegend-p"></span>
+
+                    <div class="helpbubble" helpmsgid="hm"></div>
+
+                </div>
+
+                <div id="actionbtngrp">
+
+                    <div id="sizetypeselect">
+
+                        <input type="radio" id="sizetype-am" name="sizetype"><label for="sizetype-am"></label>
+
+                        <input type="radio" id="sizetype-mc" name="sizetype" checked="checked"><label for="sizetype-mc"></label>
+
+                    </div>
+
+                    <div id="lsinopac_refreshbtn" class="button"></div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="heatmapcanvas"></div>
+
+    </div>
+
+
+
+    <div id="itemlist" class="datatable wbox sct">
+        <div class="resultbox">
+            <div class="datarow datarowtmpl" style="display:none" ric="">
+                <div class="textlink order"></div><!--
+                --><div class="textlink symbol"></div><!--
+                --><div class="textlink nm"></div><!--
+                --><div class="ls"></div><!--
+                --><div class="ccy"></div><!--
+                --><div class="hmcell p1d"></div><!--
+                --><div class="hmcell p1w"></div><!--
+                --><div class="hmcell p1m"></div><!--
+                --><div class="hmcell p6m"></div>
+            </div>
+
+        </div>
+
+        <div id="dclm">
+
+            <div class="pagingbar" style="display:none"></div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+</div>
+    
+    
+    </body>
+</html>

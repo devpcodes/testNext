@@ -1,0 +1,130 @@
+
+<script>
+    (function ($) {
+        $(function () {
+            var _WP_PATH = "../";
+            jQuery.loadScript = function (url, usecache) {
+                jQuery.ajax({url: _WP_PATH + url, dataType: "script", async: false, method: "GET", ifModified: usecache});
+            };
+            jQuery.loadCSS = function (url) {
+                if (document.createStyleSheet)
+                    try {
+                        document.createStyleSheet(_WP_PATH + url);
+                    } catch (e) {
+                    }
+                else if ($("head link[href='" + _WP_PATH + url + "']").length === 0)
+                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($("head"));
+            };
+            var lang = LabCI.Utils.getURLParameter("lang");
+                if (lang == null || lang == undefined || lang == "") {
+                    lang = "zh_TW";
+                }
+            if (typeof (LabCI.WP.FinancialPageObj) === "undefined") {
+                //    $.loadCSS("css/ps.css");
+                $.loadScript("js/quote-financial.js");
+            }
+            
+             if (lang === "zh_HK")
+             $.loadScript("js/quote-financial_zh_HK.js");
+             else if (lang === "zh_CN")
+             $.loadScript("js/quote-financial_zh_CN.js");
+             else if (lang === "en")
+             $.loadScript("js/quote-financial_en.js");
+             else
+             $.loadScript("js/quote-financial_zh_TW.js");
+             
+        });
+// Turn on/off debug logger, default is off
+        LabCI.Utils.CONSOLELOGGER.isdebug = true;
+    })(jQuery);
+</script>
+<style>
+#lsinopac-quote-financial {pointer-events: none;}
+#lsinopac-quote-financial .headerrow{background-color: #5b7ea8; font-size:15px; color:white;}
+#lsinopac-quote-financial .datatable{width:calc(100% - 20px); margin:0 auto;}
+#lsinopac-quote-financial .datatable.summary{margin-bottom: 50px;}
+#lsinopac-quote-financial .datatable .datarow{min-height: 50px;}
+#lsinopac-quote-financial .datatable .datarow .title{text-transform: uppercase;}
+#lsinopac-quote-financial .datarow:nth-child(odd){background-color: #f1f1f1;}
+
+@media only screen and (max-width: 768px) {
+    #lsinopac-quote-financial .datatable .y1, #lsinopac-quote-financial .datatable .y2{display: none;}                                       
+    #lsinopac-quote-financial .datatable .y3, #lsinopac-quote-financial .datatable .y4{    
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;}
+    #lsinopac-quote-financial{padding:3px;}
+    .headerrow  div, .datarow div{padding: 0px 5px; font-size:14px;}
+    .datarow div:nth-child(n+1){word-break: break-all;}
+    .datarow div:first-child{word-break: break-word;}
+    
+    
+}
+</style>
+<div id="lsinopac-quote-financial" class="lsinopac">
+    <div id="summary_title"></div>
+    <div class="datatable bal_sheet">
+        <div class="row headerrow "><div class="col-4 vcenter title">title</div><div class="col-2 vcenter y1"></div><div class="col-2 vcenter y2"></div><div class="col-2 vcenter y3"></div><div class="col-2 vcenter y4"></div></div>
+        <div class='row datarow SCSI'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ATRC'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow AITL'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOCA'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ATCA'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ACDB'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ASEC'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOEA'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ANTL'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow APPN'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow AINT'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SINV'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOLA'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOAT'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ATOT'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow LTCL'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow LTTD'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SLTL'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow LMIN'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow LTLL'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SRPR'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SPRS'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SCMS'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOTE'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow QTLE'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow QTLL'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow QTCO'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow QTPO'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+    </div>
+    <div class="datatable income_stat">
+        <div class="row headerrow "><div class="col-4 vcenter title">title</div><div class="col-2 vcenter y1">Dec 13<br>C.</div><div class="col-2 vcenter y2">Dec 14<br>C.</div><div class="col-2 vcenter y3">Dec 15<br>C.</div><div class="col-2 vcenter y4">Dec 16<br>C.</div></div>
+        <div class='row datarow RTLR'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SSGA'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SDPR'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ETOE'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOPI'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SNII'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SNIE'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ENII'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SBTR'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow EIBT'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow NINC'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SBBF'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SBAI'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+    </div>
+    
+    <div class="datatable cashflow">
+        <div class="row headerrow "><div class="col-4 vcenter title">title</div><div class="col-2 vcenter y1">Dec 13<br>C.</div><div class="col-2 vcenter y2">Dec 14<br>C.</div><div class="col-2 vcenter y3">Dec 15<br>C.</div><div class="col-2 vcenter y4">Dec 16<br>C.</div></div>
+        <div class='row datarow OTLO'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow ITLI'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow FTLF'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SDED'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SAMT'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SNCI'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SOCF'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SCEX'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow FCDP'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SNCC'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SNCB'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+        <div class='row datarow SNCE'><div class='col-4 vcenter title'></div><div class='col-2 vcenter y1'></div><div class='col-2 vcenter y2'></div><div class='col-2 vcenter y3'></div><div class='col-2 vcenter y4'></div></div>
+    </div>
+</div>

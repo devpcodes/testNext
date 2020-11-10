@@ -1,0 +1,89 @@
+
+<script>
+    (function ($) {
+        $(function () {
+            var _WP_PATH = "../";
+            jQuery.loadScript = function (url, usecache) {
+                jQuery.ajax({url: _WP_PATH + url, dataType: "script", async: false, method: "GET", ifModified: usecache});
+            };
+            jQuery.loadCSS = function (url) {
+                if (document.createStyleSheet)
+                    try {
+                        document.createStyleSheet(_WP_PATH + url);
+                    } catch (e) {
+                    }
+                else if ($("head link[href='" + _WP_PATH + url + "']").length === 0)
+                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($("head"));
+            };
+            /*
+             
+             // 3rd Party Libraries
+             
+             //if (Date.CultureInfo===undefined) $.loadScript("js/misc/date.js", true);
+             
+             if (typeof(JSON)==="undefined") $.loadScript("js/misc/json2.js");
+             
+             //if (typeof(NumberFormat)==="undefined") $.loadScript("js/misc/numberformat.js");
+             
+             
+             
+             // LabCI Libraries
+             
+             if (typeof(LabCI.AbstractPageObj)==="undefined") $.loadScript("js/lib/abstractpageobj.js");
+             
+             if (typeof(LabCI.Utils)==="undefined") {
+             
+             $.loadScript("js/lib/utils.js");
+             
+             $.loadScript("js/lib/financialdataformat.js");
+             
+             }
+             
+             if (typeof(LabCI.SSDL)==="undefined") {
+             
+             $.loadScript("js/lib/ssdl/ssdlconfig.js");
+             
+             $.loadScript("js/lib/ssdl/ssdlcore.js");
+             
+             }
+             */
+            // Common Resources
+            $.loadCSS("css/common_1.0.3.css");
+    //        $.loadScript("js/commonrc.js");
+            var lang = LabCI.Utils.getURLParameter("lang");
+            if (lang == null || lang == undefined || lang == "") {
+                lang = "zh_TW";
+            }
+    /*        if (lang === "zh_HK")
+                $.loadScript("js/commonrc_zh_HK.js");
+            else if (lang === "zh_CN")
+                $.loadScript("js/commonrc_zh_CN.js");
+            else if (lang === "en")
+                $.loadScript("js/commonrc_en.js");
+            else
+                $.loadScript("js/commonrc_zh_TW.js");
+*/
+            // PowerSearch PageObj & Resources
+            if (typeof (LabCI.WP.PSPageObj) === "undefined") {
+                $.loadCSS("css/ps.css");
+                $.loadScript("js/ps.js");
+            }
+            if (lang === "zh_HK")
+                $.loadScript("js/ps_zh_HK.js");
+            else if (lang === "zh_CN")
+                $.loadScript("js/ps_zh_CN.js");
+            else if (lang === "en")
+                $.loadScript("js/ps_en.js");
+            else
+                $.loadScript("js/ps_zh_TW.js");
+        });
+// Turn on/off debug logger, default is off
+        LabCI.Utils.CONSOLELOGGER.isdebug = true;
+    })(jQuery);
+</script>
+<!-- ======================================================================= -->
+<div id="lsinopac-ps">
+    <input tabindex="1">
+    <div class="magglassicon"></div>
+    <div class="loadingicon"></div>
+</div>

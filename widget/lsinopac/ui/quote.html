@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="HandheldFriendly" content="True"/>
+        <meta name="MobileOptimized" content="320"/>
+        <meta name="robots" content="follow,index"/>
+        <meta name="author" content=""/>
+        <meta name="description" content=""/>
+        <meta name="keywords" content=""/> 
+        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
+        <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
+        <!--TEST 
+        <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js" integrity="sha256-EgPuQS+2I8bm2u3b3r1dJUEiO56a/xeZGXiTnNTvYZM=" crossorigin="anonymous"></script>
+        -->
+        <script>
+            var that = this;
+            var _WP_PATH = "../";
+
+            $(function () {
+                jQuery.loadScript = function (url, usecache) {
+                    usecache = true;
+                    var _u = _WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
+                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
+
+                };
+                jQuery.loadCSS = function (url) {
+                    var _u = _WP_PATH + url;
+                    //    if (APP_CONFIG.VERSION)
+                    //        _u += "?_=" + APP_CONFIG.VERSION;
+                    if (document.createStyleSheet)
+                        try {
+                            document.createStyleSheet(_u);
+                        } catch (e) {
+                        }
+                    else if ($("head link[href='" + _u + "']").length === 0)
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
+                };
+
+
+                if (typeof (LabCI) === "undefined")
+                    LabCI = {WP: {}};
+                else if (typeof (LabCI.WP) === "undefined")
+                    LabCI.WP = {};
+
+                if (typeof (LabCI.AbstractPageObj) === "undefined")
+                    $.loadScript("js/lib/combined/core.2.0.3.js");
+
+                if (typeof (APP_CONFIG) === "undefined") {
+                    $.loadScript("/js/constant.js");
+                    $.loadCSS("css/common_1.0.3.css");
+                }
+
+                if (typeof (LabCI.WP.AppUtils) === "undefined")
+                    $.loadScript("js/apputils.js");
+
+                /*    if (typeof (LabCI.AbstractPageObj) === "undefined")
+                 $.loadScript("js/lib/abstractpageobj.js");
+                 if (typeof (LabCI.Utils) === "undefined")
+                 $.loadScript("js/lib/utils.js");
+                 if (typeof (LabCI.Utils.getUpDownClass) === "undefined")
+                 $.loadScript("js/misc/financialdataformat.js");
+                 
+                 if (typeof (LabCI.SSDL) === "undefined") {
+                 //in core.js
+                 $.loadScript("js/lib/ssdl/ssdlconfig.js");
+                 $.loadScript("js/lib/ssdl/ssdlcore.js");
+                 }
+                 */
+//chart engine...
+                if (typeof (chartFactory) === "undefined") {
+                    $.loadScript("js/lib/c5/alpha_chart.js");
+                    $.loadCSS("css/c5/c5.css");
+                }
+
+                var lang = LabCI.Utils.getURLParameter("lang");
+
+                if (lang == null || lang == undefined || lang == "") {
+                    lang = "zh_TW";
+                }
+                LabCI.getLang = function () {
+                    return lang;
+                };
+
+                var ric = LabCI.Utils.getURLParameter("ric");
+                var symbol = LabCI.Utils.getURLParameter("symbol");
+                var exch = LabCI.Utils.getURLParameter("exch");
+
+                //TEST
+                $.loadScript("js/lib/combined/sschart.js");
+                if (lang === "zh_HK")
+                    $.loadScript("js/lib/sschart/TALabels_zh_HK.js");
+                else if (lang === "zh_CN")
+                    $.loadScript("js/lib/sschart/TALabels_zh_CN.js");
+                else
+                    $.loadScript("js/lib/sschart/TALabels_en.js");
+
+                //page specific object...
+                if (typeof (LabCI.WP.QuotePageObj) === "undefined") {
+                    $.loadScript("js/quote.js");
+                }
+
+
+                ;
+                if (lang === "zh_HK")
+                    $.loadScript("js/quote_zh_HK.js");
+                else if (lang === "zh_CN")
+                    $.loadScript("js/quote_zh_CN.js");
+                else if (lang === "en")
+                    $.loadScript("js/quote_en.js");
+                else
+                    $.loadScript("js/quote_zh_TW.js");
+
+                if (lang === "zh_HK")
+                    $.loadScript("js/commonrc_zh_HK.js");
+                else if (lang === "zh_CN")
+                    $.loadScript("js/commonrc_zh_CN.js");
+                else if (lang === "en")
+                    $.loadScript("js/commonrc_en.js");
+                else
+                    $.loadScript("js/commonrc_zh_TW.js");
+
+
+                // For returning the access token
+                LabCI.getToken = function () {
+                    return decodeURIComponent(LabCI.Utils.getURLParameter("token"));
+
+                };
+                LabCI.setDataAPIPath = function (path) {
+                    if (LabCI && LabCI.SSDLConf) {
+                        if (path === undefined)
+                            LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
+                    }
+                };
+                LabCI.setDataAPIPath();
+
+                // Helper method to load a widget into a <div>
+                $.fn.loadwidget = function (url, readyfn) {
+                    var $this = $(this);
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        success: function (html) {
+                            $this.html(html);
+                            if (readyfn)
+                                readyfn();
+                        },
+                        error: function (jqXHR, textStatus) {
+
+                        }
+                    });
+                };
+
+                // Instantiate the PowerSearch widget
+                LabCI.loadPowerSearchWidget = function () {
+                    if (window["lsinopac_ps"] === undefined) {
+                        $("#psbox").loadwidget("ps.html?_=" + (new Date()).getTime(), function () {
+                            
+                            window["lsinopac_ps"] = LabCI.WP["createpspageobj"].call(that).init(lang).show();
+                        });
+                    }
+                };
+                LabCI.loadPowerSearchWidget();
+
+                /*        LabCI.loadSummaryWidget = function () {
+                 
+                 $("#lsinopac-quote-summary-chart").loadwidget("quote-summary.html?_=" + (new Date()).getTime(), function () {
+                 //        LabCI.setDataAPIPath();
+                  LabCI.WP.createpspageobj.call(that).init(LabCI.getLang()).show();
+                 window["lsinopac-quote-summary-chart"] = LabCI.WP["createquotesummarypageobj"].call(that).init(lang).show();
+                 });
+                 };
+                 */
+                if (ric != null && ric != '') {
+                    window["lsinopac_quote"] = LabCI.WP["createquotepageobj"].call(that).init(lang).show({ric: ric});
+                } else if (symbol != null && exch != null) {
+                    window["lsinopac_quote"] = LabCI.WP["createquotepageobj"].call(that).init(lang).show({symbol: symbol, exch: exch});
+                } else {
+                    window["lsinopac_quote"] = LabCI.WP["createquotepageobj"].call(that).init(lang).show();
+                }
+
+                $(window).resize(function () {
+                    window["lsinopac_quote"].resize();
+                });
+
+            });
+        </script>        
+        <style>
+            /*        @media (max-width: 575.98px),
+                    @media (min-width: 576px) and (max-width: 767.98px){
+                        .desktoptemplate{
+                            display: none;
+                        }
+                        .mobiletemplate{
+                            display: block;
+                        }    
+                    } 
+            */
+            body{
+                padding: 0;
+            }
+            table{
+                width: 100%;
+                border-collapse: collapse;
+                padding:0px;
+            }
+            tr{
+                padding:0px;
+            }
+            td{
+                padding:0px;
+            }
+
+            #lsinopac-quote .powersearchpanel {
+                /*    width: 100%; */
+                padding-bottom: 20px;             
+                /*       text-align:right; */
+            }
+            #lsinopac-quote #psbox{
+                width: 100%;
+            }
+            #lsinopac-ps input{
+                width: 100%;
+            }
+            #lsinopac-quote .stockinfopanel{
+                margin-bottom:30px;                
+            }
+            #lsinopac-quote .stockinfopanel .name {
+                font-size: 15px;
+                font-weight: 700;
+            }
+            #lsinopac-quote .stockinfopanel .price{
+                font-size: 28px;
+                font-weight: 400;
+            } 
+            #lsinopac-quote .stockinfopanel .change {
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 42px;
+
+            }
+            #lsinopac-quote .stockinfopanel .refreshBtn {
+                background-repeat: repeat;
+                top: 0;
+                height: 26px;
+            }            
+            #lsinopac-quote .stockinfopanel .watchlistbutton {
+                color: #CC0066;
+                /*   width: 80%; */
+                width: 50%;
+                /*    background-image: url(../images/heart2.png);
+                    background-repeat: no-repeat;
+                    background-position: right 5px center; 
+                */
+                /*    height: 40px;
+                    line-height: 40px;
+                */
+                text-align: center;
+                color: #D73B3C;
+                border: 1px solid #D73B3C;
+                /*     cursor: pointer;             */
+                background-color: white;
+                border-radius: 0px;
+                /*    padding: 0px 28px 0px 12px;*/
+                padding: 0px;
+
+            }            
+            #lsinopac-quote .stockinfopanel .note {
+                font-size: 13px;
+                font-weight: 400;
+                color: #999999;
+            }
+            #lsinopac-quote .stockinfopanel .buybutton {
+                width: 49%;
+                height:40px;
+                /*    line-height: 40px; */
+                text-align: center;
+                color: #D73B3C;
+                background-color: white;
+                border: 1px solid #D73B3C;
+                /*    cursor: pointer;
+                    margin-right:2%;
+                */
+                border-radius: 0px;
+            }
+            #lsinopac-quote .stockinfopanel .buybutton2{
+                width: 100%;
+                height:40px;
+                /*    line-height: 40px; */
+                text-align: center;
+                color: white;
+                border: 1px solid #c50017;
+                /*    cursor: pointer; */
+                background-color: #c50017;
+                border-radius: 50px;
+            }             
+            #lsinopac-quote .stockinfopanel .sellbutton{
+                width: 49%;
+                height:40px;
+                /*    line-height: 40px; */
+                text-align: center;
+                color: #01A57A;
+                border: 1px solid #01A57A;
+                /*    cursor: pointer; */
+                background-color: white;
+                border-radius: 0px;
+            } 
+            #lsinopac-quote .sectionbox{
+                padding: 0px 10px 0px 10px;
+            }
+            #lsinopac-quote .sectionboxitem {
+                border: 1px solid #DBD8D5;
+                border-bottom: 0px solid #DBD8D5;
+                border-radius: 10px 10px 0px 0px;
+                background-color: #DBD8D5;
+                line-height:40px;
+                height: 40px;
+                margin:2px;
+                font-size:16px;
+                font-weight: 700;
+                cursor:pointer;
+            }
+            #lsinopac-quote .sectionbox .selected {
+                color: #FC0001;
+                background-color: white;
+                cursor:pointer;
+            }
+
+            #lsinopac-quote .sectionselect{
+                width: 100%;
+                height: 35px;
+                border: 1px solid #9A9791;
+                color: #3E3A39;
+            }
+
+            #lsinopac-quote .selectgroup{
+                width: 100%;
+            }
+
+            #lsinopac-quote .selectgroup .selectbutton1{
+                border: 1px solid #9A9791;
+                border-right-width: 0px;
+                border-radius: 0px;
+                width: 100%;
+                background-color: white;
+                color: black;
+                text-align:left;
+            }    
+            #lsinopac-quote .selectgroup .selectbutton2{
+                border: 1px solid #9A9791;
+                border-radius: 0px;
+                border-left-width: 0px;
+                background-color: white;
+                color: black;     
+            } 
+            #lsinopac-quote .selectgroup .selectbutton1:focus,
+            #lsinopac-quote .selectgroup .selectbutton2:focus{
+                box-shadow: none;
+            } 
+
+            #lsinopac-quote .selectgroup .dropdown-menu{
+                width: 100%;
+            }             
+
+            #lsinopac-quote .contentregion{
+                width: 100%
+            }
+
+            #lsinopac-quote-chart{
+                padding-top:15px;
+            }
+
+            #lsinopac-quote-srplus{
+                padding-top:15px;
+            }  
+
+            #lsinopac-quote-content{
+                padding-bottom:50px;
+            }
+
+            #lsinopac-quote-content .itemlabel{
+                font-size: 15px;
+                font-weight: 700;
+                padding-top:5px;
+                padding-bottom: 5px;
+            }
+
+            #lsinopac-quote-content .itemvalue{
+                font-size: 15px;
+                font-weight: 400;
+                text-align: right;
+                padding-top:5px;
+                padding-bottom: 5px;                
+            }            
+
+            #lsinopac-quote-related{
+                padding-top:15px;
+            }
+
+            #lsinopac-quote-related .peer-title{
+                font-weight: 700;
+            }            
+
+            #lsinopac-quote .datablockend{
+                padding-bottom:15px;
+            }
+            #lsinopac-quote-content .itemvalue.lastrow{
+                border-right: 0px; 
+            } 
+            .mobile-navbar .tab{
+                background-repeat: no-repeat;
+                background-position: center top;
+            }
+            .mobile-navbar .tab div{
+                font-size: 12px;
+                padding-top:27px;
+            }
+            .mobile-navbar .tab-summary{
+                background-image: url("../images/quote/summary_inactive.png");
+            }            
+            .mobile-navbar .tab-chart{
+                background-image: url("../images/quote/chart_inactive.png");
+            }
+            .mobile-navbar .tab-sr{
+                background-image: url("../images/quote/stock_report_inactive.png");
+            } 
+            .mobile-navbar .tab-financial{
+                background-image: url("../images/quote/financial_inactive.png");
+            } 
+            
+            .mobile-navbar .tab-summary.selected{
+                background-image: url("../images/quote/summary_active.png");
+                color: #FD0000;
+            }
+            .mobile-navbar .tab-chart.selected{
+                background-image: url("../images/quote/chart_active.png");
+                color: #FD0000;
+            }            
+            .mobile-navbar .tab-sr.selected{
+                background-image: url("../images/quote/stock_report_active.png");
+            }
+            .mobile-navbar .tab-financial.selected{
+                background-image: url("../images/quote/financial_active.png");
+            }
+            
+            #invalidricModel .btn-close {
+                height: 40px;
+                text-align: center;
+                color: #D73B3C;
+                background-color: white;
+                border: 1px solid #D73B3C;
+                border-radius: 0px;            
+            }
+            @media (min-width: 768px) {
+                #lsinopac-quote-content .itemvalue{
+                    border-right: 1px solid black;
+                }
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="lsinopac-quote" class="lsinopac">
+
+            <div class="powersearchpanel">
+                <div class="row">
+                    <div class="col-md-8 col-md-auto">
+
+                    </div>
+                    <div class="col-md-4 ml-auto">
+                        <div id="psbox" style="float:right;"></div>
+                        <div style="clear:both"></div>                           
+                    </div>
+                </div>
+
+            </div>
+
+            <!--   <div class="row justify-content-end powersearchpanel">
+                   <div class="col-4 text-align-right align-self-end"><div id="psbox"></div></div>
+               </div>
+            -->
+            <div class="row stockinfopanel">
+                <div class="col-md-8 col-md-auto" style="max-width:500px;">
+                    <div class="row">
+                        <div class="col-6 text-nowrap name">-</div>
+                        <div class="col-6" style="text-align: center">
+                            <button type="button" class="btn watchlistbutton">Add </button>
+                            <button type="button" class="btn lblrefresh refreshBtn tab2Refresh" data-refresh-value="">更新</button>
+                        </div>                        
+                    </div>
+                    <div class="row">
+                        <div class="col-6 price">-</div>
+                        <div class="col-6 change text-left"><span class="netchange">-</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pctchange">-</span></div>
+                    </div> 
+                    <div class="row">
+                        <div class="col note">-</div>
+                    </div>
+
+                </div>
+                <div class="col-md-3 ml-auto" style="min-width:301px;text-align:right">
+                    <div class="row">
+                        <div class="col d-none d-md-block"></div>
+                        <div class="col"><button type="button" class="btn buybutton2">BUY</button></div>
+                    </div>
+            <!--        <div style="width:100%">
+                        <button type="button" class="btn buybutton2">BUY</button> 
+                    </div>
+            -->
+                </div> 
+            </div>
+            <div class="d-none d-md-block"> <!-- show on large screen -->
+                <div class=" row sectionbox">
+                    <div class="col text-center summarylabel sectionboxitem selected" mode="summary">Summary</div>
+                    <div class="col text-center chartlabel sectionboxitem" mode="chart">Chart</div>
+                    <div class="col text-center stockreportlabel sectionboxitem" mode="srplus">Stock Report +</div>
+                    <div class="col text-center financiallabel sectionboxitem" mode="financial">Financial</div>
+                </div>
+            </div>            
+        <!--    <div class="d-md-none"> 
+                <div class="btn-group selectgroup">
+                    <button class="btn btn-default selectbutton1" type="button" data-toggle="dropdown">
+                        <span class="currentvalue summarylabel">Summary</span>
+                    </button>
+                    <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2" data-toggle="dropdown">
+                    </button>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item summarylabel" value="summary" type="button">Summary</button>
+                        <button class="dropdown-item chartlabel" value="chart" type="button">Chart</button>
+                        <button class="dropdown-item stockreportlabel" value="srplus" type="button">Stock Report +</button>
+                    </div>
+                </div>
+            </div>
+-->
+            <div id="lsinopac-quote-content" class="contentregion">
+                <div id="lsinopac-quote-summary-chart" class="changed"></div>
+                <div id="lsinopac-quote-chart" class="changed"></div>
+                <div id="lsinopac-quote-srplus"></div>
+                <div id="lsinopac-quote-financial"></div>
+
+            <!--    <div id="lsinopac-quote-detail">
+                    <div class="row">
+                        <div class="col-6 col-md-4">
+                            <div class="row">
+                                <div class="col-6 itemlabel lblopen">Open</div>
+                                <div class="col-6 itemvalue opdata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblhigh">High</div>
+                                <div class="col-6 itemvalue hidata">-</div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-6 itemlabel lbllow">Low</div>
+                                <div class="col-6 itemvalue lodata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblvwap">VWAP</div>
+                                <div class="col-6 itemvalue vwapdata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblwk52high">52W High</div>
+                                <div class="col-6 itemvalue wk52highdata">-</div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-6 itemlabel lblwk52low">52W Low</div>
+                                <div class="col-6 itemvalue wk52lowdata">-</div>
+                            </div> 
+                            <div class="row marketcaprow">
+                                <div class="col-6 itemlabel lblmarketcap">Market Cap</div>
+                                <div class="col-6 itemvalue marketcapdata">-</div>
+                            </div> 
+                            <div class="row d-none d-md-block datablockend"></div>                            
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="row">
+                                <div class="col-6 itemlabel lblbid">Bid</div>
+                                <div class="col-6 itemvalue biddata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblask">Ask</div>
+                                <div class="col-6 itemvalue askdata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblpc">Previous Close</div>
+                                <div class="col-6 itemvalue hcdata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lbleps">EPS (TTM)</div>
+                                <div class="col-6 itemvalue epsdata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblper">PER (TTM)</div>
+                                <div class="col-6 itemvalue perdata">-</div>
+                            </div>
+                            <div class="row pbrrow">
+                                <div class="col-6 itemlabel lblpbr">PBR (LFY)</div>
+                                <div class="col-6 itemvalue pbrdata">-</div>
+                            </div> 
+                            <div class="row lotsizerow">
+                                <div class="col-6 itemlabel lbllotsize">Lot Size</div>
+                                <div class="col-6 itemvalue lotsizedata">-</div>
+                            </div> 
+                            <div class="row d-none d-md-block datablockend"></div>    
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="row">
+                                <div class="col-6 itemlabel lbldividend">Dividend</div>
+                                <div class="col-6 itemvalue lastrow dividenddata">-</div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-6 itemlabel lbldividendyield">Dividend Yield</div>
+                                <div class="col-6 itemvalue lastrow yielddata">-</div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-6 itemlabel lbldividendexdate">Dividend Ex Date</div>
+                                <div class="col-6 itemvalue lastrow dividendexdatedata">-</div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-6 itemlabel lbldividendpaydate">Dividend Pay Date</div>
+                                <div class="col-6 itemvalue lastrow dividendpaydatedata">-</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 itemlabel lblvolume">Volume</div>
+                                <div class="col-6 itemvalue lastrow volumedata">-</div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-6 itemlabel lblturnover">Turnover</div>
+                                <div class="col-6 itemvalue lastrow turnoverdata">-</div>
+                            </div>
+                            <div class="datablockend"></div>                               
+                        </div>                        
+                    </div>
+                </div>                
+-->
+                
+                <div id="lsinopac-quote-detail">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-6 itemlabel lblopen">Open</div>
+                                    <div class="col-6 itemvalue opdata">-</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 itemlabel lblhigh">High</div>
+                                    <div class="col-6 itemvalue hidata">-</div>
+                                </div> 
+                                <div class="row">
+                                    <div class="col-6 itemlabel lbllow">Low</div>
+                                    <div class="col-6 itemvalue lodata">-</div>
+                                </div>
+                                <div class="row vwaprow">
+                                    <div class="col-6 itemlabel lblvwap">VWAP</div>
+                                    <div class="col-6 itemvalue vwapdata">-</div>
+                                </div>
+                                <div class="row yrhighrow">
+                                    <div class="col-6 itemlabel lblwk52high">52W High</div>
+                                    <div class="col-6 itemvalue wk52highdata">-</div>
+                                </div> 
+                                <div class="row yrlowrow">
+                                    <div class="col-6 itemlabel lblwk52low">52W Low</div>
+                                    <div class="col-6 itemvalue wk52lowdata">-</div>
+                                </div> 
+                                <div class="row marketcaprow">
+                                    <div class="col-6 itemlabel lblmarketcap">Market Cap</div>
+                                    <div class="col-6 itemvalue marketcapdata">-</div>
+                                </div> 
+                                <div class="row d-none d-md-block datablockend"></div>                            
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-6 itemlabel lblbid">Bid</div>
+                                    <div class="col-6 itemvalue biddata">-</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 itemlabel lblask">Ask</div>
+                                    <div class="col-6 itemvalue askdata">-</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 itemlabel lblpc">Previous Close</div>
+                                    <div class="col-6 itemvalue hcdata">-</div>
+                                </div>
+                                <div class="row epsrow">
+                                    <div class="col-6 itemlabel lbleps">EPS (TTM)</div>
+                                    <div class="col-6 itemvalue epsdata">-</div>
+                                </div>
+                                <div class="row perrow">
+                                    <div class="col-6 itemlabel lblper">PER (TTM)</div>
+                                    <div class="col-6 itemvalue perdata">-</div>
+                                </div>
+                                <div class="row pbrrow">
+                                    <div class="col-6 itemlabel lblpbr">PBR (LFY)</div>
+                                    <div class="col-6 itemvalue pbrdata">-</div>
+                                </div> 
+                                <div class="row lotsizerow">
+                                    <div class="col-6 itemlabel lbllotsize">Lot Size</div>
+                                    <div class="col-6 itemvalue lotsizedata">-</div>
+                                </div> 
+                                <div class="row d-none d-md-block datablockend"></div>    
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row dividendrow">
+                                    <div class="col-6 itemlabel lbldividend">Dividend</div>
+                                    <div class="col-6 itemvalue lastrow dividenddata">-</div>
+                                </div> 
+                                <div class="row yieldrow">
+                                    <div class="col-6 itemlabel lbldividendyield">Dividend Yield</div>
+                                    <div class="col-6 itemvalue lastrow yielddata">-</div>
+                                </div>  
+                                <div class="row exdaterow">
+                                    <div class="col-6 itemlabel lbldividendexdate">Dividend Ex Date</div>
+                                    <div class="col-6 itemvalue lastrow dividendexdatedata">-</div>
+                                </div> 
+                                <div class="row paydaterow">
+                                    <div class="col-6 itemlabel lbldividendpaydate">Dividend Pay Date</div>
+                                    <div class="col-6 itemvalue lastrow dividendpaydatedata">-</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 itemlabel lblvolume">Volume</div>
+                                    <div class="col-6 itemvalue lastrow volumedata">-</div>
+                                </div> 
+                                <div class="row turnoverrow">
+                                    <div class="col-6 itemlabel lblturnover">Turnover</div>
+                                    <div class="col-6 itemvalue lastrow turnoverdata">-</div>
+                                </div>
+                                <div class="datablockend"></div>                               
+                            </div>                        
+                        </div>
+                    </div>
+                
+                <div>
+                    <div id="lsinopac-quote-related"  class="d-none d-md-block changed">
+                        <div class="peer-title lblpeer">Peer Stocks</div>
+                        <div class="result-count"><span class="stockfrom"></span> - <span class="stockto"></span> <span class="lblstockof">of</span> <span class="stocktotal"></span> <span class="lblstocktotal">stock(s)</span></div>
+                        
+                        <table class="table table-striped sinopactable">
+                            <thead>
+                            <td class="code lblcode">Code</td>
+                            <td class="company lblcompany">Company</td>
+                            <td class="sector lblsector">Sector</td>
+                            <td class="last text-right lbllast">Last</td>
+                            <td class="change text-right lblchange">Change</td>
+                            <td class="pctchange text-right lblchangepct">Change %</td>
+                            <td class="volume text-right lblvolume">Volume</td>
+                            </thead>
+                        </table>
+                        <div class="result-no-count lblnoresults" style="display:none;text-align:center">No results</div>
+                        <nav class="desktop-pagination">
+                            <ul class="pagination pagination justify-content-end">
+                                <li class="page-item" item="prev"><span class="page-link lblprev" onclick="window['lsinopac_quote']._loadRelatedStocksPage(this)">Previous</span></li>
+                                <li class="page-item" item="next"><span class="page-link lblnext" onclick="window['lsinopac_quote']._loadRelatedStocksPage(this)">Next</span></li>
+                                <li class="page-dropdown-item"><span class="page-link"><select class="page-dropdown" onchange="window['lsinopac_quote']._loadRelatedStocksPageFromSelect(this)"></select></span></li>
+                            </ul>
+                        </nav>                        
+                    </div>                    
+                </div>
+
+            </div>
+
+            <div class="modal fade menu-sector" id="invalidricModel" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">                                 
+                        <div class="modal-body">
+                            <div class="lblinvalidRicBody">Invalid Stock Input</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-close lblclose" data-dismiss="modal">Close</button>
+                        </div>                             
+                    </div>                       
+                </div>
+            </div>            
+
+        <nav class="navbar fixed-bottom navbar-expand navbar-light bg-light d-md-none">
+            <div class="navbar-nav mobile-navbar" style="width:100%">
+                <div class="row m-0" style="width:100%">
+                    <div class="col-3 nav-item text-center p-0 tab tab-summary selected" mode="summary"><div class="summarylabel">Summary</div></div>
+                    <div class="col-3 nav-item text-center p-0 tab tab-chart" mode="chart"><div class="chartlabel">Chart</div></div>
+                    <div class="col-3 nav-item text-center p-0 tab tab-sr" mode="srplus"><div class="stockreportlabel">Stock Report+</div></div>
+                    <div class="col-3 nav-item text-center p-0 tab tab-financial" mode="financial"><div class="financiallabel">Financial</div></div>
+                </div>
+            </div>
+        </nav>
+
+        </div>  
+        
+    </body>
+
+
+</html>
