@@ -1,49 +1,44 @@
-
 (function ($) {
+    //################################################################################
+    //################################################################################
+    // The LabCI object for Generic Widget Package
+    // LabCI = { WP: { ... } }
 
-//################################################################################
-//################################################################################
-// The LabCI object for Generic Widget Package
-// LabCI = { WP: { ... } }
+    if (typeof LabCI === 'undefined') LabCI = { WP: {} };
+    else if (typeof LabCI.WP === 'undefined') LabCI.WP = {};
 
-    if (typeof (LabCI) === "undefined")
-        LabCI = {WP: {}};
-    else if (typeof (LabCI.WP) === "undefined")
-        LabCI.WP = {};
+    //################################################################################
 
-//################################################################################
-
-// Create a new PSPageObj ...
+    // Create a new PSPageObj ...
     LabCI.WP.createquotesummarypageobj = function (id) {
-        var pobj = LabCI.AbstractPageObj.extend(id ? id : "lsinopac-quote-summary-chart", LabCI.WP.QuoteSummaryPageObj);
+        var pobj = LabCI.AbstractPageObj.extend(id ? id : 'lsinopac-quote-summary-chart', LabCI.WP.QuoteSummaryPageObj);
         return pobj;
     };
 
-// The PSPageObj class
-// The main object definition is here...
+    // The PSPageObj class
+    // The main object definition is here...
     LabCI.WP.QuoteSummaryPageObj = {
-
         chart: {
             $this: null,
             $chartwidget: null,
             chartframeobj: null,
-            CHARTNAME_MAINCHART: "mainchart",
+            CHARTNAME_MAINCHART: 'mainchart',
             $chartpane: null,
             $chartpane_canvasbox: null,
             mainchartobj: null,
             _TAPANE_HEIGHT: 100, // in pixels
-            curperiod: "1W",
-            curtype: "line",
+            curperiod: '1W',
+            curtype: 'line',
             curta: {
-                overlay: "nooverlay",
-                tapane: "notapane"
-            }
+                overlay: 'nooverlay',
+                tapane: 'notapane',
+            },
         },
         currentquoteric: null,
 
         //test...
-            $tachartbox: null,
-            $chartbox: null,        
+        $tachartbox: null,
+        $chartbox: null,
 
         initImpl: function () {
             // Get ready
@@ -52,15 +47,15 @@
             // c5
             //    this.chart.$this = this.$pageobj.find(".chartbox");
 
-            this.chart.$this = $("#lsinopac-quote-summary .chartbox");
+            this.chart.$this = $('#lsinopac-quote-summary .chartbox');
             // Prepare the Chart Factory
-            this.chart.$chartwidget = this.chart.$this.find(".c5box");
+            this.chart.$chartwidget = this.chart.$this.find('.c5box');
 
             this.chart.chartframeobj = chartFactory.create();
-            this.chart.$chartpane = this.chart.$chartwidget.children(".chartpane1");
-            this.chart.$chartpane_canvasbox = this.chart.$chartpane.children(".canvasbox");
+            this.chart.$chartpane = this.chart.$chartwidget.children('.chartpane1');
+            this.chart.$chartpane_canvasbox = this.chart.$chartpane.children('.canvasbox');
 
-    /*        // Create the price chart object here
+            /*        // Create the price chart object here
             this.chart.mainchartobj = this.chart.chartframeobj.add(chartFactory.PRICE_CHART, this.chart.CHARTNAME_MAINCHART, 1, 1, this.chart.$chartpane_canvasbox, {
                 gridType: chartFactory.GRID_DATE_ALIGN, // do not set here, until later when we know whether it is a HTS or MTS chart in _fxchart_loaddata()...
                 gridStyle: chartFactory.GRID_LABEL_X | chartFactory.GRID_LABEL_Y,
@@ -73,39 +68,34 @@
 */
             ////////////////////////////////////////////////////////////////////
 
-
-
-
             //TEST...
-                    this.$tachartbox = this.$pageobj.find(".tachartbox");
-             this.$chartbox = this.$tachartbox.find("#chartCanvas").sschart({
-             span: "MINUTE_1",
-             period: "DAY_1",
-             type: "LINE",
-             brand: null,
-             gid: null,
-             trend: false,
-             imageOnly: true,
-             onZoomToCustom: null,
-             onCrossHairMove: function (event, data) {
-             },
-             onTAValueChange: function (event, result) {
-             
-             },
-             onChange: function (event, data) {
-             }
-             });            
-             
-
+            this.$tachartbox = this.$pageobj.find('.tachartbox');
+            this.$chartbox = this.$tachartbox.find('#chartCanvas').sschart({
+                span: 'MINUTE_1',
+                period: 'DAY_1',
+                type: 'LINE',
+                brand: null,
+                gid: null,
+                trend: false,
+                imageOnly: true,
+                onZoomToCustom: null,
+                onCrossHairMove: function (event, data) {},
+                onTAValueChange: function (event, result) {},
+                onChange: function (event, data) {},
+            });
 
             // Prepare the resize function
             // ... this has to be created here, because when resize() is called, the "this" will be in a different context
             // ... hence, use "that" in the function scope here to build this resize() function
             // ... a bad trick, but works ;)
             this.resize = function () {
-                that.$pageobj.delaycall("resize", function () {
-                    that.resizeImpl();
-                }, 100);
+                that.$pageobj.delaycall(
+                    'resize',
+                    function () {
+                        that.resizeImpl();
+                    },
+                    100,
+                );
             };
 
             ////////////////////////////////////////////////////////////////////
@@ -125,7 +115,7 @@
         },
         // c5
         resizeMainChart: function () {
-/*
+            /*
             // Not showing any TA, put date/time on mainchartobj's x-axis
             this.chart.mainchartobj.setGridStyle(chartFactory.GRID_LABEL_X | chartFactory.GRID_LABEL_Y);
 
@@ -140,7 +130,7 @@
 */
         },
 
-    /*    // c5
+        /*    // c5
         _chart_changeperiod: function (period) {
             // Save it and apply
 
@@ -322,19 +312,23 @@
         ////////////////////////////////////////////////////////////////////
 */
         showImpl: function (statedata) {
-//        // Get ready
-//        var that = this;
+            //        // Get ready
+            //        var that = this;
 
-            if (this.$pageobj.hasClass("changed")) {
+            if (this.$pageobj.hasClass('changed')) {
                 this.currentquoteric = statedata.ric;
-            //    this._chart_loaddata(this.currentquoteric);
-                // Trigger a resize to catch the current dimension    
-                this.$pageobj.removeClass("changed");
+                //    this._chart_loaddata(this.currentquoteric);
+                // Trigger a resize to catch the current dimension
+                this.$pageobj.removeClass('changed');
             }
 
-
-
-                    this.$chartbox.sschart("setMultiOption", "code:" + this.currentquoteric + "|assettype:EQUITY|span:MINUTE_1|period:DAY_1|type:LINE|token:" + encodeURIComponent(LabCI.getToken()));
+            this.$chartbox.sschart(
+                'setMultiOption',
+                'code:' +
+                    this.currentquoteric +
+                    '|assettype:EQUITY|span:MINUTE_1|period:DAY_1|type:LINE|token:' +
+                    encodeURIComponent(LabCI.getToken()),
+            );
 
             $(window).resize(this.resize);
             this.resizeImpl();
@@ -343,8 +337,8 @@
         },
 
         hideImpl: function () {
-//        // Get ready
-//        var that = this;
+            //        // Get ready
+            //        var that = this;
 
             // Unbind the resize event
             $(window).unbind(_RESIZE_EVENT, this.resize);
@@ -368,8 +362,6 @@
 
         ////////////////////////////////////////////////////////////////////
 
-
-
         ////////////////////////////////////////////////////////////////////
 
         // Build up the UI on-the-fly for different languages
@@ -378,7 +370,7 @@
             var rblbl = that.pageobj_rb.lbl;
 
             $.each(rblbl, function (id, value) {
-                that.$pageobj.find("." + id).html(value);
+                that.$pageobj.find('.' + id).html(value);
             });
         },
 
@@ -386,10 +378,7 @@
 
         // A placeholder for resources, to be defined in separate resource files for specific languages
         PAGEOBJ_RESOURCEBUNDLE: {
-            conf: {
-            }
-        }
-
+            conf: {},
+        },
     };
-
 })(jQuery);

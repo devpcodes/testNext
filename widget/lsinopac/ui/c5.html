@@ -6,72 +6,61 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="format-detection" content="telephone=no">
-        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <meta name="HandheldFriendly" content="True"/>
-        <meta name="MobileOptimized" content="320"/>
-        <meta name="robots" content="follow,index"/>
-        <meta name="author" content=""/>
-        <meta name="description" content=""/>
-        <meta name="keywords" content=""/>  
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="robots" content="follow,index" />
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
         <script src="../js/lib/jquery/jquery-1.10.2.min.js"></script>
-        <script src="../js/lib/bootstrap/bootstrap-4.0.0.min.js"></script>             
+        <script src="../js/lib/bootstrap/bootstrap-4.0.0.min.js"></script>
         <script src="../js/constant.js"></script>
-        <link rel="stylesheet" href="../css/common_1.0.3.css"/>  
+        <link rel="stylesheet" href="../css/common_1.0.3.css" />
 
         <script>
             var that = this;
             $(function () {
-
-
                 jQuery.loadScript = function (url, usecache) {
                     usecache = true;
                     var _u = APP_CONFIG._WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
-                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
-
+                    jQuery.ajax({ url: _u, dataType: 'script', async: false, method: 'GET', ifModified: usecache });
                 };
 
                 jQuery.loadCSS = function (url) {
                     var _u = APP_CONFIG._WP_PATH + url;
-                    if (APP_CONFIG.VERSION)
-                        _u += "?_=" + APP_CONFIG.VERSION;
+                    if (APP_CONFIG.VERSION) _u += '?_=' + APP_CONFIG.VERSION;
                     if (document.createStyleSheet)
                         try {
                             document.createStyleSheet(_u);
-                        } catch (e) {
-                        }
+                        } catch (e) {}
                     else if ($("head link[href='" + _u + "']").length === 0)
-                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
-
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($('head'));
                 };
 
-                if (typeof (LabCI) === "undefined")
-                    LabCI = {WP: {}};
-                else if (typeof (LabCI.WP) === "undefined")
-                    LabCI.WP = {};
+                if (typeof LabCI === 'undefined') LabCI = { WP: {} };
+                else if (typeof LabCI.WP === 'undefined') LabCI.WP = {};
 
-                if (Date.CultureInfo === undefined)
-                    $.loadScript("js/misc/date.js", true);
-                if (typeof (LabCI.AbstractPageObj) === "undefined")
-                    $.loadScript("js/lib/abstractpageobj.js");
-                if (typeof (LabCI.Utils) === "undefined")
-                    $.loadScript("js/lib/utils.js");                
-         //       if (typeof (LabCI.Utils.getUpDownClass) === "undefined")
-                    $.loadScript("js/misc/financialdataformat.js");
-                    if (typeof(LabCI.SSDL)==="undefined") {
-                 //in core.js
-                 $.loadScript("js/lib/ssdl/ssdlconfig.js");
-                 $.loadScript("js/lib/ssdl/ssdlcore.js");
-                 }
-                 
-//chart engine...
-                if (typeof (chartFactory) === "undefined") {
-                    $.loadScript("js/lib/c5/alpha_chart.js");
-                    $.loadCSS("css/c5/c5.css");
-                    $.loadScript("/ui/c5.js");
+                if (Date.CultureInfo === undefined) $.loadScript('js/misc/date.js', true);
+                if (typeof LabCI.AbstractPageObj === 'undefined') $.loadScript('js/lib/abstractpageobj.js');
+                if (typeof LabCI.Utils === 'undefined') $.loadScript('js/lib/utils.js');
+                //       if (typeof (LabCI.Utils.getUpDownClass) === "undefined")
+                $.loadScript('js/misc/financialdataformat.js');
+                if (typeof LabCI.SSDL === 'undefined') {
+                    //in core.js
+                    $.loadScript('js/lib/ssdl/ssdlconfig.js');
+                    $.loadScript('js/lib/ssdl/ssdlcore.js');
+                }
+
+                //chart engine...
+                if (typeof chartFactory === 'undefined') {
+                    $.loadScript('js/lib/c5/alpha_chart.js');
+                    $.loadCSS('css/c5/c5.css');
+                    $.loadScript('/ui/c5.js');
                 }
 
                 LabCI.setDataAPIPath = function (path) {
@@ -79,24 +68,21 @@ and open the template in the editor.
                         if (path === undefined)
                             //    path = "https://t1www5.trkd-hs.com/sinopacwidget"; // set for using local data API
                             // path = "http://localhost:45516/sinopacwidget"; // set for using local data API
-                            //   path = "/sinopacwidget"; 
+                            //   path = "/sinopacwidget";
 
                             LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
                     }
                 };
                 LabCI.setDataAPIPath();
 
-                window["lsinopac_c5"] = LabCI.WP["createc5pageobj"].call(that).init("en").show();
+                window['lsinopac_c5'] = LabCI.WP['createc5pageobj'].call(that).init('en').show();
                 // LabCI.WP.WorldNavPageObj.show($.extend({id: id, token: token, lang: lang, wid: wid, mode: mode}));
-                
-                $(window).resize(function () {
-                    window["lsinopac_c5"].resize();
-                });                
-                
-                
-            });
 
-        </script>        
+                $(window).resize(function () {
+                    window['lsinopac_c5'].resize();
+                });
+            });
+        </script>
         <style>
             body {
                 margin: 0;
@@ -105,28 +91,23 @@ and open the template in the editor.
                 background: white;
                 height: auto;
             }
-/*
+            /*
             div#chartbox {
                 position: relative;
             }
             */
-        </style>        
-
-
+        </style>
     </head>
     <body>
         11
         <div id="lsinopac-c5" class="lsinopac">
-            <div id="chartbox" style="width:100%; height:400px">
+            <div id="chartbox" style="width: 100%; height: 400px">
                 <div id="c5box" class="chartwidget">
                     <div class="chartpane">
-                        <div class="canvasbox">
-                        </div>
+                        <div class="canvasbox"></div>
                     </div>
                 </div>
-            </div>        
-        </div>    
-
-
+            </div>
+        </div>
     </body>
 </html>

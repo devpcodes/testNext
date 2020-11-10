@@ -7,61 +7,62 @@
     height:100%;
 }
 */
-html, body {
+html,
+body {
     position: relative;
     height: 100%;
-} 
+}
 
-body{
-    font-family: Microsoft JhengHei,Calibri,serif!important;
-    font-size:16px;
+body {
+    font-family: Microsoft JhengHei, Calibri, serif !important;
+    font-size: 16px;
     font-weight: normal;
-    color:#282522;
+    color: #282522;
 }
-.lsinopac{
-    height:100%;
+.lsinopac {
+    height: 100%;
 }
 
-.lsinopac .refreshBtn{
+.lsinopac .refreshBtn {
     width: 72px;
-    height:20px;
-   background-image: url(../images/refresh.png);
-   background-repeat: no-repeat;
-   background-position: center;
-   color: white;
-   padding-left: 18px;
-   font-size: 14px;
-   line-height:0px;
-   text-align: center;
-   border-radius: 0px;
-   position: relative;
-   top: -3px;   
-   cursor:pointer;
+    height: 20px;
+    background-image: url(../images/refresh.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: white;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 0px;
+    text-align: center;
+    border-radius: 0px;
+    position: relative;
+    top: -3px;
+    cursor: pointer;
 }
 
-.font1{
-    font-size:18px;
+.font1 {
+    font-size: 18px;
     font-weight: 700;
 }
 
 .swiper-container {
     width: 100%;
     height: 100%;
-} 
+}
 .swiper-slide {
     font-size: 18px;
     height: auto;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     padding: 30px;
-}     
+}
 
 .lsinopac .downval {
-    color: #01A57A;
+    color: #01a57a;
 }
 
 .lsinopac .upval {
-    color: #D73B3C;
+    color: #d73b3c;
 }
 
 #lsinopac-curtain {
@@ -74,7 +75,7 @@ body{
     z-index: 9990;
 }
 
-.sinopactable thead td{
+.sinopactable thead td {
     color: white;
     height: 50px;
     line-height: 50px;
@@ -82,22 +83,33 @@ body{
     font-weight: 400;
     padding: 1px 10px 0px 10px;
 
-    background: #F04546; /* Old browsers */
-    background: -moz-linear-gradient(top, #F04546 0%, #E52B32 50%, #E52B32 51%, #D80E16 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #F04546 0%,#E52B32 50%,#E52B32 51%,#D80E16 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #F04546 0%,#E52B32 50%,#E52B32 51%,#D80E16 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F04546', endColorstr='#D80E16',GradientType=0 ); /* IE6-9 */                
-
+    background: #f04546; /* Old browsers */
+    background: -moz-linear-gradient(top, #f04546 0%, #e52b32 50%, #e52b32 51%, #d80e16 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(
+        top,
+        #f04546 0%,
+        #e52b32 50%,
+        #e52b32 51%,
+        #d80e16 100%
+    ); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(
+        to bottom,
+        #f04546 0%,
+        #e52b32 50%,
+        #e52b32 51%,
+        #d80e16 100%
+    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F04546', endColorstr='#D80E16',GradientType=0 ); /* IE6-9 */
 }
 
-.sinopactable .datablockend{
+.sinopactable .datablockend {
     border-bottom: 1px solid black;
-    padding:0px;
+    padding: 0px;
     margin: 10px 0px 10px 0px;
 }
 
 arrow-placeholder {
-    border: solid #666560;;
+    border: solid #666560;
     border-width: 0 1px 1px 0;
     display: inline-block;
     padding: 3px;
@@ -123,15 +135,15 @@ arrow-placeholder {
     -webkit-transform: rotate(45deg);
 }
 
-.page-link{
+.page-link {
     border: 0px;
     color: #666560;
 }
-.page-item.active .page-link{
+.page-item.active .page-link {
     background-color: transparent;
-    color: #FC0001;
+    color: #fc0001;
 }
-.page-item.disabled .page-link{
+.page-item.disabled .page-link {
     color: #b5babe;
 }
 
@@ -139,7 +151,7 @@ arrow-placeholder {
 We set the element we are applying our loading mask to relative  
 */
 .loading-mask {
-  position: relative;
+    position: relative;
 }
 
 /*
@@ -147,26 +159,26 @@ Because we set .loading-mask relative, we can span our ::before
 element over the whole parent element  
 */
 .loading-mask::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.25);
-  z-index:2000;
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 2000;
 }
 
 /*
 Spin animation for .loading-mask::after  
 */
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
 }
 
 /*
@@ -176,18 +188,18 @@ Instead of a border we could also use a font-icon or any
 image using the content attribute.  
 */
 .loading-mask::after {
-  content: "";
-  position: absolute;
-  border-width: 3px;
-  border-style: solid;
-  border-color: transparent rgb(255, 255, 255) rgb(255, 255, 255);
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  /*top: calc(50% - 12px); */
-  top: calc(15% - 12px);
-  left: calc(50% - 12px);
-  animation: 2s linear 0s normal none infinite running spin;
-  filter: drop-shadow(0 0 2 rgba(0, 0, 0, 0.33));
-  z-index:2000;
+    content: '';
+    position: absolute;
+    border-width: 3px;
+    border-style: solid;
+    border-color: transparent rgb(255, 255, 255) rgb(255, 255, 255);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    /*top: calc(50% - 12px); */
+    top: calc(15% - 12px);
+    left: calc(50% - 12px);
+    animation: 2s linear 0s normal none infinite running spin;
+    filter: drop-shadow(0 0 2 rgba(0, 0, 0, 0.33));
+    z-index: 2000;
 }

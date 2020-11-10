@@ -1,30 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="format-detection" content="telephone=no">
-        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <meta name="HandheldFriendly" content="True"/>
-        <meta name="MobileOptimized" content="320"/>
-        <meta name="robots" content="follow,index"/>
-        <meta name="author" content=""/>
-        <meta name="description" content=""/>
-        <meta name="keywords" content=""/> 
-        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="robots" content="follow,index" />
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css" />
         <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
 
         <script>
             var that = this;
-            var _WP_PATH = "../";
+            var _WP_PATH = '../';
 
             $(function () {
                 jQuery.loadScript = function (url, usecache) {
                     usecache = true;
                     var _u = _WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
-                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
-
+                    jQuery.ajax({ url: _u, dataType: 'script', async: false, method: 'GET', ifModified: usecache });
                 };
                 jQuery.loadCSS = function (url) {
                     var _u = _WP_PATH + url;
@@ -33,24 +32,19 @@
                     if (document.createStyleSheet)
                         try {
                             document.createStyleSheet(_u);
-                        } catch (e) {
-                        }
+                        } catch (e) {}
                     else if ($("head link[href='" + _u + "']").length === 0)
-                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($('head'));
                 };
 
+                if (typeof LabCI === 'undefined') LabCI = { WP: {} };
+                else if (typeof LabCI.WP === 'undefined') LabCI.WP = {};
 
-                if (typeof (LabCI) === "undefined")
-                    LabCI = {WP: {}};
-                else if (typeof (LabCI.WP) === "undefined")
-                    LabCI.WP = {};
+                if (typeof LabCI.AbstractPageObj === 'undefined') $.loadScript('js/lib/combined/core.2.0.3.js');
 
-                if (typeof (LabCI.AbstractPageObj) === "undefined")
-                    $.loadScript("js/lib/combined/core.2.0.3.js");
-
-                if (typeof (APP_CONFIG) === "undefined") {
-                    $.loadScript("/js/constant.js");
-                    $.loadCSS("css/common_1.0.3.css");
+                if (typeof APP_CONFIG === 'undefined') {
+                    $.loadScript('/js/constant.js');
+                    $.loadCSS('css/common_1.0.3.css');
                 }
 
                 /*    if (typeof (LabCI.AbstractPageObj) === "undefined")
@@ -66,74 +60,56 @@
                  $.loadScript("js/lib/ssdl/ssdlcore.js");
                  }
                  */
-//chart engine...
-                if (typeof (chartFactory) === "undefined") {
-                    $.loadScript("js/lib/c5/alpha_chart.js");
-                    $.loadCSS("css/c5/c5.css");
+                //chart engine...
+                if (typeof chartFactory === 'undefined') {
+                    $.loadScript('js/lib/c5/alpha_chart.js');
+                    $.loadCSS('css/c5/c5.css');
                 }
-                
-                 $.loadScript("js/lib/combined/sschart.js"); 
-                 if (lang === "zh_HK")
-                 $.loadScript("js/lib/sschart/TALabels_zh_HK.js");
-                 else if (lang === "zh_CN")
-                 $.loadScript("js/lib/sschart/TALabels_zh_CN.js");
-                 else
-                 $.loadScript("js/lib/sschart/TALabels_en.js");            
-                    
+
+                $.loadScript('js/lib/combined/sschart.js');
+                if (lang === 'zh_HK') $.loadScript('js/lib/sschart/TALabels_zh_HK.js');
+                else if (lang === 'zh_CN') $.loadScript('js/lib/sschart/TALabels_zh_CN.js');
+                else $.loadScript('js/lib/sschart/TALabels_en.js');
 
                 //page specific object...
-                if (typeof (LabCI.WP.WorldNavPageObj) === "undefined") {
-                    $.loadScript("js/worldnav.js");
+                if (typeof LabCI.WP.WorldNavPageObj === 'undefined') {
+                    $.loadScript('js/worldnav.js');
                 }
-                var lang = LabCI.Utils.getURLParameter("lang");
-                if (lang == null || lang == undefined || lang == "") {
-                    lang = "zh_TW";
+                var lang = LabCI.Utils.getURLParameter('lang');
+                if (lang == null || lang == undefined || lang == '') {
+                    lang = 'zh_TW';
                 }
-                ;
-                if (lang === "zh_HK")
-                    $.loadScript("js/worldnav_zh_HK.js");
-                else if (lang === "zh_CN")
-                    $.loadScript("js/worldnav_zh_CN.js");
-                else if (lang === "en")
-                    $.loadScript("js/worldnav_en.js");
-                else
-                    $.loadScript("js/worldnav_zh_TW.js");
+                if (lang === 'zh_HK') $.loadScript('js/worldnav_zh_HK.js');
+                else if (lang === 'zh_CN') $.loadScript('js/worldnav_zh_CN.js');
+                else if (lang === 'en') $.loadScript('js/worldnav_en.js');
+                else $.loadScript('js/worldnav_zh_TW.js');
 
-                if (lang === "zh_HK")
-                    $.loadScript("js/commonrc_zh_HK.js");
-                else if (lang === "zh_CN")
-                    $.loadScript("js/commonrc_zh_CN.js");
-                else if (lang === "en")
-                    $.loadScript("js/commonrc_en.js");
-                else
-                    $.loadScript("js/commonrc_zh_TW.js");
-
+                if (lang === 'zh_HK') $.loadScript('js/commonrc_zh_HK.js');
+                else if (lang === 'zh_CN') $.loadScript('js/commonrc_zh_CN.js');
+                else if (lang === 'en') $.loadScript('js/commonrc_en.js');
+                else $.loadScript('js/commonrc_zh_TW.js');
 
                 // For returning the access token
                 LabCI.getToken = function () {
-                    return decodeURIComponent(LabCI.Utils.getURLParameter("token"));
-
+                    return decodeURIComponent(LabCI.Utils.getURLParameter('token'));
                 };
                 LabCI.setDataAPIPath = function (path) {
                     if (LabCI && LabCI.SSDLConf) {
-                        if (path === undefined)
-                            LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
+                        if (path === undefined) LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
                     }
                 };
                 LabCI.getLang = function () {
                     return lang;
-                };                
+                };
                 LabCI.setDataAPIPath();
 
-
-                window["lsinopac_worldnav"] = LabCI.WP["createworldnavpageobj"].call(that).init(lang).show();
+                window['lsinopac_worldnav'] = LabCI.WP['createworldnavpageobj'].call(that).init(lang).show();
                 // LabCI.WP.WorldNavPageObj.show($.extend({id: id, token: token, lang: lang, wid: wid, mode: mode}));
                 $(window).resize(function () {
-                    window["lsinopac_worldnav"].resize();
+                    window['lsinopac_worldnav'].resize();
                 });
-
             });
-        </script>        
+        </script>
         <style>
             /*      #lsinopac-worldnav{
                       height: Calc(100% - 10px);
@@ -145,8 +121,7 @@
             */
             #lsinopac-worldnav {
                 padding: 15px;
-
-            }            
+            }
             #lsinopac-worldnav .mapregion {
                 float: left;
                 width: 635px;
@@ -165,61 +140,60 @@
                 bottom: 0;
                 left: -1px;
                 right: 0;
-
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox {
+            #lsinopac-worldnav .mapregion .mapquotebox {
                 /*    display: none; */
                 position: absolute;
                 width: 195px;
                 font-size: 11px;
                 cursor: pointer;
-                border: 1px solid #084D9F;
+                border: 1px solid #084d9f;
                 background-color: white;
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_HONGKONG {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_HONGKONG {
                 left: 192px;
                 top: 67px;
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_CHINA1 {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_CHINA1 {
                 left: 215px;
                 top: 34px;
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_CHINA2 {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_CHINA2 {
                 left: 215px;
                 top: 98px;
-            }            
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_JAPAN {
+            }
+            #lsinopac-worldnav .mapregion .mapquotebox.box_JAPAN {
                 left: 432px;
                 top: 23px;
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_SINGAPORE {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_SINGAPORE {
                 left: 230px;
                 top: 260px;
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_TAIWAN {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_TAIWAN {
                 left: 140px;
                 top: 220px;
             }
 
-            #lsinopac-worldnav  .mapregion .mapquotebox.box_US1 {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_US1 {
                 left: 20px;
                 top: 230px;
             }
-            #lsinopac-worldnav   .mapregion .mapquotebox.box_US2 {
+            #lsinopac-worldnav .mapregion .mapquotebox.box_US2 {
                 left: 20px;
                 top: 294px;
             }
 
-            #lsinopac-worldnav  .mapregion .mapquotebox .title {
+            #lsinopac-worldnav .mapregion .mapquotebox .title {
                 height: 23px;
                 line-height: 23px;
                 font-size: 10px;
                 font-weight: normal;
                 padding: 0px 2px;
-                color: #FFFFFF;
-                background-color: #084D9F;
+                color: #ffffff;
+                background-color: #084d9f;
             }
-            #lsinopac-worldnav  .mapregion .mapquotebox .title .ccname {
+            #lsinopac-worldnav .mapregion .mapquotebox .title .ccname {
                 /*float: left;*/
                 position: absolute;
                 margin-left: 5px;
@@ -229,29 +203,29 @@
                     font-size: 11px;
                 */
             }
-            #lsinopac-worldnav  .mapregion .mapquotebox .title .td {
+            #lsinopac-worldnav .mapregion .mapquotebox .title .td {
                 float: right;
                 margin-right: 2px;
             }
-            #lsinopac-worldnav  .mapregion .mapquotebox .title .tm {
+            #lsinopac-worldnav .mapregion .mapquotebox .title .tm {
                 float: right;
                 margin-right: 3px;
             }
-            #lsinopac-worldnav  .mapregion .mapquotebox .content {
+            #lsinopac-worldnav .mapregion .mapquotebox .content {
                 padding: 5px;
             }
-            #lsinopac-worldnav  .mapregion .mapquotebox.selected {
-                border-color: #BC9144;
+            #lsinopac-worldnav .mapregion .mapquotebox.selected {
+                border-color: #bc9144;
             }
-            #lsinopac-worldnav  .mapregion .mapquotebox.selected .title {
-                background-color: #BC9144;
+            #lsinopac-worldnav .mapregion .mapquotebox.selected .title {
+                background-color: #bc9144;
             }
 
             #lsinopac-worldnav .header {
                 height: 36px;
                 line-height: 36px;
                 background-color: #333333;
-                color: #FFFFFF;
+                color: #ffffff;
                 font-size: 15px;
                 font-weight: bold;
                 padding: 0px 10px;
@@ -265,7 +239,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                color: #FFFFFF;
+                color: #ffffff;
             }
 
             #lsinopac-worldnav .header .datetime {
@@ -284,56 +258,55 @@
 
             #lsinopac-worldnav hr {
                 height: 1px;
-                background-color: #D2D2D2;
+                background-color: #d2d2d2;
                 border: none;
             }
-
 
             #lsinopac-worldnav .separator {
                 height: 10px;
             }
 
-            #lsinopac-worldnav .clear{
-                clear:both;
+            #lsinopac-worldnav .clear {
+                clear: both;
             }
 
-            #lsinopac-worldnav .title{
+            #lsinopac-worldnav .title {
                 float: none;
             }
-            #lsinopac-worldnav .mquoteinfo{
-                padding :10px 0px 10px 0px;
-                border-bottom: 1px solid #3E3A39;
+            #lsinopac-worldnav .mquoteinfo {
+                padding: 10px 0px 10px 0px;
+                border-bottom: 1px solid #3e3a39;
                 cursor: pointer;
             }
-            #lsinopac-worldnav .mquoteinfo.last{
-                border-bottom: 0px solid #3E3A39;
-            }            
-            #lsinopac-worldnav .mquote{
+            #lsinopac-worldnav .mquoteinfo.last {
+                border-bottom: 0px solid #3e3a39;
+            }
+            #lsinopac-worldnav .mquote {
                 padding-left: 30px;
                 background-repeat: no-repeat;
                 background-position: left top;
-                background-size: 20px 20px;                
+                background-size: 20px 20px;
             }
-            #lsinopac-worldnav .mquote.TAIWAN{
-                background-image: url("../images/worldnav/taiwan.png");            
+            #lsinopac-worldnav .mquote.TAIWAN {
+                background-image: url('../images/worldnav/taiwan.png');
             }
-            #lsinopac-worldnav .mquote.HONGKONG{
-                background-image: url("../images/worldnav/hong-kong.png");            
+            #lsinopac-worldnav .mquote.HONGKONG {
+                background-image: url('../images/worldnav/hong-kong.png');
             }
             #lsinopac-worldnav .mquote.CHINA1,
-            #lsinopac-worldnav .mquote.CHINA2{
-                background-image: url("../images/worldnav/china.png");            
-            } 
-            #lsinopac-worldnav .mquote.SINGAPORE{
-                background-image: url("../images/worldnav/singapore.png");            
+            #lsinopac-worldnav .mquote.CHINA2 {
+                background-image: url('../images/worldnav/china.png');
+            }
+            #lsinopac-worldnav .mquote.SINGAPORE {
+                background-image: url('../images/worldnav/singapore.png');
             }
             #lsinopac-worldnav .mquote.US1,
-            #lsinopac-worldnav .mquote.US2{
-                background-image: url("../images/worldnav/united-states-of-america.png");            
+            #lsinopac-worldnav .mquote.US2 {
+                background-image: url('../images/worldnav/united-states-of-america.png');
             }
-            #lsinopac-worldnav .mquote.JAPAN{
-                background-image: url("../images/worldnav/japan.png");            
-            }            
+            #lsinopac-worldnav .mquote.JAPAN {
+                background-image: url('../images/worldnav/japan.png');
+            }
 
             #lsinopac-worldnav .quoteregion .name,
             #lsinopac-worldnav .quotedetail .turnoverlabel,
@@ -343,36 +316,36 @@
                 font-size: 15px;
                 font-weight: 700;
             }
-            #lsinopac-worldnav .mapregion .refreshBtn{
+            #lsinopac-worldnav .mapregion .refreshBtn {
                 position: absolute;
-                top:30px;
-                left:30px;
+                top: 30px;
+                left: 30px;
             }
             #lsinopac-worldnav .quoteregion .name,
-            #lsinopac-worldnav .mpanel .namerow{
+            #lsinopac-worldnav .mpanel .namerow {
                 padding-bottom: 5px;
             }
 
-            #lsinopac-worldnav .quoteregion .price{
+            #lsinopac-worldnav .quoteregion .price {
                 font-size: 20px;
                 font-weight: 400;
             }
-            #lsinopac-worldnav .mapregion .mapquotebox{
+            #lsinopac-worldnav .mapregion .mapquotebox {
                 font-size: 20px;
                 line-height: 25px;
-                font-weight: 400;                
+                font-weight: 400;
             }
             #lsinopac-worldnav .mpanel .netchange,
-            #lsinopac-worldnav .mpanel .pctchange,            
-            #lsinopac-worldnav .mpanel .price{
+            #lsinopac-worldnav .mpanel .pctchange,
+            #lsinopac-worldnav .mpanel .price {
                 font-size: 15px;
                 font-weight: 400;
-            } 
-            #lsinopac-worldnav .mpanel .clickdesc{
+            }
+            #lsinopac-worldnav .mpanel .clickdesc {
                 font-size: 14px;
             }
-            #lsinopac-worldnav .mpanel .clickinfo{
-                padding-bottom:5px;
+            #lsinopac-worldnav .mpanel .clickinfo {
+                padding-bottom: 5px;
             }
             #lsinopac-worldnav .quoteregion .date,
             #lsinopac-worldnav .quoteregion .netchange,
@@ -382,26 +355,26 @@
             #lsinopac-worldnav .mapregion .mapquotebox .title .tm,
             #lsinopac-worldnav .mapregion .mapquotebox .title .td,
             #lsinopac-worldnav .mapregion .mapquotebox .content .nc,
-            #lsinopac-worldnav .mapregion .mapquotebox .content .pc{
+            #lsinopac-worldnav .mapregion .mapquotebox .content .pc {
                 font-size: 13px;
                 font-weight: 400;
                 text-align: right;
             }
             #lsinopac-worldnav .mapregion .mapquotebox .content .nc,
-            #lsinopac-worldnav .mapregion .mapquotebox .content .pc{
+            #lsinopac-worldnav .mapregion .mapquotebox .content .pc {
                 line-height: 13px;
-            }            
+            }
             #lsinopac-worldnav .quotedetail .returnlabel > div,
-            #lsinopac-worldnav .quotedetail .return > div{
+            #lsinopac-worldnav .quotedetail .return > div {
                 /*    margin-left: 5px;
                     margin-right: 5px;
                 */
                 /*    margin-left: calc((100% - 260px) / 3); */
                 margin-right: calc((100% - 260px) / 3);
-                max-width:64px;
-            } 
-            
-            #lsinopac-worldnav .quotedetail{
+                max-width: 64px;
+            }
+
+            #lsinopac-worldnav .quotedetail {
                 width: 100%;
             }
             /*    #lsinopac-worldnav .mobile .quotedetail{
@@ -421,68 +394,66 @@
                 }            
             */
             #lsinopac-worldnav .quotedetail .turnover,
-            #lsinopac-worldnav .quotedetail .chartperiod > div{
+            #lsinopac-worldnav .quotedetail .chartperiod > div {
                 font-size: 15px;
                 font-weight: 400;
-
             }
-            #lsinopac-worldnav .quotedetail .chartperiod > div{
+            #lsinopac-worldnav .quotedetail .chartperiod > div {
                 padding: 0 5px 0 5px;
-            } 
+            }
 
             #lsinopac-worldnav .pricerow {
                 line-height: 20px;
-            }  
+            }
             #lsinopac-worldnav .namerow {
                 line-height: 15px;
-            }             
-            #lsinopac-worldnav .quotedetail .chartperiod > div{
-                color: #CCCCCC;
+            }
+            #lsinopac-worldnav .quotedetail .chartperiod > div {
+                color: #cccccc;
                 cursor: pointer;
-            } 
-            #lsinopac-worldnav .quotedetail .chartperiod .selected{
+            }
+            #lsinopac-worldnav .quotedetail .chartperiod .selected {
                 color: #000000;
                 border-bottom: solid 2px red;
                 display: inline;
-                padding-bottom: 2px;               
-            } 
-            #lsinopac-worldnav .quotedetail .chart{
+                padding-bottom: 2px;
+            }
+            #lsinopac-worldnav .quotedetail .chart {
                 width: 100%;
                 min-width: 290px;
                 height: 190px;
                 padding: 5px 0px 5px 0px;
-            } 
+            }
             #lsinopac-worldnav .quotedetail .r1M,
             #lsinopac-worldnav .quotedetail .r3M,
             #lsinopac-worldnav .quotedetail .r6M,
-            #lsinopac-worldnav .quotedetail .r1Y{
-                color: #FFFFFF;
-                background-color: #CCCCCC;
+            #lsinopac-worldnav .quotedetail .r1Y {
+                color: #ffffff;
+                background-color: #cccccc;
                 border-radius: 3px;
                 padding: 1px;
             }
 
-            #lsinopac-worldnav .quotedetail .return .downval{
-                background-color: #01A57A;
+            #lsinopac-worldnav .quotedetail .return .downval {
+                background-color: #01a57a;
             }
 
-            #lsinopac-worldnav .quotedetail .return .upval{
-                background-color: #D73B3C;
-            }            
+            #lsinopac-worldnav .quotedetail .return .upval {
+                background-color: #d73b3c;
+            }
 
-            #lsinopac-worldnav .turnoverrow{
-                padding-top:5px;
-            } 
+            #lsinopac-worldnav .turnoverrow {
+                padding-top: 5px;
+            }
 
-            #lsinopac-worldnav .chartperiod{
-                padding-top:15px;
-            }             
-
+            #lsinopac-worldnav .chartperiod {
+                padding-top: 15px;
+            }
         </style>
     </head>
     <body>
-        <div id="lsinopac-worldnav" class="lsinopac" style="overflow:hidden">
-            <div id="overviewworldnavpage" class="worldnavwidget" style="height:100%">
+        <div id="lsinopac-worldnav" class="lsinopac" style="overflow: hidden">
+            <div id="overviewworldnavpage" class="worldnavwidget" style="height: 100%">
                 <div class="d-none d-md-block desktoptemplate">
                     <div class="mapregion">
                         <button class="btn refreshlabel refreshBtn">Refresh</button>
@@ -499,27 +470,28 @@
                                 <div class="pctchange col-3 text-right align-middle">-</div>
                             </div>
                         </div>
-                        <div class="quotedetailwrapper">
-
-                        </div>
-
+                        <div class="quotedetailwrapper"></div>
                     </div>
-                    <div style="clear:both"></div>                
-                </div>                
+                    <div style="clear: both"></div>
+                </div>
 
-                <div class="quotedetail" style="position:relative; display:none">
-                    <div class="row turnoverrow" style="margin-left: 0px;margin-right: 0px;">
+                <div class="quotedetail" style="position: relative; display: none">
+                    <div class="row turnoverrow" style="margin-left: 0px; margin-right: 0px">
                         <div class="turnoverlabel col-6 text-left">Turnover</div>
-                        <div class="turnover col-6 text-right" style="padding-right:0px">-</div>
-                    </div> 
-                    <div class="row chartperiod" style="margin-left: 0px;margin-right: 0px;">
-                        <div class="col text-center"><div class="periodselect intradaylabel selected" p="MINUTE_1">Intraday</div></div>
+                        <div class="turnover col-6 text-right" style="padding-right: 0px">-</div>
+                    </div>
+                    <div class="row chartperiod" style="margin-left: 0px; margin-right: 0px">
+                        <div class="col text-center">
+                            <div class="periodselect intradaylabel selected" p="MINUTE_1">Intraday</div>
+                        </div>
                         <div class="col text-center"><div class="periodselect dailylabel" p="DAILY">Daily</div></div>
                         <div class="col text-center"><div class="periodselect weeklylabel" p="WEEKLY">Weekly</div></div>
-                        <div class="col text-center"><div class="periodselect monthlylabel" p="MONTHLY">Monthly</div></div>
-                    </div> 
+                        <div class="col text-center">
+                            <div class="periodselect monthlylabel" p="MONTHLY">Monthly</div>
+                        </div>
+                    </div>
                     <div class="chart">
-                    <!--    <div class="chartbox" style="width:100%; height:100%">
+                        <!--    <div class="chartbox" style="width:100%; height:100%">
                             <div class="c5box chartwidget">
                                 <div class="chartpane1">
                                     <div class="canvasbox">
@@ -528,35 +500,36 @@
                             </div>
                         </div> 
                     -->
-                    <div class="tachartbox" style="height:190px"><div id="chartCanvas" style="height:190px"></div></div>
-                    </div> 
-                    <div class="row returnlabel" style="margin-left: 0px;margin-right: 0px;padding-top:5px">
-                        <div class="col-3  text-center 1Mlabel" style="margin-left:0px">1M</div>
-                        <div class="col-3  text-center 3Mlabel">3M</div>
-                        <div class="col-3  text-center 6Mlabel">6M</div>
-                        <div class="col-3  text-center 1Ylabel" style="margin-right:0px">1Y</div>
+                        <div class="tachartbox" style="height: 190px">
+                            <div id="chartCanvas" style="height: 190px"></div>
+                        </div>
                     </div>
-                    <div class="row return" style="margin-left: 0px;margin-right: 0px;">
-                        <div class="col-3  text-center r1M" style="margin-left:0px">-</div>
-                        <div class="col-3  text-center r3M">-</div>
-                        <div class="col-3  text-center r6M">-</div>
-                        <div class="col-3  text-center r1Y" style="margin-right:0px">-</div>
-                    </div>                    
+                    <div class="row returnlabel" style="margin-left: 0px; margin-right: 0px; padding-top: 5px">
+                        <div class="col-3 text-center 1Mlabel" style="margin-left: 0px">1M</div>
+                        <div class="col-3 text-center 3Mlabel">3M</div>
+                        <div class="col-3 text-center 6Mlabel">6M</div>
+                        <div class="col-3 text-center 1Ylabel" style="margin-right: 0px">1Y</div>
+                    </div>
+                    <div class="row return" style="margin-left: 0px; margin-right: 0px">
+                        <div class="col-3 text-center r1M" style="margin-left: 0px">-</div>
+                        <div class="col-3 text-center r3M">-</div>
+                        <div class="col-3 text-center r6M">-</div>
+                        <div class="col-3 text-center r1Y" style="margin-right: 0px">-</div>
+                    </div>
                 </div>
 
-                <div class="d-md-none mobiletemplate" style="height:100%">
-                            <div class="row clickinfo">
-                                <div class="col-8"><div class="clickdesclabel clickdesc">*Click on index for more information</div></div>
-                                <div class="col-4"><button class="btn refreshlabel refreshBtn">Refresh</button></div>
-                            </div>                    
-                    <div class="swiper-container">
-                        <div class="mpanel swiper-wrapper">                            
-                        </div>                
+                <div class="d-md-none mobiletemplate" style="height: 100%">
+                    <div class="row clickinfo">
+                        <div class="col-8">
+                            <div class="clickdesclabel clickdesc">*Click on index for more information</div>
+                        </div>
+                        <div class="col-4"><button class="btn refreshlabel refreshBtn">Refresh</button></div>
                     </div>
-                </div>                    
-
+                    <div class="swiper-container">
+                        <div class="mpanel swiper-wrapper"></div>
+                    </div>
+                </div>
             </div>
-
         </div>
     </body>
 </html>

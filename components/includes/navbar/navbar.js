@@ -174,7 +174,7 @@ const Navbar = React.memo(props => {
                     border-width: 0 5.5px 8px 5.5px;
                     border-color: transparent transparent ${theme.colors.secondary} transparent;
                     position: absolute;
-                    bottom: -6px;
+                    bottom: -1px;
                     left: calc(50% - 6px);
                     display: none;
                 }

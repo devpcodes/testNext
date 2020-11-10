@@ -1,4 +1,4 @@
-import { getErrorMessage, logMessage, } from './helpers';
+import { getErrorMessage, logMessage } from './helpers';
 var QuotesPulseProvider = /** @class */ (function () {
     function QuotesPulseProvider(quotesProvider) {
         this._subscribers = {};
@@ -13,11 +13,11 @@ var QuotesPulseProvider = /** @class */ (function () {
             fastSymbols: fastSymbols,
             listener: onRealtimeCallback,
         };
-        logMessage("QuotesPulseProvider: subscribed quotes with #" + listenerGuid);
+        logMessage('QuotesPulseProvider: subscribed quotes with #' + listenerGuid);
     };
     QuotesPulseProvider.prototype.unsubscribeQuotes = function (listenerGuid) {
         delete this._subscribers[listenerGuid];
-        logMessage("QuotesPulseProvider: unsubscribed quotes with #" + listenerGuid);
+        logMessage('QuotesPulseProvider: unsubscribed quotes with #' + listenerGuid);
     };
     QuotesPulseProvider.prototype._updateQuotes = function (updateType) {
         var _this = this;
@@ -27,19 +27,36 @@ var QuotesPulseProvider = /** @class */ (function () {
         var _loop_1 = function (listenerGuid) {
             this_1._requestsPending++;
             var subscriptionRecord = this_1._subscribers[listenerGuid];
-            this_1._quotesProvider.getQuotes(updateType === 1 /* Fast */ ? subscriptionRecord.fastSymbols : subscriptionRecord.symbols)
+            this_1._quotesProvider
+                .getQuotes(updateType === 1 /* Fast */ ? subscriptionRecord.fastSymbols : subscriptionRecord.symbols)
                 .then(function (data) {
-                _this._requestsPending--;
-                if (!_this._subscribers.hasOwnProperty(listenerGuid)) {
-                    return;
-                }
-                subscriptionRecord.listener(data);
-                logMessage("QuotesPulseProvider: data for #" + listenerGuid + " (" + updateType + ") updated successfully, pending=" + _this._requestsPending);
-            })
+                    _this._requestsPending--;
+                    if (!_this._subscribers.hasOwnProperty(listenerGuid)) {
+                        return;
+                    }
+                    subscriptionRecord.listener(data);
+                    logMessage(
+                        'QuotesPulseProvider: data for #' +
+                            listenerGuid +
+                            ' (' +
+                            updateType +
+                            ') updated successfully, pending=' +
+                            _this._requestsPending,
+                    );
+                })
                 .catch(function (reason) {
-                _this._requestsPending--;
-                logMessage("QuotesPulseProvider: data for #" + listenerGuid + " (" + updateType + ") updated with error=" + getErrorMessage(reason) + ", pending=" + _this._requestsPending);
-            });
+                    _this._requestsPending--;
+                    logMessage(
+                        'QuotesPulseProvider: data for #' +
+                            listenerGuid +
+                            ' (' +
+                            updateType +
+                            ') updated with error=' +
+                            getErrorMessage(reason) +
+                            ', pending=' +
+                            _this._requestsPending,
+                    );
+                });
         };
         var this_1 = this;
         for (var listenerGuid in this._subscribers) {
@@ -47,5 +64,5 @@ var QuotesPulseProvider = /** @class */ (function () {
         }
     };
     return QuotesPulseProvider;
-}());
+})();
 export { QuotesPulseProvider };
