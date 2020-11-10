@@ -1,4 +1,4 @@
-import { getErrorMessage, logMessage, } from './helpers';
+import { getErrorMessage, logMessage } from './helpers';
 var DataPulseProvider = /** @class */ (function () {
     function DataPulseProvider(historyProvider, updateFrequency) {
         this._subscribers = {};
@@ -8,7 +8,7 @@ var DataPulseProvider = /** @class */ (function () {
     }
     DataPulseProvider.prototype.subscribeBars = function (symbolInfo, resolution, newDataCallback, listenerGuid) {
         if (this._subscribers.hasOwnProperty(listenerGuid)) {
-            logMessage("DataPulseProvider: already has subscriber with id=" + listenerGuid);
+            logMessage('DataPulseProvider: already has subscriber with id=' + listenerGuid);
             return;
         }
         this._subscribers[listenerGuid] = {
@@ -17,11 +17,13 @@ var DataPulseProvider = /** @class */ (function () {
             resolution: resolution,
             symbolInfo: symbolInfo,
         };
-        logMessage("DataPulseProvider: subscribed for #" + listenerGuid + " - {" + symbolInfo.name + ", " + resolution + "}");
+        logMessage(
+            'DataPulseProvider: subscribed for #' + listenerGuid + ' - {' + symbolInfo.name + ', ' + resolution + '}',
+        );
     };
     DataPulseProvider.prototype.unsubscribeBars = function (listenerGuid) {
         delete this._subscribers[listenerGuid];
-        logMessage("DataPulseProvider: unsubscribed for #" + listenerGuid);
+        logMessage('DataPulseProvider: unsubscribed for #' + listenerGuid);
     };
     DataPulseProvider.prototype._updateData = function () {
         var _this = this;
@@ -31,15 +33,28 @@ var DataPulseProvider = /** @class */ (function () {
         this._requestsPending = 0;
         var _loop_1 = function (listenerGuid) {
             this_1._requestsPending += 1;
-            this_1._updateDataForSubscriber(listenerGuid)
+            this_1
+                ._updateDataForSubscriber(listenerGuid)
                 .then(function () {
-                _this._requestsPending -= 1;
-                logMessage("DataPulseProvider: data for #" + listenerGuid + " updated successfully, pending=" + _this._requestsPending);
-            })
+                    _this._requestsPending -= 1;
+                    logMessage(
+                        'DataPulseProvider: data for #' +
+                            listenerGuid +
+                            ' updated successfully, pending=' +
+                            _this._requestsPending,
+                    );
+                })
                 .catch(function (reason) {
-                _this._requestsPending -= 1;
-                logMessage("DataPulseProvider: data for #" + listenerGuid + " updated with error=" + getErrorMessage(reason) + ", pending=" + _this._requestsPending);
-            });
+                    _this._requestsPending -= 1;
+                    logMessage(
+                        'DataPulseProvider: data for #' +
+                            listenerGuid +
+                            ' updated with error=' +
+                            getErrorMessage(reason) +
+                            ', pending=' +
+                            _this._requestsPending,
+                    );
+                });
         };
         var this_1 = this;
         for (var listenerGuid in this._subscribers) {
@@ -53,15 +68,16 @@ var DataPulseProvider = /** @class */ (function () {
         // BEWARE: please note we really need 2 bars, not the only last one
         // see the explanation below. `10` is the `large enough` value to work around holidays
         var rangeStartTime = rangeEndTime - periodLengthSeconds(subscriptionRecord.resolution, 10);
-        return this._historyProvider.getBars(subscriptionRecord.symbolInfo, subscriptionRecord.resolution, rangeStartTime, rangeEndTime)
+        return this._historyProvider
+            .getBars(subscriptionRecord.symbolInfo, subscriptionRecord.resolution, rangeStartTime, rangeEndTime)
             .then(function (result) {
-            _this._onSubscriberDataReceived(listenerGuid, result);
-        });
+                _this._onSubscriberDataReceived(listenerGuid, result);
+            });
     };
     DataPulseProvider.prototype._onSubscriberDataReceived = function (listenerGuid, result) {
         // means the subscription was cancelled while waiting for data
         if (!this._subscribers.hasOwnProperty(listenerGuid)) {
-            logMessage("DataPulseProvider: Data comes for already unsubscribed subscription #" + listenerGuid);
+            logMessage('DataPulseProvider: Data comes for already unsubscribed subscription #' + listenerGuid);
             return;
         }
         var bars = result.bars;
@@ -87,21 +103,18 @@ var DataPulseProvider = /** @class */ (function () {
         subscriptionRecord.listener(lastBar);
     };
     return DataPulseProvider;
-}());
+})();
 export { DataPulseProvider };
 function periodLengthSeconds(resolution, requiredPeriodsCount) {
     var daysCount = 0;
     if (resolution === 'D' || resolution === '1D') {
         daysCount = requiredPeriodsCount;
-    }
-    else if (resolution === 'M' || resolution === '1M') {
+    } else if (resolution === 'M' || resolution === '1M') {
         daysCount = 31 * requiredPeriodsCount;
-    }
-    else if (resolution === 'W' || resolution === '1W') {
+    } else if (resolution === 'W' || resolution === '1W') {
         daysCount = 7 * requiredPeriodsCount;
-    }
-    else {
-        daysCount = requiredPeriodsCount * parseInt(resolution) / (24 * 60);
+    } else {
+        daysCount = (requiredPeriodsCount * parseInt(resolution)) / (24 * 60);
     }
     return daysCount * 24 * 60 * 60;
 }

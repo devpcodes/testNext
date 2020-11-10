@@ -1,88 +1,122 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="format-detection" content="telephone=no">
-        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <meta name="HandheldFriendly" content="True"/>
-        <meta name="MobileOptimized" content="320"/>
-        <meta name="robots" content="follow,index"/>
-        <meta name="author" content=""/>
-        <meta name="description" content=""/>
-        <meta name="keywords" content=""/> 
-        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="robots" content="follow,index" />
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css" />
         <script>
-        let sensorGetCookie = function (cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
+            let sensorGetCookie = function (cname) {
+                var name = cname + '=';
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
                 }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
+                return '';
+            };
+            let isLogin = false;
+            let userId = sensorGetCookie('user_id');
+            if (userId !== '') {
+                isLogin = true;
             }
-            return "";
-        };
-        let isLogin = false;
-        let userId = sensorGetCookie('user_id');
-        if(userId !== ''){
-            isLogin = true;
-        }
-        var sensorsPlatform = 'PC'
-        sensorsPlatform = window.screen.width <= 768 ? '移動站' : 'PC端';
-        var sensorsShowLog = location.host.indexOf('localhost') >= 0 ? true : false; 
-        var sensorsServerUrl = location.host === 'www.sinotrade.com.tw' ? 'https://DMP.sinotrade.com.tw/sa?project=default' : 'http://128.110.5.145:8106/sa?project=default';
-        (function (para) {
-        var p = para.sdk_url, n = para.name, w = window, d = document, s = 'script', x = null, y = null;
-        if (typeof (w['sensorsDataAnalytic201505']) !== 'undefined') {
-            return false;
-        }
-        w['sensorsDataAnalytic201505'] = n;
-        w[n] = w[n] || function (a) { return function () { (w[n]._q = w[n]._q || []).push([a, arguments]); } };
-        var ifs = ['track', 'quick', 'register', 'registerPage', 'registerOnce', 'trackSignup', 'trackAbtest', 'setProfile', 'setOnceProfile', 'appendProfile', 'incrementProfile', 'deleteProfile', 'unsetProfile', 'identify', 'login', 'logout', 'trackLink', 'clearAllRegister', 'getAppStatus'];
-        for (var i = 0; i < ifs.length; i++) {
-            w[n][ifs[i]] = w[n].call(null, ifs[i]);
-        }
-        if (!w[n]._t) {
-            x = d.createElement(s), y = d.getElementsByTagName(s)[0];
-            x.async = 1;
-            x.src = p;
-            x.setAttribute('charset', 'UTF-8');
-            w[n].para = para;
-            y.parentNode.insertBefore(x, y);
-        }
-        })({
-            sdk_url: location.protocol + '//' + location.host + '/dist/js/vendor/sensorsdata.min.js',
-            heatmap_url: location.protocol + '//' + location.host + '/dist/js/vendor/heatmap.min.js',
-            name: 'sensors',
-            server_url: sensorsServerUrl,
-            heatmap: {},
-            show_log: sensorsShowLog,
-            send_type: 'ajax'
-        });
-        sensors.registerPage({
-            is_login: isLogin,
-            platform: sensorsPlatform
-        });
-        sensors.quick('autoTrack');
+            var sensorsPlatform = 'PC';
+            sensorsPlatform = window.screen.width <= 768 ? '移動站' : 'PC端';
+            var sensorsShowLog = location.host.indexOf('localhost') >= 0 ? true : false;
+            var sensorsServerUrl =
+                location.host === 'www.sinotrade.com.tw'
+                    ? 'https://DMP.sinotrade.com.tw/sa?project=default'
+                    : 'http://128.110.5.145:8106/sa?project=default';
+            (function (para) {
+                var p = para.sdk_url,
+                    n = para.name,
+                    w = window,
+                    d = document,
+                    s = 'script',
+                    x = null,
+                    y = null;
+                if (typeof w['sensorsDataAnalytic201505'] !== 'undefined') {
+                    return false;
+                }
+                w['sensorsDataAnalytic201505'] = n;
+                w[n] =
+                    w[n] ||
+                    function (a) {
+                        return function () {
+                            (w[n]._q = w[n]._q || []).push([a, arguments]);
+                        };
+                    };
+                var ifs = [
+                    'track',
+                    'quick',
+                    'register',
+                    'registerPage',
+                    'registerOnce',
+                    'trackSignup',
+                    'trackAbtest',
+                    'setProfile',
+                    'setOnceProfile',
+                    'appendProfile',
+                    'incrementProfile',
+                    'deleteProfile',
+                    'unsetProfile',
+                    'identify',
+                    'login',
+                    'logout',
+                    'trackLink',
+                    'clearAllRegister',
+                    'getAppStatus',
+                ];
+                for (var i = 0; i < ifs.length; i++) {
+                    w[n][ifs[i]] = w[n].call(null, ifs[i]);
+                }
+                if (!w[n]._t) {
+                    (x = d.createElement(s)), (y = d.getElementsByTagName(s)[0]);
+                    x.async = 1;
+                    x.src = p;
+                    x.setAttribute('charset', 'UTF-8');
+                    w[n].para = para;
+                    y.parentNode.insertBefore(x, y);
+                }
+            })({
+                sdk_url: location.protocol + '//' + location.host + '/dist/js/vendor/sensorsdata.min.js',
+                heatmap_url: location.protocol + '//' + location.host + '/dist/js/vendor/heatmap.min.js',
+                name: 'sensors',
+                server_url: sensorsServerUrl,
+                heatmap: {},
+                show_log: sensorsShowLog,
+                send_type: 'ajax',
+            });
+            sensors.registerPage({
+                is_login: isLogin,
+                platform: sensorsPlatform,
+            });
+            sensors.quick('autoTrack');
         </script>
         <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
         <script>
             var that = this;
-            var _WP_PATH = "../";
+            var _WP_PATH = '../';
 
             $(function () {
                 jQuery.loadScript = function (url, usecache) {
                     usecache = true;
                     var _u = _WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
-                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
-
+                    jQuery.ajax({ url: _u, dataType: 'script', async: false, method: 'GET', ifModified: usecache });
                 };
                 jQuery.loadCSS = function (url) {
                     var _u = _WP_PATH + url;
@@ -91,28 +125,22 @@
                     if (document.createStyleSheet)
                         try {
                             document.createStyleSheet(_u);
-                        } catch (e) {
-                        }
+                        } catch (e) {}
                     else if ($("head link[href='" + _u + "']").length === 0)
-                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($('head'));
                 };
 
+                if (typeof LabCI === 'undefined') LabCI = { WP: {} };
+                else if (typeof LabCI.WP === 'undefined') LabCI.WP = {};
 
-                if (typeof (LabCI) === "undefined")
-                    LabCI = {WP: {}};
-                else if (typeof (LabCI.WP) === "undefined")
-                    LabCI.WP = {};
+                if (typeof LabCI.AbstractPageObj === 'undefined') $.loadScript('js/lib/combined/core.2.0.3.js');
 
-                if (typeof (LabCI.AbstractPageObj) === "undefined")
-                    $.loadScript("js/lib/combined/core.2.0.3.js");
-
-                if (typeof (APP_CONFIG) === "undefined") {
-                    $.loadScript("/js/constant.js");
-                    $.loadCSS("css/common_1.0.3.css");
+                if (typeof APP_CONFIG === 'undefined') {
+                    $.loadScript('/js/constant.js');
+                    $.loadCSS('css/common_1.0.3.css');
                 }
-                
-                if (typeof (LabCI.WP.AppUtils) === "undefined")
-                    $.loadScript("js/apputils.js");                
+
+                if (typeof LabCI.WP.AppUtils === 'undefined') $.loadScript('js/apputils.js');
 
                 /*    if (typeof (LabCI.AbstractPageObj) === "undefined")
                  $.loadScript("js/lib/abstractpageobj.js");
@@ -129,205 +157,191 @@
                  */
 
                 //page specific object...
-                if (typeof (LabCI.WP.ScreenerPageObj) === "undefined") {
-                    $.loadScript("js/screener.js");
+                if (typeof LabCI.WP.ScreenerPageObj === 'undefined') {
+                    $.loadScript('js/screener.js');
                 }
-                var lang = LabCI.Utils.getURLParameter("lang");
-                if (lang == null || lang == undefined || lang == "") {
-                    lang = "zh_TW";
+                var lang = LabCI.Utils.getURLParameter('lang');
+                if (lang == null || lang == undefined || lang == '') {
+                    lang = 'zh_TW';
                 }
-                ;
-                if (lang === "zh_HK")
-                    $.loadScript("js/screener_zh_HK.js");
-                else if (lang === "zh_CN")
-                    $.loadScript("js/screener_zh_CN.js");
-                else if (lang === "en")
-                    $.loadScript("js/screener_en.js");
-                else
-                    $.loadScript("js/screener_zh_TW.js");
+                if (lang === 'zh_HK') $.loadScript('js/screener_zh_HK.js');
+                else if (lang === 'zh_CN') $.loadScript('js/screener_zh_CN.js');
+                else if (lang === 'en') $.loadScript('js/screener_en.js');
+                else $.loadScript('js/screener_zh_TW.js');
 
-                if (lang === "zh_HK")
-                    $.loadScript("js/commonrc_zh_HK.js");
-                else if (lang === "zh_CN")
-                    $.loadScript("js/commonrc_zh_CN.js");
-                else if (lang === "en")
-                    $.loadScript("js/commonrc_en.js");
-                else
-                    $.loadScript("js/commonrc_zh_TW.js");
-
+                if (lang === 'zh_HK') $.loadScript('js/commonrc_zh_HK.js');
+                else if (lang === 'zh_CN') $.loadScript('js/commonrc_zh_CN.js');
+                else if (lang === 'en') $.loadScript('js/commonrc_en.js');
+                else $.loadScript('js/commonrc_zh_TW.js');
 
                 // For returning the access token
                 LabCI.getToken = function () {
-                    return decodeURIComponent(LabCI.Utils.getURLParameter("token"));
-
+                    return decodeURIComponent(LabCI.Utils.getURLParameter('token'));
                 };
                 LabCI.setDataAPIPath = function (path) {
                     if (LabCI && LabCI.SSDLConf) {
-                        if (path === undefined)
-                            LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
+                        if (path === undefined) LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
                     }
                 };
                 LabCI.setDataAPIPath();
 
-
-                window["lsinopac_screener"] = LabCI.WP["createscreenerpageobj"].call(that).init(lang).show();
+                window['lsinopac_screener'] = LabCI.WP['createscreenerpageobj'].call(that).init(lang).show();
                 // LabCI.WP.ScreenerPageObj.show($.extend({id: id, token: token, lang: lang, wid: wid, mode: mode}));
                 //    $(window).resize(function () {
                 //        window["lsinopac_screener"].resize();
                 //    });
-
             });
-        </script>        
+        </script>
         <style>
             #lsinopac-screener {
                 padding: 15px;
             }
-            #lsinopac-screener .selectgroup{
+            #lsinopac-screener .selectgroup {
                 width: 100%;
-                padding-top:5px;
+                padding-top: 5px;
             }
 
-            #lsinopac-screener .step-2{
-                padding-top:20px;
-                padding-bottom:5px;
-            }            
+            #lsinopac-screener .step-2 {
+                padding-top: 20px;
+                padding-bottom: 5px;
+            }
 
             #lsinopac-screener .selectgroup .selectbutton1,
-            #saveModel .selectbutton1{
-                border: 1px solid #9A9791;
+            #saveModel .selectbutton1 {
+                border: 1px solid #9a9791;
                 border-right-width: 0px;
                 border-radius: 0px;
                 width: 100%;
                 background-color: white;
                 color: black;
-                text-align:left;
-            }    
+                text-align: left;
+            }
             #lsinopac-screener .selectgroup .selectbutton2,
-            #saveModel .selectgroup .selectbutton2{
-                border: 1px solid #9A9791;
+            #saveModel .selectgroup .selectbutton2 {
+                border: 1px solid #9a9791;
                 border-radius: 0px;
                 border-left-width: 0px;
                 background-color: white;
-                color: black;     
-            }            
+                color: black;
+            }
             #lsinopac-screener .selectgroup .selectbutton1:focus,
             #lsinopac-screener .selectgroup .selectbutton2:focus,
-            #saveModel .selectbutton1{
+            #saveModel .selectbutton1 {
                 box-shadow: none;
-            } 
+            }
 
-            #lsinopac-screener .selectgroup .dropdown-menu{
+            #lsinopac-screener .selectgroup .dropdown-menu {
                 width: 100%;
-            } 
+            }
 
             #lsinopac-screener .marketbox,
-            #lsinopac-screener .sectorbox{
-                border: 1px solid #D0CDC7;
-                color: #D0CDC7; 
+            #lsinopac-screener .sectorbox {
+                border: 1px solid #d0cdc7;
+                color: #d0cdc7;
                 font-size: 15px;
                 text-align: center;
-                cursor:pointer;
+                cursor: pointer;
             }
-            #lsinopac-screener .advancedbox{
-                border: 1px solid #D0CDC7;
-                color: #D0CDC7; 
+            #lsinopac-screener .advancedbox {
+                border: 1px solid #d0cdc7;
+                color: #d0cdc7;
                 font-size: 15px;
                 text-align: center;
                 height: 170px;
-            } 
-            #lsinopac-screener .no_criteria{
-                cursor:pointer;
-                line-height: 170px;                
+            }
+            #lsinopac-screener .no_criteria {
+                cursor: pointer;
+                line-height: 170px;
             }
             #lsinopac-screener .marketbox .marketbox-header,
-            #lsinopac-screener .sectorbox .sectorbox-header{
-                background-color: #D0CDC7; 
+            #lsinopac-screener .sectorbox .sectorbox-header {
+                background-color: #d0cdc7;
                 font-weight: 700;
                 color: white;
             }
-            #lsinopac-screener .sectorbox .sectorbox-header{
+            #lsinopac-screener .sectorbox .sectorbox-header {
                 min-height: 44px;
             }
-            #lsinopac-screener .marketbox-body{
+            #lsinopac-screener .marketbox-body {
                 padding: 10px 0px 10px 0px;
             }
-            #lsinopac-screener .sectorbox-body{
+            #lsinopac-screener .sectorbox-body {
                 padding: 0px;
-            }            
+            }
             #lsinopac-screener .marketbox.selected,
-            #lsinopac-screener .sectorbox.selected{
-                border: 1px solid #FC0001;
-                color: black; 
+            #lsinopac-screener .sectorbox.selected {
+                border: 1px solid #fc0001;
+                color: black;
             }
-            #lsinopac-screener .marketbox.selected .marketbox-header{
-                background-color: #FC0001;
+            #lsinopac-screener .marketbox.selected .marketbox-header {
+                background-color: #fc0001;
             }
-            #lsinopac-screener .sectorbox.selected .sectorbox-header{
-                background-color: #FC0001;
-            }            
+            #lsinopac-screener .sectorbox.selected .sectorbox-header {
+                background-color: #fc0001;
+            }
             #lsinopac-screener .checkall-market,
-            #lsinopac-screener .checkall-sector{
+            #lsinopac-screener .checkall-sector {
                 padding-left: 5px;
                 margin-bottom: 5px;
                 font-size: 15px;
                 font-weight: 700;
             }
-            #lsinopac-screener .menu-sector{
+            #lsinopac-screener .menu-sector {
                 padding: 0px 10px 10px 10px;
-            }            
+            }
             #lsinopac-screener .btn-confirm {
-                height:40px;
+                height: 40px;
                 text-align: center;
-                color: #D73B3C;
+                color: #d73b3c;
                 background-color: white;
-                border: 1px solid #D73B3C;
+                border: 1px solid #d73b3c;
                 border-radius: 0px;
             }
-            #lsinopac-screener .btn-cancel{
-                height:40px;
+            #lsinopac-screener .btn-cancel {
+                height: 40px;
                 text-align: center;
-                color: #01A57A;
-                border: 1px solid #01A57A;
+                color: #01a57a;
+                border: 1px solid #01a57a;
                 background-color: white;
                 border-radius: 0px;
-            }    
+            }
             #lsinopac-screener .strategy-btn-save {
                 width: 100%;
-                height:40px;
+                height: 40px;
                 text-align: center;
-                color: #D73B3C;
+                color: #d73b3c;
                 background-color: white;
-                border: 1px solid #D73B3C;
+                border: 1px solid #d73b3c;
                 border-radius: 0px;
             }
-            #lsinopac-screener .strategy-btn-reset{
+            #lsinopac-screener .strategy-btn-reset {
                 width: 100%;
-                height:40px;
+                height: 40px;
                 text-align: center;
-                color: #01A57A;
-                border: 1px solid #01A57A;
+                color: #01a57a;
+                border: 1px solid #01a57a;
                 background-color: white;
                 border-radius: 0px;
-            } 
-
-            #lsinopac-screener .modal-title{
-                font-weight: 700;
-                font-size:15px;
             }
 
-            #lsinopac-screener .advanced-selection-subtitle{
+            #lsinopac-screener .modal-title {
+                font-weight: 700;
+                font-size: 15px;
+            }
+
+            #lsinopac-screener .advanced-selection-subtitle {
                 color: #790007;
             }
-            #lsinopac-screener .advanced-selection-item{
-                font-size:14px;
-                color: #788C94;
+            #lsinopac-screener .advanced-selection-item {
+                font-size: 14px;
+                color: #788c94;
                 cursor: pointer;
                 text-decoration: none;
             }
-            #lsinopac-screener .advancedcriteriaitembox{
+            #lsinopac-screener .advancedcriteriaitembox {
                 height: 100%;
             }
-            #lsinopac-screener .advancedcriteriaitembox .name{
+            #lsinopac-screener .advancedcriteriaitembox .name {
                 font-weight: 700;
                 min-height: 44px;
                 cursor: pointer;
@@ -337,14 +351,14 @@
                 cursor: pointer;
                 top: -10px;
                 right: 5px;
-                margin-right: 5px;  
+                margin-right: 5px;
                 background: url(../images/screener/close.png) no-repeat center right;
-            } 
-            #lsinopac-screener .criterianamerow{
-                background-color: #FC0001;
-                color: white;                
             }
-            #lsinopac-screener .histogramslider{
+            #lsinopac-screener .criterianamerow {
+                background-color: #fc0001;
+                color: white;
+            }
+            #lsinopac-screener .histogramslider {
                 padding: 0px 10px 0px 10px;
             }
             #lsinopac-screener .histogramslider .ui-slider .ui-slider-handle {
@@ -357,7 +371,7 @@
                 top: 50%;
                 margin-top: -10px;
             }
-            #lsinopac-screener  .histogramslider .ui-slider {
+            #lsinopac-screener .histogramslider .ui-slider {
                 position: relative;
                 border: none !important;
             }
@@ -365,7 +379,8 @@
             #lsinopac-screener .histogramslider .slidercontrol {
                 background: none !important;
             }
-            #lsinopac-screener .advancedcriteriaitembox .imagepane, .advancedcriteriaitembox object {
+            #lsinopac-screener .advancedcriteriaitembox .imagepane,
+            .advancedcriteriaitembox object {
                 /*   position: absolute;
                    width: 166px !important;
                 */
@@ -373,7 +388,7 @@
                 height: 25px !important;
                 overflow: hidden;
             }
-            #lsinopac-screener  .advancedcriteriaitembox .slidercontrol {
+            #lsinopac-screener .advancedcriteriaitembox .slidercontrol {
                 /*   position: absolute;
                    width: 166px !important;
                 */
@@ -385,75 +400,75 @@
             #lsinopac-screener .histogramslider .ui-slider .ui-slider-range {
                 background: none !important;
             }
-            #lsinopac-screener .btn-result-wrapper{
-                padding-top:15px;
+            #lsinopac-screener .btn-result-wrapper {
+                padding-top: 15px;
             }
-            #lsinopac-screener .btn-result{
+            #lsinopac-screener .btn-result {
                 width: 100%;
-                height:40px;
+                height: 40px;
                 text-align: center;
                 color: white;
-                border: 0px solid #01A57A;
-                background-color: #FF0000;
-                border-radius: 0px; 
+                border: 0px solid #01a57a;
+                background-color: #ff0000;
+                border-radius: 0px;
                 margin-bottom: 15px;
             }
 
-            #lsinopac-screener .mobile-back{
+            #lsinopac-screener .mobile-back {
                 color: #666560;
                 cursor: pointer;
                 margin-bottom: 15px;
             }
 
-            #lsinopac-screener .mobile-result-count{
+            #lsinopac-screener .mobile-result-count {
                 color: #666560;
                 padding-bottom: 5px;
             }
-            #lsinopac-screener .mobile-result arrow-placeholder{
+            #lsinopac-screener .mobile-result arrow-placeholder {
                 position: relative;
                 top: -3px;
             }
-            #lsinopac-screener .screener-result-list arrow-placeholder{
+            #lsinopac-screener .screener-result-list arrow-placeholder {
                 position: relative;
                 top: 2px;
                 left: 5px;
                 border: solid white;
                 border-width: 0 3px 3px 0;
-            } 
-            #lsinopac-screener .screener-result-list arrow-placeholder.arrow-down{
+            }
+            #lsinopac-screener .screener-result-list arrow-placeholder.arrow-down {
                 top: -3px;
             }
 
-            #lsinopac-screener .list-group-item.first{
+            #lsinopac-screener .list-group-item.first {
                 border-top: 0px;
             }
-            #lsinopac-screener .list-group-item.last{
+            #lsinopac-screener .list-group-item.last {
                 border-bottom: 0px;
             }
 
-            #lsinopac-screener .mobile-result-list .name{
+            #lsinopac-screener .mobile-result-list .name {
                 font-weight: 700;
             }
 
-            #lsinopac-screener .screener-result-list{
+            #lsinopac-screener .screener-result-list {
                 padding-top: 30px;
             }
 
-            #lsinopac-screener .advfilter{
+            #lsinopac-screener .advfilter {
                 padding-top: 5px;
             }
-            #lsinopac-screener .strategy-btn-group{
+            #lsinopac-screener .strategy-btn-group {
                 padding-top: 10px;
             }
-            #lsinopac-screener .tosave{
+            #lsinopac-screener .tosave {
                 padding-bottom: 10px;
-            }            
+            }
         </style>
     </head>
     <body>
         <div id="lsinopac-screener" class="lsinopac">
             <div class="screener-setting">
-                <div class='lblstep1'>Step 1. Select or formulate your own strategy</div>
+                <div class="lblstep1">Step 1. Select or formulate your own strategy</div>
 
                 <div class="row">
                     <!--    <div class="col-md-6 pr-md-0">
@@ -471,43 +486,56 @@
                     <div class="col-md-12">
                         <div class="btn-group saved selectgroup">
                             <button class="btn btn-default selectbutton1" type="button" data-toggle="dropdown">
-                                <span class="currentvalue savedlabel lblsavedstrategy" strategy="">Saved Strategies</span>
+                                <span class="currentvalue savedlabel lblsavedstrategy" strategy=""
+                                    >Saved Strategies</span
+                                >
                             </button>
-                            <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2" data-toggle="dropdown">
-                            </button>
-                            <div class="dropdown-menu saved-dropdown">
-
-                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2"
+                                data-toggle="dropdown"
+                            ></button>
+                            <div class="dropdown-menu saved-dropdown"></div>
                         </div>
-                    </div>               
-                </div> 
+                    </div>
+                </div>
 
                 <div class="step-2 lblstep2">Step 2. Select Market</div>
                 <div class="step-2-container">
                     <div>
-                        <input id="cbmarket" class="cbmarket" type="checkbox" checked> <label for="cbmarket" class="lblall checkall-market">All</label>
+                        <input id="cbmarket" class="cbmarket" type="checkbox" checked />
+                        <label for="cbmarket" class="lblall checkall-market">All</label>
                     </div>
                     <div class="row">
-                        <div class="col-6 col-md  pr-2 pb-3">
+                        <div class="col-6 col-md pr-2 pb-3">
                             <div class="marketbox selected" market="hk" c="2">
                                 <div class="marketbox-header lblHK">Hong Kong</div>
-                                <div class="marketbox-body"><span class="marketbox-count hkcount">-</span><span class="lblmarketbox-count"> stock(s)</span></div>
+                                <div class="marketbox-body">
+                                    <span class="marketbox-count hkcount">-</span
+                                    ><span class="lblmarketbox-count"> stock(s)</span>
+                                </div>
                             </div>
                         </div>
                         <div class="col-6 col-md pr-md-0 pl-2 pb-3">
                             <div class="marketbox selected" market="us" c="1">
                                 <div class="marketbox-header lblUS">United States</div>
-                                <div class="marketbox-body"><span class="marketbox-count uscount">-</span><span class="lblmarketbox-count"> stock(s)</span></div>
-                            </div>                    
-                        </div>
-                        <div class="col-6 col-md  pr-2 pr-md-3 pb-3">
-                            <div class="marketbox selected" market="tw" c="5">
-                                <div class="marketbox-header lblTW">Taiwan</div>
-                                <div class="marketbox-body"><span class="marketbox-count twcount">-</span><span class="lblmarketbox-count"> stock(s)</span></div>
+                                <div class="marketbox-body">
+                                    <span class="marketbox-count uscount">-</span
+                                    ><span class="lblmarketbox-count"> stock(s)</span>
+                                </div>
                             </div>
                         </div>
-                                            
-                    <!--    <div class="col-6 col-md pr-md-0 pb-3">
+                        <div class="col-6 col-md pr-2 pr-md-3 pb-3">
+                            <div class="marketbox selected" market="tw" c="5">
+                                <div class="marketbox-header lblTW">Taiwan</div>
+                                <div class="marketbox-body">
+                                    <span class="marketbox-count twcount">-</span
+                                    ><span class="lblmarketbox-count"> stock(s)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--    <div class="col-6 col-md pr-md-0 pb-3">
                             <div class="marketbox selected" market="cn" c="34">
                                 <div class="marketbox-header lblCN">China</div>
                                 <div class="marketbox-body"><span class="marketbox-count cncount">-</span><span class="lblmarketbox-count"> stock(s)</span></div>
@@ -525,201 +553,372 @@
                                 <div class="marketbox-body"><span class="marketbox-count twcount">-</span><span class="lblmarketbox-count"> stock(s)</span></div>
                             </div> 
                         </div> 
-                    -->
-                    </div>                    
+                    --></div>
                 </div>
-
-
 
                 <div class="step-3 lblstep3">Step 3. Select business classification (optional)</div>
                 <div class="step-3-container">
                     <div class="btn-group sector selectgroup">
-                        <button class="btn btn-default selectbutton1" type="button" data-toggle="modal"  data-target="#sectorModel">
+                        <button
+                            class="btn btn-default selectbutton1"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#sectorModel"
+                        >
                             <span class="currentvalue sectorlabel lblsectorselect">Sector Selection</span>
                         </button>
-                        <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2" data-toggle="modal"  data-target="#sectorModel">
-                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2"
+                            data-toggle="modal"
+                            data-target="#sectorModel"
+                        ></button>
                         <div class="modal fade menu-sector" id="sectorModel" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
-                                        <div class="alert alert-warning no-sector lblno-sector" role="alert" style="text-align: center;display:none;margin-bottom:5px;padding:10px"></div>
-                                        <div class="container-fluid" style="padding:0px">
+                                        <div
+                                            class="alert alert-warning no-sector lblno-sector"
+                                            role="alert"
+                                            style="text-align: center; display: none; margin-bottom: 5px; padding: 10px"
+                                        ></div>
+                                        <div class="container-fluid" style="padding: 0px">
                                             <div>
-                                                <input id="cbsector" class="cbsector" type="checkbox" checked> <label for="cbsector" class="lblall checkall-sector">All</label>
+                                                <input id="cbsector" class="cbsector" type="checkbox" checked />
+                                                <label for="cbsector" class="lblall checkall-sector">All</label>
                                             </div>
-                                            <div class="sector-selection">
-                                            </div>                                    
+                                            <div class="sector-selection"></div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn sector-btn-confirm btn-confirm lblconfirm">Confirm</button>
-                                        <button type="button" class="btn sector-btn-cancel btn-cancel lblcancel" data-dismiss="modal">Cancel</button>
-                                    </div>                             
-                                </div>                       
+                                        <button type="button" class="btn sector-btn-confirm btn-confirm lblconfirm">
+                                            Confirm
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn sector-btn-cancel btn-cancel lblcancel"
+                                            data-dismiss="modal"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="advfilter lbladvfilter">Advanced Filter (Max. 5)</div>
-                    <div class="row advanced-selection-box" style="padding-top:5px">
+                    <div class="row advanced-selection-box" style="padding-top: 5px">
                         <div class="col-6 col-md pr-0 pb-3">
                             <div class="advancedbox advanced0">
-                                <div class="no_criteria lbladdcriteria" data-toggle="modal"  data-target="#advancedModel" data-advanced="0">+ Criteria</div>
-                            </div>                                             
+                                <div
+                                    class="no_criteria lbladdcriteria"
+                                    data-toggle="modal"
+                                    data-target="#advancedModel"
+                                    data-advanced="0"
+                                >
+                                    + Criteria
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6 col-md pr-md-0 pb-3">
                             <div class="advancedbox advanced1">
-                                <div class="no_criteria lbladdcriteria" data-toggle="modal"  data-target="#advancedModel" data-advanced="1">+ Criteria</div>
-                            </div>                                              
+                                <div
+                                    class="no_criteria lbladdcriteria"
+                                    data-toggle="modal"
+                                    data-target="#advancedModel"
+                                    data-advanced="1"
+                                >
+                                    + Criteria
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6 col-md pr-0 pb-3">
                             <div class="advancedbox advanced2">
-                                <div class="no_criteria lbladdcriteria" data-toggle="modal"  data-target="#advancedModel" data-advanced="2">+ Criteria</div>
-                            </div>                     
+                                <div
+                                    class="no_criteria lbladdcriteria"
+                                    data-toggle="modal"
+                                    data-target="#advancedModel"
+                                    data-advanced="2"
+                                >
+                                    + Criteria
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6 col-md pr-md-0 pb-3">
                             <div class="advancedbox advanced3">
-                                <div class="no_criteria lbladdcriteria" data-toggle="modal" data-target="#advancedModel" data-advanced="3">+ Criteria</div>
-                            </div>                    
+                                <div
+                                    class="no_criteria lbladdcriteria"
+                                    data-toggle="modal"
+                                    data-target="#advancedModel"
+                                    data-advanced="3"
+                                >
+                                    + Criteria
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6 col-md pr-0 pr-md-3 pb-3">
                             <div class="advancedbox advanced4">
-                                <div class="no_criteria lbladdcriteria" data-toggle="modal"  data-target="#advancedModel" data-advanced="4">+ Criteria</div>
-                            </div>                     
+                                <div
+                                    class="no_criteria lbladdcriteria"
+                                    data-toggle="modal"
+                                    data-target="#advancedModel"
+                                    data-advanced="4"
+                                >
+                                    + Criteria
+                                </div>
+                            </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="strategy-btn-group">
                     <div class="row">
                         <div class="col-md-4 col-md-auto">
                             <div class="row">
                                 <div class="col pr-0">
-                                    <button type="button" class="btn strategy-btn-save lblsavestrategy"  data-toggle="modal"  data-target="#saveModel">Save Strategy</button>                           
+                                    <button
+                                        type="button"
+                                        class="btn strategy-btn-save lblsavestrategy"
+                                        data-toggle="modal"
+                                        data-target="#saveModel"
+                                    >
+                                        Save Strategy
+                                    </button>
                                 </div>
                                 <div class="col pr-md-0">
-                                    <button type="button" class="btn strategy-btn-reset lblresetstrategy">Reset Strategy</button>       
-                                </div>                        
-                            </div>                        
-                        </div>                     
+                                    <button type="button" class="btn strategy-btn-reset lblresetstrategy">
+                                        Reset Strategy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal fade menu-sector" id="saveModel" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <div class="container-fluid" style="padding:0px">
+                                    <div class="container-fluid" style="padding: 0px">
                                         <div>
                                             <div class="btn-group tosave selectgroup">
-                                                <button class="btn btn-default selectbutton1" type="button" data-toggle="dropdown">
+                                                <button
+                                                    class="btn btn-default selectbutton1"
+                                                    type="button"
+                                                    data-toggle="dropdown"
+                                                >
                                                     <span class="currentvalue savedlabel" strategy="0">Strategy 1</span>
                                                 </button>
-                                                <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2" data-toggle="dropdown2">
-                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2"
+                                                    data-toggle="dropdown2"
+                                                ></button>
                                                 <div class="dropdown-menu strategy-save-dropdown">
-                                                    <button class="dropdown-item" value="0" type="button">Strategy 1</button>
-                                                    <button class="dropdown-item" value="1" type="button">Strategy 2</button>
-                                                    <button class="dropdown-item" value="2" type="button">Strategy 3</button>
-                                                    <button class="dropdown-item" value="3" type="button">Strategy 4</button>
+                                                    <button class="dropdown-item" value="0" type="button">
+                                                        Strategy 1
+                                                    </button>
+                                                    <button class="dropdown-item" value="1" type="button">
+                                                        Strategy 2
+                                                    </button>
+                                                    <button class="dropdown-item" value="2" type="button">
+                                                        Strategy 3
+                                                    </button>
+                                                    <button class="dropdown-item" value="3" type="button">
+                                                        Strategy 4
+                                                    </button>
                                                 </div>
-                                            </div>                                         
-                                            <input type="text" maxlength="50" value="" class="save_name" style="width: 100%;">
+                                            </div>
+                                            <input
+                                                type="text"
+                                                maxlength="50"
+                                                value=""
+                                                class="save_name"
+                                                style="width: 100%"
+                                            />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn strategy-btn-confirm btn-confirm lblconfirm">Confirm</button>
-                                    <button type="button" class="btn strategy-btn-cancel btn-cancel lblcancel" data-dismiss="modal">Cancel</button>
-                                </div>                             
-                            </div>                       
+                                    <button type="button" class="btn strategy-btn-confirm btn-confirm lblconfirm">
+                                        Confirm
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn strategy-btn-cancel btn-cancel lblcancel"
+                                        data-dismiss="modal"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
 
                 <div class="d-none d-md-block screener-result-list">
-                    <div class="desktop-result-count"><span class="stockfrom"></span> - <span class="stockto"></span> <span class="lblstockof">of</span> <span class="stocktotal"></span> <span class="lblstocktotal">stock(s)</span></div>
+                    <div class="desktop-result-count">
+                        <span class="stockfrom"></span> - <span class="stockto"></span>
+                        <span class="lblstockof">of</span> <span class="stocktotal"></span>
+                        <span class="lblstocktotal">stock(s)</span>
+                    </div>
                     <table class="table table-striped sinopactable">
                         <thead>
-                        <td class="code" item="ticker" style="cursor: pointer" onclick="window['lsinopac_screener']._sortResult(this)"><span class="lblcode">Code</span></td>
-                        <td class="company" item="name" style="cursor: pointer" onclick="window['lsinopac_screener']._sortResult(this)"><span class="lblcompany">Company</span> </td>
-                        <td class="exchange" item="b_exchange" style="cursor: pointer" onclick="window['lsinopac_screener']._sortResult(this)"><span class="lblexchange">Exchange</span></td>
-                        <td class="last text-right lbllast">Last</td>
-                        <td class="change text-right lblchange">Change</td>
-                        <td class="pctchange text-right"  style="cursor: pointer" item="pc" onclick="window['lsinopac_screener']._sortResult(this)"><span class="lblchangepct">Change %</span></td>
+                            <td
+                                class="code"
+                                item="ticker"
+                                style="cursor: pointer"
+                                onclick="window['lsinopac_screener']._sortResult(this)"
+                            >
+                                <span class="lblcode">Code</span>
+                            </td>
+                            <td
+                                class="company"
+                                item="name"
+                                style="cursor: pointer"
+                                onclick="window['lsinopac_screener']._sortResult(this)"
+                            >
+                                <span class="lblcompany">Company</span>
+                            </td>
+                            <td
+                                class="exchange"
+                                item="b_exchange"
+                                style="cursor: pointer"
+                                onclick="window['lsinopac_screener']._sortResult(this)"
+                            >
+                                <span class="lblexchange">Exchange</span>
+                            </td>
+                            <td class="last text-right lbllast">Last</td>
+                            <td class="change text-right lblchange">Change</td>
+                            <td
+                                class="pctchange text-right"
+                                style="cursor: pointer"
+                                item="pc"
+                                onclick="window['lsinopac_screener']._sortResult(this)"
+                            >
+                                <span class="lblchangepct">Change %</span>
+                            </td>
                         </thead>
                     </table>
-                    <div class="desktop-result-no-count lblnoresults" style="display:none;text-align:center">No results</div>
+                    <div class="desktop-result-no-count lblnoresults" style="display: none; text-align: center">
+                        No results
+                    </div>
                     <nav class="desktop-pagination">
                         <ul class="pagination pagination justify-content-end">
-                            <li class="page-item" item="prev"><span class="page-link lblprev" onclick="window['lsinopac_screener']._loadPage(this)">Previous</span></li>
-                            <li class="page-item" item="next"><span class="page-link lblnext" onclick="window['lsinopac_screener']._loadPage(this)">Next</span></li>
-                            <li class="page-dropdown-item"><span class="page-link"><select class="page-dropdown" onchange="window['lsinopac_screener']._loadPageFromSelect(this)"></select></span></li>
+                            <li class="page-item" item="prev">
+                                <span class="page-link lblprev" onclick="window['lsinopac_screener']._loadPage(this)"
+                                    >Previous</span
+                                >
+                            </li>
+                            <li class="page-item" item="next">
+                                <span class="page-link lblnext" onclick="window['lsinopac_screener']._loadPage(this)"
+                                    >Next</span
+                                >
+                            </li>
+                            <li class="page-dropdown-item">
+                                <span class="page-link"
+                                    ><select
+                                        class="page-dropdown"
+                                        onchange="window['lsinopac_screener']._loadPageFromSelect(this)"
+                                    ></select
+                                ></span>
+                            </li>
                         </ul>
-                    </nav>                    
-
+                    </nav>
                 </div>
 
                 <div class="d-md-none btn-result-wrapper">
                     <button type="button" class="btn btn-result lblresult">Result</button>
-                </div>        
+                </div>
             </div>
 
+            <div class="d-md-none mobile-result" style="display: none">
+                <div class="mobile-back">
+                    <arrow-placeholder class="arrow-left"></arrow-placeholder>
+                    <span class="lblback">Back to Filter</span>
+                </div>
+                <div class="mobile-result-count">
+                    <span class="stockfrom"></span> - <span class="stockto"></span> <span class="lblstockof">of</span>
+                    <span class="stocktotal"></span> <span class="lblstocktotal">stock(s)</span>
+                </div>
+                <ul class="list-group list-group-flush mobile-result-list"></ul>
+                <nav class="mobile-pagination" style="padding-top: 10px">
+                    <ul class="pagination pagination-sm justify-content-between">
+                        <li class="page-item" item="prev">
+                            <span class="page-link lblprev" onclick="window['lsinopac_screener']._loadPage(this)"
+                                >Previous</span
+                            >
+                        </li>
+                        <li class="page-item" item="next">
+                            <span class="page-link lblnext" onclick="window['lsinopac_screener']._loadPage(this)"
+                                >Next</span
+                            >
+                        </li>
+                        <li class="page-dropdown-item">
+                            <span class="page-link"
+                                ><select
+                                    class="page-dropdown"
+                                    onchange="window['lsinopac_screener']._loadPageFromSelect(this)"
+                                ></select
+                            ></span>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="mobile-result-no-count lblnoresults" style="display: none; text-align: center">
+                    No results
+                </div>
+            </div>
 
-            <div class="d-md-none mobile-result" style="display:none">
-                <div class="mobile-back"><arrow-placeholder class="arrow-left"></arrow-placeholder> <span class="lblback">Back to Filter<span></div>
-                            <div class="mobile-result-count"><span class="stockfrom"></span> - <span class="stockto"></span> <span class="lblstockof">of</span> <span class="stocktotal"></span> <span class="lblstocktotal">stock(s)</span></div>
-                            <ul class="list-group list-group-flush mobile-result-list"></ul>
-                            <nav class="mobile-pagination" style="padding-top:10px">
-                                <ul class="pagination pagination-sm justify-content-between">
-                                    <li class="page-item" item="prev"><span class="page-link lblprev" onclick="window['lsinopac_screener']._loadPage(this)">Previous</span></li>
-                                    <li class="page-item" item="next"><span class="page-link lblnext" onclick="window['lsinopac_screener']._loadPage(this)">Next</span></li>
-                                                                <li class="page-dropdown-item"><span class="page-link"><select class="page-dropdown" onchange="window['lsinopac_screener']._loadPageFromSelect(this)"></select></span></li>
-                                </ul>
-                            </nav>
-                            <div class="mobile-result-no-count lblnoresults" style="display:none;text-align:center">No results</div>
-                            </div>
-
-                            <div class="modal fade menu-sector" id="advancedModel" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <div class="modal-title lbladvcriteria">Advanced Criteria</div>
-                                            
-                                        </div>                        
-                                        <div class="modal-body">
-                                            <div class="alert alert-warning duplicate-criteria lblduplicate-criteria" role="alert" style="text-align: center;display:none;margin-bottom:5px;padding:10px"></div>
-                                            <div class="container-fluid" style="padding:0px">
-                                                <div class="advanced-selection">
-                                                    <div class="row">
-                                                        <div class="col-md-4 col-md-auto advanced-col1">
-                                                        </div>
-                                                        <div class="col-md-4 col-md-auto advanced-col2">
-                                                        </div>
-                                                        <div class="col-md-4 col-md-auto advanced-col3">
-                                                        </div>                                      
-                                                    </div>
-                                                </div>                                    
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn advanced-btn-cancel btn-cancel lblcancel" data-dismiss="modal">Cancel</button>
-                                        </div>                         
-                                    </div>                       
+            <div class="modal fade menu-sector" id="advancedModel" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title lbladvcriteria">Advanced Criteria</div>
+                        </div>
+                        <div class="modal-body">
+                            <div
+                                class="alert alert-warning duplicate-criteria lblduplicate-criteria"
+                                role="alert"
+                                style="text-align: center; display: none; margin-bottom: 5px; padding: 10px"
+                            ></div>
+                            <div class="container-fluid" style="padding: 0px">
+                                <div class="advanced-selection">
+                                    <div class="row">
+                                        <div class="col-md-4 col-md-auto advanced-col1"></div>
+                                        <div class="col-md-4 col-md-auto advanced-col2"></div>
+                                        <div class="col-md-4 col-md-auto advanced-col3"></div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn advanced-btn-cancel btn-cancel lblcancel"
+                                data-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="modal fade menu-sector" id="alertModel" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-sm" role="document">
-                                    <div class="modal-content">                       
-                                        <div class="modal-body">
-                                            <div class="container-fluid alertmessages" style="padding:0px">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn advanced-btn-cancel btn-confirm lblconfirm" data-dismiss="modal">Cancel</button>
-                                        </div>                         
-                                    </div>                       
-                                </div>
-                            </div>            
-
-                            </div>
-                            </body>
-                            </html>
+            <div class="modal fade menu-sector" id="alertModel" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="container-fluid alertmessages" style="padding: 0px"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn advanced-btn-cancel btn-confirm lblconfirm"
+                                data-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
