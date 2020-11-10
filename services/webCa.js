@@ -90,7 +90,10 @@ export const applyCert = function (user_idNo, token, callBack) {
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
         DM: process.env.NEXT_PUBLIC_DM,
     });
-
+    console.log({
+        userID: user_idNo,
+        memberNo: token,
+    });
     ca.applyCert(
         {
             userID: user_idNo,
