@@ -1,0 +1,81 @@
+<script>
+    (function ($) {
+        $(function () {
+            var _WP_PATH = '../';
+            jQuery.loadScript = function (url, usecache) {
+                jQuery.ajax({
+                    url: _WP_PATH + url,
+                    dataType: 'script',
+                    async: false,
+                    method: 'GET',
+                    ifModified: usecache,
+                });
+            };
+            jQuery.loadCSS = function (url) {
+                if (document.createStyleSheet)
+                    try {
+                        document.createStyleSheet(_WP_PATH + url);
+                    } catch (e) {}
+                else if ($("head link[href='" + _WP_PATH + url + "']").length === 0)
+                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($('head'));
+            };
+            var lang = LabCI.Utils.getURLParameter('lang');
+            if (lang == null || lang == undefined || lang == '') {
+                lang = 'zh_TW';
+            }
+            if (typeof LabCI.WP.QuoteChartPageObj === 'undefined') {
+                //    $.loadCSS("css/ps.css");
+                $.loadScript('js/quote-summary.js');
+            }
+
+            if (lang === 'zh_HK') $.loadScript('js/quote-summary_zh_HK.js');
+            else if (lang === 'zh_CN') $.loadScript('js/quote-summary_zh_CN.js');
+            else if (lang === 'en') $.loadScript('js/quote-summary_en.js');
+            else $.loadScript('js/quote-summary_zh_TW.js');
+        });
+        // Turn on/off debug logger, default is off
+        LabCI.Utils.CONSOLELOGGER.isdebug = true;
+    })(jQuery);
+</script>
+<style>
+    #lsinopac-quote-summary .chart {
+        width: 100%;
+        height: 260px;
+        padding: 5px 0px 5px 0px;
+    }
+    #lsinopac-quote-summary .chartperiodlabel {
+        padding-top: 15px;
+    }
+    /* TEST */
+    #lsinopac-quote-summary .tachartbox {
+        position: relative;
+        width: 100%;
+        min-height: 20px;
+        /*   padding: 15px 20px; */
+        box-sizing: border-box;
+    }
+    #lsinopac-quote-summary .tachartbox #chartCanvas {
+        position: relative;
+        width: 100%;
+        height: 250px;
+    }
+</style>
+<div id="lsinopac-quote-summary" class="lsinopac">
+    <div class="chartperiodlabel intraday">Intraday</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tachartbox" style="width: 100%"><div id="chartCanvas"></div></div>
+            <!--    <div class="chart">
+                <div class="chartbox" style="width:100%; height:100%">
+                    <div class="c5box chartwidget">
+                        <div class="chartpane1">
+                            <div class="canvasbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>                        
+            </div>  
+        --></div>
+        <div class="col-md-6 col-md-auto"></div>
+    </div>
+</div>

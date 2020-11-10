@@ -1,0 +1,804 @@
+/******************************************************************************/
+/* LabCI Sinopac Widget - Sector Heatmap
+/******************************************************************************/
+
+/* Specific Languages */
+#lsinopac_scthm.zh_HK {
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm #lsinopac_popupminiquote {
+    display: none;
+    position: absolute;
+    padding: 8px;
+    z-index: 1000;
+    background-color: white;
+    border: 2px solid #dddddd;
+    -webkit-box-shadow: 0px 0px 6px #e6e7e8;
+    -moz-box-shadow: 0px 0px 6px #e6e7e8;
+    box-shadow: 0px 0px 6px #e6e7e8;
+
+    /* to be dynamically positioned */
+    width: 312px;
+    height: 350px;
+}
+#lsinopac_scthm #lsinopac_popupminiquote .miniquote .datarow .ccy {
+    float: left;
+    margin-left: 8px;
+    padding-top: 1px;
+}
+#lsinopac_scthm.en #lsinopac_popupminiquote .miniquote .datarow .ccy {
+    padding-top: 2px;
+}
+#lsinopac_scthm #lsinopac_popupminiquote .miniquote .datarow .ls {
+    float: left;
+    margin-left: 4px;
+}
+/*
+#lsinopac_scthm #lsinopac_popupminiquote .miniquote .datarow .chg { right: 21%; }
+#lsinopac_scthm #lsinopac_popupminiquote .miniquote .datarow .ambox { right: 21%; }
+*/
+
+#lsinopac_scthm #lsinopac_popupminiquote #minichart {
+    position: absolute;
+    top: 98px;
+    bottom: 56px;
+    left: 8px;
+}
+#lsinopac_scthm #lsinopac_popupminiquote #bsbtngrp {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm #lsinopac_pagetitlebar {
+    padding: 8px 8px 20px 8px;
+    text-align: justify;
+    margin-bottom: -1px;
+    border-bottom: none;
+}
+
+#lsinopac_scthm #lsinopac_funcbar {
+    padding: 0 0.75rem 0.5rem 0.75rem;
+    height: auto;
+    margin-bottom: 4px;
+    border-top: none;
+}
+#lsinopac_scthm #lsinopac_funcbar #lsinopac_mktbar,
+#lsinopac_scthm #lsinopac_funcbar #lsinopac_perbar {
+    margin: auto;
+    max-width: 100%;
+}
+#lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv1 .funcbarcell {
+    width: calc(100% / 3);
+}
+#lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv2 .funcbarcell {
+    width: 25%;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm #heatmapbox {
+    position: relative;
+    padding: 0 0.75rem 0.5rem 0.75rem;
+}
+
+#lsinopac_scthm #heatmapnavbox #breadcrumb {
+    width: 100%;
+    overflow: hidden;
+    background: url('../images/breadcrumb-bg.png') 0 0 no-repeat;
+    background-size: cover;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+#lsinopac_scthm #heatmapnavbox #breadcrumb #breadcrumb-lv1 {
+    float: left;
+    padding: 5px 16px;
+}
+#lsinopac_scthm #heatmapnavbox #breadcrumb #breadcrumb-lv2 {
+    float: left;
+    padding: 5px 8px 5px 28px;
+    background: url('../images/breadcrumb-sep.png') 0 -1px no-repeat;
+    background-size: contain;
+}
+
+#lsinopac_scthm #heatmapnavbox .headerrow {
+    margin-bottom: 8px;
+}
+#lsinopac_scthm #heatmapnavbox .datarow {
+    height: 30px;
+    line-height: 30px;
+}
+#lsinopac_scthm #heatmapnavbox .datarow .rowtitle {
+    font-weight: bold;
+    width: 190px;
+    margin-right: 10px;
+    float: left;
+}
+#lsinopac_scthm #heatmapnavbox .datarow .cell {
+    float: left;
+    margin-right: 20px;
+    white-space: nowrap;
+}
+#lsinopac_scthm #heatmapnavbox .datarow .cell .nm {
+    margin-right: 8px;
+}
+
+#lsinopac_scthm #heatmapbox #actionbtngrp {
+    display: inline-block;
+}
+#lsinopac_scthm #heatmapbox #actionbtngrp #sizetypeselect {
+    float: left;
+    margin-right: 20px;
+    display: none;
+}
+#lsinopac_scthm #heatmapbox #actionbtngrp #sizetypeselect input {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+#lsinopac_scthm #heatmapbox #actionbtngrp #lsinopac_refreshbtn {
+    width: 72px;
+    height: 20px;
+    background-image: url(../images/refresh.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    color: white;
+    padding-left: 18px;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 0px;
+    position: relative;
+    top: -3px;
+    cursor: pointer;
+}
+
+#lsinopac_scthm #heatmapnavbox_sub {
+    display: flex;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    padding: 0px 10px 0px 0px;
+    margin-bottom: 12px;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm #heatmapbox #heatmapcanvas {
+    position: relative;
+    height: 500px;
+    background-color: #f6f8fa;
+}
+
+#lsinopac_scthm #heatmapbox #heatmapcanvas > .datarow.empty {
+    text-align: center;
+    line-height: 500px;
+}
+
+/******************************************************************************/
+/* Common Controls - Heatmap Box
+/******************************************************************************/
+
+#lsinopac_scthm .heatmapbox .heatmapboxcontentpane {
+    position: absolute;
+    top: 0;
+    bottom: -1px;
+    left: 0;
+    right: -1px;
+    overflow: hidden;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell {
+    position: absolute;
+    border-style: solid;
+    border-color: #ffffff;
+    border-width: 0 1px 1px 0;
+    box-sizing: border-box;
+    /*border-width: 1px; /* ie7 or below, which does not support box-sizing */
+    overflow: hidden;
+    cursor: pointer;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell .heatmapcelltextbox {
+    position: absolute;
+}
+
+/* Special style for showing with different styles according to the order */
+#lsinopac_scthm .heatmapbox .heatmapcell.order0 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order0 div a {
+    font-size: 24px !important;
+    font-weight: bold !important;
+    white-space: normal !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell.order1 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order1 div a {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    white-space: normal !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell.order2 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order2 div a {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    white-space: normal !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell.order3 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order3 div a {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    white-space: normal !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell.order4 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order4 div a {
+    font-size: 12px !important;
+    font-weight: bold !important;
+    white-space: normal !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell.order5 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order5 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order6 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order6 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order7 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order7 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order8 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order8 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order9 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order9 div a {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell.order10 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order10 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order11 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order11 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order12 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order12 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order13 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order13 div a,
+#lsinopac_scthm .heatmapbox .heatmapcell.order14 div,
+#lsinopac_scthm .heatmapbox .heatmapcell.order14 div a {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell div,
+#lsinopac_scthm .heatmapbox .heatmapcell div a {
+    font-size: 10px !important;
+    white-space: nowrap !important;
+}
+#lsinopac_scthm .heatmapbox .heatmapcell .cellvalue {
+    font-size: 90% !important;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm .datarow .hmcell {
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    height: 34px;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm .hmcell {
+    text-align: center;
+}
+#lsinopac_scthm .hmcell a {
+    text-decoration: none;
+    color: #ffffff !important;
+}
+#lsinopac_scthm .hmcell.hmn3 a,
+#lsinopac_scthm .hmcell.hmn2 a,
+#lsinopac_scthm .hmcell.hmn1 a,
+#lsinopac_scthm .hmcell.hm0 a,
+#lsinopac_scthm .hmcell.hmp1 a,
+#lsinopac_scthm .hmcell.hmp2 a,
+#lsinopac_scthm .hmcell.hmp3 a {
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hmp10 {
+    background-color: #cd0513 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp9 {
+    background-color: #dc0515 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp8 {
+    background-color: #e53340 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp7 {
+    background-color: #e84e59 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp6 {
+    background-color: #ed616b !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp5 {
+    background-color: #ef7981 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp4 {
+    background-color: #f59597 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp3 {
+    background-color: #f8aeb0 !important;
+    color: #000000 !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmp2 {
+    background-color: #ffc1c2 !important;
+    /*color: #DC0515;*/
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hmp1 {
+    background-color: #ffd1d2 !important;
+    /*color: #DC0515;*/
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hm0 {
+    background-color: #bcbec0 !important;
+    /*color: #4c4c4c;*/
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hmn1 {
+    background-color: #bbccb9 !important;
+    /*color: #297500;*/
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hmn2 {
+    background-color: #aac0a8 !important;
+    /*color: #297500;*/
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hmn3 {
+    background-color: #90aa9e !important;
+    /*color: #297500;*/
+    color: #000000 !important;
+}
+#lsinopac_scthm .hmcell.hmn4 {
+    background-color: #789889 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmn5 {
+    background-color: #65917b !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmn6 {
+    background-color: #5d8571 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmn7 {
+    background-color: #507461 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmn8 {
+    background-color: #446453 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmn9 {
+    background-color: #385245 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+#lsinopac_scthm .hmcell.hmn10 {
+    background-color: #2c4036 !important;
+    color: #ffffff !important;
+    /*color: #000000;*/
+}
+
+/******************************************************************************/
+#lsinopac_scthm .lsinopac_funcbar2 {
+    position: relative;
+    height: 72px;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .funcbarcell {
+    position: relative;
+    float: left;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .funcbarcell .cellbody {
+    position: relative;
+    width: auto;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 4px;
+    white-space: nowrap;
+    text-align: center;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .funcbarcell .lbl {
+    white-space: nowrap;
+}
+
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 {
+    position: relative;
+    height: 43px; /*margin: 20px 20px 0 20px;*/
+    border-bottom: 1px solid #0075b0;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 .funcbarcell .cellbody {
+    border: 1px solid #dbd8d5;
+    border-bottom: 0px solid #dbd8d5;
+    border-radius: 10px 10px 0px 0px;
+    background-color: #dbd8d5;
+    line-height: 40px;
+    height: 40px;
+    margin: 2px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 .funcbarcell.selected .cellbody {
+    color: #fc0001;
+    background-color: white;
+    cursor: pointer;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 .funcbarcell .cellbody {
+    margin-right: 0px;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 .funcbarcell.last .cellbody {
+    margin-right: 0;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 .funcbarcell.first .cellbody {
+    margin-left: 0;
+}
+
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv2 {
+    position: relative;
+    height: 35px; /*margin: 0 20px 20px 20px;*/
+    background-color: #e6e7e8;
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -border-radius: 0 0 4px 4px;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv2 .funcbarcell .cellbody {
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -border-radius: 0 0 4px 4px;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv2 .funcbarcell.selected .cellbody {
+    color: #ffffff !important;
+    background-color: #0075b0 !important;
+}
+#lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv2 .funcbarcell .cellbody:hover {
+    color: #ffffff;
+    background-color: #666666;
+}
+
+#lsinopac_scthm .menulink:hover {
+    color: #000000;
+}
+#lsinopac_scthm .menulink {
+    color: #6d6e71;
+    cursor: pointer;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm .wbox {
+    background: inherit;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0px 2px 3px #e6e7e8;
+    -moz-box-shadow: 0px 2px 3px #e6e7e8;
+    box-shadow: 0px 2px 3px #e6e7e8;
+    margin-bottom: 12px;
+}
+
+#lsinopac_scthm .resultbox {
+    display: table;
+    width: 100%;
+    font-size: 13px;
+    margin-bottom: 1rem;
+}
+
+#lsinopac_scthm .headerrow {
+    display: table-row !important;
+}
+
+#lsinopac_scthm .datarow.alt {
+    background-color: #f6f8fa;
+}
+
+#lsinopac_scthm .datarow > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#lsinopac_scthm .sct .datarow .symbol,
+#lsinopac_scthm .sct .datarow .ccy,
+#lsinopac_scthm .sct .datarow .ls {
+    display: none;
+}
+
+#lsinopac_scthm .datarow > div:first-child {
+    padding-left: 0.75rem;
+}
+
+#lsinopac_scthm .order {
+    width: 40px;
+}
+
+#lsinopac_scthm .resultbox .headerrow {
+    background-color: #5b7ea8;
+    font-weight: bold;
+    font-size: 13px;
+    color: white;
+}
+
+#lsinopac_scthm .headerrow .hmcell {
+    border: none;
+}
+
+#lsinopac_scthm .datarow .hmcell {
+    width: 10%;
+}
+
+#lsinopac_scthm .textlink {
+    color: #0070ae;
+    cursor: pointer;
+}
+
+#lsinopac_scthm .resultbox .empty {
+    padding: 0.5rem 0.75rem;
+}
+
+/* Mobile - 540px is the desktop layout min-width */
+@media only screen and (max-width: 540px) {
+    #lsinopac_scthm .datarow > div,
+    #lsinopac_scthm .sct .datarow .ccy,
+    #lsinopac_scthm .sct .datarow .ls {
+        display: inline-block;
+    }
+
+    #lsinopac_scthm .headerrow .order,
+    #lsinopac_scthm .headerrow .symbol,
+    #lsinopac_scthm .headerrow .nm,
+    #lsinopac_scthm .headerrow .ls,
+    #lsinopac_scthm .headerrow .ccy {
+        display: none !important;
+    }
+
+    #lsinopac_scthm .datarow {
+        border-bottom: 2px solid #e6e7e8;
+        padding-bottom: 1px;
+    }
+
+    #lsinopac_scthm .order {
+        width: 40px;
+    }
+    #lsinopac_scthm .symbol {
+        width: 45px;
+    }
+    #lsinopac_scthm .nm {
+        width: calc(100% - 180px);
+    }
+    #lsinopac_scthm .ls {
+        width: 65px;
+        text-align: right;
+    }
+    #lsinopac_scthm .ccy {
+        width: 30px;
+    }
+    #lsinopac_scthm .datarow .hmcell {
+        width: 25%;
+        padding: 8px 0px;
+    }
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm #heatmaplegend {
+    width: 250px;
+    height: 30px;
+    line-height: 30px;
+    color: #333333;
+    display: inline-block;
+}
+#lsinopac_scthm #heatmaplegend #heatmaplegend-n,
+#lsinopac_scthm #heatmaplegend #heatmaplegend-p,
+#lsinopac_scthm #heatmaplegend .helpbubble {
+    float: left;
+    margin: 0 2px;
+}
+#lsinopac_scthm #heatmaplegend #heatmaplegend-lbl {
+    float: left;
+    width: 148px;
+    height: 30px;
+    text-align: center;
+    background: url('../images/heatmaplegend.png') 0 0 no-repeat;
+}
+#lsinopac_scthm #heatmaplegend .helpbubble {
+    widthmargin-left: 6px;
+    margin-top: 7px;
+}
+
+/******************************************************************************/
+#lsinopac_scthm #dclm {
+    margin-bottom: 1rem;
+}
+
+#lsinopac_scthm .pagingbar .control .menulink {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+}
+
+#lsinopac_scthm .pagingbar .control .menulink.disabled {
+    pointer-events: none;
+    color: #b5babe;
+}
+
+#lsinopac_scthm .pagingbar .control .menulink:hover {
+    color: #0056b3;
+    text-decoration: none;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+#lsinopac_scthm .pagingbar .control .menulink.selected {
+    background-color: transparent;
+    color: #fc0001;
+}
+
+#lsinopac_scthm .control {
+    display: inline-block;
+    float: right;
+}
+
+#lsinopac_scthm .infobox {
+    display: inline-block;
+    margin-right: 20%;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Mobile - 540px is the desktop layout min-width */
+@media only screen and (max-width: 540px) {
+    #lsinopac_scthm .control,
+    #lsinopac_scthm .infobox {
+        float: none;
+        width: 100%;
+    }
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm #lsinopac_footerbar {
+    padding: 20px 8px 0 8px;
+    text-align: justify;
+}
+
+/******************************************************************************/
+
+#lsinopac_scthm .heatmapcelltextbox {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/******************************************************************************/
+
+/* Tablet - 930px is the desktop layout min-width */
+@media only screen and (max-width: 930px) {
+}
+
+/* Mobile - 540px is the desktop layout min-width */
+@media only screen and (max-width: 540px) {
+    #lsinopac_scthm #heatmaplegend #heatmaplegend-lbl {
+        width: 90px;
+    }
+
+    #lsinopac_scthm #heatmapbox {
+        padding: 0px 0px 0.75rem 0px;
+    }
+    #lsinopac_scthm #heatmapcanvas .heatmapcell {
+        width: calc((100% / 3) - 2px) !important;
+        position: initial;
+        display: inline-block;
+        margin: 1px 1px -6px 1px;
+    }
+
+    #lsinopac_scthm .heatmapbox .heatmapcell .heatmapcelltextbox {
+        position: inherit;
+    }
+
+    #lsinopac_scthm .heatmapbox .heatmapcell.order0 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order0 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order1 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order1 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order2 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order2 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order3 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order3 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order4 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order4 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order5 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order5 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order6 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order6 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order7 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order7 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order8 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order8 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order9 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order9 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order10 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order10 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order11 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order11 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order12 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order12 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order13 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order13 div,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order14 div a,
+    #lsinopac_scthm .heatmapbox .heatmapcell.order14 div {
+        font-size: 13px !important;
+        overflow: hidden;
+        white-space: nowrap !important;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    #lsinopac_scthm #heatmapbox #heatmapcanvas {
+        height: initial;
+    }
+
+    #lsinopac_scthm .heatmapbox .heatmapboxcontentpane {
+        position: initial;
+    }
+
+    #lsinopac_scthm .heatmapcelltextbox {
+        transform: none;
+        padding: 10px;
+    }
+
+    #lsinopac_scthm #lsinopac_funcbar {
+        padding: 0px;
+    }
+    #lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv1 .funcbarcell:nth-child(1),
+    #lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv1 .funcbarcell:nth-child(2) {
+        float: none;
+        display: inline-block;
+    }
+
+    #lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv1 .funcbarcell:nth-child(3),
+    #lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv1 .funcbarcell:nth-child(4),
+    #lsinopac_scthm #lsinopac_funcbar .lsinopac_funcbar2-lv1 .funcbarcell:nth-child(5) {
+        width: calc(100% / 3);
+        float: none;
+        display: inline-block;
+    }
+
+    #lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 {
+        height: auto;
+    }
+
+    #lsinopac_scthm .lsinopac_funcbar2 .lsinopac_funcbar2-lv1 .funcbarcell .cellbody {
+        margin: 0px 1px;
+    }
+}

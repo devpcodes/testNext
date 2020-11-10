@@ -1,0 +1,47 @@
+<%@page import="java.util.*" %>
+<%!
+//used by genchart.jsp
+
+    class ParamHelper
+    {
+        private Map paramMap = null;
+        
+        public void ParamHelper()
+        {
+        }    
+        
+        public void setMap(Map m)
+        {
+            paramMap = m;
+        }    
+        
+        String getParameter(String k)
+        {
+            if ((k == null) || (paramMap == null))
+                return null;
+
+            return (String) paramMap.get(k.toUpperCase());
+        }        
+    }
+%>
+
+<%
+    Map parameters = new HashMap();
+    ParamHelper paramHelper = new ParamHelper();
+    paramHelper.setMap(parameters);
+    
+    Map omap = request.getParameterMap();
+    
+    if (omap.size() > 0)
+    {
+        // Create new parameter map with key all converted to uppercase
+        for (Iterator it=omap.keySet().iterator(); it.hasNext();)
+        {
+            String k = (String) it.next();
+            parameters.put(k.toUpperCase(), request.getParameter(k));
+        }
+    }        
+    
+    // Releasing reference...
+    omap = null;
+%>

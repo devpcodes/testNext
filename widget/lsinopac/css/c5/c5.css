@@ -1,0 +1,33 @@
+/******************************************************************************/
+/* C5 is here
+/******************************************************************************/
+
+.lsinopac .chartwidget .chartpane {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+    background-color: #ffffff;
+}
+
+.lsinopac .chartwidget .chartpane .canvasbox {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    bottom: 5px;
+}
+.lsinopac .chartwidget /*.chartpane .canvasbox*/ .canvasvaluebox {
+    position: absolute;
+    line-height: 18px;
+    height: auto;
+    left: 12px; /* fit for the chart's thin left margin at 10px */
+    right: 61px; /* fit for the chart's right margin at 60px */
+    margin-top: -5px;
+    font-size: 11px; /* use smaller font to fit onto the screen */
+
+    /* HIDE IT in the current design! */
+    /*display: none !important;*/
+}
