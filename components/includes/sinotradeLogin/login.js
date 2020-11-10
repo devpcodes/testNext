@@ -9,7 +9,7 @@ import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
-
+import { sign, checkCA, checkCert } from '../../../services/webCa';
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
@@ -187,6 +187,18 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (isIframe) {
             iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
         } else {
+            //憑證
+            console.log('checkCA', checkCert('MCCAFIGAGI'));
+            let ca_content = sign(
+                {
+                    idno: 'MCCAFIGAGI',
+                    broker_id: '9A95',
+                    account: '9815668',
+                },
+                true,
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDQ5NzY5MTAsImV4cCI6MTYwNTA2MzMxMCwidXNlcl9pZCI6Ik1DQ0FGSUdBR0kiLCJhY3RzIjpbIkYwMDIwMDAxMjYzMDYyIiwiOUE5NTA0NzU1OTkiLCJGMDAyMDAwMDAxMTc0OSIsIkYwMDIwMDA5MTUxMDQwIiwiOUE5NTA5ODAyNjM0IiwiOUE5NTk4MTU2NjgiLCI5QTlVOTgwMTM4OSJdLCJhY3RzX2RldGFpbCI6W3siZGF0YWNvdW50IjowLCJiaG5hbWUiOiJcdTY3MWZcdThjYThcdTdlM2RcdTUxNmNcdTUzZjgiLCJicm9rZXJfaWQiOiJGMDAyMDAwIiwiaWRubyI6IkZCQ0hCRkFFQkciLCJhY2N0dHlwZSI6IkYiLCJ1c2VybmFtZSI6Ilx1NTQ2OCoqIiwiYWNjb3VudCI6IjEyNjMwNjIifSx7ImRhdGFjb3VudCI6MSwiYmhuYW1lIjoiXHU1M2YwXHU5NThiIiwiYnJva2VyX2lkIjoiOUE5NSIsImlkbm8iOiJGQkNIQkZBRUJHIiwiYWNjdHR5cGUiOiJTIiwidXNlcm5hbWUiOiJcdTU0NjgqKiIsImFjY291bnQiOiIwNDc1NTk5In0seyJkYXRhY291bnQiOjIsImJobmFtZSI6Ilx1NjcxZlx1OGNhOFx1N2UzZFx1NTE2Y1x1NTNmOCIsImJyb2tlcl9pZCI6IkYwMDIwMDAiLCJpZG5vIjoiTUNDQUZJR0FHSSIsImFjY3R0eXBlIjoiRiIsInVzZXJuYW1lIjoiXHU2N2QwKioiLCJhY2NvdW50IjoiMDAxMTc0OSJ9LHsiZGF0YWNvdW50IjozLCJiaG5hbWUiOiJcdTY3MWZcdThjYThcdTdlM2RcdTUxNmNcdTUzZjgiLCJicm9rZXJfaWQiOiJGMDAyMDAwIiwiaWRubyI6Ik1DQ0FGSUdBR0kiLCJhY2N0dHlwZSI6IkYiLCJ1c2VybmFtZSI6Ilx1OTY3MyoqIiwiYWNjb3VudCI6IjkxNTEwNDAifSx7ImRhdGFjb3VudCI6NCwiYmhuYW1lIjoiXHU1M2YwXHU5NThiIiwiYnJva2VyX2lkIjoiOUE5NSIsImlkbm8iOiJNQ0NBRklHQUdJIiwiYWNjdHR5cGUiOiJIIiwidXNlcm5hbWUiOiJcdTk2NzMqKiIsImFjY291bnQiOiIwOTgwMjYzNCJ9LHsiZGF0YWNvdW50Ijo1LCJiaG5hbWUiOiJcdTUzZjBcdTk1OGIiLCJicm9rZXJfaWQiOiI5QTk1IiwiaWRubyI6Ik1DQ0FGSUdBR0kiLCJhY2N0dHlwZSI6IlMiLCJ1c2VybmFtZSI6Ilx1OTY3MyoqIiwiYWNjb3VudCI6Ijk4MTU2NjgifSx7ImRhdGFjb3VudCI6NiwiYmhuYW1lIjoiXHU0ZTJkXHU2YjYzIiwiYnJva2VyX2lkIjoiOUE5VSIsImlkbm8iOiJNQ0NBRklHQUdJIiwiYWNjdHR5cGUiOiJTIiwidXNlcm5hbWUiOiJcdTk2NzMqKiIsImFjY291bnQiOiI5ODAxMzg5In1dLCJzZXNzaW9uX2lkIjoiMjVkMzAwYzQtMjMwMC0xMWViLTkxOTEtMDA1MDU2OTI2YzIwIiwib3JpZ19pYXQiOjE2MDQ5NzY5MTB9.aATci1aVcySguDCkt8xdgcuBk6I73IFx4OJ3jJLGbbo',
+            );
+            console.log('CA!!!!!', ca_content);
             successHandler();
         }
     };

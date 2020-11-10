@@ -19,6 +19,7 @@ import { getCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
+import CaHead from '../includes/CaHead';
 
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
@@ -330,6 +331,7 @@ const Layout = React.memo(({ children }) => {
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
                 />
             </Head>
+            <CaHead />
             <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
                 <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
             </MyTransition>
