@@ -80,5 +80,38 @@ export const checkCert = function (userIdNo) {
     });
     const checkData = ca.checkCert(userIdNo);
     console.log('checkCert', checkData);
-    return checkData.suggestAction;
+    return checkData;
+};
+
+export const applyCert = function (user_idNo, token, callBack) {
+    const ca = new CA_Component({
+        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+        DM: process.env.NEXT_PUBLIC_DM,
+    });
+
+    ca.applyCert(
+        {
+            userID: user_idNo,
+            memberNo: token,
+        },
+        callBack,
+    );
+};
+
+export const renewCert = function (user_idNo, token, callBack) {
+    const ca = new CA_Component({
+        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+        DM: process.env.NEXT_PUBLIC_DM,
+    });
+    ca.renewCert(
+        {
+            userID: user_idNo,
+            memberNo: token,
+        },
+        callBack,
+    );
 };

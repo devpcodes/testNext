@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Modal } from 'antd';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
 import jwt_decode from 'jwt-decode';
@@ -20,7 +21,7 @@ import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import CaHead from '../includes/CaHead';
-
+import { checkCert, applyCert, renewCert } from '../../services/webCa';
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -257,6 +258,7 @@ const Layout = React.memo(({ children }) => {
                 duration: 3,
                 top: 70,
             });
+            CAHandler(getCookie('token'));
             router.push(
                 prevPathname.current,
                 `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
@@ -270,10 +272,12 @@ const Layout = React.memo(({ children }) => {
         bigLoginRouterHandler('close');
     };
 
+    //登入頁 登入成功
     const bigLoginSuccess = function () {
         setShowBigLogin(false);
         dispatch(setIsLogin(true));
         bigLoginRouterHandler();
+        CAHandler(getCookie('token'));
     };
 
     const bigLoginRouterHandler = function (type) {
@@ -301,6 +305,42 @@ const Layout = React.memo(({ children }) => {
                 });
             } else return child;
         });
+    };
+
+    //憑證檢查
+    const CAHandler = function (token) {
+        const tokenVal = jwt_decode(token);
+        const checkData = checkCert(tokenVal.user_id);
+        if (checkData.suggestAction != 'None') {
+            setTimeout(() => {
+                Modal.info({
+                    title: '憑證系統',
+                    content: `您現在無憑證。是否要載入憑證 ?`,
+                    onOk() {
+                        caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
+                    },
+                    okText: '是',
+                    onCancel() {
+                        sessionStorage.setItem('deployCA', false);
+                    },
+                    cancelText: '否',
+                });
+            }, 600);
+        }
+    };
+
+    //憑證安裝
+    const caResultDataHandler = function (suggestAction, userIdNo, token) {
+        if (suggestAction === 'ApplyCert') {
+            applyCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                console.log('applyCertMsg', applyCertMsg);
+            });
+        }
+        if (suggestAction == 'RenewCert') {
+            renewCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                console.log('RenewCertMsg', applyCertMsg);
+            });
+        }
     };
 
     return (
