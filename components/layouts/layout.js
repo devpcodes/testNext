@@ -313,17 +313,17 @@ const Layout = React.memo(({ children }) => {
         const checkData = checkCert(tokenVal.user_id);
         if (checkData.suggestAction != 'None') {
             setTimeout(() => {
-                Modal.info({
+                Modal.confirm({
                     title: '憑證系統',
                     content: `您現在無憑證。是否要載入憑證 ?`,
                     onOk() {
                         caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
                     },
                     okText: '是',
+                    cancelText: '否',
                     onCancel() {
                         sessionStorage.setItem('deployCA', false);
                     },
-                    cancelText: '否',
                 });
             }, 600);
         }
