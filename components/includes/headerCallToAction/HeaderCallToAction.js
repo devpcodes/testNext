@@ -33,7 +33,7 @@ export const HeaderCallToAction = () => {
         if (router.pathname !== '/errPage') {
             dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         }
-        router.push('', `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`, { shallow: true });
+        router.push('/SinoTrade_login');
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;

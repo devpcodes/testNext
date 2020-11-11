@@ -1,8 +1,11 @@
+import { useRouter } from 'next/router';
 import { submit } from '../services/components/login/trustLogin';
 import { useEffect } from 'react';
 import { checkServer } from '../services/checkServer';
 
 const Navigation = () => {
+    const router = useRouter();
+
     useEffect(() => {
         doLogin();
     }, []);
@@ -51,11 +54,13 @@ const Navigation = () => {
                 const res = await submit(queryStringDict.otp);
                 if (res.data.success === true) {
                     sessionStorage.setItem('source', queryStringDict.platform.toLowerCase());
-                    location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${queryStringDict.page}`;
+                    router.push(`/${queryStringDict.page}`);
+                    // location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${queryStringDict.page}`;
                 }
             }
         } catch (e) {
-            location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${canTrustDict[queryStringDict.platform].errorPage}`;
+            router.push(`/${canTrustDict[queryStringDict.platform].errorPage}`);
+            // location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${canTrustDict[queryStringDict.platform].errorPage}`;
             alert('登入失敗，請重新登入');
         }
     };

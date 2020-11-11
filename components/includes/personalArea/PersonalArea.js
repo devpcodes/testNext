@@ -37,7 +37,6 @@ export const PersonalArea = ({ personalAreaVisible }) => {
             await logout();
             dispatch(setIsLogin(false));
             window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
-            // router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
         } catch (error) {
             console.error(`logout error:`, error);
         }

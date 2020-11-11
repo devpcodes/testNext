@@ -18,7 +18,7 @@ function Subbrokerage() {
     useEffect(() => {
         if (!checkAccountsType(accounts, 'H')) {
             Modal.error({ content: '無可交易帳號' });
-            router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
+            router.push('/');
         }
     }, [accounts]);
     return (

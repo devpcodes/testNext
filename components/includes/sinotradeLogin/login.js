@@ -196,7 +196,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + 'Service_ForgetPassword');
         } else {
             onClose();
-            router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+            router.push(`/Service_ForgetPassword`);
         }
     };
 
