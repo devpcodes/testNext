@@ -5,7 +5,8 @@ const cache = require('./resources/serviceWorker/cache');
 
 const isProd = process.env.NODE_ENV === 'production';
 module.exports = withOptimizedImages({
-    assetPrefix: isProd ? '/newweb' : '',
+    basePath: '/newweb',
+    // assetPrefix: '/newweb',
     // inlineImageLimit: isProd ? 16384 : 0,
     webpack: (config, { isServer, buildId, dev }) => {
         let workboxOptions = {};

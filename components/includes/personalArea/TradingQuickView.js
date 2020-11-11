@@ -261,7 +261,7 @@ export const TradingQuickView = () => {
         return (
             <div className="tradingQuickView__container">
                 <img className="errImg" src={errImg} alt="永豐金證券" />
-                <p className="errMsg">損益資料取得錯誤</p>
+                <p className="errMsg">暫時無法取得損益資料</p>
                 <style jsx>{`
                     .errImg {
                         display: block;
