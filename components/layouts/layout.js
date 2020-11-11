@@ -54,6 +54,8 @@ const Layout = React.memo(({ children }) => {
 
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered.current) {
+            console.log('================= update =================');
+
             updateNavData();
         }
     }, [isMobile, isLogin, domain]);
@@ -89,6 +91,8 @@ const Layout = React.memo(({ children }) => {
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
             if (!Object.keys(navData).length) {
+                console.log('================= first =================');
+
                 updateNavData();
             }
         }, 10);
