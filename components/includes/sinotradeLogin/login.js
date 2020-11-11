@@ -144,7 +144,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 content: `初次登入，請修改密碼後重新登入，謝謝`,
                 onOk() {
                     onClose();
-                    router.push('/User_ChangePassword', `${process.env.NEXT_PUBLIC_SUBPATH}User_ChangePassword`);
+                    router.push('/User_ChangePassword');
                 },
             });
             return true;
