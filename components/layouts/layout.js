@@ -258,12 +258,14 @@ const Layout = React.memo(({ children }) => {
                 duration: 3,
                 top: 70,
             });
-            CAHandler(getCookie('token'));
             router.push(
                 prevPathname.current,
                 `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
             );
         }, 500);
+        setTimeout(() => {
+            CAHandler(getCookie('token'));
+        }, 700);
     }, []);
 
     // 關閉大的login
@@ -332,16 +334,10 @@ const Layout = React.memo(({ children }) => {
     //憑證安裝
     const caResultDataHandler = async function (suggestAction, userIdNo, token) {
         if (suggestAction === 'ApplyCert') {
-            // applyCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-            //     console.log('applyCertMsg', applyCertMsg);
-            // });
             const msg = await applyCert(userIdNo, token);
             console.log('await msg', msg);
         }
         if (suggestAction == 'RenewCert') {
-            // renewCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-            //     console.log('RenewCertMsg', applyCertMsg);
-            // });
             const msg = await renewCert(userIdNo, token);
             console.log('await msg', msg);
         }
