@@ -18,7 +18,7 @@ function TradingCenter_TWStocks_Taiex() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Taiex`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 1600 : 1300}
+                    iHeight={isMobile ? 1700 : 1300}
                     login={isLogin}
                 />
             </div>
