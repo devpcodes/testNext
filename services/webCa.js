@@ -94,13 +94,18 @@ export const applyCert = function (user_idNo, token, callBack) {
         userID: user_idNo,
         memberNo: token,
     });
-    ca.applyCert(
-        {
-            userID: user_idNo,
-            memberNo: token,
-        },
-        callBack,
-    );
+    return new Promise((resolve, reject) => {
+        ca.applyCert(
+            {
+                userID: user_idNo,
+                memberNo: token,
+            },
+            function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                resolve(applyCertMsg);
+            },
+        );
+    });
 };
 
 export const renewCert = function (user_idNo, token, callBack) {
@@ -110,11 +115,16 @@ export const renewCert = function (user_idNo, token, callBack) {
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
         DM: process.env.NEXT_PUBLIC_DM,
     });
-    ca.renewCert(
-        {
-            userID: user_idNo,
-            memberNo: token,
-        },
-        callBack,
-    );
+    return new Promise((resolve, reject) => {
+        ca.renewCert(
+            {
+                userID: user_idNo,
+                memberNo: token,
+            },
+            function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                resolve(applyCertMsg);
+            },
+        );
+    });
 };

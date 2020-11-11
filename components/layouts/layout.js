@@ -330,16 +330,20 @@ const Layout = React.memo(({ children }) => {
     };
 
     //憑證安裝
-    const caResultDataHandler = function (suggestAction, userIdNo, token) {
+    const caResultDataHandler = async function (suggestAction, userIdNo, token) {
         if (suggestAction === 'ApplyCert') {
-            applyCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-                console.log('applyCertMsg', applyCertMsg);
-            });
+            // applyCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+            //     console.log('applyCertMsg', applyCertMsg);
+            // });
+            const msg = await applyCert(userIdNo, token);
+            console.log('await msg', msg);
         }
         if (suggestAction == 'RenewCert') {
-            renewCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-                console.log('RenewCertMsg', applyCertMsg);
-            });
+            // renewCert(userIdNo, token, function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+            //     console.log('RenewCertMsg', applyCertMsg);
+            // });
+            const msg = await renewCert(userIdNo, token);
+            console.log('await msg', msg);
         }
     };
 
