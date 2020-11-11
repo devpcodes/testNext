@@ -64,15 +64,7 @@ const NavList = React.memo(props => {
                             </a>
                         )}
                         {lv3Item.url && !lv3Item.isOpen && (
-                            <Link
-                                href={lv3Item.url}
-                                as={
-                                    lv3Item.isFullUrl
-                                        ? `${lv3Item.url}`
-                                        : `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`
-                                }
-                                prefetch={false}
-                            >
+                            <Link href={lv3Item.url} prefetch={false} as={lv3Item.url}>
                                 <a
                                     target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
                                     className="navbar__lv3__item__title"

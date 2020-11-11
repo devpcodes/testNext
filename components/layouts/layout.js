@@ -212,7 +212,7 @@ const Layout = React.memo(({ children }) => {
     //無權限頁面處理
     const noPermissionPage = function (errMsg) {
         prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
-        router.push('/errPage', `${process.env.NEXT_PUBLIC_SUBPATH}errPage`);
+        router.push('/errPage');
         setVerifySuccess(false);
         setVerifyErrMsg(errMsg);
         setTimeout(() => {
@@ -262,10 +262,7 @@ const Layout = React.memo(({ children }) => {
                 duration: 3,
                 top: 70,
             });
-            router.push(
-                prevPathname.current,
-                `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
-            );
+            router.push(prevPathname.current);
         }, 500);
         setTimeout(() => {
             CAHandler(getCookie('token'));
@@ -288,16 +285,13 @@ const Layout = React.memo(({ children }) => {
 
     const bigLoginRouterHandler = function (type) {
         if (router.pathname.indexOf('errPage') != -1 && prevPathname.current != null && type == null) {
-            router.push(
-                prevPathname.current,
-                `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
-            );
+            router.push(prevPathname.current);
             return;
         }
         if (!currentPath) {
-            router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
+            router.push('/');
         } else {
-            router.push(currentPath, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`, { shallow: true });
+            router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
         }
     };
 

@@ -33,7 +33,8 @@ export const HeaderCallToAction = () => {
         if (router.pathname !== '/errPage') {
             dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         }
-        router.push('', `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`, { shallow: true });
+        // 無真正的 SinoTrade_login 頁面
+        router.push('', `/SinoTrade_login`, { shallow: true });
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
