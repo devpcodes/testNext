@@ -291,7 +291,11 @@ const Layout = React.memo(({ children }) => {
         if (!currentPath) {
             router.push('/');
         } else {
-            router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+            if (currentPath === '/') {
+                router.push(currentPath, '/', { shallow: true });
+            } else {
+                router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+            }
         }
     };
 
