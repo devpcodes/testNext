@@ -54,7 +54,7 @@ const Navbar = React.memo(props => {
     return (
         <div className={`${showMenu ? '' : 'navbar--hide'}`}>
             <div className="navbar__lv1__item navbar__lv1__item__title menu__ctrl">
-                <Link href={'/'} as={`${process.env.NEXT_PUBLIC_SUBPATH}`}>
+                <Link href={'/'}>
                     <a className="header__logo">
                         <img src={logo}></img>
                     </a>
@@ -77,14 +77,7 @@ const Navbar = React.memo(props => {
                                         {lv1Item.title}
                                     </a>
                                 ) : (
-                                    <Link
-                                        href={lv1Item.url}
-                                        as={
-                                            lv1Item.isFullUrl
-                                                ? `${lv1Item.url}`
-                                                : `${process.env.NEXT_PUBLIC_SUBPATH}${lv1Item.url}`
-                                        }
-                                    >
+                                    <Link href={lv1Item.url}>
                                         <a
                                             className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
                                             onClick={menuItemClickHandler}
@@ -116,17 +109,10 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={''} as={`${process.env.NEXT_PUBLIC_SUBPATH}goOrder`}>
+                    <Link href={''}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
-                    <Link
-                        href={''}
-                        as={
-                            !!accountMarket
-                                ? `${process.env.NEXT_PUBLIC_SUBPATH}TradingAccount?mkt=${marketMappingList[accountMarket]}`
-                                : `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`
-                        }
-                    >
+                    <Link href={''}>
                         <a className="navbar__account">我的帳務</a>
                     </Link>
                 </div>
