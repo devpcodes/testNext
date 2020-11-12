@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoginHandler } from '../../../store/components/layouts/action';
-import { trust } from '../../../services/components/header/navTurst';
+import { setCurrentPath } from '../../../store/components/layouts/action';
+import { trust } from '../../../services/components/general/navTurst';
 import theme from '../../../resources/styles/theme';
 
 import Link from 'next/link';
