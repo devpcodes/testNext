@@ -30,6 +30,10 @@ const NavList = React.memo(props => {
               })(trustUrl, trustBody);
     };
 
+    const linkSetCurrentPath = () => {
+        dispatch(setCurrentPath(location.href));
+    };
+
     return (
         <div className="navlist">
             <h6
@@ -65,6 +69,7 @@ const NavList = React.memo(props => {
                         )}
                         {lv3Item.url && !lv3Item.isOpen && (
                             <Link
+                                onClick={linkSetCurrentPath}
                                 href={lv3Item.url}
                                 as={
                                     lv3Item.isFullUrl
