@@ -88,6 +88,9 @@ const footerData = [
 ];
 
 const Footer = React.memo(props => {
+    const telHandler = () => {
+        window.location.href = 'tel:+886-2-66308899';
+    };
     return (
         <div className="footer">
             <div className="footer__up">
@@ -109,7 +112,9 @@ const Footer = React.memo(props => {
                 </a>
             </div>
             <div className="mobile__box2">
-                <p className="box2__title">撥打客服專線</p>
+                <p onClick={telHandler} className="box2__title">
+                    撥打客服專線
+                </p>
                 <p className="box2__val">
                     <span>服務時間</span>(AM7:30~PM10:00)
                 </p>
