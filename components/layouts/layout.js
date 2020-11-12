@@ -223,8 +223,14 @@ const Layout = React.memo(({ children }) => {
             duration: 2,
             top: 70,
         });
+
         setTimeout(() => {
-            router.back();
+            // router.back();
+            if (currentPath === '' || currentPath === '/') {
+                router.push('/');
+            } else {
+                router.push(currentPath.substr(1));
+            }
         }, 200);
 
         setTimeout(() => {

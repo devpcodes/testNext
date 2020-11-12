@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoginHandler } from '../../../store/components/layouts/action';
 import { setCurrentPath } from '../../../store/general/action';
@@ -8,6 +9,7 @@ import theme from '../../../resources/styles/theme';
 import Link from 'next/link';
 
 const NavList = React.memo(props => {
+    const router = useRouter();
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
     const dispatch = useDispatch();
@@ -32,8 +34,8 @@ const NavList = React.memo(props => {
     };
 
     const linkSetCurrentPath = () => {
-        const currentPath = `/${window.location.pathname.split('/').pop()}`;
-        dispatch(setCurrentPath(currentPath));
+        // const currentPath = `/${window.location.pathname.split('/').pop()}`;
+        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
     };
 
     return (
