@@ -1,12 +1,16 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoginHandler } from '../../../store/components/layouts/action';
+import { setMenuOpen } from '../../../store/components/layouts/action';
+import { setCurrentPath } from '../../../store/general/action';
 import { trust } from '../../../services/components/header/navTurst';
 import theme from '../../../resources/styles/theme';
 
 import Link from 'next/link';
 
 const NavList = React.memo(props => {
+    const router = useRouter();
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
     const dispatch = useDispatch();
@@ -28,6 +32,11 @@ const NavList = React.memo(props => {
                   const res = await trust(trustUrl, trustBody);
                   window.open(res.data.result.url, '_blank');
               })(trustUrl, trustBody);
+    };
+
+    const linkSetCurrentPath = () => {
+        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+        dispatch(setMenuOpen(false));
     };
 
     return (
@@ -63,15 +72,25 @@ const NavList = React.memo(props => {
                                 <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                             </a>
                         )}
-                        {lv3Item.url && !lv3Item.isOpen && (
-                            <Link href={lv3Item.url} prefetch={false} as={lv3Item.url}>
+                        {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
+                            <Link href={lv3Item.url}>
                                 <a
-                                    target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
+                                    onClick={linkSetCurrentPath}
+                                    target={lv3Item.isBlank ? '_blank' : ''}
                                     className="navbar__lv3__item__title"
                                 >
                                     <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                                 </a>
                             </Link>
+                        )}
+                        {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && lv3Item.isFullUrl && (
+                            <a
+                                href={lv3Item.url}
+                                target={lv3Item.isBlank ? '_blank' : ''}
+                                className="navbar__lv3__item__title"
+                            >
+                                <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
+                            </a>
                         )}
                         {lv3Item.isTrust && (
                             <a

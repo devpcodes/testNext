@@ -203,10 +203,39 @@ const Layout = React.memo(({ children }) => {
         const token = getCookie('token');
         const res = await verifyMenu(currentPath, token);
         if (!res.data.result.isPass) {
-            noPermissionPage(res.data.result.message);
+            //P = 權限不足, N = 需要登入
+            if (res.data.result.errorCode === 'N') {
+                noLoginPage(res.data.result.message);
+            } else {
+                noPermissionPage(res.data.result.message);
+            }
         } else {
             setVerifySuccess(true);
         }
+    };
+
+    const noLoginPage = function (errMsg) {
+        prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
+        setVerifySuccess(false);
+        notification.error({
+            placement: 'topRight',
+            message: errMsg,
+            duration: 2,
+            top: 70,
+        });
+
+        setTimeout(() => {
+            // router.back();
+            if (currentPath === '' || currentPath === '/') {
+                router.push('/');
+            } else {
+                router.push(currentPath.substr(1));
+            }
+        }, 200);
+
+        setTimeout(() => {
+            dispatch(showLoginHandler(true));
+        }, 1500);
     };
 
     //無權限頁面處理
@@ -291,7 +320,11 @@ const Layout = React.memo(({ children }) => {
         if (!currentPath) {
             router.push('/');
         } else {
-            router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+            if (currentPath === '/') {
+                router.push(currentPath, '/', { shallow: true });
+            } else {
+                router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+            }
         }
     };
 
@@ -333,11 +366,21 @@ const Layout = React.memo(({ children }) => {
     const caResultDataHandler = async function (suggestAction, userIdNo, token) {
         if (suggestAction === 'ApplyCert') {
             const msg = await applyCert(userIdNo, token);
-            console.log('await msg', msg);
+            console.log('ApplyCert憑證回傳訊息', msg);
+            notification.open({
+                message: '系統訊息',
+                description: msg,
+                top: 70,
+            });
         }
         if (suggestAction == 'RenewCert') {
             const msg = await renewCert(userIdNo, token);
-            console.log('await msg', msg);
+            console.log('RenewCert憑證回傳訊息', msg);
+            notification.open({
+                message: '系統訊息',
+                description: msg,
+                top: 70,
+            });
         }
     };
 

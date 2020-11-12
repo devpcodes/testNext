@@ -25,7 +25,7 @@ function GoOrder() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/goOrder${queryStr}`}
                     title="永豐金證券"
-                    iHeight={710}
+                    iHeight={750}
                 />
             </div>
             <style jsx>{`

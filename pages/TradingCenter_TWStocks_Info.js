@@ -2,11 +2,13 @@ import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { PageHead } from '../components/includes/PageHead';
 import { setNavItems } from '../store/components/layouts/action';
+import { useSelector } from 'react-redux';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 function TradingCenter_TWStocks_Info() {
+    const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <>
             <PageHead title={'台股公佈欄'} />
@@ -14,7 +16,7 @@ function TradingCenter_TWStocks_Info() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Info`}
                     title="永豐金證券"
-                    iHeight={700}
+                    iHeight={isMobile ? 2800 : 700}
                 />
             </div>
         </>
