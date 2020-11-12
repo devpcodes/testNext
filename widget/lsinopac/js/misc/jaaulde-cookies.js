@@ -32,15 +32,15 @@
         } else {
             scope[name] = definition();
         }
-    }('cookies', function () {
-            /* localize natives */
+    })('cookies', function () {
+        /* localize natives */
         var document = scope.document,
             /* opts and support */
             default_options = {
                 expires: null,
                 path: '/',
                 domain: null,
-                secure: false
+                secure: false,
             },
             /**
              *
@@ -49,7 +49,11 @@
              * @returns {void}
              */
             warn = function (msg) {
-                if (typeof scope.console === 'object' && scope.console !== null && typeof scope.console.warn === 'function') {
+                if (
+                    typeof scope.console === 'object' &&
+                    scope.console !== null &&
+                    typeof scope.console.warn === 'function'
+                ) {
                     warn = function (msg) {
                         scope.console.warn(msg);
                     };
@@ -62,8 +66,7 @@
              * @returns {object}
              */
             resolveOptions = function (o) {
-                var r,
-                    e;
+                var r, e;
 
                 if (typeof o !== 'object' || o === null) {
                     r = default_options;
@@ -72,7 +75,7 @@
                         expires: default_options.expires,
                         path: default_options.path,
                         domain: default_options.domain,
-                        secure: default_options.secure
+                        secure: default_options.secure,
                     };
 
                     /*
@@ -84,15 +87,21 @@
                         r.expires = o.expires;
                     } else if (typeof o.expires_at === 'object' && o.expires_at instanceof Date) {
                         r.expires = o.expires_at;
-                        warn('Cookie option "expires_at" has been deprecated. Rename to "expires". Support for "expires_at" will be removed in a version to come.');
+                        warn(
+                            'Cookie option "expires_at" has been deprecated. Rename to "expires". Support for "expires_at" will be removed in a version to come.',
+                        );
                     } else if (typeof o.expiresAt === 'object' && o.expiresAt instanceof Date) {
                         r.expires = o.expiresAt;
-                        warn('Cookie option "expiresAt" has been deprecated. Rename to "expires". Support for "expiresAt" will be removed in a version to come.');
+                        warn(
+                            'Cookie option "expiresAt" has been deprecated. Rename to "expires". Support for "expiresAt" will be removed in a version to come.',
+                        );
                     } else if (typeof o.hoursToLive === 'number' && o.hoursToLive !== 0) {
                         e = new Date();
-                        e.setTime(e.getTime() + (o.hoursToLive * 60 * 60 * 1000));
+                        e.setTime(e.getTime() + o.hoursToLive * 60 * 60 * 1000);
                         r.expires = e;
-                        warn('Cookie option "hoursToLive" has been deprecated. Rename to "expires" and prodvide a Date instance (see documentation). Support for "hoursToLive" will be removed in a version to come.');
+                        warn(
+                            'Cookie option "hoursToLive" has been deprecated. Rename to "expires" and prodvide a Date instance (see documentation). Support for "hoursToLive" will be removed in a version to come.',
+                        );
                     }
 
                     if (typeof o.path === 'string' && o.path !== '') {
@@ -119,12 +128,14 @@
             cookieOptions = function (o) {
                 o = resolveOptions(o);
 
-                return ([
-                    (typeof o.expires === 'object' && o.expires instanceof Date ? '; expires=' + o.expires.toGMTString() : ''),
-                    ('; path=' + o.path),
-                    (typeof o.domain === 'string' ? '; domain=' + o.domain : ''),
-                    (o.secure === true ? '; secure' : '')
-                ].join(''));
+                return [
+                    typeof o.expires === 'object' && o.expires instanceof Date
+                        ? '; expires=' + o.expires.toGMTString()
+                        : '',
+                    '; path=' + o.path,
+                    typeof o.domain === 'string' ? '; domain=' + o.domain : '',
+                    o.secure === true ? '; secure' : '',
+                ].join('');
             },
             /**
              *
@@ -142,8 +153,7 @@
                     };
                 } else {
                     trim_def = (function () {
-                        var l,
-                            r;
+                        var l, r;
 
                         l = /^\s+/;
                         r = /\s+$/;
@@ -151,11 +161,11 @@
                         return function (s) {
                             return s.replace(l, '').replace(r, '');
                         };
-                    }());
+                    })();
                 }
 
                 return trim_def;
-            }()),
+            })(),
             /**
              *
              * @access private
@@ -167,17 +177,16 @@
                     native_isNaN = scope.isNaN;
 
                 return function (v) {
-                    return (v === null || !p.test(v) || native_isNaN(v));
+                    return v === null || !p.test(v) || native_isNaN(v);
                 };
-            }()),
+            })(),
             /**
              *
              * @access private
              * @returns {object}
              */
             parseCookies = (function () {
-                var parseJSON,
-                    p;
+                var parseJSON, p;
 
                 if (JSON && typeof JSON.parse === 'function') {
                     parseJSON = function (s) {
@@ -233,11 +242,16 @@
 
                         /* Logic borrowed from http://jquery.com/ dataAttr method */
                         try {
-                            vv = (vv === 'true')
-                                ? true : (vv === 'false')
-                                    ? false : !isNaN(vv)
-                                        ? parseFloat(vv) : p.test(vv)
-                                            ? parseJSON(vv) : vv;
+                            vv =
+                                vv === 'true'
+                                    ? true
+                                    : vv === 'false'
+                                    ? false
+                                    : !isNaN(vv)
+                                    ? parseFloat(vv)
+                                    : p.test(vv)
+                                    ? parseJSON(vv)
+                                    : vv;
                         } catch (ignore) {}
 
                         c[n] = vv;
@@ -245,7 +259,7 @@
 
                     return c;
                 };
-            }());
+            })();
 
         return {
             /**
@@ -266,7 +280,7 @@
                     c = parseCookies();
 
                 if (typeof n === 'string') {
-                    r = (c[n] !== undef) ? c[n] : null;
+                    r = c[n] !== undef ? c[n] : null;
                 } else if (typeof n === 'object' && n !== null) {
                     r = {};
 
@@ -332,10 +346,7 @@
                     o.expires.setFullYear(1978);
                 } else {
                     /* Logic borrowed from http://jquery.com/ dataAttr method and reversed */
-                    v = (v === true)
-                        ? 'true' : (v === false)
-                            ? 'false' : !isNaN(v)
-                                ? String(v) : v;
+                    v = v === true ? 'true' : v === false ? 'false' : !isNaN(v) ? String(v) : v;
 
                     if (typeof v !== 'string') {
                         if (typeof JSON === 'object' && JSON !== null && typeof JSON.stringify === 'function') {
@@ -413,7 +424,7 @@
                 }
 
                 default_options = resolveOptions(o);
-            }
+            },
         };
-    }));
-}(this));
+    });
+})(this);

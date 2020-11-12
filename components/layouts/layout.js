@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Modal } from 'antd';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
 import jwt_decode from 'jwt-decode';
@@ -19,7 +20,8 @@ import { getCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
-
+import CaHead from '../includes/CaHead';
+import { checkCert, applyCert, renewCert } from '../../services/webCa';
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -52,6 +54,8 @@ const Layout = React.memo(({ children }) => {
 
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered.current) {
+            console.log('================= update =================');
+
             updateNavData();
         }
     }, [isMobile, isLogin, domain]);
@@ -87,6 +91,8 @@ const Layout = React.memo(({ children }) => {
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
             if (!Object.keys(navData).length) {
+                console.log('================= first =================');
+
                 updateNavData();
             }
         }, 10);
@@ -197,16 +203,39 @@ const Layout = React.memo(({ children }) => {
         const token = getCookie('token');
         const res = await verifyMenu(currentPath, token);
         if (!res.data.result.isPass) {
-            noPermissionPage(res.data.result.message);
+            //P = 權限不足, N = 需要登入
+            if (res.data.result.errorCode === 'N') {
+                noLoginPage(res.data.result.message);
+            } else {
+                noPermissionPage(res.data.result.message);
+            }
         } else {
             setVerifySuccess(true);
         }
     };
 
+    const noLoginPage = function (errMsg) {
+        prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
+        setVerifySuccess(false);
+        notification.error({
+            placement: 'topRight',
+            message: errMsg,
+            duration: 2,
+            top: 70,
+        });
+        setTimeout(() => {
+            router.back();
+        }, 200);
+
+        setTimeout(() => {
+            dispatch(showLoginHandler(true));
+        }, 1500);
+    };
+
     //無權限頁面處理
     const noPermissionPage = function (errMsg) {
         prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
-        router.push('/errPage', `${process.env.NEXT_PUBLIC_SUBPATH}errPage`);
+        router.push('/errPage');
         setVerifySuccess(false);
         setVerifyErrMsg(errMsg);
         setTimeout(() => {
@@ -256,11 +285,11 @@ const Layout = React.memo(({ children }) => {
                 duration: 3,
                 top: 70,
             });
-            router.push(
-                prevPathname.current,
-                `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
-            );
+            router.push(prevPathname.current);
         }, 500);
+        setTimeout(() => {
+            CAHandler(getCookie('token'));
+        }, 700);
     }, []);
 
     // 關閉大的login
@@ -269,24 +298,27 @@ const Layout = React.memo(({ children }) => {
         bigLoginRouterHandler('close');
     };
 
+    //登入頁 登入成功
     const bigLoginSuccess = function () {
         setShowBigLogin(false);
         dispatch(setIsLogin(true));
         bigLoginRouterHandler();
+        CAHandler(getCookie('token'));
     };
 
     const bigLoginRouterHandler = function (type) {
         if (router.pathname.indexOf('errPage') != -1 && prevPathname.current != null && type == null) {
-            router.push(
-                prevPathname.current,
-                `${process.env.NEXT_PUBLIC_SUBPATH}${prevPathname.current.split('/')[1]}`,
-            );
+            router.push(prevPathname.current);
             return;
         }
         if (!currentPath) {
-            router.push('/', `${process.env.NEXT_PUBLIC_SUBPATH}`);
+            router.push('/');
         } else {
-            router.push(currentPath, `${process.env.NEXT_PUBLIC_SUBPATH}${currentPath.substr(1)}`, { shallow: true });
+            if (currentPath === '/') {
+                router.push(currentPath, '/', { shallow: true });
+            } else {
+                router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+            }
         }
     };
 
@@ -300,6 +332,50 @@ const Layout = React.memo(({ children }) => {
                 });
             } else return child;
         });
+    };
+
+    //憑證檢查
+    const CAHandler = function (token) {
+        const tokenVal = jwt_decode(token);
+        const checkData = checkCert(tokenVal.user_id);
+        if (checkData.suggestAction != 'None') {
+            setTimeout(() => {
+                Modal.confirm({
+                    title: '憑證系統',
+                    content: `您現在無憑證。是否要載入憑證 ?`,
+                    onOk() {
+                        caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
+                    },
+                    okText: '是',
+                    cancelText: '否',
+                    onCancel() {
+                        sessionStorage.setItem('deployCA', false);
+                    },
+                });
+            }, 600);
+        }
+    };
+
+    //憑證安裝
+    const caResultDataHandler = async function (suggestAction, userIdNo, token) {
+        if (suggestAction === 'ApplyCert') {
+            const msg = await applyCert(userIdNo, token);
+            console.log('ApplyCert憑證回傳訊息', msg);
+            notification.open({
+                message: '系統訊息',
+                description: msg,
+                top: 70,
+            });
+        }
+        if (suggestAction == 'RenewCert') {
+            const msg = await renewCert(userIdNo, token);
+            console.log('RenewCert憑證回傳訊息', msg);
+            notification.open({
+                message: '系統訊息',
+                description: msg,
+                top: 70,
+            });
+        }
     };
 
     return (
@@ -330,6 +406,7 @@ const Layout = React.memo(({ children }) => {
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
                 />
             </Head>
+            <CaHead />
             <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
                 <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
             </MyTransition>

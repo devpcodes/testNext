@@ -9,7 +9,6 @@ import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
-
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
@@ -145,7 +144,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 content: `初次登入，請修改密碼後重新登入，謝謝`,
                 onOk() {
                     onClose();
-                    router.push('/User_ChangePassword', `${process.env.NEXT_PUBLIC_SUBPATH}User_ChangePassword`);
+                    router.push('/User_ChangePassword');
                 },
             });
             return true;
@@ -197,7 +196,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + 'Service_ForgetPassword');
         } else {
             onClose();
-            router.push(`${process.env.NEXT_PUBLIC_SUBPATH}Service_ForgetPassword`);
+            router.push(`/Service_ForgetPassword`);
         }
     };
 
