@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoginHandler } from '../../../store/components/layouts/action';
+import { setCurrentPath } from '../../../store/general/action';
 import { trust } from '../../../services/components/header/navTurst';
 import theme from '../../../resources/styles/theme';
 
@@ -28,6 +29,10 @@ const NavList = React.memo(props => {
                   const res = await trust(trustUrl, trustBody);
                   window.open(res.data.result.url, '_blank');
               })(trustUrl, trustBody);
+    };
+
+    const linkSetCurrentPath = () => {
+        dispatch(setCurrentPath(location.href));
     };
 
     return (
@@ -64,7 +69,7 @@ const NavList = React.memo(props => {
                             </a>
                         )}
                         {lv3Item.url && !lv3Item.isOpen && (
-                            <Link href={lv3Item.url} prefetch={false} as={lv3Item.url}>
+                            <Link onClick={linkSetCurrentPath} href={lv3Item.url} prefetch={false} as={lv3Item.url}>
                                 <a
                                     target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
                                     className="navbar__lv3__item__title"

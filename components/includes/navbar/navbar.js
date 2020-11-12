@@ -109,10 +109,16 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={''}>
+                    <Link href={'/goOrder'}>
                         <a className="navbar__order">快速下單</a>
                     </Link>
-                    <Link href={''}>
+                    <Link
+                        href={
+                            !!accountMarket
+                                ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
+                                : `SinoTrade_login`
+                        }
+                    >
                         <a className="navbar__account">我的帳務</a>
                     </Link>
                 </div>
