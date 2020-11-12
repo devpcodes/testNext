@@ -361,20 +361,18 @@ const Layout = React.memo(({ children }) => {
         if (suggestAction === 'ApplyCert') {
             const msg = await applyCert(userIdNo, token);
             console.log('ApplyCert憑證回傳訊息', msg);
-            notification.success({
-                placement: 'topRight',
-                message: msg,
-                duration: 3,
+            notification.open({
+                message: '系統訊息',
+                description: msg,
                 top: 70,
             });
         }
         if (suggestAction == 'RenewCert') {
             const msg = await renewCert(userIdNo, token);
             console.log('RenewCert憑證回傳訊息', msg);
-            notification.success({
-                placement: 'topRight',
-                message: msg,
-                duration: 3,
+            notification.open({
+                message: '系統訊息',
+                description: msg,
                 top: 70,
             });
         }
