@@ -69,16 +69,25 @@ const NavList = React.memo(props => {
                                 <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                             </a>
                         )}
-                        {lv3Item.url && !lv3Item.isOpen && (
-                            <Link href={lv3Item.url} prefetch={false} as={lv3Item.url}>
+                        {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
+                            <Link href={lv3Item.url}>
                                 <a
                                     onClick={linkSetCurrentPath}
-                                    target={lv3Item.isBlank && !lv3Item.isTrust && !lv3Item.isOpen ? '_blank' : ''}
+                                    target={lv3Item.isBlank ? '_blank' : ''}
                                     className="navbar__lv3__item__title"
                                 >
                                     <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                                 </a>
                             </Link>
+                        )}
+                        {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && lv3Item.isFullUrl && (
+                            <a
+                                href={lv3Item.url}
+                                target={lv3Item.isBlank ? '_blank' : ''}
+                                className="navbar__lv3__item__title"
+                            >
+                                <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
+                            </a>
                         )}
                         {lv3Item.isTrust && (
                             <a
