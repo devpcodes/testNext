@@ -11,7 +11,7 @@ const TradingCenter_TWStocks_Self = function () {
     return (
         <>
             <PageHead title={'自選報價'} />
-            <div>
+            <div style={{ padding: '0 50px' }}>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Self`}
                     title="永豐金證券"
