@@ -23,7 +23,6 @@ const NavList = React.memo(props => {
         const left = (screen.width - popupWinWidth) / 2;
         const top = (screen.height - popupWinHeight) / 4;
         window.open(url, popupWinName, `width=${popupWinWidth},height=${popupWinHeight},top=${top},left=${left}`);
-        dispatch(setMenuOpen(false));
     };
 
     const openTrust = (trustUrl, trustBody) => {
@@ -33,7 +32,6 @@ const NavList = React.memo(props => {
                   const res = await trust(trustUrl, trustBody);
                   window.open(res.data.result.url, '_blank');
               })(trustUrl, trustBody);
-        dispatch(setMenuOpen(false));
     };
 
     const linkSetCurrentPath = () => {
