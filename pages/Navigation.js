@@ -55,13 +55,11 @@ const Navigation = () => {
                 if (res.data.success === true) {
                     sessionStorage.setItem('source', queryStringDict.platform.toLowerCase());
                     router.push(`/${queryStringDict.page}`);
-                    // location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${queryStringDict.page}`;
                 }
             }
         } catch (e) {
             router.push(`/${canTrustDict[queryStringDict.platform].errorPage}`);
-            // location.href = `${process.env.NEXT_PUBLIC_SUBPATH}${canTrustDict[queryStringDict.platform].errorPage}`;
-            alert('登入失敗，請重新登入');
+            // 注意：這裡不需要再 alert 任何錯誤訊息，myAxios.js 已在上層處理 api 的 error handle (顯示錯誤訊息)
         }
     };
 
