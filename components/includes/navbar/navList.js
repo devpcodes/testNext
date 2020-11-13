@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoginHandler } from '../../../store/components/layouts/action';
@@ -15,6 +15,17 @@ const NavList = React.memo(props => {
     const isLogin = useSelector(store => store.user.isLogin);
     const dispatch = useDispatch();
 
+    const trusting = useRef(false);
+    const trustingBody = useRef({});
+    const trustingUrl = useRef('');
+
+    useEffect(() => {
+        if (isLogin && trusting.current) {
+            console.log('trusting', trustingUrl.current, trustingBody.current);
+            trustHandler(trustingUrl.current, trustingBody.current);
+        }
+    }, [isLogin]);
+
     const clickHandler = () => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
     };
@@ -25,13 +36,27 @@ const NavList = React.memo(props => {
         window.open(url, popupWinName, `width=${popupWinWidth},height=${popupWinHeight},top=${top},left=${left}`);
     };
 
+    const noLoginTrustHandler = (trustUrl, trustBody) => {
+        trusting.current = true;
+        trustingUrl.current = trustUrl;
+        trustingBody.current = trustBody;
+        dispatch(showLoginHandler(true));
+    };
+
+    const stopTrustingHandler = () => {
+        trusting.current = false;
+        trustingUrl.current = '';
+        trustingBody.current = {};
+    };
+
+    const trustHandler = async (trustUrl, trustBody) => {
+        const res = await trust(trustUrl, trustBody);
+        stopTrustingHandler();
+        window.open(res.data.result.url, '_blank');
+    };
+
     const openTrust = (trustUrl, trustBody) => {
-        !isLogin
-            ? dispatch(showLoginHandler(true))
-            : (async () => {
-                  const res = await trust(trustUrl, trustBody);
-                  window.open(res.data.result.url, '_blank');
-              })(trustUrl, trustBody);
+        !isLogin ? noLoginTrustHandler(trustUrl, trustBody) : trustHandler(trustUrl, trustBody);
     };
 
     const linkSetCurrentPath = () => {

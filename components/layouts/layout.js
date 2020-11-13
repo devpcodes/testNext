@@ -291,7 +291,9 @@ const Layout = React.memo(({ children }) => {
                 duration: 3,
                 top: 70,
             });
-            router.push(prevPathname.current);
+            if (prevPathname.current) {
+                router.push(prevPathname.current);
+            }
         }, 500);
         setTimeout(() => {
             CAHandler(getCookie('token'));
