@@ -13,6 +13,7 @@ const NavList = React.memo(props => {
     const router = useRouter();
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
+    const showLogin = useSelector(store => store.layout.showLogin);
     const dispatch = useDispatch();
 
     const trusting = useRef(false);
@@ -20,9 +21,21 @@ const NavList = React.memo(props => {
     const trustingUrl = useRef('');
 
     useEffect(() => {
-        if (isLogin && trusting.current) {
-            console.log('trusting', trustingUrl.current, trustingBody.current);
-            trustHandler(trustingUrl.current, trustingBody.current);
+        if (props.id === 1) {
+            if (!showLogin && !isLogin) {
+                //讓它觸發的islgoin慢，才能先執行完trust 才清掉
+                setTimeout(() => {
+                    stopTrustingHandler();
+                }, 1);
+            }
+        }
+    }, [showLogin]);
+
+    useEffect(() => {
+        if (props.id === 1) {
+            if (isLogin && trusting.current) {
+                trustHandler(trustingUrl.current, trustingBody.current);
+            }
         }
     }, [isLogin]);
 

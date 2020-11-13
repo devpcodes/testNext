@@ -14,6 +14,7 @@ import { setCurrentPath } from '../../../store/general/action';
 // level(1) 選單點選第二次隱藏
 
 const Navbar = React.memo(props => {
+    let index = 0;
     const router = useRouter();
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
@@ -101,15 +102,19 @@ const Navbar = React.memo(props => {
                                         className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
                                         style={{ width: 168 * lv1Item.items.length }}
                                     >
-                                        {lv1Item.items.map((lv2Item, lv2Index) => (
-                                            <li className="navbar__lv2__item" key={lv2Index}>
-                                                <NavList
-                                                    navItems={lv1Item.items}
-                                                    lv2Data={lv2Item}
-                                                    twoColumnPX={1024}
-                                                />
-                                            </li>
-                                        ))}
+                                        {lv1Item.items.map((lv2Item, lv2Index) => {
+                                            index += 1;
+                                            return (
+                                                <li className="navbar__lv2__item" key={lv2Index}>
+                                                    <NavList
+                                                        navItems={lv1Item.items}
+                                                        lv2Data={lv2Item}
+                                                        twoColumnPX={1024}
+                                                        id={index}
+                                                    />
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 )}
                             </li>
