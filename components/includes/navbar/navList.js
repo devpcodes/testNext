@@ -16,24 +16,27 @@ const NavList = React.memo(props => {
     const showLogin = useSelector(store => store.layout.showLogin);
     const dispatch = useDispatch();
 
+    const trustingId = useRef(0);
     const trusting = useRef(false);
     const trustingBody = useRef({});
     const trustingUrl = useRef('');
 
     useEffect(() => {
-        if (props.id === 1) {
+        if (props.id === trustingId.current) {
             if (!showLogin && !isLogin) {
                 //讓它觸發的islgoin慢，才能先執行完trust 才清掉
+                console.log('stop', trusting.current);
                 setTimeout(() => {
                     stopTrustingHandler();
-                }, 1);
+                }, 100);
             }
         }
     }, [showLogin]);
 
     useEffect(() => {
-        if (props.id === 1) {
+        if (props.id === trustingId.current) {
             if (isLogin && trusting.current) {
+                console.log('trust', trusting.current);
                 trustHandler(trustingUrl.current, trustingBody.current);
             }
         }
@@ -53,6 +56,7 @@ const NavList = React.memo(props => {
         trusting.current = true;
         trustingUrl.current = trustUrl;
         trustingBody.current = trustBody;
+        trustingId.current = props.id;
         dispatch(showLoginHandler(true));
     };
 
