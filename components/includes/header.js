@@ -36,6 +36,7 @@ const Header = () => {
                     top: 0;
                     right: 0;
                     left: 0;
+                    z-index: 500;
                 }
                 .header__navbar {
                     width: ${theme.contentWidth.pc};

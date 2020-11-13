@@ -9,21 +9,21 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
-const OpenAccount = () => {
+const Appointment = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     return (
         <>
-            <PageHead title={'我要開戶'} />
+            <PageHead title={'預約開戶'} />
             <div>
                 <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/OpenAccount`}
+                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/service_reserveAccount`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 3400 : 2000}
+                    iHeight={isMobile ? 1800 : 1100}
                 />
             </div>
         </>
     );
 };
 
-export default OpenAccount;
+export default Appointment;

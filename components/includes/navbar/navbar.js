@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuOpen } from '../../../store/components/layouts/action';
 import Link from 'next/link';
@@ -8,15 +9,20 @@ import logo from '../../../resources/images/components/header/sinopac_securities
 import closeMenu from '../../../resources/images/components/header/ic_closemenu.png';
 import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
 import openImg from '../../../resources/images/components/header/ic_open.png';
-
+import { setCurrentPath } from '../../../store/general/action';
+import { setMaskVisible } from '../../../store/components/layouts/action';
 // firefox 手機板隱藏 navbar scrollBar
 // level(1) 選單點選第二次隱藏
 
 const Navbar = React.memo(props => {
+    let index = 0;
+    const router = useRouter();
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
     const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
+    const isLogin = useSelector(store => store.user.isLogin);
     const showMenu = useSelector(store => store.layout.showMenu);
+    const isMobile = useSelector(store => store.layout.isMobile);
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
     const marketMappingList = {
         S: 'stock',
@@ -28,7 +34,16 @@ const Navbar = React.memo(props => {
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
         console.log(accountMarket);
+        return () => {
+            window.removeEventListener('resize', resizeHandler);
+        };
     }, []);
+
+    useEffect(() => {
+        if (isMobile) {
+            dispatch(setMaskVisible(showMenu));
+        }
+    }, [showMenu]);
 
     const resizeHandler = function () {
         let winWidth = window.innerWidth;
@@ -49,6 +64,23 @@ const Navbar = React.memo(props => {
             dom.target.parentElement.getElementsByClassName('navbar__lv2')[0].classList.add('navbar__lv2--show');
             dom.target.parentElement.classList.add('navbar__lv1__item--show');
         }
+    };
+
+    const setCurrentPathHandler = () => {
+        dispatch(setMenuOpen(false));
+        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+    };
+
+    const goLogin = () => {
+        setCurrentPathHandler();
+        dispatch(setMenuOpen(false));
+        router.push('', `/SinoTrade_login`, { shallow: true });
+    };
+
+    const goSignUp = () => {
+        return window.open(
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
+        );
     };
 
     return (
@@ -88,19 +120,20 @@ const Navbar = React.memo(props => {
                                     </Link>
                                 )}
                                 {lv1Item.items && lv1Item.items.length && (
-                                    <ul
-                                        className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
-                                        style={{ width: 168 * lv1Item.items.length }}
-                                    >
-                                        {lv1Item.items.map((lv2Item, lv2Index) => (
-                                            <li className="navbar__lv2__item" key={lv2Index}>
-                                                <NavList
-                                                    navItems={lv1Item.items}
-                                                    lv2Data={lv2Item}
-                                                    twoColumnPX={1024}
-                                                />
-                                            </li>
-                                        ))}
+                                    <ul className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}>
+                                        {lv1Item.items.map((lv2Item, lv2Index) => {
+                                            index += 1;
+                                            return (
+                                                <li className="navbar__lv2__item" key={lv2Index}>
+                                                    <NavList
+                                                        navItems={lv1Item.items}
+                                                        lv2Data={lv2Item}
+                                                        twoColumnPX={1024}
+                                                        id={index}
+                                                    />
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 )}
                             </li>
@@ -109,18 +142,35 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={'/goOrder'}>
-                        <a className="navbar__order">快速下單</a>
-                    </Link>
-                    <Link
-                        href={
-                            !!accountMarket
-                                ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
-                                : `SinoTrade_login`
-                        }
-                    >
-                        <a className="navbar__account">我的帳務</a>
-                    </Link>
+                    {isLogin ? (
+                        <>
+                            <Link href={'/goOrder'}>
+                                <a onClick={setCurrentPathHandler} className="navbar__order">
+                                    快速下單
+                                </a>
+                            </Link>
+                            <Link
+                                href={
+                                    !!accountMarket
+                                        ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
+                                        : `TradingAccount`
+                                }
+                            >
+                                <a onClick={setCurrentPathHandler} className="navbar__account">
+                                    我的帳務
+                                </a>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <a onClick={goSignUp} className="navbar__order">
+                                快速開戶
+                            </a>
+                            <a onClick={goLogin} className="navbar__account">
+                                客戶登入
+                            </a>
+                        </>
+                    )}
                 </div>
             </div>
             <style jsx>{`
@@ -242,6 +292,7 @@ const Navbar = React.memo(props => {
                         left: 0;
                         background: ${theme.colors.darkBg};
                         border-right: solid ${theme.colors.darkBg} 1px;
+                        box-shadow: ${isMobile ? '0 2px 15px 0 rgba(0,0,0,0.3)' : 'none'};
                     }
                     .navbar {
                         flex-direction: column;

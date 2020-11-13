@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { showLoginHandler } from '../../../store/components/layouts/action';
@@ -13,7 +13,34 @@ const NavList = React.memo(props => {
     const router = useRouter();
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
+    const showLogin = useSelector(store => store.layout.showLogin);
     const dispatch = useDispatch();
+
+    const trustingId = useRef(0);
+    const trusting = useRef(false);
+    const trustingBody = useRef({});
+    const trustingUrl = useRef('');
+
+    useEffect(() => {
+        if (props.id === trustingId.current) {
+            if (!showLogin && !isLogin) {
+                //讓它觸發的islgoin慢，才能先執行完trust 才清掉
+                console.log('stop', trusting.current);
+                setTimeout(() => {
+                    stopTrustingHandler();
+                }, 100);
+            }
+        }
+    }, [showLogin]);
+
+    useEffect(() => {
+        if (props.id === trustingId.current) {
+            if (isLogin && trusting.current) {
+                console.log('trust', trusting.current);
+                trustHandler(trustingUrl.current, trustingBody.current);
+            }
+        }
+    }, [isLogin]);
 
     const clickHandler = () => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
@@ -25,13 +52,28 @@ const NavList = React.memo(props => {
         window.open(url, popupWinName, `width=${popupWinWidth},height=${popupWinHeight},top=${top},left=${left}`);
     };
 
+    const noLoginTrustHandler = (trustUrl, trustBody) => {
+        trusting.current = true;
+        trustingUrl.current = trustUrl;
+        trustingBody.current = trustBody;
+        trustingId.current = props.id;
+        dispatch(showLoginHandler(true));
+    };
+
+    const stopTrustingHandler = () => {
+        trusting.current = false;
+        trustingUrl.current = '';
+        trustingBody.current = {};
+    };
+
+    const trustHandler = async (trustUrl, trustBody) => {
+        const res = await trust(trustUrl, trustBody);
+        stopTrustingHandler();
+        window.open(res.data.result.url, '_blank');
+    };
+
     const openTrust = (trustUrl, trustBody) => {
-        !isLogin
-            ? dispatch(showLoginHandler(true))
-            : (async () => {
-                  const res = await trust(trustUrl, trustBody);
-                  window.open(res.data.result.url, '_blank');
-              })(trustUrl, trustBody);
+        !isLogin ? noLoginTrustHandler(trustUrl, trustBody) : trustHandler(trustUrl, trustBody);
     };
 
     const linkSetCurrentPath = () => {
