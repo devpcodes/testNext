@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 import { Popover } from 'antd';
 import { PersonalArea } from '../personalArea/PersonalArea';
@@ -10,10 +11,14 @@ import { setMaskVisible, setMenuOpen } from '../../../store/components/layouts/a
 import theme from '../../../resources/styles/theme';
 
 export const AccountButton = () => {
+    const router = useRouter();
     const dispatch = useDispatch();
+
     const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
+
     const [personalAreaVisible, setPersonalAreaVisible] = useState(false);
+    const [popoverVisible, setPopoverVisible] = useState(false);
 
     const accountElement = <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>;
     const accountPopoverContent = (
@@ -23,6 +28,7 @@ export const AccountButton = () => {
     );
 
     const handlePersonalAreaVisible = visible => {
+        setPopoverVisible(visible);
         setPersonalAreaVisible(visible);
         dispatch(setMaskVisible(visible));
         if (visible) {
@@ -30,11 +36,17 @@ export const AccountButton = () => {
         }
     };
 
+    useEffect(() => {
+        setPopoverVisible(false);
+        dispatch(setMaskVisible(false));
+    }, [router.asPath]);
+
     return (
         <>
             <Popover
                 placement="bottomRight"
                 content={accountPopoverContent}
+                visible={popoverVisible}
                 trigger={isMobile ? 'click' : 'hover'}
                 onVisibleChange={handlePersonalAreaVisible}
             >
