@@ -30,6 +30,9 @@ const Navbar = React.memo(props => {
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
         console.log(accountMarket);
+        return () => {
+            window.removeEventListener('resize', resizeHandler);
+        };
     }, []);
 
     const resizeHandler = function () {
