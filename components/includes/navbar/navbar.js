@@ -10,6 +10,7 @@ import closeMenu from '../../../resources/images/components/header/ic_closemenu.
 import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
 import openImg from '../../../resources/images/components/header/ic_open.png';
 import { setCurrentPath } from '../../../store/general/action';
+import { setMaskVisible } from '../../../store/components/layouts/action';
 // firefox 手機板隱藏 navbar scrollBar
 // level(1) 選單點選第二次隱藏
 
@@ -20,6 +21,7 @@ const Navbar = React.memo(props => {
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
     const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
     const showMenu = useSelector(store => store.layout.showMenu);
+    const isMobile = useSelector(store => store.layout.isMobile);
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
     const marketMappingList = {
         S: 'stock',
@@ -35,6 +37,12 @@ const Navbar = React.memo(props => {
             window.removeEventListener('resize', resizeHandler);
         };
     }, []);
+
+    useEffect(() => {
+        if (isMobile) {
+            dispatch(setMaskVisible(showMenu));
+        }
+    }, [showMenu]);
 
     const resizeHandler = function () {
         let winWidth = window.innerWidth;
@@ -260,6 +268,7 @@ const Navbar = React.memo(props => {
                         left: 0;
                         background: ${theme.colors.darkBg};
                         border-right: solid ${theme.colors.darkBg} 1px;
+                        box-shadow: ${isMobile ? '0 2px 15px 0 rgba(0,0,0,0.3)' : 'none'};
                     }
                     .navbar {
                         flex-direction: column;

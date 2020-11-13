@@ -13,6 +13,7 @@ import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAc
 import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { checkMobile } from '../../services/components/layouts/checkMobile';
+import { setMenuOpen } from '../../store/components/layouts/action';
 import Login from '../includes/sinotradeLogin/login';
 import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
@@ -386,6 +387,12 @@ const Layout = React.memo(({ children }) => {
         }
     };
 
+    const maskClickHandler = function () {
+        if (isMobile) {
+            dispatch(setMenuOpen(false));
+        }
+    };
+
     return (
         <>
             <Head>
@@ -422,7 +429,7 @@ const Layout = React.memo(({ children }) => {
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
             <Header />
-            {isMobile && showMask && <div className="page__mask"></div>}
+            {isMobile && showMask && <div onClick={maskClickHandler} className="page__mask"></div>}
             <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
             <Footer />
             <style jsx>{`
