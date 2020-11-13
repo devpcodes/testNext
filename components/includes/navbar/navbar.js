@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuOpen } from '../../../store/components/layouts/action';
 import Link from 'next/link';
@@ -8,11 +9,12 @@ import logo from '../../../resources/images/components/header/sinopac_securities
 import closeMenu from '../../../resources/images/components/header/ic_closemenu.png';
 import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
 import openImg from '../../../resources/images/components/header/ic_open.png';
-
+import { setCurrentPath } from '../../../store/general/action';
 // firefox 手機板隱藏 navbar scrollBar
 // level(1) 選單點選第二次隱藏
 
 const Navbar = React.memo(props => {
+    const router = useRouter();
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
     const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
@@ -49,6 +51,10 @@ const Navbar = React.memo(props => {
             dom.target.parentElement.getElementsByClassName('navbar__lv2')[0].classList.add('navbar__lv2--show');
             dom.target.parentElement.classList.add('navbar__lv1__item--show');
         }
+    };
+
+    const setCurrentPathHandler = () => {
+        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
     };
 
     return (
@@ -110,16 +116,20 @@ const Navbar = React.memo(props => {
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
                     <Link href={'/goOrder'}>
-                        <a className="navbar__order">快速下單</a>
+                        <a onClick={setCurrentPathHandler} className="navbar__order">
+                            快速下單
+                        </a>
                     </Link>
                     <Link
                         href={
                             !!accountMarket
                                 ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
-                                : `SinoTrade_login`
+                                : `TradingAccount`
                         }
                     >
-                        <a className="navbar__account">我的帳務</a>
+                        <a onClick={setCurrentPathHandler} className="navbar__account">
+                            我的帳務
+                        </a>
                     </Link>
                 </div>
             </div>
