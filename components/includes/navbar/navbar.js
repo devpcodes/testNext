@@ -20,6 +20,7 @@ const Navbar = React.memo(props => {
     const serverMainlNav = useSelector(store => store.server.navData?.main);
     const clientMainlNav = useSelector(store => store.layout.navData?.main);
     const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
+    const isLogin = useSelector(store => store.user.isLogin);
     const showMenu = useSelector(store => store.layout.showMenu);
     const isMobile = useSelector(store => store.layout.isMobile);
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
@@ -66,7 +67,20 @@ const Navbar = React.memo(props => {
     };
 
     const setCurrentPathHandler = () => {
+        dispatch(setMenuOpen(false));
         dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+    };
+
+    const goLogin = () => {
+        setCurrentPathHandler();
+        dispatch(setMenuOpen(false));
+        router.push('', `/SinoTrade_login`, { shallow: true });
+    };
+
+    const goSignUp = () => {
+        return window.open(
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
+        );
     };
 
     return (
@@ -131,22 +145,35 @@ const Navbar = React.memo(props => {
             </div>
             <div className="navbar__lv1__item navbar__shortcuts__li">
                 <div className="navbar__shortcuts">
-                    <Link href={'/goOrder'}>
-                        <a onClick={setCurrentPathHandler} className="navbar__order">
-                            快速下單
-                        </a>
-                    </Link>
-                    <Link
-                        href={
-                            !!accountMarket
-                                ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
-                                : `TradingAccount`
-                        }
-                    >
-                        <a onClick={setCurrentPathHandler} className="navbar__account">
-                            我的帳務
-                        </a>
-                    </Link>
+                    {isLogin ? (
+                        <>
+                            <Link href={'/goOrder'}>
+                                <a onClick={setCurrentPathHandler} className="navbar__order">
+                                    快速下單
+                                </a>
+                            </Link>
+                            <Link
+                                href={
+                                    !!accountMarket
+                                        ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
+                                        : `TradingAccount`
+                                }
+                            >
+                                <a onClick={setCurrentPathHandler} className="navbar__account">
+                                    我的帳務
+                                </a>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <a onClick={goSignUp} className="navbar__order">
+                                快速開戶
+                            </a>
+                            <a onClick={goLogin} className="navbar__account">
+                                客戶登入
+                            </a>
+                        </>
+                    )}
                 </div>
             </div>
             <style jsx>{`
