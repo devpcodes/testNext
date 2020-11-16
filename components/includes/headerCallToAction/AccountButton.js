@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -6,7 +6,7 @@ import { Popover } from 'antd';
 import { PersonalArea } from '../personalArea/PersonalArea';
 import { HeaderBtn } from '../HeaderBtn';
 import { AccountAvatar } from '../AccountAvatar';
-import { setMaskVisible, setMenuOpen } from '../../../store/components/layouts/action';
+import { setMaskVisible, setMenuOpen, setPersonalAreaVisible } from '../../../store/components/layouts/action';
 
 import theme from '../../../resources/styles/theme';
 
@@ -16,9 +16,7 @@ export const AccountButton = () => {
 
     const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
-    const showMask = useSelector(store => store.layout.showMask);
-    const [personalAreaVisible, setPersonalAreaVisible] = useState(false);
-    const [popoverVisible, setPopoverVisible] = useState(false);
+    const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
 
     const accountElement = <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>;
     const accountPopoverContent = (
@@ -28,26 +26,23 @@ export const AccountButton = () => {
     );
 
     const handlePersonalAreaVisible = visible => {
-        setPopoverVisible(visible);
-        setPersonalAreaVisible(visible);
-        // setTimeout(() => {
-        //     dispatch(setMaskVisible(visible));
-        // }, 100);
-
-        if (visible) {
+        dispatch(setPersonalAreaVisible(visible));
+        if (isMobile && visible) {
             dispatch(setMenuOpen(false));
         }
     };
 
     useEffect(() => {
-        if (popoverVisible) {
-            dispatch(setMaskVisible(popoverVisible));
+        if (isMobile && personalAreaVisible) {
+            dispatch(setMaskVisible(true));
         }
-    });
+    }, [personalAreaVisible]);
 
     useEffect(() => {
-        setPopoverVisible(false);
-        dispatch(setMaskVisible(false));
+        if (isMobile) {
+            dispatch(setPersonalAreaVisible(false));
+            dispatch(setMaskVisible(false));
+        }
     }, [router.asPath]);
 
     return (
@@ -55,7 +50,7 @@ export const AccountButton = () => {
             <Popover
                 placement="bottomRight"
                 content={accountPopoverContent}
-                visible={popoverVisible}
+                visible={personalAreaVisible}
                 trigger={isMobile ? 'click' : 'hover'}
                 onVisibleChange={handlePersonalAreaVisible}
             >

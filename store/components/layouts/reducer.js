@@ -7,6 +7,7 @@ const initialState = {
     showMenu: false,
     navData: {},
     showMask: false,
+    personalAreaVisible: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -36,6 +37,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 showMask: action.payload,
+            };
+        case actionType.SET_PERSONAL_AREA_VISIBLE:
+            return {
+                ...state,
+                personalAreaVisible: action.payload,
             };
         default:
             return state;
