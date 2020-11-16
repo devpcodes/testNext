@@ -30,7 +30,10 @@ export const AccountButton = () => {
     const handlePersonalAreaVisible = visible => {
         setPopoverVisible(visible);
         setPersonalAreaVisible(visible);
-        dispatch(setMaskVisible(visible));
+        setTimeout(() => {
+            dispatch(setMaskVisible(visible));
+        }, 10);
+
         if (visible) {
             dispatch(setMenuOpen(false));
         }
