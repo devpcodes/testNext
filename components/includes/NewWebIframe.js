@@ -82,7 +82,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
             // 延遲是為了避免手機裝置的點擊事件延遲 300ms 左右，mask 收回後馬上觸發到 iframe 內的連結或事件。
             setTimeout(() => {
                 setPointerEvents('auto');
-            }, 1300);
+            }, 1800);
         }
     }, [showMask]);
 

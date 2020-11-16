@@ -42,7 +42,13 @@ const Navbar = React.memo(props => {
 
     useEffect(() => {
         if (isMobile) {
-            dispatch(setMaskVisible(showMenu));
+            if (showMenu) {
+                setTimeout(() => {
+                    dispatch(setMaskVisible(showMenu));
+                }, 10);
+            } else {
+                dispatch(setMaskVisible(showMenu));
+            }
         }
     }, [showMenu]);
 
