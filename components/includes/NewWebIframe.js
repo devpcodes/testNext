@@ -75,13 +75,14 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
         因 antd 的 Popover 元件，若要點擊其他區塊收回時，點到 iframe 區塊會失效，且觸發 iframe 內的連結或事件。
     */
     useEffect(() => {
+        console.log('showMask', showMask);
         if (showMask) {
             setPointerEvents('none');
         } else {
             // 延遲是為了避免手機裝置的點擊事件延遲 300ms 左右，mask 收回後馬上觸發到 iframe 內的連結或事件。
             setTimeout(() => {
                 setPointerEvents('auto');
-            }, 500);
+            }, 1300);
         }
     }, [showMask]);
 

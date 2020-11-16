@@ -32,7 +32,7 @@ export const AccountButton = () => {
         setPersonalAreaVisible(visible);
         setTimeout(() => {
             dispatch(setMaskVisible(visible));
-        }, 10);
+        }, 100);
 
         if (visible) {
             dispatch(setMenuOpen(false));
