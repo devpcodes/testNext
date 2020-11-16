@@ -16,7 +16,7 @@ export const AccountButton = () => {
 
     const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
-
+    const showMask = useSelector(store => store.layout.showMask);
     const [personalAreaVisible, setPersonalAreaVisible] = useState(false);
     const [popoverVisible, setPopoverVisible] = useState(false);
 
@@ -30,14 +30,20 @@ export const AccountButton = () => {
     const handlePersonalAreaVisible = visible => {
         setPopoverVisible(visible);
         setPersonalAreaVisible(visible);
-        setTimeout(() => {
-            dispatch(setMaskVisible(visible));
-        }, 100);
+        // setTimeout(() => {
+        //     dispatch(setMaskVisible(visible));
+        // }, 100);
 
         if (visible) {
             dispatch(setMenuOpen(false));
         }
     };
+
+    useEffect(() => {
+        if (popoverVisible) {
+            dispatch(setMaskVisible(popoverVisible));
+        }
+    });
 
     useEffect(() => {
         setPopoverVisible(false);

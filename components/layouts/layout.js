@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, showLoginHandler, setNavItems } from '../../store/components/layouts/action';
+import { resize, showLoginHandler, setNavItems, setMaskVisible } from '../../store/components/layouts/action';
 import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
 import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
@@ -390,6 +390,7 @@ const Layout = React.memo(({ children }) => {
     const maskClickHandler = function () {
         if (isMobile) {
             dispatch(setMenuOpen(false));
+            dispatch(setMaskVisible(false));
         }
     };
 
