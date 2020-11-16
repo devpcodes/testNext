@@ -62,3 +62,10 @@ export const setNavItems = data => async dispatch => {
         console.error(`error:`, error);
     }
 };
+
+export const setPersonalAreaVisible = bool => {
+    return {
+        type: actionType.SET_PERSONAL_AREA_VISIBLE,
+        payload: bool,
+    };
+};

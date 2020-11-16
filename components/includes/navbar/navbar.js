@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuOpen } from '../../../store/components/layouts/action';
@@ -10,7 +10,7 @@ import closeMenu from '../../../resources/images/components/header/ic_closemenu.
 import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
 import openImg from '../../../resources/images/components/header/ic_open.png';
 import { setCurrentPath } from '../../../store/general/action';
-import { setMaskVisible, setMaskUpdated } from '../../../store/components/layouts/action';
+import { setMaskVisible } from '../../../store/components/layouts/action';
 import MyTransition from '../../includes/myTransition';
 // firefox 手機板隱藏 navbar scrollBar
 // level(1) 選單點選第二次隱藏
