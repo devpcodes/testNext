@@ -6,7 +6,12 @@ function H5_TradingAccount() {
     return (
         <>
             <PageHead title={'交易帳務'} />
-            <div>
+            <div
+                style={{
+                    marginTop: '-30px',
+                    marginLeft: '-17px',
+                }}
+            >
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/H5_TradingAccount`}
                     title="永豐金證券"
