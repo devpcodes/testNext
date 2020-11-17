@@ -13,3 +13,8 @@ export const getCookie = function (cname) {
     }
     return '';
 };
+
+export const removeCookie = function (cname) {
+    document.cookie = cname + '=;expires=Wed, 09 Aug 1995 00:00:01 GMT; path=/';
+    document.cookie = cname + '=;expires=Wed, 09 Aug 1995 00:00:01 GMT; path=/newweb';
+};

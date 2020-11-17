@@ -17,7 +17,7 @@ import { setMenuOpen } from '../../store/components/layouts/action';
 import Login from '../includes/sinotradeLogin/login';
 import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
-import { getCookie } from '../../services/components/layouts/cookieController';
+import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
@@ -154,6 +154,7 @@ const Layout = React.memo(({ children }) => {
     const doLoginHashHandler = () => {
         if (window.location.hash === '#doLogin') {
             const path = getCookie('doLoginPage');
+            removeCookie('doLoginPage');
             const arr = path.split('/');
             const redirectPath = '/' + arr[arr.length - 1];
             dispatch(setCurrentPath(redirectPath));
