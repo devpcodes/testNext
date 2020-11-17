@@ -153,8 +153,9 @@ const Layout = React.memo(({ children }) => {
     //inside iframe 逾時處理
     const doLoginHashHandler = () => {
         if (window.location.hash === '#doLogin') {
-            const path = getCookie('doLoginPage');
+            const path = getCookie('doLoginPage') || getCookie('afterLoginUrl');
             removeCookie('doLoginPage');
+            removeCookie('afterLoginUrl');
             const arr = path.split('/');
             const redirectPath = '/' + arr[arr.length - 1];
             dispatch(setCurrentPath(redirectPath));
