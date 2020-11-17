@@ -8,11 +8,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, showLoginHandler, setNavItems, setMaskVisible } from '../../store/components/layouts/action';
+import { showLoginHandler, setNavItems, setMaskVisible } from '../../store/components/layouts/action';
 import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
 import { setDomain } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
-import { checkMobile } from '../../services/components/layouts/checkMobile';
 import { setMenuOpen } from '../../store/components/layouts/action';
 import Login from '../includes/sinotradeLogin/login';
 import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
@@ -24,6 +23,8 @@ import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import CaHead from '../includes/CaHead';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
 import { setCurrentPath } from '../../store/general/action';
+import { useCheckMobile } from '../../hooks/useCheckMobile';
+
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -49,6 +50,9 @@ const Layout = React.memo(({ children }) => {
     const prevDomain = useRef(domain);
     const queryStr = useRef('');
     const isRendered = useRef(false);
+
+    // window 寬度改變處理，回傳 isMobile
+    useCheckMobile();
 
     useEffect(() => {
         prevIsMobile.current = isMobile;
@@ -89,8 +93,6 @@ const Layout = React.memo(({ children }) => {
     useEffect(() => {
         // pwaHandler();
         doLoginHashHandler();
-        window.addEventListener('resize', resizeHandler);
-        resizeHandler();
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
             if (!Object.keys(navData).length) {
@@ -108,7 +110,6 @@ const Layout = React.memo(({ children }) => {
         isRendered.current = true;
 
         return () => {
-            window.removeEventListener('resize', resizeHandler, false);
             clearTimeout(timeout);
         };
     }, []);
@@ -276,16 +277,6 @@ const Layout = React.memo(({ children }) => {
                     })
                     .catch(err => console.log('Boo!', err));
             }
-        }
-    };
-
-    // WINDOW寬度改變處理
-    const resizeHandler = function () {
-        let winWidth = window.innerWidth;
-        if (checkMobile(winWidth)) {
-            dispatch(resize(winWidth, true));
-        } else {
-            dispatch(resize(winWidth, false));
         }
     };
 
