@@ -6,6 +6,7 @@ import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/user/logoutFetcher';
 import { setIsLogin } from '../../../store/user/action';
 import { TradingQuickView } from './TradingQuickView';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 import theme from '../../../resources/styles/theme';
 import signOutImg from '../../../resources/images/components/header/ic-signout.png';
@@ -14,6 +15,8 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 
 export const PersonalArea = ({ personalAreaVisible }) => {
     const dispatch = useDispatch();
+    const winSize = useWindowSize();
+
     const serverPersonalNav = useSelector(store => store.server.navData?.personal);
     const clientPersonalNav = useSelector(store => store.layout.navData?.personal);
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -116,7 +119,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                     .personalArea__container {
                         position: absolute;
                         width: calc((10 / 12) * 100vw);
-                        height: ${window.innerHeight}px;
+                        height: ${winSize.height}px;
                         top: -74px;
                         right: 0;
                         bottom: 0;
