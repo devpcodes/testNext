@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -13,17 +13,14 @@ import theme from '../../../resources/styles/theme';
 import checkImg from '../../../resources/images/components/login/ic-check.png';
 
 export const AccountDropdown = ({ personalAreaVisible }) => {
-    const selectRef = useRef(null);
     const dropdownWidth = 243;
-    const selectTop = selectRef.current?.getBoundingClientRect()?.top;
-    const dropdownCssTop = selectTop ? `${selectTop}px !important` : '0px';
-    const dropdownCssWidth = selectTop ? `${dropdownWidth - 28}px !important` : '0px';
-
     const { Option, OptGroup } = Select;
+
     const dispatch = useDispatch();
     const isMobile = useSelector(store => store.layout.isMobile);
     const accounts = useSelector(store => store.user.accounts);
     const currentAccount = useSelector(store => store.user.currentAccount);
+
     const [listVisible, setListVisible] = useState(false);
 
     const groupedAccount = accountGroupByType(accounts);
@@ -87,7 +84,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
         return null;
 
     return (
-        <div className="account__container" ref={selectRef}>
+        <div className="account__container">
             {isMobile ? (
                 <>
                     <div className="account__container--mobile">
@@ -158,6 +155,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
                     style={{ width: dropdownWidth }}
                     onChange={handleChange}
+                    getPopupContainer={trigger => trigger.parentElement}
                 >
                     {groupedAccountTypes.map((accType, index) => {
                         const accText = getAccountText(accType);
@@ -331,9 +329,9 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     background-image: url(${checkImg});
                 }
                 .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
-                    width: ${dropdownCssWidth};
-                    min-width: ${dropdownCssWidth};
-                    top: ${dropdownCssTop};
+                    width: ${dropdownWidth - 28}px !important;
+                    min-width: ${dropdownWidth - 28}px !important;
+                    top: 0px !important;
                 }
             `}</style>
         </div>
