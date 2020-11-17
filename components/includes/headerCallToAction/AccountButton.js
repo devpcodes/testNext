@@ -53,6 +53,7 @@ export const AccountButton = () => {
                 visible={personalAreaVisible}
                 trigger={isMobile ? 'click' : 'hover'}
                 onVisibleChange={handlePersonalAreaVisible}
+                getPopupContainer={trigger => trigger.parentElement}
             >
                 <div>
                     <HeaderBtn content={accountElement} type={'primary'} />
