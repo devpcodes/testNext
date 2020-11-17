@@ -1,8 +1,12 @@
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { PageHead } from '../components/includes/PageHead';
-import { useSelector } from 'react-redux';
+import { useCheckMobile } from '../hooks/useCheckMobile';
+
 function H5_TradingAccount() {
-    const isMobile = useSelector(store => store.layout.isMobile);
+    const isMobile = useCheckMobile();
+
+    console.log(`===============isMobile:`, isMobile);
+
     return (
         <>
             <PageHead title={'交易帳務'} />
