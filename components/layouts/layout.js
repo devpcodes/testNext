@@ -23,6 +23,7 @@ import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import CaHead from '../includes/CaHead';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
+import { setCurrentPath } from '../../store/general/action';
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -87,6 +88,7 @@ const Layout = React.memo(({ children }) => {
 
     useEffect(() => {
         // pwaHandler();
+        doLoginHashHandler();
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
         const timeout = setTimeout(() => {
@@ -147,6 +149,17 @@ const Layout = React.memo(({ children }) => {
     useEffect(() => {
         queryStr.current = router.query;
     }, [router.query]);
+
+    //inside iframe 逾時處理
+    const doLoginHashHandler = () => {
+        if (window.location.hash === '#doLogin') {
+            const path = getCookie('doLoginPage');
+            const arr = path.split('/');
+            const redirectPath = '/' + arr[arr.length - 1];
+            dispatch(setCurrentPath(redirectPath));
+            router.push('', `/SinoTrade_login`, { shallow: true });
+        }
+    };
 
     // 由 queryString 取得來源
     const getSourceFromQueryString = () => {
