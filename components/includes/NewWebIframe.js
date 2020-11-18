@@ -41,7 +41,10 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
     }, []);
 
     useEffect(() => {
-        iframeDom.current.height = iHeight;
+        setTimeout(() => {
+            console.log(`=============== delayed iHeight:`, iHeight);
+            iframeDom.current.height = iHeight;
+        }, 500);
     }, [iHeight]);
 
     useEffect(() => {

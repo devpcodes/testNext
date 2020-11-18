@@ -1,11 +1,11 @@
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { PageHead } from '../components/includes/PageHead';
-import { useCheckMobile } from '../hooks/useCheckMobile';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 function H5_TradingAccount() {
-    const isMobile = useCheckMobile();
+    const winSize = useWindowSize();
 
-    console.log(`===============isMobile:`, isMobile);
+    console.log(`===============winSize.height:`, winSize.height);
 
     return (
         <>
@@ -14,7 +14,7 @@ function H5_TradingAccount() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/H5_TradingAccount`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 500 : 1000}
+                    iHeight={winSize.height || 1000}
                 />
             </div>
         </>

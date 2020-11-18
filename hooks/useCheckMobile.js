@@ -21,7 +21,5 @@ export const useCheckMobile = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    console.log(`===================== hook:`, isMobile);
-
     return isMobile;
 };
