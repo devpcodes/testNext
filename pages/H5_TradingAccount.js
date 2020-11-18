@@ -5,8 +5,6 @@ import { useWindowSize } from '../hooks/useWindowSize';
 function H5_TradingAccount() {
     const winSize = useWindowSize();
 
-    console.log(`===============winSize.height:`, winSize.height);
-
     return (
         <>
             <PageHead title={'交易帳務'} />

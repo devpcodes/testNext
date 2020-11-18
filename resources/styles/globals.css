@@ -17,6 +17,17 @@ a {
     text-decoration: none;
 }
 
+button {
+    cursor: pointer;
+}
+
+/* override black outline at Chrome 83up */
+*,
+*:focus,
+*:hover {
+    outline: none;
+}
+
 * {
     box-sizing: border-box;
     font-family: Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei', sans-serif;

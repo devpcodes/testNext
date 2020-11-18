@@ -122,7 +122,10 @@ const Navbar = React.memo(props => {
                                         </Link>
                                     )}
                                     {lv1Item.items && lv1Item.items.length && (
-                                        <ul className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}>
+                                        <ul
+                                            className={`navbar__lv2 ${lv1Index > mainNav.length / 2 ? 'right' : ''}`}
+                                            style={{ width: 159 * lv1Item.items.length + 34 }}
+                                        >
                                             {lv1Item.items.map((lv2Item, lv2Index) => {
                                                 index += 1;
                                                 return (
