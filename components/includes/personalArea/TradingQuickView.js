@@ -260,6 +260,7 @@ export const TradingQuickView = () => {
     if (isError) {
         return (
             <div className="tradingQuickView__container">
+                <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
                 <img className="errImg" src={errImg} alt="永豐金證券" />
                 <p className="errMsg">暫時無法取得損益資料</p>
                 <style jsx>{`
