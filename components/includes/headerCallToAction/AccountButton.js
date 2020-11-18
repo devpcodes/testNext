@@ -39,8 +39,8 @@ export const AccountButton = () => {
     }, [personalAreaVisible]);
 
     useEffect(() => {
+        dispatch(setPersonalAreaVisible(false));
         if (isMobile) {
-            dispatch(setPersonalAreaVisible(false));
             dispatch(setMaskVisible(false));
         }
     }, [router.asPath]);
