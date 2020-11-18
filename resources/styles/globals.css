@@ -17,6 +17,10 @@ a {
     text-decoration: none;
 }
 
+button {
+    cursor: pointer;
+}
+
 * {
     box-sizing: border-box;
     font-family: Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei', sans-serif;
