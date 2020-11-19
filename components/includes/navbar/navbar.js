@@ -333,8 +333,8 @@ const Navbar = React.memo(props => {
                         .navbar__order,
                         .navbar__account {
                             display: block;
-                            height: 65px;
-                            line-height: 65px;
+                            height: 70px;
+                            line-height: 70px;
                             width: 50%;
                             text-align: center;
                         }
