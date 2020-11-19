@@ -70,8 +70,10 @@ const NavList = React.memo(props => {
         try {
             const res = await trust(trustUrl, trustBody);
             stopTrustingHandler();
-            var tempwindow = window.open('_blank');
-            tempwindow.location = res.data.result.url;
+            const tempwindow = window.open('_blank');
+            setTimeout(() => {
+                tempwindow.location = res.data.result.url;
+            }, 800);
             // window.open(res.data.result.url, '_blank');
         } catch (error) {
             console.error(error);
