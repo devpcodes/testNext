@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { PageHead } from '../components/includes/PageHead';
-import { checkServer } from '../services/checkServer';
+import { useRouter } from 'next/router';
+
 function PlaceOrderPopupWindow() {
+    const router = useRouter();
     const iframeDom = useRef(null);
     const timer = useRef(null);
 
@@ -14,12 +16,17 @@ function PlaceOrderPopupWindow() {
         };
     }, []);
 
+    useEffect(() => {
+        if (router.query?.opener === 'OK') {
+            window.clearInterval(timer.current);
+        }
+    }, [router.query]);
+
     const setOpener = () => {
-        console.log('test', window.opener);
         if (iframeDom.current != null && window.opener.parent != null) {
             iframeDom.current.contentWindow.opener = window.opener;
             window.clearInterval(timer.current);
-            window.location.reload();
+            window.location.href = process.env.NEXT_PUBLIC_SUBPATH + 'PlaceOrderPopupWindow?opener=OK';
         }
     };
 
