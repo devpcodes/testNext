@@ -7,7 +7,6 @@ function PlaceOrderPopupWindow() {
 
     useEffect(() => {
         iframeDom.current.contentWindow.opener = window.opener;
-        iframeDom.current.contentWindow.location.reload();
     }, []);
 
     const getIframeDom = dom => {
