@@ -9,8 +9,14 @@ function PlaceOrderPopupWindow() {
     const timer = useRef(null);
 
     useEffect(() => {
-        iframeDom.current.contentWindow.opener = window.opener;
-        timer.current = window.setInterval(setOpener, 500);
+        setTimeout(() => {
+            iframeDom.current.contentWindow.opener = window.opener;
+
+            //資料沒進補救
+            if (window.opener.parent == null) {
+                timer.current = window.setInterval(setOpener, 500);
+            }
+        }, 500);
         return () => {
             window.clearInterval(timer.current);
         };
