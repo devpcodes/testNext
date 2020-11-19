@@ -6,12 +6,39 @@ import { AccountButton } from './AccountButton';
 
 import { setCurrentPath } from '../../../store/general/action';
 
+import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
+
 export const HeaderCallToAction = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
     const isLogin = useSelector(store => store.user.isLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
+    const domain = useSelector(store => store.general.domain);
+
+    const getGoOrderUrl = currentQuery => {
+        const newQuery = {
+            nav: 0,
+        };
+
+        let queryString;
+        switch (domain) {
+            case 'mma': {
+                const mmaQuery = Object.assign(currentQuery, newQuery, { source: 'mma' });
+                queryString = objectToQueryHandler(mmaQuery);
+                break;
+            }
+            case 'line': {
+                const lineQuery = Object.assign(newQuery, { platform: 'Line' });
+                queryString = objectToQueryHandler(lineQuery);
+                break;
+            }
+            default:
+                queryString = objectToQueryHandler(newQuery);
+                break;
+        }
+        return `${process.env.NEXT_PUBLIC_SUBPATH}goOrder${queryString}`;
+    };
 
     const goSignUp = () => {
         return window.open(
@@ -24,7 +51,7 @@ export const HeaderCallToAction = () => {
         const iTop = (window.screen.availHeight - 30 - iHeight) / 2; //視窗的垂直位置;
         const iLeft = window.screen.availLeft + (window.screen.availWidth - 10 - iWidth) / 2; //視窗的水平位置;
         return window.open(
-            `${process.env.NEXT_PUBLIC_SUBPATH}goOrder?nav=0`,
+            `${getGoOrderUrl(router.query)}`,
             'goOrder',
             `height=${iHeight},innerHeight=${iHeight},width=${iWidth},innerWidth=${iWidth},top=${iTop},left=${iLeft}`,
         );

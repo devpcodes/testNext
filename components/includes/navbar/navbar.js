@@ -24,6 +24,7 @@ const Navbar = React.memo(props => {
     const isLogin = useSelector(store => store.user.isLogin);
     const showMenu = useSelector(store => store.layout.showMenu);
     const isMobile = useSelector(store => store.layout.isMobile);
+    const domain = useSelector(store => store.general.domain);
     const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
     const marketMappingList = {
         S: 'stock',
@@ -82,6 +83,30 @@ const Navbar = React.memo(props => {
         return window.open(
             'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
         );
+    };
+
+    const getGoOrderUrl = domain => {
+        let url;
+        switch (domain) {
+            case 'mma':
+                url = `/goOrder?source=mma`;
+                break;
+            case 'line':
+                url = `/goOrder?platform=Line`;
+                break;
+            default:
+                url = `/goOrder`;
+                break;
+        }
+        return url;
+    };
+
+    const getTradingAccountUrl = domain => {
+        if (domain === 'line') {
+            return `/Line_TradingAccount`;
+        } else {
+            return !!accountMarket ? `/TradingAccount?mkt=${marketMappingList[accountMarket]}` : `/TradingAccount`;
+        }
     };
 
     return (
@@ -149,18 +174,12 @@ const Navbar = React.memo(props => {
                     <div className="navbar__shortcuts">
                         {isLogin ? (
                             <>
-                                <Link href={'/goOrder'}>
+                                <Link href={getGoOrderUrl(domain)}>
                                     <a onClick={setCurrentPathHandler} className="navbar__order">
                                         快速下單
                                     </a>
                                 </Link>
-                                <Link
-                                    href={
-                                        !!accountMarket
-                                            ? `TradingAccount?mkt=${marketMappingList[accountMarket]}`
-                                            : `TradingAccount`
-                                    }
-                                >
+                                <Link href={getTradingAccountUrl(domain)}>
                                     <a onClick={setCurrentPathHandler} className="navbar__account">
                                         我的帳務
                                     </a>
