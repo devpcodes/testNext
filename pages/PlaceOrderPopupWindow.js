@@ -18,6 +18,7 @@ function PlaceOrderPopupWindow() {
         console.log('test', window.opener);
         if (iframeDom.current != null && window.opener.parent != null) {
             iframeDom.current.contentWindow.opener = window.opener;
+            window.clearInterval(timer.current);
             window.location.reload();
         }
     };
