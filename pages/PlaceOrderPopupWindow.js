@@ -16,8 +16,9 @@ function PlaceOrderPopupWindow() {
 
     const setOpener = () => {
         console.log('test', window.opener);
-        if (iframeDom.current != null) {
+        if (iframeDom.current != null && window.opener.parent != null) {
             iframeDom.current.contentWindow.opener = window.opener;
+            window.location.reload();
         }
     };
 
