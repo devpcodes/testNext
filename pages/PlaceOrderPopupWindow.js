@@ -12,9 +12,7 @@ function PlaceOrderPopupWindow() {
         iframeDom.current.contentWindow.opener = window.opener;
 
         //資料沒進補救
-        if (window.opener.parent == null) {
-            timer.current = window.setInterval(setOpener, 500);
-        }
+        timer.current = window.setInterval(setOpener, 500);
         return () => {
             window.clearInterval(timer.current);
         };
