@@ -6,18 +6,16 @@ function PlaceOrderPopupWindow() {
     const iframeDom = useRef(null);
     const timer = useRef(null);
 
-    if (!checkServer) {
-        timer.current = window.setInterval(setOpener, 200);
-    }
-
     useEffect(() => {
         iframeDom.current.contentWindow.opener = window.opener;
+        timer.current = window.setInterval(setOpener, 500);
         return () => {
             window.clearInterval(timer.current);
         };
     }, []);
 
     const setOpener = () => {
+        console.log('test', window.opener);
         if (iframeDom.current != null) {
             iframeDom.current.contentWindow.opener = window.opener;
         }
