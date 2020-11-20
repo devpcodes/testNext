@@ -86,6 +86,9 @@ const Header = () => {
                     .navbar__switch__m {
                         display: block;
                     }
+                    .header__logo {
+                        margin: 19px 0;
+                    }
                 }
             `}</style>
         </header>
