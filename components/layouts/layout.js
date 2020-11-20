@@ -1,28 +1,32 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Modal } from 'antd';
-import { notification } from 'antd';
+import PropTypes from 'prop-types';
+import { Modal, notification } from 'antd';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import jwt_decode from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
-import Head from 'next/head';
+
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { resize, showLoginHandler, setNavItems } from '../../store/components/layouts/action';
-import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
-import { setDomain } from '../../store/general/action';
-import { checkLogin } from '../../services/components/layouts/checkLogin';
-import { checkMobile } from '../../services/components/layouts/checkMobile';
-import { setMenuOpen } from '../../store/components/layouts/action';
 import Login from '../includes/sinotradeLogin/login';
 import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
-import { getCookie } from '../../services/components/layouts/cookieController';
+import CaHead from '../includes/CaHead';
+
+import { showLoginHandler, setNavItems, setMaskVisible, setMenuOpen } from '../../store/components/layouts/action';
+import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
+import { setDomain, setCurrentPath } from '../../store/general/action';
+
+import { checkLogin } from '../../services/components/layouts/checkLogin';
+import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
-import CaHead from '../includes/CaHead';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
+import { getDomain } from '../../services/getDomain';
+
+import { useCheckMobile } from '../../hooks/useCheckMobile';
+
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -48,6 +52,9 @@ const Layout = React.memo(({ children }) => {
     const prevDomain = useRef(domain);
     const queryStr = useRef('');
     const isRendered = useRef(false);
+
+    // window 寬度改變處理，回傳 isMobile
+    useCheckMobile();
 
     useEffect(() => {
         prevIsMobile.current = isMobile;
@@ -87,8 +94,7 @@ const Layout = React.memo(({ children }) => {
 
     useEffect(() => {
         // pwaHandler();
-        window.addEventListener('resize', resizeHandler);
-        resizeHandler();
+        doLoginHashHandler();
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
             if (!Object.keys(navData).length) {
@@ -97,6 +103,7 @@ const Layout = React.memo(({ children }) => {
                 updateNavData();
             }
         }, 10);
+
         sourceHandler();
 
         if (checkLogin()) {
@@ -106,7 +113,6 @@ const Layout = React.memo(({ children }) => {
         isRendered.current = true;
 
         return () => {
-            window.removeEventListener('resize', resizeHandler, false);
             clearTimeout(timeout);
         };
     }, []);
@@ -148,45 +154,32 @@ const Layout = React.memo(({ children }) => {
         queryStr.current = router.query;
     }, [router.query]);
 
-    // 由 queryString 取得來源
-    const getSourceFromQueryString = () => {
-        const params = new URLSearchParams(window.location.search);
-        let sourceFromQueryString;
-
-        if (params.has('platform')) {
-            switch (params.get('platform')) {
-                case 'Line':
-                    sourceFromQueryString = 'Line';
-                    break;
-                default:
-                    sourceFromQueryString = '';
-                    break;
-            }
+    useEffect(() => {
+        if (showMask || showLogin || showBigLogin) {
+            document.body.style.overflow = 'hidden';
         }
 
-        return sourceFromQueryString;
+        if (!showMask && !showLogin && !showBigLogin) {
+            document.body.style.overflow = 'auto';
+        }
+    }, [showMask, showLogin, showBigLogin]);
+
+    //inside iframe 逾時處理
+    const doLoginHashHandler = () => {
+        if (window.location.hash === '#doLogin') {
+            const path = getCookie('doLoginPage') || getCookie('afterLoginUrl');
+            removeCookie('doLoginPage');
+            removeCookie('afterLoginUrl');
+            const arr = path.split('/');
+            const redirectPath = '/' + arr[arr.length - 1];
+            dispatch(setCurrentPath(redirectPath));
+            router.push('', `/SinoTrade_login`, { shallow: true });
+        }
     };
 
     // 依據來源設置 fetch 選單所帶的 domain 值
     const sourceHandler = () => {
-        const sourceFromQueryString = getSourceFromQueryString();
-        const sourceFromSessionStorage = sessionStorage.getItem('platform') || sessionStorage.getItem('source');
-        let source = sourceFromQueryString || sourceFromSessionStorage;
-        let domain;
-
-        switch (source) {
-            case 'mma':
-                domain = 'mma';
-                break;
-            case 'Line':
-                domain = 'line';
-                break;
-            default:
-                domain = 'newweb';
-                break;
-        }
-
-        dispatch(setDomain(domain));
+        dispatch(setDomain(getDomain()));
     };
 
     const updateNavData = () => {
@@ -261,16 +254,6 @@ const Layout = React.memo(({ children }) => {
                     })
                     .catch(err => console.log('Boo!', err));
             }
-        }
-    };
-
-    // WINDOW寬度改變處理
-    const resizeHandler = function () {
-        let winWidth = window.innerWidth;
-        if (checkMobile(winWidth)) {
-            dispatch(resize(winWidth, true));
-        } else {
-            dispatch(resize(winWidth, false));
         }
     };
 
@@ -390,6 +373,7 @@ const Layout = React.memo(({ children }) => {
     const maskClickHandler = function () {
         if (isMobile) {
             dispatch(setMenuOpen(false));
+            dispatch(setMaskVisible(false));
         }
     };
 

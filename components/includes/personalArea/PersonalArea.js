@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -7,6 +6,7 @@ import { AccountDropdown } from './AccountDropdown';
 import { logout } from '../../../services/user/logoutFetcher';
 import { setIsLogin } from '../../../store/user/action';
 import { TradingQuickView } from './TradingQuickView';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 import theme from '../../../resources/styles/theme';
 import signOutImg from '../../../resources/images/components/header/ic-signout.png';
@@ -15,22 +15,12 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 
 export const PersonalArea = ({ personalAreaVisible }) => {
     const dispatch = useDispatch();
+    const winSize = useWindowSize();
+
     const serverPersonalNav = useSelector(store => store.server.navData?.personal);
     const clientPersonalNav = useSelector(store => store.layout.navData?.personal);
     const isMobile = useSelector(store => store.layout.isMobile);
     const personalNav = clientPersonalNav ? clientPersonalNav : serverPersonalNav;
-    const [personalAreaMobileCSS, setPersonalAreaMobileCSS] = useState({ position: 'absolute', top: '-74px' });
-
-    // 處理 mobile 情況時，antd popover 展開後無法馬上 fixed 問題
-    useEffect(() => {
-        if (personalAreaVisible) {
-            setTimeout(() => {
-                setPersonalAreaMobileCSS({ position: 'fixed', top: '0' });
-            }, 350);
-        } else {
-            setPersonalAreaMobileCSS({ position: 'absolute', top: '-74px' });
-        }
-    }, [personalAreaVisible]);
 
     const handleLogout = async () => {
         try {
@@ -127,10 +117,10 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .personalArea__container {
-                        position: ${personalAreaMobileCSS.position};
+                        position: absolute;
                         width: calc((10 / 12) * 100vw);
-                        height: 100vh;
-                        top: ${personalAreaMobileCSS.top};
+                        height: ${winSize.height}px;
+                        top: -74px;
                         right: 0;
                         bottom: 0;
                         border-top: none;

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import Navbar from './navbar/navbar';
 import { HeaderCallToAction } from './headerCallToAction/HeaderCallToAction';
-import logo from '../../resources/images/components/header/sinopac_securities_logo.png';
+import logo from '../../resources/images/logo/logo.svg';
 import menu from '../../resources/images/components/header/ic_menu.png';
 import theme from '../../resources/styles/theme';
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,8 +21,12 @@ const Header = () => {
             <div className="header__navbar">
                 <div className="navbar__switch__m" onClick={menuClickHandler}></div>
                 <Link href={'/'}>
-                    <a className={`header__logo ${showMenu ? 'header__logo--hide' : ''}`}>
-                        <img src={logo} alt={'logo'}></img>
+                    <a>
+                        <img
+                            src={logo}
+                            alt={'logo'}
+                            className={`header__logo ${showMenu ? 'header__logo--hide' : ''}`}
+                        ></img>
                     </a>
                 </Link>
                 <Navbar />
@@ -57,7 +61,6 @@ const Header = () => {
                     width: 158px;
                     height: 38px;
                     margin: 16px 0;
-                    background-size: 158px 38px;
                 }
 
                 @media (max-width: 1250px) {
@@ -70,7 +73,9 @@ const Header = () => {
                         width: 100%;
                     }
                     .header__logo {
-                        margin: 16px 0 16px 10px;
+                        width: 132px;
+                        height: 32px;
+                        margin: 19px 0 19px 10px;
                     }
                 }
 
@@ -80,6 +85,9 @@ const Header = () => {
                     }
                     .navbar__switch__m {
                         display: block;
+                    }
+                    .header__logo {
+                        margin: 19px 0;
                     }
                 }
             `}</style>

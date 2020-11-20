@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
-import loginImg from '../../../resources/images/pages/SinoTrade_login/group-3.png';
-import logo from '../../../resources/images/pages/SinoTrade_login/logo-dark.png';
+import loginImg from '../../../resources/images/pages/SinoTrade_login/img-login.jpg';
+import logo from '../../../resources/images/logo/logo-dark.svg';
 import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 
 const SinoTradeLogin = function ({ onClose, successHandler }) {
@@ -81,6 +81,7 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
                     display: inline-block;
                     vertical-align: top;
                     margin-right: 19px;
+                    width: 400px;
                 }
                 .login__header {
                     margin-left: 32px;

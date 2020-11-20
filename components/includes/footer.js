@@ -1,6 +1,6 @@
 import React from 'react';
 import qrCode from '../../resources/images/components/footer/img_ileaderapp.png';
-import logo from '../../resources/images/components/footer/logo_footer.png';
+import logo from '../../resources/images/logo/logo.svg';
 import fb from '../../resources/images/components/footer/btn_fb.png';
 import youtube from '../../resources/images/components/footer/btn_youtube.png';
 import line from '../../resources/images/components/footer/btn_line.png';
@@ -170,7 +170,7 @@ const Footer = React.memo(props => {
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.sinotrade.com.tw/newweb/index_privacy" target="_blank">
+                            <a href={process.env.NEXT_PUBLIC_SUBPATH + 'index_privacy'} target="_blank">
                                 隱私權保護聲明
                             </a>
                         </li>
@@ -183,7 +183,7 @@ const Footer = React.memo(props => {
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.sinotrade.com.tw/newweb/index_disclaimer" target="_blank">
+                            <a href={process.env.NEXT_PUBLIC_SUBPATH + 'index_disclaimer'} target="_blank">
                                 網站免責聲明
                             </a>
                         </li>

@@ -67,18 +67,28 @@ const NavList = React.memo(props => {
     };
 
     const trustHandler = async (trustUrl, trustBody) => {
-        const res = await trust(trustUrl, trustBody);
-        stopTrustingHandler();
-        window.open(res.data.result.url, '_blank');
+        try {
+            const res = await trust(trustUrl, trustBody);
+            stopTrustingHandler();
+            const tempwindow = window.open('_blank');
+            tempwindow.location = res.data.result.url;
+            // window.open(res.data.result.url, '_blank');
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const openTrust = (trustUrl, trustBody) => {
         !isLogin ? noLoginTrustHandler(trustUrl, trustBody) : trustHandler(trustUrl, trustBody);
     };
 
-    const linkSetCurrentPath = () => {
+    const linkSetCurrentPath = (event, needLogin) => {
         dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         dispatch(setMenuOpen(false));
+        if (needLogin && !isLogin) {
+            dispatch(showLoginHandler(true));
+            event.preventDefault();
+        }
     };
 
     return (
@@ -117,7 +127,7 @@ const NavList = React.memo(props => {
                         {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
                             <Link href={lv3Item.url}>
                                 <a
-                                    onClick={linkSetCurrentPath}
+                                    onClick={e => linkSetCurrentPath(e, lv3Item.needLogin)}
                                     target={lv3Item.isBlank ? '_blank' : ''}
                                     className="navbar__lv3__item__title"
                                 >

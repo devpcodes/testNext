@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
@@ -15,6 +16,8 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function Inside_Frame() {
     const router = useRouter();
     const [url, setUrl] = useState('');
+
+    const isMobile = useSelector(store => store.layout.isMobile);
 
     useEffect(() => {
         const setEBillUrl = async ({ token = '' } = {}) => {
@@ -44,7 +47,7 @@ function Inside_Frame() {
         <>
             <PageHead title={'申請服務'} />
             <div>
-                <NewWebIframe iframeSrc={url} title="永豐金證券" iHeight={1240} />
+                <NewWebIframe iframeSrc={url} title="永豐金證券" iHeight={isMobile ? 4000 : 2000} />
             </div>
         </>
     );
