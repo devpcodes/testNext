@@ -155,12 +155,14 @@ const Layout = React.memo(({ children }) => {
     }, [router.query]);
 
     useEffect(() => {
-        if (showMask) {
+        if (showMask || showLogin || showBigLogin) {
             document.body.style.overflow = 'hidden';
-        } else {
+        }
+
+        if (!showMask && !showLogin && !showBigLogin) {
             document.body.style.overflow = 'auto';
         }
-    }, [showMask]);
+    }, [showMask, showLogin, showBigLogin]);
 
     //inside iframe 逾時處理
     const doLoginHashHandler = () => {
