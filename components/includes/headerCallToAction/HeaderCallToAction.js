@@ -8,7 +8,11 @@ import { setCurrentPath } from '../../../store/general/action';
 
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 
+import { useHasMounted } from '../../../hooks/useHasMounted';
+
 export const HeaderCallToAction = () => {
+    const hasMounted = useHasMounted();
+
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -65,6 +69,10 @@ export const HeaderCallToAction = () => {
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
+
+    if (!hasMounted) {
+        return null;
+    }
 
     return (
         <div className="callToAction__container">
