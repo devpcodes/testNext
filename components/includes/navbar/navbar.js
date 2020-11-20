@@ -5,7 +5,7 @@ import { setMenuOpen } from '../../../store/components/layouts/action';
 import Link from 'next/link';
 import theme from '../../../resources/styles/theme';
 import NavList from '../navbar/navList';
-import logo from '../../../resources/images/components/header/sinopac_securities_logo.png';
+import logo from '../../../resources/images/logo/logo.svg';
 import closeMenu from '../../../resources/images/components/header/ic_closemenu.png';
 import closeImg from '../../../resources/images/components/header/ic_close_horizontal_flip.png';
 import openImg from '../../../resources/images/components/header/ic_open.png';
@@ -114,8 +114,8 @@ const Navbar = React.memo(props => {
             <div className={`${showMenu ? '' : 'navbar--hide'}`}>
                 <div className="navbar__lv1__item navbar__lv1__item__title menu__ctrl">
                     <Link href={'/'}>
-                        <a className="header__logo">
-                            <img src={logo}></img>
+                        <a>
+                            <img src={logo} alt={'logo'} className={'navbar__logo'}></img>
                         </a>
                     </Link>
                     <a className="close__menu" onClick={menuClickHandler}>
@@ -428,6 +428,11 @@ const Navbar = React.memo(props => {
                         }
                         .navbar__lv2__item {
                             margin: 0;
+                        }
+                        .navbar__logo {
+                            width: 132px;
+                            height: 32px;
+                            margin: 19px 0;
                         }
                     }
                 `}</style>

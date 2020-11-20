@@ -1,6 +1,6 @@
 import React from 'react';
 import qrCode from '../../resources/images/components/footer/img_ileaderapp.png';
-import logo from '../../resources/images/components/footer/logo_footer.png';
+import logo from '../../resources/images/logo/logo.svg';
 import fb from '../../resources/images/components/footer/btn_fb.png';
 import youtube from '../../resources/images/components/footer/btn_youtube.png';
 import line from '../../resources/images/components/footer/btn_line.png';

@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
 import loginImg from '../../../resources/images/pages/SinoTrade_login/img-login.jpg';
-import logo from '../../../resources/images/pages/SinoTrade_login/logo-dark.png';
+import logo from '../../../resources/images/logo/logo-dark.svg';
 import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 
 const SinoTradeLogin = function ({ onClose, successHandler }) {
