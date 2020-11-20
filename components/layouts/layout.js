@@ -151,6 +151,14 @@ const Layout = React.memo(({ children }) => {
         queryStr.current = router.query;
     }, [router.query]);
 
+    useEffect(() => {
+        if (showMask) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [showMask]);
+
     //inside iframe 逾時處理
     const doLoginHashHandler = () => {
         if (window.location.hash === '#doLogin') {
