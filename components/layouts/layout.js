@@ -1,28 +1,30 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Modal } from 'antd';
-import { notification } from 'antd';
+import PropTypes from 'prop-types';
+import { Modal, notification } from 'antd';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import jwt_decode from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
-import Head from 'next/head';
+
 import Header from '../includes/header';
 import Footer from '../includes/footer';
-import { showLoginHandler, setNavItems, setMaskVisible } from '../../store/components/layouts/action';
-import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
-import { setDomain } from '../../store/general/action';
-import { checkLogin } from '../../services/components/layouts/checkLogin';
-import { setMenuOpen } from '../../store/components/layouts/action';
 import Login from '../includes/sinotradeLogin/login';
 import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
+import CaHead from '../includes/CaHead';
+
+import { showLoginHandler, setNavItems, setMaskVisible, setMenuOpen } from '../../store/components/layouts/action';
+import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
+import { setDomain, setCurrentPath } from '../../store/general/action';
+
+import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
-import CaHead from '../includes/CaHead';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
-import { setCurrentPath } from '../../store/general/action';
+import { getDomain } from '../../services/getDomain';
+
 import { useCheckMobile } from '../../hooks/useCheckMobile';
 
 const Layout = React.memo(({ children }) => {
@@ -101,6 +103,7 @@ const Layout = React.memo(({ children }) => {
                 updateNavData();
             }
         }, 10);
+
         sourceHandler();
 
         if (checkLogin()) {
@@ -172,45 +175,9 @@ const Layout = React.memo(({ children }) => {
         }
     };
 
-    // 由 queryString 取得來源
-    const getSourceFromQueryString = () => {
-        const params = new URLSearchParams(window.location.search);
-        let sourceFromQueryString;
-
-        if (params.has('platform')) {
-            switch (params.get('platform')) {
-                case 'Line':
-                    sourceFromQueryString = 'Line';
-                    break;
-                default:
-                    sourceFromQueryString = '';
-                    break;
-            }
-        }
-
-        return sourceFromQueryString;
-    };
-
     // 依據來源設置 fetch 選單所帶的 domain 值
     const sourceHandler = () => {
-        const sourceFromQueryString = getSourceFromQueryString();
-        const sourceFromSessionStorage = sessionStorage.getItem('platform') || sessionStorage.getItem('source');
-        let source = sourceFromQueryString || sourceFromSessionStorage;
-        let domain;
-
-        switch (source) {
-            case 'mma':
-                domain = 'mma';
-                break;
-            case 'Line':
-                domain = 'line';
-                break;
-            default:
-                domain = 'newweb';
-                break;
-        }
-
-        dispatch(setDomain(domain));
+        dispatch(setDomain(getDomain()));
     };
 
     const updateNavData = () => {

@@ -82,9 +82,12 @@ const NavList = React.memo(props => {
         !isLogin ? noLoginTrustHandler(trustUrl, trustBody) : trustHandler(trustUrl, trustBody);
     };
 
-    const linkSetCurrentPath = () => {
+    const linkSetCurrentPath = needLogin => {
         dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         dispatch(setMenuOpen(false));
+        if (needLogin && !isLogin) {
+            dispatch(showLoginHandler(true));
+        }
     };
 
     return (
@@ -123,7 +126,7 @@ const NavList = React.memo(props => {
                         {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
                             <Link href={lv3Item.url}>
                                 <a
-                                    onClick={linkSetCurrentPath}
+                                    onClick={linkSetCurrentPath(lv3Item.needLogin)}
                                     target={lv3Item.isBlank ? '_blank' : ''}
                                     className="navbar__lv3__item__title"
                                 >
