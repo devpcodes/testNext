@@ -193,18 +193,22 @@ const Layout = React.memo(({ children }) => {
 
     //驗證有沒有瀏覽頁面的權限
     const showPageHandler = async function (pathname) {
-        let currentPath = pathname.substr(1);
-        const token = getCookie('token');
-        const res = await verifyMenu(currentPath, token);
-        if (!res.data.result.isPass) {
-            //P = 權限不足, N = 需要登入
-            if (res.data.result.errorCode === 'N') {
-                noLoginPage(res.data.result.message);
+        try {
+            let currentPath = pathname.substr(1);
+            const token = getCookie('token');
+            const res = await verifyMenu(currentPath, token);
+            if (!res.data.result.isPass) {
+                //P = 權限不足, N = 需要登入
+                if (res.data.result.errorCode === 'N') {
+                    noLoginPage(res.data.result.message);
+                } else {
+                    noPermissionPage(res.data.result.message);
+                }
             } else {
-                noPermissionPage(res.data.result.message);
+                setVerifySuccess(true);
             }
-        } else {
-            setVerifySuccess(true);
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -303,13 +307,22 @@ const Layout = React.memo(({ children }) => {
             router.push(prevPathname.current);
             return;
         }
-        if (!currentPath) {
+
+        if (router.query.currentPath != null) {
+            changeRouterByCurrentPath(decodeURIComponent(router.query.currentPath));
+        } else {
+            changeRouterByCurrentPath(currentPath);
+        }
+    };
+
+    const changeRouterByCurrentPath = function (path) {
+        if (!path) {
             router.push('/');
         } else {
-            if (currentPath === '/') {
-                router.push(currentPath, '/', { shallow: true });
+            if (path === '/') {
+                router.push(path, '/', { shallow: true });
             } else {
-                router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+                router.push(path, `${path.substr(1)}`, { shallow: true });
             }
         }
     };
