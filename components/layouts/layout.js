@@ -193,18 +193,22 @@ const Layout = React.memo(({ children }) => {
 
     //驗證有沒有瀏覽頁面的權限
     const showPageHandler = async function (pathname) {
-        let currentPath = pathname.substr(1);
-        const token = getCookie('token');
-        const res = await verifyMenu(currentPath, token);
-        if (!res.data.result.isPass) {
-            //P = 權限不足, N = 需要登入
-            if (res.data.result.errorCode === 'N') {
-                noLoginPage(res.data.result.message);
+        try {
+            let currentPath = pathname.substr(1);
+            const token = getCookie('token');
+            const res = await verifyMenu(currentPath, token);
+            if (!res.data.result.isPass) {
+                //P = 權限不足, N = 需要登入
+                if (res.data.result.errorCode === 'N') {
+                    noLoginPage(res.data.result.message);
+                } else {
+                    noPermissionPage(res.data.result.message);
+                }
             } else {
-                noPermissionPage(res.data.result.message);
+                setVerifySuccess(true);
             }
-        } else {
-            setVerifySuccess(true);
+        } catch (error) {
+            console.error(error);
         }
     };
 

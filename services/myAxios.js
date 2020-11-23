@@ -22,10 +22,14 @@ const errorHandler = error => {
                 const reLoginHandler = async () => {
                     try {
                         await logout();
+                        const currentPath = `/${window.location.pathname.split('/').pop()}`;
+
                         Modal.error({
                             content: '帳號逾時，請重新登入。',
                             onOk() {
-                                window.location = `${process.env.NEXT_PUBLIC_SUBPATH}SinoTrade_login`;
+                                window.location = `${
+                                    process.env.NEXT_PUBLIC_SUBPATH
+                                }SinoTrade_login?currentPath=${encodeURIComponent(currentPath)}`;
                             },
                         });
                     } catch (error) {
