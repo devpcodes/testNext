@@ -75,7 +75,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
                 .content__btn {
                     display: inline-block;
                     margin-bottom: 10px;
-                    cursor: pointer;
+                    cursor: ${isMobile ? 'pointer' : 'auto'};
                 }
                 img {
                     margin-left: 5px;

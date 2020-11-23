@@ -189,7 +189,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                 }
                 .account__container :global(.ant-select-selector) {
                     border: 0;
-                    border-bottom: solid 1px #e6ebf5;
+                    border-bottom: dotted 2px #e6ebf5;
                     height: 36px;
                     padding: 0 11px 0 0;
                     font-size: 1.6rem;

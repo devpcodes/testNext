@@ -3,7 +3,7 @@ import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox } from 'antd';
-import logo from '../../../resources/images/components/login/logo.png';
+import logo from '../../../resources/images/logo/logo-icon.svg';
 import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
