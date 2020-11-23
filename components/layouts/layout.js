@@ -303,13 +303,22 @@ const Layout = React.memo(({ children }) => {
             router.push(prevPathname.current);
             return;
         }
-        if (!currentPath) {
+
+        if (router.query.currentPath != null) {
+            changeRouterByCurrentPath(decodeURIComponent(router.query.currentPath));
+        } else {
+            changeRouterByCurrentPath(currentPath);
+        }
+    };
+
+    const changeRouterByCurrentPath = function (path) {
+        if (!path) {
             router.push('/');
         } else {
-            if (currentPath === '/') {
-                router.push(currentPath, '/', { shallow: true });
+            if (path === '/') {
+                router.push(path, '/', { shallow: true });
             } else {
-                router.push(currentPath, `${currentPath.substr(1)}`, { shallow: true });
+                router.push(path, `${path.substr(1)}`, { shallow: true });
             }
         }
     };
