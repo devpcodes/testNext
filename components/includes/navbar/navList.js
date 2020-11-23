@@ -169,7 +169,7 @@ const NavList = React.memo(props => {
                 .navbar__lv2__item__title {
                     font-size: 16px;
                     color: ${theme.colors.secondary};
-                    border-bottom: 2px dotted ${theme.colors.secondary};
+                    border-bottom: 1px dotted ${theme.colors.secondary};
                     padding: 0 0 10px 0;
                     margin: 0 0 18px 0;
                     font-weight: bold;
