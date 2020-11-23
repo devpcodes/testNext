@@ -22,7 +22,8 @@ const errorHandler = error => {
                 const reLoginHandler = async () => {
                     try {
                         await logout();
-                        const currentPath = `/${window.location.pathname.split('/').pop()}`;
+                        const lastPath = window.location.pathname.split('/').pop();
+                        const currentPath = `/${lastPath === 'newweb' ? '' : lastPath}`;
 
                         Modal.error({
                             content: '帳號逾時，請重新登入。',
