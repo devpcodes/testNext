@@ -33,11 +33,8 @@ export const AccountButton = () => {
     };
 
     useEffect(() => {
-        if (isMobile && personalAreaVisible) {
-            dispatch(setMaskVisible(true));
-        }
-        if (isMobile && !personalAreaVisible) {
-            dispatch(setMaskVisible(false));
+        if (isMobile) {
+            dispatch(setMaskVisible(personalAreaVisible));
         }
     }, [personalAreaVisible]);
 
