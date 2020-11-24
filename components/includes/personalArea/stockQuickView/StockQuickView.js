@@ -1,29 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { QuickViewTable } from './QuickViewTable';
-// import { useSelector } from 'react-redux';
-// import MyTransition from '../../myTransition';
-// import close from '../../../../resources/images/components/stockQuickView/close.png';
 import CurrencyBox from '../CurrencyBox';
 
 // eslint-disable-next-line react/display-name
 const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
-    // const isMobile = useSelector(store => store.layout.isMobile);
-    // const [showContent, setShowContent] = useState(false);
-
-    // useEffect(() => {
-    //     if (!isMobile) {
-    //         setShowContent(true);
-    //     }
-    // }, [isMobile]);
-
-    // const contentBtnClick = () => {
-    //     if (noData()) {
-    //         return;
-    //     }
-    //     setShowContent(prevState => !prevState);
-    // };
-
     //判斷無資料
     const noData = () => {
         if (currencyData.length === 0) {
@@ -38,9 +20,9 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
         <>
             <div className="StockQuickView__container">
                 <p>國內證券未實現損益</p>
-                <p className="unrealized">
+                <div className="unrealized">
                     {Array.isArray(unreal) ? <CurrencyBox currencyData={unreal} autoColor={true} digits={0} /> : unreal}
-                </p>
+                </div>
                 {!noData() && (
                     <div className="settlementMoney__box">
                         <p>近三日交割款</p>
@@ -103,7 +85,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
     );
 });
 StockQuickView.propTypes = {
-    // unreal: PropTypes.string,
+    unreal: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     currencyData: PropTypes.array,
     tableInfo: PropTypes.array,
 };
