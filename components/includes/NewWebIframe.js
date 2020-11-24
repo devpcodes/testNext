@@ -91,7 +91,9 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
     }, [personalAreaVisible]);
 
     const onLoadHandler = () => {
-        setShowLoading(false);
+        if (isMobile) {
+            setShowLoading(false);
+        }
     };
 
     return (
