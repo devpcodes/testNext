@@ -1,11 +1,12 @@
 import { useEffect, useRef, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+
 // eslint-disable-next-line react/display-name
 const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom }) {
     const iframeDom = useRef(null);
-    const iframeContentReady = useRef(false);
     const iframeContentDoc = useRef(null);
+
     const isMobile = useSelector(store => store.layout.isMobile);
     const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
 
@@ -19,7 +20,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
                 iframeContent = iframeContent.document;
             }
             iframeContentDoc.current = iframeContent;
-            iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
         }
     }, 100);
 
@@ -34,11 +34,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
         if (getIframeDom != null) {
             getIframeDom(iframeDom.current);
         }
-        return () => {
-            if (iframeContentDoc.current != null) {
-                iframeContentDoc.current.removeEventListener('DOMContentLoaded', ready, false);
-            }
-        };
     }, []);
 
     useEffect(() => {
@@ -48,14 +43,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
             }
         }, 500);
     }, [iHeight]);
-
-    useEffect(() => {
-        if (iframeContentReady.current) {
-            if (isMobile) {
-                hideHeaderFooter();
-            }
-        }
-    }, [isMobile]);
 
     useEffect(() => {
         if (login != null && login) {
@@ -69,7 +56,6 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
 
                 if (iframeContentDoc.current != null && iframeContentDoc.current.location != null) {
                     iframeContentDoc.current.location.reload(true);
-                    iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
                 }
             }, 100);
         }
@@ -92,43 +78,15 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
         }
     }, [personalAreaVisible]);
 
-    const ready = () => {
-        console.log('ready');
-        hideHeaderFooter();
-    };
-
-    const hideHeaderFooter = () => {
-        console.log('onload');
-        console.log('content', iframeContentDoc.current);
-        if (iframeContentDoc.current != null && !iframeContentReady.current) {
-            if (iframeContentDoc.current.getElementsByClassName('nav-container').length === 0) {
-                iframeContentDoc.current.addEventListener('DOMContentLoaded', ready);
-            }
-            if (iframeContentDoc.current.getElementsByClassName('nav-container').length > 0) {
-                iframeContentDoc.current.getElementsByClassName('nav-container')[0].style.display = 'none';
-                iframeContentDoc.current.getElementsByClassName('footer-container')[0].style.display = 'none';
-                iframeContentDoc.current.getElementsByClassName('body-container')[0].style.padding = '0';
-            }
-            if (isMobile) {
-                if (iframeContentDoc.current.getElementsByClassName('homeFooter').length > 0) {
-                    iframeContentDoc.current.getElementsByClassName('homeFooter')[0].style.display = 'none';
-                }
-            }
-            iframeContentReady.current = true;
-        }
-    };
-
     return (
         <>
             <iframe
-                onLoad={hideHeaderFooter}
                 title={title}
                 ref={iframeDom}
                 id="nweWebiFrame"
                 name="newWebiFrame"
                 width="100%"
                 src={iframeSrc}
-                // scrolling="No"
                 style={{
                     overflowX: 'auto',
                     overflowY: 'hidden',
