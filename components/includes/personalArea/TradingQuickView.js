@@ -258,7 +258,7 @@ export const TradingQuickView = () => {
             SBdeliveryTrial.sum_data.forEach((obj, index) => {
                 let item = {
                     key: index,
-                    date: moment(obj.t1day).format('YYYY.MM.DD'),
+                    date: moment().format('YYYY.MM.DD'),
                     currency: obj.curr,
                     amount: obj.sum_net,
                 };

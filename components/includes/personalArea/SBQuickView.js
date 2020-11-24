@@ -1,19 +1,41 @@
 import PropTypes from 'prop-types';
+
 import CurrencyBox from './CurrencyBox';
 import { QuickViewTable } from './stockQuickView/QuickViewTable';
 
 const SBQuickView = ({ unreal, deliveryTrial }) => {
+    const hasData = data => {
+        if (data?.length > 0) {
+            return true;
+        }
+        return false;
+    };
+
+    // 未實現跟當日交割都無資料
+    const noInformation = () => {
+        return !hasData(unreal) && !hasData(deliveryTrial);
+    };
+
     return (
         <>
             <div className="SBQuickView__container">
-                <p className="quickView__title">海外證券未實現損益</p>
-                <CurrencyBox key={'SBunreal'} currencyData={unreal} autoColor={true} />
-                <p className="quickView__title currentDay">當日交割款試算</p>
-                <QuickViewTable dataSource={deliveryTrial} />
+                {(hasData(unreal) || noInformation()) && (
+                    <>
+                        <p className="quickView__title">海外證券未實現損益</p>
+                        <CurrencyBox key={'SBunreal'} currencyData={unreal} autoColor={true} />
+                    </>
+                )}
+                {hasData(deliveryTrial) && (
+                    <>
+                        <p className="quickView__title currentDay">當日交割款試算</p>
+                        <QuickViewTable dataSource={deliveryTrial} />
+                    </>
+                )}
             </div>
             <style jsx>{`
                 .SBQuickView__container {
                     font-size: 1.6rem;
+                    font-weight: 600;
                     color: #0d1623;
                 }
                 @media (max-width: 768px) {
@@ -35,7 +57,7 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
                     }
                 }
                 .currentDay {
-                    margin-top: 20px;
+                    margin-top: 18px;
                 }
             `}</style>
         </>
