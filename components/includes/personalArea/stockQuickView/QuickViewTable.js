@@ -74,13 +74,13 @@ export const QuickViewTable = ({ dataSource }) => {
                     text-align: right;
                 }
                 .stockQuickView__table .ant-table-tbody > tr > td :nth-child(3) {
-                    text-align: center;
+                    text-align: right;
                 }
                 .ant-table-cell :nth-child(2) {
                     text-align: right;
                 }
                 .ant-table-cell :nth-child(3) {
-                    text-align: center;
+                    text-align: right;
                 }
                 .stockQuickView__table {
                     margin-bottom: 10px;

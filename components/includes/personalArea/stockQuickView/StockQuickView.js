@@ -26,11 +26,6 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
 
     //判斷無資料
     const noData = () => {
-        //pc版不做此判斷
-        if (!isMobile) {
-            return false;
-        }
-
         if (currencyData.length === 0) {
             if (tableInfo[0].key == 0) {
                 return true;
@@ -43,20 +38,24 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
         <>
             <div className="StockQuickView__container">
                 <p>國內證券未實現損益</p>
-                <p className="unrealized">{formatNum(unreal)}</p>
-                <div className="settlementMoney__box">
-                    <p onClick={contentBtnClick} className="content__btn">
-                        {isMobile ? '近三日交割款' : '當日交割款'}
-                    </p>
-                    {isMobile && <img onClick={contentBtnClick} src={close} />}
-                    {isMobile && noData() && <p className="noData">無交割款</p>}
-                    <MyTransition isVisible={showContent && !noData()} classNames={'maxHeight'}>
-                        <div className="settlementMoney__content">
-                            <CurrencyBox currencyData={currencyData} />
-                            <QuickViewTable dataSource={tableInfo} />
-                        </div>
-                    </MyTransition>
-                </div>
+                <p className="unrealized">
+                    {Array.isArray(unreal) ? <CurrencyBox currencyData={unreal} autoColor={true} digits={0} /> : unreal}
+                </p>
+                {!noData() && (
+                    <div className="settlementMoney__box">
+                        <p onClick={contentBtnClick} className="content__btn">
+                            近三日交割款
+                        </p>
+                        {isMobile && <img onClick={contentBtnClick} src={close} />}
+                        {isMobile && noData() && <p className="noData">無交割款</p>}
+                        <MyTransition isVisible={showContent && !noData()} classNames={'maxHeight'}>
+                            <div className="settlementMoney__content">
+                                {/* <CurrencyBox currencyData={currencyData} /> */}
+                                <QuickViewTable dataSource={tableInfo} />
+                            </div>
+                        </MyTransition>
+                    </div>
+                )}
             </div>
             <style jsx>{`
                 .StockQuickView__container {
@@ -74,7 +73,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
                 }
                 .content__btn {
                     display: inline-block;
-                    margin-bottom: 10px;
+                    margin-bottom: 5px !important;
                     cursor: ${isMobile ? 'pointer' : 'auto'};
                 }
                 img {
@@ -91,6 +90,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
                 }
                 .StockQuickView__container p {
                     margin: 0;
+                    font-weight: bold;
                 }
                 @media (max-width: 768px) {
                     .StockQuickView__container p {
@@ -100,12 +100,12 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
                 .StockQuickView__container .unrealized {
                     font-size: 3rem;
                     color: ${Number(unreal) >= 0 ? '#c43826' : '#22a16f'};
-                    margin-top: 0.2rem;
+                    margin-top: -1rem;
                     font-weight: bold;
                 }
                 @media (max-width: 768px) {
                     .StockQuickView__container .unrealized {
-                        margin-bottom: 20px;
+                        margin-bottom: 5px;
                     }
                 }
             `}</style>
@@ -113,7 +113,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
     );
 });
 StockQuickView.propTypes = {
-    unreal: PropTypes.string,
+    // unreal: PropTypes.string,
     currencyData: PropTypes.array,
     tableInfo: PropTypes.array,
 };

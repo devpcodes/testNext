@@ -62,7 +62,8 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                     }
                 }
                 .amount {
-                    font-size: 2.6rem;
+                    margin-top: -10px;
+                    font-size: 3rem;
                     font-weight: bold;
                 }
 

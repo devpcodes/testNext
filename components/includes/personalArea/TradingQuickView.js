@@ -148,27 +148,36 @@ export const TradingQuickView = () => {
         dispatch(getOpenProfitLossSum(fetchOpenPosition(data)));
     };
 
+    const tableInfoHandler = (obj, tableInfo) => {
+        if (obj.tnetamt != 0 || obj.t1netamt != 0 || obj.t2netamt != 0) {
+            tableInfo.push({
+                key: obj.Currency + obj.tday,
+                date: moment(obj.tday).format('YYYY.MM.DD'),
+                amount: formatNum(Number(obj.tnetamt)),
+                cruuency: obj.tnetamt == 0 ? '-' : obj.Currency,
+            });
+            tableInfo.push({
+                key: obj.Currency + obj.t1day,
+                date: moment(obj.t1day).format('YYYY.MM.DD'),
+                amount: formatNum(Number(obj.t1netamt)),
+                cruuency: obj.t1netamt == 0 ? '-' : obj.Currency,
+            });
+            tableInfo.push({
+                key: obj.Currency + obj.t2day,
+                date: moment(obj.t2day).format('YYYY.MM.DD'),
+                amount: formatNum(Number(obj.t2netamt)),
+                cruuency: obj.t2netamt == 0 ? '-' : obj.Currency,
+            });
+        }
+        return tableInfo;
+    };
+
     //當日的不拿，有值的才拿
     const getStockSummarisePrtlosInfo = function () {
-        const tableInfo = [];
+        let tableInfo = [];
         if (typeof summarisePrtlos === 'object' && summarisePrtlos.length !== 0) {
             summarisePrtlos.forEach(obj => {
-                if (obj.t1netamt != 0) {
-                    tableInfo.push({
-                        key: obj.Currency + obj.t1day,
-                        date: moment(obj.t1day).format('YYYY.MM.DD'),
-                        amount: formatNum(Number(obj.t1netamt)),
-                        currency: obj.Currency,
-                    });
-                }
-                if (obj.t2netamt != 0) {
-                    tableInfo.push({
-                        key: obj.Currency + obj.t2day,
-                        date: moment(obj.t1day).format('YYYY.MM.DD'),
-                        amount: formatNum(Number(obj.t2netamt)),
-                        currency: obj.Currency,
-                    });
-                }
+                tableInfo = tableInfoHandler(obj, tableInfo);
             });
 
             if (tableInfo.length === 0) {
@@ -193,6 +202,17 @@ export const TradingQuickView = () => {
                 },
             ];
         }
+    };
+
+    const getStockUnrealInfo = () => {
+        return unRealPrtlos.length === 0
+            ? '--'
+            : [
+                  {
+                      currency: 'NTD',
+                      amount: unRealPrtlos[unRealPrtlos.length - 1]?.unreal,
+                  },
+              ];
     };
 
     //當日交割款全幣別
@@ -294,7 +314,7 @@ export const TradingQuickView = () => {
                 <>
                     <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
                     <StockQuickView
-                        unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal}
+                        unreal={getStockUnrealInfo()}
                         currencyData={getStockCurrencyData()}
                         tableInfo={getStockSummarisePrtlosInfo()}
                     />

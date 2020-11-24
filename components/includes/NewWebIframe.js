@@ -1,7 +1,6 @@
 import { useEffect, useRef, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-
 // eslint-disable-next-line react/display-name
 const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom }) {
     const iframeDom = useRef(null);
