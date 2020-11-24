@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { formatNum } from '../../../services/formatNum';
+
 const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false }) => {
     const amountClassName = amount => {
         let amountClassName = 'amount';
@@ -66,9 +67,14 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                     font-size: 3rem;
                     font-weight: bold;
                 }
+                .amount--no {
+                    color: #0b1728;
+                    font-size: 3rem;
+                    font-weight: bold;
+                    margin-top: -1rem;
+                }
 
                 .currency__item {
-                    /* width: 46%; */
                     display: inline-block;
                 }
                 .currency__item p {
@@ -76,10 +82,10 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                 }
                 @media (max-width: 768px) {
                     .currency__item p {
-                        color: white;
+                        color: #ffffff;
                     }
                     .amount--no {
-                        color: white;
+                        color: #ffffff;
                     }
                 }
                 .currency__item:first-child {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { QuickViewTable } from './QuickViewTable';
-import { formatNum } from '../../../../services/formatNum';
 import { useSelector } from 'react-redux';
 import MyTransition from '../../myTransition';
 import close from '../../../../resources/images/components/stockQuickView/close.png';
@@ -106,6 +105,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
                 @media (max-width: 768px) {
                     .StockQuickView__container .unrealized {
                         margin-bottom: 5px;
+                        color: #ffffff;
                     }
                 }
             `}</style>
