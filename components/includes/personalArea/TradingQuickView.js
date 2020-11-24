@@ -158,7 +158,7 @@ export const TradingQuickView = () => {
                         key: obj.Currency + obj.t1day,
                         date: moment(obj.t1day).format('YYYY.MM.DD'),
                         amount: formatNum(Number(obj.t1netamt)),
-                        cruuency: obj.Currency,
+                        currency: obj.Currency,
                     });
                 }
                 if (obj.t2netamt != 0) {
@@ -166,7 +166,7 @@ export const TradingQuickView = () => {
                         key: obj.Currency + obj.t2day,
                         date: moment(obj.t1day).format('YYYY.MM.DD'),
                         amount: formatNum(Number(obj.t2netamt)),
-                        cruuency: obj.Currency,
+                        currency: obj.Currency,
                     });
                 }
             });
@@ -177,7 +177,7 @@ export const TradingQuickView = () => {
                         key: 0,
                         date: '--',
                         amount: '--',
-                        cruuency: '--',
+                        currency: '--',
                     },
                 ];
             } else {
@@ -189,7 +189,7 @@ export const TradingQuickView = () => {
                     key: 0,
                     date: '--',
                     amount: '--',
-                    cruuency: '--',
+                    currency: '--',
                 },
             ];
         }
@@ -233,12 +233,15 @@ export const TradingQuickView = () => {
     //海外交割試算
     const getDeliveryCurrencyData = () => {
         const currencyInfo = [];
-        // console.log(SBdeliveryTrial);
+
         if (SBdeliveryTrial.sum_data != null && SBdeliveryTrial.sum_data.length !== 0) {
-            SBdeliveryTrial.sum_data.forEach(obj => {
-                let item = {};
-                item.currency = obj.curr;
-                item.amount = obj.sum_net;
+            SBdeliveryTrial.sum_data.forEach((obj, index) => {
+                let item = {
+                    key: index,
+                    date: moment(obj.t1day).format('YYYY.MM.DD'),
+                    currency: obj.curr,
+                    amount: obj.sum_net,
+                };
                 currencyInfo.push(item);
             });
             return currencyInfo;

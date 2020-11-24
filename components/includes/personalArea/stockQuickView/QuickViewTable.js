@@ -1,22 +1,24 @@
+import PropTypes from 'prop-types';
 import { Table } from 'antd';
+
 // const dataSource = [
 //     {
 //         key: '1',
 //         date: '2020.10.02',
 //         amount: -315,
-//         cruuency: 'USD',
+//         currency: 'USD',
 //     },
 //     {
 //         key: '2',
 //         date: '2020.10.03',
 //         amount: 435100,
-//         cruuency: 'NTD',
+//         currency: 'NTD',
 //     },
 //     {
 //         key: '3',
 //         date: '2020.10.04',
 //         amount: -117,
-//         cruuency: 'CNY',
+//         currency: 'CNY',
 //     },
 // ];
 
@@ -33,10 +35,11 @@ const columns = [
     },
     {
         title: '幣別',
-        dataIndex: 'cruuency',
-        key: 'cruuency',
+        dataIndex: 'currency',
+        key: 'currency',
     },
 ];
+
 export const QuickViewTable = ({ dataSource }) => {
     return (
         <>
@@ -129,4 +132,8 @@ export const QuickViewTable = ({ dataSource }) => {
             `}</style>
         </>
     );
+};
+
+QuickViewTable.propTypes = {
+    dataSource: PropTypes.array,
 };

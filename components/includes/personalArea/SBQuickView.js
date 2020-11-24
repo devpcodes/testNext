@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import CurrencyBox from './CurrencyBox';
+import { QuickViewTable } from './stockQuickView/QuickViewTable';
+
 const SBQuickView = ({ unreal, deliveryTrial }) => {
     return (
         <>
@@ -7,7 +9,7 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
                 <p className="quickView__title">海外證券未實現損益</p>
                 <CurrencyBox key={'SBunreal'} currencyData={unreal} autoColor={true} />
                 <p className="quickView__title currentDay">當日交割款試算</p>
-                <CurrencyBox key={'SBunreal2'} currencyData={deliveryTrial} />
+                <QuickViewTable dataSource={deliveryTrial} />
             </div>
             <style jsx>{`
                 .SBQuickView__container {
@@ -39,8 +41,10 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
         </>
     );
 };
+
 SBQuickView.propTypes = {
     unreal: PropTypes.array,
     deliveryTrial: PropTypes.array,
 };
+
 export default SBQuickView;
