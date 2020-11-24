@@ -75,7 +75,7 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                 }
 
                 .currency__item {
-                    display: inline-block;
+                    display: block;
                 }
                 .currency__item p {
                     margin-bottom: 5px;
@@ -92,15 +92,14 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                         color: #ffffff;
                     }
                 }
-                .currency__item:first-child {
+                /* .currency__item:first-child {
                     margin-right: 15px;
-                }
-                @media (max-width: 768px) {
+                } */
+                /* @media (max-width: 768px) {
                     .currency__item {
                         margin-right: 15px;
-                        /* float: left; */
                     }
-                }
+                } */
                 @media (max-width: 768px) {
                     .currency__box {
                         width: 100%;
