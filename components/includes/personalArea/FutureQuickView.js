@@ -26,6 +26,7 @@ export const FutureQuickView = ({ openProfitLoss }) => {
                     }
                 }
                 .quickView__title {
+                    font-weight: 600;
                     margin-bottom: 5px;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {

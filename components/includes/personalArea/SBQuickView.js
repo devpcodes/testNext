@@ -35,7 +35,6 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
             <style jsx>{`
                 .SBQuickView__container {
                     font-size: 1.6rem;
-                    font-weight: 600;
                     color: #0d1623;
                 }
                 @media (max-width: 768px) {
@@ -48,6 +47,7 @@ const SBQuickView = ({ unreal, deliveryTrial }) => {
                     }
                 }
                 .quickView__title {
+                    font-weight: 600;
                     margin-bottom: 5px;
                 }
                 @media (max-width: 768px) {
