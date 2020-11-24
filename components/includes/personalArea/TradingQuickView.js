@@ -154,19 +154,19 @@ export const TradingQuickView = () => {
                 key: obj.Currency + obj.tday,
                 date: moment(obj.tday).format('YYYY.MM.DD'),
                 amount: formatNum(Number(obj.tnetamt)),
-                cruuency: obj.tnetamt == 0 ? '-' : obj.Currency,
+                currency: obj.tnetamt == 0 ? '-' : obj.Currency,
             });
             tableInfo.push({
                 key: obj.Currency + obj.t1day,
                 date: moment(obj.t1day).format('YYYY.MM.DD'),
                 amount: formatNum(Number(obj.t1netamt)),
-                cruuency: obj.t1netamt == 0 ? '-' : obj.Currency,
+                currency: obj.t1netamt == 0 ? '-' : obj.Currency,
             });
             tableInfo.push({
                 key: obj.Currency + obj.t2day,
                 date: moment(obj.t2day).format('YYYY.MM.DD'),
                 amount: formatNum(Number(obj.t2netamt)),
-                cruuency: obj.t2netamt == 0 ? '-' : obj.Currency,
+                currency: obj.t2netamt == 0 ? '-' : obj.Currency,
             });
         }
         return tableInfo;

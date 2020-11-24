@@ -97,7 +97,7 @@ export const QuickViewTable = ({ dataSource }) => {
                     }
                     .ant-table-container {
                         background-image: linear-gradient(to top, #0d1623, #080e16);
-                        padding: 0 30px;
+                        padding: 0 35px;
                         min-height: 65px;
                     }
                     .ant-table-thead > tr > th {

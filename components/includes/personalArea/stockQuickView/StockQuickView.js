@@ -99,7 +99,7 @@ const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
                 }
                 .StockQuickView__container .unrealized {
                     font-size: 3rem;
-                    color: ${Number(unreal) >= 0 ? '#c43826' : '#22a16f'};
+                    color: #0b1728;
                     margin-top: -1rem;
                     font-weight: bold;
                 }
