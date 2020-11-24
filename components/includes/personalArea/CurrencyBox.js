@@ -63,7 +63,7 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                     }
                 }
                 .amount {
-                    margin-top: -10px;
+                    margin-top: -5px;
                     font-size: 3rem;
                     font-weight: bold;
                 }
@@ -84,7 +84,11 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                     .currency__item p {
                         color: #ffffff;
                     }
+                    .amount {
+                        margin-top: 0;
+                    }
                     .amount--no {
+                        margin-top: 0;
                         color: #ffffff;
                     }
                 }
