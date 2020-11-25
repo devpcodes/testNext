@@ -41,7 +41,6 @@ const NavList = React.memo(props => {
                 trustHandler(trustingUrl.current, trustingBody.current);
             }
         }
-        console.log('redirect======', props.id, redirectUrl.current, isLogin);
         if (props.id === redirectId.current) {
             if (isLogin && redirecting.current) {
                 console.log('goRedirect', props.id, redirectUrl.current);
