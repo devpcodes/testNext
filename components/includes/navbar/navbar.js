@@ -401,6 +401,7 @@ const Navbar = React.memo(props => {
                             transform: rotate(0);
                             display: inline-block;
                             vertical-align: middle;
+                            margin-bottom: 6px;
                         }
 
                         .navbar__lv1__item__title.no__lv2:after {
