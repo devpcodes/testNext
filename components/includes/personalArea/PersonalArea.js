@@ -225,9 +225,6 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                     .personalArea__container .navbar__lv3__item {
                         width: 50%;
                     }
-                    .personalArea__container .navbar__lv3__item__title {
-                        font-size: 2rem;
-                    }
                 }
             `}</style>
         </div>

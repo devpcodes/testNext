@@ -188,7 +188,7 @@ const NavList = React.memo(props => {
                 }
 
                 .navbar__lv2__item__title {
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     color: ${theme.colors.secondary};
                     border-bottom: 1px dotted ${theme.colors.secondary};
                     padding: 0 0 10px 0;
@@ -206,7 +206,7 @@ const NavList = React.memo(props => {
                 }
 
                 .navbar__lv3__item__title {
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     color: ${theme.colors.darkBg};
                     display: block;
                 }
@@ -221,7 +221,7 @@ const NavList = React.memo(props => {
                     text-align: center;
                     margin-left: 5px;
                     vertical-align: text-bottom;
-                    font-size: 12px;
+                    font-size: 1.2rem;
                     transform: scale(0.9);
                 }
                 .NEW::after {
