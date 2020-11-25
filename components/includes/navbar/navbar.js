@@ -49,8 +49,9 @@ const Navbar = React.memo(props => {
 
     const resizeHandler = function () {
         let winWidth = window.innerWidth;
-        if (winWidth <= 1024) {
+        if (winWidth >= 1024) {
             dispatch(setMenuOpen(false));
+            dispatch(setMaskVisible(false));
         }
     };
 
