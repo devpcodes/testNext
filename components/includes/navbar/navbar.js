@@ -219,7 +219,6 @@ const Navbar = React.memo(props => {
                         display: flex;
                         flex-direction: column;
                         list-style: none;
-                        font-size: 1.9rem;
                         color: ${theme.colors.text};
                         height: 100%;
                         position: relative;
@@ -229,6 +228,8 @@ const Navbar = React.memo(props => {
                         width: 100%;
                         height: 100%;
                         line-height: 70px;
+                        font-size: 2rem;
+                        font-weight: bold;
                     }
 
                     .navbar__shortcuts__li {
@@ -294,7 +295,7 @@ const Navbar = React.memo(props => {
                         }
                         .navbar__lv1__item:hover .navbar__lv1__item__title:after {
                             transition: all 0.3s;
-                            transform: rotate(-0deg);
+                            transform: rotate(180deg);
                         }
                     }
 
@@ -396,7 +397,7 @@ const Navbar = React.memo(props => {
                             background-image: url(${openImg});
                             margin-left: 4px;
                             transition: all 0.3s;
-                            transform: rotate(-180deg);
+                            transform: rotate(0);
                             display: inline-block;
                             vertical-align: middle;
                         }
@@ -411,7 +412,7 @@ const Navbar = React.memo(props => {
 
                         .navbar__lv1__item--show .navbar__lv1__item__title:after {
                             background-image: url(${closeImg});
-                            transform: rotate(0);
+                            transform: rotate(180deg);
                         }
 
                         .navbar__lv1__item--show .navbar__lv1__item__title {
