@@ -21,12 +21,17 @@ const NavList = React.memo(props => {
     const trustingBody = useRef({});
     const trustingUrl = useRef('');
 
+    const redirectId = useRef(0);
+    const redirecting = useRef(false);
+    const redirectUrl = useRef('');
+
     useEffect(() => {
         if (props.id === trustingId.current) {
             if (!showLogin && !isLogin) {
                 //讓它觸發的islgoin慢，才能先執行完trust 才清掉
                 setTimeout(() => {
                     stopTrustingHandler();
+                    stopRedirectHandler();
                 }, 100);
             }
         }
@@ -36,6 +41,13 @@ const NavList = React.memo(props => {
         if (props.id === trustingId.current) {
             if (isLogin && trusting.current) {
                 trustHandler(trustingUrl.current, trustingBody.current);
+            }
+        }
+
+        if (props.id === redirectId.current) {
+            if (isLogin && redirecting.current) {
+                router.push(redirectUrl.current);
+                stopRedirectHandler();
             }
         }
     }, [isLogin]);
@@ -51,6 +63,7 @@ const NavList = React.memo(props => {
     };
 
     const noLoginTrustHandler = (trustUrl, trustBody) => {
+        stopRedirectHandler();
         trusting.current = true;
         trustingUrl.current = trustUrl;
         trustingBody.current = trustBody;
@@ -81,10 +94,19 @@ const NavList = React.memo(props => {
         !isLogin ? noLoginTrustHandler(trustUrl, trustBody) : trustHandler(trustUrl, trustBody);
     };
 
-    const linkSetCurrentPath = (event, needLogin) => {
+    const stopRedirectHandler = () => {
+        redirecting.current = false;
+        redirectUrl.current = '';
+    };
+
+    const linkSetCurrentPath = (event, needLogin, url) => {
         dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         dispatch(setMenuOpen(false));
         if (needLogin && !isLogin) {
+            stopTrustingHandler();
+            redirectUrl.current = url;
+            redirectId.current = props.id;
+            redirecting.current = true;
             dispatch(showLoginHandler(true));
             event.preventDefault();
         }
@@ -126,7 +148,7 @@ const NavList = React.memo(props => {
                         {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
                             <Link href={lv3Item.url}>
                                 <a
-                                    onClick={e => linkSetCurrentPath(e, lv3Item.needLogin)}
+                                    onClick={e => linkSetCurrentPath(e, lv3Item.needLogin, lv3Item.url)}
                                     target={lv3Item.isBlank ? '_blank' : ''}
                                     className="navbar__lv3__item__title"
                                 >
