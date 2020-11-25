@@ -31,7 +31,7 @@ const NavList = React.memo(props => {
             setTimeout(() => {
                 stopTrustingHandler();
                 stopRedirectHandler();
-            }, 100);
+            }, 1000);
         }
     }, [showLogin]);
 
@@ -41,11 +41,12 @@ const NavList = React.memo(props => {
                 trustHandler(trustingUrl.current, trustingBody.current);
             }
         }
-        console.log('redirect', props.id, redirectUrl.current);
         if (props.id === redirectId.current) {
             if (isLogin && redirecting.current) {
+                console.log('goRedirect', props.id, redirectUrl.current);
                 router.push(redirectUrl.current);
                 stopTrustingHandler();
+                dispatch(setMenuOpen(false));
             }
         }
     }, [isLogin]);
@@ -76,13 +77,13 @@ const NavList = React.memo(props => {
     };
 
     const trustHandler = async (trustUrl, trustBody) => {
-        dispatch(setMenuOpen(false));
         try {
             const res = await trust(trustUrl, trustBody);
             stopTrustingHandler();
             // const tempwindow = window.open('_blank');
             // tempwindow.location = res.data.result.url;
             window.open(res.data.result.url, '_blank');
+            dispatch(setMenuOpen(false));
         } catch (error) {
             console.error(error);
         }
@@ -93,21 +94,22 @@ const NavList = React.memo(props => {
     };
 
     const stopRedirectHandler = () => {
-        console.log('stop', props.id, redirectUrl.current);
         redirecting.current = false;
         redirectUrl.current = '';
     };
 
     const linkSetCurrentPath = (event, needLogin, url) => {
-        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
-        dispatch(setMenuOpen(false));
         if (needLogin && !isLogin) {
             stopTrustingHandler();
             redirectUrl.current = url;
             redirectId.current = props.id;
             redirecting.current = true;
+            console.log(props.id, redirectUrl.current);
             dispatch(showLoginHandler(true));
             event.preventDefault();
+        } else {
+            dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+            dispatch(setMenuOpen(false));
         }
     };
 
