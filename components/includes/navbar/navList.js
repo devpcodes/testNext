@@ -25,6 +25,7 @@ const NavList = React.memo(props => {
     const redirecting = useRef(false);
     const redirectUrl = useRef('');
 
+    const [nowPath, setNowPath] = useState('');
     useEffect(() => {
         if (!showLogin && !isLogin) {
             //讓它觸發的islgoin慢，才能先執行完trust 才清掉
@@ -50,6 +51,10 @@ const NavList = React.memo(props => {
             }
         }
     }, [isLogin]);
+
+    useEffect(() => {
+        setNowPath(router.pathname);
+    }, [router.pathname]);
 
     const clickHandler = () => {
         props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
@@ -113,6 +118,19 @@ const NavList = React.memo(props => {
         }
     };
 
+    //目前網址對應選單，改變樣式
+    const classNameHandler = resultUrl => {
+        if (resultUrl.indexOf('#') !== -1) {
+            resultUrl = resultUrl.substring(0, resultUrl.indexOf('#'));
+        }
+        const nowAllPath = nowPath.substr(1) + (typeof window === 'undefined' ? '' : window.location.search);
+        if (resultUrl === nowAllPath) {
+            return 'navbar__lv3__item__title active';
+        } else {
+            return 'navbar__lv3__item__title';
+        }
+    };
+
     return (
         <div className="navlist">
             <h6
@@ -151,7 +169,7 @@ const NavList = React.memo(props => {
                                 <a
                                     onClick={e => linkSetCurrentPath(e, lv3Item.needLogin, lv3Item.url)}
                                     target={lv3Item.isBlank ? '_blank' : ''}
-                                    className="navbar__lv3__item__title"
+                                    className={classNameHandler(lv3Item.url)}
                                 >
                                     <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                                 </a>
@@ -185,6 +203,9 @@ const NavList = React.memo(props => {
             </ul>
 
             <style jsx>{`
+                .navbar__lv3__item__title.active {
+                    color: #daa360;
+                }
                 .navlist {
                     width: 122px;
                 }
