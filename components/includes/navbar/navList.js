@@ -26,14 +26,12 @@ const NavList = React.memo(props => {
     const redirectUrl = useRef('');
 
     useEffect(() => {
-        if (props.id === trustingId.current) {
-            if (!showLogin && !isLogin) {
-                //讓它觸發的islgoin慢，才能先執行完trust 才清掉
-                setTimeout(() => {
-                    stopTrustingHandler();
-                    stopRedirectHandler();
-                }, 100);
-            }
+        if (!showLogin && !isLogin) {
+            //讓它觸發的islgoin慢，才能先執行完trust 才清掉
+            setTimeout(() => {
+                stopTrustingHandler();
+                stopRedirectHandler();
+            }, 100);
         }
     }, [showLogin]);
 
@@ -43,11 +41,11 @@ const NavList = React.memo(props => {
                 trustHandler(trustingUrl.current, trustingBody.current);
             }
         }
-
+        console.log('redirect', props.id, redirectUrl.current);
         if (props.id === redirectId.current) {
             if (isLogin && redirecting.current) {
                 router.push(redirectUrl.current);
-                stopRedirectHandler();
+                stopTrustingHandler();
             }
         }
     }, [isLogin]);
@@ -95,6 +93,7 @@ const NavList = React.memo(props => {
     };
 
     const stopRedirectHandler = () => {
+        console.log('stop', props.id, redirectUrl.current);
         redirecting.current = false;
         redirectUrl.current = '';
     };
