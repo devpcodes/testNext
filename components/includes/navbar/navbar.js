@@ -235,6 +235,8 @@ const Navbar = React.memo(props => {
 
                     .navbar__shortcuts__li {
                         display: none;
+                        font-size: 2rem;
+                        font-weight: bold;
                     }
                     .active__mark {
                         width: 0;
