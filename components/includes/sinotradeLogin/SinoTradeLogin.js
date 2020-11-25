@@ -8,11 +8,13 @@ import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png'
 
 const SinoTradeLogin = function ({ onClose, successHandler }) {
     const [isPC, setIsPC] = useState(true);
-
+    const [isIframe, setIsIframe] = useState(false);
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
-
+        if (checkIframe()) {
+            setIsIframe(true);
+        }
         return () => {
             window.removeEventListener('resize', resizeHandler, false);
         };
@@ -40,6 +42,13 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
     };
 
     const loginFailFun = function () {};
+
+    const checkIframe = function () {
+        try {
+            return window.self !== window.top;
+        } catch (error) {}
+        return false;
+    };
 
     return (
         <div className="loginPage__container">
@@ -69,7 +78,7 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
                     background-color: ${isPC ? 'white' : 'transparent'};
                     /* background-color: white; */
                     z-index: 999;
-                    overflow: auto;
+                    overflow: ${isIframe ? 'hidden' : 'auto'};
                 }
                 .page__box {
                     width: ${isPC ? '960px' : '100%'};
