@@ -78,7 +78,8 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
                     background-color: ${isPC ? 'white' : 'transparent'};
                     /* background-color: white; */
                     z-index: 999;
-                    overflow: ${isIframe ? 'hidden' : 'auto'};
+                    overflow-x: hidden;
+                    overflow-y: ${isIframe ? 'hidden' : 'auto'};
                 }
                 .page__box {
                     width: ${isPC ? '960px' : '100%'};
