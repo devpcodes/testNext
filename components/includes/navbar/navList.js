@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState, useEffect, useRef, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { showLoginHandler } from '../../../store/components/layouts/action';
 import { setMenuOpen } from '../../../store/components/layouts/action';
 import { setCurrentPath } from '../../../store/general/action';
+
 import { trust } from '../../../services/components/header/navTurst';
 import theme from '../../../resources/styles/theme';
 
-import Link from 'next/link';
-
-const NavList = React.memo(props => {
+const NavList = memo(({ id, lv2Data, twoColumnPX, toggleList }) => {
     const router = useRouter();
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
@@ -21,27 +23,43 @@ const NavList = React.memo(props => {
     const trustingBody = useRef({});
     const trustingUrl = useRef('');
 
+    const redirectId = useRef(0);
+    const redirecting = useRef(false);
+    const redirectUrl = useRef('');
+
+    const [nowPath, setNowPath] = useState('');
     useEffect(() => {
-        if (props.id === trustingId.current) {
-            if (!showLogin && !isLogin) {
-                //讓它觸發的islgoin慢，才能先執行完trust 才清掉
-                setTimeout(() => {
-                    stopTrustingHandler();
-                }, 100);
-            }
+        if (!showLogin && !isLogin) {
+            //讓它觸發的islgoin慢，才能先執行完trust 才清掉
+            setTimeout(() => {
+                stopTrustingHandler();
+                stopRedirectHandler();
+            }, 1000);
         }
     }, [showLogin]);
 
     useEffect(() => {
-        if (props.id === trustingId.current) {
+        if (id === trustingId.current) {
             if (isLogin && trusting.current) {
                 trustHandler(trustingUrl.current, trustingBody.current);
             }
         }
+        if (id === redirectId.current) {
+            if (isLogin && redirecting.current) {
+                console.log('goRedirect', id, redirectUrl.current);
+                router.push(redirectUrl.current);
+                stopTrustingHandler();
+                dispatch(setMenuOpen(false));
+            }
+        }
     }, [isLogin]);
 
+    useEffect(() => {
+        setNowPath(router.pathname);
+    }, [router.pathname]);
+
     const clickHandler = () => {
-        props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
+        toggleList && setLv3MobileVisible(!lv3MobileVisible);
     };
 
     const openWindow = (url, popupWinWidth, popupWinHeight, popupWinName) => {
@@ -51,10 +69,11 @@ const NavList = React.memo(props => {
     };
 
     const noLoginTrustHandler = (trustUrl, trustBody) => {
+        stopRedirectHandler();
         trusting.current = true;
         trustingUrl.current = trustUrl;
         trustingBody.current = trustBody;
-        trustingId.current = props.id;
+        trustingId.current = id;
         dispatch(showLoginHandler(true));
     };
 
@@ -65,13 +84,13 @@ const NavList = React.memo(props => {
     };
 
     const trustHandler = async (trustUrl, trustBody) => {
-        dispatch(setMenuOpen(false));
         try {
             const res = await trust(trustUrl, trustBody);
             stopTrustingHandler();
             // const tempwindow = window.open('_blank');
             // tempwindow.location = res.data.result.url;
             window.open(res.data.result.url, '_blank');
+            dispatch(setMenuOpen(false));
         } catch (error) {
             console.error(error);
         }
@@ -81,27 +100,51 @@ const NavList = React.memo(props => {
         !isLogin ? noLoginTrustHandler(trustUrl, trustBody) : trustHandler(trustUrl, trustBody);
     };
 
-    const linkSetCurrentPath = (event, needLogin) => {
-        dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
-        dispatch(setMenuOpen(false));
+    const stopRedirectHandler = () => {
+        redirecting.current = false;
+        redirectUrl.current = '';
+    };
+
+    const linkSetCurrentPath = (event, needLogin, url) => {
         if (needLogin && !isLogin) {
+            stopTrustingHandler();
+            redirectUrl.current = url;
+            redirectId.current = id;
+            redirecting.current = true;
+            console.log(id, redirectUrl.current);
             dispatch(showLoginHandler(true));
             event.preventDefault();
+        } else {
+            dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+            dispatch(setMenuOpen(false));
+        }
+    };
+
+    //目前網址對應選單，改變樣式
+    const classNameHandler = resultUrl => {
+        if (resultUrl.indexOf('#') !== -1) {
+            resultUrl = resultUrl.substring(0, resultUrl.indexOf('#'));
+        }
+        const nowAllPath = nowPath.substr(1) + (typeof window === 'undefined' ? '' : window.location.search);
+        if (resultUrl === nowAllPath) {
+            return 'navbar__lv3__item__title active';
+        } else {
+            return 'navbar__lv3__item__title';
         }
     };
 
     return (
-        <div className="navlist">
+        <div className="navList">
             <h6
                 className={`navbar__lv2__item__title ${
-                    props.toggleList && !lv3MobileVisible ? 'navbar__lv2__item__title--hide' : ''
+                    toggleList && !lv3MobileVisible ? 'navbar__lv2__item__title--hide' : ''
                 }`}
                 onClick={clickHandler}
             >
-                {props.lv2Data.title}
+                {lv2Data.title}
             </h6>
-            <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
-                {props.lv2Data.items.map((lv3Item, lv3Index) => (
+            <ul className={`navbar__lv3 ${toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
+                {lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
                         {lv3Item.isOpen && (
                             <a
@@ -126,9 +169,9 @@ const NavList = React.memo(props => {
                         {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
                             <Link href={lv3Item.url}>
                                 <a
-                                    onClick={e => linkSetCurrentPath(e, lv3Item.needLogin)}
+                                    onClick={e => linkSetCurrentPath(e, lv3Item.needLogin, lv3Item.url)}
                                     target={lv3Item.isBlank ? '_blank' : ''}
-                                    className="navbar__lv3__item__title"
+                                    className={classNameHandler(lv3Item.url)}
                                 >
                                     <span className={lv3Item.icon ? lv3Item.icon : ''}>{lv3Item.title}</span>
                                 </a>
@@ -162,12 +205,15 @@ const NavList = React.memo(props => {
             </ul>
 
             <style jsx>{`
-                .navlist {
+                .navbar__lv3__item__title.active {
+                    color: #daa360;
+                }
+                .navList {
                     width: 122px;
                 }
 
                 .navbar__lv2__item__title {
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     color: ${theme.colors.secondary};
                     border-bottom: 1px dotted ${theme.colors.secondary};
                     padding: 0 0 10px 0;
@@ -185,7 +231,7 @@ const NavList = React.memo(props => {
                 }
 
                 .navbar__lv3__item__title {
-                    font-size: 16px;
+                    font-size: 1.6rem;
                     color: ${theme.colors.darkBg};
                     display: block;
                 }
@@ -200,7 +246,7 @@ const NavList = React.memo(props => {
                     text-align: center;
                     margin-left: 5px;
                     vertical-align: text-bottom;
-                    font-size: 12px;
+                    font-size: 1.2rem;
                     transform: scale(0.9);
                 }
                 .NEW::after {
@@ -215,8 +261,8 @@ const NavList = React.memo(props => {
                     content: 'HOT';
                 }
 
-                @media (max-width: ${props.twoColumnPX}px) {
-                    .navlist {
+                @media (max-width: ${twoColumnPX}px) {
+                    .navList {
                         width: 100%;
                         margin-bottom: 27px;
                     }
@@ -235,5 +281,12 @@ const NavList = React.memo(props => {
         </div>
     );
 });
+
+NavList.propTypes = {
+    id: PropTypes.number.isRequired,
+    lv2Data: PropTypes.object.isRequired,
+    twoColumnPX: PropTypes.number,
+    toggleList: PropTypes.bool,
+};
 
 export default NavList;

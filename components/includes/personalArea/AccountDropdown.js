@@ -31,7 +31,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
             case 'S':
                 return '國內證券';
             case 'H':
-                return '國外證券';
+                return '海外證券';
             case 'F':
                 return '期權';
             default:

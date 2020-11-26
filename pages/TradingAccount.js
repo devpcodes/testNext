@@ -19,13 +19,6 @@ function TradingAccount() {
         if (qStr) {
             setQueryStr(qStr);
         }
-    }, []);
-
-    useEffect(() => {
-        const qStr = objectToQueryHandler(router.query);
-        if (qStr) {
-            setQueryStr(qStr);
-        }
     }, [router.query]);
 
     return (

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { formatNum } from '../../../services/formatNum';
+
 const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false }) => {
     const amountClassName = amount => {
         let amountClassName = 'amount';
@@ -62,34 +63,43 @@ const CurrencyBox = ({ currencyData, autoColor, digits } = { autoColor: false })
                     }
                 }
                 .amount {
-                    font-size: 2.6rem;
+                    margin-top: -5px;
+                    font-size: 3rem;
                     font-weight: bold;
+                }
+                .amount--no {
+                    color: #0b1728;
+                    font-size: 3rem;
+                    font-weight: bold;
+                    margin-top: -1rem;
                 }
 
                 .currency__item {
-                    /* width: 46%; */
-                    display: inline-block;
+                    display: block;
                 }
                 .currency__item p {
                     margin-bottom: 5px;
                 }
                 @media (max-width: 768px) {
                     .currency__item p {
-                        color: white;
+                        color: #ffffff;
+                    }
+                    .amount {
+                        margin-top: 0;
                     }
                     .amount--no {
-                        color: white;
+                        margin-top: 0;
+                        color: #ffffff;
                     }
                 }
-                .currency__item:first-child {
+                /* .currency__item:first-child {
                     margin-right: 15px;
-                }
-                @media (max-width: 768px) {
+                } */
+                /* @media (max-width: 768px) {
                     .currency__item {
                         margin-right: 15px;
-                        /* float: left; */
                     }
-                }
+                } */
                 @media (max-width: 768px) {
                     .currency__box {
                         width: 100%;

@@ -148,27 +148,36 @@ export const TradingQuickView = () => {
         dispatch(getOpenProfitLossSum(fetchOpenPosition(data)));
     };
 
+    const tableInfoHandler = (obj, tableInfo) => {
+        if (obj.tnetamt != 0 || obj.t1netamt != 0 || obj.t2netamt != 0) {
+            tableInfo.push({
+                key: obj.Currency + obj.tday,
+                date: moment(obj.tday).format('YYYY.MM.DD'),
+                amount: formatNum(Number(obj.tnetamt)),
+                currency: obj.tnetamt == 0 ? '-' : obj.Currency,
+            });
+            tableInfo.push({
+                key: obj.Currency + obj.t1day,
+                date: moment(obj.t1day).format('YYYY.MM.DD'),
+                amount: formatNum(Number(obj.t1netamt)),
+                currency: obj.t1netamt == 0 ? '-' : obj.Currency,
+            });
+            tableInfo.push({
+                key: obj.Currency + obj.t2day,
+                date: moment(obj.t2day).format('YYYY.MM.DD'),
+                amount: formatNum(Number(obj.t2netamt)),
+                currency: obj.t2netamt == 0 ? '-' : obj.Currency,
+            });
+        }
+        return tableInfo;
+    };
+
     //當日的不拿，有值的才拿
     const getStockSummarisePrtlosInfo = function () {
-        const tableInfo = [];
+        let tableInfo = [];
         if (typeof summarisePrtlos === 'object' && summarisePrtlos.length !== 0) {
             summarisePrtlos.forEach(obj => {
-                if (obj.t1netamt != 0) {
-                    tableInfo.push({
-                        key: obj.Currency + obj.t1day,
-                        date: moment(obj.t1day).format('YYYY.MM.DD'),
-                        amount: formatNum(Number(obj.t1netamt)),
-                        cruuency: obj.Currency,
-                    });
-                }
-                if (obj.t2netamt != 0) {
-                    tableInfo.push({
-                        key: obj.Currency + obj.t2day,
-                        date: moment(obj.t1day).format('YYYY.MM.DD'),
-                        amount: formatNum(Number(obj.t2netamt)),
-                        cruuency: obj.Currency,
-                    });
-                }
+                tableInfo = tableInfoHandler(obj, tableInfo);
             });
 
             if (tableInfo.length === 0) {
@@ -177,7 +186,7 @@ export const TradingQuickView = () => {
                         key: 0,
                         date: '--',
                         amount: '--',
-                        cruuency: '--',
+                        currency: '--',
                     },
                 ];
             } else {
@@ -189,10 +198,21 @@ export const TradingQuickView = () => {
                     key: 0,
                     date: '--',
                     amount: '--',
-                    cruuency: '--',
+                    currency: '--',
                 },
             ];
         }
+    };
+
+    const getStockUnrealInfo = () => {
+        return unRealPrtlos.length === 0
+            ? '--'
+            : [
+                  {
+                      currency: 'NTD',
+                      amount: unRealPrtlos[unRealPrtlos.length - 1]?.unreal,
+                  },
+              ];
     };
 
     //當日交割款全幣別
@@ -233,12 +253,15 @@ export const TradingQuickView = () => {
     //海外交割試算
     const getDeliveryCurrencyData = () => {
         const currencyInfo = [];
-        // console.log(SBdeliveryTrial);
+
         if (SBdeliveryTrial.sum_data != null && SBdeliveryTrial.sum_data.length !== 0) {
-            SBdeliveryTrial.sum_data.forEach(obj => {
-                let item = {};
-                item.currency = obj.curr;
-                item.amount = obj.sum_net;
+            SBdeliveryTrial.sum_data.forEach((obj, index) => {
+                let item = {
+                    key: index,
+                    date: moment().format('YYYY.MM.DD'),
+                    currency: obj.curr,
+                    amount: obj.sum_net,
+                };
                 currencyInfo.push(item);
             });
             return currencyInfo;
@@ -291,7 +314,7 @@ export const TradingQuickView = () => {
                 <>
                     <LastUpdatedTime time={updateDate} handleUpdate={handleUpdateDate} />
                     <StockQuickView
-                        unreal={unRealPrtlos.length === 0 ? '--' : unRealPrtlos[unRealPrtlos.length - 1]?.unreal}
+                        unreal={getStockUnrealInfo()}
                         currencyData={getStockCurrencyData()}
                         tableInfo={getStockSummarisePrtlosInfo()}
                     />

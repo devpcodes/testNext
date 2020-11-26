@@ -18,7 +18,7 @@ function User_AssetOverview() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/User_AssetOverview`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 850 : 850}
+                    iHeight={isMobile ? 2100 : 1950}
                 />
             </div>
         </>

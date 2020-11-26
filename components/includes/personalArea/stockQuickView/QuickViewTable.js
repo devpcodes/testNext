@@ -1,22 +1,24 @@
+import PropTypes from 'prop-types';
 import { Table } from 'antd';
+
 // const dataSource = [
 //     {
 //         key: '1',
 //         date: '2020.10.02',
 //         amount: -315,
-//         cruuency: 'USD',
+//         currency: 'USD',
 //     },
 //     {
 //         key: '2',
 //         date: '2020.10.03',
 //         amount: 435100,
-//         cruuency: 'NTD',
+//         currency: 'NTD',
 //     },
 //     {
 //         key: '3',
 //         date: '2020.10.04',
 //         amount: -117,
-//         cruuency: 'CNY',
+//         currency: 'CNY',
 //     },
 // ];
 
@@ -33,21 +35,17 @@ const columns = [
     },
     {
         title: '幣別',
-        dataIndex: 'cruuency',
-        key: 'cruuency',
+        dataIndex: 'currency',
+        key: 'currency',
     },
 ];
+
 export const QuickViewTable = ({ dataSource }) => {
     return (
         <>
             <div className="stockQuickView__table">
                 <Table pagination={false} dataSource={dataSource} columns={columns} />
-                <div className="rectangle"></div>
             </div>
-            <style jsx>{`
-                @media (max-width: 768px) {
-                }
-            `}</style>
             <style jsx global>{`
                 .stockQuickView__table .ant-table-tbody > tr > td,
                 .ant-table-thead > tr > th,
@@ -58,6 +56,7 @@ export const QuickViewTable = ({ dataSource }) => {
                 .stockQuickView__table .ant-table-thead > tr > th {
                     font-weight: bold;
                     color: #a9b6cb;
+                    padding: 0 0 4px 0;
                 }
                 .stockQuickView__table .ant-table-thead > tr > th {
                     background: white;
@@ -65,19 +64,20 @@ export const QuickViewTable = ({ dataSource }) => {
                 .stockQuickView__table .ant-table-tbody > tr > td {
                     border: none;
                     color: #0d1623;
+                    padding: 4px 0 0 0;
                 }
                 .stockQuickView__table .ant-table-tbody > tr > td :nth-child(2) {
                     font-weight: bold;
                     text-align: right;
                 }
                 .stockQuickView__table .ant-table-tbody > tr > td :nth-child(3) {
-                    text-align: center;
+                    text-align: right;
                 }
                 .ant-table-cell :nth-child(2) {
                     text-align: right;
                 }
                 .ant-table-cell :nth-child(3) {
-                    text-align: center;
+                    text-align: right;
                 }
                 .stockQuickView__table {
                     margin-bottom: 10px;
@@ -86,6 +86,9 @@ export const QuickViewTable = ({ dataSource }) => {
                     margin: 10px 0;
                 }
                 @media (max-width: 768px) {
+                    .ant-table {
+                        background: none;
+                    }
                     .ant-table-thead {
                         background: none;
                     }
@@ -93,18 +96,13 @@ export const QuickViewTable = ({ dataSource }) => {
                         background: none;
                     }
                     .ant-table-container {
-                        background-image: linear-gradient(to top, #0d1623, #080e16);
-                        padding: 0 30px;
+                        padding: 0 35px;
                         min-height: 65px;
                     }
                     .ant-table-thead > tr > th {
                         border-bottom: solid 1.1px #121f32;
-                        padding: 8px 0;
+                        padding: 4px 0;
                         font-size: 1.6rem;
-                        padding-top: 15px;
-                    }
-                    .ant-table-thead > tr > td {
-                        padding: 8px 0;
                     }
                     .stockQuickView__table .ant-table-tbody > tr > td {
                         color: white;
@@ -113,20 +111,15 @@ export const QuickViewTable = ({ dataSource }) => {
                     .stockQuickView__table .ant-table-tbody > tr > td :nth-child(2) {
                         font-weight: normal;
                     }
-                    .ant-table {
-                        border-top: 1px solid #17273d;
-                    }
                     .stockQuickView__table .ant-table-tbody > tr > td {
-                        padding: 8px 0;
-                    }
-                    .rectangle {
-                        transform: rotate(-180deg);
-                        background-image: linear-gradient(to top, #0d1623, #080e16);
-                        width: 99%;
-                        height: 10px;
+                        padding: 4px 0 0 0;
                     }
                 }
             `}</style>
         </>
     );
+};
+
+QuickViewTable.propTypes = {
+    dataSource: PropTypes.array,
 };
