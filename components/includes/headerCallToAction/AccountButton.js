@@ -17,6 +17,7 @@ export const AccountButton = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
+    const showMenu = useSelector(store => store.layout.showMenu);
 
     const accountElement = <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>;
     const accountPopoverContent = (
@@ -34,7 +35,11 @@ export const AccountButton = () => {
 
     useEffect(() => {
         if (isMobile) {
-            dispatch(setMaskVisible(personalAreaVisible));
+            if (personalAreaVisible || showMenu) {
+                dispatch(setMaskVisible(true));
+            } else {
+                dispatch(setMaskVisible(false));
+            }
         }
     }, [personalAreaVisible]);
 

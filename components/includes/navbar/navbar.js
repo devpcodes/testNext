@@ -21,6 +21,7 @@ const Navbar = memo(() => {
     const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
     const isLogin = useSelector(store => store.user.isLogin);
     const showMenu = useSelector(store => store.layout.showMenu);
+    const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
     const isMobile = useSelector(store => store.layout.isMobile);
     const domain = useSelector(store => store.general.domain);
     const mainNav = clientMainNav ? clientMainNav : serverMainNav;
@@ -41,7 +42,11 @@ const Navbar = memo(() => {
 
     useEffect(() => {
         if (isMobile) {
-            dispatch(setMaskVisible(showMenu));
+            if (personalAreaVisible || showMenu) {
+                dispatch(setMaskVisible(true));
+            } else {
+                dispatch(setMaskVisible(false));
+            }
         }
     }, [showMenu]);
 
