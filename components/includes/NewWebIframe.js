@@ -7,11 +7,12 @@ import MyTransition from '../../components/includes/myTransition';
 const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom }) {
     const iframeDom = useRef(null);
     const iframeContentDoc = useRef(null);
+    const initLoginStatus = useRef(false);
     const [showLoading, setShowLoading] = useState(false);
 
     const isMobile = useSelector(store => store.layout.isMobile);
     const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
-
+    const isLogin = useSelector(store => store.user.isLogin);
     const [pointerEvents, setPointerEvents] = useState('auto');
 
     setTimeout(() => {
@@ -26,6 +27,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
     }, 100);
 
     useEffect(() => {
+        initLoginStatus.current = isLogin;
         if (iHeight != null) {
             setTimeout(() => {
                 if (iframeDom.current != null) {
@@ -57,7 +59,7 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
     }, [iHeight]);
 
     useEffect(() => {
-        if (login != null && login) {
+        if (login != null && login && initLoginStatus.current != login) {
             setTimeout(() => {
                 var iframeId = iframeDom.current;
                 var iframeContent = iframeId.contentWindow || iframeId.contentDocument;
@@ -65,11 +67,10 @@ const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom 
                     iframeContent = iframeContent.document;
                 }
                 iframeContentDoc.current = iframeContent;
-
                 if (iframeContentDoc.current != null && iframeContentDoc.current.location != null) {
                     iframeContentDoc.current.location.reload(true);
                 }
-            }, 100);
+            }, 1000);
         }
     }, [login]);
 
