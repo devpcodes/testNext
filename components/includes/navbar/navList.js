@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState, useEffect, useRef, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { showLoginHandler } from '../../../store/components/layouts/action';
 import { setMenuOpen } from '../../../store/components/layouts/action';
 import { setCurrentPath } from '../../../store/general/action';
+
 import { trust } from '../../../services/components/header/navTurst';
 import theme from '../../../resources/styles/theme';
 
-import Link from 'next/link';
-
-const NavList = React.memo(props => {
+const NavList = memo(({ id, lv2Data, twoColumnPX, toggleList }) => {
     const router = useRouter();
     const [lv3MobileVisible, setLv3MobileVisible] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
@@ -37,14 +39,14 @@ const NavList = React.memo(props => {
     }, [showLogin]);
 
     useEffect(() => {
-        if (props.id === trustingId.current) {
+        if (id === trustingId.current) {
             if (isLogin && trusting.current) {
                 trustHandler(trustingUrl.current, trustingBody.current);
             }
         }
-        if (props.id === redirectId.current) {
+        if (id === redirectId.current) {
             if (isLogin && redirecting.current) {
-                console.log('goRedirect', props.id, redirectUrl.current);
+                console.log('goRedirect', id, redirectUrl.current);
                 router.push(redirectUrl.current);
                 stopTrustingHandler();
                 dispatch(setMenuOpen(false));
@@ -57,7 +59,7 @@ const NavList = React.memo(props => {
     }, [router.pathname]);
 
     const clickHandler = () => {
-        props.toggleList && setLv3MobileVisible(!lv3MobileVisible);
+        toggleList && setLv3MobileVisible(!lv3MobileVisible);
     };
 
     const openWindow = (url, popupWinWidth, popupWinHeight, popupWinName) => {
@@ -71,7 +73,7 @@ const NavList = React.memo(props => {
         trusting.current = true;
         trustingUrl.current = trustUrl;
         trustingBody.current = trustBody;
-        trustingId.current = props.id;
+        trustingId.current = id;
         dispatch(showLoginHandler(true));
     };
 
@@ -107,9 +109,9 @@ const NavList = React.memo(props => {
         if (needLogin && !isLogin) {
             stopTrustingHandler();
             redirectUrl.current = url;
-            redirectId.current = props.id;
+            redirectId.current = id;
             redirecting.current = true;
-            console.log(props.id, redirectUrl.current);
+            console.log(id, redirectUrl.current);
             dispatch(showLoginHandler(true));
             event.preventDefault();
         } else {
@@ -132,17 +134,17 @@ const NavList = React.memo(props => {
     };
 
     return (
-        <div className="navlist">
+        <div className="navList">
             <h6
                 className={`navbar__lv2__item__title ${
-                    props.toggleList && !lv3MobileVisible ? 'navbar__lv2__item__title--hide' : ''
+                    toggleList && !lv3MobileVisible ? 'navbar__lv2__item__title--hide' : ''
                 }`}
                 onClick={clickHandler}
             >
-                {props.lv2Data.title}
+                {lv2Data.title}
             </h6>
-            <ul className={`navbar__lv3 ${props.toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
-                {props.lv2Data.items.map((lv3Item, lv3Index) => (
+            <ul className={`navbar__lv3 ${toggleList && !lv3MobileVisible ? 'navbar__lv3--hide' : ''}`}>
+                {lv2Data.items.map((lv3Item, lv3Index) => (
                     <li className="navbar__lv3__item" key={lv3Index}>
                         {lv3Item.isOpen && (
                             <a
@@ -206,7 +208,7 @@ const NavList = React.memo(props => {
                 .navbar__lv3__item__title.active {
                     color: #daa360;
                 }
-                .navlist {
+                .navList {
                     width: 122px;
                 }
 
@@ -259,8 +261,8 @@ const NavList = React.memo(props => {
                     content: 'HOT';
                 }
 
-                @media (max-width: ${props.twoColumnPX}px) {
-                    .navlist {
+                @media (max-width: ${twoColumnPX}px) {
+                    .navList {
                         width: 100%;
                         margin-bottom: 27px;
                     }
@@ -279,5 +281,12 @@ const NavList = React.memo(props => {
         </div>
     );
 });
+
+NavList.propTypes = {
+    id: PropTypes.number.isRequired,
+    lv2Data: PropTypes.object.isRequired,
+    twoColumnPX: PropTypes.number,
+    toggleList: PropTypes.bool,
+};
 
 export default NavList;

@@ -1,9 +1,9 @@
 import { useEffect, useRef, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Spin } from 'antd';
 import PropTypes from 'prop-types';
+
 import MyTransition from '../../components/includes/myTransition';
-// eslint-disable-next-line react/display-name
+
 const NewWebIframe = function ({ iframeSrc, title, iHeight, login, getIframeDom }) {
     const iframeDom = useRef(null);
     const iframeContentDoc = useRef(null);
@@ -220,6 +220,6 @@ NewWebIframe.propTypes = {
     getIframeDom: PropTypes.func,
 };
 
-NewWebIframe.displayName = NewWebIframe;
+NewWebIframe.displayName = 'NewWebIframe';
 
 export default memo(NewWebIframe);

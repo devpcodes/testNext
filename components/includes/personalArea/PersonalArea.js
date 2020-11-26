@@ -40,7 +40,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         {!!personalNav &&
                             personalNav.map((data, index) => (
                                 <div className="myNav__list" key={index}>
-                                    <NavList lv2Data={data} toggleList={isMobile} />
+                                    <NavList lv2Data={data} toggleList={isMobile} id={index} />
                                 </div>
                             ))}
                     </div>
@@ -166,7 +166,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
             `}</style>
             <style jsx global>{`
                 @media (max-width: ${theme.mobileBreakPoint}px) {
-                    .personalArea__container .navlist {
+                    .personalArea__container .navList {
                         width: 100%;
                     }
                     .personalArea__container .navbar__lv2__item__title {

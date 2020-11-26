@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuOpen } from '../../../store/components/layouts/action';
@@ -12,20 +12,18 @@ import openImg from '../../../resources/images/components/header/ic_open.png';
 import { setCurrentPath } from '../../../store/general/action';
 import { setMaskVisible } from '../../../store/components/layouts/action';
 import MyTransition from '../../includes/myTransition';
-// firefox 手機板隱藏 navbar scrollBar
-// level(1) 選單點選第二次隱藏
 
-const Navbar = React.memo(props => {
+const Navbar = memo(() => {
     let index = 0;
     const router = useRouter();
-    const serverMainlNav = useSelector(store => store.server.navData?.main);
-    const clientMainlNav = useSelector(store => store.layout.navData?.main);
+    const serverMainNav = useSelector(store => store.server.navData?.main);
+    const clientMainNav = useSelector(store => store.layout.navData?.main);
     const accountMarket = useSelector(store => store.user.currentAccount?.accttype);
     const isLogin = useSelector(store => store.user.isLogin);
     const showMenu = useSelector(store => store.layout.showMenu);
     const isMobile = useSelector(store => store.layout.isMobile);
     const domain = useSelector(store => store.general.domain);
-    const mainNav = clientMainlNav ? clientMainlNav : serverMainlNav;
+    const mainNav = clientMainNav ? clientMainNav : serverMainNav;
     const marketMappingList = {
         S: 'stock',
         F: 'futuresOptions',
@@ -106,7 +104,7 @@ const Navbar = React.memo(props => {
         if (domain === 'line') {
             return `/Line_TradingAccount`;
         } else {
-            return !!accountMarket ? `/TradingAccount?mkt=${marketMappingList[accountMarket]}` : `/TradingAccount`;
+            return accountMarket ? `/TradingAccount?mkt=${marketMappingList[accountMarket]}` : `/TradingAccount`;
         }
     };
 
@@ -120,7 +118,7 @@ const Navbar = React.memo(props => {
                         </a>
                     </Link>
                     <a className="close__menu" onClick={menuClickHandler}>
-                        <img src={closeMenu}></img>
+                        <img src={closeMenu} alt={'close'}></img>
                     </a>
                 </div>
                 <div className="navbar__content">
@@ -156,12 +154,7 @@ const Navbar = React.memo(props => {
                                                 index += 1;
                                                 return (
                                                     <li className="navbar__lv2__item" key={lv2Index}>
-                                                        <NavList
-                                                            navItems={lv1Item.items}
-                                                            lv2Data={lv2Item}
-                                                            twoColumnPX={1024}
-                                                            id={index}
-                                                        />
+                                                        <NavList lv2Data={lv2Item} twoColumnPX={1024} id={index} />
                                                     </li>
                                                 );
                                             })}
@@ -445,5 +438,7 @@ const Navbar = React.memo(props => {
         </MyTransition>
     );
 });
+
+Navbar.displayName = 'Navbar';
 
 export default Navbar;
