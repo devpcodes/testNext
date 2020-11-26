@@ -100,7 +100,7 @@ const Footer = React.memo(props => {
                     </li>
                     <li> 02-6630-8899</li>
                     <li>
-                        <span>台股營業日</span> (AM7:30~PM10:00)
+                        <span>台股營業日</span> (AM8:00~PM9:00)
                     </li>
                 </ul>
                 <a
@@ -116,7 +116,7 @@ const Footer = React.memo(props => {
                     撥打客服專線
                 </p>
                 <p className="box2__val">
-                    <span>服務時間</span>(AM7:30~PM10:00)
+                    <span>服務時間</span>(AM8:00~PM9:00)
                 </p>
             </div>
             <div className="mobile__box3">
