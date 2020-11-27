@@ -193,7 +193,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     .account__container {
                         color: ${theme.colors.text};
                         background-color: ${theme.colors.darkBg};
-                        height: ${listVisible ? '100vh' : 'auto'};
+                        height: ${listVisible ? '100%' : 'auto'};
                         position: ${listVisible ? 'absolute' : 'relative'};
                         width: ${listVisible ? '100%' : 'auto'};
                         z-index: ${listVisible ? '10' : 'auto'};
@@ -208,9 +208,12 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     }
                     .accountList__container {
                         display: block;
-                        height: calc(100% - 80px);
+                        position: absolute;
+                        width: 100%;
+                        height: calc(100vh - 80px);
                         overflow-y: auto;
                         overflow-x: hidden;
+                        background-color: ${theme.colors.darkBg};
                         -ms-overflow-style: none; /* IE and Edge */
                         scrollbar-width: none; /* Firefox */
                     }
