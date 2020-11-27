@@ -261,7 +261,7 @@ const Navbar = memo(() => {
                         background: #fff;
                         z-index: 501;
                         text-align: left;
-                        visibility: hidden;
+                        /* visibility: hidden; */
                         opacity: 0;
                         transition: visibility 0.4s, opacity 0.4s linear;
                     }
@@ -290,7 +290,8 @@ const Navbar = memo(() => {
                             display: block;
                         }
                         .navbar__lv1__item:hover .navbar__lv2 {
-                            visibility: visible;
+                            animation-duration: 0.3s;
+                            /* visibility: visible; */
                             opacity: 1;
                             display: flex;
                         }
@@ -299,10 +300,23 @@ const Navbar = memo(() => {
                             transform: rotate(180deg);
                         }
                     }
+                    @keyframes mymove {
+                        from {
+                            transform: scaleY(0);
+                        }
+                        to {
+                            transform: scaleY(1);
+                        }
+                    }
 
                     @media (max-width: 1024px) {
                         .navbar__lv2--show {
-                            visibility: visible;
+                            animation-duration: 0.3s;
+                            animation-name: mymove;
+                            animation-timing-function: cubic;
+                            /* visibility: visible; */
+                            transform: scaleY(1);
+                            transform-origin: top;
                             opacity: 1;
                             display: flex;
                         }
@@ -383,6 +397,7 @@ const Navbar = memo(() => {
                         }
                         .navbar__lv1__item .navbar__lv2--show {
                             display: flex;
+
                             transition: all 0.3s;
                         }
                         .navbar__lv1__item__title {
