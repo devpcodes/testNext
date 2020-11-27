@@ -261,7 +261,7 @@ const Navbar = memo(() => {
                         background: #fff;
                         z-index: 501;
                         text-align: left;
-                        /* visibility: hidden; */
+                        visibility: hidden;
                         opacity: 0;
                         transition: visibility 0.4s, opacity 0.4s linear;
                     }
@@ -291,7 +291,7 @@ const Navbar = memo(() => {
                         }
                         .navbar__lv1__item:hover .navbar__lv2 {
                             animation-duration: 0.3s;
-                            /* visibility: visible; */
+                            visibility: visible;
                             opacity: 1;
                             display: flex;
                         }
@@ -314,7 +314,7 @@ const Navbar = memo(() => {
                             animation-duration: 0.3s;
                             animation-name: mymove;
                             animation-timing-function: cubic;
-                            /* visibility: visible; */
+                            visibility: visible;
                             transform: scaleY(1);
                             transform-origin: top;
                             opacity: 1;
