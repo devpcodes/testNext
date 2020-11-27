@@ -3,14 +3,14 @@ import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { accountGroupByType } from '../../../services/user/accountGroupByType';
-import { setCurrentAccount } from '../../../store/user/action';
+import { accountGroupByType } from '../../../../services/user/accountGroupByType';
+import { setCurrentAccount } from '../../../../store/user/action';
 
-import { AccountAvatar } from '../AccountAvatar';
-import MyTransition from '../myTransition';
+import { AccountList } from './AccountList';
+import MyTransition from '../../myTransition';
 
-import theme from '../../../resources/styles/theme';
-import checkImg from '../../../resources/images/components/login/ic-check.png';
+import theme from '../../../../resources/styles/theme';
+import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
 export const AccountDropdown = ({ personalAreaVisible }) => {
     const dropdownWidth = 243;
@@ -87,16 +87,8 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
         <div className="account__container">
             {isMobile ? (
                 <>
-                    <div className="account__container--mobile">
-                        <div className="account__wrapper">
-                            <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>
-                            <div className="select__container">
-                                <div className="select__account">{`${currentAccount.broker_id}-${currentAccount.account}`}</div>
-                                <div className="select__username">{`${currentAccount.bhname || ''} ${
-                                    currentAccount.username
-                                }`}</div>
-                            </div>
-                        </div>
+                    <div className="account__container--mobile currentAccount__container">
+                        <AccountList account={currentAccount} />
                         <div
                             className="button__clickToShow"
                             onClick={toggleListVisible}
@@ -107,7 +99,6 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                             {listVisible ? '確定' : '切換帳號'}
                         </div>
                     </div>
-                    <div className="rectangle"></div>
                     <MyTransition isVisible={listVisible} classNames={'accounts'}>
                         <div className="account__container--mobile accountList__container">
                             {groupedAccountTypes.map((accType, index) => {
@@ -127,15 +118,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                                                     role="menuitem"
                                                     tabIndex="0"
                                                 >
-                                                    <div className="account__wrapper">
-                                                        <AccountAvatar>{account.username[0]}</AccountAvatar>
-                                                        <div className="select__container">
-                                                            <div className="select__account">{`${account.broker_id}-${account.account}`}</div>
-                                                            <div className="select__username">
-                                                                {`${account.bhname || ''} ${account.username}`}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <AccountList account={account} />
                                                     {`${currentAccount.broker_id}-${currentAccount.account}` ===
                                                         `${account.broker_id}-${account.account}` && (
                                                         <img src={checkImg} alt="check"></img>
@@ -201,8 +184,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                 .optGroup__accType,
                 .option__accType,
                 .option__account,
-                .option__username,
-                .account__wrapper {
+                .option__username {
                     font-size: 1.6rem;
                     font-weight: 600;
                 }
@@ -210,7 +192,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     .account__container {
                         color: ${theme.colors.text};
                         background-color: ${theme.colors.darkBg};
-                        height: ${listVisible ? '100vh' : 'auto'};
+                        height: ${listVisible ? '100%' : 'auto'};
                         position: ${listVisible ? 'absolute' : 'relative'};
                         width: ${listVisible ? '100%' : 'auto'};
                         z-index: ${listVisible ? '10' : 'auto'};
@@ -223,11 +205,19 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                         justify-content: space-between;
                         background-color: ${theme.colors.darkBg};
                     }
+                    .currentAccount__container {
+                        position: relative;
+                        z-index: 1;
+                        box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 10px;
+                    }
                     .accountList__container {
                         display: block;
-                        height: calc(100% - 80px);
+                        position: absolute;
+                        width: 100%;
+                        height: calc(100vh - 70px);
                         overflow-y: auto;
                         overflow-x: hidden;
+                        background-color: ${theme.colors.darkBg};
                         -ms-overflow-style: none; /* IE and Edge */
                         scrollbar-width: none; /* Firefox */
                     }
@@ -242,14 +232,6 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     }
                     .account__card img {
                         margin-right: 8px;
-                    }
-                    .account__wrapper {
-                        display: flex;
-                        align-items: center;
-                        margin: 10px 0;
-                    }
-                    .select__container {
-                        margin-left: 17px;
                     }
                     .button__clickToShow {
                         display: flex;

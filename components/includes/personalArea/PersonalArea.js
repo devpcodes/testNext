@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import NavList from '../navbar/navList';
-import { AccountDropdown } from './AccountDropdown';
+import { AccountDropdown } from './accountDropdown/AccountDropdown';
 import { logout } from '../../../services/user/logoutFetcher';
 import { setIsLogin } from '../../../store/user/action';
 import { TradingQuickView } from './TradingQuickView';
@@ -125,6 +125,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         bottom: 0;
                         border-top: none;
                         background: ${theme.colors.darkBg};
+                        box-shadow: none;
                     }
                     .personalArea__container:before {
                         display: none;

@@ -290,6 +290,7 @@ const Navbar = memo(() => {
                             display: block;
                         }
                         .navbar__lv1__item:hover .navbar__lv2 {
+                            animation-duration: 0.3s;
                             visibility: visible;
                             opacity: 1;
                             display: flex;
@@ -299,10 +300,23 @@ const Navbar = memo(() => {
                             transform: rotate(180deg);
                         }
                     }
+                    @keyframes mymove {
+                        from {
+                            transform: scaleY(0);
+                        }
+                        to {
+                            transform: scaleY(1);
+                        }
+                    }
 
                     @media (max-width: 1024px) {
                         .navbar__lv2--show {
+                            animation-duration: 0.3s;
+                            animation-name: mymove;
+                            animation-timing-function: cubic;
                             visibility: visible;
+                            transform: scaleY(1);
+                            transform-origin: top;
                             opacity: 1;
                             display: flex;
                         }
@@ -350,6 +364,7 @@ const Navbar = memo(() => {
                         .navbar__shortcuts {
                             display: flex;
                             flex-direction: row;
+                            border-top: solid 1px #17273d;
                         }
                         .navbar__order,
                         .navbar__account {
@@ -372,6 +387,7 @@ const Navbar = memo(() => {
                             background: ${theme.colors.darkBg};
                             z-index: 503;
                             width: 316px;
+                            box-shadow: rgba(0, 0, 0, 0.35) -5px 5px 10px;
                         }
                         .active__mark {
                             display: none !important;
@@ -383,6 +399,7 @@ const Navbar = memo(() => {
                         }
                         .navbar__lv1__item .navbar__lv2--show {
                             display: flex;
+
                             transition: all 0.3s;
                         }
                         .navbar__lv1__item__title {
