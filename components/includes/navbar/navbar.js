@@ -364,6 +364,7 @@ const Navbar = memo(() => {
                         .navbar__shortcuts {
                             display: flex;
                             flex-direction: row;
+                            border-top: solid 1px #17273d;
                         }
                         .navbar__order,
                         .navbar__account {
@@ -386,6 +387,7 @@ const Navbar = memo(() => {
                             background: ${theme.colors.darkBg};
                             z-index: 503;
                             width: 316px;
+                            box-shadow: rgba(0, 0, 0, 0.35) -5px 5px 10px;
                         }
                         .active__mark {
                             display: none !important;

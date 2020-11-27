@@ -87,7 +87,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
         <div className="account__container">
             {isMobile ? (
                 <>
-                    <div className="account__container--mobile">
+                    <div className="account__container--mobile currentAccount__container">
                         <AccountList account={currentAccount} />
                         <div
                             className="button__clickToShow"
@@ -99,7 +99,6 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                             {listVisible ? '確定' : '切換帳號'}
                         </div>
                     </div>
-                    <div className="rectangle"></div>
                     <MyTransition isVisible={listVisible} classNames={'accounts'}>
                         <div className="account__container--mobile accountList__container">
                             {groupedAccountTypes.map((accType, index) => {
@@ -206,11 +205,16 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                         justify-content: space-between;
                         background-color: ${theme.colors.darkBg};
                     }
+                    .currentAccount__container {
+                        position: relative;
+                        z-index: 1;
+                        box-shadow: rgba(0, 0, 0, 0.35) 5px 5px 10px;
+                    }
                     .accountList__container {
                         display: block;
                         position: absolute;
                         width: 100%;
-                        height: calc(100vh - 80px);
+                        height: calc(100vh - 70px);
                         overflow-y: auto;
                         overflow-x: hidden;
                         background-color: ${theme.colors.darkBg};

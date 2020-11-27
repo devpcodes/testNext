@@ -125,6 +125,7 @@ export const PersonalArea = ({ personalAreaVisible }) => {
                         bottom: 0;
                         border-top: none;
                         background: ${theme.colors.darkBg};
+                        box-shadow: none;
                     }
                     .personalArea__container:before {
                         display: none;
