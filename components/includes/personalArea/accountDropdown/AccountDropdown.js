@@ -3,14 +3,14 @@ import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { accountGroupByType } from '../../../services/user/accountGroupByType';
-import { setCurrentAccount } from '../../../store/user/action';
+import { accountGroupByType } from '../../../../services/user/accountGroupByType';
+import { setCurrentAccount } from '../../../../store/user/action';
 
-import { AccountAvatar } from '../AccountAvatar';
-import MyTransition from '../myTransition';
+import { AccountList } from './AccountList';
+import MyTransition from '../../myTransition';
 
-import theme from '../../../resources/styles/theme';
-import checkImg from '../../../resources/images/components/login/ic-check.png';
+import theme from '../../../../resources/styles/theme';
+import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
 export const AccountDropdown = ({ personalAreaVisible }) => {
     const dropdownWidth = 243;
@@ -88,15 +88,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
             {isMobile ? (
                 <>
                     <div className="account__container--mobile">
-                        <div className="account__wrapper">
-                            <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>
-                            <div className="select__container">
-                                <div className="select__account">{`${currentAccount.broker_id}-${currentAccount.account}`}</div>
-                                <div className="select__username">{`${currentAccount.bhname || ''} ${
-                                    currentAccount.username
-                                }`}</div>
-                            </div>
-                        </div>
+                        <AccountList account={currentAccount} />
                         <div
                             className="button__clickToShow"
                             onClick={toggleListVisible}
@@ -127,15 +119,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                                                     role="menuitem"
                                                     tabIndex="0"
                                                 >
-                                                    <div className="account__wrapper">
-                                                        <AccountAvatar>{account.username[0]}</AccountAvatar>
-                                                        <div className="select__container">
-                                                            <div className="select__account">{`${account.broker_id}-${account.account}`}</div>
-                                                            <div className="select__username">
-                                                                {`${account.bhname || ''} ${account.username}`}
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <AccountList account={account} />
                                                     {`${currentAccount.broker_id}-${currentAccount.account}` ===
                                                         `${account.broker_id}-${account.account}` && (
                                                         <img src={checkImg} alt="check"></img>
@@ -201,8 +185,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                 .optGroup__accType,
                 .option__accType,
                 .option__account,
-                .option__username,
-                .account__wrapper {
+                .option__username {
                     font-size: 1.6rem;
                     font-weight: 600;
                 }
@@ -242,14 +225,6 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     }
                     .account__card img {
                         margin-right: 8px;
-                    }
-                    .account__wrapper {
-                        display: flex;
-                        align-items: center;
-                        margin: 10px 0;
-                    }
-                    .select__container {
-                        margin-left: 17px;
                     }
                     .button__clickToShow {
                         display: flex;
