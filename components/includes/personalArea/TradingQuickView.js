@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
-import { getCookie } from '../../../services/components/layouts/cookieController';
 import { getStockUnRealPrtlos, getStockSummarisePrtlos } from '../../../store/stock/action';
 import { getSBUnRealPrtlos, getSBDeliveryTrial } from '../../../store/sb/action';
 import { getOpenProfitLossSum } from '../../../store/future/action';
 
+import { getCookie } from '../../../services/components/layouts/cookieController';
+import { getToken } from '../../../services/user/getToken';
 import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
 import { fetchStockSummarisePrtlos } from '../../../services/stock/stockSummarisePrtlosFetcher';
 import { fetchSBUnRealPrtlosFetcher } from '../../../services/sb/sbUnrealizedPrtLosFetcher';
@@ -104,7 +105,7 @@ export const TradingQuickView = () => {
         const ctype = 'A'; // 全部
         const sip = getCookie('client_ip');
         const stock = ' ';
-        const token = getCookie('token');
+        const token = getToken();
         const ttype = 'A';
         dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(action, bhno, cseq, ctype, sip, stock, ttype, token)));
     };
@@ -113,7 +114,7 @@ export const TradingQuickView = () => {
         const bhno = currentAccount.broker_id;
         const cseq = currentAccount.account;
         const sip = getCookie('client_ip');
-        const token = getCookie('token');
+        const token = getToken();
         dispatch(getStockSummarisePrtlos(fetchStockSummarisePrtlos(bhno, cseq, sip, token)));
     };
 
@@ -122,7 +123,7 @@ export const TradingQuickView = () => {
         const market = '';
         const stock_id = '';
         const hasData = false;
-        const token = getCookie('token');
+        const token = getToken();
         dispatch(getSBUnRealPrtlos(fetchSBUnRealPrtlosFetcher(market, stock_id, hasData, token)));
     };
 
@@ -131,14 +132,14 @@ export const TradingQuickView = () => {
         const market = '';
         const stock_id = '';
         const hasData = false;
-        const token = getCookie('token');
+        const token = getToken();
         dispatch(getSBDeliveryTrial(fetchSBDeliveryTrialFetcher(market, stock_id, hasData, token)));
     };
 
     // 期權未平倉損益
     const dispatchOpenProfitLossSum = function () {
         const data = {
-            token: getCookie('token'),
+            token: getToken(),
             user_id: currentAccount.idno,
             account: `${currentAccount.broker_id}${currentAccount.account}`,
             category: '0',

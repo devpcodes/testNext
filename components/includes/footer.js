@@ -170,7 +170,7 @@ const Footer = React.memo(props => {
                             </a>
                         </li>
                         <li>
-                            <a href={process.env.NEXT_PUBLIC_SUBPATH + 'index_privacy'} target="_blank">
+                            <a href={process.env.NEXT_PUBLIC_SUBPATH + '/index_privacy'} target="_blank">
                                 隱私權保護聲明
                             </a>
                         </li>
@@ -183,7 +183,7 @@ const Footer = React.memo(props => {
                             </a>
                         </li>
                         <li>
-                            <a href={process.env.NEXT_PUBLIC_SUBPATH + 'index_disclaimer'} target="_blank">
+                            <a href={process.env.NEXT_PUBLIC_SUBPATH + '/index_disclaimer'} target="_blank">
                                 網站免責聲明
                             </a>
                         </li>

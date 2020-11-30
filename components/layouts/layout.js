@@ -20,6 +20,7 @@ import { setDomain, setCurrentPath } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
+import { getToken } from '../../services/user/getToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
@@ -83,7 +84,7 @@ const Layout = React.memo(({ children }) => {
         };
 
         if (isLogin) {
-            const tokenVal = jwt_decode(getCookie('token'));
+            const tokenVal = jwt_decode(getToken());
             dispatch(setAccounts(tokenVal.acts_detail));
             updateUserSettings();
         } else {
@@ -184,7 +185,7 @@ const Layout = React.memo(({ children }) => {
 
     const updateNavData = () => {
         const data = {
-            token: getCookie('token'),
+            token: getToken(),
             domain: prevDomain.current,
             isMobile: prevIsMobile.current,
         };
@@ -195,7 +196,7 @@ const Layout = React.memo(({ children }) => {
     const showPageHandler = async function (pathname) {
         try {
             let currentPath = pathname.substr(1);
-            const token = getCookie('token');
+            const token = getToken();
             const res = await verifyMenu(currentPath, token);
             if (!res.data.result.isPass) {
                 //P = 權限不足, N = 需要登入
@@ -252,7 +253,7 @@ const Layout = React.memo(({ children }) => {
         if (process.env.NODE_ENV === 'production') {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
-                    .register(`${process.env.NEXT_PUBLIC_SUBPATH}sw.js`, { scope: '/newweb/' })
+                    .register(`${process.env.NEXT_PUBLIC_SUBPATH}/sw.js`, { scope: '/newweb/' })
                     .then(() => {
                         // console.log('SW registered!', reg);
                     })
@@ -284,7 +285,7 @@ const Layout = React.memo(({ children }) => {
             }
         }, 500);
         setTimeout(() => {
-            CAHandler(getCookie('token'));
+            CAHandler(getToken());
         }, 700);
     }, []);
 
@@ -299,7 +300,7 @@ const Layout = React.memo(({ children }) => {
         setShowBigLogin(false);
         dispatch(setIsLogin(true));
         bigLoginRouterHandler();
-        CAHandler(getCookie('token'));
+        CAHandler(getToken());
     };
 
     const bigLoginRouterHandler = function (type) {
@@ -402,17 +403,17 @@ const Layout = React.memo(({ children }) => {
                     rel="icon"
                     type="image/png"
                     sizes="32x32"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}images/icons/32.png`}
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`}
                 />
                 <link
                     rel="icon"
                     type="image/png"
                     sizes="16x16"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}images/icons/16.png`}
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/16.png`}
                 />
                 <meta name="theme-color" content="#000000" />
-                <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}images/icons/32.png`} color="#5bbad5" />
-                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}manifest.json`} />
+                <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`} color="#5bbad5" />
+                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"

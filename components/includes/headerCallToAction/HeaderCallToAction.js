@@ -41,7 +41,7 @@ export const HeaderCallToAction = () => {
                 queryString = objectToQueryHandler(newQuery);
                 break;
         }
-        return `${process.env.NEXT_PUBLIC_SUBPATH}goOrder${queryString}`;
+        return `${process.env.NEXT_PUBLIC_SUBPATH}/goOrder${queryString}`;
     };
 
     const goSignUp = () => {

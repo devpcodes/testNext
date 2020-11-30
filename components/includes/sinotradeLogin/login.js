@@ -110,8 +110,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             try {
                 const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
-                console.log('res', res);
                 if (res.data.success) {
+                    // 儲存 token 在 localStorage
+                    localStorage.setItem('newweb_token', res.data.result.token);
+
                     //記身份證字號
                     if (form.getFieldValue('remember')) {
                         localStorage.setItem('userID', form.getFieldValue('account'));
@@ -193,7 +195,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //忘記密碼
     const forgetPassword = function () {
         if (isIframe) {
-            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + 'Service_ForgetPassword');
+            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/Service_ForgetPassword');
         } else {
             onClose();
             router.push(`/Service_ForgetPassword`);

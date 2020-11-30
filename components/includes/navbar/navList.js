@@ -152,7 +152,7 @@ const NavList = memo(({ id, lv2Data, twoColumnPX, toggleList }) => {
                                     lv3Item.isOpen
                                         ? () =>
                                               openWindow(
-                                                  `${process.env.NEXT_PUBLIC_SUBPATH}${lv3Item.url}`,
+                                                  `${process.env.NEXT_PUBLIC_SUBPATH}/${lv3Item.url}`,
                                                   lv3Item.openWidth,
                                                   lv3Item.openHeight,
                                                   lv3Item.title,

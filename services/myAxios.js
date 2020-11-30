@@ -30,7 +30,7 @@ const errorHandler = error => {
                             onOk() {
                                 window.location = `${
                                     process.env.NEXT_PUBLIC_SUBPATH
-                                }SinoTrade_login?currentPath=${encodeURIComponent(currentPath)}`;
+                                }/SinoTrade_login?currentPath=${encodeURIComponent(currentPath)}`;
                             },
                         });
                     } catch (error) {
