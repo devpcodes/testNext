@@ -195,7 +195,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //忘記密碼
     const forgetPassword = function () {
         if (isIframe) {
-            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + 'Service_ForgetPassword');
+            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/Service_ForgetPassword');
         } else {
             onClose();
             router.push(`/Service_ForgetPassword`);

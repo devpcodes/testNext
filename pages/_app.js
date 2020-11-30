@@ -99,9 +99,9 @@ function MyApp({ Component, pageProps, router }) {
                 '//' +
                 location.host +
                 `${process.env.NEXT_PUBLIC_SUBPATH}` +
-                'js/sensorsdata.min.js',
+                '/js/sensorsdata.min.js',
             heatmap_url:
-                location.protocol + '//' + location.host + `${process.env.NEXT_PUBLIC_SUBPATH}` + 'js/heatmap.min.js',
+                location.protocol + '//' + location.host + `${process.env.NEXT_PUBLIC_SUBPATH}` + '/js/heatmap.min.js',
             name: 'sensors',
             server_url: sensorsServerUrl,
             heatmap: {},

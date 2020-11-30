@@ -25,11 +25,11 @@ function PlaceOrderPopupWindow() {
     }, [router.query]);
 
     const setOpener = () => {
-        console.log('test', window.opener);
+        // console.log('test', window.opener);
         if (iframeDom.current != null && window.opener.parent != null) {
             iframeDom.current.contentWindow.opener = window.opener;
             window.clearInterval(timer.current);
-            window.location.href = process.env.NEXT_PUBLIC_SUBPATH + 'PlaceOrderPopupWindow?opener=OK';
+            window.location.href = process.env.NEXT_PUBLIC_SUBPATH + '/PlaceOrderPopupWindow?opener=OK';
         }
     };
 

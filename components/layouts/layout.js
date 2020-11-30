@@ -253,7 +253,7 @@ const Layout = React.memo(({ children }) => {
         if (process.env.NODE_ENV === 'production') {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
-                    .register(`${process.env.NEXT_PUBLIC_SUBPATH}sw.js`, { scope: '/newweb/' })
+                    .register(`${process.env.NEXT_PUBLIC_SUBPATH}/sw.js`, { scope: '/newweb/' })
                     .then(() => {
                         // console.log('SW registered!', reg);
                     })
@@ -403,17 +403,17 @@ const Layout = React.memo(({ children }) => {
                     rel="icon"
                     type="image/png"
                     sizes="32x32"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}images/icons/32.png`}
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`}
                 />
                 <link
                     rel="icon"
                     type="image/png"
                     sizes="16x16"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}images/icons/16.png`}
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/16.png`}
                 />
                 <meta name="theme-color" content="#000000" />
-                <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}images/icons/32.png`} color="#5bbad5" />
-                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}manifest.json`} />
+                <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`} color="#5bbad5" />
+                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
