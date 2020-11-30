@@ -3,10 +3,12 @@ import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 
 import NewWebIframe from '../components/includes/NewWebIframe';
+import { PageHead } from '../components/includes/PageHead';
+
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
-import { PageHead } from '../components/includes/PageHead';
-import { getCookie } from '../services/components/layouts/cookieController';
+
+import { getToken } from '../services/user/getToken';
 import { getLykanInstance } from '../services/myAxios';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
@@ -34,7 +36,7 @@ function Inside_Frame() {
 
         const target = router.query?.target;
         const URL = router.query?.URL;
-        const token = getCookie('token');
+        const token = getToken();
 
         if (target === 'ebill' && token) {
             setEBillUrl({ token });

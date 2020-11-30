@@ -1,10 +1,10 @@
 import jwt_decode from 'jwt-decode';
-import { getCookie } from './cookieController';
+import { getToken } from '../../user/getToken';
 
 export const checkLogin = function () {
-    if (getCookie('token') !== '') {
+    if (getToken() !== '') {
         //第一次登入，不算登入成功
-        const tonkenVal = jwt_decode(getCookie('token'));
+        const tonkenVal = jwt_decode(getToken());
         if (tonkenVal.acts_detail == null) {
             return false;
         }

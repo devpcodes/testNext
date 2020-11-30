@@ -20,6 +20,7 @@ import { setDomain, setCurrentPath } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
+import { getToken } from '../../services/user/getToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
@@ -83,7 +84,7 @@ const Layout = React.memo(({ children }) => {
         };
 
         if (isLogin) {
-            const tokenVal = jwt_decode(getCookie('token'));
+            const tokenVal = jwt_decode(getToken());
             dispatch(setAccounts(tokenVal.acts_detail));
             updateUserSettings();
         } else {
@@ -184,7 +185,7 @@ const Layout = React.memo(({ children }) => {
 
     const updateNavData = () => {
         const data = {
-            token: getCookie('token'),
+            token: getToken(),
             domain: prevDomain.current,
             isMobile: prevIsMobile.current,
         };
@@ -195,7 +196,7 @@ const Layout = React.memo(({ children }) => {
     const showPageHandler = async function (pathname) {
         try {
             let currentPath = pathname.substr(1);
-            const token = getCookie('token');
+            const token = getToken();
             const res = await verifyMenu(currentPath, token);
             if (!res.data.result.isPass) {
                 //P = 權限不足, N = 需要登入
@@ -284,7 +285,7 @@ const Layout = React.memo(({ children }) => {
             }
         }, 500);
         setTimeout(() => {
-            CAHandler(getCookie('token'));
+            CAHandler(getToken());
         }, 700);
     }, []);
 
@@ -299,7 +300,7 @@ const Layout = React.memo(({ children }) => {
         setShowBigLogin(false);
         dispatch(setIsLogin(true));
         bigLoginRouterHandler();
-        CAHandler(getCookie('token'));
+        CAHandler(getToken());
     };
 
     const bigLoginRouterHandler = function (type) {

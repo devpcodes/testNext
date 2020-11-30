@@ -1,7 +1,8 @@
 import axios from '../../myAxios';
-import { getCookie } from '../../../services/components/layouts/cookieController';
+import { getToken } from '../../../services/user/getToken';
+
 export const trust = async function (trustUrl, trustBody) {
-    trustBody.token = getCookie('token');
+    trustBody.token = getToken();
     const res = await axios({
         method: 'post',
         url: trustUrl,
