@@ -7,5 +7,8 @@ export const logout = async function () {
     const res = await axios.post(url);
     // 清除 localStorage 裡的 token
     removeToken();
-    return res.data;
+    // 清除 sessionStorage 裡與來源別相關的值
+    sessionStorage.removeItem('source');
+    sessionStorage.removeItem('platform');
+    return res;
 };
