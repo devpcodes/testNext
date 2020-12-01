@@ -20,7 +20,7 @@ import { setDomain, setCurrentPath } from '../../store/general/action';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { accountGroupByType } from '../../services/user/accountGroupByType';
-import { getToken } from '../../services/user/getToken';
+import { getToken } from '../../services/user/accessToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';

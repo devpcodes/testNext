@@ -8,7 +8,7 @@ import { PageHead } from '../components/includes/PageHead';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 
-import { getToken } from '../services/user/getToken';
+import { getToken } from '../services/user/accessToken';
 import { getLykanInstance } from '../services/myAxios';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {

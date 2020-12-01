@@ -1,5 +1,5 @@
 import jwt_decode from 'jwt-decode';
-import { getToken } from '../../user/getToken';
+import { getToken } from '../../user/accessToken';
 
 export const checkLogin = function () {
     if (getToken() !== '') {
