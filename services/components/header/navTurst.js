@@ -1,5 +1,5 @@
 import axios from '../../myAxios';
-import { getToken } from '../../../services/user/getToken';
+import { getToken } from '../../user/accessToken';
 
 export const trust = async function (trustUrl, trustBody) {
     trustBody.token = getToken();

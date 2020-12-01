@@ -111,9 +111,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
                 setIsLoading(false);
                 if (res.data.success) {
-                    // 儲存 token 在 localStorage
-                    localStorage.setItem('newweb_token', res.data.result.token);
-
                     //記身份證字號
                     if (form.getFieldValue('remember')) {
                         localStorage.setItem('userID', form.getFieldValue('account'));

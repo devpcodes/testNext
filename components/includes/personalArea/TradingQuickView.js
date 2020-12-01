@@ -7,7 +7,7 @@ import { getSBUnRealPrtlos, getSBDeliveryTrial } from '../../../store/sb/action'
 import { getOpenProfitLossSum } from '../../../store/future/action';
 
 import { getCookie } from '../../../services/components/layouts/cookieController';
-import { getToken } from '../../../services/user/getToken';
+import { getToken } from '../../../services/user/accessToken';
 import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
 import { fetchStockSummarisePrtlos } from '../../../services/stock/stockSummarisePrtlosFetcher';
 import { fetchSBUnRealPrtlosFetcher } from '../../../services/sb/sbUnrealizedPrtLosFetcher';
