@@ -45,7 +45,7 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                 }
                 .loginMobile-enter-done {
                     transform: translate(0.1px, 0);
-                    transition: all 300ms;
+                    transition: transform 300ms;
                 }
                 .loginMobile-exit {
                     transform: translate(0.1px, 0);

@@ -458,6 +458,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     padding-top: ${popup ? '0' : '1px'};
                     background-color: ${isPC ? '#f9fbff' : 'white'};
                     border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
+                    overflow-y: ${isIframe ? 'hidden' : 'auto'};
                 }
                 .overLay {
                     position: fixed;
