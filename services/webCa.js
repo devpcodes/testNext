@@ -66,6 +66,12 @@ export const checkCA = function (ca_content) {
 };
 
 export const checkCert = function (userIdNo) {
+    let DM;
+    if (process.env.NEXT_PUBLIC_DM === 'false') {
+        DM = false;
+    } else {
+        DM = true;
+    }
     const ca = new CA_Component({
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
@@ -84,6 +90,12 @@ export const checkCert = function (userIdNo) {
 };
 
 export const applyCert = function (user_idNo, token, callBack) {
+    let DM;
+    if (process.env.NEXT_PUBLIC_DM === 'false') {
+        DM = false;
+    } else {
+        DM = true;
+    }
     const ca = new CA_Component({
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
@@ -109,6 +121,12 @@ export const applyCert = function (user_idNo, token, callBack) {
 };
 
 export const renewCert = function (user_idNo, token, callBack) {
+    let DM;
+    if (process.env.NEXT_PUBLIC_DM === 'false') {
+        DM = false;
+    } else {
+        DM = true;
+    }
     const ca = new CA_Component({
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
