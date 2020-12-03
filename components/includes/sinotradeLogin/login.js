@@ -159,24 +159,25 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             afterSensors();
             return;
         }
-        try {
-            sensors.login(user_id, function () {
-                sensors.track(
-                    'LoginResults',
-                    {
-                        is_success: true,
-                        failure_reason: '',
-                        is_login: true,
-                        page_url: window.location.href,
-                        page_title: document.title,
-                        page_url_path: window.location.pathname,
-                    },
-                    afterSensors,
-                );
-            });
-        } catch (error) {
-            afterSensors();
-        }
+        afterSensors();
+        // try {
+        //     sensors.login(user_id, function () {
+        //         sensors.track(
+        //             'LoginResults',
+        //             {
+        //                 is_success: true,
+        //                 failure_reason: '',
+        //                 is_login: true,
+        //                 page_url: window.location.href,
+        //                 page_title: document.title,
+        //                 page_url_path: window.location.pathname,
+        //             },
+        //             afterSensors,
+        //         );
+        //     });
+        // } catch (error) {
+        //     afterSensors();
+        // }
     };
 
     //神策傳送成功後 做的事
