@@ -413,7 +413,7 @@ const Layout = React.memo(({ children }) => {
                 />
                 <meta name="theme-color" content="#000000" />
                 <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`} color="#5bbad5" />
-                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
+                {/* <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} /> */}
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
