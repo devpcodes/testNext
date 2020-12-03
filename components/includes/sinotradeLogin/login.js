@@ -52,15 +52,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const winKeyDownHandler = function (e) {
-        if (e.key === 'Enter') {
-            form.validateFields()
-                .then(() => {
-                    finishHandler();
-                })
-                .catch(() => {
-                    console.log('err');
-                });
-        }
+        // if (e.key === 'Enter') {
+        //     form.validateFields()
+        //         .then(() => {
+        //             finishHandler();
+        //         })
+        //         .catch(() => {
+        //             console.log('err');
+        //         });
+        // }
     };
 
     const encryptionHandler = function (str) {
