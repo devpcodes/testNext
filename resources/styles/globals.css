@@ -38,6 +38,7 @@ button {
 ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 9px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
