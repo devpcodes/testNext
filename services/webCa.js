@@ -2,12 +2,18 @@ export const sign = function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         var signDict = {};
         console.log('CACA', CA_Component);
+        let DM;
+        if (process.env.NEXT_PUBLIC_DM === 'false') {
+            DM = false;
+        } else {
+            DM = true;
+        }
         // 產生簽章元件
         var ca = new CA_Component({
             windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
             webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
             getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-            DM: process.env.NEXT_PUBLIC_DM,
+            DM: DM,
         });
         console.log('CACA', ca);
         var memberNo;
@@ -76,13 +82,13 @@ export const checkCert = function (userIdNo) {
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-        DM: process.env.NEXT_PUBLIC_DM,
+        DM: DM,
     });
     console.log('checkCert', {
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-        DM: process.env.NEXT_PUBLIC_DM,
+        DM: DM,
     });
     const checkData = ca.checkCert(userIdNo);
     console.log('checkCert', checkData);
@@ -100,7 +106,7 @@ export const applyCert = function (user_idNo, token, callBack) {
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-        DM: process.env.NEXT_PUBLIC_DM,
+        DM: DM,
     });
     console.log({
         userID: user_idNo,
@@ -131,7 +137,7 @@ export const renewCert = function (user_idNo, token, callBack) {
         windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
         webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-        DM: process.env.NEXT_PUBLIC_DM,
+        DM: DM,
     });
     return new Promise((resolve, reject) => {
         ca.renewCert(
