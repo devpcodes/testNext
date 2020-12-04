@@ -1,7 +1,10 @@
-import axios from '../myAxios';
+import { getLykanInstance } from '../myAxios';
 
-export const fetchUserSettings = async function (userId, type = '') {
-    const url = `/SinoTrade-Service/rest/service/v0/accountSettings/${userId}?filter=${type}`; // ?filter=stock | recommissioned | option
-    const res = await axios.get(url);
+export const fetchUserSettings = async function (token, market = 'ALL') {
+    const url = `/service/getAccountSettings`;
+    const res = await getLykanInstance().post(url, {
+        token,
+        market,
+    });
     return res.data;
 };

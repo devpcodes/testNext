@@ -22,12 +22,10 @@ export const setUserSettings = userSettingsData => {
     };
 };
 
-export const getUserSettings = userId => async dispatch => {
+export const getUserSettings = (token, market) => async dispatch => {
     try {
-        const res = await fetchUserSettings(userId);
-        const userSettingsData = res.data;
-
-        return dispatch(setUserSettings(userSettingsData));
+        const data = await fetchUserSettings(token, market);
+        return dispatch(setUserSettings(data.result));
     } catch (error) {
         console.error(`error:`, error);
         return dispatch(setUserSettings({}));
