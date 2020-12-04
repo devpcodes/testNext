@@ -242,7 +242,7 @@ export const TradingQuickView = () => {
             SBunRealPrtlos.sum_data.forEach(obj => {
                 let item = {};
                 item.currency = obj.curr;
-                item.amount = obj.sum_amt;
+                item.amount = obj.sum_pl;
                 currencyInfo.push(item);
             });
             return currencyInfo;
