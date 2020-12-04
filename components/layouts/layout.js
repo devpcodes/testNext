@@ -79,8 +79,8 @@ const Layout = React.memo(({ children }) => {
 
     useEffect(() => {
         const updateUserSettings = () => {
-            const userId = getCookie('user_id');
-            userId && dispatch(getUserSettings(userId));
+            const token = getToken();
+            token && dispatch(getUserSettings(token));
         };
 
         if (isLogin) {

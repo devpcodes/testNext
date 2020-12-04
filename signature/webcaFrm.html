@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+        <title>WebCA 憑證小幫手</title>
+        <script>
+            var webcaOpener = window.opener;
+            var businessNo = webcaOpener.twcaH5Params.businessNo;
+            var verifyNo = webcaOpener.twcaH5Params.verifyNo;
+            var apiVersion = webcaOpener.twcaH5Params.apiVersion;
+            var hashKeyNo = webcaOpener.twcaH5Params.hashKeyNo;
+            var returnParams = webcaOpener.twcaH5Params.returnParams;
+            var memberNo = webcaOpener.twcaH5Params.memberNo;
+            var raFunc = webcaOpener.twcaH5Params.raFunc;
+            var identifyNo = webcaOpener.twcaH5Params.identifyNo;
+            var webcaURL = webcaOpener.twcaH5Params.webcaURL;
+            var isWebCAClose = false;
+
+            window.onload = function () {
+                var form = postObject();
+                var isApple = navigator.platform && /iPad|iPhone|iPod|MacIntel/.test(navigator.platform);
+                var isSafari = 'safari' === getBrowserType();
+                var isSafariOnApple = isApple && isSafari;
+                if (!isApple) {
+                    document.body.innerHTML +=
+                        " <iframe id='iFR' name='iFR' style='position:fixed; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
+                    form.target = 'iFR';
+                }
+                document.body.appendChild(form);
+                form.submit();
+            };
+
+            window.onbeforeunload = function () {
+                if (!isWebCAClose) {
+                    try {
+                        //            document.getElementById("iFR").contentWindow.ackRaFunc("5079", "使用者關閉視窗", businessNo, verifyNo, raFunc);
+
+                        var twcaH5Flow;
+
+                        twcaH5Flow = {
+                            action: 'AckRAFunc',
+                            raFunc: raFunc,
+                            businessNo: businessNo,
+                            verifyNo: verifyNo,
+                            errCode: '5079',
+                            errMsg: '使用者關閉視窗',
+                        };
+                        document.getElementById('iFR').contentWindow.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+
+                        twcaH5Flow = {
+                            action: 'Exception',
+                            raFunc: raFunc,
+                            origin: window.location.hostname,
+                            errCode: '5079',
+                            errMsg: '使用者關閉視窗',
+                        };
+                        webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    } catch (e) {}
+                }
+            };
+
+            if (window.addEventListener) {
+                window.addEventListener('message', receiveMessage, false);
+            } else {
+                window.attachEvent('onmessage', receiveMessage);
+            }
+
+            function postObject() {
+                var form = document.createElement('form');
+                form.setAttribute('id', 'webcaform');
+                form.setAttribute('method', 'POST');
+                form.setAttribute('action', webcaURL);
+                form.appendChild(getHiddenField('BusinessNo', businessNo));
+                form.appendChild(getHiddenField('VerifyNo', verifyNo));
+                form.appendChild(getHiddenField('ApiVersion', apiVersion));
+                form.appendChild(getHiddenField('HashKeyNo', hashKeyNo));
+                form.appendChild(getHiddenField('ReturnParams', returnParams));
+                form.appendChild(getHiddenField('MemberNo', memberNo));
+                form.appendChild(getHiddenField('RAFunc', raFunc));
+                form.appendChild(getHiddenField('IdentifyNo', identifyNo));
+                return form;
+            }
+
+            function getHiddenField(name, value) {
+                var hiddenField;
+                hiddenField = document.createElement('input');
+                hiddenField.setAttribute('type', 'hidden');
+                hiddenField.setAttribute('name', name);
+                hiddenField.setAttribute('value', value);
+                return hiddenField;
+            }
+
+            function receiveMessage(event) {
+                var twcaH5Flow = event.data.twcaH5Flow;
+                if (!twcaH5Flow) {
+                    return;
+                }
+
+                var action = twcaH5Flow.action;
+
+                if (action === 'SaveUrlsAndCertInfo') {
+                    webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    return;
+                }
+
+                if (action === 'PageLoaded') {
+                    webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    return;
+                }
+
+                if (action === 'DeployComplete') {
+                    webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    return;
+                }
+
+                if (action === 'Exception') {
+                    isWebCAClose = true;
+                    webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    window.close();
+                    return;
+                }
+
+                if (action === 'DeployCertInfo') {
+                    postWin = document.getElementById('iFR').contentWindow.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    return;
+                }
+
+                if (action === 'Redirect') {
+                    postWin = document.getElementById('iFR').contentWindow.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    return;
+                }
+
+                if (action === 'FinishRAFunction') {
+                    postWin = document.getElementById('iFR').contentWindow.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                    return;
+                }
+
+                if (action === 'CloseWindow') {
+                    isWebCAClose = true;
+                    window.close();
+                }
+            }
+
+            function getBrowserType() {
+                var ua = navigator.userAgent.toLowerCase();
+                var sBrowser = '';
+
+                if (ua.indexOf('edge') > -1) {
+                    sBrowser = 'edge';
+                } else if (ua.indexOf('firefox') > -1) {
+                    sBrowser = 'firefox';
+                } else if (ua.indexOf('msie') > -1) {
+                    sBrowser = 'ie';
+                } else if (ua.indexOf('rv:11.0') > -1 && ua.indexOf('like gecko') > -1) {
+                    if (ua.indexOf('windows nt 6.3;') > -1) {
+                        sBrowser = 'ie';
+                    } else {
+                        if (ua.indexOf('windows nt ') > -1) {
+                            sBrowser = 'ie';
+                        } else {
+                            sBrowser = 'other';
+                        }
+                    }
+                } else if (ua.indexOf('iemobile') > -1) {
+                    sBrowser = 'ie';
+                } else if (ua.indexOf('chrome') > -1) {
+                    sBrowser = 'chrome';
+                } else if (ua.indexOf('safari') > -1) {
+                    if (ua.indexOf('gsa') > -1 || ua.indexOf('crios') > -1) {
+                        sBrowser = 'chrome';
+                    } else {
+                        sBrowser = 'safari';
+                    }
+                } else if (ua.indexOf('dophin') > -1) {
+                    sBrowser = 'dophin';
+                } else if (ua.indexOf('opera') > -1) {
+                    sBrowser = 'opera';
+                } else {
+                    sBrowser = 'other';
+                }
+                return sBrowser;
+            }
+        </script>
+    </head>
+    <body></body>
+</html>
