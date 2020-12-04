@@ -1,3 +1,5 @@
+import Head from 'next/head';
+
 import 'antd/dist/antd.min.css';
 import '../resources/styles/globals.css';
 import { useEffect } from 'react';
@@ -116,6 +118,13 @@ function MyApp({ Component, pageProps, router }) {
     }, []);
     const getLayout = Component.getLayout || (page => <Layout children={page} />);
     const renderComp = getLayout(<Component {...pageProps} />);
-    return <>{renderComp}</>;
+    return (
+        <>
+            <Head>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+            </Head>
+            {renderComp}
+        </>
+    );
 }
 export default wrapper.withRedux(MyApp);
