@@ -121,7 +121,7 @@ function MyApp({ Component, pageProps, router }) {
     return (
         <>
             <Head>
-                <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+                <meta httpEquiv="X-UA-Compatible" content="IE=edge, chrome=1" />
             </Head>
             {renderComp}
         </>
