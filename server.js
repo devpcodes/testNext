@@ -13,6 +13,7 @@ app.prepare().then(() => {
     const server = express();
 
     server.use('/widget', express.static('./widget'));
+    server.use('/signature', express.static('./signature'));
 
     server.get('*', (req, res) => {
         if (req.url.includes('/sw')) {

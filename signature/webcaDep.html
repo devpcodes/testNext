@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="Content-Language" content="zh-tw" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <script>
+            var raSaveFuncs = ['ApplyCert', 'ChangePIN', 'RenewCert'];
+            var raRemoveFuncs = ['DeleteCert'];
+
+            var isApple = navigator.platform && /iPad|iPhone|iPod|MacIntel/.test(navigator.platform);
+            var isSafari = 'safari' === getBrowserType();
+            var srcWindow;
+            if (isApple) {
+                srcWindow = window.opener;
+            } else {
+                srcWindow = window.parent;
+            }
+            if (isTWID()) {
+                srcWindow = window.parent;
+            }
+            var origin = window.location.hostname;
+
+            window.onload = function () {
+                if (isApple && srcWindow === window) {
+                    srcWindow = window.open('', 'twcaSrcWindow');
+                }
+                if (srcWindow == null) {
+                    srcWindow = window.parent;
+                }
+                var twcaH5Flow = {
+                    twcaH5Flow: {
+                        action: 'PageLoaded',
+                        origin: origin,
+                        raFunc: '',
+                    },
+                };
+                srcWindow.postMessage(twcaH5Flow, '*');
+            };
+
+            function closeWindow(raFunc) {
+                var twcaH5Flow = {
+                    twcaH5Flow: {
+                        action: 'CloseWindow',
+                        origin: origin,
+                        raFunc: raFunc,
+                    },
+                };
+
+                srcWindow.postMessage(twcaH5Flow, '*');
+                window.close();
+            }
+
+            if (window.addEventListener) {
+                window.addEventListener('message', receiveMessage, false);
+            } else {
+                window.attachEvent('onmessage', receiveMessage);
+            }
+
+            function receiveMessage(event) {
+                var twcaH5Flow = event.data.twcaH5Flow;
+
+                if (!twcaH5Flow) {
+                    return;
+                }
+
+                var action = twcaH5Flow.action;
+                var raFunc = twcaH5Flow.raFunc;
+                if (action === 'DeployCertInfo') {
+                    var ret = 0;
+                    if (raSaveFuncs.indexOf(raFunc) >= 0) {
+                        ret = saveCert(twcaH5Flow.certInfo);
+                    } else if (raRemoveFuncs.indexOf(raFunc) >= 0) {
+                        ret = deleteCert(JSON.parse(twcaH5Flow.certInfo).userID);
+                    } else {
+                        ret = 1006;
+                    }
+
+                    var twcaH5Flow = {
+                        twcaH5Flow: {
+                            action: 'DeployComplete',
+                            errCode: ret,
+                            errMsg: getErrMsg(ret),
+                            origin: origin,
+                            raFunc: raFunc,
+                        },
+                    };
+                    srcWindow.postMessage(twcaH5Flow, '*');
+                    return;
+                }
+
+                if (action === 'Redirect') {
+                    var location = twcaH5Flow.location;
+                    window.location.href = location + '?' + raFunc;
+                }
+
+                if (action === 'FinishRAFunction') {
+                    closeWindow(raFunc);
+                }
+            }
+
+            function saveCert(certInfo) {
+                if (typeof localStorage === 'undefined') {
+                    return 7002;
+                }
+
+                certInfo = JSON.parse(certInfo);
+                var TWCACertIdxRefId = 'TWCACertIdxRef';
+                var certRefId = 'TWCA' + new Date().getTime().toString();
+                var certIdxRefObj = null;
+
+                do {
+                    if (localStorage.getItem(TWCACertIdxRefId) === null) {
+                        certIdxRefObj = {};
+                        break;
+                    }
+
+                    if (localStorage.getItem(TWCACertIdxRefId) === '') {
+                        certIdxRefObj = {};
+                        break;
+                    }
+
+                    try {
+                        certIdxRefObj = JSON.parse(localStorage.getItem(TWCACertIdxRefId));
+                    } catch (err) {
+                        certIdxRefObj = {};
+                    }
+                } while (false);
+
+                for (var key in certIdxRefObj) {
+                    if (certIdxRefObj[key]['issuer'] === certInfo.issuer) {
+                        var certInfoCn = certInfo.cn
+                            .replace(/^\s+|\s+$/, '')
+                            .replace(/^0*/, '')
+                            .toUpperCase()
+                            .split('-')[0];
+                        var certIdxRefObjCn = certIdxRefObj[key]['cn']
+                            .replace(/^\s+|\s+$/, '')
+                            .replace(/^0*/, '')
+                            .toUpperCase()
+                            .split('-')[0];
+
+                        if (certInfoCn === certIdxRefObjCn) {
+                            certIdxRefObj[key] = null;
+                            delete certIdxRefObj[key];
+                            localStorage.removeItem(key);
+                            break;
+                        }
+                    }
+                }
+
+                certIdxRefObj[certRefId] = {
+                    cn: certInfo.cn,
+                    issuer: certInfo.issuer,
+                    subject: certInfo.subject,
+                    serial: certInfo.serial,
+                    notBefore: certInfo.notBefore,
+                    notAfter: certInfo.notAfter,
+                };
+
+                try {
+                    localStorage.setItem(TWCACertIdxRefId, JSON.stringify(certIdxRefObj));
+                    localStorage.setItem(certRefId, JSON.stringify(certInfo));
+                } catch (ex) {
+                    return 7001;
+                }
+
+                return 0;
+            }
+
+            function deleteCert(userID) {
+                if (typeof localStorage === 'undefined') {
+                    return 7002;
+                }
+
+                var TWCACertIdxRefId = 'TWCACertIdxRef';
+                var certIdxRefObj = null;
+
+                do {
+                    if (localStorage.getItem(TWCACertIdxRefId) === null) {
+                        certIdxRefObj = {};
+                        break;
+                    }
+
+                    if (localStorage.getItem(TWCACertIdxRefId) === '') {
+                        certIdxRefObj = {};
+                        break;
+                    }
+
+                    try {
+                        certIdxRefObj = JSON.parse(localStorage.getItem(TWCACertIdxRefId));
+                    } catch (err) {
+                        certIdxRefObj = {};
+                    }
+                } while (false);
+
+                for (var key in certIdxRefObj) {
+                    if (certIdxRefObj[key]['cn'].indexOf(userID) >= 0) {
+                        certIdxRefObj[key] = null;
+                        delete certIdxRefObj[key];
+                        localStorage.removeItem(key);
+                    }
+                }
+
+                try {
+                    localStorage.setItem(TWCACertIdxRefId, JSON.stringify(certIdxRefObj));
+                } catch (ex) {
+                    return 7001;
+                }
+
+                return 0;
+            }
+
+            function getErrMsg(errCode) {
+                var ret = '';
+
+                switch (ret) {
+                    case 0:
+                        retMsg = '成功';
+                        break;
+                    case 1006:
+                        retMsg = 'RAFunc參數錯誤';
+                        break;
+                    case 7001:
+                        retMsg = '瀏覽器儲存憑證失敗';
+                        break;
+                    case 7002:
+                        retMsg = '瀏覽器讀取憑證失敗';
+                        break;
+                    case 7003:
+                        retMsg = '瀏覽器刪除憑證失敗';
+                        break;
+                    default:
+                        retMsg = '錯誤';
+                }
+            }
+
+            function isTWID() {
+                if (navigator.userAgent.indexOf('TWID') >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            function getBrowserType() {
+                var ua = navigator.userAgent.toLowerCase();
+                var sBrowser = '';
+
+                if (ua.indexOf('edge') > -1) {
+                    sBrowser = 'edge';
+                } else if (ua.indexOf('firefox') > -1) {
+                    sBrowser = 'firefox';
+                } else if (ua.indexOf('msie') > -1) {
+                    sBrowser = 'ie';
+                } else if (ua.indexOf('rv:11.0') > -1 && ua.indexOf('like gecko') > -1) {
+                    if (ua.indexOf('windows nt 6.3;') > -1) {
+                        sBrowser = 'ie';
+                    } else {
+                        if (ua.indexOf('windows nt ') > -1) {
+                            sBrowser = 'ie';
+                        } else {
+                            sBrowser = 'other';
+                        }
+                    }
+                } else if (ua.indexOf('iemobile') > -1) {
+                    sBrowser = 'ie';
+                } else if (ua.indexOf('chrome') > -1) {
+                    sBrowser = 'chrome';
+                } else if (ua.indexOf('safari') > -1) {
+                    if (ua.indexOf('gsa') > -1 || ua.indexOf('crios') > -1) {
+                        sBrowser = 'chrome';
+                    } else {
+                        sBrowser = 'safari';
+                    }
+                } else if (ua.indexOf('dophin') > -1) {
+                    sBrowser = 'dophin';
+                } else if (ua.indexOf('opera') > -1) {
+                    sBrowser = 'opera';
+                } else {
+                    sBrowser = 'other';
+                }
+                return sBrowser;
+            }
+        </script>
+        <title>憑證佈署</title>
+    </head>
+    <body></body>
+</html>
