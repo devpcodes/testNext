@@ -220,7 +220,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         );
 
         // postMessage 完之後，清除所有 input 資料。
-        location.reload();
+        // location.reload();
     };
 
     const signUpHandler = function (e) {
@@ -293,6 +293,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 {
                                     required: true,
                                     message: '請輸入身份證字號',
+                                },
+                                {
+                                    max: 10,
+                                    message: '超過限定字數',
                                 },
                                 {
                                     validator: (rule, value) => {
