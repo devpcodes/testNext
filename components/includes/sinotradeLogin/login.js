@@ -143,7 +143,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 content: `初次登入，請修改密碼後重新登入，謝謝`,
                 onOk() {
                     onClose();
-                    router.push('/User_ChangePassword');
+                    if (isIframe) {
+                        iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/User_ChangePassword');
+                    } else {
+                        router.push('/User_ChangePassword');
+                    }
                 },
             });
             return true;
@@ -152,7 +156,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         return false;
     };
 
-    //傳資料給神策
+    //傳資料給神策(暫拿掉)
     const sensorsHandler = function (user_id) {
         console.log('browser', checkBrowser(), process.env.NEXT_PUBLIC_ENV);
         if (checkBrowser() === 'ie' && process.env.NEXT_PUBLIC_ENV === 'development') {
