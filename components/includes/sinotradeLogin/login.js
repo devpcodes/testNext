@@ -31,6 +31,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 remember: true,
             });
         }
+        if (encryptAccount) {
+            setAccountFontSize('0rem');
+        }
         window.addEventListener('keypress', winKeyDownHandler, false);
         if (checkIframe()) {
             setIsIframe(true);
