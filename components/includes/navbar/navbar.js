@@ -359,12 +359,10 @@ const Navbar = memo(() => {
                             bottom: 0;
                             left: 0;
                             width: 316px;
-                            background: ${theme.colors.darkBg};
                         }
                         .navbar__shortcuts {
                             display: flex;
                             flex-direction: row;
-                            border-top: solid 1px #17273d;
                         }
                         .navbar__order,
                         .navbar__account {
@@ -375,10 +373,24 @@ const Navbar = memo(() => {
                             text-align: center;
                         }
                         .navbar__order {
-                            border-bottom: 5px solid ${theme.colors.secondary};
+                            background: ${theme.colors.secondary};
+                            transition: ${theme.button.transition};
+                            color: ${theme.colors.text};
+                        }
+                        .navbar__order:hover,
+                        .navbar__order:focus,
+                        .navbar__order:active {
+                            background: ${theme.colors.secondaryHover};
                         }
                         .navbar__account {
-                            border-bottom: 5px solid ${theme.colors.primary};
+                            background: ${theme.colors.primary};
+                            transition: ${theme.button.transition};
+                            color: ${theme.colors.text};
+                        }
+                        .navbar__account:hover,
+                        .navbar__account:focus,
+                        .navbar__account:active {
+                            background: ${theme.colors.primaryHover};
                         }
                         .navbar__lv1__item.menu__ctrl {
                             position: fixed;
