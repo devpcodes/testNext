@@ -19,6 +19,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
     useEffect(() => {
+        form.setFieldsValue({
+            account: '',
+        });
         const account = localStorage.getItem('userID');
         if (account) {
             form.setFieldsValue({
