@@ -222,8 +222,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             },
             '*',
         );
-
         // postMessage 完之後，清除所有 input 資料。
+        parent.location.reload();
         // location.reload();
     };
 
