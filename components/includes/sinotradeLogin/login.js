@@ -31,9 +31,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 remember: true,
             });
         }
-        if (encryptAccount) {
-            setAccountFontSize('0rem');
-        }
+
         window.addEventListener('keypress', winKeyDownHandler, false);
         if (checkIframe()) {
             setIsIframe(true);
@@ -43,6 +41,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             window.removeEventListener('keypress', winKeyDownHandler, false);
         };
     }, []);
+
+    const changeHandler = function () {
+        if (form.getFieldValue('account').length !== 0) {
+            setEncryptAccount('');
+        }
+    };
 
     let account;
     const fieldsChange = function (changedFields) {
@@ -328,6 +332,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 placeholder="請輸入身份證字號"
                                 onBlur={blurHandler}
                                 ref={accountInput}
+                                onChange={changeHandler}
                             />
                         </Form.Item>
                         <span
