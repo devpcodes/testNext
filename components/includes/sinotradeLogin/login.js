@@ -37,6 +37,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             setIsIframe(true);
         }
 
+        setTimeout(() => {
+            if (form.getFieldValue('account').length !== 0) {
+                setEncryptAccount('');
+            }
+        }, 500);
+
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
         };
