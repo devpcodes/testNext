@@ -39,7 +39,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
         setTimeout(() => {
             // console.log(form.getFieldValue('account').length);
-            if (encryptAccount) {
+            if (encryptAccount && form.getFieldValue('account').length !== 0) {
                 setAccountFontSize('0rem');
             }
         }, 500);
@@ -49,11 +49,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         };
     }, []);
 
-    const changeHandler = function () {
-        if (form.getFieldValue('account').length !== 0) {
-            setEncryptAccount('');
+    useEffect(() => {
+        if (encryptAccount && form.getFieldValue('account').length !== 0) {
+            setAccountFontSize('0rem');
         }
-    };
+    }, [form.getFieldValue('account')]);
 
     let account;
     const fieldsChange = function (changedFields) {
@@ -341,7 +341,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 placeholder="請輸入身份證字號"
                                 onBlur={blurHandler}
                                 ref={accountInput}
-                                onChange={changeHandler}
                             />
                         </Form.Item>
                         <span
