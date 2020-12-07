@@ -38,8 +38,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
 
         setTimeout(() => {
-            if (form.getFieldValue('account').length !== 0) {
-                setEncryptAccount('');
+            // console.log(form.getFieldValue('account').length);
+            if (encryptAccount) {
+                setAccountFontSize('0rem');
             }
         }, 500);
 
