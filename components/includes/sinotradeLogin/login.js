@@ -34,10 +34,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             });
         } else {
             console.log('clear');
-            setEncryptAccount('');
-            form.setFieldsValue({
-                account: '',
-            });
+            setTimeout(() => {
+                setEncryptAccount('');
+                form.setFieldsValue({
+                    account: '',
+                });
+            }, 100);
         }
 
         window.addEventListener('keypress', winKeyDownHandler, false);
@@ -165,6 +167,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     onClose();
                     if (isIframe) {
                         iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/User_ChangePassword');
+                        setTimeout(() => {
+                            location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+                        }, 1000);
                     } else {
                         router.push('/User_ChangePassword');
                     }
@@ -244,9 +249,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         );
         // postMessage 完之後，清除所有 input 資料。
         // parent.location.href = '/';
-        setTimeout(() => {
-            location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
-        }, 1000);
+        // setTimeout(() => {
+        //     location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+        // }, 1000);
     };
 
     const signUpHandler = function (e) {
