@@ -48,9 +48,9 @@ export const QuickViewTable = ({ dataSource }) => {
             </div>
             <style jsx global>{`
                 .stockQuickView__table .ant-table-tbody > tr > td,
-                .ant-table-thead > tr > th,
-                .ant-table tfoot > tr > td,
-                .ant-table tfoot > tr > th {
+                .stockQuickView__table .ant-table-thead > tr > th,
+                .stockQuickView__table .ant-table tfoot > tr > td,
+                .stockQuickView__table .ant-table tfoot > tr > th {
                     padding: 0;
                 }
                 .stockQuickView__table .ant-table-thead > tr > th {
@@ -73,10 +73,10 @@ export const QuickViewTable = ({ dataSource }) => {
                 .stockQuickView__table .ant-table-tbody > tr > td :nth-child(3) {
                     text-align: right;
                 }
-                .ant-table-cell :nth-child(2) {
+                .stockQuickView__table .ant-table-cell :nth-child(2) {
                     text-align: right;
                 }
-                .ant-table-cell :nth-child(3) {
+                .stockQuickView__table .ant-table-cell :nth-child(3) {
                     text-align: right;
                 }
                 .stockQuickView__table {
@@ -85,21 +85,24 @@ export const QuickViewTable = ({ dataSource }) => {
                 .stockQuickView__table .ant-empty-normal {
                     margin: 10px 0;
                 }
+                .stockQuickView__table .ant-table-tbody > tr.ant-table-row:hover > td {
+                    background: unset;
+                }
                 @media (max-width: 768px) {
-                    .ant-table {
-                        background: none;
+                    .stockQuickView__table .ant-table {
+                        background: #0d1623;
                     }
-                    .ant-table-thead {
-                        background: none;
+                    .stockQuickView__table .ant-table-thead {
+                        background: #0d1623;
                     }
                     .stockQuickView__table .ant-table-thead > tr > th {
-                        background: none;
+                        background: #0d1623;
                     }
-                    .ant-table-container {
+                    .stockQuickView__table .ant-table-container {
                         padding: 0 35px;
                         min-height: 65px;
                     }
-                    .ant-table-thead > tr > th {
+                    .stockQuickView__table .ant-table-thead > tr > th {
                         border-bottom: solid 1.1px #121f32;
                         padding: 4px 0;
                         font-size: 1.6rem;
