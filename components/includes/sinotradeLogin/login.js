@@ -22,6 +22,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         console.log('didmount');
         const account = localStorage.getItem('userID');
         if (account) {
+            console.log('account', account);
             form.setFieldsValue({
                 account,
             });
@@ -32,6 +33,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 remember: true,
             });
         } else {
+            console.log('clear');
             setEncryptAccount('');
             form.setFieldsValue({
                 account: '',
@@ -43,12 +45,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             setIsIframe(true);
         }
 
-        setTimeout(() => {
-            // console.log(form.getFieldValue('account').length);
-            if (encryptAccount && form.getFieldValue('account').length !== 0) {
-                setAccountFontSize('0rem');
-            }
-        }, 500);
+        // setTimeout(() => {
+        //     // console.log(form.getFieldValue('account').length);
+
+        // }, 500);
 
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
