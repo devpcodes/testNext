@@ -27,7 +27,7 @@ function TradingAccount() {
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingAccount${queryStr}`}
-                    iHeight={1000}
+                    iHeight={1500}
                     title="永豐金證券"
                 />
             </div>
