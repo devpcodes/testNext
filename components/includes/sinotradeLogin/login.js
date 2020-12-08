@@ -19,9 +19,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
     useEffect(() => {
-        form.setFieldsValue({
-            account: '',
-        });
+        console.log('didmount');
         const account = localStorage.getItem('userID');
         if (account) {
             form.setFieldsValue({
@@ -32,6 +30,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             setAccountFontSize('0rem');
             form.setFieldsValue({
                 remember: true,
+            });
+        } else {
+            setEncryptAccount('');
+            form.setFieldsValue({
+                account: '',
             });
         }
 
