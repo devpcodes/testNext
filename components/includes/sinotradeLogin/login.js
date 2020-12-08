@@ -33,13 +33,14 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 remember: true,
             });
         } else {
-            console.log('clear');
             setTimeout(() => {
-                console.log('clear2');
-                setEncryptAccount('');
-                form.setFieldsValue({
-                    account: '',
-                });
+                if (checkIframe()) {
+                    setEncryptAccount('');
+                    form.setFieldsValue({
+                        account: '',
+                    });
+                    setAccountFontSize('1.8rem');
+                }
             }, 1000);
         }
 
@@ -169,6 +170,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     if (isIframe) {
                         iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/User_ChangePassword');
                         setTimeout(() => {
+                            // router.push('', `/SinoTrade_login`, { shallow: true });
                             location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
                         }, 1000);
                     } else {
