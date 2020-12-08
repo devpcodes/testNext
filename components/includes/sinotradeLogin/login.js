@@ -35,11 +35,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         } else {
             console.log('clear');
             setTimeout(() => {
+                console.log('clear2');
                 setEncryptAccount('');
                 form.setFieldsValue({
                     account: '',
                 });
-            }, 100);
+            }, 1000);
         }
 
         window.addEventListener('keypress', winKeyDownHandler, false);
