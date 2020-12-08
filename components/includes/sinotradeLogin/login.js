@@ -59,12 +59,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         };
     }, []);
 
-    useEffect(() => {
-        if (encryptAccount && form.getFieldValue('account').length !== 0) {
-            setAccountFontSize('0rem');
-        }
-    }, [form.getFieldValue('account')]);
-
     let account;
     const fieldsChange = function (changedFields) {
         if (changedFields.length !== 0) {
