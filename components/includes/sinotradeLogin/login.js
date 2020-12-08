@@ -258,9 +258,33 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         );
     };
 
+    const overflowHandler = () => {
+        if (popup) {
+            if (isPC) {
+                return {
+                    overflowY: 'inherit',
+                };
+            } else {
+                return {
+                    overflowY: 'auto',
+                };
+            }
+        }
+
+        if (isIframe) {
+            return {
+                overflowY: 'hidden',
+            };
+        } else {
+            return {
+                overflowY: 'auto',
+            };
+        }
+    };
+
     return (
         <div className="login__container">
-            <div className="login__box">
+            <div className="login__box" style={overflowHandler()}>
                 {!isPC && !isIframe ? (
                     <div
                         className="close__box"
