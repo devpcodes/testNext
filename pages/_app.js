@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 // import TagManager from 'react-gtm-module';
 import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
+import { initGA, logPageView } from '../services/analytics';
 
 const tagManagerArgs = {
     gtmId: 'GTM-KHJQQ4C',
@@ -115,7 +116,17 @@ function MyApp({ Component, pageProps, router }) {
             platform: sensorsPlatform,
         });
         sensors.quick('autoTrack');
+
+        //GA
+        gaHandler();
     }, []);
+    const gaHandler = () => {
+        if (!window.GA_INITIALIZED) {
+            initGA();
+            window.GA_INITIALIZED = true;
+        }
+        logPageView();
+    };
     const getLayout = Component.getLayout || (page => <Layout children={page} />);
     const renderComp = getLayout(<Component {...pageProps} />);
     return (

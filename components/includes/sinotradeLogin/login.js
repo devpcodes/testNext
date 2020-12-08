@@ -19,8 +19,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
     useEffect(() => {
+        console.log('didmount');
         const account = localStorage.getItem('userID');
         if (account) {
+            console.log('account', account);
             form.setFieldsValue({
                 account,
             });
@@ -30,11 +32,27 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             form.setFieldsValue({
                 remember: true,
             });
+        } else {
+            setTimeout(() => {
+                if (checkIframe()) {
+                    setEncryptAccount('');
+                    form.setFieldsValue({
+                        account: '',
+                    });
+                    setAccountFontSize('1.8rem');
+                }
+            }, 1000);
         }
+
         window.addEventListener('keypress', winKeyDownHandler, false);
         if (checkIframe()) {
             setIsIframe(true);
         }
+
+        // setTimeout(() => {
+        //     // console.log(form.getFieldValue('account').length);
+
+        // }, 500);
 
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
@@ -143,7 +161,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 content: `初次登入，請修改密碼後重新登入，謝謝`,
                 onOk() {
                     onClose();
-                    router.push('/User_ChangePassword');
+                    if (isIframe) {
+                        iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/User_ChangePassword');
+                        setTimeout(() => {
+                            // router.push('', `/SinoTrade_login`, { shallow: true });
+                            location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+                        }, 1000);
+                    } else {
+                        router.push('/User_ChangePassword');
+                    }
                 },
             });
             return true;
@@ -152,7 +178,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         return false;
     };
 
-    //傳資料給神策
+    //傳資料給神策(暫拿掉)
     const sensorsHandler = function (user_id) {
         console.log('browser', checkBrowser(), process.env.NEXT_PUBLIC_ENV);
         if (checkBrowser() === 'ie' && process.env.NEXT_PUBLIC_ENV === 'development') {
@@ -218,9 +244,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             },
             '*',
         );
-
         // postMessage 完之後，清除所有 input 資料。
-        location.reload();
+        // parent.location.href = '/';
+        // setTimeout(() => {
+        //     location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+        // }, 1000);
     };
 
     const signUpHandler = function (e) {
@@ -230,9 +258,33 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         );
     };
 
+    const overflowHandler = () => {
+        if (popup) {
+            if (isPC) {
+                return {
+                    overflowY: 'inherit',
+                };
+            } else {
+                return {
+                    overflowY: 'auto',
+                };
+            }
+        }
+
+        if (isIframe) {
+            return {
+                overflowY: 'hidden',
+            };
+        } else {
+            return {
+                overflowY: 'auto',
+            };
+        }
+    };
+
     return (
         <div className="login__container">
-            <div className="login__box">
+            <div className="login__box" style={overflowHandler()}>
                 {!isPC && !isIframe ? (
                     <div
                         className="close__box"
@@ -293,6 +345,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 {
                                     required: true,
                                     message: '請輸入身份證字號',
+                                },
+                                {
+                                    max: 10,
+                                    message: '超過限定字數',
                                 },
                                 {
                                     validator: (rule, value) => {
