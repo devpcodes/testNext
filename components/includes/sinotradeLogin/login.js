@@ -251,6 +251,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             });
         } else {
             setEncryptAccount('');
+            setAccountFontSize('1.8rem');
             form.setFieldsValue({
                 account: '',
             });
