@@ -60,11 +60,15 @@ const dataSource2 = [
 const AdvanceCollection = function () {
     const [state, dispatch] = useContext(ReducerContext);
     const [columnsData, setColumnsData] = useState([]);
-    const columns = useRef([]);
-    const columns2 = useRef([]);
-    const activeTabKey = useRef('1');
+    const stockColumns = useRef([]);
+    const stockColumns2 = useRef([]);
+    const stockActiveTabKey = useRef('1');
+    const init = useRef(false);
+    const selectedAccount = useRef({});
+    const [defaultValue, setDefaultValue] = useState('');
     useEffect(() => {
-        columns.current = [
+        selectedAccount.current = state.accountsReducer.selected;
+        stockColumns.current = [
             {
                 title: '',
                 dataIndex: 'action',
@@ -74,7 +78,7 @@ const AdvanceCollection = function () {
                     return (
                         <Button
                             onClick={() => {
-                                console.log('selected', state.accountsReducer);
+                                console.log('selected', selectedAccount.current);
                                 console.log(text, record);
                             }}
                         >
@@ -117,7 +121,7 @@ const AdvanceCollection = function () {
                 },
             },
         ];
-        columns2.current = [
+        stockColumns2.current = [
             {
                 title: '委託時間',
                 dataIndex: 'time',
@@ -144,27 +148,35 @@ const AdvanceCollection = function () {
             },
         ];
 
-        setColumnsData(columns.current);
+        if (!init.current) {
+            setColumnsData(stockColumns.current);
+            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+            init.current = true;
+        }
     }, [state.accountsReducer.selected]);
 
     const changleHandler = activeKey => {
-        activeTabKey.current = activeKey;
+        stockActiveTabKey.current = activeKey;
         if (activeKey == 1) {
-            setColumnsData(columns.current);
+            setColumnsData(stockColumns.current);
         } else {
-            setColumnsData(columns2.current);
+            setColumnsData(stockColumns2.current);
+        }
+        if (state.accountsReducer.selected) {
+            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
         }
     };
+
     return (
         <div className="reservation__container">
             <h1 className="title">預收股票</h1>
             <Tabs
-                defaultActiveKey={activeTabKey.current}
+                defaultActiveKey={stockActiveTabKey.current}
                 animated={{ inkBar: true, tabPane: true }}
                 onChange={changleHandler}
             >
                 <TabPane tab="預收股票申請" key="1">
-                    <Accounts key="1" style={{ marginTop: '35px' }} />
+                    <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
                     <ApplyContent
                         key="table1"
                         scroll={{ x: 860 }}
@@ -175,7 +187,7 @@ const AdvanceCollection = function () {
                     />
                 </TabPane>
                 <TabPane tab="預收股票查詢" key="2">
-                    <Accounts key="2" style={{ marginTop: '35px' }} />
+                    <Accounts key="2" style={{ marginTop: '35px' }} value={defaultValue} />
                     <ApplyContent
                         key="table2"
                         scroll={{ x: 860 }}

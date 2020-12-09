@@ -5,13 +5,14 @@ import AccountSelect from './AccountSelect';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
 import { SELECTED } from '../../../store/advanceCollection/actionType';
-const Accounts = ({ style }) => {
+const Accounts = ({ style, value, ...props } = { value: '' }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const { width } = useWindowSize();
 
     const selectHandler = val => {
         dispatch({ type: SELECTED, payload: val });
     };
+
     return (
         <div className="account__container" style={style}>
             <div className="label__box">
@@ -22,8 +23,8 @@ const Accounts = ({ style }) => {
                 <AccountSelect
                     onSelect={selectHandler}
                     data={state.accountsReducer.accounts}
-                    defaultValue={
-                        state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account
+                    value={
+                        value || state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account
                     }
                 />
             </div>

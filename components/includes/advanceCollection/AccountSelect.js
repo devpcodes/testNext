@@ -1,13 +1,19 @@
 import { Select } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 const { Option } = Select;
 
-const AccountSelect = ({ data, defaultValue, onSelect } = { defaultValue: '' }) => {
+const AccountSelect = ({ data, onSelect, value, ...props } = { value: '' }) => {
+    const [selectedValue, setSelectedValue] = useState('');
     useEffect(() => {
-        selectHandler(defaultValue);
+        selectHandler(value);
     }, []);
 
+    useEffect(() => {
+        selectHandler(value);
+    }, [value]);
+
     const selectHandler = val => {
+        setSelectedValue(val);
         const selected = data.filter((item, key) => {
             if (item.broker_id + item.account === val) {
                 return true;
@@ -17,7 +23,7 @@ const AccountSelect = ({ data, defaultValue, onSelect } = { defaultValue: '' }) 
     };
     return (
         <div className="accountSelect__container">
-            <Select onSelect={selectHandler} defaultValue={defaultValue} style={{ width: '100%' }}>
+            <Select {...props} value={selectedValue} onSelect={selectHandler} style={{ width: '100%' }}>
                 {!!data &&
                     data.map((val, key) => {
                         return (
