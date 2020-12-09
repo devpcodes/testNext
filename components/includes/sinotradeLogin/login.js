@@ -396,7 +396,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             },
                             {
                                 validator: (rule, value) => {
-                                    if (value.length >= 4 && value.length <= 12) {
+                                    if (value.length >= 1 && value.length <= 12) {
                                         return Promise.resolve();
                                     } else {
                                         return Promise.reject('輸入字數錯誤');
