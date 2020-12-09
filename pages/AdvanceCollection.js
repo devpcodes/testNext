@@ -56,137 +56,134 @@ const dataSource2 = [
         time: '08:00',
     },
 ];
-const columns = [
-    {
-        title: '',
-        dataIndex: 'action',
-        key: 'action',
-        index: 6,
-        render: (text, record, index) => {
-            return (
-                <Button
-                    onClick={() => {
-                        console.log(text, record);
-                    }}
-                >
-                    {text}
-                </Button>
-            );
-        },
-    },
-    {
-        title: '股票代號',
-        dataIndex: 'stockCode',
-        key: 'stockCode',
-        index: 1,
-    },
-    {
-        title: '股票名稱',
-        dataIndex: 'stockName',
-        key: 'stockName',
-        index: 2,
-    },
-    {
-        title: '昨日庫存(股數)',
-        dataIndex: 'invetory',
-        key: 'invetory',
-        index: 3,
-    },
-    {
-        title: '已圈存股數',
-        dataIndex: 'alreadyNum',
-        key: 'alreadyNum',
-        index: 4,
-    },
-    {
-        title: '申請預收股數',
-        dataIndex: 'applyNum',
-        key: 'applyNum',
-        index: 5,
-        render: (text, record, index) => {
-            return <Input value={text} />;
-        },
-    },
-];
-const columns2 = [
-    {
-        title: '委託時間',
-        dataIndex: 'time',
-        key: 'time',
-        index: 1,
-    },
-    {
-        title: '股票代號',
-        dataIndex: 'symbol',
-        key: 'symbol',
-        index: 2,
-    },
-    {
-        title: '股票名稱',
-        dataIndex: 'stockName',
-        key: 'stockName',
-        index: 3,
-    },
-    {
-        title: '已預收股數',
-        dataIndex: 'invetory',
-        key: 'invetory',
-        index: 4,
-    },
-];
+
 const AdvanceCollection = function () {
     const [state, dispatch] = useContext(ReducerContext);
     const [columnsData, setColumnsData] = useState([]);
-    const [activeKey, setActiveKey] = useState('1');
+    const columns = useRef([]);
+    const columns2 = useRef([]);
+    const activeTabKey = useRef('1');
     useEffect(() => {
-        setColumnsData(columns);
-    }, []);
+        columns.current = [
+            {
+                title: '',
+                dataIndex: 'action',
+                key: 'action',
+                index: 6,
+                render: (text, record, index) => {
+                    return (
+                        <Button
+                            onClick={() => {
+                                console.log('selected', state.accountsReducer);
+                                console.log(text, record);
+                            }}
+                        >
+                            {text}
+                        </Button>
+                    );
+                },
+            },
+            {
+                title: '股票代號',
+                dataIndex: 'stockCode',
+                key: 'stockCode',
+                index: 1,
+            },
+            {
+                title: '股票名稱',
+                dataIndex: 'stockName',
+                key: 'stockName',
+                index: 2,
+            },
+            {
+                title: '昨日庫存(股數)',
+                dataIndex: 'invetory',
+                key: 'invetory',
+                index: 3,
+            },
+            {
+                title: '已圈存股數',
+                dataIndex: 'alreadyNum',
+                key: 'alreadyNum',
+                index: 4,
+            },
+            {
+                title: '申請預收股數',
+                dataIndex: 'applyNum',
+                key: 'applyNum',
+                index: 5,
+                render: (text, record, index) => {
+                    return <Input value={text} />;
+                },
+            },
+        ];
+        columns2.current = [
+            {
+                title: '委託時間',
+                dataIndex: 'time',
+                key: 'time',
+                index: 1,
+            },
+            {
+                title: '股票代號',
+                dataIndex: 'symbol',
+                key: 'symbol',
+                index: 2,
+            },
+            {
+                title: '股票名稱',
+                dataIndex: 'stockName',
+                key: 'stockName',
+                index: 3,
+            },
+            {
+                title: '已預收股數',
+                dataIndex: 'invetory',
+                key: 'invetory',
+                index: 4,
+            },
+        ];
 
-    useEffect(() => {}, [state.accountsReducer.selected]);
+        setColumnsData(columns.current);
+    }, [state.accountsReducer.selected]);
 
     const changleHandler = activeKey => {
-        console.log('===change render===');
+        activeTabKey.current = activeKey;
         if (activeKey == 1) {
-            setColumnsData(columns);
+            setColumnsData(columns.current);
         } else {
-            setColumnsData(columns2);
+            setColumnsData(columns2.current);
         }
-        setActiveKey(activeKey);
     };
-    console.log('===page render===', activeKey);
     return (
         <div className="reservation__container">
             <h1 className="title">預收股票</h1>
-            <Tabs defaultActiveKey={activeKey} animated={{ inkBar: true, tabPane: true }} onChange={changleHandler}>
+            <Tabs
+                defaultActiveKey={activeTabKey.current}
+                animated={{ inkBar: true, tabPane: true }}
+                onChange={changleHandler}
+            >
                 <TabPane tab="預收股票申請" key="1">
-                    {activeKey === '1' && (
-                        <>
-                            <Accounts key="1" style={{ marginTop: '35px' }} />
-                            <ApplyContent
-                                key="table1"
-                                scroll={{ x: 860 }}
-                                contenterTitle={'預收股票申請'}
-                                dataSource={dataSource}
-                                columns={columnsData}
-                                pagination={false}
-                            />
-                        </>
-                    )}
+                    <Accounts key="1" style={{ marginTop: '35px' }} />
+                    <ApplyContent
+                        key="table1"
+                        scroll={{ x: 860 }}
+                        contenterTitle={'預收股票申請'}
+                        dataSource={dataSource}
+                        columns={columnsData}
+                        pagination={false}
+                    />
                 </TabPane>
                 <TabPane tab="預收股票查詢" key="2">
-                    {activeKey === '2' && (
-                        <>
-                            <Accounts key="2" style={{ marginTop: '35px' }} />
-                            <ApplyContent
-                                key="table2"
-                                scroll={{ x: 860 }}
-                                contenterTitle={'預收股票查詢'}
-                                dataSource={dataSource2}
-                                columns={columnsData}
-                                pagination={false}
-                            />
-                        </>
-                    )}
+                    <Accounts key="2" style={{ marginTop: '35px' }} />
+                    <ApplyContent
+                        key="table2"
+                        scroll={{ x: 860 }}
+                        contenterTitle={'預收股票查詢'}
+                        dataSource={dataSource2}
+                        columns={columnsData}
+                        pagination={false}
+                    />
                 </TabPane>
             </Tabs>
             <style jsx>{`

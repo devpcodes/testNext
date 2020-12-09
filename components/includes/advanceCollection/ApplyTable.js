@@ -32,7 +32,7 @@ const ApplyTable = ({ ...props }) => {
                             paddingLeft: column.title === '' ? 0 : '10px',
                         }}
                     >
-                        {column.render(item[column.dataIndex])}
+                        {column.render(item[column.dataIndex], item)}
                     </div>
                 </div>
             );
@@ -51,10 +51,9 @@ const ApplyTable = ({ ...props }) => {
             </span>
         );
     };
-    console.log('=====render=====02');
     return (
         <div className="applyTable__container">
-            {width <= 580 ? (
+            {width <= 580 || width == null ? (
                 <>
                     {props.dataSource.map((item, key) => {
                         return (
