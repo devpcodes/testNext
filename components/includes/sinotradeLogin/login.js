@@ -250,6 +250,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 password: '',
             });
         } else {
+            setEncryptAccount('');
             form.setFieldsValue({
                 account: '',
             });
