@@ -244,11 +244,21 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             },
             '*',
         );
-        // postMessage 完之後，清除所有 input 資料。
-        // parent.location.href = '/';
-        // setTimeout(() => {
-        //     location.href = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
-        // }, 1000);
+
+        if (form.getFieldValue('remember') && localStorage.getItem('userID')) {
+            form.setFieldsValue({
+                password: '',
+            });
+        } else {
+            setEncryptAccount('');
+            setAccountFontSize('1.8rem');
+            form.setFieldsValue({
+                account: '',
+            });
+            form.setFieldsValue({
+                password: '',
+            });
+        }
     };
 
     const signUpHandler = function (e) {
@@ -396,7 +406,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             },
                             {
                                 validator: (rule, value) => {
-                                    if (value.length >= 4 && value.length <= 12) {
+                                    if (value.length >= 1 && value.length <= 12) {
                                         return Promise.resolve();
                                     } else {
                                         return Promise.reject('輸入字數錯誤');
