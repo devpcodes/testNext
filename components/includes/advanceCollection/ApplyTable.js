@@ -1,14 +1,14 @@
 import _ from 'lodash';
-import { useRef, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 const ApplyTable = ({ ...props }) => {
     const { width } = useWindowSize();
-    const sortColumns = useRef([]);
+    const [columnsData, setColumnsData] = useState([]);
     useEffect(() => {
-        sortColumns.current = _.orderBy(props.columns, ['index'], ['asc']);
-        console.log('columns', sortColumns.current);
-    }, []);
+        setColumnsData(_.orderBy(props.columns, ['index'], ['asc']));
+    }, [props.columns]);
+
     const mobileColumnHandler = (column, item) => {
         if (column.render != null) {
             return (
@@ -51,6 +51,7 @@ const ApplyTable = ({ ...props }) => {
             </span>
         );
     };
+    console.log('=====render=====02');
     return (
         <div className="applyTable__container">
             {width <= 580 ? (
@@ -58,16 +59,17 @@ const ApplyTable = ({ ...props }) => {
                     {props.dataSource.map((item, key) => {
                         return (
                             <div className="item__box" key={key}>
-                                {sortColumns.current.map((column, key2) => {
-                                    return (
-                                        <div key={key2}>
-                                            {mobileColumnHandler(column, item)}
-                                            {column.render == null ? (
-                                                <span className="val">{item[column.dataIndex]}</span>
-                                            ) : null}
-                                        </div>
-                                    );
-                                })}
+                                {columnsData.length > 0 &&
+                                    columnsData.map((column, key2) => {
+                                        return (
+                                            <div key={key2}>
+                                                {mobileColumnHandler(column, item)}
+                                                {column.render == null ? (
+                                                    <span className="val">{item[column.dataIndex]}</span>
+                                                ) : null}
+                                            </div>
+                                        );
+                                    })}
                             </div>
                         );
                     })}

@@ -1,4 +1,4 @@
-import { useReducer, createContext, useEffect, useContext } from 'react';
+import { useReducer, createContext, useEffect, useContext, useRef, useState } from 'react';
 import { Tabs, Button, Input } from 'antd';
 
 import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayout';
@@ -40,6 +40,22 @@ const dataSource = [
     },
 ];
 
+const dataSource2 = [
+    {
+        key: '1',
+        symbol: '2330',
+        stockName: '台積電',
+        invetory: 5000,
+        time: '10:00',
+    },
+    {
+        key: '2',
+        symbol: '2890',
+        stockName: '永豐金',
+        invetory: 1000,
+        time: '08:00',
+    },
+];
 const columns = [
     {
         title: '',
@@ -92,31 +108,85 @@ const columns = [
         },
     },
 ];
+const columns2 = [
+    {
+        title: '委託時間',
+        dataIndex: 'time',
+        key: 'time',
+        index: 1,
+    },
+    {
+        title: '股票代號',
+        dataIndex: 'symbol',
+        key: 'symbol',
+        index: 2,
+    },
+    {
+        title: '股票名稱',
+        dataIndex: 'stockName',
+        key: 'stockName',
+        index: 3,
+    },
+    {
+        title: '已預收股數',
+        dataIndex: 'invetory',
+        key: 'invetory',
+        index: 4,
+    },
+];
 const AdvanceCollection = function () {
     const [state, dispatch] = useContext(ReducerContext);
+    const [columnsData, setColumnsData] = useState([]);
+    const [activeKey, setActiveKey] = useState('1');
     useEffect(() => {
-        console.log('selected', state.accountsReducer.selected);
-    }, [state.accountsReducer.selected]);
+        setColumnsData(columns);
+    }, []);
+
+    useEffect(() => {}, [state.accountsReducer.selected]);
 
     const changleHandler = activeKey => {
-        console.log('selected', state.accountsReducer.selected);
+        console.log('===change render===');
+        if (activeKey == 1) {
+            setColumnsData(columns);
+        } else {
+            setColumnsData(columns2);
+        }
+        setActiveKey(activeKey);
     };
+    console.log('===page render===', activeKey);
     return (
         <div className="reservation__container">
             <h1 className="title">預收股票</h1>
-            <Tabs defaultActiveKey="1" animated={{ inkBar: true, tabPane: true }} onChange={changleHandler}>
+            <Tabs defaultActiveKey={activeKey} animated={{ inkBar: true, tabPane: true }} onChange={changleHandler}>
                 <TabPane tab="預收股票申請" key="1">
-                    <Accounts key="1" style={{ marginTop: '35px' }} />
-                    <ApplyContent
-                        scroll={{ x: 860 }}
-                        contenterTitle={'預收股票申請'}
-                        dataSource={dataSource}
-                        columns={columns}
-                        pagination={false}
-                    />
+                    {activeKey === '1' && (
+                        <>
+                            <Accounts key="1" style={{ marginTop: '35px' }} />
+                            <ApplyContent
+                                key="table1"
+                                scroll={{ x: 860 }}
+                                contenterTitle={'預收股票申請'}
+                                dataSource={dataSource}
+                                columns={columnsData}
+                                pagination={false}
+                            />
+                        </>
+                    )}
                 </TabPane>
                 <TabPane tab="預收股票查詢" key="2">
-                    <Accounts key="2" style={{ marginTop: '35px' }} />
+                    {activeKey === '2' && (
+                        <>
+                            <Accounts key="2" style={{ marginTop: '35px' }} />
+                            <ApplyContent
+                                key="table2"
+                                scroll={{ x: 860 }}
+                                contenterTitle={'預收股票查詢'}
+                                dataSource={dataSource2}
+                                columns={columnsData}
+                                pagination={false}
+                            />
+                        </>
+                    )}
                 </TabPane>
             </Tabs>
             <style jsx>{`
@@ -137,7 +207,7 @@ const AdvanceCollection = function () {
                 }
                 @media (max-width: 580px) {
                     .title {
-                        font-size: 20px;
+                        font-size: 26px;
                     }
                 }
             `}</style>
