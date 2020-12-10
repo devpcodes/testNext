@@ -13,12 +13,12 @@ function TradingCenter_TWStocks_Taiex() {
     const isLogin = useSelector(store => store.user.isLogin);
     return (
         <>
-            <PageHead title={'台股大盤'} />
+            <PageHead title={'大盤報價'} />
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Taiex`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 1700 : 1300}
+                    iHeight={isMobile ? 1700 : 1500}
                     login={isLogin}
                 />
             </div>
