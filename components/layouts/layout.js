@@ -33,6 +33,7 @@ const Layout = React.memo(({ children }) => {
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [showBigLogin, setShowBigLogin] = useState(false);
     const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
+    const [showNav, setShowNav] = useState(false);
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
@@ -64,14 +65,13 @@ const Layout = React.memo(({ children }) => {
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered.current) {
             console.log('================= update =================');
-
             updateNavData();
         }
     }, [isMobile, isLogin, domain]);
 
     //處理假登入路徑
     useEffect(() => {
-        console.log('pa', router.asPath, router.asPath.indexOf('/SinoTrade_login'));
+        // console.log('pa', router.asPath, router.asPath.indexOf('/SinoTrade_login'));
         if (router.asPath.indexOf('/SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
@@ -100,7 +100,6 @@ const Layout = React.memo(({ children }) => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
             if (!Object.keys(navData).length) {
                 console.log('================= first =================');
-
                 updateNavData();
             }
         }, 10);
@@ -139,7 +138,7 @@ const Layout = React.memo(({ children }) => {
     }, [userSettings]);
 
     useEffect(() => {
-        console.log('path', router.pathname, router.query);
+        // console.log('path', router.pathname, router.query);
         if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
@@ -153,6 +152,12 @@ const Layout = React.memo(({ children }) => {
 
     useEffect(() => {
         queryStr.current = router.query;
+
+        if (router.query.nav != '0') {
+            setShowNav(true);
+        } else {
+            setShowNav(false);
+        }
     }, [router.query]);
 
     useEffect(() => {
@@ -331,7 +336,7 @@ const Layout = React.memo(({ children }) => {
     //傳錯誤訊息給errpage
     const renderChildren = function (errMsg) {
         return React.Children.map(children, child => {
-            console.log('path', router.pathname.indexOf('errPage'), router.pathname);
+            // console.log('path', router.pathname.indexOf('errPage'), router.pathname);
             if (router.pathname.indexOf('errPage') != -1) {
                 return React.cloneElement(child, {
                     errMsg,
@@ -366,7 +371,7 @@ const Layout = React.memo(({ children }) => {
     const caResultDataHandler = async function (suggestAction, userIdNo, token) {
         if (suggestAction === 'ApplyCert') {
             const msg = await applyCert(userIdNo, token);
-            console.log('ApplyCert憑證回傳訊息', msg);
+            // console.log('ApplyCert憑證回傳訊息', msg);
             notification.open({
                 message: '系統訊息',
                 description: msg,
@@ -375,7 +380,7 @@ const Layout = React.memo(({ children }) => {
         }
         if (suggestAction == 'RenewCert') {
             const msg = await renewCert(userIdNo, token);
-            console.log('RenewCert憑證回傳訊息', msg);
+            // console.log('RenewCert憑證回傳訊息', msg);
             notification.open({
                 message: '系統訊息',
                 description: msg,
@@ -426,14 +431,14 @@ const Layout = React.memo(({ children }) => {
             <MyTransition isVisible={showLogin} classNames={'opacity'}>
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
-            <Header />
+            {showNav && <Header />}
             {isMobile && showMask && <div onClick={maskClickHandler} className="page__mask"></div>}
             <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
-            <Footer />
+            {showNav && <Footer />}
             <style jsx>{`
                 .page__container {
                     min-height: 500px;
-                    margin-top: 70px;
+                    margin-top: ${showNav ? '70px' : '0'};
                 }
                 .page__mask {
                     position: fixed;
