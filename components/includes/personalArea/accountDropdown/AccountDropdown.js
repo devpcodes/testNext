@@ -279,29 +279,29 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                 .account__container .ant-select-arrow {
                     display: none;
                 }
-                .ant-select-item-option-content .option__accType {
+                .account__container .ant-select-item-option-content .option__accType {
                     display: none;
                 }
-                .ant-select-item-option-content .option__account {
+                .account__container .ant-select-item-option-content .option__account {
                     display: block;
                 }
-                .ant-select-selection-item .option__account {
+                .account__container .ant-select-selection-item .option__account {
                     display: none;
                 }
-                .ant-select-item.ant-select-item-group .optGroup__accType {
+                .account__container .ant-select-item.ant-select-item-group .optGroup__accType {
                     color: ${theme.colors.secondary};
                 }
-                .ant-select-item.ant-select-item-group,
-                .ant-select-item.ant-select-item-option.ant-select-item-option-grouped {
+                .account__container .ant-select-item.ant-select-item-group,
+                .account__container .ant-select-item.ant-select-item-option.ant-select-item-option-grouped {
                     padding-left: 20px;
                 }
-                .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+                .account__container .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
                     background-color: ${theme.colors.accountHover};
                 }
-                .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+                .account__container .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
                     background-color: #ffffff;
                 }
-                .ant-select-item-option-selected:after {
+                .account__container .ant-select-item-option-selected:after {
                     content: '';
                     position: absolute;
                     top: 17px;
@@ -310,7 +310,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     height: 19px;
                     background-image: url(${checkImg});
                 }
-                .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
+                .account__container .ant-select-dropdown.ant-select-dropdown-placement-bottomLeft {
                     width: ${dropdownWidth - 28}px !important;
                     min-width: ${dropdownWidth - 28}px !important;
                     top: 0px !important;
