@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 
 import Navbar from './navbar/navbar';
 import { HeaderCallToAction } from './headerCallToAction/HeaderCallToAction';
@@ -8,7 +9,7 @@ import theme from '../../resources/styles/theme';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenuOpen } from '../../store/components/layouts/action';
 
-const Header = () => {
+const Header = ({ showNav }) => {
     const showMenu = useSelector(store => store.layout.showMenu);
     const dispatch = useDispatch();
 
@@ -41,6 +42,7 @@ const Header = () => {
                     right: 0;
                     left: 0;
                     z-index: 500;
+                    display: ${showNav ? '' : 'none'};
                 }
                 .header__navbar {
                     width: ${theme.contentWidth.pc};
@@ -93,6 +95,10 @@ const Header = () => {
             `}</style>
         </header>
     );
+};
+
+Header.propTypes = {
+    showNav: PropTypes.bool.isRequired,
 };
 
 export default Header;

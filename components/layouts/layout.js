@@ -431,10 +431,10 @@ const Layout = React.memo(({ children }) => {
             <MyTransition isVisible={showLogin} classNames={'opacity'}>
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
-            {showNav && <Header />}
+            <Header showNav={showNav} />
             {isMobile && showMask && <div onClick={maskClickHandler} className="page__mask"></div>}
             <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
-            {showNav && <Footer />}
+            <Footer showNav={showNav} />
             <style jsx>{`
                 .page__container {
                     min-height: 500px;
@@ -462,6 +462,7 @@ const Layout = React.memo(({ children }) => {
         </>
     );
 });
+
 Layout.propTypes = {
     children: PropTypes.element,
 };
