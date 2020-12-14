@@ -1,85 +1,79 @@
+
 <script>
     (function ($) {
         $(function () {
-            var _WP_PATH = '../';
+            var _WP_PATH = "../";
             jQuery.loadScript = function (url, usecache) {
-                jQuery.ajax({
-                    url: _WP_PATH + url,
-                    dataType: 'script',
-                    async: false,
-                    method: 'GET',
-                    ifModified: usecache,
-                });
+                jQuery.ajax({url: _WP_PATH + url, dataType: "script", async: false, method: "GET", ifModified: usecache});
             };
             jQuery.loadCSS = function (url) {
                 if (document.createStyleSheet)
                     try {
                         document.createStyleSheet(_WP_PATH + url);
-                    } catch (e) {}
+                    } catch (e) {
+                    }
                 else if ($("head link[href='" + _WP_PATH + url + "']").length === 0)
-                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($('head'));
+                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($("head"));
             };
-            var lang = LabCI.Utils.getURLParameter('lang');
+            var lang = LabCI.Utils.getURLParameter("lang");
             // Quaote chart Object...
-            if (typeof LabCI.WP.QuoteSRPlusPageObj === 'undefined') {
+            if (typeof (LabCI.WP.QuoteSRPlusPageObj) === "undefined") {
                 //    $.loadCSS("css/ps.css");
-                $.loadScript('js/quote-srplus.js');
+                $.loadScript("js/quote-srplus.js");
             }
-            if (lang === 'zh_HK') $.loadScript('js/quote-srplus_zh_HK.js');
-            else if (lang === 'zh_CN') $.loadScript('js/quote-srplus_zh_CN.js');
-            else if (lang === 'en') $.loadScript('js/quote-srplus_en.js');
-            else $.loadScript('js/quote-srplus_zh_TW.js');
-            if (lang === 'zh_HK') $.loadScript('js/commonrc_zh_HK.js');
-            else if (lang === 'zh_CN') $.loadScript('js/commonrc_zh_CN.js');
-            else if (lang === 'en') $.loadScript('js/commonrc_en.js');
-            else $.loadScript('js/commonrc_zh_TW.js');
+            if (lang === "zh_HK")
+                $.loadScript("js/quote-srplus_zh_HK.js");
+            else if (lang === "zh_CN")
+                $.loadScript("js/quote-srplus_zh_CN.js");
+            else if (lang === "en")
+                $.loadScript("js/quote-srplus_en.js");
+            else
+                $.loadScript("js/quote-srplus_zh_TW.js");
+            if (lang === "zh_HK")
+                $.loadScript("js/commonrc_zh_HK.js");
+            else if (lang === "zh_CN")
+                $.loadScript("js/commonrc_zh_CN.js");
+            else if (lang === "en")
+                $.loadScript("js/commonrc_en.js");
+            else
+                $.loadScript("js/commonrc_zh_TW.js");
         });
-        // Turn on/off debug logger, default is off
+// Turn on/off debug logger, default is off
         LabCI.Utils.CONSOLELOGGER.isdebug = true;
         $(window).resize(function () {
-            window['lsinopac_quote-srplus'].resizeImpl();
+            window["lsinopac_quote-srplus"].resizeImpl();
         });
     })(jQuery);
 </script>
 <style>
-    #lsinopac-quote-srplus .avgscore {
+    #lsinopac-quote-srplus .avgscore{
         font-weight: 700;
         padding-bottom: 10px;
     }
-    #lsinopac-quote-srplus .scoretrendimagediv {
+    #lsinopac-quote-srplus .scoretrendimagediv{
         /*  height: 180px; */
     }
-    #lsinopac-quote-srplus .scoretrendimage {
+    #lsinopac-quote-srplus .scoretrendimage{
         height: 180px;
     }
-    #lsinopac-quote-srplus .ylbl {
-        font-size: 13px;
-    }
-    #lsinopac-quote-srplus .xlbl {
-        font-size: 13px;
+    #lsinopac-quote-srplus .ylbl{
+        font-size:13px;
+    }     
+    #lsinopac-quote-srplus .xlbl{
+        font-size:13px;
         text-align: right;
-    }
-    #lsinopac-quote-srplus .broker-rating-title {
+    } 
+    #lsinopac-quote-srplus .broker-rating-title{
         font-weight: 700;
         padding-top: 20px;
         padding-bottom: 5px;
-    }
-    #lsinopac-quote-srplus .brokerratingscore.r1 {
-        color: #9e070f;
-    } /* SELL */
-    #lsinopac-quote-srplus .brokerratingscore.r2 {
-        color: #d6111a;
-    } /* REDUCE */
-    #lsinopac-quote-srplus .brokerratingscore.r3 {
-        color: #fdb32b;
-    } /* HOLD */
-    #lsinopac-quote-srplus .brokerratingscore.r4 {
-        color: #48a339;
-    } /* BUY */
-    #lsinopac-quote-srplus .brokerratingscore.r5 {
-        color: #3b7a30;
-    } /* STRONG BUY */
-    #lsinopac-quote-srplus .lblratingboxlengend {
+    }    
+    #lsinopac-quote-srplus .brokerratingscore.r1 { color: #9E070F; } /* SELL */
+    #lsinopac-quote-srplus .brokerratingscore.r2 { color: #D6111A; } /* REDUCE */
+    #lsinopac-quote-srplus .brokerratingscore.r3 { color: #FDB32B; } /* HOLD */
+    #lsinopac-quote-srplus .brokerratingscore.r4 { color: #48A339; } /* BUY */
+    #lsinopac-quote-srplus .brokerratingscore.r5 { color: #3B7A30; } /* STRONG BUY */   
+    #lsinopac-quote-srplus .lblratingboxlengend{
         font-size: 13px;
         /*   text-align: justify;*/
     }
@@ -88,7 +82,7 @@
         clear: both;
         width: 100%;
         height: 53px;
-    }
+    } 
     #lsinopac-quote-srplus .ratingblock {
         float: left;
         width: 108px;
@@ -110,43 +104,43 @@
     #lsinopac-quote-srplus .ratingblock.rate1 {
         background-image: url(../images/score/ratingblock1.png);
         width: 18%;
-        margin-left: 0;
+        margin-left: 0;        
     }
     #lsinopac-quote-srplus brokerrating.r1 {
-        color: #9e070f;
+        color: #9E070F;
     }
     #lsinopac-quote-srplus .ratingblock.rate2 {
         background-image: url(../images/score/ratingblock2.png);
         width: 20%;
-        margin-left: 0;
+        margin-left: 0;        
     }
     #lsinopac-quote-srplus brokerrating.r2 {
-        color: #d6111a;
+        color: #D6111A;
     }
     #lsinopac-quote-srplus .ratingblock.rate3 {
         background-image: url(../images/score/ratingblock3.png);
         width: 20%;
-        margin-left: 0;
+        margin-left: 0;        
     }
     #lsinopac-quote-srplus brokerrating.r3 {
-        color: #fdb32b;
-    }
+        color: #FDB32B;
+    } 
     #lsinopac-quote-srplus .ratingblock.rate4 {
         background-image: url(../images/score/ratingblock4.png);
         width: 20%;
-        margin-left: 0;
+        margin-left: 0;        
     }
     #lsinopac-quote-srplus brokerrating.r4 {
-        color: #48a339;
+        color: #48A339;
     }
     #lsinopac-quote-srplus .ratingblock.rate5 {
         background-image: url(../images/score/ratingblock5.png);
         width: 18%;
-        margin-left: 0;
+        margin-left: 0;        
     }
     #lsinopac-quote-srplus brokerrating.r5 {
-        color: #3b7a30;
-    }
+        color: #3B7A30;
+    }    
     #lsinopac-quote-srplus .ratingblock span {
         display: block;
         font-size: 11px;
@@ -156,20 +150,19 @@
     #lsinopac-quote-srplus .ratingblock span.has2lines {
         padding-top: 10px;
         line-height: 14px;
-    }
-    #lsinopac-quote-srplus .ratingpointer.atedge {
+    } 
+    #lsinopac-quote-srplus .ratingpointer.atedge { 
         margin-left: -12px;
     }
-    #lsinopac-quote-srplus .company-score-title {
+    #lsinopac-quote-srplus .company-score-title{
         font-weight: 700;
         padding-top: 20px;
     }
-    #lsinopac-quote-srplus .peer-title {
+    #lsinopac-quote-srplus .peer-title{
         font-weight: 700;
         padding-top: 20px;
-    }
-    #lsinopac-quote-srplus.company-score-list .stock,
-    .company-score-list .sector {
+    }    
+    #lsinopac-quote-srplus.company-score-list .stock,.company-score-list .sector{
         text-align: center;
     }
     #lsinopac-quote-srplus .scorespiderchart {
@@ -180,13 +173,13 @@
     }
     #lsinopac-quote-srplus .scorespiderchart.zh_TW {
         background-image: url(../images/score/spiderchartbg_zh_TW.png);
-    }
+    } 
     #lsinopac-quote-srplus .scorespiderchart.zh_HK {
         background-image: url(../images/score/spiderchartbg_zh_HK.png);
-    }
+    } 
     #lsinopac-quote-srplus .scorespiderchart.zh_CN {
         background-image: url(../images/score/spiderchartbg_zh_CN.png);
-    }
+    }    
     #lsinopac-quote-srplus .scorespiderchartimg {
         /*   margin-top: 24px;
            margin-left: 40px;
@@ -195,52 +188,52 @@
            
        margin: auto; */
         right: 3px;
-        position: relative;
+        position: relative;     
         width: 100%;
         height: 170px;
-        padding-top: 15px;
+        padding-top: 15px;        
     }
-    #lsinopac-quote-srplus .spiderchartStockLengend {
+    #lsinopac-quote-srplus .spiderchartStockLengend{
         width: 15px;
         height: 15px;
-        background-color: #bddc92;
+        background-color: #BDDC92;
         padding-right: 5px;
         display: inline-block;
         padding-top: 0px;
         margin-top: 0px;
         top: 2px;
-        position: relative;
+        position: relative;        
     }
-    #lsinopac-quote-srplus .spiderchartSectorLengend {
+    #lsinopac-quote-srplus .spiderchartSectorLengend{
         width: 15px;
         height: 15px;
-        background-color: #6da9b9;
+        background-color: #6DA9B9;
         padding-right: 5px;
         display: inline-block;
         padding-top: 0px;
         margin-top: 0px;
         top: 2px;
-        position: relative;
-    }
+        position: relative;        
+    }    
     #lsinopac-quote-srplus .spiderchartStock,
-    #lsinopac-quote-srplus .spiderchartSector {
+    #lsinopac-quote-srplus .spiderchartSector{
         font-size: 13px;
-        display: inline-block;
+        display:inline-block;
     }
-    #lsinopac-quote-srplus .component-score-container {
-        padding-bottom: 20px;
+    #lsinopac-quote-srplus .component-score-container{
+        padding-bottom:20px;
     }
-    #lsinopac-quote-srplus .business-summary-title {
+    #lsinopac-quote-srplus .business-summary-title{
         font-weight: 700;
-        padding-bottom: 10px;
+        padding-bottom:10px;
     }
-    #lsinopac-quote-srplus .business-summary-container {
+    #lsinopac-quote-srplus .business-summary-container{
         padding-bottom: 20px;
     }
-    #lsinopac-quote-srplus .business-summary-container.desktop {
-        border-left: 1px solid #e2e0dd;
-    }
-    #lsinopac-quote-srplus .peer-container .type {
+    #lsinopac-quote-srplus .business-summary-container.desktop{
+        border-left: 1px solid #E2E0DD;
+    }    
+    #lsinopac-quote-srplus .peer-container .type{
         font-weight: 700;
     }
     .outer {
@@ -257,9 +250,9 @@
         margin-right: auto;
         width: 100%;
         /*whatever width you want*/
-    }
+    }    
 </style>
-<div class="srplusbody" style="display: none">
+<div class="srplusbody" style="display:none;">
     <!-- ======================================================================= -->
     <div class="row">
         <div class="col-12 col-md-8 pr-md-4">
@@ -272,59 +265,39 @@
                         <div class="avgscoretrend lblavgscoretrend">Average Score Trend (4 WK Moving Avg.)</div>
                     </div>
                     <div class="col-4 col-md-0 pl-0 d-md-none">
-                        <div class="avgscorebadge" style="text-align: right"></div>
+                        <div class="avgscorebadge" style="text-align: right;"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-9 scoretrendimagediv">
                         <div class="row">
                             <div class="col-9 col-md-10 pr-0">
-                                <div class="scoretrendimage"><img src="" /></div>
+                                <div class="scoretrendimage"><img src=""/></div>
                             </div>
                             <div class="col-3 col-md-2 pl-0">
-                                <div
-                                    id="yPos"
-                                    class="ylbl lblpositive"
-                                    style="position: relative; top: 23px; padding-left: 5px"
-                                >
-                                    Positive
-                                </div>
-                                <div
-                                    id="yNeu"
-                                    class="ylbl lblneutral"
-                                    style="position: relative; top: 70px; padding-left: 5px"
-                                >
-                                    Neutral
-                                </div>
-                                <div
-                                    id="yNeg"
-                                    class="ylbl lblnegative"
-                                    style="position: relative; top: 110px; padding-left: 5px"
-                                >
-                                    Negative
-                                </div>
+                                <div id="yPos" class="ylbl lblpositive" style="position: relative;top: 23px;padding-left:5px">Positive</div>
+                                <div id="yNeu" class="ylbl lblneutral" style="position: relative;top: 70px;padding-left:5px">Neutral</div>
+                                <div id="yNeg" class="ylbl lblnegative" style="position: relative;top: 110px;padding-left:5px">Negative</div>                              
                             </div>
                         </div>
                         <div id="xlblrow" class="row">
-                            <div id="x3" class="col pr-0 xlbl"></div>
+                            <div id="x3" class="col pr-0  xlbl"></div>
                             <div id="x2" class="col pr-0 pl-0 xlbl"></div>
                             <div id="x1" class="col pr-0 pl-0 xlbl"></div>
                             <div id="x0" class="col pr-0 pl-0 xlbl"></div>
                             <div class="col pr-0 pl-0"></div>
-                        </div>
+                        </div>                    
                     </div>
                     <div class="col-0 col-md-3 d-none d-md-block pl-md-0">
-                        <div class="avgscorebadge" style="text-align: right">
-                            <img src="" width="100" height="135" />
-                        </div>
+                        <div class="avgscorebadge" style="text-align: right;"><img src="" width="100" height="135"/></div>
                     </div>
                 </div>
-            </div>
+            </div>        
         </div>
         <div class="col-md-4 d-none d-md-block pl-md-0">
             <div class="business-summary-container desktop pl-md-4">
                 <div class="business-summary-title lblbusinesssummary">Business Summary</div>
-                <div class="business-summary-desc">-</div>
+                <div class="business-summary-desc">-</div>  
             </div>
         </div>
     </div>
@@ -336,18 +309,18 @@
                     <thead>
                         <tr>
                             <td class="stock lblpeer">Peer</td>
-                            <td class="sector lblsixMago" style="text-align: center">6M Ago</td>
-                            <td class="sector lblthreeMago" style="text-align: center">3M Ago</td>
-                            <td class="sector lbloneMago" style="text-align: center">1M Ago</td>
-                            <td class="sector lbloneWago" style="text-align: center">1W Ago</td>
-                            <td class="sector lblcurrent" style="text-align: center">Current</td>
+                            <td class="sector lblsixMago" style="text-align:center">6M Ago</td>
+                            <td class="sector lblthreeMago" style="text-align:center">3M Ago</td>
+                            <td class="sector lbloneMago" style="text-align:center">1M Ago</td>
+                            <td class="sector lbloneWago" style="text-align:center">1W Ago</td>
+                            <td class="sector lblcurrent" style="text-align:center">Current</td>
                         </tr>
-                    </thead>
+                    </thead>                     
                 </table>
             </div>
             <div class="col-4">
                 <ul class="list-group list-group-flush peer-score-list">
-                    <li class="list-group-item pr-0 pl-0" style="border-top-width: 0px">
+                    <li class="list-group-item pr-0 pl-0" style="border-top-width:0px">
                         <div class="row">
                             <div class="col-9 type sectorname">-</div>
                             <div class="col-3 score sectorscore">-</div>
@@ -359,14 +332,14 @@
                         <div class="row">
                             <div class="col-9 type mktcapname">-</div>
                             <div class="col-3 score mktcapscore">-</div>
-                        </div>
+                        </div>                    
                         <div class="row">
                             <div class="col-9 type indexname">-</div>
                             <div class="col-3 score indexscore">-</div>
-                        </div>
+                        </div>                     
                     </li>
                 </ul>
-            </div>
+            </div>        
         </div>
     </div>
     <div class="broker-rating-container">
@@ -376,21 +349,15 @@
                 <div class="brokerratingscore"></div>
             </div>
             <div class="col-9 col-md-10">
-                <div class="lblratingboxlengend">
-                    Mean recommendation from all analysis covering the company on a standardized 5-point scale.
-                </div>
+                <div class="lblratingboxlengend">Mean recommendation from all analysis covering the company on a standardized 5-point scale.</div>
             </div>
         </div>
         <div class="brokerratinggauge">
-            <div class="ratingpointer" style="display: none"></div>
+            <div class="ratingpointer" style="display: none;"></div>
             <div class="ratingblock rate1 brokerrating r1"><span class="lblratingnegative">Negative</span></div>
-            <div class="ratingblock rate2 brokerrating r2">
-                <span class="has2lines lblratingneutralnegative">Neutral<br />to Negative</span>
-            </div>
+            <div class="ratingblock rate2 brokerrating r2"><span class="has2lines lblratingneutralnegative">Neutral<br>to Negative</span></div>
             <div class="ratingblock rate3 brokerrating r3"><span class="lblratingneutral">Neutral</span></div>
-            <div class="ratingblock rate4 brokerrating r4">
-                <span class="has2lines lblratingneutralpositive">Neutral<br />to Positive</span>
-            </div>
+            <div class="ratingblock rate4 brokerrating r4"><span class="has2lines lblratingneutralpositive">Neutral<br>to Positive</span></div>
             <div class="ratingblock rate5 brokerrating r5"><span class="lblratingpositive">Positive</span></div>
         </div>
     </div>
@@ -399,56 +366,56 @@
         <div class="row">
             <div class="col-12 col-md-6">
                 <ul class="list-group list-group-flush company-score-list">
-                    <li class="list-group-item pr-0 pl-0" style="border-top-width: 0px">
+                    <li class="list-group-item pr-0 pl-0" style="border-top-width:0px">
                         <div class="row">
                             <div class="col-6"></div>
-                            <div class="col-3 stock lblstock" style="text-align: center">Stock</div>
-                            <div class="col-3 sector lblsector" style="text-align: center">Sector</div>
+                            <div class="col-3 stock lblstock" style="text-align:center">Stock</div>
+                            <div class="col-3 sector lblsector" style="text-align:center">Sector</div>
                         </div>
                     </li>
                     <li class="list-group-item pr-0 pl-0">
                         <div class="row">
                             <div class="col-6 lblearning">Earnings</div>
-                            <div class="col-3 stock stock-earning" style="text-align: center">-</div>
-                            <div class="col-3 sector sector-earning" style="text-align: center">-</div>
+                            <div class="col-3 stock stock-earning" style="text-align:center">-</div>
+                            <div class="col-3 sector sector-earning" style="text-align:center">-</div>
                         </div>
-                    </li>
+                    </li> 
                     <li class="list-group-item pr-0 pl-0">
                         <div class="row">
                             <div class="col-6 lblfundamental">Fundamental</div>
-                            <div class="col-3 stock stock-fundamental" style="text-align: center">-</div>
-                            <div class="col-3 sector sector-fundamental" style="text-align: center">-</div>
+                            <div class="col-3 stock stock-fundamental" style="text-align:center">-</div>
+                            <div class="col-3 sector sector-fundamental" style="text-align:center">-</div>
                         </div>
-                    </li>
+                    </li> 
                     <li class="list-group-item pr-0 pl-0">
                         <div class="row">
                             <div class="col-6 lblvaluation">Relative Valuation</div>
-                            <div class="col-3 stock stock-valuation" style="text-align: center">-</div>
-                            <div class="col-3 sector sector-valuation" style="text-align: center">-</div>
+                            <div class="col-3 stock stock-valuation" style="text-align:center">-</div>
+                            <div class="col-3 sector sector-valuation" style="text-align:center">-</div>
                         </div>
-                    </li>
+                    </li> 
                     <li class="list-group-item pr-0 pl-0">
                         <div class="row">
                             <div class="col-6 lblrisk">Risk</div>
-                            <div class="col-3 stock stock-risk" style="text-align: center">-</div>
-                            <div class="col-3 sector sector-risk" style="text-align: center">-</div>
+                            <div class="col-3 stock stock-risk" style="text-align:center">-</div>
+                            <div class="col-3 sector sector-risk" style="text-align:center">-</div>
                         </div>
                     </li>
                     <li class="list-group-item pr-0 pl-0">
                         <div class="row">
                             <div class="col-6 lblmomentum">Price Momentum</div>
-                            <div class="col-3 stock stock-momentum" style="text-align: center">-</div>
-                            <div class="col-3 sector sector-momentum" style="text-align: center">-</div>
+                            <div class="col-3 stock stock-momentum" style="text-align:center">-</div>
+                            <div class="col-3 sector sector-momentum" style="text-align:center">-</div>
                         </div>
                     </li>
                     <li class="list-group-item pr-0 pl-0">
                         <div class="row">
                             <div class="col-6 lbloverall">Overall</div>
-                            <div class="col-3 stock stock-overall" style="text-align: center">-</div>
-                            <div class="col-3 sector sector-overall" style="text-align: center">-</div>
+                            <div class="col-3 stock stock-overall" style="text-align:center">-</div>
+                            <div class="col-3 sector sector-overall" style="text-align:center">-</div>
                         </div>
-                    </li>
-                </ul>
+                    </li>                
+                </ul>            
                 <!--    <table class="table table-striped sinopactable">
                         <thead>
                             <tr><td class=""></td>
@@ -480,7 +447,7 @@
                             <td class="stock-overall">-</td>
                             <td class="sector-overall">-</td>
                         </tr>                     
-                    </table> -->
+                    </table> -->           
             </div>
             <div class="col-12 col-md-6">
                 <div class="outer">
@@ -489,7 +456,7 @@
                             <div class="scorespiderchart">
                                 <div class="scorespiderchartimg"></div>
                             </div>
-                            <div class="row" style="padding-top: 5px">
+                            <div class="row" style="padding-top:5px">
                                 <div class="col-md-2"></div>
                                 <div class="col-4 col-md-3">
                                     <div class="spiderchartStockLengend"></div>
@@ -498,17 +465,17 @@
                                 <div class="col-8 col-md-7">
                                     <div class="spiderchartSectorLengend"></div>
                                     <div class="spiderchartSector"></div>
-                                </div>
+                                </div>                
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>        
             </div>
-        </div>
+        </div>   
     </div>
     <div class="business-summary-container d-md-none">
         <div class="business-summary-title lblbusinesssummary">Business Summary</div>
-        <div class="business-summary-desc">-</div>
+        <div class="business-summary-desc">-</div>  
     </div>
 </div>
-<div class="result-no lblnoresults" style="display: none; text-align: center">No results</div>
+<div class="result-no lblnoresults" style="display:none;text-align:center">No results</div>

@@ -1,5 +1,5 @@
-import { getErrorMessage, logMessage } from './helpers';
-import { HistoryProvider } from './history-provider';
+import { getErrorMessage, logMessage, } from './helpers';
+import { HistoryProvider, } from './history-provider';
 import { DataPulseProvider } from './data-pulse-provider';
 import { QuotesPulseProvider } from './quotes-pulse-provider';
 import { SymbolsStorage } from './symbols-storage';
@@ -13,9 +13,7 @@ function extractField(data, field, arrayIndex) {
  */
 var UDFCompatibleDatafeedBase = /** @class */ (function () {
     function UDFCompatibleDatafeedBase(datafeedURL, quotesProvider, requester, updateFrequency) {
-        if (updateFrequency === void 0) {
-            updateFrequency = 10 * 1000;
-        }
+        if (updateFrequency === void 0) { updateFrequency = 10 * 1000; }
         var _this = this;
         this._configuration = defaultConfiguration();
         this._symbolsStorage = null;
@@ -25,7 +23,8 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         this._quotesProvider = quotesProvider;
         this._dataPulseProvider = new DataPulseProvider(this._historyProvider, updateFrequency);
         this._quotesPulseProvider = new QuotesPulseProvider(this._quotesProvider);
-        this._configurationReadyPromise = this._requestConfiguration().then(function (configuration) {
+        this._configurationReadyPromise = this._requestConfiguration()
+            .then(function (configuration) {
             if (configuration === null) {
                 configuration = defaultConfiguration();
             }
@@ -41,12 +40,7 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
     UDFCompatibleDatafeedBase.prototype.getQuotes = function (symbols, onDataCallback, onErrorCallback) {
         this._quotesProvider.getQuotes(symbols).then(onDataCallback).catch(onErrorCallback);
     };
-    UDFCompatibleDatafeedBase.prototype.subscribeQuotes = function (
-        symbols,
-        fastSymbols,
-        onRealtimeCallback,
-        listenerGuid,
-    ) {
+    UDFCompatibleDatafeedBase.prototype.subscribeQuotes = function (symbols, fastSymbols, onRealtimeCallback, listenerGuid) {
         this._quotesPulseProvider.subscribeQuotes(symbols, fastSymbols, onRealtimeCallback, listenerGuid);
     };
     UDFCompatibleDatafeedBase.prototype.unsubscribeQuotes = function (listenerGuid) {
@@ -67,35 +61,29 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         };
         this._send('marks', requestParams)
             .then(function (response) {
-                if (!Array.isArray(response)) {
-                    var result = [];
-                    for (var i = 0; i < response.id.length; ++i) {
-                        result.push({
-                            id: extractField(response, 'id', i),
-                            time: extractField(response, 'time', i),
-                            color: extractField(response, 'color', i),
-                            text: extractField(response, 'text', i),
-                            label: extractField(response, 'label', i),
-                            labelFontColor: extractField(response, 'labelFontColor', i),
-                            minSize: extractField(response, 'minSize', i),
-                        });
-                    }
-                    response = result;
+            if (!Array.isArray(response)) {
+                var result = [];
+                for (var i = 0; i < response.id.length; ++i) {
+                    result.push({
+                        id: extractField(response, 'id', i),
+                        time: extractField(response, 'time', i),
+                        color: extractField(response, 'color', i),
+                        text: extractField(response, 'text', i),
+                        label: extractField(response, 'label', i),
+                        labelFontColor: extractField(response, 'labelFontColor', i),
+                        minSize: extractField(response, 'minSize', i),
+                    });
                 }
-                onDataCallback(response);
-            })
+                response = result;
+            }
+            onDataCallback(response);
+        })
             .catch(function (error) {
-                logMessage('UdfCompatibleDatafeed: Request marks failed: ' + getErrorMessage(error));
-                onDataCallback([]);
-            });
+            logMessage("UdfCompatibleDatafeed: Request marks failed: " + getErrorMessage(error));
+            onDataCallback([]);
+        });
     };
-    UDFCompatibleDatafeedBase.prototype.getTimescaleMarks = function (
-        symbolInfo,
-        from,
-        to,
-        onDataCallback,
-        resolution,
-    ) {
+    UDFCompatibleDatafeedBase.prototype.getTimescaleMarks = function (symbolInfo, from, to, onDataCallback, resolution) {
         if (!this._configuration.supports_timescale_marks) {
             return;
         }
@@ -107,25 +95,25 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         };
         this._send('timescale_marks', requestParams)
             .then(function (response) {
-                if (!Array.isArray(response)) {
-                    var result = [];
-                    for (var i = 0; i < response.id.length; ++i) {
-                        result.push({
-                            id: extractField(response, 'id', i),
-                            time: extractField(response, 'time', i),
-                            color: extractField(response, 'color', i),
-                            label: extractField(response, 'label', i),
-                            tooltip: extractField(response, 'tooltip', i),
-                        });
-                    }
-                    response = result;
+            if (!Array.isArray(response)) {
+                var result = [];
+                for (var i = 0; i < response.id.length; ++i) {
+                    result.push({
+                        id: extractField(response, 'id', i),
+                        time: extractField(response, 'time', i),
+                        color: extractField(response, 'color', i),
+                        label: extractField(response, 'label', i),
+                        tooltip: extractField(response, 'tooltip', i),
+                    });
                 }
-                onDataCallback(response);
-            })
+                response = result;
+            }
+            onDataCallback(response);
+        })
             .catch(function (error) {
-                logMessage('UdfCompatibleDatafeed: Request timescale marks failed: ' + getErrorMessage(error));
-                onDataCallback([]);
-            });
+            logMessage("UdfCompatibleDatafeed: Request timescale marks failed: " + getErrorMessage(error));
+            onDataCallback([]);
+        });
     };
     UDFCompatibleDatafeedBase.prototype.getServerTime = function (callback) {
         if (!this._configuration.supports_time) {
@@ -133,14 +121,14 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         }
         this._send('time')
             .then(function (response) {
-                var time = parseInt(response);
-                if (!isNaN(time)) {
-                    callback(time);
-                }
-            })
+            var time = parseInt(response);
+            if (!isNaN(time)) {
+                callback(time);
+            }
+        })
             .catch(function (error) {
-                logMessage('UdfCompatibleDatafeed: Fail to load server time, error=' + getErrorMessage(error));
-            });
+            logMessage("UdfCompatibleDatafeed: Fail to load server time, error=" + getErrorMessage(error));
+        });
     };
     UDFCompatibleDatafeedBase.prototype.searchSymbols = function (userInput, exchange, symbolType, onResult) {
         if (this._configuration.supports_search) {
@@ -152,28 +140,23 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
             };
             this._send('search', params)
                 .then(function (response) {
-                    if (response.s !== undefined) {
-                        logMessage('UdfCompatibleDatafeed: search symbols error=' + response.errmsg);
-                        onResult([]);
-                        return;
-                    }
-                    onResult(response);
-                })
-                .catch(function (reason) {
-                    logMessage(
-                        "UdfCompatibleDatafeed: Search symbols for '" +
-                            userInput +
-                            "' failed. Error=" +
-                            getErrorMessage(reason),
-                    );
+                if (response.s !== undefined) {
+                    logMessage("UdfCompatibleDatafeed: search symbols error=" + response.errmsg);
                     onResult([]);
-                });
-        } else {
+                    return;
+                }
+                onResult(response);
+            })
+                .catch(function (reason) {
+                logMessage("UdfCompatibleDatafeed: Search symbols for '" + userInput + "' failed. Error=" + getErrorMessage(reason));
+                onResult([]);
+            });
+        }
+        else {
             if (this._symbolsStorage === null) {
                 throw new Error('UdfCompatibleDatafeed: inconsistent configuration (symbols storage)');
             }
-            this._symbolsStorage
-                .searchSymbols(userInput, exchange, symbolType, 30 /* SearchItemsLimit */)
+            this._symbolsStorage.searchSymbols(userInput, exchange, symbolType, 30 /* SearchItemsLimit */)
                 .then(onResult)
                 .catch(onResult.bind(null, []));
         }
@@ -182,7 +165,7 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         logMessage('Resolve requested');
         var resolveRequestStartTime = Date.now();
         function onResultReady(symbolInfo) {
-            logMessage('Symbol resolved: ' + (Date.now() - resolveRequestStartTime) + 'ms');
+            logMessage("Symbol resolved: " + (Date.now() - resolveRequestStartTime) + "ms");
             onResolve(symbolInfo);
         }
         if (!this._configuration.supports_group_request) {
@@ -191,56 +174,42 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
             };
             this._send('symbols', params)
                 .then(function (response) {
-                    if (response.s !== undefined) {
-                        onError('unknown_symbol');
-                    } else {
-                        onResultReady(response);
-                    }
-                })
-                .catch(function (reason) {
-                    logMessage('UdfCompatibleDatafeed: Error resolving symbol: ' + getErrorMessage(reason));
+                if (response.s !== undefined) {
                     onError('unknown_symbol');
-                });
-        } else {
+                }
+                else {
+                    onResultReady(response);
+                }
+            })
+                .catch(function (reason) {
+                logMessage("UdfCompatibleDatafeed: Error resolving symbol: " + getErrorMessage(reason));
+                onError('unknown_symbol');
+            });
+        }
+        else {
             if (this._symbolsStorage === null) {
                 throw new Error('UdfCompatibleDatafeed: inconsistent configuration (symbols storage)');
             }
             this._symbolsStorage.resolveSymbol(symbolName).then(onResultReady).catch(onError);
         }
     };
-    UDFCompatibleDatafeedBase.prototype.getBars = function (
-        symbolInfo,
-        resolution,
-        rangeStartDate,
-        rangeEndDate,
-        onResult,
-        onError,
-    ) {
-        this._historyProvider
-            .getBars(symbolInfo, resolution, rangeStartDate, rangeEndDate)
+    UDFCompatibleDatafeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
+        this._historyProvider.getBars(symbolInfo, resolution, rangeStartDate, rangeEndDate)
             .then(function (result) {
-                onResult(result.bars, result.meta);
-            })
+            onResult(result.bars, result.meta);
+        })
             .catch(onError);
     };
-    UDFCompatibleDatafeedBase.prototype.subscribeBars = function (
-        symbolInfo,
-        resolution,
-        onTick,
-        listenerGuid,
-        onResetCacheNeededCallback,
-    ) {
+    UDFCompatibleDatafeedBase.prototype.subscribeBars = function (symbolInfo, resolution, onTick, listenerGuid, onResetCacheNeededCallback) {
         this._dataPulseProvider.subscribeBars(symbolInfo, resolution, onTick, listenerGuid);
     };
     UDFCompatibleDatafeedBase.prototype.unsubscribeBars = function (listenerGuid) {
         this._dataPulseProvider.unsubscribeBars(listenerGuid);
     };
     UDFCompatibleDatafeedBase.prototype._requestConfiguration = function () {
-        return this._send('config').catch(function (reason) {
-            logMessage(
-                'UdfCompatibleDatafeed: Cannot get datafeed configuration - use default, error=' +
-                    getErrorMessage(reason),
-            );
+        return this._send('config')
+            .catch(function (reason) {
+            logMessage("UdfCompatibleDatafeed: Cannot get datafeed configuration - use default, error=" + getErrorMessage(reason));
             return null;
         });
     };
@@ -256,16 +225,12 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
             throw new Error('Unsupported datafeed configuration. Must either support search, or support group request');
         }
         if (configurationData.supports_group_request || !configurationData.supports_search) {
-            this._symbolsStorage = new SymbolsStorage(
-                this._datafeedURL,
-                configurationData.supported_resolutions || [],
-                this._requester,
-            );
+            this._symbolsStorage = new SymbolsStorage(this._datafeedURL, configurationData.supported_resolutions || [], this._requester);
         }
-        logMessage('UdfCompatibleDatafeed: Initialized with ' + JSON.stringify(configurationData));
+        logMessage("UdfCompatibleDatafeed: Initialized with " + JSON.stringify(configurationData));
     };
     return UDFCompatibleDatafeedBase;
-})();
+}());
 export { UDFCompatibleDatafeedBase };
 function defaultConfiguration() {
     return {

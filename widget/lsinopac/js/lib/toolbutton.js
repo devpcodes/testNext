@@ -20,19 +20,21 @@
  *      hover: { "in": function(id) { ... }, "out": function(id) { ... } } // Optional, default do nothing
  *  }
  */
-(function ($) {
+(function($) {
+
     var methods = {
-        init: function (options) {
+
+        init: function(options) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Already initialized?
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (!data) {
                     // Get ready
-                    var id = $this.attr('id');
+                    var id = $this.attr("id");
                     var that = this;
 
                     // 1st time initialization to become a toolbutton
@@ -43,7 +45,7 @@
                         isradio: false,
                         istoggle: false,
                         click: null,
-                        hover: null,
+                        hover: null
                     };
                     if (options) {
                         // Save the options into this object
@@ -54,23 +56,20 @@
                     data.isenabled = true;
 
                     // The click effect...
-                    $this.click(function (e) {
-                        methods['select'].call($(this), true);
+                    $this.click(function(e) {
+                        methods["select"].call($(this), true);
                         e.stopPropagation();
                     });
 
                     // When hovering over...
-                    $this.hover(
-                        function () {
-                            methods['hoverin'].call($(this));
-                        },
-                        function () {
-                            methods['hoverout'].call($(this));
-                        },
-                    );
+                    $this.hover(function() {
+                        methods["hoverin"].call($(this));
+                    }, function() {
+                        methods["hoverout"].call($(this));
+                    });
 
                     // Save the data into this object
-                    $this.data('toolbutton', data);
+                    $this.data("toolbutton", data);
                 }
             });
 
@@ -78,14 +77,14 @@
             return $(this);
         },
 
-        destroy: function () {
+        destroy: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
                     // Unbind any event handling and destroy any underlying widget
                     $this.off(_CLICK_EVENT);
@@ -97,7 +96,7 @@
                     // nop~
 
                     // Finally, clear the underlying data
-                    $this.removeData('toolbutton');
+                    $this.removeData("toolbutton");
                 }
             });
 
@@ -105,17 +104,17 @@
             return $(this);
         },
 
-        hoverin: function () {
+        hoverin: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
-                    //                    $this.addClass("highlighted"); // better use :hover, and highlighted is reserved for specific usage to hardwiring such highlight effect
-                    if (data.options.hover && data.options.hover['in']) data.options.hover['in']($this.attr('id'));
+//                    $this.addClass("highlighted"); // better use :hover, and highlighted is reserved for specific usage to hardwiring such highlight effect
+                    if (data.options.hover && data.options.hover["in"]) data.options.hover["in"]($this.attr("id"));
                 }
             });
 
@@ -123,17 +122,17 @@
             return $(this);
         },
 
-        hoverout: function () {
+        hoverout: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
-                    //                    $this.removeClass("highlighted"); // better use :hover, and highlighted is reserved for specific usage to hardwiring such highlight effect
-                    if (data.options.hover && data.options.hover['out']) data.options.hover['out']($this.attr('id'));
+//                    $this.removeClass("highlighted"); // better use :hover, and highlighted is reserved for specific usage to hardwiring such highlight effect
+                    if (data.options.hover && data.options.hover["out"]) data.options.hover["out"]($this.attr("id"));
                 }
             });
 
@@ -141,16 +140,16 @@
             return $(this);
         },
 
-        unselect: function () {
+        unselect: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
-                    $this.removeClass('selected');
+                    $this.removeClass("selected");
                 }
             });
 
@@ -158,33 +157,34 @@
             return $(this);
         },
 
-        select: function (doclick) {
+        select: function(doclick) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
                     // If has class ".disabled", don't do anything...
-                    if ($this.hasClass('disabled')) {
+                    if ($this.hasClass("disabled")) {
                         // no-op
-                    } else {
+                    }
+                    else {
                         // For being a radio button, uncheck the others, and toggle this as checked
                         if (data.options.isradio) {
-                            //                            $("[toolbuttongroup='"+$this.attr("toolbuttongroup")+"']").removeClass("selected");
-                            //                            $this.addClass("selected");
-                            $this.addClass('selected').siblings().removeClass('selected'); // JH 20121212> Assuming all and only same toolbuttongroup are together under the same container, hence hoping to achieve a better performance (avoiding slowness of jQuery selector logic in IE)
+//                            $("[toolbuttongroup='"+$this.attr("toolbuttongroup")+"']").removeClass("selected");
+//                            $this.addClass("selected");
+                            $this.addClass("selected").siblings().removeClass("selected"); // JH 20121212> Assuming all and only same toolbuttongroup are together under the same container, hence hoping to achieve a better performance (avoiding slowness of jQuery selector logic in IE)
                         }
                         // For being a toggle button, toggle the state
                         else if (data.options.istoggle) {
-                            $this.toggleClass('selected');
+                            $this.toggleClass("selected");
                         }
 
                         // Callback as the click action...
                         if (data.options.click && doclick && data.isenabled) {
-                            data.options.click($this.attr('id'), $this.hasClass('selected'));
+                            data.options.click($this.attr("id"), $this.hasClass("selected"));
                         }
                     }
                 }
@@ -194,40 +194,41 @@
             return $(this);
         },
 
-        isSelected: function () {
+        isSelected: function() {
             // Get ready
             var $this = $(this);
 
             // Must have been initialized in order to proceed...
-            var data = $this.data('toolbutton');
+            var data = $this.data("toolbutton");
             if (data) {
                 // The status of the first one will be returned and end the call now
-                return $this.hasClass('selected');
-            } else {
+                return $this.hasClass("selected");
+            }
+            else {
                 return false;
             }
         },
 
-        isEnabled: function () {
+        isEnabled: function() {
             // Must have been initialized in order to proceed...
-            var data = $(this).data('toolbutton');
+            var data = $(this).data("toolbutton");
             if (data) {
                 // The status of the first one will be returned and end the call now
                 return data.isenabled;
             }
         },
 
-        enable: function () {
+        enable: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
                     data.isenabled = true;
-                    $this.removeClass('disabled');
+                    $this.removeClass("disabled");
                 }
             });
 
@@ -235,17 +236,17 @@
             return $(this);
         },
 
-        disable: function () {
+        disable: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Get ready
                 var $this = $(this);
 
                 // Must have been initialized in order to proceed...
-                var data = $this.data('toolbutton');
+                var data = $this.data("toolbutton");
                 if (data) {
                     data.isenabled = false;
-                    $this.addClass('disabled');
+                    $this.addClass("disabled");
                 }
             });
 
@@ -253,23 +254,25 @@
             return $(this);
         },
 
-        _makeFunction: function (name, toolbutton) {
+        _makeFunction: function(name, toolbutton) {
             var args = Array.prototype.slice.call(arguments, 1);
-            return function (event) {
+            return function(event) {
                 // $(this) is not the "this" of makeFunction
                 // $(this) is the "this" when this "function(event)" is called
                 //methods[name].call($(this), event, toolbutton);
-                methods[name].apply($(this), $.merge([event], args));
+                methods[name].apply($(this), $.merge([ event ], args));
             };
-        },
+        }
+
     };
 
-    $.fn.toolbutton = function (method) {
-        if (!method || typeof method == 'object') return methods.init.apply(this, arguments);
-        else if (methods[method] && method.charAt(0) != '_')
-            // Prevent call to private functions
+    $.fn.toolbutton = function(method) {
+        if (!method || typeof method == 'object')
+            return methods.init.apply(this, arguments);
+        else if (methods[method] && method.charAt(0) != "_") // Prevent call to private functions
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1)); // "arguments" is not an actual array
-    };
+    }
+
 })(jQuery);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -294,16 +297,18 @@
  *      hover: { "in": function(id) { ... }, "out": function(id) { ... } } // Optional, default do nothing
  *  }
  */
-(function ($) {
+(function($) {
+
     var methods = {
-        init: function (options) {
+
+        init: function(options) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Already initialized?
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (!data) {
                     // Get ready
-                    var id = $(this).attr('id');
+                    var id = $(this).attr("id");
                     var that = this;
 
                     // 1st time initialization to become a toolbutton
@@ -311,10 +316,10 @@
 
                     // Process the options...
                     data.options = {
-                        type: 'button',
+                        type: "button",
                         isradio: true,
                         click: null,
-                        hover: null,
+                        hover: null
                     };
                     if (options) {
                         // Save the options into this object
@@ -323,15 +328,15 @@
 
                     // Prepare the HTML for later adding more buttons...
                     var typecss;
-                    if (data.options.type == 'tab') typecss = 'tabbar';
-                    else typecss = 'toolbuttongroup';
+                    if (data.options.type == "tab") typecss = "tabbar";
+                                               else typecss = "toolbuttongroup";
                     $(this).addClass(typecss);
 
                     // Generate a unique random id for this toolbuttongroup
                     data.toolbuttongroupid = Date.now() + Math.random();
 
                     // Save the data into this object
-                    $(this).data('toolbuttongroup', data);
+                    $(this).data("toolbuttongroup", data);
                 }
             });
 
@@ -339,23 +344,23 @@
             return $(this);
         },
 
-        destroy: function () {
+        destroy: function() {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
                     // Unbind any event handling and destroy any underlying widget
                     //$(this).children().toolbutton("destroy");
 
                     // Drop all related CSS classes
-                    $(this).removeClass('tabbar toolbuttongroup');
+                    $(this).removeClass("tabbar toolbuttongroup");
 
                     // Remove all created html structure
                     $(this).empty();
 
                     // Finally, clear the underlying data
-                    $(this).removeData('toolbuttongroup');
+                    $(this).removeData("toolbuttongroup");
                 }
             });
 
@@ -363,29 +368,25 @@
             return $(this);
         },
 
-        addButton: function (id, label, spancss) {
+        addButton: function(id, label, spancss) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
                     // Which style?
                     var typecss;
-                    if (data.options.type == 'tab') typecss = 'tab';
-                    else if (data.options.type == 'switch') typecss = 'button switchbutton';
-                    else typecss = 'button';
+                    if (data.options.type == "tab") typecss = "tab";
+                    else if (data.options.type == "switch") typecss = "button switchbutton";
+                    else typecss = "button";
 
                     // Create the HTML for this new button
-                    var $label = $('<span/>').html(label);
-                    if (spancss) $label.addClass(spancss);
-                    var $newbutton = $('<div/>')
-                        .attr({ toolbuttongroup: data.toolbuttongroupid, id: id })
-                        .addClass(typecss)
-                        .append($label);
+                    var $label = $("<span/>").html(label); if (spancss) $label.addClass(spancss);
+                    var $newbutton = $("<div/>").attr({"toolbuttongroup": data.toolbuttongroupid, "id": id}).addClass(typecss).append($label);
                     $(this).append($newbutton);
 
                     // Finally make it a toolbutton to work along the same toolbuttongroup
-                    $newbutton.toolbutton(data.options);
+                    $newbutton.toolbutton(data.options)
                 }
             });
 
@@ -393,15 +394,13 @@
             return $(this);
         },
 
-        removeButton: function (id) {
+        removeButton: function(id) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .remove();
+                    $(this).children("#"+id).remove();
                 }
             });
 
@@ -409,26 +408,25 @@
             return $(this);
         },
 
-        getSelected: function () {
+        getSelected: function() {
             // Must have been initialized in order to proceed...
-            var data = $(this).data('toolbuttongroup');
+            var data = $(this).data("toolbuttongroup");
             if (data) {
                 // The status of the first one will be returned and end the call now
-                return $(this).children('.selected').attr('id');
-            } else {
+                return $(this).children(".selected").attr("id");
+            }
+            else {
                 return null;
             }
         },
 
-        unselect: function (id) {
+        unselect: function(id) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .toolbutton('unselect');
+                    $(this).children("#"+id).toolbutton("unselect");
                 }
             });
 
@@ -436,15 +434,13 @@
             return $(this);
         },
 
-        select: function (id, doclick) {
+        select: function(id, doclick) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .toolbutton('select', doclick);
+                    $(this).children("#"+id).toolbutton("select", doclick);
                 }
             });
 
@@ -452,39 +448,34 @@
             return $(this);
         },
 
-        isSelected: function (id) {
+        isSelected: function(id) {
             // Must have been initialized in order to proceed...
-            var data = $(this).data('toolbuttongroup');
+            var data = $(this).data("toolbuttongroup");
             if (data) {
                 // The status of the first one will be returned and end the call now
-                return $(this)
-                    .children('#' + id)
-                    .toolbutton('isSelected');
-            } else {
+                return $(this).children("#"+id).toolbutton("isSelected");
+            }
+            else {
                 return false;
             }
         },
 
-        isEnabled: function (id) {
+        isEnabled: function(id) {
             // Must have been initialized in order to proceed...
-            var data = $(this).data('toolbuttongroup');
+            var data = $(this).data("toolbuttongroup");
             if (data) {
                 // The status of the first one will be returned and end the call now
-                return $(this)
-                    .children('#' + id)
-                    .toolbutton('isEnabled');
+                return $(this).children("#"+id).toolbutton("isEnabled");
             }
         },
 
-        enable: function (id) {
+        enable: function(id) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .toolbutton('enable');
+                    $(this).children("#"+id).toolbutton("enable");
                 }
             });
 
@@ -492,15 +483,13 @@
             return $(this);
         },
 
-        disable: function (id) {
+        disable: function(id) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .toolbutton('disable');
+                    $(this).children("#"+id).toolbutton("disable");
                 }
             });
 
@@ -508,15 +497,13 @@
             return $(this);
         },
 
-        show: function (id) {
+        show: function(id) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .show();
+                    $(this).children("#"+id).show();
                 }
             });
 
@@ -524,15 +511,13 @@
             return $(this);
         },
 
-        hide: function (id) {
+        hide: function(id) {
             // For each...
-            $(this).each(function () {
+            $(this).each(function() {
                 // Must have been initialized in order to proceed...
-                var data = $(this).data('toolbuttongroup');
+                var data = $(this).data("toolbuttongroup");
                 if (data) {
-                    $(this)
-                        .children('#' + id)
-                        .hide();
+                    $(this).children("#"+id).hide();
                 }
             });
 
@@ -540,21 +525,23 @@
             return $(this);
         },
 
-        _makeFunction: function (name, toolbuttongroup) {
+        _makeFunction: function(name, toolbuttongroup) {
             var args = Array.prototype.slice.call(arguments, 1);
-            return function (event) {
+            return function(event) {
                 // $(this) is not the "this" of makeFunction
                 // $(this) is the "this" when this "function(event)" is called
                 //methods[name].call($(this), event, toolbutton);
-                methods[name].apply($(this), $.merge([event], args));
+                methods[name].apply($(this), $.merge([ event ], args));
             };
-        },
+        }
+
     };
 
-    $.fn.toolbuttongroup = function (method) {
-        if (!method || typeof method == 'object') return methods.init.apply(this, arguments);
-        else if (methods[method] && method.charAt(0) != '_')
-            // Prevent call to private functions
+    $.fn.toolbuttongroup = function(method) {
+        if (!method || typeof method == 'object')
+            return methods.init.apply(this, arguments);
+        else if (methods[method] && method.charAt(0) != "_") // Prevent call to private functions
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1)); // "arguments" is not an actual array
-    };
+    }
+
 })(jQuery);

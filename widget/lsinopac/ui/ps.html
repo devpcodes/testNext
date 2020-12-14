@@ -1,23 +1,19 @@
+
 <script>
     (function ($) {
         $(function () {
-            var _WP_PATH = '../';
+            var _WP_PATH = "../";
             jQuery.loadScript = function (url, usecache) {
-                jQuery.ajax({
-                    url: _WP_PATH + url,
-                    dataType: 'script',
-                    async: false,
-                    method: 'GET',
-                    ifModified: usecache,
-                });
+                jQuery.ajax({url: _WP_PATH + url, dataType: "script", async: false, method: "GET", ifModified: usecache});
             };
             jQuery.loadCSS = function (url) {
                 if (document.createStyleSheet)
                     try {
                         document.createStyleSheet(_WP_PATH + url);
-                    } catch (e) {}
+                    } catch (e) {
+                    }
                 else if ($("head link[href='" + _WP_PATH + url + "']").length === 0)
-                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($('head'));
+                    $("<link rel='stylesheet' type='text/css' href='" + _WP_PATH + url + "'/>").appendTo($("head"));
             };
             /*
              
@@ -52,13 +48,13 @@
              }
              */
             // Common Resources
-            $.loadCSS('css/common_1.0.3.css');
-            //        $.loadScript("js/commonrc.js");
-            var lang = LabCI.Utils.getURLParameter('lang');
-            if (lang == null || lang == undefined || lang == '') {
-                lang = 'zh_TW';
+            $.loadCSS("css/common_1.0.3.css");
+    //        $.loadScript("js/commonrc.js");
+            var lang = LabCI.Utils.getURLParameter("lang");
+            if (lang == null || lang == undefined || lang == "") {
+                lang = "zh_TW";
             }
-            /*        if (lang === "zh_HK")
+    /*        if (lang === "zh_HK")
                 $.loadScript("js/commonrc_zh_HK.js");
             else if (lang === "zh_CN")
                 $.loadScript("js/commonrc_zh_CN.js");
@@ -68,22 +64,26 @@
                 $.loadScript("js/commonrc_zh_TW.js");
 */
             // PowerSearch PageObj & Resources
-            if (typeof LabCI.WP.PSPageObj === 'undefined') {
-                $.loadCSS('css/ps.css');
-                $.loadScript('js/ps.js');
+            if (typeof (LabCI.WP.PSPageObj) === "undefined") {
+                $.loadCSS("css/ps.css");
+                $.loadScript("js/ps.js");
             }
-            if (lang === 'zh_HK') $.loadScript('js/ps_zh_HK.js');
-            else if (lang === 'zh_CN') $.loadScript('js/ps_zh_CN.js');
-            else if (lang === 'en') $.loadScript('js/ps_en.js');
-            else $.loadScript('js/ps_zh_TW.js');
+            if (lang === "zh_HK")
+                $.loadScript("js/ps_zh_HK.js");
+            else if (lang === "zh_CN")
+                $.loadScript("js/ps_zh_CN.js");
+            else if (lang === "en")
+                $.loadScript("js/ps_en.js");
+            else
+                $.loadScript("js/ps_zh_TW.js");
         });
-        // Turn on/off debug logger, default is off
+// Turn on/off debug logger, default is off
         LabCI.Utils.CONSOLELOGGER.isdebug = true;
     })(jQuery);
 </script>
 <!-- ======================================================================= -->
 <div id="lsinopac-ps">
-    <input tabindex="1" />
+    <input tabindex="1">
     <div class="magglassicon"></div>
     <div class="loadingicon"></div>
 </div>

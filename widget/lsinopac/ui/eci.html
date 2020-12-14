@@ -1,115 +1,132 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="HandheldFriendly" content="True" />
-        <meta name="MobileOptimized" content="320" />
-        <meta name="robots" content="follow,index" />
-        <meta name="author" content="" />
-        <meta name="description" content="" />
-        <meta name="keywords" content="" />
-        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="HandheldFriendly" content="True"/>
+        <meta name="MobileOptimized" content="320"/>
+        <meta name="robots" content="follow,index"/>
+        <meta name="author" content=""/>
+        <meta name="description" content=""/>
+        <meta name="keywords" content=""/> 
+        <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
         <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
         <script>
             var that = this;
-            var _WP_PATH = '../';
+            var _WP_PATH = "../";
 
-            $(function () {
-                jQuery.loadScript = function (url, usecache) {
+            $(function() {
+                jQuery.loadScript = function(url, usecache) {
                     usecache = true;
                     var _u = _WP_PATH + url; //if (LabCI.getQID) _u+="?_="+LabCI.getQID();
-                    jQuery.ajax({ url: _u, dataType: 'script', async: false, method: 'GET', ifModified: usecache });
+                    jQuery.ajax({url: _u, dataType: "script", async: false, method: "GET", ifModified: usecache});
+
                 };
-                jQuery.loadCSS = function (url) {
+                jQuery.loadCSS = function(url) {
                     var _u = _WP_PATH + url;
                     //    if (APP_CONFIG.VERSION)
                     //        _u += "?_=" + APP_CONFIG.VERSION;
                     if (document.createStyleSheet)
                         try {
                             document.createStyleSheet(_u);
-                        } catch (e) {}
+                        } catch (e) {
+                        }
                     else if ($("head link[href='" + _u + "']").length === 0)
-                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($('head'));
+                        $("<link rel='stylesheet' type='text/css' href='" + _u + "'/>").appendTo($("head"));
                 };
 
-                if (typeof LabCI === 'undefined') LabCI = { WP: {} };
-                else if (typeof LabCI.WP === 'undefined') LabCI.WP = {};
 
-                if (typeof LabCI.AbstractPageObj === 'undefined') $.loadScript('js/lib/combined/core.2.0.2.js');
+                if (typeof (LabCI) === "undefined")
+                    LabCI = {WP: {}};
+                else if (typeof (LabCI.WP) === "undefined")
+                    LabCI.WP = {};
 
-                if (typeof APP_CONFIG === 'undefined') {
-                    $.loadScript('/js/constant.js');
-                    $.loadCSS('css/common_1.0.3.css');
+                if (typeof (LabCI.AbstractPageObj) === "undefined")
+                    $.loadScript("js/lib/combined/core.2.0.2.js");
+
+                if (typeof (APP_CONFIG) === "undefined") {
+                    $.loadScript("/js/constant.js");
+                    $.loadCSS("css/common_1.0.3.css");
                 }
 
-                if (typeof LabCI.WP.AppUtils === 'undefined') $.loadScript('js/apputils.js');
+                if (typeof (LabCI.WP.AppUtils) === "undefined")
+                    $.loadScript("js/apputils.js");
 
-                $.loadScript('js/pagingbar.js');
+                $.loadScript("js/pagingbar.js");
 
                 var lang = LabCI.WP.AppUtils.getLang();
 
+
                 // 3rd Party Libraries
-                if (Date.CultureInfo === undefined) $.loadScript('js/misc/date.js', true);
-                if (typeof JSON === 'undefined') $.loadScript('js/misc/json2.js');
-                if (typeof NumberFormat === 'undefined') $.loadScript('js/misc/numberformat.js');
+                if (Date.CultureInfo === undefined)
+                    $.loadScript("js/misc/date.js", true);
+                if (typeof (JSON) === "undefined")
+                    $.loadScript("js/misc/json2.js");
+                if (typeof (NumberFormat) === "undefined")
+                    $.loadScript("js/misc/numberformat.js");
 
                 //page specific object...
-                $.loadScript('js/heatmapbox.js');
-                $.loadScript('js/apputils.js');
+                $.loadScript("js/heatmapbox.js");
+                $.loadScript("js/apputils.js");
 
                 // SSChart
-                $.loadScript('js/lib/sschart/jquery.cookies.2.2.0.min.js');
-                $.loadScript('js/lib/sschart/jquery.ui.sschart.js');
-                $.loadScript('js/lib/sschart/jquery.ui.compareChart.js');
-                $.loadScript('js/lib/sschart/helpers.js');
-                $.loadScript('js/lib/sschart/helpersVAP-002.js');
-                if (lang === 'zh_HK') $.loadScript('js/lib/sschart/TALabels_zh_HK.js');
-                else if (lang === 'zh_CN') $.loadScript('js/lib/sschart/TALabels_zh_CN.js');
-                else $.loadScript('js/lib/sschart/TALabels_en.js');
+                $.loadScript("js/lib/sschart/jquery.cookies.2.2.0.min.js");
+                $.loadScript("js/lib/sschart/jquery.ui.sschart.js");
+                $.loadScript("js/lib/sschart/jquery.ui.compareChart.js");
+                $.loadScript("js/lib/sschart/helpers.js");
+                $.loadScript("js/lib/sschart/helpersVAP-002.js");
+                if (lang === "zh_HK")
+                    $.loadScript("js/lib/sschart/TALabels_zh_HK.js");
+                else if (lang === "zh_CN")
+                    $.loadScript("js/lib/sschart/TALabels_zh_CN.js");
+                else
+                    $.loadScript("js/lib/sschart/TALabels_en.js");
 
-                if (typeof chartFactory === 'undefined') {
-                    $.loadScript('js/lib/c5/alpha_chart.js');
-                    $.loadCSS('css/c5/c5.css');
+                if (typeof (chartFactory) === "undefined") {
+                    $.loadScript("js/lib/c5/alpha_chart.js");
+                    $.loadCSS("css/c5/c5.css");
                 }
 
                 // Sector Heatmap PageObj & Resources
                 //$.loadCSS("css/eci.css");
-                $.loadScript('js/eci.js');
+                $.loadScript("js/eci.js");
 
-                if (lang === 'zh_HK') {
-                    $.loadScript('js/commonrc_zh_HK.js');
-                    $.loadScript('js/eci_zh_HK.js');
-                } else if (lang === 'zh_CN') {
-                    $.loadScript('js/commonrc_zh_CN.js');
-                    $.loadScript('js/eci_zh_CN.js');
-                } else if (lang === 'en') {
-                    $.loadScript('js/commonrc_en.js');
-                    $.loadScript('js/eci_en.js');
+
+                if (lang === "zh_HK") {
+                    $.loadScript("js/commonrc_zh_HK.js");
+                    $.loadScript("js/eci_zh_HK.js");
+                } else if (lang === "zh_CN") {
+                    $.loadScript("js/commonrc_zh_CN.js");
+                    $.loadScript("js/eci_zh_CN.js");
+                } else if (lang === "en") {
+                    $.loadScript("js/commonrc_en.js");
+                    $.loadScript("js/eci_en.js");
                 } else {
-                    $.loadScript('js/commonrc_zh_TW.js');
-                    $.loadScript('js/eci_zh_TW.js');
+                    $.loadScript("js/commonrc_zh_TW.js");
+                    $.loadScript("js/eci_zh_TW.js");
                 }
 
                 // For returning the access token
-                LabCI.getToken = function () {
-                    return decodeURIComponent(LabCI.Utils.getURLParameter('token'));
+                LabCI.getToken = function() {
+                    return decodeURIComponent(LabCI.Utils.getURLParameter("token"));
+
                 };
-                LabCI.setDataAPIPath = function (path) {
+                LabCI.setDataAPIPath = function(path) {
                     if (LabCI && LabCI.SSDLConf) {
-                        if (path === undefined) LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
+                        if (path === undefined)
+                            LabCI.SSDLConf.DATA_PATH = APP_CONFIG.DataAPIPath;
                     }
                 };
 
                 LabCI.setDataAPIPath();
 
-                LabCI.getLang = function () {
-                    LabCI.WP.AppUtils.getLang();
+                LabCI.getLang = function() {
+                    LabCI.WP.AppUtils.getLang()
                 };
-                window['lsinopac_eci'] = LabCI.WP['createecipageobj'].call(that).init(lang).show();
+                window["lsinopac_eci"] = LabCI.WP["createecipageobj"].call(that).init(lang).show();
             });
         </script>
         <style>
@@ -118,9 +135,8 @@
                 padding: 5px;
             }
 
-            #lsinopac_eci .selectgroup .selectbutton1,
-            #saveModel .selectbutton1 {
-                border: 1px solid #9a9791;
+            #lsinopac_eci .selectgroup .selectbutton1, #saveModel .selectbutton1 {
+                border: 1px solid #9A9791;
                 border-right-width: 0px;
                 border-radius: 0px;
                 width: 100%;
@@ -133,192 +149,96 @@
                 width: 100%;
             }
 
-            #lsinopac_eci .selectgroup .selectbutton2,
-            #saveModel .selectgroup .selectbutton2 {
-                border: 1px solid #9a9791;
+            #lsinopac_eci .selectgroup .selectbutton2, #saveModel .selectgroup .selectbutton2 {
+                border: 1px solid #9A9791;
                 border-radius: 0px;
                 border-left-width: 0px;
                 background-color: white;
                 color: black;
             }
 
-            #lsinopac_eci .headerrow {
+            #lsinopac_eci .headerrow{
                 background-color: #5b7ea8;
                 font-weight: bold;
                 font-size: 15px;
                 color: white;
             }
 
-            #lsinopac_eci .flag.argentina {
-                background-image: url('../images/eci/argentina.png');
-            }
-            #lsinopac_eci .flag.australia {
-                background-image: url('../images/eci/australia.png');
-            }
-            #lsinopac_eci .flag.brazil {
-                background-image: url('../images/eci/brazil.png');
-            }
-            #lsinopac_eci .flag.canada {
-                background-image: url('../images/eci/canada.png');
-            }
-            #lsinopac_eci .flag.china {
-                background-image: url('../images/eci/china.png');
-            }
-            #lsinopac_eci .flag.eurozone {
-                background-image: url('../images/eci/eurozone.png');
-            }
-            #lsinopac_eci .flag.france {
-                background-image: url('../images/eci/france.png');
-            }
-            #lsinopac_eci .flag.germany {
-                background-image: url('../images/eci/germany.png');
-            }
-            #lsinopac_eci .flag.hong_kong {
-                background-image: url('../images/eci/hong_kong.png');
-            }
-            #lsinopac_eci .flag.hungary {
-                background-image: url('../images/eci/hungary.png');
-            }
-            #lsinopac_eci .flag.iceland {
-                background-image: url('../images/eci/iceland.png');
-            }
-            #lsinopac_eci .flag.india {
-                background-image: url('../images/eci/india.png');
-            }
-            #lsinopac_eci .flag.indonesia {
-                background-image: url('../images/eci/indonesia.png');
-            }
-            #lsinopac_eci .flag.italy {
-                background-image: url('../images/eci/italy.png');
-            }
-            #lsinopac_eci .flag.japan {
-                background-image: url('../images/eci/japan.png');
-            }
-            #lsinopac_eci .flag.malaysia {
-                background-image: url('../images/eci/malaysia.png');
-            }
-            #lsinopac_eci .flag.mexico {
-                background-image: url('../images/eci/mexico.png');
-            }
-            #lsinopac_eci .flag.new_zealand {
-                background-image: url('../images/eci/new_zealand.png');
-            }
-            #lsinopac_eci .flag.philippines {
-                background-image: url('../images/eci/philippines.png');
-            }
-            #lsinopac_eci .flag.russian_federation {
-                background-image: url('../images/eci/russian_federation.png');
-            }
-            #lsinopac_eci .flag.singapore {
-                background-image: url('../images/eci/singapore.png');
-            }
-            #lsinopac_eci .flag.south_africa {
-                background-image: url('../images/eci/south_africa.png');
-            }
-            #lsinopac_eci .flag.south_korea {
-                background-image: url('../images/eci/south_korea.png');
-            }
-            #lsinopac_eci .flag.switzerland {
-                background-image: url('../images/eci/switzerland.png');
-            }
-            #lsinopac_eci .flag.taiwan {
-                background-image: url('../images/eci/taiwan.png');
-            }
-            #lsinopac_eci .flag.thailand {
-                background-image: url('../images/eci/thailand.png');
-            }
-            #lsinopac_eci .flag.turkey {
-                background-image: url('../images/eci/turkey.png');
-            }
-            #lsinopac_eci .flag.united_kingdom {
-                background-image: url('../images/eci/united_kingdom.png');
-            }
-            #lsinopac_eci .flag.united_states {
-                background-image: url('../images/eci/united_states.png');
-            }
-            #lsinopac_eci .flag {
+            #lsinopac_eci .flag.argentina{background-image: url('../images/eci/argentina.png');}
+            #lsinopac_eci .flag.australia{background-image: url('../images/eci/australia.png');}
+            #lsinopac_eci .flag.brazil{background-image: url('../images/eci/brazil.png');}
+            #lsinopac_eci .flag.canada{background-image: url('../images/eci/canada.png');}
+            #lsinopac_eci .flag.china{background-image: url('../images/eci/china.png');}
+            #lsinopac_eci .flag.eurozone{background-image: url('../images/eci/eurozone.png');}
+            #lsinopac_eci .flag.france{background-image: url('../images/eci/france.png');}
+            #lsinopac_eci .flag.germany{background-image: url('../images/eci/germany.png');}
+            #lsinopac_eci .flag.hong_kong{background-image: url('../images/eci/hong_kong.png');}
+            #lsinopac_eci .flag.hungary{background-image: url('../images/eci/hungary.png');}
+            #lsinopac_eci .flag.iceland{background-image: url('../images/eci/iceland.png');}
+            #lsinopac_eci .flag.india{background-image: url('../images/eci/india.png');}
+            #lsinopac_eci .flag.indonesia{background-image: url('../images/eci/indonesia.png');}
+            #lsinopac_eci .flag.italy{background-image: url('../images/eci/italy.png');}
+            #lsinopac_eci .flag.japan{background-image: url('../images/eci/japan.png');}
+            #lsinopac_eci .flag.malaysia{background-image: url('../images/eci/malaysia.png');}
+            #lsinopac_eci .flag.mexico{background-image: url('../images/eci/mexico.png');}
+            #lsinopac_eci .flag.new_zealand{background-image: url('../images/eci/new_zealand.png');}
+            #lsinopac_eci .flag.philippines{background-image: url('../images/eci/philippines.png');}
+            #lsinopac_eci .flag.russian_federation{background-image: url('../images/eci/russian_federation.png');}
+            #lsinopac_eci .flag.singapore{background-image: url('../images/eci/singapore.png');}
+            #lsinopac_eci .flag.south_africa{background-image: url('../images/eci/south_africa.png');}
+            #lsinopac_eci .flag.south_korea{background-image: url('../images/eci/south_korea.png');}
+            #lsinopac_eci .flag.switzerland{background-image: url('../images/eci/switzerland.png');}
+            #lsinopac_eci .flag.taiwan{background-image: url('../images/eci/taiwan.png');}
+            #lsinopac_eci .flag.thailand{background-image: url('../images/eci/thailand.png');}
+            #lsinopac_eci .flag.turkey{background-image: url('../images/eci/turkey.png');}
+            #lsinopac_eci .flag.united_kingdom{background-image: url('../images/eci/united_kingdom.png');}
+            #lsinopac_eci .flag.united_states{background-image: url('../images/eci/united_states.png');}
+            #lsinopac_eci .flag{
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: 30px;
             }
 
-            #lsinopac_eci #ecilist .datarow {
-                font-size: 13px;
-                min-height: 50px;
-            }
-            #lsinopac_eci #ecilist .datarow:nth-child(odd) {
-                background-color: #f1f1f1;
-            }
-            #lsinopac_eci .m_o {
-                display: none;
-            }
+            #lsinopac_eci #ecilist .datarow{font-size: 13px; min-height: 50px;}
+            #lsinopac_eci #ecilist .datarow:nth-child(odd){background-color: #f1f1f1;}
+            #lsinopac_eci .m_o{display: none;}
 
-            #lsinopac_eci .row {
-                margin: 0px;
-            }
-            #lsinopac_eci .data {
-                min-height: 50px;
-            }
+            #lsinopac_eci .row{margin:0px;}
+            #lsinopac_eci .data{min-height:50px;}
 
-            #lsinopac_eci #chartContainer img {
-                max-width: 100%;
-            }
-            #lsinopac_eci #chartContainer {
-                max-width: 100%;
-            }
-            #lsinopac_eci #chartCanvas {
-                max-width: 100%;
-            }
-            #lsinopac_eci .tachartbox {
-                padding: 10px;
-            }
-            #lsinopac_eci #chartCanvasMobile {
-                max-width: 100%;
-                padding: 10px;
-            }
-
-            #lsinopac_eci .top_select {
-                padding: 0px;
-            }
+            #lsinopac_eci #chartContainer img{max-width: 100%;}
+            #lsinopac_eci #chartContainer {max-width: 100%;}
+            #lsinopac_eci #chartCanvas{max-width: 100%;}
+            #lsinopac_eci .tachartbox{padding: 10px;}
+            #lsinopac_eci #chartCanvasMobile{ max-width: 100%; padding: 10px;}
+            
+            #lsinopac_eci .top_select{padding: 0px;}
 
             @media only screen and (max-width: 768px) {
-                #lsinopac_eci #ecilist .headerrow {
-                    display: none;
-                }
-                #lsinopac_eci .d_o {
-                    display: none;
-                }
-                #lsinopac_eci .m_o {
-                    display: block;
-                }
-                #lsinopac_eci .datarow,
-                #lsinopac_eci #ecilist .datarow:nth-child(odd) {
+                #lsinopac_eci #ecilist .headerrow{display: none;}
+                #lsinopac_eci .d_o{display: none;}
+                #lsinopac_eci .m_o{display: block;}
+                #lsinopac_eci .datarow, #lsinopac_eci #ecilist .datarow:nth-child(odd){
                     padding: 10px 0px;
                     border-bottom: 1px solid #999;
                     background-color: transparent;
                 }
-                #lsinopac_eci .data {
-                    min-height: inherit;
-                }
+                #lsinopac_eci .data{min-height:inherit;}
 
-                #lsinopac_eci .flag {
+                #lsinopac_eci .flag{
                     background-position: top center;
                     background-size: 40px;
                 }
 
-                #lsinopac_eci .data.idx {
+                #lsinopac_eci .data.idx{
                     font-weight: 600;
                     font-size: 15px;
                 }
 
-                #lsinopac_eci #ecilist .datarow .row div:last-child {
-                    text-align: right;
-                }
-                #lsinopac_eci #ecilist .datarow:last-child {
-                    border-bottom: 0px;
-                }
+                #lsinopac_eci #ecilist .datarow .row div:last-child{text-align: right;}
+                #lsinopac_eci #ecilist .datarow:last-child{border-bottom:0px;}
             }
-            @media;
+            @media
         </style>
     </head>
     <body>
@@ -328,38 +248,20 @@
                     <div class="row">
                         <div class="col-md-6 top_select">
                             <div class="btn-group saved selectgroup show" id="countrySelectGroup">
-                                <button
-                                    class="btn btn-default selectbutton1"
-                                    type="button"
-                                    data-toggle="dropdown"
-                                    aria-expanded="true"
-                                >
-                                    <span class="currentvalue lblsavedstrategy"></span>
+                                <button class="btn btn-default selectbutton1" type="button" data-toggle="dropdown" aria-expanded="true">
+                                    <span class="currentvalue lblsavedstrategy" ></span>
                                 </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2"
-                                    data-toggle="dropdown"
-                                ></button>
-                                <div class="dropdown-menu saved-dropdown" x-placement="bottom-start"></div>
+                                <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2" data-toggle="dropdown">                                </button>
+                                <div class="dropdown-menu saved-dropdown" x-placement="bottom-start">                                </div>
                             </div>
                         </div>
                         <div class="col-md-6 top_select">
                             <div class="btn-group saved selectgroup show" id="dateSelectGroup">
-                                <button
-                                    class="btn btn-default selectbutton1"
-                                    type="button"
-                                    data-toggle="dropdown"
-                                    aria-expanded="true"
-                                >
-                                    <span class="currentvalue lblsavedstrategy"></span>
+                                <button class="btn btn-default selectbutton1" type="button" data-toggle="dropdown" aria-expanded="true">
+                                    <span class="currentvalue lblsavedstrategy" ></span>
                                 </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2"
-                                    data-toggle="dropdown"
-                                ></button>
-                                <div class="dropdown-menu saved-dropdown" x-placement="bottom-start"></div>
+                                <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split selectbutton2" data-toggle="dropdown">                                </button>
+                                <div class="dropdown-menu saved-dropdown" x-placement="bottom-start">                                </div>
                             </div>
                         </div>
                     </div>
@@ -401,7 +303,7 @@
                     </div>
                 </div>
                 <div class="chart_wrapper col-md-4 p-0 d_o">
-                    <div class="tachartbox" style="width: 100%"></div>
+                    <div class="tachartbox" style="width:100%"></div>
                 </div>
             </div>
         </div>
