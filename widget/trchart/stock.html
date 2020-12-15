@@ -1,231 +1,218 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-    <head>
-        <title>TradingView Charting</title>
 
-        <!-- Fix for iOS Safari zooming bug -->
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<head>
 
-        <script type="text/javascript" src="charting_library/charting_library.min.js"></script>
-        <script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
-        <script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
+	<title>TradingView Charting</title>
 
-        <script type="text/javascript">
-            function getParameterByName(name) {
-                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-                    results = regex.exec(location.search);
-                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-            }
+	<!-- Fix for iOS Safari zooming bug -->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-            TradingView.onready(function () {
-                searchXhr = function getQueryString(name) {
-                    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-                    var r = window.location.search.substr(1).match(reg);
-                    if (r != null) {
-                        return unescape(r[2]);
-                    }
-                    return null;
-                };
+	<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
+	<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
+	<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
 
-                var host = 'https://' + window.location.hostname;
-                if (
-                    window.location.hostname == 'service.sinotrade.com.tw' ||
-                    window.location.hostname == 'www.sinotrade.com.tw'
-                ) {
-                    host = host + '/MQTT-service';
-                }
-                var datafeed_url = host + '/TradingView/stock';
+	<script type="text/javascript">
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+			return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
 
-                const widget = (window.tvWidget = new TradingView.widget({
-                    // debug: true, // uncomment this line to see Library errors and warnings in the console
-                    fullscreen: true,
-                    symbol: searchXhr('CODE'),
-                    container_id: 'tv_chart_container',
-                    //	BEWARE: no trailing slash is expected in feed URL
-                    datafeed: new Datafeeds.UDFCompatibleDatafeed(datafeed_url),
-                    library_path: 'charting_library/',
-                    locale: getParameterByName('lang') || 'zh_TW',
-                    timezone: 'Asia/Taipei',
-                    enabled_features: ['study_templates', 'move_logo_to_main_pane'],
-                    disabled_features: [
-                        'save_chart_properties_to_local_storage',
-                        'symbol_info',
-                        'header_saveload',
-                        'header_undo_redo',
-                        'header_symbol_search',
-                    ],
-                    studies_overrides: {
-                        'volume.volume.color.0': '#5cbc8e',
-                        'volume.volume.color.1': '#ec5f6b',
-                        'volume.volume.transparency': 75,
-                    },
-                    overrides: {
-                        // K線
-                        'mainSeriesProperties.candleStyle.upColor': '#d83b3c',
-                        'mainSeriesProperties.candleStyle.downColor': '#01a477',
-                        'mainSeriesProperties.candleStyle.drawWick': true,
-                        'mainSeriesProperties.candleStyle.drawBorder': true,
-                        'mainSeriesProperties.candleStyle.borderColor': '#378658',
-                        'mainSeriesProperties.candleStyle.borderUpColor': '#d83b3c',
-                        'mainSeriesProperties.candleStyle.borderDownColor': '#01a477',
-                        'mainSeriesProperties.candleStyle.wickUpColor': '#d83b3c',
-                        'mainSeriesProperties.candleStyle.wickDownColor': '#01a477',
-                        'mainSeriesProperties.candleStyle.barColorsOnPrevClose': false,
+		TradingView.onready(function () {
+			searchXhr = function getQueryString(name) {
+				var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) {
+					return unescape(r[2]);
+				}
+				return null;
+			};
 
-                        // 空心蠟燭線
-                        'mainSeriesProperties.hollowCandleStyle.upColor': '#d83b3c',
-                        'mainSeriesProperties.hollowCandleStyle.downColor': '#01a477',
-                        'mainSeriesProperties.hollowCandleStyle.drawWick': true,
-                        'mainSeriesProperties.hollowCandleStyle.drawBorder': true,
-                        'mainSeriesProperties.hollowCandleStyle.borderColor': '#378658',
-                        'mainSeriesProperties.hollowCandleStyle.borderUpColor': '#d83b3c',
-                        'mainSeriesProperties.hollowCandleStyle.borderDownColor': '#01a477',
-                        'mainSeriesProperties.hollowCandleStyle.wickUpColor': '#d83b3c',
-                        'mainSeriesProperties.hollowCandleStyle.wickDownColor': '#01a477',
+			var host = "https://" + window.location.hostname;
+			if (window.location.hostname == "service.sinotrade.com.tw" || window.location.hostname == "www.sinotrade.com.tw") {
+				host = host + "/MQTT-service";
+			}
+			var datafeed_url = host + "/TradingView/stock";
 
-                        // 平均K線
-                        'mainSeriesProperties.haStyle.upColor': '#d83b3c',
-                        'mainSeriesProperties.haStyle.downColor': '#01a477',
-                        'mainSeriesProperties.haStyle.drawWick': true,
-                        'mainSeriesProperties.haStyle.drawBorder': true,
-                        'mainSeriesProperties.haStyle.borderColor': '#378658',
-                        'mainSeriesProperties.haStyle.borderUpColor': '#d83b3c',
-                        'mainSeriesProperties.haStyle.borderDownColor': '#01a477',
-                        'mainSeriesProperties.haStyle.wickUpColor': '#d83b3c',
-                        'mainSeriesProperties.haStyle.wickDownColor': '#01a477',
-                        'mainSeriesProperties.haStyle.barColorsOnPrevClose': false,
+			const widget = window.tvWidget = new TradingView.widget({
+				// debug: true, // uncomment this line to see Library errors and warnings in the console
+				fullscreen: true,
+				symbol: searchXhr('CODE'),
+				container_id: "tv_chart_container",
+				//	BEWARE: no trailing slash is expected in feed URL
+				datafeed: new Datafeeds.UDFCompatibleDatafeed(datafeed_url),
+				library_path: "charting_library/",
+				locale: getParameterByName('lang') || "zh_TW",
+				timezone: "Asia/Taipei",
+				enabled_features: [
+					"study_templates",
+					"move_logo_to_main_pane",
+				],
+				disabled_features: [
+					'save_chart_properties_to_local_storage',
+					'symbol_info',
+					'header_saveload',
+					'header_undo_redo',
+					'header_symbol_search',
+				],
+				studies_overrides: {
+					"volume.volume.color.0": "#5cbc8e",
+					"volume.volume.color.1": "#ec5f6b",
+					"volume.volume.transparency": 75,
+				},
+				overrides: {
+					// K線
+					'mainSeriesProperties.candleStyle.upColor': "#d83b3c",
+					'mainSeriesProperties.candleStyle.downColor': "#01a477",
+					'mainSeriesProperties.candleStyle.drawWick': true,
+					'mainSeriesProperties.candleStyle.drawBorder': true,
+					'mainSeriesProperties.candleStyle.borderColor': "#378658",
+					'mainSeriesProperties.candleStyle.borderUpColor': "#d83b3c",
+					'mainSeriesProperties.candleStyle.borderDownColor': "#01a477",
+					'mainSeriesProperties.candleStyle.wickUpColor': '#d83b3c',
+					'mainSeriesProperties.candleStyle.wickDownColor': '#01a477',
+					'mainSeriesProperties.candleStyle.barColorsOnPrevClose': false,
 
-                        // 美國線
-                        'mainSeriesProperties.barStyle.upColor': '#d83b3c',
-                        'mainSeriesProperties.barStyle.downColor': '#01a477',
-                        'mainSeriesProperties.barStyle.barColorsOnPrevClose': false,
-                        'mainSeriesProperties.barStyle.dontDrawOpen': false,
+					// 空心蠟燭線
+					'mainSeriesProperties.hollowCandleStyle.upColor': "#d83b3c",
+					'mainSeriesProperties.hollowCandleStyle.downColor': "#01a477",
+					'mainSeriesProperties.hollowCandleStyle.drawWick': true,
+					'mainSeriesProperties.hollowCandleStyle.drawBorder': true,
+					'mainSeriesProperties.hollowCandleStyle.borderColor': "#378658",
+					'mainSeriesProperties.hollowCandleStyle.borderUpColor': "#d83b3c",
+					'mainSeriesProperties.hollowCandleStyle.borderDownColor': "#01a477",
+					'mainSeriesProperties.hollowCandleStyle.wickUpColor': '#d83b3c',
+					'mainSeriesProperties.hollowCandleStyle.wickDownColor': '#01a477',
 
-                        // 線形圖
-                        'mainSeriesProperties.lineStyle.color': '#0303F7',
-                        'mainSeriesProperties.lineStyle.linewidth': 1,
-                        'mainSeriesProperties.lineStyle.priceSource': 'close',
+					// 平均K線
+					'mainSeriesProperties.haStyle.upColor': "#d83b3c",
+					'mainSeriesProperties.haStyle.downColor': "#01a477",
+					'mainSeriesProperties.haStyle.drawWick': true,
+					'mainSeriesProperties.haStyle.drawBorder': true,
+					'mainSeriesProperties.haStyle.borderColor': "#378658",
+					'mainSeriesProperties.haStyle.borderUpColor': "#d83b3c",
+					'mainSeriesProperties.haStyle.borderDownColor': "#01a477",
+					'mainSeriesProperties.haStyle.wickUpColor': '#d83b3c',
+					'mainSeriesProperties.haStyle.wickDownColor': '#01a477',
+					'mainSeriesProperties.haStyle.barColorsOnPrevClose': false,
 
-                        // 區域圖
-                        'mainSeriesProperties.areaStyle.color1': '#606090',
-                        'mainSeriesProperties.areaStyle.color2': '#01F6F5',
-                        'mainSeriesProperties.areaStyle.linecolor': '#0094FF',
-                        'mainSeriesProperties.areaStyle.linewidth': 1,
-                        'mainSeriesProperties.areaStyle.priceSource': 'close',
+					// 美國線
+					'mainSeriesProperties.barStyle.upColor': "#d83b3c",
+					'mainSeriesProperties.barStyle.downColor': "#01a477",
+					'mainSeriesProperties.barStyle.barColorsOnPrevClose': false,
+					'mainSeriesProperties.barStyle.dontDrawOpen': false,
 
-                        // 基準線
-                        'mainSeriesProperties.baselineStyle.baselineColor': 'rgba( 117, 134, 150, 1)',
-                        'mainSeriesProperties.baselineStyle.topFillColor1': 'rgba( 235, 77, 92, 0.1)',
-                        'mainSeriesProperties.baselineStyle.topFillColor2': 'rgba( 235, 77, 92, 0.1)',
-                        'mainSeriesProperties.baselineStyle.bottomFillColor1': 'rgba( 83, 185, 135, 0.1)',
-                        'mainSeriesProperties.baselineStyle.bottomFillColor2': 'rgba( 83, 185, 135, 0.1)',
-                        'mainSeriesProperties.baselineStyle.topLineColor': 'rgba( 235, 77, 92, 1)',
-                        'mainSeriesProperties.baselineStyle.bottomLineColor': 'rgba( 83, 185, 135, 1)',
-                        'mainSeriesProperties.baselineStyle.topLineWidth': 1,
-                        'mainSeriesProperties.baselineStyle.bottomLineWidth': 1,
-                        'mainSeriesProperties.baselineStyle.priceSource': 'close',
-                        'mainSeriesProperties.baselineStyle.transparency': 50,
-                        'mainSeriesProperties.baselineStyle.baseLevelPercentage': 50,
-                    },
-                    charts_storage_url: 'https://saveload.tradingview.com',
-                    charts_storage_api_version: '1.1',
-                    client_id: 'tradingview.com',
-                    user_id: 'public_user_id',
-                    theme: 'light',
-                    favorites: {
-                        intervals: ['1', 'D', 'W', 'M'],
-                    },
-                    timeframe: '6m',
-                    time_frames: [
-                        {
-                            text: '1d',
-                            resolution: '1',
-                            description: '1 Day',
-                            title: '一天',
-                        },
-                        {
-                            text: '6m',
-                            resolution: '1D',
-                            description: '6 Month',
-                            title: '六月',
-                        },
-                        {
-                            text: '3y',
-                            resolution: 'W',
-                            description: '3 Years',
-                            title: '三年',
-                        },
-                        {
-                            text: '5y',
-                            resolution: 'M',
-                            description: '5 Years',
-                            title: '五年',
-                        },
-                    ],
-                }));
+					// 線形圖
+					'mainSeriesProperties.lineStyle.color': "#0303F7",
+					'mainSeriesProperties.lineStyle.linewidth': 1,
+					'mainSeriesProperties.lineStyle.priceSource': "close",
 
-                widget.onChartReady(function () {
-                    // default initialization
-                    widget.chart().setResolution('1D');
+					// 區域圖
+					'mainSeriesProperties.areaStyle.color1': "#606090",
+					'mainSeriesProperties.areaStyle.color2': "#01F6F5",
+					'mainSeriesProperties.areaStyle.linecolor': "#0094FF",
+					'mainSeriesProperties.areaStyle.linewidth': 1,
+					'mainSeriesProperties.areaStyle.priceSource': "close",
 
-                    // listening onIntervalChanged
-                    widget
-                        .chart()
-                        .onIntervalChanged()
-                        .subscribe(null, function (interval, timeframeParams) {
-                            if (isNaN(interval)) {
-                                widget.chart().setChartType(1);
-                            } else {
-                                widget.chart().setChartType(2);
-                            }
+					// 基準線
+					'mainSeriesProperties.baselineStyle.baselineColor': "rgba( 117, 134, 150, 1)",
+					'mainSeriesProperties.baselineStyle.topFillColor1': "rgba( 235, 77, 92, 0.1)",
+					'mainSeriesProperties.baselineStyle.topFillColor2': "rgba( 235, 77, 92, 0.1)",
+					'mainSeriesProperties.baselineStyle.bottomFillColor1': "rgba( 83, 185, 135, 0.1)",
+					'mainSeriesProperties.baselineStyle.bottomFillColor2': "rgba( 83, 185, 135, 0.1)",
+					'mainSeriesProperties.baselineStyle.topLineColor': "rgba( 235, 77, 92, 1)",
+					'mainSeriesProperties.baselineStyle.bottomLineColor': "rgba( 83, 185, 135, 1)",
+					'mainSeriesProperties.baselineStyle.topLineWidth': 1,
+					'mainSeriesProperties.baselineStyle.bottomLineWidth': 1,
+					'mainSeriesProperties.baselineStyle.priceSource': "close",
+					'mainSeriesProperties.baselineStyle.transparency': 50,
+					'mainSeriesProperties.baselineStyle.baseLevelPercentage': 50,
+				},
+				charts_storage_url: 'https://saveload.tradingview.com',
+				charts_storage_api_version: '1.1',
+				client_id: 'tradingview.com',
+				user_id: 'public_user_id',
+				theme: 'light',
+				favorites: {
+					intervals: ['1', 'D', 'W', 'M'],
+				},
+				timeframe: '6m',
+				time_frames: [{
+						text: '1d',
+						resolution: '1',
+						description: '1 Day',
+						title: '一天'
+					},
+					{
+						text: '6m',
+						resolution: '1D',
+						description: '6 Month',
+						title: '六月'
+					},
+					{
+						text: '3y',
+						resolution: 'W',
+						description: '3 Years',
+						title: '三年'
+					},
+					{
+						text: '5y',
+						resolution: 'M',
+						description: '5 Years',
+						title: '五年'
+					},
+				],
+			});
 
-                            switch (interval) {
-                                case '1':
-                                    timeframeParams.timeframe = '1d';
-                                    break;
-                                case '5':
-                                    timeframeParams.timeframe = '1d';
-                                    break;
-                                case '15':
-                                    timeframeParams.timeframe = '1d';
-                                    break;
-                                case '30':
-                                    timeframeParams.timeframe = '1d';
-                                    break;
-                                case '60':
-                                    timeframeParams.timeframe = '1d';
-                                    break;
-                                case '1D':
-                                    timeframeParams.timeframe = '6m';
-                                    break;
-                                case '2D':
-                                    timeframeParams.timeframe = '6m';
-                                    break;
-                                case '3D':
-                                    timeframeParams.timeframe = '6m';
-                                    break;
-                                case '1W':
-                                    timeframeParams.timeframe = '36m';
-                                    break;
-                                case '3W':
-                                    timeframeParams.timeframe = '36m';
-                                    break;
-                                case '1M':
-                                    timeframeParams.timeframe = '60m';
-                                    break;
-                                case '6M':
-                                    timeframeParams.timeframe = '60m';
-                                    break;
-                            }
-                        });
-                });
-            });
-        </script>
-    </head>
+			widget.onChartReady(function () {
+				// default initialization
+				widget.chart().setResolution('1D');
 
-    <body style="margin: 0px">
-        <div id="tv_chart_container"></div>
-    </body>
+				// listening onIntervalChanged
+				widget.chart().onIntervalChanged().subscribe(null, function (interval, timeframeParams) {
+					if (isNaN(interval)) {
+						widget.chart().setChartType(1);
+					} else {
+						widget.chart().setChartType(2);
+					}
+
+					switch (interval) {
+						case '1':
+							timeframeParams.timeframe = '1d';
+							break;
+						case '1D':
+							timeframeParams.timeframe = '6m';
+							break;
+						case '2D':
+							timeframeParams.timeframe = '6m';
+							break;
+						case '3D':
+							timeframeParams.timeframe = '6m';
+							break;
+						case '1W':
+							timeframeParams.timeframe = '36m';
+							break;
+						case '3W':
+							timeframeParams.timeframe = '36m';
+							break;
+						case '1M':
+							timeframeParams.timeframe = '60m';
+							break;
+						case '6M':
+							timeframeParams.timeframe = '60m';
+							break;
+					}
+				});
+			});
+		});
+	</script>
+</head>
+
+<body style="margin:0px;">
+	<div id="tv_chart_container"></div>
+</body>
+
 </html>

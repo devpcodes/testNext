@@ -1,19 +1,23 @@
+
 (function ($) {
-    //################################################################################
-    //################################################################################
-    // The LabCI object for Generic Widget Package
-    // LabCI = { WP: { ... } }
 
-    if (typeof LabCI === 'undefined') LabCI = { WP: {} };
-    else if (typeof LabCI.WP === 'undefined') LabCI.WP = {};
+//################################################################################
+//################################################################################
+// The LabCI object for Generic Widget Package
+// LabCI = { WP: { ... } }
 
-    var _DEFAULT_INDEXRIC = '2890.TW';
+    if (typeof (LabCI) === "undefined")
+        LabCI = {WP: {}};
+    else if (typeof (LabCI.WP) === "undefined")
+        LabCI.WP = {};
 
-    //################################################################################
+    var _DEFAULT_INDEXRIC = "2890.TW";
 
-    // Create a new IndexPageObj ...
+//################################################################################
+
+// Create a new IndexPageObj ...
     LabCI.WP.createquotepageobj = function () {
-        var pobj = LabCI.AbstractPageObj.extend('lsinopac-quote', LabCI.WP.QuotePageObj);
+        var pobj = LabCI.AbstractPageObj.extend("lsinopac-quote", LabCI.WP.QuotePageObj);
         return pobj;
     };
 
@@ -22,17 +26,17 @@
             $this: null,
             $chartwidget: null,
             chartframeobj: null,
-            CHARTNAME_MAINCHART: 'mainchart',
+            CHARTNAME_MAINCHART: "mainchart",
             $chartpane: null,
             $chartpane_canvasbox: null,
             mainchartobj: null,
             _TAPANE_HEIGHT: 100, // in pixels
-            curperiod: '1W',
-            curtype: 'line',
+            curperiod: "1W",
+            curtype: "line",
             curta: {
-                overlay: 'nooverlay',
-                tapane: 'notapane',
-            },
+                overlay: "nooverlay",
+                tapane: "notapane"
+            }
         },
         $quote: null,
         $stockinfopanel: null,
@@ -48,66 +52,62 @@
         currentSymbol: null,
         currentExchange: null,
         currentPrice: null,
-        currentsection: 'summary',
-        mode: 'desktop',
+        currentsection: "summary",
+        mode: "desktop",
         breakpoint: null,
         initImpl: function () {
             // Get ready
             var that = this;
-            this.$sectionbox = this.$pageobj.find('.sectionbox');
-            this.$quote = this.$pageobj.find('#lsinopac-quote');
-            this.$stockinfopanel = this.$pageobj.find('.stockinfopanel');
-            this.$quotedetail = this.$pageobj.find('#lsinopac-quote-detail');
-            this.$quoterelated = this.$pageobj.find('#lsinopac-quote-related');
-            this.$mobilenavbar = this.$pageobj.find('.mobile-navbar');
+            this.$sectionbox = this.$pageobj.find(".sectionbox");
+            this.$quote = this.$pageobj.find("#lsinopac-quote");
+            this.$stockinfopanel = this.$pageobj.find(".stockinfopanel");
+            this.$quotedetail = this.$pageobj.find("#lsinopac-quote-detail");
+            this.$quoterelated = this.$pageobj.find("#lsinopac-quote-related");
+            this.$mobilenavbar = this.$pageobj.find(".mobile-navbar");
 
-            this.$sectionbox.find('.sectionboxitem').on('click', function () {
-                that.$sectionbox.find('.sectionboxitem').removeClass('selected');
-                $(this).addClass('selected');
-                if ($(this).attr('mode') == 'chart') {
-                    that.currentsection = 'chart';
+
+            this.$sectionbox.find(".sectionboxitem").on("click", function () {
+                that.$sectionbox.find(".sectionboxitem").removeClass("selected");
+                $(this).addClass("selected");
+                if ($(this).attr("mode") == "chart") {
+                    that.currentsection = "chart";
                     that._loadChartWidget();
-                } else if ($(this).attr('mode') == 'summary') {
-                    that.currentsection = 'summary';
+                } else if ($(this).attr("mode") == "summary") {
+                    that.currentsection = "summary";
                     that._loadSummaryWidget();
-                } else if ($(this).attr('mode') == 'srplus') {
-                    that.currentsection = 'srplus';
+                } else if ($(this).attr("mode") == "srplus") {
+                    that.currentsection = "srplus";
                     that._loadSRPlusWidget();
-                } else if ($(this).attr('mode') == 'financial') {
-                    that.currentsection = 'financial';
+                } else if ($(this).attr("mode") == "financial") {
+                    that.currentsection = "financial";
                     that._loadFinancialWidget();
                 }
             });
 
-            this.$mobilenavbar.find('.tab').on('click', function () {
-                that.$mobilenavbar.find('.tab').removeClass('selected');
-                $(this).addClass('selected');
-                if ($(this).attr('mode') == 'chart') {
-                    that.currentsection = 'chart';
+            this.$mobilenavbar.find(".tab").on("click", function () {
+                that.$mobilenavbar.find(".tab").removeClass("selected");
+                $(this).addClass("selected");
+                if ($(this).attr("mode") == "chart") {
+                    that.currentsection = "chart";
                     that._loadChartWidget();
-                } else if ($(this).attr('mode') == 'summary') {
-                    that.currentsection = 'summary';
+                } else if ($(this).attr("mode") == "summary") {
+                    that.currentsection = "summary";
                     that._loadSummaryWidget();
-                } else if ($(this).attr('mode') == 'srplus') {
-                    that.currentsection = 'srplus';
+                } else if ($(this).attr("mode") == "srplus") {
+                    that.currentsection = "srplus";
                     that._loadSRPlusWidget();
-                } else if ($(this).attr('mode') == 'financial') {
-                    that.currentsection = 'financial';
+                } else if ($(this).attr("mode") == "financial") {
+                    that.currentsection = "financial";
                     that._loadFinancialWidget();
                 }
             });
-
-            this.$pageobj.find('.buybutton2').on('click', function () {
+            
+            this.$pageobj.find(".buybutton2").on("click", function () {
                 if (that.currentSymbol != null && that.currentExchange != null) {
-                    LabCI.WP.AppUtils.buysellIntegration(
-                        that.currentSymbol,
-                        that.currentExchange,
-                        that.currentPrice,
-                        'B',
-                    );
+                    LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'B');
                 }
-            });
-            /*
+            });            
+/*
             this.$pageobj.find(".buybutton").on("click", function () {
                 if (that.currentSymbol != null && that.currentExchange != null) {
                     LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'B');
@@ -120,11 +120,12 @@
                 }
             });
 */
-            this.$pageobj.find('.watchlistbutton').on('click', function () {
+            this.$pageobj.find(".watchlistbutton").on("click", function () {
                 if (that.currentSymbol != null && that.currentExchange != null) {
                     LabCI.WP.AppUtils.addFavourIntegration(that.currentSymbol, that.currentExchange);
                 }
             });
+
 
             /*        this.$pageobj.find(".sectionselect").on("change", function () {
              
@@ -187,13 +188,9 @@
             // ... a bad trick, but works ;)
             this.resize = function () {
                 var that = this;
-                that.$pageobj.delaycall(
-                    'resize',
-                    function () {
-                        that.resizeImpl();
-                    },
-                    100,
-                );
+                that.$pageobj.delaycall("resize", function () {
+                    that.resizeImpl();
+                }, 100);
             };
 
             this.resize();
@@ -204,24 +201,22 @@
         changeRicBySymbol: function (symbol, exch) {
             var that = this;
 
-            this.$pageobj.loaddata(
-                'searchdata',
-                '/data/ps',
-                {
-                    k: symbol,
-                    e: exch,
-                    l: 1,
-                    exact: 1,
-                    token: encodeURIComponent(LabCI.getToken()),
-                    lang: this.lang,
-                },
-                function (result) {
-                    if (result && result.data && result.data.responseCode !== 'F') {
-                        if (result.data.results && result.data.results.length > 0) {
-                            that.currentquoteric = result.data.results[0].ric;
-                            that.changeRic(that.currentquoteric);
-                            $(that.$pageobj).find('.tab2Refresh').attr('data-refresh-value', that.currentquoteric);
-                            /*        that.changedric = true;
+            this.$pageobj.loaddata("searchdata", "/data/ps",
+                    {
+                        k: symbol,
+                        e: exch,
+                        l: 1,
+                        exact: 1,
+                        token: encodeURIComponent(LabCI.getToken()),
+                        lang: this.lang
+                    },
+                    function (result) {
+                        if (result && result.data && result.data.responseCode !== "F") {
+                            if (result.data.results && result.data.results.length > 0) {
+                                that.currentquoteric = result.data.results[0].ric;
+                                that.changeRic(that.currentquoteric);
+                                $(that.$pageobj).find(".tab2Refresh").attr("data-refresh-value", that.currentquoteric);
+                                /*        that.changedric = true;
                                  
                                  if (that.currentsection == "summary") {
                                  that._loadSummaryWidget();
@@ -238,31 +233,36 @@
                                  $("#lsinopac-quote-chart").addClass("changed");
                                  $("#lsinopac-quote-srplus").addClass("changed");
                                  */
+
+                            }
+
+
+                        } else {
+
+                            //make as data changed
+                            //    $("#lsinopac-quote-summary-chart").addClass("changed");
+                            //    that.$quoterelated.addClass("changed");
+                            //    $("#lsinopac-quote-chart").addClass("changed");
+                            //    $("#lsinopac-quote-srplus").addClass("changed");
+
+                            $('#invalidricModel').modal('show');
+
+
+                            //Error handling...
+
                         }
-                    } else {
-                        //make as data changed
-                        //    $("#lsinopac-quote-summary-chart").addClass("changed");
-                        //    that.$quoterelated.addClass("changed");
-                        //    $("#lsinopac-quote-chart").addClass("changed");
-                        //    $("#lsinopac-quote-srplus").addClass("changed");
-
-                        $('#invalidricModel').modal('show');
-
-                        //Error handling...
-                    }
-                    //    if (result && result.data && result.data.responseCode!=="F") {
-                    //        $imgdiv.append($("<img/>").attr("src", "data:image/png;base64," + result.data.compscoreimage));
-                    //    }
-                    //    else {
-                    //        // Error handling...
-                    //
-                    //    }
-                },
-                0,
-                {
-                    datatype: 'jsonp',
-                },
-            );
+                        //    if (result && result.data && result.data.responseCode!=="F") {
+                        //        $imgdiv.append($("<img/>").attr("src", "data:image/png;base64," + result.data.compscoreimage));
+                        //    }
+                        //    else {
+                        //        // Error handling...
+//
+                        //    }
+                    },
+                    0,
+                    {
+                        datatype: "jsonp"
+                    });
 
             //  this._loadQuoteData(ric);
 
@@ -278,6 +278,7 @@
         changeRic: function (ric) {
             var that = this;
 
+
             this._loadQuoteData(ric);
 
             /*    if (this.currentsection == "summary") {
@@ -292,560 +293,418 @@
         _loadQuoteData: function (ric) {
             var that = this;
 
-            this.$pageobj.loaddata(
-                'quotedata',
-                '/data/getquote',
-                {
-                    ric: ric,
-                    token: encodeURIComponent(LabCI.getToken()),
-                    lang: this.lang,
-                },
-                function (result) {
-                    if (
-                        result &&
-                        result.data &&
-                        result.data.responseCode !== 'F' &&
-                        result.data.datalist[0].status == 0
-                    ) {
-                        //reset
-                        that.$stockinfopanel.find('.name').html('-');
-                        that.$stockinfopanel.find('.price').html('-');
-                        that.$stockinfopanel.find('.netchange').removeClass('upval').removeClass('downval').html('-');
-                        that.$stockinfopanel.find('.pctchange').removeClass('upval').removeClass('downval').html('-');
-                        that.$stockinfopanel.find('.note').html('-');
 
-                        that.$quotedetail.find('.opdata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.hidata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.lodata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.vwapdata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.wk52highdata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.wk52lowdata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.biddata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.askdata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.hcdata').removeClass('upval').removeClass('downval').html('-');
-                        that.$quotedetail.find('.epsdata').html('-');
-                        that.$quotedetail.find('.perdata').html('-');
-                        that.$quotedetail.find('.pbrdata').html('-');
-                        that.$quotedetail.find('.dividenddata').html('-');
-                        that.$quotedetail.find('.yielddata').html('-');
-                        that.$quotedetail.find('.dividendexdatedata').html('-');
-                        that.$quotedetail.find('.dividendpaydatedata').html('-');
-                        that.$quotedetail.find('.marketcapdata').html('-');
-                        that.$quotedetail.find('.volumedata').html('-');
-                        that.$quotedetail.find('.turnoverdata').html('-');
-                        that.$quotedetail.find('.lotsizedata').html('-');
-
-                        that.$pageobj.find('.chartbox').hide();
-
-                        that.$quoterelated.find('.relatedstock').remove();
-
-                        that.currentquoteric = ric;
-                        that.changedric = true;
-
-                        if (result.data.datalist && result.data.datalist.length > 0) {
-                            if (that.currentsection == 'summary') {
-                                that._loadSummaryWidget();
-                            } else if (that.currentsection == 'chart') {
-                                that._loadChartWidget();
-                            } else if (that.currentsection == 'srplus') {
-                                that._loadSRPlusWidget();
-                            } else if (that.currentsection == 'financial') {
-                                that._loadFinancialWidget();
-                            }
-
-                            //make as data changed
-                            $('#lsinopac-quote-summary-chart').addClass('changed');
-                            that.$quoterelated.addClass('changed');
-                            $('#lsinopac-quote-chart').addClass('changed');
-                            $('#lsinopac-quote-srplus').addClass('changed');
-                            $('#lsinopac-quote-financial').addClass('changed');
-
-                            var updownclass = getUpDownClass(result.data.datalist[0].nc);
-
-                            that.$stockinfopanel
-                                .find('.name')
-                                .html(result.data.datalist[0].nm + ' (' + result.data.datalist[0].symbol + ')');
-                            that.$stockinfopanel.find('.price').html(result.data.datalist[0].ls);
-                            that.$stockinfopanel
-                                .find('.netchange')
-                                .removeClass('upval')
-                                .removeClass('downval')
-                                .addClass(updownclass)
-                                .setValue(result.data.datalist[0].nc, null, false, '-', result.data.datalist[0].ls);
-                            that.$stockinfopanel
-                                .find('.pctchange')
-                                .removeClass('upval')
-                                .removeClass('downval')
-                                .addClass(updownclass)
-                                .setValue(result.data.datalist[0].pc, '%', false, '-', result.data.datalist[0].ls);
-                            var quoteNote =
-                                that.pageobj_rb.lbl[result.data.datalist[0].exchsect] +
-                                ' ' +
-                                that.pageobj_rb.lbl[result.data.datalist[0].dc] +
-                                '.';
-                            quoteNote +=
-                                that.pageobj_rb.lbl['ccy'] +
-                                that.pageobj_rb.lbl['ccy_' + result.data.datalist[0].ccy] +
-                                '  ' +
-                                formatShortTime(result.data.datalist[0].tm) +
-                                ' ' +
-                                formatShortDate(result.data.datalist[0].td);
-
-                            that.$stockinfopanel.find('.note').html(quoteNote);
-
-                            that.currentSymbol = result.data.datalist[0].symbol;
-                            that.currentExchange = result.data.datalist[0].exchsect;
-                            that.currentPrice = result.data.datalist[0].ls;
-                        }
-
-                        //    if (that.$quotedetail.is(":visible")) {
-                        var ricData = result.data.datalist[0];
-                        var refdiff = 0;
-                        var updownclass = '';
-
-                        updownclass = that._getRefUpDownClass(ricData.op, ricData.refprice);
-                        that.$quotedetail
-                            .find('.opdata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.op);
-
-                        updownclass = that._getRefUpDownClass(ricData.hi, ricData.refprice);
-                        that.$quotedetail
-                            .find('.hidata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.hi);
-
-                        updownclass = that._getRefUpDownClass(ricData.lo, ricData.refprice);
-                        that.$quotedetail
-                            .find('.lodata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.lo);
-
-                        updownclass = that._getRefUpDownClass(ricData.vwap, ricData.refprice);
-                        that.$quotedetail
-                            .find('.vwapdata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.vwap);
-
-                        updownclass = that._getRefUpDownClass(ricData.yh, ricData.refprice);
-                        that.$quotedetail
-                            .find('.wk52highdata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.yh);
-
-                        updownclass = that._getRefUpDownClass(ricData.yl, ricData.refprice);
-                        that.$quotedetail
-                            .find('.wk52lowdata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.yl);
-
-                        if (ricData.bd && ricData.bd != '-') {
-                            updownclass = that._getRefUpDownClass(ricData.bd, ricData.refprice);
-                            that.$quotedetail
-                                .find('.biddata')
-                                .removeClass('upval')
-                                .removeClass('downval')
-                                .addClass(updownclass)
-                                .html(ricData.bd + ' x ' + ricData.bdsize);
-                        } else {
-                            that.$quotedetail
-                                .find('.biddata')
-                                .removeClass('upval')
-                                .removeClass('downval')
-                                .addClass(updownclass)
-                                .html('-');
-                        }
-
-                        if (ricData.as && ricData.as != '-') {
-                            updownclass = that._getRefUpDownClass(ricData.as, ricData.refprice);
-                            that.$quotedetail
-                                .find('.askdata')
-                                .removeClass('upval')
-                                .removeClass('downval')
-                                .addClass(updownclass)
-                                .html(ricData.as + ' x ' + ricData.assize);
-                        } else {
-                            that.$quotedetail
-                                .find('.askdata')
-                                .removeClass('upval')
-                                .removeClass('downval')
-                                .addClass(updownclass)
-                                .html('-');
-                        }
-
-                        updownclass = that._getRefUpDownClass(ricData.hc, ricData.refprice);
-                        that.$quotedetail
-                            .find('.hcdata')
-                            .removeClass('upval')
-                            .removeClass('downval')
-                            .addClass(updownclass)
-                            .html(ricData.hc);
-                        if (ricData.eps != null) {
-                            that.$quotedetail.find('.epsdata').html(ricData.eps);
-                        }
-                        if (ricData.per != null) {
-                            that.$quotedetail.find('.perdata').html(ricData.per);
-                        }
-
-                        if (ricData.cc == 'USA') {
-                            that.$quotedetail.find('.vwaprow').hide();
-                            that.$quotedetail.find('.yrhighrow').hide();
-                            that.$quotedetail.find('.yrlowrow').hide();
-                            that.$quotedetail.find('.epsrow').hide();
-                            that.$quotedetail.find('.perrow').hide();
-                            that.$quotedetail.find('.pbrrow').hide();
-                            that.$quotedetail.find('.dividendrow').hide();
-                            that.$quotedetail.find('.yieldrow').hide();
-                            that.$quotedetail.find('.exdaterow').hide();
-                            that.$quotedetail.find('.paydaterow').hide();
-                            that.$quotedetail.find('.turnoverrow').hide();
-                        } else {
-                            that.$quotedetail.find('.vwaprow').show();
-                            that.$quotedetail.find('.yrhighrow').show();
-                            that.$quotedetail.find('.yrlowrow').show();
-                            that.$quotedetail.find('.epsrow').show();
-                            that.$quotedetail.find('.perrow').show();
-                            that.$quotedetail.find('.pbrrow').show();
-                            that.$quotedetail.find('.dividendrow').show();
-                            that.$quotedetail.find('.yieldrow').show();
-                            that.$quotedetail.find('.exdaterow').show();
-                            that.$quotedetail.find('.paydaterow').show();
-                            that.$quotedetail.find('.turnoverrow').show();
-                            that.$quotedetail.find('.pbrdata').html(ricData.pbr);
-                        }
-
-                        if (ricData.div) {
-                            that.$quotedetail.find('.dividenddata').html(ricData.div + ' ' + ricData.currency);
-                        } else {
-                            that.$quotedetail.find('.dividenddata').html('-');
-                        }
-
-                        if (ricData.yield) {
-                            that.$quotedetail.find('.yielddata').html(ricData.yield + '%');
-                        } else {
-                            that.$quotedetail.find('.yielddata').html('-');
-                        }
-
-                        if (ricData.exdate != null && ricData.exdate != undefined && ricData.exdate != '-') {
-                            that.$quotedetail.find('.dividendexdatedata').html(formatLongDate(ricData.exdate));
-                        } else {
-                            that.$quotedetail.find('.dividendexdatedata').html('-');
-                        }
-
-                        if (ricData.paydate != null && ricData.paydate != undefined && ricData.paydate != '-') {
-                            that.$quotedetail.find('.dividendpaydatedata').html(formatLongDate(ricData.paydate));
-                        } else {
-                            that.$quotedetail.find('.dividendpaydatedata').html('-');
-                        }
-
-                        if (ricData.cc == 'USA') {
-                            that.$quotedetail.find('.marketcaprow').hide();
-                        } else {
-                            that.$quotedetail.find('.marketcaprow').show();
-                            if (ricData.mktvalue && ricData.mktvalue != '-') {
-                                that.$quotedetail
-                                    .find('.marketcapdata')
-                                    .html(ricData.mktvalue + ' ' + ricData.currency);
-                            } else {
-                                that.$quotedetail.find('.marketcapdata').html('-');
-                            }
-                        }
-                        if (ricData.mktvalue && ricData.mktvalue != '-') {
-                            that.$quotedetail.find('.marketcapdata').html(ricData.mktvalue + ' ' + ricData.currency);
-                        } else {
-                            that.$quotedetail.find('.marketcapdata').html('-');
-                        }
-                        that.$quotedetail.find('.volumedata').html(ricData.vo);
-                        if (ricData.am && ricData.am != '-') {
-                            that.$quotedetail.find('.turnoverdata').html(ricData.am + ' ' + ricData.currency);
-                        } else {
-                            that.$quotedetail.find('.turnoverdata').html('-');
-                        }
-                        if (ricData.cc == 'USA') {
-                            that.$quotedetail.find('.lotsizerow').hide();
-                        } else {
-                            that.$quotedetail.find('.lotsizerow').show();
-                            that.$quotedetail.find('.lotsizedata').html(ricData.lot);
-                        }
-
-                        //    }
-
-                        that.$pageobj.find('.chartbox').show();
-
-                        that._loadRelatedStockData(1);
-                    } else if (result.data.datalist[0].status == 3) {
-                        //make as data changed
-                        //    $("#lsinopac-quote-summary-chart").addClass("changed");
-                        //    that.$quoterelated.addClass("changed");
-                        //    $("#lsinopac-quote-chart").addClass("changed");
-                        //    $("#lsinopac-quote-srplus").addClass("changed");
-
-                        $('#invalidricModel').modal('show');
-
-                        //Error handling...
-                    }
-                    //    if (result && result.data && result.data.responseCode!=="F") {
-                    //        $imgdiv.append($("<img/>").attr("src", "data:image/png;base64," + result.data.compscoreimage));
-                    //    }
-                    //    else {
-                    //        // Error handling...
-                    //
-                    //    }
-                },
-                0,
-                {
-                    datatype: 'jsonp',
-                },
-            );
-        },
-        _getRefUpDownClass: function (price, refPrice) {
-            if (price && refPrice) {
-                var priceval = Number(price.replace(',', ''));
-                var refpriceval = Number(refPrice.replace(',', ''));
-
-                // Check if 0
-                if (priceval == 0 || refpriceval == 0) {
-                    return '';
-                }
-                // If -nnn ?
-                else if (priceval < refpriceval) {
-                    return 'downval';
-                }
-                // If +nnn ?
-                else if (priceval > refpriceval) {
-                    return 'upval';
-                }
-            }
-            // Any other case, return ""
-            return '';
-        },
-        _loadRelatedStockData: function (pn) {
-            var that = this;
-            var ric = this.currentquoteric;
-            if (this.$quoterelated.is(':visible')) {
-                //        if (that.$quoterelated.hasClass("changed") || pn != 1) {
-                this.$pageobj.loaddata(
-                    'quoterelateddata',
-                    '/data/getrelatedstockquote',
+            this.$pageobj.loaddata("quotedata", "/data/getquote",
                     {
                         ric: ric,
-                        pn: pn,
                         token: encodeURIComponent(LabCI.getToken()),
-                        lang: this.lang,
+                        lang: this.lang
                     },
                     function (result) {
-                        //                        that.$quoterelated.attr("ric", ric);
 
-                        that.$quoterelated.find('.relatedstock').remove();
-                        that.$quoterelated.removeClass('changed');
-                        if (result && result.data && result.data.responseCode !== 'F') {
-                            that.$pageobj.find('.result-count').show();
-                            that.$pageobj.find('.result-no-count').hide();
-                            that.$pageobj.find('.pagination').show();
-                            that.$pageobj.find('.stockfrom').html('-');
-                            that.$pageobj.find('.stockto').html('-');
-                            that.$pageobj.find('.stocktotal').html('-');
+                        if (result && result.data && result.data.responseCode !== "F" && result.data.datalist[0].status == 0) {
+
+                            //reset
+                            that.$stockinfopanel.find(".name").html("-");
+                            that.$stockinfopanel.find(".price").html("-");
+                            that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").html("-");
+                            that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").html("-");
+                            that.$stockinfopanel.find(".note").html("-");
+
+                            that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").html("-");
+                            that.$quotedetail.find(".epsdata").html("-");
+                            that.$quotedetail.find(".perdata").html("-");
+                            that.$quotedetail.find(".pbrdata").html("-");
+                            that.$quotedetail.find(".dividenddata").html("-");
+                            that.$quotedetail.find(".yielddata").html("-");
+                            that.$quotedetail.find(".dividendexdatedata").html("-");
+                            that.$quotedetail.find(".dividendpaydatedata").html("-");
+                            that.$quotedetail.find(".marketcapdata").html("-");
+                            that.$quotedetail.find(".volumedata").html("-");
+                            that.$quotedetail.find(".turnoverdata").html("-");
+                            that.$quotedetail.find(".lotsizedata").html("-");
+
+                            that.$pageobj.find(".chartbox").hide();
+
+                            that.$quoterelated.find(".relatedstock").remove();
+
+                            that.currentquoteric = ric;
+                            that.changedric = true;
 
                             if (result.data.datalist && result.data.datalist.length > 0) {
-                                that.$quoterelated.find('.stockfrom').html(result.data.from);
-                                that.$quoterelated.find('.stockto').html(result.data.to);
-                                that.$quoterelated.find('.stocktotal').html(result.data.totalrec);
 
-                                for (var key in result.data.datalist) {
-                                    var updownclass = getUpDownClass(result.data.datalist[key].nc);
-
-                                    var addedRow = $(
-                                        "<tr class='relatedstock' style='cursor:pointer'; ric='" +
-                                            result.data.datalist[key].ric +
-                                            "' symbol='" +
-                                            result.data.datalist[key].symbol +
-                                            "' exchange='" +
-                                            LabCI.WP.AppUtils.INTEGRATION_EXCHANGE_MAPPING[
-                                                result.data.datalist[key].exchange_code
-                                            ] +
-                                            "'><td>" +
-                                            result.data.datalist[key].symbol +
-                                            '</td>' +
-                                            '<td>' +
-                                            result.data.datalist[key].name +
-                                            '</td>' +
-                                            '<td>' +
-                                            result.data.datalist[key].trbc_name +
-                                            '</td>' +
-                                            "<td class='text-right'>" +
-                                            result.data.datalist[key].ls +
-                                            '</td>' +
-                                            "<td class='" +
-                                            updownclass +
-                                            " text-right'>" +
-                                            setValue(
-                                                result.data.datalist[key].nc,
-                                                null,
-                                                false,
-                                                '-',
-                                                result.data.datalist[key].ls,
-                                            ) +
-                                            '</td>' +
-                                            "<td class='" +
-                                            updownclass +
-                                            " text-right'>" +
-                                            setValue(
-                                                result.data.datalist[key].pc,
-                                                '%',
-                                                false,
-                                                '-',
-                                                result.data.datalist[key].ls,
-                                            ) +
-                                            '</td>' +
-                                            "<td class='text-right'>" +
-                                            result.data.datalist[key].vo +
-                                            '</td>' +
-                                            '</tr>',
-                                    );
-
-                                    that.$quoterelated.find('table').append(addedRow);
-
-                                    $(addedRow).on(_CLICK_EVENT, function () {
-                                        var that2 = this;
-                                        //    $("html, body").animate({scrollTop: 0}, 400, function () {
-                                        //        that.changeRic($(that2).attr('ric'));
-                                        //    });
-                                        LabCI.WP.AppUtils.openQuotePage(
-                                            $(that2).attr('symbol'),
-                                            $(that2).attr('exchange'),
-                                        );
-                                    });
+                                if (that.currentsection == "summary") {
+                                    that._loadSummaryWidget();                              
+                                } else if (that.currentsection == "chart") {
+                                    that._loadChartWidget();
+                                } else if (that.currentsection == "srplus") {
+                                    that._loadSRPlusWidget();
+                                } else if (that.currentsection == "financial") {
+                                    that._loadFinancialWidget();
                                 }
 
-                                //for pagination...
-                                var pagination = that.$quoterelated.find('.desktop-pagination');
-                                var pageno = pn * 1; //cast to int...
-                                var maxPage = Math.ceil(result.data.totalrec / that.recperpage);
-                                var paginationFrom = pageno - 3;
-                                var paginationTo = pageno + 2;
+                                //make as data changed
+                                $("#lsinopac-quote-summary-chart").addClass("changed");
+                                that.$quoterelated.addClass("changed");
+                                $("#lsinopac-quote-chart").addClass("changed");
+                                $("#lsinopac-quote-srplus").addClass("changed");
+                                $("#lsinopac-quote-financial").addClass("changed");
 
-                                if (paginationFrom <= 0) {
-                                    paginationTo = Math.abs(paginationFrom) + paginationTo;
-                                    paginationFrom = 1;
-                                } else {
-                                    paginationFrom += 1;
-                                }
+                                var updownclass = getUpDownClass(result.data.datalist[0].nc);
 
-                                if (paginationTo > maxPage) {
-                                    var diff = paginationTo - maxPage;
-                                    paginationFrom -= diff;
-                                    paginationTo -= diff;
-                                }
-                                if (paginationFrom < 1) {
-                                    paginationFrom = 1;
-                                }
+                                that.$stockinfopanel.find(".name").html(result.data.datalist[0].nm + " (" + result.data.datalist[0].symbol + ")");
+                                that.$stockinfopanel.find(".price").html(result.data.datalist[0].ls);
+                                that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].nc, null, false, "-", result.data.datalist[0].ls);
+                                that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].pc, "%", false, "-", result.data.datalist[0].ls);
+                                var quoteNote = that.pageobj_rb.lbl[result.data.datalist[0].exchsect] + " " + that.pageobj_rb.lbl[result.data.datalist[0].dc] + ".";
+                                quoteNote += that.pageobj_rb.lbl["ccy"] + that.pageobj_rb.lbl["ccy_" + result.data.datalist[0].ccy] + "  " + formatShortTime(result.data.datalist[0].tm) + " " + formatShortDate(result.data.datalist[0].td)
 
-                                pagination.find('.page-no').remove();
-                                pagination.find('li').removeClass('disabled').removeClass('active');
+                                that.$stockinfopanel.find(".note").html(quoteNote);
 
-                                pagination.find('.page-dropdown > option').remove();
+                                that.currentSymbol = result.data.datalist[0].symbol;
+                                that.currentExchange = result.data.datalist[0].exchsect;
+                                that.currentPrice = result.data.datalist[0].ls;
 
-                                if (pageno == 1) {
-                                    pagination.find("li[item='prev']").addClass('disabled');
-                                } else {
-                                    pagination.find("li[item='prev'] span").attr('pn', pageno - 1);
-                                }
-
-                                for (var i = paginationFrom; i <= paginationTo; ++i) {
-                                    if (i == pageno) {
-                                        pagination
-                                            .find("li[item='next']")
-                                            .before(
-                                                '<li class="page-item page-no active" item="' +
-                                                    pageno +
-                                                    '"><span class="page-link">' +
-                                                    pageno +
-                                                    '</span></li>',
-                                            );
-                                    } else {
-                                        pagination
-                                            .find("li[item='next']")
-                                            .before(
-                                                '<li class="page-item page-no" item="' +
-                                                    i +
-                                                    '"><span class="page-link" pn="' +
-                                                    i +
-                                                    '" onclick="window[\'lsinopac_quote\']._loadRelatedStocksPage(this)">' +
-                                                    i +
-                                                    '</span></li>',
-                                            );
-                                    }
-                                }
-
-                                if (pageno + 1 > maxPage) {
-                                    pagination.find("li[item='next']").addClass('disabled');
-                                } else {
-                                    pagination.find("li[item='next'] span").attr('pn', pageno + 1);
-                                }
-
-                                for (var i = 0; i < maxPage; ++i) {
-                                    //drop down...
-                                    if (pageno == i + 1) {
-                                        pagination
-                                            .find('.page-dropdown')
-                                            .append(
-                                                '<option selected value="' + (i + 1) + '">' + (i + 1) + '</option>',
-                                            );
-                                    } else {
-                                        pagination
-                                            .find('.page-dropdown')
-                                            .append('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
-                                    }
-                                }
-                            } else {
-                                that.$pageobj.find('.result-count').hide();
-                                that.$pageobj.find('.result-no-count').show();
-                                that.$pageobj.find('.pagination').hide();
                             }
-                        } else {
+
+                            //    if (that.$quotedetail.is(":visible")) {
+                            var ricData = result.data.datalist[0];
+                            var refdiff = 0;
+                            var updownclass = "";
+
+                            updownclass = that._getRefUpDownClass(ricData.op, ricData.refprice);
+                            that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.op);
+
+                            updownclass = that._getRefUpDownClass(ricData.hi, ricData.refprice);
+                            that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hi);
+
+                            updownclass = that._getRefUpDownClass(ricData.lo, ricData.refprice);
+                            that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.lo);
+
+                            updownclass = that._getRefUpDownClass(ricData.vwap, ricData.refprice);
+                            that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.vwap);
+
+                            updownclass = that._getRefUpDownClass(ricData.yh, ricData.refprice);
+                            that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yh);
+
+                            updownclass = that._getRefUpDownClass(ricData.yl, ricData.refprice);
+                            that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yl);
+
+                            if (ricData.bd && ricData.bd != "-") {
+                                updownclass = that._getRefUpDownClass(ricData.bd, ricData.refprice);
+                                that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.bd + " x " + ricData.bdsize);
+                            } else {
+                                that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
+                            }
+
+                            if (ricData.as && ricData.as != "-") {
+                                updownclass = that._getRefUpDownClass(ricData.as, ricData.refprice);
+                                that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.as + " x " + ricData.assize);
+                            } else {
+                                that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
+                            }
+
+                            updownclass = that._getRefUpDownClass(ricData.hc, ricData.refprice);
+                            that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hc);
+                            if (ricData.eps != null) {
+                                that.$quotedetail.find(".epsdata").html(ricData.eps);
+                            }
+                            if (ricData.per != null) {
+                                that.$quotedetail.find(".perdata").html(ricData.per);
+                            }
+
+                            if (ricData.cc == "USA") {
+                                that.$quotedetail.find(".vwaprow").hide();
+                                that.$quotedetail.find(".yrhighrow").hide();
+                                that.$quotedetail.find(".yrlowrow").hide();
+                                that.$quotedetail.find(".epsrow").hide();
+                                that.$quotedetail.find(".perrow").hide();                                
+                                that.$quotedetail.find(".pbrrow").hide();
+                                that.$quotedetail.find(".dividendrow").hide();
+                                that.$quotedetail.find(".yieldrow").hide();
+                                that.$quotedetail.find(".exdaterow").hide();
+                                that.$quotedetail.find(".paydaterow").hide();
+                                that.$quotedetail.find(".turnoverrow").hide();
+                            } else {
+                                that.$quotedetail.find(".vwaprow").show();
+                                that.$quotedetail.find(".yrhighrow").show();
+                                that.$quotedetail.find(".yrlowrow").show();
+                                that.$quotedetail.find(".epsrow").show();
+                                that.$quotedetail.find(".perrow").show();                                
+                                that.$quotedetail.find(".pbrrow").show();
+                                that.$quotedetail.find(".dividendrow").show();
+                                that.$quotedetail.find(".yieldrow").show();
+                                that.$quotedetail.find(".exdaterow").show();
+                                that.$quotedetail.find(".paydaterow").show();
+                                that.$quotedetail.find(".turnoverrow").show();                                
+                                that.$quotedetail.find(".pbrdata").html(ricData.pbr);
+                            }
+
+                            if (ricData.div) {
+                                that.$quotedetail.find(".dividenddata").html(ricData.div + " " + ricData.currency);
+                            } else {
+                                that.$quotedetail.find(".dividenddata").html("-");
+                            }
+
+                            if (ricData.yield) {
+                                that.$quotedetail.find(".yielddata").html(ricData.yield + '%');
+                            } else {
+                                that.$quotedetail.find(".yielddata").html("-");
+                            }
+
+                            if (ricData.exdate != null && ricData.exdate != undefined && ricData.exdate != "-") {
+                                that.$quotedetail.find(".dividendexdatedata").html(formatLongDate(ricData.exdate));
+                            } else {
+                                that.$quotedetail.find(".dividendexdatedata").html("-");
+                            }
+
+                            if (ricData.paydate != null && ricData.paydate != undefined && ricData.paydate != "-") {
+                                that.$quotedetail.find(".dividendpaydatedata").html(formatLongDate(ricData.paydate));
+                            } else {
+                                that.$quotedetail.find(".dividendpaydatedata").html("-");
+                            }
+
+
+                            if (ricData.cc == "USA") {
+                                that.$quotedetail.find(".marketcaprow").hide();
+                            } else {
+                                that.$quotedetail.find(".marketcaprow").show();
+                                if (ricData.mktvalue && ricData.mktvalue != "-") {
+                                    that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
+                                } else {
+                                    that.$quotedetail.find(".marketcapdata").html("-");
+                                }
+                            }
+                            if (ricData.mktvalue && ricData.mktvalue != "-") {
+                                that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
+                            } else {
+                                that.$quotedetail.find(".marketcapdata").html("-");
+                            }
+                            that.$quotedetail.find(".volumedata").html(ricData.vo);
+                            if (ricData.am && ricData.am != "-") {
+                                that.$quotedetail.find(".turnoverdata").html(ricData.am + " " + ricData.currency);
+                            } else {
+                                that.$quotedetail.find(".turnoverdata").html("-");
+                            }
+                            if (ricData.cc == "USA") {
+                                that.$quotedetail.find(".lotsizerow").hide();
+                            } else {
+                                that.$quotedetail.find(".lotsizerow").show();
+                                that.$quotedetail.find(".lotsizedata").html(ricData.lot);
+                            }
+
+                            //    }
+
+                            that.$pageobj.find(".chartbox").show();
+
+                            that._loadRelatedStockData(1);
+
+                        } else if (result.data.datalist[0].status == 3) {
+
+                            //make as data changed
+                            //    $("#lsinopac-quote-summary-chart").addClass("changed");
+                            //    that.$quoterelated.addClass("changed");
+                            //    $("#lsinopac-quote-chart").addClass("changed");
+                            //    $("#lsinopac-quote-srplus").addClass("changed");
+
+                            $('#invalidricModel').modal('show');
+
+
                             //Error handling...
+
                         }
                         //    if (result && result.data && result.data.responseCode!=="F") {
                         //        $imgdiv.append($("<img/>").attr("src", "data:image/png;base64," + result.data.compscoreimage));
                         //    }
                         //    else {
                         //        // Error handling...
-                        //
+//
                         //    }
                     },
                     0,
                     {
-                        datatype: 'jsonp',
-                    },
-                );
+                        datatype: "jsonp"
+                    });
+
+        },
+        _getRefUpDownClass: function (price, refPrice) {
+            if (price && refPrice) {
+                var priceval = Number(price.replace(",",""));
+                var refpriceval = Number(refPrice.replace(",",""));
+
+                // Check if 0
+                if (priceval == 0 || refpriceval == 0) {
+                    return "";
+                }
+                // If -nnn ?
+                else if (priceval < refpriceval) {                   
+                    return "downval";
+                }
+                // If +nnn ?
+                else if (priceval > refpriceval) {                  
+                    return "upval";
+                }
+            }
+            // Any other case, return ""
+            return "";
+        },
+        _loadRelatedStockData: function (pn) {
+            var that = this;
+            var ric = this.currentquoteric;
+            if (this.$quoterelated.is(":visible")) {
+
+                //        if (that.$quoterelated.hasClass("changed") || pn != 1) {
+                this.$pageobj.loaddata("quoterelateddata", "/data/getrelatedstockquote",
+                        {
+                            ric: ric,
+                            pn: pn,
+                            token: encodeURIComponent(LabCI.getToken()),
+                            lang: this.lang
+                        },
+                        function (result) {
+
+                            //                        that.$quoterelated.attr("ric", ric);
+
+                            that.$quoterelated.find(".relatedstock").remove();
+                            that.$quoterelated.removeClass("changed")
+                            if (result && result.data && result.data.responseCode !== "F") {
+                                that.$pageobj.find(".result-count").show();
+                                that.$pageobj.find(".result-no-count").hide();
+                                that.$pageobj.find(".pagination").show();
+                                that.$pageobj.find(".stockfrom").html("-");
+                                that.$pageobj.find(".stockto").html("-");
+                                that.$pageobj.find(".stocktotal").html("-");
+
+                                if (result.data.datalist && result.data.datalist.length > 0) {
+                                    that.$quoterelated.find(".stockfrom").html(result.data.from);
+                                    that.$quoterelated.find(".stockto").html(result.data.to);
+                                    that.$quoterelated.find(".stocktotal").html(result.data.totalrec);
+
+                                    for (var key in result.data.datalist) {
+                                        var updownclass = getUpDownClass(result.data.datalist[key].nc);
+                                        
+                                        var addedRow = $("<tr class='relatedstock' style='cursor:pointer'; ric='" + result.data.datalist[key].ric + "' symbol='"+result.data.datalist[key].symbol+"' exchange='"+LabCI.WP.AppUtils.INTEGRATION_EXCHANGE_MAPPING[result.data.datalist[key].exchange_code]+"'><td>" + result.data.datalist[key].symbol + "</td>" +
+                                                "<td>" + result.data.datalist[key].name + "</td>" +
+                                                "<td>" + result.data.datalist[key].trbc_name + "</td>" +
+                                                "<td class='text-right'>" + result.data.datalist[key].ls + "</td>" +
+                                                "<td class='" + updownclass + " text-right'>" + setValue(result.data.datalist[key].nc, null, false, "-", result.data.datalist[key].ls) + "</td>" +
+                                                "<td class='" + updownclass + " text-right'>" + setValue(result.data.datalist[key].pc, "%", false, "-", result.data.datalist[key].ls) + "</td>" +
+                                                "<td class='text-right'>" + result.data.datalist[key].vo + "</td>" +
+                                                "</tr>");
+
+                                        that.$quoterelated.find("table").append(addedRow);
+
+                                        $(addedRow).on(_CLICK_EVENT, function () {
+                                            var that2 = this;
+                                        //    $("html, body").animate({scrollTop: 0}, 400, function () {
+                                        //        that.changeRic($(that2).attr('ric'));
+                                        //    });
+                                            LabCI.WP.AppUtils.openQuotePage($(that2).attr('symbol'), $(that2).attr('exchange'));
+                                        });
+                                    }
+
+                                    //for pagination...
+                                    var pagination = that.$quoterelated.find(".desktop-pagination");
+                                    var pageno = pn * 1; //cast to int...
+                                    var maxPage = Math.ceil(result.data.totalrec / that.recperpage);
+                                    var paginationFrom = pageno - 3;
+                                    var paginationTo = pageno + 2;
+
+                                    if (paginationFrom <= 0) {
+                                        paginationTo = Math.abs(paginationFrom) + paginationTo;
+                                        paginationFrom = 1;
+                                    } else {
+                                        paginationFrom += 1;
+                                    }
+
+                                    if (paginationTo > maxPage) {
+                                        var diff = paginationTo - maxPage;
+                                        paginationFrom -= diff;
+                                        paginationTo -= diff;
+                                    }
+                                    if (paginationFrom < 1) {
+                                        paginationFrom = 1;
+                                    }
+
+                                    pagination.find(".page-no").remove();
+                                    pagination.find("li").removeClass("disabled").removeClass("active");
+                                    
+                                    pagination.find(".page-dropdown > option").remove();
+
+                                    if (pageno == 1) {
+                                        pagination.find("li[item='prev']").addClass("disabled");
+                                    } else {
+                                        pagination.find("li[item='prev'] span").attr("pn", pageno - 1);
+                                    }
+
+                                    for (var i = paginationFrom; i <= paginationTo; ++i) {
+                                        if (i == pageno) {
+                                            pagination.find("li[item='next']").before('<li class="page-item page-no active" item="' + pageno + '"><span class="page-link">' + pageno + '</span></li>');
+                                        } else {
+                                            pagination.find("li[item='next']").before('<li class="page-item page-no" item="' + i + '"><span class="page-link" pn="' + i + '" onclick="window[\'lsinopac_quote\']._loadRelatedStocksPage(this)">' + i + '</span></li>');
+                                        }
+                                    }
+
+                                    if (pageno + 1 > maxPage) {
+                                        pagination.find("li[item='next']").addClass("disabled");
+                                    } else {
+                                        pagination.find("li[item='next'] span").attr("pn", pageno + 1);
+                                    }
+                                                                     
+                                    for(var i = 0 ; i < maxPage; ++i){
+                                        //drop down...
+                                        if(pageno == i+1){
+                                            pagination.find(".page-dropdown").append('<option selected value="'+(i+1)+'">'+(i+1)+'</option>'); 
+                                        }else{
+                                            pagination.find(".page-dropdown").append('<option value="'+(i+1)+'">'+(i+1)+'</option>');                                             
+                                        }                                       
+                                    }
+
+                                } else {
+                                    that.$pageobj.find(".result-count").hide();
+                                    that.$pageobj.find(".result-no-count").show();
+                                    that.$pageobj.find(".pagination").hide();
+                                }
+                            } else {
+                                //Error handling...
+                            }
+                            //    if (result && result.data && result.data.responseCode!=="F") {
+                            //        $imgdiv.append($("<img/>").attr("src", "data:image/png;base64," + result.data.compscoreimage));
+                            //    }
+                            //    else {
+                            //        // Error handling...
+//
+                            //    }
+                        },
+                        0,
+                        {
+                            datatype: "jsonp"
+                        });
                 //            }
             }
+
         },
         _hideAllSubWidget: function () {
-            if (LabCI.WP['createquotesummarypageobj']) {
-                window['lsinopac-quote-summary-chart'].hide();
+            if (LabCI.WP["createquotesummarypageobj"]) {
+                window["lsinopac-quote-summary-chart"].hide();
                 this.$quoterelated.parent().hide();
             }
-            if (LabCI.WP['createquotechartpageobj']) {
-                window['lsinopac_quote-chart'].hide();
+            if (LabCI.WP["createquotechartpageobj"]) {
+                window["lsinopac_quote-chart"].hide();
             }
-            if (LabCI.WP['createquotesrpluspageobj']) {
-                window['lsinopac_quote-srplus'].hide();
+            if (LabCI.WP["createquotesrpluspageobj"]) {
+                window["lsinopac_quote-srplus"].hide();
             }
-            if (LabCI.WP['createquotefinancialpageobj']) {
-                window['lsinopac_quote-financial'].hide();
+            if (LabCI.WP["createquotefinancialpageobj"]) {
+                window["lsinopac_quote-financial"].hide();
             }
         },
         _loadChartWidget: function () {
@@ -854,34 +713,28 @@
             var lang = this.lang;
             this.$quotedetail.show();
 
-            if (LabCI.WP['createquotechartpageobj']) {
-                window['lsinopac_quote-chart'].show({ ric: ric });
+            if (LabCI.WP["createquotechartpageobj"]) {
+                window["lsinopac_quote-chart"].show({ric: ric});
             } else {
-                $('#lsinopac-quote-chart').loadwidget('quote-chart.html?_=' + new Date().getTime(), function () {
-                    window['lsinopac_quote-chart'] = LabCI.WP['createquotechartpageobj']
-                        .call(that)
-                        .init(lang)
-                        .show({ ric: ric });
+                $("#lsinopac-quote-chart").loadwidget("quote-chart.html?_=" + (new Date()).getTime(), function () {
+                    window["lsinopac_quote-chart"] = LabCI.WP["createquotechartpageobj"].call(that).init(lang).show({ric: ric});                 
                 });
             }
         },
         _preloadChartWidget: function () {
-            //    this._hideAllSubWidget();
+        //    this._hideAllSubWidget();
             var ric = this.currentquoteric;
             var lang = this.lang;
-            //    this.$quotedetail.show();
+        //    this.$quotedetail.show();
 
-            if (LabCI.WP['createquotechartpageobj']) {
-                //   window["lsinopac_quote-chart"].show({ric: ric});
+            if (LabCI.WP["createquotechartpageobj"]) {
+             //   window["lsinopac_quote-chart"].show({ric: ric});
             } else {
-                $('#lsinopac-quote-chart').loadwidget('quote-chart.html?_=' + new Date().getTime(), function () {
-                    window['lsinopac_quote-chart'] = LabCI.WP['createquotechartpageobj']
-                        .call(that)
-                        .init(lang)
-                        .show({ ric: ric, preload: '1' });
+                $("#lsinopac-quote-chart").loadwidget("quote-chart.html?_=" + (new Date()).getTime(), function () {
+                    window["lsinopac_quote-chart"] = LabCI.WP["createquotechartpageobj"].call(that).init(lang).show({ric: ric, preload: "1"});                 
                 });
             }
-        },
+        },        
         _loadSummaryWidget: function () {
             var that = this;
             this._hideAllSubWidget();
@@ -890,30 +743,25 @@
             this.$quoterelated.parent().show();
             this.$quotedetail.show();
 
-            if (LabCI.WP['createquotesummarypageobj']) {
-                window['lsinopac-quote-summary-chart'].show({ ric: ric });
-                if (that.$quoterelated.hasClass('changed')) {
+            if (LabCI.WP["createquotesummarypageobj"]) {
+                window["lsinopac-quote-summary-chart"].show({ric: ric});
+                if (that.$quoterelated.hasClass("changed")) {
                     that._loadRelatedStockData(1);
                 }
             } else {
-                $('#lsinopac-quote-summary-chart').loadwidget(
-                    'quote-summary.html?_=' + new Date().getTime(),
-                    function () {
-                        window['lsinopac-quote-summary-chart'] = LabCI.WP['createquotesummarypageobj']
-                            .call(that)
-                            .init(lang)
-                            .show({ ric: ric });
-                        //            that._loadRelatedStockData(1);
-
-                        if (LabCI.WP.AppUtils.getMobileOrDesktop() == 'DESKTOP') {
-                            //    that.$pageobj.find(".preloadchartframe").attr("src", APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + this.currentquoteric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang);
-                            //APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + ric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang
-                            //    that._loadChartWidget();
-                            that._preloadChartWidget();
-                        }
-                    },
-                );
-            }
+                $("#lsinopac-quote-summary-chart").loadwidget("quote-summary.html?_=" + (new Date()).getTime(), function () {
+                    window["lsinopac-quote-summary-chart"] = LabCI.WP["createquotesummarypageobj"].call(that).init(lang).show({ric: ric});
+                    //            that._loadRelatedStockData(1);
+                    
+            if(LabCI.WP.AppUtils.getMobileOrDesktop() == "DESKTOP"){
+            //    that.$pageobj.find(".preloadchartframe").attr("src", APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + this.currentquoteric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang);
+                //APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + ric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang               
+            //    that._loadChartWidget();
+            that._preloadChartWidget();
+            }                     
+                    
+                });
+            }         
         },
         _loadFinancialWidget: function () {
             var that = this;
@@ -921,24 +769,19 @@
             var ric = this.currentquoteric;
             var lang = this.lang;
             this.$quotedetail.hide();
-
+            
             try {
-                if (LabCI.WP['createquotefinancialpageobj']) {
-                    window['lsinopac_quote-financial'].show({ ric: ric });
+                if (LabCI.WP["createquotefinancialpageobj"]) {
+                    window["lsinopac_quote-financial"].show({ric: ric});
                 } else {
-                    $('#lsinopac-quote-financial').loadwidget(
-                        'quote-financial.html?_=' + new Date().getTime(),
-                        function () {
-                            window['lsinopac_quote-financial'] = LabCI.WP['createquotefinancialpageobj']
-                                .call(that)
-                                .init(lang)
-                                .show({ ric: ric });
-                        },
-                    );
+                    $("#lsinopac-quote-financial").loadwidget("quote-financial.html?_=" + (new Date()).getTime(), function () {
+                        window["lsinopac_quote-financial"] = LabCI.WP["createquotefinancialpageobj"].call(that).init(lang).show({ric: ric});
+                    });
                 }
             } catch (err) {
-                window['lsinopac_quote-financial'].show({ ric: ric });
+                window["lsinopac_quote-financial"].show({ric: ric});
             }
+
         },
         _loadSRPlusWidget: function () {
             var that = this;
@@ -949,32 +792,32 @@
             this.$quotedetail.hide();
 
             try {
-                if (LabCI.WP['createquotesrpluspageobj']) {
-                    window['lsinopac_quote-srplus'].show({ ric: ric });
+                if (LabCI.WP["createquotesrpluspageobj"]) {
+                    window["lsinopac_quote-srplus"].show({ric: ric});
                 } else {
-                    $('#lsinopac-quote-srplus').loadwidget('quote-srplus.html?_=' + new Date().getTime(), function () {
-                        window['lsinopac_quote-srplus'] = LabCI.WP['createquotesrpluspageobj']
-                            .call(that)
-                            .init(lang)
-                            .show({ ric: ric });
+                    $("#lsinopac-quote-srplus").loadwidget("quote-srplus.html?_=" + (new Date()).getTime(), function () {
+                        window["lsinopac_quote-srplus"] = LabCI.WP["createquotesrpluspageobj"].call(that).init(lang).show({ric: ric});
                     });
                 }
             } catch (err) {
-                window['lsinopac_quote-srplus'].show({ ric: ric });
+                window["lsinopac_quote-srplus"].show({ric: ric});
             }
+
         },
         _loadRelatedStocksPage: function (obj) {
-            this.pageno = $(obj).attr('pn');
+
+            this.pageno = $(obj).attr("pn");
             this._loadRelatedStockData(this.pageno);
         },
         _loadRelatedStocksPageFromSelect: function (obj) {
+            
             this.pageno = $(obj).val();
             this._loadRelatedStockData(this.pageno);
-        },
+        },        
         resizeImpl: function () {
             var that = this;
-            var param = 'code:' + this.currentquoteric;
-            /*        if(that.breakpoint == null){
+            var param = "code:" + this.currentquoteric;
+    /*        if(that.breakpoint == null){
                 //init
                 that.breakpoint = LabCI.WP.AppUtils.getMobileOrDesktop();
             }else if(that.breakpoint != LabCI.WP.AppUtils.getMobileOrDesktop()){
@@ -1019,10 +862,13 @@
             //      window["lsinopac_quote-chart"].resizeImpl();
             //  }
 
+
+
             // c5
             //    this.$pageobj.css("min-height", ($(window).innerHeight()) + "px");
             // Force resizing C5 in order to show the chart correctly ;)
             //    this.resizeMainChart.call(this);
+
         },
         ////////////////////////////////////////////////////////////////////
         /*
@@ -1044,6 +890,7 @@
          },
          */
         showImpl: function (statedata) {
+
             var that = this;
             var isStart = true;
 
@@ -1059,14 +906,15 @@
                     this.changeRic(this.currentquoteric);
                 }
             }
-
-            if (this.currentsection == 'summary') {
+            
+            if (this.currentsection == "summary") {
                 //default...
-                //    this._loadSummaryWidget();
-            } else if (this.currentsection == 'chart') {
+            //    this._loadSummaryWidget();
+            } else if (this.currentsection == "chart") {
                 this._loadChartWidget();
             }
-
+            
+            
             //        that._loaddata();
             //    if (that.mode == "desktop") {
             //        that.$quotedetail.appendTo(that.$mapQuoteBox);
@@ -1097,6 +945,7 @@
         },
         ////////////////////////////////////////////////////////////////////
 
+
         ////////////////////////////////////////////////////////////////////
 
         // Build up the UI on-the-fly for different languages
@@ -1104,8 +953,9 @@
             var that = this;
             var rblbl = that.pageobj_rb.lbl;
             $.each(rblbl, function (id, value) {
-                that.$pageobj.find('.' + id).html(value);
+                that.$pageobj.find("." + id).html(value);
             });
+
         },
         /*
          _loaddata: function () {
@@ -1453,7 +1303,10 @@
 
         // A placeholder for resources, to be defined in separate resource files for specific languages
         PAGEOBJ_RESOURCEBUNDLE: {
-            conf: {},
-        },
+            conf: {
+            }
+        }
+
     };
+
 })(jQuery);

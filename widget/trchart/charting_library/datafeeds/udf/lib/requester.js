@@ -11,11 +11,9 @@ var Requester = /** @class */ (function () {
             if (paramKeys.length !== 0) {
                 urlPath += '?';
             }
-            urlPath += paramKeys
-                .map(function (key) {
-                    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key].toString());
-                })
-                .join('&');
+            urlPath += paramKeys.map(function (key) {
+                return encodeURIComponent(key) + "=" + encodeURIComponent(params[key].toString());
+            }).join('&');
         }
         logMessage('New request: ' + urlPath);
         // Send user cookies if the URL is on the same origin as the calling script.
@@ -23,14 +21,10 @@ var Requester = /** @class */ (function () {
         if (this._headers !== undefined) {
             options.headers = this._headers;
         }
-        return fetch(datafeedUrl + '/' + urlPath, options)
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (responseTest) {
-                return JSON.parse(responseTest);
-            });
+        return fetch(datafeedUrl + "/" + urlPath, options)
+            .then(function (response) { return response.text(); })
+            .then(function (responseTest) { return JSON.parse(responseTest); });
     };
     return Requester;
-})();
+}());
 export { Requester };

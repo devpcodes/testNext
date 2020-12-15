@@ -1,10 +1,13 @@
-import React from 'react';
+import { memo } from 'react';
+import PropTypes from 'prop-types';
+
 import qrCode from '../../resources/images/components/footer/img_ileaderapp.png';
 import logo from '../../resources/images/logo/logo.svg';
 import fb from '../../resources/images/components/footer/btn_fb.png';
 import youtube from '../../resources/images/components/footer/btn_youtube.png';
 import line from '../../resources/images/components/footer/btn_line.png';
 import theme from '../../resources/styles/theme';
+
 const footerData = [
     {
         title: '關於永豐金證券',
@@ -87,7 +90,7 @@ const footerData = [
     },
 ];
 
-const Footer = React.memo(props => {
+const Footer = memo(({ showNav }) => {
     const telHandler = () => {
         window.location.href = 'tel:+886-2-66308899';
     };
@@ -205,6 +208,7 @@ const Footer = React.memo(props => {
                 .footer {
                     background-color: #172439;
                     font-family: ${theme.fontFamily};
+                    display: ${showNav ? '' : 'none'};
                 }
                 .footer .mobile__box2 {
                     display: none;
@@ -606,4 +610,11 @@ const Footer = React.memo(props => {
         </div>
     );
 });
+
+Footer.propTypes = {
+    showNav: PropTypes.bool.isRequired,
+};
+
+Footer.displayName = 'Footer';
+
 export default Footer;

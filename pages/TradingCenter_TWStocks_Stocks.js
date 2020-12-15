@@ -18,7 +18,7 @@ function TradingCenter_TWStocks_Stocks() {
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/TradingCenter_TWStocks_Stocks`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 1900 : 1450}
+                    iHeight={isMobile ? 2500 : 2200}
                     login={isLogin}
                 />
             </div>

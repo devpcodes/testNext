@@ -2,26 +2,31 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { submit } from '../services/components/login/trustLogin';
-import { getParamFromQueryString } from '../services/getParamFromQueryString';
+import { objectToQueryHandler } from '../services/objectToQueryHandler';
 
 const Navigation = () => {
     const router = useRouter();
 
     const doLogin = async () => {
-        const queryStringDict = {
-            platform: getParamFromQueryString('platform'),
-            source: getParamFromQueryString('source'),
-            page: getParamFromQueryString('page'),
-            otp: getParamFromQueryString('otp'),
+        const getQueryStr = () => {
+            if (router.query.nav == '0') {
+                return objectToQueryHandler({
+                    nav: '0',
+                });
+            } else {
+                return '';
+            }
         };
 
         try {
-            const res = await submit(queryStringDict.otp);
+            const res = await submit(router.query.otp);
             if (res.data.success) {
-                // 來源有取 platform 也有 source，為保持與舊站的相容，暫時這兩個值都要儲存在 sessionStorage
-                sessionStorage.setItem('platform', queryStringDict.platform);
-                sessionStorage.setItem('source', queryStringDict.platform.toLowerCase());
-                router.push(`/${queryStringDict.page}`);
+                // 來源有取 platform 也有 source，為保持與舊站的相容，暫時這兩個值都要儲存在 sessionStorage (未來需收斂)
+                if (router.query.platform) {
+                    sessionStorage.setItem('platform', router.query.platform);
+                    sessionStorage.setItem('source', router.query.platform.toLowerCase());
+                }
+                router.push(`/${router.query.page || ''}${getQueryStr()}`);
             }
         } catch (e) {
             router.push(`/errPage`);
@@ -30,8 +35,10 @@ const Navigation = () => {
     };
 
     useEffect(() => {
-        doLogin();
-    }, []);
+        if (router.query.otp) {
+            doLogin();
+        }
+    }, [router.query]);
 
     return null;
 };
