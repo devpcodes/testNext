@@ -15,17 +15,17 @@ import CaHead from '../includes/CaHead';
 
 import { showLoginHandler, setNavItems, setMaskVisible, setMenuOpen } from '../../store/components/layouts/action';
 import { setIsLogin } from '../../store/user/action';
-import { setDomain, setCurrentPath } from '../../store/general/action';
+import { setCurrentPath } from '../../store/general/action';
 
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
 import { getToken } from '../../services/user/accessToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
 import { checkCert, applyCert, renewCert } from '../../services/webCa';
-import { getDomain } from '../../services/getDomain';
 
 import { useCheckMobile } from '../../hooks/useCheckMobile';
 import { useUser } from '../../hooks/useUser';
+import { useDomain } from '../../hooks/useDomain';
 
 const noVerifyRouters = ['goOrder', 'errPage'];
 
@@ -35,13 +35,13 @@ const Layout = memo(({ children }) => {
     const [showBigLogin, setShowBigLogin] = useState(false);
     const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
     const [showNav, setShowNav] = useState(false);
+    const domain = useDomain();
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector(store => store.user.isLogin);
     const navData = useSelector(store => store.layout.navData);
-    const domain = useSelector(store => store.general.domain);
     const currentPath = useSelector(store => store.general.currentPath);
     const showMask = useSelector(store => store.layout.showMask);
 
@@ -87,8 +87,6 @@ const Layout = memo(({ children }) => {
                 updateNavData();
             }
         }, 10);
-
-        sourceHandler();
 
         isRendered.current = true;
 
@@ -156,11 +154,6 @@ const Layout = memo(({ children }) => {
             dispatch(setCurrentPath(redirectPath));
             router.push('', `/SinoTrade_login`, { shallow: true });
         }
-    };
-
-    // 依據來源設置 fetch 選單所帶的 domain 值
-    const sourceHandler = () => {
-        dispatch(setDomain(getDomain()));
     };
 
     const updateNavData = () => {
