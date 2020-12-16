@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 import icon from '../../../resources/images/reservation/icon.png';
 import mobileIcon from '../../../resources/images/reservation/mobileIcon.png';
 import AccountSelect from './AccountSelect';
@@ -9,9 +9,13 @@ const Accounts = ({ style, value, ...props } = { value: '' }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const { width } = useWindowSize();
 
-    const selectHandler = val => {
+    // const selectHandler = val => {
+    //     dispatch({ type: SELECTED, payload: val });
+    // };
+
+    const selectHandler = useCallback(val => {
         dispatch({ type: SELECTED, payload: val });
-    };
+    }, []);
 
     return (
         <div className="account__container" style={style}>

@@ -80,4 +80,4 @@ const AccountSelect = ({ data, onSelect, value, ...props } = { value: '' }) => {
     );
 };
 
-export default AccountSelect;
+export default React.memo(AccountSelect);

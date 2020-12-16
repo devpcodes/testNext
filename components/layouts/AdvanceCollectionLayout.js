@@ -29,7 +29,7 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
         if (time.isBetween(beforeTime, afterTime)) {
             return true;
         } else {
-            alert(`非營業時間，請於${startTime}-${endTime}`);
+            alert(`非營業時間，請於${startTime}-${endTime}申請`);
             return true;
         }
     };

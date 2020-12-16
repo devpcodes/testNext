@@ -78,7 +78,7 @@ const AdvanceCollection = function () {
                     return (
                         <Button
                             onClick={() => {
-                                console.log('selected', selectedAccount.current);
+                                // console.log('selected', selectedAccount.current, record, index);
                                 console.log(text, record);
                             }}
                         >
@@ -117,7 +117,8 @@ const AdvanceCollection = function () {
                 key: 'applyNum',
                 index: 5,
                 render: (text, record, index) => {
-                    return <Input value={text} />;
+                    console.log(text, record, index);
+                    return <Input defaultValue={text} onChange={inpChangeHandler.bind(null, record)} />;
                 },
             },
         ];
@@ -165,6 +166,11 @@ const AdvanceCollection = function () {
         if (state.accountsReducer.selected) {
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
         }
+    };
+
+    const inpChangeHandler = function (record, e) {
+        const { value } = e.target;
+        console.log('record', value, record);
     };
 
     return (
