@@ -28,6 +28,7 @@ import { getDomain } from '../../services/getDomain';
 
 import { useCheckMobile } from '../../hooks/useCheckMobile';
 
+const noVerifyRouters = ['goOrder', 'errPage'];
 const Layout = React.memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
@@ -143,7 +144,7 @@ const Layout = React.memo(({ children }) => {
             setShowBigLogin(true);
         }
 
-        if (router.pathname.indexOf('errPage') >= 0 || router.pathname === '/') {
+        if (noVerifyRouter()) {
             setVerifySuccess(true);
         } else {
             showPageHandler(router.pathname);
@@ -169,6 +170,21 @@ const Layout = React.memo(({ children }) => {
             document.body.style.overflow = 'auto';
         }
     }, [showMask, showLogin, showBigLogin]);
+
+    // 不需檢查是否登入的頁面
+    const noVerifyRouter = () => {
+        const arr = noVerifyRouters.filter(val => {
+            if (router.pathname.indexOf(val) >= 0) {
+                return true;
+            }
+        });
+
+        if (arr.length != 0 || router.pathname === '/') {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     //inside iframe 逾時處理
     const doLoginHashHandler = () => {

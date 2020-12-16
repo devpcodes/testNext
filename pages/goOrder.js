@@ -5,8 +5,9 @@ import { useRouter } from 'next/router';
 import { PageHead } from '../components/includes/PageHead';
 import { checkServer } from '../services/checkServer';
 import { getParamFromQueryString } from '../services/getParamFromQueryString';
-
+import { useCheckLogin } from '../hooks/useCheckLogin';
 function GoOrder() {
+    const checkLoginHooks = useCheckLogin();
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
     const nav = router.query?.nav;
@@ -20,14 +21,19 @@ function GoOrder() {
 
     return (
         <>
-            <PageHead title={'快速下單'} />
-            <div className={'container'}>
-                <NewWebIframe
-                    iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/goOrder${queryStr}`}
-                    title="永豐金證券"
-                    iHeight={750}
-                />
-            </div>
+            {checkLoginHooks && (
+                <>
+                    <PageHead title={'快速下單'} />
+                    <div className={'container'}>
+                        <NewWebIframe
+                            iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/goOrder${queryStr}`}
+                            title="永豐金證券"
+                            iHeight={750}
+                        />
+                    </div>
+                </>
+            )}
+
             <style jsx>{`
                 .container {
                     margin-top: ${nav == '0' ? '0' : '70px'};
