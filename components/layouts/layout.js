@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, notification } from 'antd';
 import { useRouter } from 'next/router';
@@ -14,12 +14,10 @@ import MyTransition from '../includes/myTransition';
 import CaHead from '../includes/CaHead';
 
 import { showLoginHandler, setNavItems, setMaskVisible, setMenuOpen } from '../../store/components/layouts/action';
-import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
+import { setIsLogin } from '../../store/user/action';
 import { setDomain, setCurrentPath } from '../../store/general/action';
 
-import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
-import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { getToken } from '../../services/user/accessToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
@@ -27,9 +25,11 @@ import { checkCert, applyCert, renewCert } from '../../services/webCa';
 import { getDomain } from '../../services/getDomain';
 
 import { useCheckMobile } from '../../hooks/useCheckMobile';
+import { useUser } from '../../hooks/useUser';
 
 const noVerifyRouters = ['goOrder', 'errPage'];
-const Layout = React.memo(({ children }) => {
+
+const Layout = memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [showBigLogin, setShowBigLogin] = useState(false);
@@ -41,16 +41,12 @@ const Layout = React.memo(({ children }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const isLogin = useSelector(store => store.user.isLogin);
     const navData = useSelector(store => store.layout.navData);
-    const userSettings = useSelector(store => store.user.userSettings);
-    const accounts = useSelector(store => store.user.accounts);
     const domain = useSelector(store => store.general.domain);
     const currentPath = useSelector(store => store.general.currentPath);
     const showMask = useSelector(store => store.layout.showMask);
 
     const getMenuPath = useRef(false);
-    // const needLogin = useRef(false);
     const prevPathname = useRef(false);
-    // const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isMobile);
     const prevDomain = useRef(domain);
     const queryStr = useRef('');
@@ -58,6 +54,9 @@ const Layout = React.memo(({ children }) => {
 
     // window 寬度改變處理，回傳 isMobile
     useCheckMobile();
+
+    // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
+    useUser();
 
     useEffect(() => {
         prevIsMobile.current = isMobile;
@@ -79,22 +78,6 @@ const Layout = React.memo(({ children }) => {
     }, [router.asPath]);
 
     useEffect(() => {
-        const updateUserSettings = () => {
-            const token = getToken();
-            token && dispatch(getUserSettings(token));
-        };
-
-        if (isLogin) {
-            const tokenVal = jwt_decode(getToken());
-            dispatch(setAccounts(tokenVal.acts_detail));
-            updateUserSettings();
-        } else {
-            dispatch(setAccounts([]));
-            dispatch(setUserSettings({}));
-        }
-    }, [isLogin]);
-
-    useEffect(() => {
         // pwaHandler();
         doLoginHashHandler();
         const timeout = setTimeout(() => {
@@ -107,36 +90,12 @@ const Layout = React.memo(({ children }) => {
 
         sourceHandler();
 
-        if (checkLogin()) {
-            dispatch(setIsLogin(true));
-        }
-
         isRendered.current = true;
 
         return () => {
             clearTimeout(timeout);
         };
     }, []);
-
-    useEffect(() => {
-        const getDefaultAccount = accounts => {
-            const groupedAccount = accountGroupByType(accounts);
-            if (groupedAccount.S.length) {
-                const defaultStockAccount = groupedAccount.S.find(
-                    account => `${account.broker_id}-${account.account}` === userSettings.defaultStockAccount,
-                );
-                return defaultStockAccount || groupedAccount.S[0];
-            } else if (groupedAccount.H.length) {
-                return groupedAccount.H[0];
-            } else if (groupedAccount.F.length) {
-                return groupedAccount.F[0];
-            } else {
-                return accounts[0];
-            }
-        };
-        const defaultAccount = getDefaultAccount(accounts) || {};
-        dispatch(setCurrentAccount(defaultAccount));
-    }, [userSettings]);
 
     useEffect(() => {
         // console.log('path', router.pathname, router.query);
@@ -482,4 +441,7 @@ const Layout = React.memo(({ children }) => {
 Layout.propTypes = {
     children: PropTypes.element,
 };
+
+Layout.displayName = 'Layout';
+
 export default Layout;
