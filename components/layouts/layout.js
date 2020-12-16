@@ -35,12 +35,16 @@ const Layout = memo(({ children }) => {
     const [showBigLogin, setShowBigLogin] = useState(false);
     const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
     const [showNav, setShowNav] = useState(false);
+
+    // window 寬度改變處理，回傳 isMobile
+    const isMobile = useCheckMobile();
+    // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
+    const { isLogin } = useUser();
+    // 來源別相關的處理
     const domain = useDomain();
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
-    const isMobile = useSelector(store => store.layout.isMobile);
-    const isLogin = useSelector(store => store.user.isLogin);
     const navData = useSelector(store => store.layout.navData);
     const currentPath = useSelector(store => store.general.currentPath);
     const showMask = useSelector(store => store.layout.showMask);
@@ -51,12 +55,6 @@ const Layout = memo(({ children }) => {
     const prevDomain = useRef(domain);
     const queryStr = useRef('');
     const isRendered = useRef(false);
-
-    // window 寬度改變處理，回傳 isMobile
-    useCheckMobile();
-
-    // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
-    useUser();
 
     useEffect(() => {
         prevIsMobile.current = isMobile;
