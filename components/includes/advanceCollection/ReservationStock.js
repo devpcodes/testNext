@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef, useState } from 'react';
+import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import { Tabs, Button, Input } from 'antd';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
@@ -61,6 +61,7 @@ const ReservationStock = () => {
     const init = useRef(false);
     const selectedAccount = useRef({});
     const [defaultValue, setDefaultValue] = useState('');
+
     useEffect(() => {
         selectedAccount.current = state.accountsReducer.selected;
         stockColumns.current = [
@@ -70,16 +71,7 @@ const ReservationStock = () => {
                 key: 'action',
                 index: 6,
                 render: (text, record, index) => {
-                    return (
-                        <Button
-                            onClick={() => {
-                                console.log('selected', selectedAccount.current, record, index);
-                                console.log(text, record);
-                            }}
-                        >
-                            {text}
-                        </Button>
-                    );
+                    return <Button onClick={clickHandler.bind(null, text, record)}>{text}</Button>;
                 },
             },
             {
@@ -112,7 +104,6 @@ const ReservationStock = () => {
                 key: 'applyNum',
                 index: 5,
                 render: (text, record, index) => {
-                    console.log(text, record, index);
                     return <Input defaultValue={text} onChange={inpChangeHandler.bind(null, record)} />;
                 },
             },
@@ -163,11 +154,17 @@ const ReservationStock = () => {
         }
     };
 
-    const inpChangeHandler = function (record, e) {
+    const clickHandler = useCallback((text, record) => {
+        console.log('selected', selectedAccount.current, record);
+        console.log(text, record);
+    }, []);
+
+    const inpChangeHandler = useCallback((record, e) => {
         const { value } = e.target;
         console.log('record', value, record);
-    };
+    }, []);
 
+    console.log('render PAGE=============');
     return (
         <div className="reservation__container">
             <h1 className="title">預收股票</h1>
