@@ -1,9 +1,9 @@
 import * as actionType from './actionType';
 
-export const setDomain = domain => {
+export const setPlatform = platform => {
     return {
-        type: actionType.SET_DOMAIN,
-        payload: domain,
+        type: actionType.SET_PLATFORM,
+        payload: platform,
     };
 };
 

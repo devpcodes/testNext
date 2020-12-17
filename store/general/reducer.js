@@ -1,16 +1,16 @@
 import * as actionType from './actionType';
 
 const initialState = {
-    domain: 'newweb',
+    platform: 'newweb',
     currentPath: '',
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionType.SET_DOMAIN:
+        case actionType.SET_PLATFORM:
             return {
                 ...state,
-                domain: action.payload,
+                platform: action.payload,
             };
         case actionType.SET_CURRENT_PATH:
             return {

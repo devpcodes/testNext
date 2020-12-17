@@ -1,2 +1,2 @@
-export const SET_DOMAIN = 'SET_DOMAIN';
+export const SET_PLATFORM = 'SET_PLATFORM';
 export const SET_CURRENT_PATH = 'SET_CURRENT_PATH';

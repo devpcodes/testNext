@@ -18,7 +18,7 @@ export const HeaderCallToAction = () => {
 
     const isLogin = useSelector(store => store.user.isLogin);
     const isMobile = useSelector(store => store.layout.isMobile);
-    const domain = useSelector(store => store.general.domain);
+    const platform = useSelector(store => store.general.platform);
 
     const getGoOrderUrl = currentQuery => {
         const newQuery = {
@@ -26,14 +26,14 @@ export const HeaderCallToAction = () => {
         };
 
         let queryString;
-        switch (domain) {
+        switch (platform) {
             case 'mma': {
-                const mmaQuery = Object.assign(currentQuery, newQuery, { source: 'mma' });
+                const mmaQuery = Object.assign(currentQuery, newQuery, { platform: 'MMA', source: 'mma' });
                 queryString = objectToQueryHandler(mmaQuery);
                 break;
             }
             case 'line': {
-                const lineQuery = Object.assign(newQuery, { platform: 'Line' });
+                const lineQuery = Object.assign(newQuery, { platform: 'Line', source: 'u168' });
                 queryString = objectToQueryHandler(lineQuery);
                 break;
             }

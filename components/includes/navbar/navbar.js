@@ -23,7 +23,7 @@ const Navbar = memo(() => {
     const showMenu = useSelector(store => store.layout.showMenu);
     const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
     const isMobile = useSelector(store => store.layout.isMobile);
-    const domain = useSelector(store => store.general.domain);
+    const platform = useSelector(store => store.general.platform);
     const mainNav = clientMainNav ? clientMainNav : serverMainNav;
     const marketMappingList = {
         S: 'stock',
@@ -89,14 +89,14 @@ const Navbar = memo(() => {
         );
     };
 
-    const getGoOrderUrl = domain => {
+    const getGoOrderUrl = platform => {
         let url;
-        switch (domain) {
+        switch (platform) {
             case 'mma':
-                url = `/goOrder?source=mma`;
+                url = `/goOrder?platform=MMA&source=mma`;
                 break;
             case 'line':
-                url = `/goOrder?platform=Line`;
+                url = `/goOrder?platform=Line&source=u168`;
                 break;
             default:
                 url = `/goOrder`;
@@ -105,8 +105,8 @@ const Navbar = memo(() => {
         return url;
     };
 
-    const getTradingAccountUrl = domain => {
-        if (domain === 'line') {
+    const getTradingAccountUrl = platform => {
+        if (platform === 'line') {
             return `/Line_TradingAccount`;
         } else {
             return accountMarket ? `/TradingAccount?mkt=${marketMappingList[accountMarket]}` : `/TradingAccount`;
@@ -173,12 +173,12 @@ const Navbar = memo(() => {
                     <div className="navbar__shortcuts">
                         {isLogin ? (
                             <>
-                                <Link href={getGoOrderUrl(domain)}>
+                                <Link href={getGoOrderUrl(platform)}>
                                     <a onClick={setCurrentPathHandler} className="navbar__order">
                                         快速下單
                                     </a>
                                 </Link>
-                                <Link href={getTradingAccountUrl(domain)}>
+                                <Link href={getTradingAccountUrl(platform)}>
                                     <a onClick={setCurrentPathHandler} className="navbar__account">
                                         我的帳務
                                     </a>

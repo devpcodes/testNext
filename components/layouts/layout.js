@@ -25,7 +25,7 @@ import { checkCert, applyCert, renewCert } from '../../services/webCa';
 
 import { useCheckMobile } from '../../hooks/useCheckMobile';
 import { useUser } from '../../hooks/useUser';
-import { useDomain } from '../../hooks/useDomain';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const noVerifyRouters = ['goOrder', 'errPage'];
 
@@ -41,7 +41,7 @@ const Layout = memo(({ children }) => {
     // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
     const { isLogin } = useUser();
     // 來源別相關的處理
-    const domain = useDomain();
+    const platform = usePlatform();
 
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
@@ -52,20 +52,20 @@ const Layout = memo(({ children }) => {
     const getMenuPath = useRef(false);
     const prevPathname = useRef(false);
     const prevIsMobile = useRef(isMobile);
-    const prevDomain = useRef(domain);
+    const prevPlatform = useRef(platform);
     const queryStr = useRef('');
     const isRendered = useRef(false);
 
     useEffect(() => {
         prevIsMobile.current = isMobile;
-        prevDomain.current = domain;
+        prevPlatform.current = platform;
 
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered.current) {
             console.log('================= update =================');
             updateNavData();
         }
-    }, [isMobile, isLogin, domain]);
+    }, [isMobile, isLogin, platform]);
 
     //處理假登入路徑
     useEffect(() => {
@@ -79,7 +79,7 @@ const Layout = memo(({ children }) => {
         // pwaHandler();
         doLoginHashHandler();
         const timeout = setTimeout(() => {
-            // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
+            // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, platform 的狀態就位。
             if (!Object.keys(navData).length) {
                 console.log('================= first =================');
                 updateNavData();
@@ -157,7 +157,7 @@ const Layout = memo(({ children }) => {
     const updateNavData = () => {
         const data = {
             token: getToken(),
-            domain: prevDomain.current,
+            platform: prevPlatform.current,
             isMobile: prevIsMobile.current,
         };
         dispatch(setNavItems(data));
