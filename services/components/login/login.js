@@ -9,7 +9,7 @@ export const submit = async function (account, password) {
         data: {
             user_id: account,
             password,
-            domain: 'NewWeb',
+            platform: 'newweb',
         },
     });
     // 儲存 token 在 localStorage
