@@ -1,22 +1,27 @@
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getPlatform } from '../services/getPlatform';
-
 import { setPlatform } from '../store/general/action';
 
+import { useSessionStorage } from './useSessionStorage';
+
 export const usePlatform = () => {
+    const router = useRouter();
+    const [nwPlatform, setNwPlatform] = useSessionStorage('newweb_platform', 'newweb');
+
     const dispatch = useDispatch();
     const platform = useSelector(store => store.general.platform);
 
-    // 依據來源設置 fetch 選單所帶的 platform 值
-    const sourceHandler = () => {
-        dispatch(setPlatform(getPlatform()));
-    };
+    useEffect(() => {
+        if (router.query.platform) {
+            setNwPlatform(router.query.platform.toLowerCase());
+        }
+    }, [router.query]);
 
     useEffect(() => {
-        sourceHandler();
-    }, []);
+        dispatch(setPlatform(nwPlatform));
+    }, [nwPlatform]);
 
     return platform;
 };

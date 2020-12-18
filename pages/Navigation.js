@@ -22,7 +22,7 @@ const Navigation = () => {
             const res = await submit(router.query.otp);
             if (res.data.success) {
                 if (router.query.platform) {
-                    sessionStorage.setItem('platform', router.query.platform);
+                    sessionStorage.setItem('newweb_platform', router.query.platform.toLowerCase());
                 }
                 router.push(`/${router.query.page || ''}${getQueryStr()}`);
             }
