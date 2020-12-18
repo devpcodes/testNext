@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
@@ -8,6 +9,7 @@ import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png'
 import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
 
 const SinoTradeLogin = function ({ onClose, successHandler }) {
+    const router = useRouter();
     const [isPC, setIsPC] = useState(true);
     const [isIframe, setIsIframe] = useState(false);
     const noCloseBtn = useLoginClosBtn();
@@ -53,18 +55,33 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
         return false;
     };
 
+    const logoClickHandler = function (e) {
+        e.preventDefault();
+        onClose();
+        router.push('/');
+    };
+
     return (
         <div className="loginPage__container">
             <div className="page__box">
                 <div className="login__header">
-                    <img src={logo} alt="永豐金證券" />
+                    <a onClick={logoClickHandler}>
+                        <img src={logo} alt="永豐金證券" />
+                    </a>
                     {!noCloseBtn ? (
                         <a onClick={onClose} role="button">
                             <img className="close" src={close} alt="關閉" />
                         </a>
                     ) : null}
                 </div>
-                {isPC ? <img className="login__img" src={loginImg} alt="永豐金證券" /> : null}
+                {isPC ? (
+                    <a
+                        href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                        target="_blank"
+                    >
+                        <img className="login__img" src={loginImg} alt="永豐金證券" />
+                    </a>
+                ) : null}
                 <Login
                     popup={false}
                     isPC={isPC}
