@@ -5,16 +5,19 @@ import Login from './login';
 import loginImg from '../../../resources/images/pages/SinoTrade_login/img-login.jpg';
 import logo from '../../../resources/images/logo/logo-dark.svg';
 import close from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
+import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
 
 const SinoTradeLogin = function ({ onClose, successHandler }) {
     const [isPC, setIsPC] = useState(true);
     const [isIframe, setIsIframe] = useState(false);
+    const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
         resizeHandler();
         if (checkIframe()) {
             setIsIframe(true);
         }
+        console.log('nocloseBtn', noCloseBtn);
         return () => {
             window.removeEventListener('resize', resizeHandler, false);
         };
@@ -55,9 +58,11 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
             <div className="page__box">
                 <div className="login__header">
                     <img src={logo} alt="永豐金證券" />
-                    <a onClick={onClose} role="button">
-                        <img className="close" src={close} alt="關閉" />
-                    </a>
+                    {!noCloseBtn ? (
+                        <a onClick={onClose} role="button">
+                            <img className="close" src={close} alt="關閉" />
+                        </a>
+                    ) : null}
                 </div>
                 {isPC ? <img className="login__img" src={loginImg} alt="永豐金證券" /> : null}
                 <Login
