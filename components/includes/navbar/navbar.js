@@ -98,6 +98,10 @@ const Navbar = memo(() => {
             case 'line':
                 url = `/goOrder?platform=Line&source=u168`;
                 break;
+            case 'udn':
+                //TODO source還沒帶入
+                url = `/goOrder?platform=udn`;
+                break;
             default:
                 url = `/goOrder`;
                 break;

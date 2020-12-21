@@ -26,7 +26,7 @@ import { checkCert, applyCert, renewCert } from '../../services/webCa';
 import { useCheckMobile } from '../../hooks/useCheckMobile';
 import { useUser } from '../../hooks/useUser';
 import { usePlatform } from '../../hooks/usePlatform';
-
+import { noCloseBtns } from '../../hooks/useLoginClosBtn';
 const noVerifyRouters = ['goOrder', 'errPage'];
 
 const Layout = memo(({ children }) => {
@@ -55,11 +55,9 @@ const Layout = memo(({ children }) => {
     const prevPlatform = useRef(platform);
     const queryStr = useRef('');
     const isRendered = useRef(false);
-
     useEffect(() => {
         prevIsMobile.current = isMobile;
         prevPlatform.current = platform;
-
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered.current) {
             console.log('================= update =================');
@@ -361,7 +359,6 @@ const Layout = memo(({ children }) => {
             dispatch(setMaskVisible(false));
         }
     };
-
     return (
         <>
             <Head>
@@ -391,9 +388,15 @@ const Layout = memo(({ children }) => {
                 />
             </Head>
             <CaHead />
-            <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
-                <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
-            </MyTransition>
+            {noCloseBtns.includes(platform) ? (
+                <MyTransition isVisible={showBigLogin}>
+                    <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
+                </MyTransition>
+            ) : (
+                <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
+                    <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
+                </MyTransition>
+            )}
             <MyTransition isVisible={showLogin} classNames={'opacity'}>
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
