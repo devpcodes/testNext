@@ -162,11 +162,13 @@ export const CAHandler = function (token) {
     const checkData = checkCert(tokenVal.user_id);
     if (checkData.suggestAction != 'None') {
         setTimeout(() => {
-            Modal.confirm({
+            const modal = Modal.confirm();
+            modal.update({
                 title: '憑證系統',
                 content: `您現在無憑證。是否要載入憑證 ?`,
-                onOk() {
-                    caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
+                async onOk() {
+                    modal.destroy();
+                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
                 },
                 okText: '是',
                 cancelText: '否',
