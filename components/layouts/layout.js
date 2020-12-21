@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, notification } from 'antd';
+import { notification } from 'antd';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import jwt_decode from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Header from '../includes/header';
@@ -21,7 +20,7 @@ import { getCookie, removeCookie } from '../../services/components/layouts/cooki
 import { getToken } from '../../services/user/accessToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
-import { checkCert, applyCert, renewCert } from '../../services/webCa';
+import { CAHandler } from '../../services/webCa';
 
 import { useCheckMobile } from '../../hooks/useCheckMobile';
 import { useUser } from '../../hooks/useUser';
@@ -307,50 +306,6 @@ const Layout = memo(({ children }) => {
                 });
             } else return child;
         });
-    };
-
-    //憑證檢查
-    const CAHandler = function (token) {
-        const tokenVal = jwt_decode(token);
-        const checkData = checkCert(tokenVal.user_id);
-        if (checkData.suggestAction != 'None') {
-            setTimeout(() => {
-                Modal.confirm({
-                    title: '憑證系統',
-                    content: `您現在無憑證。是否要載入憑證 ?`,
-                    onOk() {
-                        caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
-                    },
-                    okText: '是',
-                    cancelText: '否',
-                    onCancel() {
-                        sessionStorage.setItem('deployCA', false);
-                    },
-                });
-            }, 600);
-        }
-    };
-
-    //憑證安裝
-    const caResultDataHandler = async function (suggestAction, userIdNo, token) {
-        if (suggestAction === 'ApplyCert') {
-            const msg = await applyCert(userIdNo, token);
-            // console.log('ApplyCert憑證回傳訊息', msg);
-            notification.open({
-                message: '系統訊息',
-                description: msg,
-                top: 70,
-            });
-        }
-        if (suggestAction == 'RenewCert') {
-            const msg = await renewCert(userIdNo, token);
-            // console.log('RenewCert憑證回傳訊息', msg);
-            notification.open({
-                message: '系統訊息',
-                description: msg,
-                top: 70,
-            });
-        }
     };
 
     const maskClickHandler = function () {
