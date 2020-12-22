@@ -37,6 +37,11 @@ export const HeaderCallToAction = () => {
                 queryString = objectToQueryHandler(lineQuery);
                 break;
             }
+            case 'udn': {
+                const lineQuery = Object.assign(newQuery, { platform: 'udn' });
+                queryString = objectToQueryHandler(lineQuery);
+                break;
+            }
             default:
                 queryString = objectToQueryHandler(newQuery);
                 break;
