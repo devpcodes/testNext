@@ -1,15 +1,16 @@
-// const withImages = require('next-images');
 const withOptimizedImages = require('next-optimized-images');
-const NextWorkboxPlugin = require('next-workbox-webpack-plugin');
 const withPWA = require('next-pwa');
-const cache = require('./resources/serviceWorker/cache');
+// const withImages = require('next-images');
+// const NextWorkboxPlugin = require('next-workbox-webpack-plugin');
+// const cache = require('./resources/serviceWorker/cache');
+// const isProd = process.env.NODE_ENV === 'production';
 
-const isProd = process.env.NODE_ENV === 'production';
 module.exports = withPWA(
     withOptimizedImages({
         basePath: '/newweb',
         assetPrefix: '/newweb',
         pwa: {
+            disable: process.env.NODE_ENV === 'development',
             dest: 'public',
             register: false,
             subdomainPrefix: '/newweb',
