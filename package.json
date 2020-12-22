@@ -32,6 +32,7 @@
         "next": "9.5.1",
         "next-images": "^1.4.1",
         "next-optimized-images": "^2.6.2",
+        "next-pwa": "^5.0.0",
         "next-redux-wrapper": "^6.0.2",
         "next-workbox-webpack-plugin": "^2.1.1",
         "prop-types": "^15.7.2",

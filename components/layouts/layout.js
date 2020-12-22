@@ -73,7 +73,7 @@ const Layout = memo(({ children }) => {
     }, [router.asPath]);
 
     useEffect(() => {
-        // pwaHandler();
+        pwaHandler();
         doLoginHashHandler();
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, platform 的狀態就位。
@@ -336,7 +336,7 @@ const Layout = memo(({ children }) => {
                 />
                 <meta name="theme-color" content="#000000" />
                 <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`} color="#5bbad5" />
-                {/* <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} /> */}
+                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
