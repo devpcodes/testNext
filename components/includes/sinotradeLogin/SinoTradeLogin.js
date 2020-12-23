@@ -35,15 +35,13 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
     };
 
     const loginSuccessFun = function () {
-        notification.success({
-            placement: 'topRight',
-            message: '登入成功',
-            duration: 3,
-            top: 70,
-        });
-        setTimeout(() => {
-            successHandler();
-        }, 200);
+        // notification.success({
+        //     placement: 'topRight',
+        //     message: '登入成功',
+        //     duration: 3,
+        //     top: 70,
+        // });
+        successHandler();
     };
 
     const loginFailFun = function () {};

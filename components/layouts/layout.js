@@ -242,12 +242,6 @@ const Layout = memo(({ children }) => {
         dispatch(setIsLogin(true));
         getMenuPath.current = false;
         setTimeout(() => {
-            notification.success({
-                placement: 'topRight',
-                message: '登入成功',
-                duration: 3,
-                top: 70,
-            });
             if (prevPathname.current) {
                 router.push(prevPathname.current);
             }

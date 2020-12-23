@@ -38,7 +38,7 @@ export const HeaderCallToAction = () => {
                 break;
             }
             case 'udn': {
-                const lineQuery = Object.assign(newQuery, { platform: 'udn' });
+                const lineQuery = Object.assign(newQuery, { platform: 'udn', source: 'udn' });
                 queryString = objectToQueryHandler(lineQuery);
                 break;
             }
