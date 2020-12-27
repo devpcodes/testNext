@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, notification } from 'antd';
+import { notification } from 'antd';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import jwt_decode from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Header from '../includes/header';
@@ -14,60 +13,56 @@ import MyTransition from '../includes/myTransition';
 import CaHead from '../includes/CaHead';
 
 import { showLoginHandler, setNavItems, setMaskVisible, setMenuOpen } from '../../store/components/layouts/action';
-import { setIsLogin, setAccounts, setUserSettings, getUserSettings, setCurrentAccount } from '../../store/user/action';
-import { setDomain, setCurrentPath } from '../../store/general/action';
+import { setIsLogin } from '../../store/user/action';
+import { setCurrentPath } from '../../store/general/action';
 
-import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { getCookie, removeCookie } from '../../services/components/layouts/cookieController';
-import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { getToken } from '../../services/user/accessToken';
 import { objectToQueryHandler } from '../../services/objectToQueryHandler';
 import { verifyMenu } from '../../services/components/layouts/verifyMenu';
-import { checkCert, applyCert, renewCert } from '../../services/webCa';
-import { getDomain } from '../../services/getDomain';
+import { CAHandler } from '../../services/webCa';
 
 import { useCheckMobile } from '../../hooks/useCheckMobile';
+import { useUser } from '../../hooks/useUser';
+import { usePlatform } from '../../hooks/usePlatform';
+import { noCloseBtns } from '../../hooks/useLoginClosBtn';
+const noVerifyRouters = ['goOrder', 'errPage'];
 
-const Layout = React.memo(({ children }) => {
+const Layout = memo(({ children }) => {
     const router = useRouter();
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [showBigLogin, setShowBigLogin] = useState(false);
     const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
     const [showNav, setShowNav] = useState(false);
 
+    // window 寬度改變處理，回傳 isMobile
+    const isMobile = useCheckMobile();
+    // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
+    const { isLogin } = useUser();
+    // 來源別相關的處理
+    const platform = usePlatform();
+
     const dispatch = useDispatch();
     const showLogin = useSelector(store => store.layout.showLogin);
-    const isMobile = useSelector(store => store.layout.isMobile);
-    const isLogin = useSelector(store => store.user.isLogin);
     const navData = useSelector(store => store.layout.navData);
-    const userSettings = useSelector(store => store.user.userSettings);
-    const accounts = useSelector(store => store.user.accounts);
-    const domain = useSelector(store => store.general.domain);
     const currentPath = useSelector(store => store.general.currentPath);
     const showMask = useSelector(store => store.layout.showMask);
 
     const getMenuPath = useRef(false);
-    // const needLogin = useRef(false);
     const prevPathname = useRef(false);
-    // const isAuthenticated = useRef(true);
     const prevIsMobile = useRef(isMobile);
-    const prevDomain = useRef(domain);
+    const prevPlatform = useRef(platform);
     const queryStr = useRef('');
     const isRendered = useRef(false);
-
-    // window 寬度改變處理，回傳 isMobile
-    useCheckMobile();
-
     useEffect(() => {
         prevIsMobile.current = isMobile;
-        prevDomain.current = domain;
-
+        prevPlatform.current = platform;
         // 不是第一次 render 才更新資料
         if (Object.keys(navData).length && isRendered.current) {
             console.log('================= update =================');
             updateNavData();
         }
-    }, [isMobile, isLogin, domain]);
+    }, [isMobile, isLogin, platform]);
 
     //處理假登入路徑
     useEffect(() => {
@@ -78,37 +73,15 @@ const Layout = React.memo(({ children }) => {
     }, [router.asPath]);
 
     useEffect(() => {
-        const updateUserSettings = () => {
-            const token = getToken();
-            token && dispatch(getUserSettings(token));
-        };
-
-        if (isLogin) {
-            const tokenVal = jwt_decode(getToken());
-            dispatch(setAccounts(tokenVal.acts_detail));
-            updateUserSettings();
-        } else {
-            dispatch(setAccounts([]));
-            dispatch(setUserSettings({}));
-        }
-    }, [isLogin]);
-
-    useEffect(() => {
         // pwaHandler();
         doLoginHashHandler();
         const timeout = setTimeout(() => {
-            // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, domain 的狀態就位。
+            // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, platform 的狀態就位。
             if (!Object.keys(navData).length) {
                 console.log('================= first =================');
                 updateNavData();
             }
         }, 10);
-
-        sourceHandler();
-
-        if (checkLogin()) {
-            dispatch(setIsLogin(true));
-        }
 
         isRendered.current = true;
 
@@ -118,32 +91,12 @@ const Layout = React.memo(({ children }) => {
     }, []);
 
     useEffect(() => {
-        const getDefaultAccount = accounts => {
-            const groupedAccount = accountGroupByType(accounts);
-            if (groupedAccount.S.length) {
-                const defaultStockAccount = groupedAccount.S.find(
-                    account => `${account.broker_id}-${account.account}` === userSettings.defaultStockAccount,
-                );
-                return defaultStockAccount || groupedAccount.S[0];
-            } else if (groupedAccount.H.length) {
-                return groupedAccount.H[0];
-            } else if (groupedAccount.F.length) {
-                return groupedAccount.F[0];
-            } else {
-                return accounts[0];
-            }
-        };
-        const defaultAccount = getDefaultAccount(accounts) || {};
-        dispatch(setCurrentAccount(defaultAccount));
-    }, [userSettings]);
-
-    useEffect(() => {
         // console.log('path', router.pathname, router.query);
         if (router.pathname.indexOf('/SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
 
-        if (router.pathname.indexOf('errPage') >= 0 || router.pathname === '/') {
+        if (noVerifyRouter()) {
             setVerifySuccess(true);
         } else {
             showPageHandler(router.pathname);
@@ -170,6 +123,21 @@ const Layout = React.memo(({ children }) => {
         }
     }, [showMask, showLogin, showBigLogin]);
 
+    // 不需檢查是否登入的頁面
+    const noVerifyRouter = () => {
+        const arr = noVerifyRouters.filter(val => {
+            if (router.pathname.indexOf(val) >= 0) {
+                return true;
+            }
+        });
+
+        if (arr.length != 0 || router.pathname === '/') {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     //inside iframe 逾時處理
     const doLoginHashHandler = () => {
         if (window.location.hash === '#doLogin') {
@@ -183,15 +151,10 @@ const Layout = React.memo(({ children }) => {
         }
     };
 
-    // 依據來源設置 fetch 選單所帶的 domain 值
-    const sourceHandler = () => {
-        dispatch(setDomain(getDomain()));
-    };
-
     const updateNavData = () => {
         const data = {
             token: getToken(),
-            domain: prevDomain.current,
+            platform: prevPlatform.current,
             isMobile: prevIsMobile.current,
         };
         dispatch(setNavItems(data));
@@ -279,12 +242,6 @@ const Layout = React.memo(({ children }) => {
         dispatch(setIsLogin(true));
         getMenuPath.current = false;
         setTimeout(() => {
-            notification.success({
-                placement: 'topRight',
-                message: '登入成功',
-                duration: 3,
-                top: 70,
-            });
             if (prevPathname.current) {
                 router.push(prevPathname.current);
             }
@@ -345,57 +302,12 @@ const Layout = React.memo(({ children }) => {
         });
     };
 
-    //憑證檢查
-    const CAHandler = function (token) {
-        const tokenVal = jwt_decode(token);
-        const checkData = checkCert(tokenVal.user_id);
-        if (checkData.suggestAction != 'None') {
-            setTimeout(() => {
-                Modal.confirm({
-                    title: '憑證系統',
-                    content: `您現在無憑證。是否要載入憑證 ?`,
-                    onOk() {
-                        caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
-                    },
-                    okText: '是',
-                    cancelText: '否',
-                    onCancel() {
-                        sessionStorage.setItem('deployCA', false);
-                    },
-                });
-            }, 600);
-        }
-    };
-
-    //憑證安裝
-    const caResultDataHandler = async function (suggestAction, userIdNo, token) {
-        if (suggestAction === 'ApplyCert') {
-            const msg = await applyCert(userIdNo, token);
-            // console.log('ApplyCert憑證回傳訊息', msg);
-            notification.open({
-                message: '系統訊息',
-                description: msg,
-                top: 70,
-            });
-        }
-        if (suggestAction == 'RenewCert') {
-            const msg = await renewCert(userIdNo, token);
-            // console.log('RenewCert憑證回傳訊息', msg);
-            notification.open({
-                message: '系統訊息',
-                description: msg,
-                top: 70,
-            });
-        }
-    };
-
     const maskClickHandler = function () {
         if (isMobile) {
             dispatch(setMenuOpen(false));
             dispatch(setMaskVisible(false));
         }
     };
-
     return (
         <>
             <Head>
@@ -418,16 +330,22 @@ const Layout = React.memo(({ children }) => {
                 />
                 <meta name="theme-color" content="#000000" />
                 <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`} color="#5bbad5" />
-                {/* <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} /> */}
+                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
                 />
             </Head>
             <CaHead />
-            <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
-                <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
-            </MyTransition>
+            {noCloseBtns.includes(platform) ? (
+                <MyTransition isVisible={showBigLogin}>
+                    <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
+                </MyTransition>
+            ) : (
+                <MyTransition isVisible={showBigLogin} classNames={isMobile ? 'loginMobile' : 'login'}>
+                    <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
+                </MyTransition>
+            )}
             <MyTransition isVisible={showLogin} classNames={'opacity'}>
                 <Login popup={true} isPC={!isMobile} onClose={closeHandler} successHandler={loginSuccessHandler} />
             </MyTransition>
@@ -466,4 +384,7 @@ const Layout = React.memo(({ children }) => {
 Layout.propTypes = {
     children: PropTypes.element,
 };
+
+Layout.displayName = 'Layout';
+
 export default Layout;

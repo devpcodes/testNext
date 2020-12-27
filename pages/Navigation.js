@@ -4,8 +4,11 @@ import { useEffect } from 'react';
 import { submit } from '../services/components/login/trustLogin';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
 
+import { useSessionStorage } from '../hooks/useSessionStorage';
+
 const Navigation = () => {
     const router = useRouter();
+    const [, setPlatform] = useSessionStorage('newweb_platform', 'newweb'); // 因為沒用到，忽略陣列解構的第一個回傳值，只取 setPlatform
 
     const doLogin = async () => {
         const getQueryStr = () => {
@@ -21,10 +24,8 @@ const Navigation = () => {
         try {
             const res = await submit(router.query.otp);
             if (res.data.success) {
-                // 來源有取 platform 也有 source，為保持與舊站的相容，暫時這兩個值都要儲存在 sessionStorage (未來需收斂)
                 if (router.query.platform) {
-                    sessionStorage.setItem('platform', router.query.platform);
-                    sessionStorage.setItem('source', router.query.platform.toLowerCase());
+                    setPlatform(router.query.platform.toLowerCase());
                 }
                 router.push(`/${router.query.page || ''}${getQueryStr()}`);
             }

@@ -8,7 +8,8 @@ export const logout = async function () {
     // 清除 localStorage 裡的 token
     removeToken();
     // 清除 sessionStorage 裡與來源別相關的值
-    sessionStorage.removeItem('source');
-    sessionStorage.removeItem('platform');
+    sessionStorage.removeItem('newweb_platform');
+    sessionStorage.removeItem('source'); // 舊站下架後可移除這行
+    sessionStorage.removeItem('platform'); // 舊站下架後可移除這行
     return res;
 };

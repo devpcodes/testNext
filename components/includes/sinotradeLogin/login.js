@@ -9,6 +9,8 @@ import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
+import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
+
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
@@ -18,6 +20,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
+    const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
         console.log('didmount');
         const account = localStorage.getItem('userID');
@@ -185,25 +188,26 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             afterSensors();
             return;
         }
-        afterSensors();
-        // try {
-        //     sensors.login(user_id, function () {
-        //         sensors.track(
-        //             'LoginResults',
-        //             {
-        //                 is_success: true,
-        //                 failure_reason: '',
-        //                 is_login: true,
-        //                 page_url: window.location.href,
-        //                 page_title: document.title,
-        //                 page_url_path: window.location.pathname,
-        //             },
-        //             afterSensors,
-        //         );
-        //     });
-        // } catch (error) {
-        //     afterSensors();
-        // }
+        //登入完傳值給神策
+        // afterSensors();
+        try {
+            sensors.login(user_id, function () {
+                sensors.track(
+                    'LoginResults',
+                    {
+                        is_success: true,
+                        failure_reason: '',
+                        is_login: true,
+                        page_url: window.location.href,
+                        page_title: document.title,
+                        page_url_path: window.location.pathname,
+                    },
+                    afterSensors,
+                );
+            });
+        } catch (error) {
+            afterSensors();
+        }
     };
 
     //神策傳送成功後 做的事
@@ -291,11 +295,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             };
         }
     };
-
     return (
         <div className="login__container">
             <div className="login__box" style={overflowHandler()}>
-                {!isPC && !isIframe ? (
+                {!isPC && !isIframe && !noCloseBtn ? (
                     <div
                         className="close__box"
                         onClick={onClose}
@@ -310,7 +313,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         <img alt="關閉" src={closeMobile} />
                     </div>
                 ) : null}
-                {popup ? (
+                {popup && !noCloseBtn ? (
                     <div
                         className="close"
                         onClick={onClose}

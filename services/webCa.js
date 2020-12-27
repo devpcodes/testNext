@@ -1,3 +1,6 @@
+import jwt_decode from 'jwt-decode';
+import { Modal, notification } from 'antd';
+
 export const sign = function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         var signDict = {};
@@ -63,7 +66,7 @@ export const sign = function (userInfo, isNeedSign = true, token) {
     }
 };
 
-export const checkCA = function (ca_content) {
+const checkCA = function (ca_content) {
     console.log('CA_CONTENT', ca_content);
     if (ca_content.certSN && ca_content.plainText && ca_content.signature) {
         return true;
@@ -71,7 +74,7 @@ export const checkCA = function (ca_content) {
     return false;
 };
 
-export const checkCert = function (userIdNo) {
+const checkCert = function (userIdNo) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
         DM = false;
@@ -151,4 +154,50 @@ export const renewCert = function (user_idNo, token, callBack) {
             },
         );
     });
+};
+
+//憑證檢查
+export const CAHandler = function (token) {
+    const tokenVal = jwt_decode(token);
+    const checkData = checkCert(tokenVal.user_id);
+    if (checkData.suggestAction != 'None') {
+        setTimeout(() => {
+            const modal = Modal.confirm();
+            modal.update({
+                title: '憑證系統',
+                content: `您現在無憑證。是否要載入憑證 ?`,
+                async onOk() {
+                    modal.destroy();
+                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
+                },
+                okText: '是',
+                cancelText: '否',
+                onCancel() {
+                    sessionStorage.setItem('deployCA', false);
+                },
+            });
+        }, 600);
+    }
+};
+
+//憑證安裝
+const caResultDataHandler = async function (suggestAction, userIdNo, token) {
+    if (suggestAction === 'ApplyCert') {
+        const msg = await applyCert(userIdNo, token);
+        // console.log('ApplyCert憑證回傳訊息', msg);
+        notification.open({
+            message: '系統訊息',
+            description: msg,
+            top: 70,
+        });
+    }
+    if (suggestAction == 'RenewCert') {
+        const msg = await renewCert(userIdNo, token);
+        // console.log('RenewCert憑證回傳訊息', msg);
+        notification.open({
+            message: '系統訊息',
+            description: msg,
+            top: 70,
+        });
+    }
 };
