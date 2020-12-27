@@ -25,7 +25,10 @@ const Navigation = () => {
             const res = await submit(router.query.otp);
             if (res.data.success) {
                 if (router.query.platform) {
+                    // 新站一律使用 newweb_platform 作為 key，不與舊站 `platform` 與 `source` 兩個 key 混用，以保證舊站未來可安全下架
                     setPlatform(router.query.platform.toLowerCase());
+                    // 為保持與舊站的相容，trust login 進站時，也要設定 sessionStorage `platform`，直到舊站下架才移除下面這行
+                    sessionStorage.setItem('platform', router.query.platform);
                 }
                 router.push(`/${router.query.page || ''}${getQueryStr()}`);
             }
