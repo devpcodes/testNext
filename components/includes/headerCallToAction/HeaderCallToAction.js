@@ -33,7 +33,7 @@ export const HeaderCallToAction = () => {
                 break;
             }
             case 'line': {
-                const lineQuery = Object.assign(newQuery, { platform: 'Line', source: 'u168' });
+                const lineQuery = Object.assign(newQuery, { platform: 'Line' });
                 queryString = objectToQueryHandler(lineQuery);
                 break;
             }
