@@ -133,6 +133,102 @@ function MyApp({ Component, pageProps, router }) {
         <>
             <Head>
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+                <link rel="icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/favicon.ico`} />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="32x32"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`}
+                />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="16x16"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/16.png`}
+                />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="512x512"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/512.png`}
+                />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="192x192"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/192.png`}
+                />
+                <meta name="theme-color" content="#ffffff" />
+                <meta name="mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-title" content="永豐金證券" />
+                <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+                <link
+                    rel="mask-icon"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/logo.svg`}
+                    color="#c43826"
+                />
+                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
+                <link rel="shortcut icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/favicon.ico`} type="image/x-icon" />
+                <link
+                    rel="apple-touch-icon"
+                    sizes="192x192"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/192.png`}
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphone5_splash.png`}
+                    media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphone6_splash.png`}
+                    media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphoneplus_splash.png`}
+                    media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphonex_splash.png`}
+                    media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphonexr_splash.png`}
+                    media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphonexsmax_splash.png`}
+                    media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/ipad_splash.png`}
+                    media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/ipadpro1_splash.png`}
+                    media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/ipadpro3_splash.png`}
+                    media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <link
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/ipadpro2_splash.png`}
+                    media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
+                    rel="apple-touch-startup-image"
+                />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+                />
             </Head>
             {renderComp}
         </>
