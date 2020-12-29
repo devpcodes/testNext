@@ -337,7 +337,7 @@ const Layout = memo(({ children }) => {
                 />
             </Head>
             <CaHead />
-            {noCloseBtns.includes(platform) ? (
+            {noCloseBtns.includes(platform) || currentPath === '' || currentPath === '/goOrder' ? (
                 <MyTransition isVisible={showBigLogin}>
                     <SinoTradeLogin onClose={bigLoginClose} successHandler={bigLoginSuccess} />
                 </MyTransition>
