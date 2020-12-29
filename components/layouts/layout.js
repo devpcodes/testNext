@@ -73,7 +73,7 @@ const Layout = memo(({ children }) => {
     }, [router.asPath]);
 
     useEffect(() => {
-        // pwaHandler();
+        pwaHandler();
         doLoginHashHandler();
         const timeout = setTimeout(() => {
             // 第一次 render 且 redux 沒資料時，才 fetch 資料。setTimeout 是為了等 isMobile, isLogin, platform 的狀態就位。
