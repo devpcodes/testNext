@@ -1,12 +1,12 @@
-const initialState = {
-    count: 0,
-};
+import * as actionType from './actionType';
+const initialState = {};
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'add':
+        case actionType.SOLACE:
             return {
-                count: state.count + 1,
+                ...state,
+                solace: action.payload,
             };
         default:
             return state;
