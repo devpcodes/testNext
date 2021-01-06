@@ -296,7 +296,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     padding-left: 20px;
                 }
                 .account__container .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-                    background-color: ${theme.colors.accountHover};
+                    background-color: ${theme.colors.normalBg};
                 }
                 .account__container .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
                     background-color: #ffffff;
