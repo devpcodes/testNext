@@ -133,7 +133,16 @@ function MyApp({ Component, pageProps, router }) {
         <>
             <Head>
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+                {/* Target older browsers like IE 10 and lower. */}
                 <link rel="icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/favicon.ico`} />
+                {/* The classic favicon displayed in tabs. */}
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="16x16"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/16.png`}
+                />
+                {/* Target safari on MacOS. */}
                 <link
                     rel="icon"
                     type="image/png"
@@ -143,8 +152,8 @@ function MyApp({ Component, pageProps, router }) {
                 <link
                     rel="icon"
                     type="image/png"
-                    sizes="16x16"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/16.png`}
+                    sizes="192x192"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/192.png`}
                 />
                 <link
                     rel="icon"
@@ -152,29 +161,28 @@ function MyApp({ Component, pageProps, router }) {
                     sizes="512x512"
                     href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/512.png`}
                 />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="192x192"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/192.png`}
-                />
-                <meta name="theme-color" content="#ffffff" />
-                <meta name="mobile-web-app-capable" content="yes" />
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="apple-mobile-web-app-title" content="永豐金證券" />
-                <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+                {/* Used for Safari pinned tabs. */}
                 <link
                     rel="mask-icon"
                     href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/logo.svg`}
                     color="#c43826"
                 />
-                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
                 <link rel="shortcut icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/favicon.ico`} type="image/x-icon" />
+                {/* Used by Android Chrome for the "Add to home screen" icon and settings. */}
+                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
+                {/* Used by Chrome, Firefox OS, and opera to change the browser address bar. */}
+                <meta name="theme-color" content="#ffffff" />
+                <meta name="mobile-web-app-capable" content="yes" />
+                {/* APP icon on iOS */}
                 <link
                     rel="apple-touch-icon"
-                    sizes="192x192"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/192.png`}
+                    sizes="180x180"
+                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/apple-touch-icon.png`}
                 />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="apple-mobile-web-app-title" content="永豐金證券" />
+                <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+                {/* Custom Splash Screen on iOS */}
                 <link
                     href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/splashscreens/iphone5_splash.png`}
                     media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
