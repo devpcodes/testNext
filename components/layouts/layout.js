@@ -310,32 +310,6 @@ const Layout = memo(({ children }) => {
     };
     return (
         <>
-            <Head>
-                <link
-                    rel="apple-touch-icon"
-                    sizes="180x180"
-                    href="https://richclub.azureedge.net/public/apple-icon-180x180.png"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="32x32"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`}
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="16x16"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/16.png`}
-                />
-                <meta name="theme-color" content="#000000" />
-                <link rel="mask-icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/images/icons/32.png`} color="#5bbad5" />
-                <link rel="manifest" href={`${process.env.NEXT_PUBLIC_SUBPATH}/manifest.json`} />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-                />
-            </Head>
             <CaHead />
             {noCloseBtns.includes(platform) || currentPath === '' || currentPath === '/goOrder' ? (
                 <MyTransition isVisible={showBigLogin}>
