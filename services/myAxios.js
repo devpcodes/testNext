@@ -10,53 +10,63 @@ const a8Auth = {
     password: 'Nweb123',
 };
 
-const errorHandler = error => {
+const reLoginHandler = async () => {
+    try {
+        await logout();
+        // TODO: 若加上 trailing slash，這段邏輯要修改
+        const lastPath = window.location.pathname.split('/').pop();
+        const currentPath = `/${lastPath === 'newweb' ? '' : lastPath}`;
+
+        Modal.error({
+            content: '帳號逾時，請重新登入。',
+            onOk() {
+                window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login?currentPath=${encodeURIComponent(
+                    currentPath,
+                )}`;
+            },
+        });
+    } catch (error) {
+        console.error(`logout error:`, error);
+    }
+};
+
+const errorHandler = (error, modal = true) => {
     const isServer = checkServer();
     const defaultErrorMsg = '伺服器錯誤，請稍後再試';
 
-    if (error.response == null) {
-        !isServer && Modal.error({ content: defaultErrorMsg });
-    } else {
-        if (error.response.data != null) {
-            if (!isServer) {
-                const reLoginHandler = async () => {
-                    try {
-                        await logout();
-                        const lastPath = window.location.pathname.split('/').pop();
-                        const currentPath = `/${lastPath === 'newweb' ? '' : lastPath}`;
-
+    if (error.response) {
+        if (!isServer) {
+            switch (error.response.status) {
+                case 401:
+                    reLoginHandler();
+                    break;
+                default:
+                    modal &&
                         Modal.error({
-                            content: '帳號逾時，請重新登入。',
-                            onOk() {
-                                window.location = `${
-                                    process.env.NEXT_PUBLIC_SUBPATH
-                                }/SinoTrade_login?currentPath=${encodeURIComponent(currentPath)}`;
-                            },
+                            content:
+                                error.response.data.message ||
+                                (error.response.data.result.msg && JSON.stringify(error.response.data.result.msg)) ||
+                                defaultErrorMsg,
                         });
-                    } catch (error) {
-                        console.error(`logout error:`, error);
-                    }
-                };
-
-                switch (error.response.status) {
-                    case 401:
-                        reLoginHandler();
-                        break;
-                    default:
-                        Modal.error({ content: error.response.data.message || defaultErrorMsg });
-                        break;
-                }
+                    break;
             }
-        } else {
-            !isServer && Modal.error({ content: defaultErrorMsg });
         }
+    } else if (error.request) {
+        !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
+    } else {
+        !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
     }
+
     return Promise.reject(error);
 };
 
-axios.interceptors.response.use(res => {
-    return res;
-}, errorHandler);
+// axios 攔截器
+axios.interceptors.response.use(
+    res => res,
+    error => {
+        return errorHandler(error);
+    },
+);
 
 // A8 instance：設置 call A8 server 的最低配置
 const createA8Instance = (version = a8DefaultVersion, auth = a8Auth) =>
@@ -69,12 +79,15 @@ const createA8Instance = (version = a8DefaultVersion, auth = a8Auth) =>
         },
     });
 
-export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth) => {
+export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal = true) => {
     const a8Ins = createA8Instance(version, auth);
 
-    a8Ins.interceptors.response.use(response => {
-        return response;
-    }, errorHandler);
+    a8Ins.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
 
     return a8Ins;
 };
@@ -90,12 +103,15 @@ const createLykanInstance = (version = lykanDefaultVersion) =>
         },
     });
 
-export const getLykanInstance = (version = lykanDefaultVersion) => {
+export const getLykanInstance = (version = lykanDefaultVersion, modal = true) => {
     const LykanIns = createLykanInstance(version);
 
-    LykanIns.interceptors.response.use(response => {
-        return response;
-    }, errorHandler);
+    LykanIns.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
 
     return LykanIns;
 };

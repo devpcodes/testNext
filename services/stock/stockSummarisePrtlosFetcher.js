@@ -1,9 +1,9 @@
 import { getA8Instance } from '../myAxios';
 
-export const fetchStockSummarisePrtlos = async function (bhno, cseq, sip, token) {
+export const fetchStockSummarisePrtlos = async function ({ bhno, cseq, sip, token }, modal = true) {
     try {
         const url = `/Equity/SummarisePrtlos`;
-        const res = await getA8Instance().post(url, {
+        const res = await getA8Instance(undefined, undefined, modal).post(url, {
             bhno,
             cseq,
             sip,

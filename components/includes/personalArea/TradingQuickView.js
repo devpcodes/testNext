@@ -99,41 +99,53 @@ export const TradingQuickView = () => {
     };
 
     const getStockUnReal = function () {
-        const action = '';
-        const bhno = currentAccount.broker_id;
-        const cseq = currentAccount.account;
-        const ctype = 'A'; // 全部
-        const sip = getCookie('client_ip');
-        const stock = ' ';
-        const token = getToken();
-        const ttype = 'A';
-        dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(action, bhno, cseq, ctype, sip, stock, ttype, token)));
+        const data = {
+            action: '',
+            bhno: currentAccount.broker_id,
+            cseq: currentAccount.account,
+            ctype: 'A', // 全部
+            sip: getCookie('client_ip'),
+            stock: ' ',
+            ttype: 'A',
+            token: getToken(),
+        };
+        const modal = false;
+        dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(data, modal)));
     };
 
     const getSummarise = function () {
-        const bhno = currentAccount.broker_id;
-        const cseq = currentAccount.account;
-        const sip = getCookie('client_ip');
-        const token = getToken();
-        dispatch(getStockSummarisePrtlos(fetchStockSummarisePrtlos(bhno, cseq, sip, token)));
+        const data = {
+            bhno: currentAccount.broker_id,
+            cseq: currentAccount.account,
+            sip: getCookie('client_ip'),
+            token: getToken(),
+        };
+        const modal = false;
+        dispatch(getStockSummarisePrtlos(fetchStockSummarisePrtlos(data, modal)));
     };
 
     //海外未實現損益
     const getSBUnrealizedPrtLos = function () {
-        const market = '';
-        const stock_id = '';
-        const hasData = false;
-        const token = getToken();
-        dispatch(getSBUnRealPrtlos(fetchSBUnRealPrtlosFetcher(market, stock_id, hasData, token)));
+        const data = {
+            market: '',
+            stock_id: '',
+            hasData: false,
+            token: getToken(),
+        };
+        const modal = false;
+        dispatch(getSBUnRealPrtlos(fetchSBUnRealPrtlosFetcher(data, modal)));
     };
 
     //當日交割款試算
     const getDeliveryTrial = function () {
-        const market = '';
-        const stock_id = '';
-        const hasData = false;
-        const token = getToken();
-        dispatch(getSBDeliveryTrial(fetchSBDeliveryTrialFetcher(market, stock_id, hasData, token)));
+        const data = {
+            market: '',
+            stock_id: '',
+            hasData: false,
+            token: getToken(),
+        };
+        const modal = false;
+        dispatch(getSBDeliveryTrial(fetchSBDeliveryTrialFetcher(data, modal)));
     };
 
     // 期權未平倉損益
@@ -146,7 +158,8 @@ export const TradingQuickView = () => {
             type: '1',
             call_put: ' ',
         };
-        dispatch(getOpenProfitLossSum(fetchOpenPosition(data)));
+        const modal = false;
+        dispatch(getOpenProfitLossSum(fetchOpenPosition(data, modal)));
     };
 
     const tableInfoHandler = (obj, tableInfo) => {

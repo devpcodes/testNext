@@ -1,8 +1,8 @@
 import { getA8Instance } from '../myAxios';
 
-export const fetchOpenPosition = async function ({ token, user_id, account, category, type, call_put }) {
+export const fetchOpenPosition = async function ({ token, user_id, account, category, type, call_put }, modal = true) {
     const url = `/Future/Position`;
-    const res = await getA8Instance().post(url, {
+    const res = await getA8Instance(undefined, undefined, modal).post(url, {
         token,
         user_id,
         account,

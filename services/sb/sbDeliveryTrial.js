@@ -1,9 +1,9 @@
 import { getLykanInstance } from '../myAxios';
 
-export const fetchSBDeliveryTrialFetcher = async function (market, stock_id, hasData, token) {
+export const fetchSBDeliveryTrialFetcher = async function ({ market, stock_id, hasData, token }, modal = true) {
     try {
         const url = `/assets/querySubBrokerageDeliveryTrial`;
-        const res = await getLykanInstance().post(url, {
+        const res = await getLykanInstance(undefined, modal).post(url, {
             market,
             stock_id,
             hasData,
