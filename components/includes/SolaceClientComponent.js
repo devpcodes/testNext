@@ -10,6 +10,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
     const topic = useRef([]);
+    const solaceData = useRef([]);
     useEffect(() => {
         //依賴初始化需要時間，所以延遲100毫秒做連線
         setTimeout(() => {
@@ -17,8 +18,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                 solace.current = solaceClient('', getCookie('user_id'));
                 solace.current.connect();
                 solace.current.setMessageEvent('ST', function (xhr) {
-                    console.log(xhr);
-                    dispatch(setSolaceData(xhr.data));
+                    solaceEventHandler(xhr);
                 });
             }
             subscribeHandler();
@@ -32,18 +32,57 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         }, 100);
     }, [subscribeTopic]);
 
+    const solaceEventHandler = xhr => {
+        //symbol 可能之後有少數抓不到symbol情況 得調整
+        let symbol = xhr.topic.split('/')[3];
+        let update = false;
+        if (solaceData.current.length === 0) {
+            solaceData.current.push(xhr);
+        } else {
+            const checkLastKey = xhr.topic.split('/')[xhr.topic.split('/').length - 1];
+            solaceData.current = solaceData.current.map(val => {
+                const checkValLastKey = val.topic.split('/')[val.topic.split.length - 1];
+                if (val.topic.split('/')[3] === symbol && checkLastKey === checkValLastKey) {
+                    update = true;
+                    val.topic = xhr.topic;
+                    return Object.assign(val.data, xhr.data);
+                } else {
+                    return val;
+                }
+            });
+            if (!update) {
+                solaceData.current.push(xhr);
+            }
+        }
+        // console.log('solaceData', solaceData.current)
+        dispatch(setSolaceData(solaceData.current));
+    };
+
     const unsubscribeHandler = () => {
         if (topic.current.length !== 0) {
             topic.current.forEach(oldTopic => {
                 if (oldTopic.indexOf('SNP') === -1) {
                     solace.current.unsubscribe(oldTopic);
                 }
+                clearReduxData(oldTopic);
+                dispatch(setSolaceData(solaceData.current));
             });
         }
     };
 
+    const clearReduxData = topic => {
+        let symbol = topic.split('/')[3];
+        const checkLastKey = topic.split('/')[topic.split('/').length - 1];
+        solaceData.current = solaceData.current.filter(val => {
+            const checkValLastKey = val.topic.split('/')[val.topic.split('/').length - 1];
+            if (val.topic.split('/')[3] === symbol && checkLastKey === checkValLastKey) {
+                return false;
+            }
+            return true;
+        });
+    };
+
     const subscribeHandler = () => {
-        console.log(subscribeTopic, topic.current);
         if (JSON.stringify(subscribeTopic) != JSON.stringify(topic.current)) {
             unsubscribeHandler();
         }
