@@ -6,8 +6,8 @@ import stock from './stock/reducer';
 import sb from './sb/reducer';
 import future from './future/reducer';
 import general from './general/reducer';
-
 import goOrder from './goOrder/reducer';
+import solace from './solace/reducer';
 
 const reducers = combineReducers({
     layout,
@@ -18,6 +18,7 @@ const reducers = combineReducers({
     sb,
     future,
     general,
+    solace,
 });
 
 export default reducers;
