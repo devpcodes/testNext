@@ -467,7 +467,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         </Button>
                     </Form.Item>
                 </Form>
-                <p className="a__box">
+                <p className="a__box" style={{ marginBottom: '0.5rem' }}>
                     {!isIframe ? (
                         <a
                             target="_blank"
@@ -487,6 +487,19 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         </a>
                     )}
                 </p>
+                <div style={{ textAlign: 'center', color: 'rgba(0,0,0,.32)' }}>
+                    This site is protected by reCAPTCHA and the Google
+                    <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
+                        {' '}
+                        Privacy Policy{' '}
+                    </a>{' '}
+                    and
+                    <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
+                        {' '}
+                        Terms of Service{' '}
+                    </a>{' '}
+                    apply.
+                </div>
             </div>
             {popup ? (
                 <div
