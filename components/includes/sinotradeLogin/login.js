@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react'; //react-google-recaptcha-v3
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -10,6 +10,8 @@ import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-clos
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
 import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
+import MD5 from 'crypto-js/md5';
+import Recaptcha from './Recaptcha';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
@@ -128,33 +130,44 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         });
         if (errors.length === 0) {
             setIsLoading(true);
-            try {
-                const res = await submit(form.getFieldValue('account'), form.getFieldValue('password'));
-                setIsLoading(false);
-                if (res.data.success) {
-                    //記身份證字號
-                    if (form.getFieldValue('remember')) {
-                        localStorage.setItem('userID', form.getFieldValue('account'));
-                    } else {
-                        localStorage.removeItem('userID');
-                    }
+            //reCAPTCHA
+            window.grecaptcha.ready(() => {
+                window.grecaptcha
+                    .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
+                    .then(async reCAPTCHAToken => {
+                        try {
+                            const res = await submit(
+                                form.getFieldValue('account'),
+                                MD5(form.getFieldValue('password')).toString(),
+                                reCAPTCHAToken,
+                            );
+                            setIsLoading(false);
+                            if (res.data.success) {
+                                //記身份證字號
+                                if (form.getFieldValue('remember')) {
+                                    localStorage.setItem('userID', form.getFieldValue('account'));
+                                } else {
+                                    localStorage.removeItem('userID');
+                                }
 
-                    if (!checkFirstLogin(res.data)) {
-                        //傳資料給神策
-                        sensorsHandler(form.getFieldValue('account'));
-                    }
-                }
-            } catch (error) {
-                setIsLoading(false);
-                sensors.track('LoginResults', {
-                    is_success: false,
-                    failure_reason: '',
-                    is_login: false,
-                    page_url: window.location.href,
-                    page_title: document.title,
-                    page_url_path: window.location.pathname,
-                });
-            }
+                                if (!checkFirstLogin(res.data)) {
+                                    //傳資料給神策
+                                    sensorsHandler(form.getFieldValue('account'));
+                                }
+                            }
+                        } catch (error) {
+                            setIsLoading(false);
+                            sensors.track('LoginResults', {
+                                is_success: false,
+                                failure_reason: '',
+                                is_login: false,
+                                page_url: window.location.href,
+                                page_title: document.title,
+                                page_url_path: window.location.pathname,
+                            });
+                        }
+                    });
+            });
         }
     };
 
@@ -297,6 +310,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
     return (
         <div className="login__container">
+            <Recaptcha />
             <div className="login__box" style={overflowHandler()}>
                 {!isPC && !isIframe && !noCloseBtn ? (
                     <div
