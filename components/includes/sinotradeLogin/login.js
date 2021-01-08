@@ -11,7 +11,7 @@ import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
 import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
 import MD5 from 'crypto-js/md5';
-import Recaptcha from './Recaptcha';
+import ReCaptchaComponent from './ReCaptchaComponent';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
@@ -63,6 +63,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             window.removeEventListener('keypress', winKeyDownHandler, false);
         };
     }, []);
+    useEffect(() => {
+        if (document.getElementsByClassName('grecaptcha-badge').length > 0) {
+            document.getElementsByClassName('grecaptcha-badge')[0].style.display = 'none';
+        }
+    });
 
     let account;
     const fieldsChange = function (changedFields) {
@@ -310,7 +315,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
     return (
         <div className="login__container">
-            <Recaptcha />
+            <ReCaptchaComponent />
             <div className="login__box" style={overflowHandler()}>
                 {!isPC && !isIframe && !noCloseBtn ? (
                     <div

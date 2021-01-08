@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const ReCaptcha = () => {
+const ReCaptchaComponent = () => {
     useEffect(() => {
         const loadScriptByURL = (id, url, callback) => {
             const isScriptExist = document.getElementById(id);
@@ -31,4 +31,4 @@ const ReCaptcha = () => {
     return <></>;
 };
 
-export default ReCaptcha;
+export default ReCaptchaComponent;
