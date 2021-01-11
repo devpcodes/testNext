@@ -1,4 +1,14 @@
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 const FiveLatestOffer = () => {
+    const solaceData = useSelector(store => store.solace.solaceData);
+    useEffect(() => {
+        if (solaceData.topic != null) {
+            if (solaceData.topic.indexOf('SNP') >= 0 || solaceData.topic.indexOf('QUT') >= 0) {
+            }
+        }
+    }, [solaceData]);
+    console.log('solaceData', solaceData);
     return (
         <>
             <div className="five__container">
