@@ -42,6 +42,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             const checkLastKey = xhr.topic.split('/')[xhr.topic.split('/').length - 1];
             solaceData.current = solaceData.current.map(val => {
                 const checkValLastKey = val.topic.split('/')[val.topic.split.length - 1];
+                console.log('update', checkLastKey, checkValLastKey);
                 if (val.topic.split('/')[3] === symbol && checkLastKey === checkValLastKey) {
                     update = true;
                     val.topic = xhr.topic;
