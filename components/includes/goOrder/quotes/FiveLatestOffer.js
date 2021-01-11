@@ -99,6 +99,7 @@ const FiveLatestOffer = () => {
                         </div>
                     </div>
                 </div>
+                <span className="blackLine"></span>
             </div>
             <style jsx>{`
                 .five__container {
@@ -109,6 +110,9 @@ const FiveLatestOffer = () => {
                     margin-top: 8px;
                     height: 1px;
                     background: #0d1623;
+                }
+                .blackLine:last-child {
+                    margin-top: 2px;
                 }
                 .buySell__header {
                     height: 24px;
@@ -128,7 +132,7 @@ const FiveLatestOffer = () => {
                     display: inline-block;
                     width: calc(50% - 8px);
                     font-size: 1.2rem;
-                    padding-right: 15px;
+                    padding-right: 20px;
                     margin-left: 8px;
                 }
                 .header__rText {
@@ -142,34 +146,52 @@ const FiveLatestOffer = () => {
                     font-size: 1.6rem;
                     font-weight: bold;
                     height: 22px;
+                    clear: both;
                 }
                 .buy__box {
                     display: inline-block;
-                    width: 50%;
+                    width: calc(50% - 8px);
                 }
                 .sell__box {
                     display: inline-block;
-                    width: 50%;
+                    width: calc(50% - 8px);
+                    float: right;
+                }
+                .sell__box .item {
+                    margin-bottom: 2px;
                 }
                 .hL {
-                    width: 5%;
+                    width: 15px;
                     display: inline-block;
                 }
+                .sell__box .hL {
+                    float: right;
+                }
+                .sell__box .box__content {
+                    background-color: #22a16f;
+                }
                 .volume {
-                    width: 10%;
+                    width: 45px;
                     display: inline-block;
                 }
                 .price {
-                    width: 10%;
+                    width: 45px;
                     display: inline-block;
+                    text-align: right;
+                }
+                .buy__box .price {
+                    float: right;
                 }
                 .box {
-                    width: 75%;
+                    width: calc(100% - 110px);
                     height: 8px;
                     display: inline-block;
+                    padding-right: 5px;
+                    vertical-align: top;
+                    margin-top: 8px;
                 }
                 .box__content {
-                    width: 25%;
+                    width: 100%;
                     height: 8px;
                     background: #c43826;
                     vertical-align: middle;

@@ -33,7 +33,6 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     }, [subscribeTopic]);
 
     const solaceEventHandler = xhr => {
-        console.log('xxxx', solaceData.current);
         //symbol 可能之後有少數抓不到symbol情況 得調整
         let symbol = xhr.topic.split('/')[3];
         let update = false;
@@ -49,7 +48,9 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                     if (val.topic.split('/')[3] === symbol && checkLastKey === checkValLastKey) {
                         update = true;
                         val.topic = xhr.topic;
-                        return Object.assign(val.data, xhr.data);
+                        Object.assign(val.data, xhr.data);
+                        // console.log('newVal', val);
+                        return val;
                     } else {
                         return val;
                     }
