@@ -8,10 +8,16 @@ const initialState = {
     navData: {},
     showMask: false,
     personalAreaVisible: false,
+    recaptchaReady: false,
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionType.SET_RECAPTCHA_LOAD:
+            return {
+                ...state,
+                recaptchaReady: action.payload,
+            };
         case actionType.RESIZE_EVENT:
             return {
                 ...state,

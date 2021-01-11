@@ -1,3 +1,4 @@
+export const SET_RECAPTCHA_LOAD = 'SET_RECAPTCHA_LOAD';
 export const RESIZE_EVENT = 'RESIZE_EVENT';
 export const SHOW_LOGIN = 'SHOW_LOGIN';
 export const SET_SERVER_NAV_ITEMS = 'SET_SERVER_NAV_ITEMS';
