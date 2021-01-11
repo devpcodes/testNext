@@ -1,7 +1,4 @@
 import { useEffect, useState } from 'react';
-
-import { PageHead } from '../components/includes/PageHead';
-import { Info } from '../components/includes/goOrder/infoArea/Info';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
 import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
 const OrderGO = () => {
