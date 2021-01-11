@@ -69,3 +69,10 @@ export const setPersonalAreaVisible = bool => {
         payload: bool,
     };
 };
+
+export const setRecaptchaReady = bool => {
+    return {
+        type: actionType.SET_RECAPTCHA_LOAD,
+        payload: true,
+    };
+};

@@ -11,8 +11,15 @@ import Login from '../includes/sinotradeLogin/login';
 import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
 import CaHead from '../includes/CaHead';
+import ReCaptchaComponent from '../includes/sinotradeLogin/ReCaptchaComponent';
 
-import { showLoginHandler, setNavItems, setMaskVisible, setMenuOpen } from '../../store/components/layouts/action';
+import {
+    showLoginHandler,
+    setNavItems,
+    setMaskVisible,
+    setMenuOpen,
+    setRecaptchaReady,
+} from '../../store/components/layouts/action';
 import { setIsLogin } from '../../store/user/action';
 import { setCurrentPath } from '../../store/general/action';
 
@@ -308,8 +315,13 @@ const Layout = memo(({ children }) => {
             dispatch(setMaskVisible(false));
         }
     };
+
+    const reCaptchaLoadReady = () => {
+        dispatch(setRecaptchaReady(true));
+    };
     return (
         <>
+            <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} />
             <CaHead />
             {noCloseBtns.includes(platform) || currentPath === '' || currentPath === '/goOrder' ? (
                 <MyTransition isVisible={showBigLogin}>
@@ -344,6 +356,9 @@ const Layout = memo(({ children }) => {
                 }
             `}</style>
             <style jsx global>{`
+                .grecaptcha-badge {
+                    display: none !important;
+                }
                 .ant-modal-mask {
                     z-index: 9999;
                 }
