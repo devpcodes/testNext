@@ -22,6 +22,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
+    const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
         console.log('didmount');
@@ -133,7 +134,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         errors = errors.filter(val => {
             return val.errors.length !== 0;
         });
-        if (errors.length === 0) {
+        if (errors.length === 0 && reCaptchaReady) {
             setIsLoading(true);
             //reCAPTCHA
             window.grecaptcha.ready(() => {
@@ -313,9 +314,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             };
         }
     };
+    const reCaptchaLoadReady = () => {
+        setReCaptchaReady(true);
+    };
     return (
         <div className="login__container">
-            <ReCaptchaComponent />
+            <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} />
             <div className="login__box" style={overflowHandler()}>
                 {!isPC && !isIframe && !noCloseBtn ? (
                     <div
