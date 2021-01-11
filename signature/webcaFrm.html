@@ -8,66 +8,69 @@
 
         <title>WebCA 憑證小幫手</title>
         <script>
-            alert('WebCA 憑證小幫手');
-            var webcaOpener = window.opener;
-            var businessNo = webcaOpener.twcaH5Params.businessNo;
-            var verifyNo = webcaOpener.twcaH5Params.verifyNo;
-            var apiVersion = webcaOpener.twcaH5Params.apiVersion;
-            var hashKeyNo = webcaOpener.twcaH5Params.hashKeyNo;
-            var returnParams = webcaOpener.twcaH5Params.returnParams;
-            var memberNo = webcaOpener.twcaH5Params.memberNo;
-            var raFunc = webcaOpener.twcaH5Params.raFunc;
-            var identifyNo = webcaOpener.twcaH5Params.identifyNo;
-            var webcaURL = webcaOpener.twcaH5Params.webcaURL;
-            var isWebCAClose = false;
+            try {
+                var webcaOpener = window.opener;
+                var businessNo = webcaOpener.twcaH5Params.businessNo;
+                var verifyNo = webcaOpener.twcaH5Params.verifyNo;
+                var apiVersion = webcaOpener.twcaH5Params.apiVersion;
+                var hashKeyNo = webcaOpener.twcaH5Params.hashKeyNo;
+                var returnParams = webcaOpener.twcaH5Params.returnParams;
+                var memberNo = webcaOpener.twcaH5Params.memberNo;
+                var raFunc = webcaOpener.twcaH5Params.raFunc;
+                var identifyNo = webcaOpener.twcaH5Params.identifyNo;
+                var webcaURL = webcaOpener.twcaH5Params.webcaURL;
+                var isWebCAClose = false;
 
-            window.onload = function () {
-                var form = postObject();
-                var isApple = navigator.platform && /iPad|iPhone|iPod|MacIntel/.test(navigator.platform);
-                var isSafari = 'safari' === getBrowserType();
-                var isSafariOnApple = isApple && isSafari;
-                if (!isApple) {
-                    document.body.innerHTML +=
-                        " <iframe id='iFR' name='iFR' style='position:fixed; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
-                    form.target = 'iFR';
+                window.onload = function () {
+                    var form = postObject();
+                    var isApple = navigator.platform && /iPad|iPhone|iPod|MacIntel/.test(navigator.platform);
+                    var isSafari = 'safari' === getBrowserType();
+                    var isSafariOnApple = isApple && isSafari;
+                    if (!isApple) {
+                        document.body.innerHTML +=
+                            " <iframe id='iFR' name='iFR' style='position:fixed; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;'></iframe>";
+                        form.target = 'iFR';
+                    }
+                    document.body.appendChild(form);
+                    form.submit();
+                };
+
+                window.onbeforeunload = function () {
+                    if (!isWebCAClose) {
+                        try {
+                            //            document.getElementById("iFR").contentWindow.ackRaFunc("5079", "使用者關閉視窗", businessNo, verifyNo, raFunc);
+
+                            var twcaH5Flow;
+
+                            twcaH5Flow = {
+                                action: 'AckRAFunc',
+                                raFunc: raFunc,
+                                businessNo: businessNo,
+                                verifyNo: verifyNo,
+                                errCode: '5079',
+                                errMsg: '使用者關閉視窗',
+                            };
+                            document.getElementById('iFR').contentWindow.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+
+                            twcaH5Flow = {
+                                action: 'Exception',
+                                raFunc: raFunc,
+                                origin: window.location.hostname,
+                                errCode: '5079',
+                                errMsg: '使用者關閉視窗',
+                            };
+                            webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
+                        } catch (e) {}
+                    }
+                };
+
+                if (window.addEventListener) {
+                    window.addEventListener('message', receiveMessage, false);
+                } else {
+                    window.attachEvent('onmessage', receiveMessage);
                 }
-                document.body.appendChild(form);
-                form.submit();
-            };
-
-            window.onbeforeunload = function () {
-                if (!isWebCAClose) {
-                    try {
-                        //            document.getElementById("iFR").contentWindow.ackRaFunc("5079", "使用者關閉視窗", businessNo, verifyNo, raFunc);
-
-                        var twcaH5Flow;
-
-                        twcaH5Flow = {
-                            action: 'AckRAFunc',
-                            raFunc: raFunc,
-                            businessNo: businessNo,
-                            verifyNo: verifyNo,
-                            errCode: '5079',
-                            errMsg: '使用者關閉視窗',
-                        };
-                        document.getElementById('iFR').contentWindow.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
-
-                        twcaH5Flow = {
-                            action: 'Exception',
-                            raFunc: raFunc,
-                            origin: window.location.hostname,
-                            errCode: '5079',
-                            errMsg: '使用者關閉視窗',
-                        };
-                        webcaOpener.postMessage({ twcaH5Flow: twcaH5Flow }, '*');
-                    } catch (e) {}
-                }
-            };
-
-            if (window.addEventListener) {
-                window.addEventListener('message', receiveMessage, false);
-            } else {
-                window.attachEvent('onmessage', receiveMessage);
+            } catch (e) {
+                alert(e);
             }
 
             function postObject() {
