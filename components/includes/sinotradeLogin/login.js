@@ -64,11 +64,11 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             window.removeEventListener('keypress', winKeyDownHandler, false);
         };
     }, []);
-    useEffect(() => {
-        if (document.getElementsByClassName('grecaptcha-badge').length > 0) {
-            document.getElementsByClassName('grecaptcha-badge')[0].style.display = 'none';
-        }
-    });
+    // useEffect(() => {
+    //     if (document.getElementsByClassName('grecaptcha-badge').length > 0) {
+    //         document.getElementsByClassName('grecaptcha-badge')[0].style.display = 'none';
+    //     }
+    // });
 
     let account;
     const fieldsChange = function (changedFields) {
@@ -650,6 +650,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
             `}</style>
             <style global jsx>{`
+                .grecaptcha-badge {
+                    display: none !important;
+                }
                 .login__container .ant-btn-primary {
                     background: #c43826;
                     height: ${isIframe ? '34px' : '54px'};
