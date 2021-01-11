@@ -56,6 +56,14 @@ const QuotesDetail = () => {
                     color: #0d1623;
                     font-weight: bold;
                 }
+                @media (max-width: 350px) {
+                    .item {
+                        font-size: 1.4rem;
+                    }
+                    .label {
+                        font-size: 1.4rem;
+                    }
+                }
                 .item__box {
                     font-size: 0;
                     display: inline-block;

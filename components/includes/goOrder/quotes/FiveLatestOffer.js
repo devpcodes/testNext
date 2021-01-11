@@ -148,6 +148,11 @@ const FiveLatestOffer = () => {
                     height: 22px;
                     clear: both;
                 }
+                @media (max-width: 350px) {
+                    .item {
+                        font-size: 1.4rem;
+                    }
+                }
                 .buy__box {
                     display: inline-block;
                     width: calc(50% - 8px);
@@ -179,6 +184,17 @@ const FiveLatestOffer = () => {
                     display: inline-block;
                     text-align: right;
                 }
+                @media (max-width: 350px) {
+                    .volume {
+                        width: 38px;
+                    }
+                    .price {
+                        width: 38px;
+                    }
+                    .sell__box .item {
+                        margin-bottom: 0;
+                    }
+                }
                 .buy__box .price {
                     float: right;
                 }
@@ -189,6 +205,12 @@ const FiveLatestOffer = () => {
                     padding-right: 5px;
                     vertical-align: top;
                     margin-top: 8px;
+                }
+                @media (max-width: 350px) {
+                    .box {
+                        width: calc(100% - 96px);
+                        margin-top: 6px;
+                    }
                 }
                 .box__content {
                     width: 100%;

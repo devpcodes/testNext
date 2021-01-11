@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
-import QuotesDetail from '../components/includes/goOrder/quotes/QuotesDetail';
-import FiveLatestOffer from '../components/includes/goOrder/quotes/FiveLatestOffer';
+import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [title, setTitle] = useState('Order GO');
@@ -26,8 +25,7 @@ const OrderGO = () => {
         <>
             <div>
                 <SolaceClientComponent subscribeTopic={topic} />
-                <QuotesDetail />
-                <FiveLatestOffer />
+                <QuoteContainer />
             </div>
             <style jsx>{``}</style>
         </>
