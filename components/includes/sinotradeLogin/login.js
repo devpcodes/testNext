@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'; //react-google-recaptcha-v3
+import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -11,18 +12,20 @@ import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
 import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
 import MD5 from 'crypto-js/md5';
-import ReCaptchaComponent from './ReCaptchaComponent';
+// import ReCaptchaComponent from './ReCaptchaComponent';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
 
+    const recaptchaReady = useSelector(store => store.layout.recaptchaReady);
+
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
-    const [reCaptchaReady, setReCaptchaReady] = useState(false);
+    // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
         console.log('didmount');
@@ -134,7 +137,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         errors = errors.filter(val => {
             return val.errors.length !== 0;
         });
-        if (errors.length === 0 && reCaptchaReady) {
+        if (errors.length === 0 && recaptchaReady) {
             setIsLoading(true);
             //reCAPTCHA
             window.grecaptcha.ready(() => {
@@ -314,12 +317,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             };
         }
     };
-    const reCaptchaLoadReady = () => {
-        setReCaptchaReady(true);
-    };
+    // const reCaptchaLoadReady = () => {
+    //     setReCaptchaReady(true);
+    // };
     return (
         <div className="login__container">
-            <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} />
+            {/* <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} /> */}
             <div className="login__box" style={overflowHandler()}>
                 {!isPC && !isIframe && !noCloseBtn ? (
                     <div
