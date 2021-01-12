@@ -1,12 +1,15 @@
 import * as actionType from './actionType';
-const initialState = {};
+
+const initialState = {
+    type: 'S',
+};
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionType.SOLACE:
+        case actionType.SET_TYPE:
             return {
                 ...state,
-                solace: action.payload,
+                type: action.payload,
             };
         default:
             return state;

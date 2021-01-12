@@ -2,7 +2,6 @@ import { Children, cloneElement, useEffect, useState, useRef, useCallback, memo 
 import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Header from '../includes/header';

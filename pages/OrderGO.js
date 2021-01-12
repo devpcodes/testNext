@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
+
+import { PageHead } from '../components/includes/PageHead';
+import { Info } from '../components/includes/goOrder/infoArea/Info';
+import { Header } from '../components/includes/goOrder/header/Header';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
 import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
+
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [title, setTitle] = useState('Order GO');
@@ -20,10 +25,12 @@ const OrderGO = () => {
     }, []);
     return (
         <>
-            <div>
-                <SolaceClientComponent subscribeTopic={topic} only={true} />
-                <QuoteContainer />
-            </div>
+            <PageHead title={'快速下單'} />
+            <Header />
+            <Info />
+            <SolaceClientComponent subscribeTopic={topic} only={true} />
+            <QuoteContainer />
+            <h1>{title}</h1>
             <style jsx>{``}</style>
         </>
     );

@@ -1,1 +1,1 @@
-export const SOLACE = 'SOLACE';
+export const SET_TYPE = 'SET_TYPE';

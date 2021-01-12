@@ -1,10 +1,8 @@
-export const add = () => async dispatch => {
-    await delay(1000);
-    dispatch({ type: 'add' });
-};
+import * as actionType from './actionType';
 
-const delay = interval => {
-    return new Promise(resolve => {
-        setTimeout(resolve, interval);
-    });
+export const setType = type => {
+    return {
+        type: actionType.SET_TYPE,
+        payload: type,
+    };
 };

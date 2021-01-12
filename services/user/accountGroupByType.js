@@ -13,3 +13,16 @@ export const accountGroupByType = objectArray => {
         { S: [], H: [], F: [] },
     );
 };
+
+export const getAccountText = accType => {
+    switch (accType) {
+        case 'S':
+            return '國內證券';
+        case 'H':
+            return '海外證券';
+        case 'F':
+            return '期權';
+        default:
+            return '其他';
+    }
+};
