@@ -154,7 +154,7 @@ const Layout = memo(({ children }) => {
             const arr = path.split('/');
             const redirectPath = '/' + arr[arr.length - 1];
             dispatch(setCurrentPath(redirectPath));
-            router.push('', `/SinoTrade_login`, { shallow: true });
+            router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
         }
     };
 
@@ -203,7 +203,7 @@ const Layout = memo(({ children }) => {
             if (currentPath === '' || currentPath === '/') {
                 router.push('/');
             } else {
-                router.push(currentPath.substr(1));
+                router.push(currentPath);
             }
         }, 200);
 
@@ -248,11 +248,11 @@ const Layout = memo(({ children }) => {
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
         getMenuPath.current = false;
-        setTimeout(() => {
-            if (prevPathname.current) {
-                router.push(prevPathname.current);
-            }
-        }, 500);
+        // setTimeout(() => {
+        //     if (prevPathname.current) {
+        //         router.push(prevPathname.current);
+        //     }
+        // }, 500);
         setTimeout(() => {
             CAHandler(getToken());
         }, 700);

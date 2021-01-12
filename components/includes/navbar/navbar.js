@@ -144,7 +144,7 @@ const Navbar = memo(() => {
                                             {lv1Item.title}
                                         </a>
                                     ) : (
-                                        <Link href={lv1Item.url}>
+                                        <Link href={'/' + lv1Item.url}>
                                             <a
                                                 className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
                                                 onClick={menuItemClickHandler}
