@@ -7,34 +7,64 @@ const FiveLatestOffer = () => {
         let data = [];
         if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
             if (solaceData[0].topic.indexOf('SNP') >= 0 || solaceData[0].topic.indexOf('QUT' >= 0)) {
-                //2345 我要的symbol，先寫死做測試
+                // TODO 2345 我要的symbol，先寫死做測試
                 let data = solaceData.filter(sItem => sItem.topic.indexOf('2345') >= 0);
                 if (data.length > 0) {
                     let volumeSum = 0;
                     data[0].data[volumeKey].forEach((item, index) => {
                         volumeSum += data[0].data[volumeKey][index];
                     });
-                    return data[0].data[priceKey].map((item, index) => {
-                        return (
-                            <div className="item" key={index}>
-                                <span className="hL"></span>
-                                <span className="volume">{data[0].data[volumeKey][index]}</span>
-                                <div className="box">
-                                    <div
-                                        className="box__content"
-                                        style={{
-                                            width: Math.round((data[0].data[volumeKey][index] * 100) / volumeSum) + '%',
-                                        }}
-                                    ></div>
+                    if (priceKey === 'BidPrice') {
+                        return data[0].data[priceKey].map((item, index) => {
+                            return (
+                                <div className="item" key={index}>
+                                    <span className="hL"></span>
+                                    <span className="volume">{data[0].data[volumeKey][index]}</span>
+                                    <div className="box">
+                                        <div
+                                            className="box__content"
+                                            style={{
+                                                width:
+                                                    Math.round((data[0].data[volumeKey][index] * 100) / volumeSum) +
+                                                    '%',
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <span className="price">{item}</span>
                                 </div>
-                                <span className="price">{item}</span>
-                            </div>
-                        );
-                    });
+                            );
+                        });
+                    } else {
+                        return data[0].data[priceKey].map((item, index) => {
+                            return (
+                                <div className="item" key={index}>
+                                    <span className="hL"></span>
+                                    <span className="volume">{item}</span>
+                                    <div className="box">
+                                        <div
+                                            className="box__content"
+                                            style={{
+                                                width:
+                                                    Math.round((data[0].data[volumeKey][index] * 100) / volumeSum) +
+                                                    '%',
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <span className="price">{data[0].data[volumeKey][index]}</span>
+                                </div>
+                            );
+                        });
+                    }
                 }
             }
         }
         if (Object.keys(solaceData).length == 0 || data.length === 0) {
+            return defaultRender(priceKey);
+        }
+    };
+
+    const defaultRender = priceKey => {
+        if (priceKey === 'BidPrice') {
             return [1, 2, 3, 4, 5].map((item, index) => (
                 <div className="item" key={index}>
                     <span className="hL"></span>
@@ -45,9 +75,19 @@ const FiveLatestOffer = () => {
                     <span className="price">--</span>
                 </div>
             ));
+        } else {
+            return [1, 2, 3, 4, 5].map((item, index) => (
+                <div className="item" key={index}>
+                    <span className="hL"></span>
+                    <span className="volume">--</span>
+                    <div className="box">
+                        <div className="box__content"></div>
+                    </div>
+                    <span className="price">0</span>
+                </div>
+            ));
         }
     };
-    console.log('solaceData.....', solaceData);
     return (
         <>
             <div className="five__container">
