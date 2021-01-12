@@ -6,11 +6,12 @@ import { solaceClient } from '../../services/solaceClient';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { setSolaceData } from '../../store/solace/action';
 
-const SolaceClientComponent = ({ subscribeTopic }) => {
+const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
     const topic = useRef([]);
     const solaceData = useRef([]);
+    const currentSubscribe = useRef([]);
     useEffect(() => {
         //依賴初始化需要時間，所以延遲100毫秒做連線
         setTimeout(() => {
@@ -22,7 +23,6 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                 });
             }
             subscribeHandler();
-
             return () => {
                 if (solace.current != null) {
                     dispatch(setSolaceData({}));
@@ -30,6 +30,9 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                 }
             };
         }, 100);
+        if (subscribeTopic.length !== 0) {
+            currentSubscribe.current = subscribeTopic;
+        }
     }, [subscribeTopic]);
 
     const solaceEventHandler = xhr => {
@@ -61,7 +64,27 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             }
         }
         // console.log('solaceData', solaceData.current)
+        filterSolaceData();
         dispatch(setSolaceData(solaceData.current));
+    };
+
+    // 避免遇到訂閱到其它不需訂閱的資料存在redux
+    const filterSolaceData = () => {
+        solaceData.current = solaceData.current.filter(item => {
+            if (checkTopic(item)) {
+                return true;
+            }
+        });
+    };
+
+    const checkTopic = item => {
+        return currentSubscribe.current.some(topic => {
+            let symbol = topic.split('/')[3];
+            let dataSymbol = item.topic.split('/')[3];
+            if (symbol == dataSymbol) {
+                return true;
+            }
+        });
     };
 
     const unsubscribeHandler = () => {

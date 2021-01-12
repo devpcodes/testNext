@@ -21,7 +21,7 @@ const OrderGO = () => {
     return (
         <>
             <div>
-                <SolaceClientComponent subscribeTopic={topic} />
+                <SolaceClientComponent subscribeTopic={topic} only={true} />
                 <QuoteContainer />
             </div>
             <style jsx>{``}</style>
