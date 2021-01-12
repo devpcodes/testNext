@@ -67,7 +67,13 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
                         <img src={logo} alt="永豐金證券" />
                     </a>
                     {!noCloseBtn ? (
-                        <a onClick={onClose} role="button">
+                        <a
+                            onClick={e => {
+                                e.preventDefault();
+                                onClose();
+                            }}
+                            role="button"
+                        >
                             <img className="close" src={close} alt="關閉" />
                         </a>
                     ) : null}

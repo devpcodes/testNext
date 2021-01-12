@@ -292,7 +292,7 @@ const Layout = memo(({ children }) => {
             if (path === '/') {
                 router.push(path, '/', { shallow: true });
             } else {
-                router.push(path, `${path.substr(1)}`, { shallow: true });
+                router.push(path, `${path}`, { shallow: true });
             }
         }
     };

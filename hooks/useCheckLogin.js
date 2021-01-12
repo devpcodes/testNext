@@ -35,7 +35,7 @@ export const useCheckLogin = () => {
         } else {
             setisLoginState(false);
             dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
-            router.push('', `/SinoTrade_login`, { shallow: true });
+            router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
         }
     }, [isLogin]);
 
