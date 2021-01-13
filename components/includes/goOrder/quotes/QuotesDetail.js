@@ -1,33 +1,91 @@
+import { useSelector } from 'react-redux';
+import { checkServer } from '../../../../services/checkServer';
+import { toDecimal, priceColor } from '../../../../services/numFormat';
 const QuotesDetail = () => {
+    const solaceData = useSelector(store => store.solace.solaceData);
+    const renderAmountSum = () => {
+        if (solaceData[0].data.AmountSum[0] != null) {
+            return Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100;
+        } else {
+            return '';
+        }
+    };
     return (
         <>
             <div className="quotes__container">
                 <div className="item__container--top">
                     <div className="item__box">
                         <span className="label">昨收</span>
-                        <button className="item">489.0</button>
+                        <button className="item">
+                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.Reference)) ||
+                                '--'}
+                        </button>
                     </div>
                     <div className="item__box">
                         <span className="label">開盤</span>
-                        <button className="item">493.0</button>
+                        <button
+                            className="item"
+                            style={{
+                                color:
+                                    !checkServer() &&
+                                    solaceData.length > 0 &&
+                                    priceColor(solaceData[0]?.data.Open, solaceData[0]?.data.Reference),
+                            }}
+                        >
+                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.Open)) || '--'}
+                        </button>
                     </div>
                     <div className="item__box">
                         <span className="label">金額(億)</span>
-                        <span className="item">579</span>
+                        <span className="item">
+                            {(!checkServer() && solaceData.length > 0 && renderAmountSum()) || '--'}
+                        </span>
                     </div>
                 </div>
                 <div>
                     <div className="item__box">
                         <span className="label">最高</span>
-                        <button className="item">493.5</button>
+                        <button
+                            className="item"
+                            style={{
+                                color:
+                                    !checkServer() &&
+                                    solaceData.length > 0 &&
+                                    priceColor(solaceData[0]?.data.High[0], solaceData[0]?.data.Reference),
+                            }}
+                        >
+                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.High[0])) ||
+                                '--'}
+                        </button>
                     </div>
                     <div className="item__box">
                         <span className="label">最低</span>
-                        <button className="item">480.0</button>
+                        <button
+                            className="item"
+                            style={{
+                                color:
+                                    !checkServer() &&
+                                    solaceData.length > 0 &&
+                                    priceColor(solaceData[0]?.data.Low[0], solaceData[0]?.data.Reference),
+                            }}
+                        >
+                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.Low[0])) || '--'}
+                        </button>
                     </div>
                     <div className="item__box">
                         <span className="label">均價</span>
-                        <button className="item">483.1</button>
+                        <button
+                            className="item"
+                            style={{
+                                color:
+                                    !checkServer() &&
+                                    solaceData.length > 0 &&
+                                    priceColor(solaceData[0]?.data.AvgPrice[0], solaceData[0]?.data.Reference),
+                            }}
+                        >
+                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.AvgPrice[0])) ||
+                                '--'}
+                        </button>
                     </div>
                 </div>
             </div>

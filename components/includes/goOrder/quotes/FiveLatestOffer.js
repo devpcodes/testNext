@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 // import { useEffect } from 'react';
 import { checkServer } from '../../../../services/checkServer';
+import { toDecimal, priceColor } from '../../../../services/numFormat';
 const FiveLatestOffer = () => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const renderBidPrice = (priceKey, volumeKey) => {
@@ -8,7 +9,8 @@ const FiveLatestOffer = () => {
         if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
             if (solaceData[0].topic.indexOf('SNP') >= 0 || solaceData[0].topic.indexOf('QUT' >= 0)) {
                 // TODO 2345 我要的symbol，先寫死做測試
-                let data = solaceData.filter(sItem => sItem.topic.indexOf('2345') >= 0);
+                // let data = solaceData.filter(sItem => sItem.topic.indexOf('2345') >= 0);
+                let data = solaceData;
                 if (data.length > 0) {
                     let volumeSum = 0;
                     data[0].data[volumeKey].forEach((item, index) => {
@@ -20,7 +22,12 @@ const FiveLatestOffer = () => {
                                 <div className="item" key={index}>
                                     <span className="hL"></span>
                                     <span className="volume">{data[0].data[volumeKey][index]}</span>
-                                    <div className="box">
+                                    <div
+                                        className="box"
+                                        style={{
+                                            width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
+                                        }}
+                                    >
                                         <div
                                             className="box__content"
                                             style={{
@@ -30,7 +37,15 @@ const FiveLatestOffer = () => {
                                             }}
                                         ></div>
                                     </div>
-                                    <span className="price">{item}</span>
+                                    <span
+                                        className="price"
+                                        style={{
+                                            color: priceColor(item, data[0].data.Reference),
+                                            width: toDecimal(item).length * 8 + 'px',
+                                        }}
+                                    >
+                                        {toDecimal(item)}
+                                    </span>
                                 </div>
                             );
                         });
@@ -39,8 +54,21 @@ const FiveLatestOffer = () => {
                             return (
                                 <div className="item" key={index}>
                                     <span className="hL"></span>
-                                    <span className="volume">{item}</span>
-                                    <div className="box">
+                                    <span
+                                        className="volume"
+                                        style={{
+                                            color: priceColor(item, data[0].data.Reference),
+                                            width: toDecimal(item).length * 8 + 'px',
+                                        }}
+                                    >
+                                        {toDecimal(item)}
+                                    </span>
+                                    <div
+                                        className="box"
+                                        style={{
+                                            width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
+                                        }}
+                                    >
                                         <div
                                             className="box__content"
                                             style={{
@@ -109,6 +137,47 @@ const FiveLatestOffer = () => {
                 <span className="blackLine"></span>
             </div>
             <style jsx>{`
+                /* .five__container {
+                    padding: 0 16px;
+                }
+                .blackLine {
+                    display: block;
+                    margin-top: 8px;
+                    height: 1px;
+                    background: #0d1623;
+                }
+                .blackLine:last-child {
+                    margin-top: 2px;
+                }
+                .buySell__header {
+                    height: 24px;
+                    margin: 0 0 3px;
+                    padding: 0 0 3px;
+                    background-color: #e6ebf5;
+                    font-size: 0;
+                }
+                .buySell__left {
+                    display: inline-block;
+                    width: calc(50% - 8px);
+                    font-size: 1.2rem;
+                    padding-left: 15px;
+                    margin-right: 8px;
+                }
+                .buySell__right {
+                    display: inline-block;
+                    width: calc(50% - 8px);
+                    font-size: 1.2rem;
+                    padding-right: 20px;
+                    margin-left: 8px;
+                }
+                .header__rText {
+                    float: right;
+                }
+                .header__text {
+                    line-height: 24px;
+                } */
+            `}</style>
+            <style jsx global>{`
                 .five__container {
                     padding: 0 16px;
                 }
@@ -148,19 +217,14 @@ const FiveLatestOffer = () => {
                 .header__text {
                     line-height: 24px;
                 }
-            `}</style>
-            <style jsx global>{`
+
                 .five__container .item {
                     font-size: 1.6rem;
                     font-weight: bold;
                     height: 22px;
                     clear: both;
                 }
-                @media (max-width: 350px) {
-                    .five__container .item {
-                        font-size: 1.4rem;
-                    }
-                }
+
                 .five__container .buy__box {
                     display: inline-block;
                     width: calc(50% - 8px);
@@ -184,25 +248,15 @@ const FiveLatestOffer = () => {
                     background-color: #22a16f;
                 }
                 .five__container .volume {
-                    width: 45px;
+                    width: 35px;
                     display: inline-block;
                 }
                 .five__container .price {
-                    width: 45px;
+                    width: 60px;
                     display: inline-block;
                     text-align: right;
                 }
-                @media (max-width: 350px) {
-                    .five__container .volume {
-                        width: 38px;
-                    }
-                    .five__container .price {
-                        width: 38px;
-                    }
-                    .five__container .sell__box .item {
-                        margin-bottom: 0;
-                    }
-                }
+
                 .five__container .buy__box .price {
                     float: right;
                 }
@@ -210,26 +264,41 @@ const FiveLatestOffer = () => {
                     width: calc(100% - 110px);
                     height: 8px;
                     display: inline-block;
-                    padding-right: 5px;
+                    padding-right: 0;
                     vertical-align: top;
                     margin-top: 8px;
+                    padding-right: 5px;
                 }
-                @media (max-width: 350px) {
-                    .five__container .box {
-                        width: calc(100% - 96px);
-                        margin-top: 6px;
-                    }
-                }
+
                 .five__container .box__content {
-                    width: 100%;
+                    width: 0%;
                     height: 8px;
                     background: #c43826;
                     vertical-align: middle;
                     float: right;
                 }
+                .five__container .sell__box .box__content {
+                    float: left;
+                }
+                .five__container .sell__box .volume {
+                    width: 60px;
+                }
+                .five__container .sell__box .price {
+                    width: 35px;
+                }
+                .five__container .sell__box .box {
+                    padding-left: 5px;
+                    padding-right: 0;
+                }
             `}</style>
         </>
     );
 };
+// @media (max-width: 350px) {
+//     .five__container .box {
+//         width: calc(100% - 96px);
+//         margin-top: 6px;
+//     }
+// }
 
 export default FiveLatestOffer;

@@ -44,15 +44,12 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
         } else {
             const checkLastKey = xhr.topic.split('/')[xhr.topic.split('/').length - 1];
             solaceData.current = solaceData.current.map(val => {
-                // console.log('===',xhr.topic, val.topic);
                 if (val != null) {
                     const checkValLastKey = val.topic.split('/')[val.topic.split('/').length - 1];
-                    console.log('update', checkLastKey, checkValLastKey, xhr.topic, val.topic);
                     if (val.topic.split('/')[3] === symbol && checkLastKey === checkValLastKey) {
                         update = true;
                         val.topic = xhr.topic;
-                        Object.assign(val.data, xhr.data);
-                        // console.log('newVal', val);
+                        updateData(xhr, val.data);
                         return val;
                     } else {
                         return val;
@@ -63,9 +60,56 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
                 solaceData.current.push(xhr);
             }
         }
-        // console.log('solaceData', solaceData.current)
         filterSolaceData();
         dispatch(setSolaceData(solaceData.current));
+    };
+
+    // 更新髒數據
+    const updateData = (realTimeData, prevData) => {
+        const nextData = realTimeData.data;
+        if (realTimeData.topic.indexOf('MKT') >= 0) {
+            console.log(nextData);
+            let High = prevData.High[0];
+            let Low = prevData.Low[0];
+            if (prevData.High[0] < nextData.Close[0]) {
+                // && !data.Simtrade
+                High = nextData.Close[0];
+            }
+            if (prevData.Low[0] > nextData.Close[0]) {
+                Low = nextData.Close[0];
+            }
+            const DiffPrice = parseFloat((nextData.Close[0] - prevData.Reference).toFixed(2));
+            const DiffRate = parseFloat(
+                (((nextData.Close[0] - prevData.Reference) / prevData.Reference) * 100).toFixed(2),
+            );
+            const AvgPrice = parseFloat((nextData.AmountSum[0] / nextData.VolSum[0] / 1000).toFixed(2));
+            let DiffType;
+            if (DiffPrice > 0) {
+                if (nextData.Close[0] < prevData.Upper) {
+                    DiffType = 2;
+                } else {
+                    DiffType = 1;
+                }
+            } else if (DiffPrice < 0) {
+                if (nextData.Close[0] > prevData.Lower) {
+                    DiffType = 4;
+                } else {
+                    DiffType = 5;
+                }
+            } else {
+                DiffType = 3;
+            }
+            // console.log(DiffPrice, DiffRate, AvgPrice, DiffType);
+            Object.assign(prevData, nextData);
+            prevData.High[0] = High;
+            prevData.Low[0] = Low;
+            prevData.DiffPrice[0] = DiffPrice;
+            prevData.DiffRate[0] = DiffRate;
+            prevData.AvgPrice[0] = AvgPrice;
+            prevData.DiffType[0] = DiffType;
+        } else {
+            Object.assign(prevData, nextData);
+        }
     };
 
     // 避免遇到訂閱到其它不需訂閱的資料存在redux
