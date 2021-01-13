@@ -208,7 +208,7 @@ const FiveLatestOffer = () => {
                     display: inline-block;
                     width: calc(50% - 8px);
                     font-size: 1.2rem;
-                    padding-right: 20px;
+                    padding-right: 15px;
                     margin-left: 8px;
                 }
                 .header__rText {
