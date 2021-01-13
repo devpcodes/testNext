@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { notification } from 'antd';
+// import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
 import loginImg from '../../../resources/images/pages/SinoTrade_login/img-login.jpg';
