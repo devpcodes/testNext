@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Modal } from 'antd';
 import { checkServer } from './checkServer';
 import { logout } from './user/logoutFetcher';
+import { getCurrentPath } from './getCurrentPath';
 
 const lykanDefaultVersion = 'v1';
 const a8DefaultVersion = 'v1';
@@ -13,15 +14,11 @@ const a8Auth = {
 const reLoginHandler = async () => {
     try {
         await logout();
-        // TODO: 若加上 trailing slash，這段邏輯要修改
-        const lastPath = window.location.pathname.split('/').pop();
-        const currentPath = `/${lastPath === 'newweb' ? '' : lastPath}`;
-
         Modal.error({
             content: '帳號逾時，請重新登入。',
             onOk() {
                 window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login?currentPath=${encodeURIComponent(
-                    currentPath,
+                    getCurrentPath(),
                 )}`;
             },
         });

@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentPath } from '../store/general/action';
 import { useRouter } from 'next/router';
 import { checkLogin } from '../services/components/layouts/checkLogin';
+import { getCurrentPath } from '../services/getCurrentPath';
+
 //udn
 export const useCheckLogin = () => {
     const dispatch = useDispatch();
@@ -13,10 +15,8 @@ export const useCheckLogin = () => {
     useEffect(() => {
         if (router.query.nav == 0) {
             if (!checkLogin()) {
-                const lastPath = window.location.pathname.split('/').pop();
-                const currentPath = `/${lastPath === 'newweb' ? '' : lastPath}`;
                 window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login?currentPath=${encodeURIComponent(
-                    currentPath,
+                    getCurrentPath(),
                 )}`;
             } else {
                 setisLoginState(true);
