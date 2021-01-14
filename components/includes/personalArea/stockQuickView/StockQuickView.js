@@ -1,11 +1,11 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 
 import { QuickViewTable } from './QuickViewTable';
 import CurrencyBox from '../CurrencyBox';
 
 // eslint-disable-next-line react/display-name
-const StockQuickView = React.memo(({ unreal, currencyData, tableInfo }) => {
+const StockQuickView = memo(({ unreal, currencyData, tableInfo }) => {
     //判斷無資料
     const noData = () => {
         if (currencyData.length === 0) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
+import { Children, cloneElement, useEffect, useState, useRef, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
@@ -299,10 +299,10 @@ const Layout = memo(({ children }) => {
 
     //傳錯誤訊息給errpage
     const renderChildren = function (errMsg) {
-        return React.Children.map(children, child => {
+        return Children.map(children, child => {
             // console.log('path', router.pathname.indexOf('errPage'), router.pathname);
             if (router.pathname.indexOf('errPage') != -1) {
-                return React.cloneElement(child, {
+                return cloneElement(child, {
                     errMsg,
                 });
             } else return child;
