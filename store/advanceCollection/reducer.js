@@ -1,8 +1,9 @@
-import { ACCOUNTS, SELECTED } from './actionType';
+import { ACCOUNTS, SELECTED, DISABLED } from './actionType';
 
 const initialState = {
     accounts: [],
     selected: '',
+    disabled: false,
 };
 
 export function accountsReducer(state = initialState, action) {
@@ -16,6 +17,11 @@ export function accountsReducer(state = initialState, action) {
             return {
                 ...state,
                 selected: action.payload,
+            };
+        case DISABLED:
+            return {
+                ...state,
+                disabled: action.payload,
             };
         default:
             return state;

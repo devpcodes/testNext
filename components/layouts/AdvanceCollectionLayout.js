@@ -8,7 +8,7 @@ import { accountGroupByType } from '../../services/user/accountGroupByType';
 import { PageHead } from '../includes/PageHead';
 import { getToken } from '../../services/user/accessToken';
 import { ReducerContext } from '../../pages/AdvanceCollection';
-import { ACCOUNTS } from '../../store/advanceCollection/actionType';
+import { ACCOUNTS, DISABLED } from '../../store/advanceCollection/actionType';
 const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [state, dispatch] = useContext(ReducerContext);
@@ -29,7 +29,8 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
         if (time.isBetween(beforeTime, afterTime)) {
             return true;
         } else {
-            alert(`非營業時間，請於${startTime}-${endTime}申請`);
+            alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
+            // dispatch({type: DISABLED, payload: true});
             return true;
         }
     };

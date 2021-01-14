@@ -1,4 +1,7 @@
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
+import MyTransition from '../myTransition';
+
+import { Progress } from 'antd';
 import { Tabs, Button, Input } from 'antd';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
@@ -12,7 +15,7 @@ const dataSource = [
         stockName: '台積電',
         invetory: 1000,
         alreadyNum: 1000,
-        applyNum: 1000,
+        applyNum: '',
         action: '申請',
     },
     {
@@ -21,7 +24,7 @@ const dataSource = [
         stockName: '台積電',
         invetory: 1000,
         alreadyNum: 1000,
-        applyNum: 1000,
+        applyNum: '',
         action: '申請',
     },
     {
@@ -30,7 +33,7 @@ const dataSource = [
         stockName: '台積電',
         invetory: 1000,
         alreadyNum: 1000,
-        applyNum: 500,
+        applyNum: '',
         action: '申請',
     },
 ];
@@ -55,7 +58,12 @@ const dataSource2 = [
 const ReservationStock = () => {
     const [state, dispatch] = useContext(ReducerContext);
     const [columnsData, setColumnsData] = useState([]);
+    const [percent, setPercent] = useState(0);
+    const [loading, setLoading] = useState(false);
+
     const stockColumns = useRef([]);
+    const nowPercent = useRef(0);
+    const timer = useRef(null);
     const stockColumns2 = useRef([]);
     const stockActiveTabKey = useRef('1');
     const init = useRef(false);
@@ -63,6 +71,8 @@ const ReservationStock = () => {
     const [defaultValue, setDefaultValue] = useState('');
 
     useEffect(() => {
+        console.log('state', state);
+
         selectedAccount.current = state.accountsReducer.selected;
         stockColumns.current = [
             {
@@ -71,7 +81,14 @@ const ReservationStock = () => {
                 key: 'action',
                 index: 6,
                 render: (text, record, index) => {
-                    return <Button onClick={clickHandler.bind(null, text, record)}>{text}</Button>;
+                    return (
+                        <Button
+                            disabled={state.accountsReducer.disabled}
+                            onClick={clickHandler.bind(null, text, record)}
+                        >
+                            {text}
+                        </Button>
+                    );
                 },
             },
             {
@@ -140,6 +157,12 @@ const ReservationStock = () => {
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             init.current = true;
         }
+        return () => {
+            if (timer.current != null) {
+                window.clearInterval(timer.current);
+                timer.current = null;
+            }
+        };
     }, [state.accountsReducer.selected]);
 
     const changleHandler = activeKey => {
@@ -156,11 +179,42 @@ const ReservationStock = () => {
 
     const clickHandler = useCallback((text, record) => {
         console.log('selected', selectedAccount.current, record);
+        setLoading(true);
+        percentHandler();
         console.log(text, record);
     }, []);
 
+    const percentHandler = () => {
+        //TODO 測試
+        setTimeout(() => {
+            submitSuccess();
+        }, 1000);
+
+        nowPercent.current = 0;
+        setPercent(nowPercent.current);
+        timer.current = window.setInterval(() => {
+            if (nowPercent.current >= 99 || nowPercent.current + 4 >= 99) {
+                window.clearInterval(timer.current);
+                timer.current = null;
+                return;
+            }
+            nowPercent.current += Math.floor(Math.random() * 5);
+            setPercent(nowPercent.current);
+        }, Math.floor(Math.random() * 50));
+    };
+
+    const submitSuccess = () => {
+        window.clearInterval(timer.current);
+        timer.current = null;
+        setPercent(100);
+        setTimeout(() => {
+            setLoading(false);
+        }, 50);
+    };
+
     const inpChangeHandler = useCallback((record, e) => {
         const { value } = e.target;
+        record.applyNum = Number(value);
         console.log('record', value, record);
     }, []);
 
@@ -196,6 +250,35 @@ const ReservationStock = () => {
                     />
                 </TabPane>
             </Tabs>
+            <MyTransition isVisible={loading} classNames={'opacity'}>
+                <>
+                    <Progress
+                        type="circle"
+                        percent={percent}
+                        width={100}
+                        showInfo={true}
+                        // format={(percent)=>{
+                        //     if(percent < 100){
+                        //         return(
+                        //             <>
+                        //                 <div style={{fontSize: '1.5rem'}}>傳送中...</div>
+                        //                 <span style={{fontSize: '1.5rem'}}>{`${percent}%`}</span>
+                        //             </>
+                        //         )
+                        //     }else{
+                        //         return(
+                        //             <>
+                        //                 <div style={{fontSize: '1.5rem', color: '#73ab58'}}>傳送完成</div>
+                        //                 <span style={{fontSize: '1.5rem', color: '#73ab58'}}>{`${percent}%`}</span>
+                        //             </>
+                        //         )
+                        //     }
+                        // }}
+                    />
+                    <div className="page__mask"></div>
+                </>
+            </MyTransition>
+
             <style jsx>{`
                 .reservation__container {
                     margin: 20px auto 0 auto;
@@ -212,6 +295,16 @@ const ReservationStock = () => {
                     letter-spacing: 6px;
                     margin-bottom: 0;
                 }
+                .page__mask {
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 400;
+                    height: 100%;
+                    background-color: rgb(249 249 249 / 70%);
+                }
                 @media (max-width: 580px) {
                     .title {
                         font-size: 26px;
@@ -219,6 +312,21 @@ const ReservationStock = () => {
                 }
             `}</style>
             <style jsx global>{`
+                .reservation__container .ant-progress.ant-progress-circle {
+                    position: fixed;
+                    z-index: 999;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+                .reservation__container
+                    .ant-progress.ant-progress-circle.ant-progress-status-success.ant-progress-show-info.ant-progress-default.opacity-appear-done.opacity-enter-done {
+                    position: fixed;
+                    z-index: 999;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
                 .reservation__container .ant-btn {
                     font-size: 16px;
                     border: none;
@@ -236,6 +344,14 @@ const ReservationStock = () => {
                 }
                 .reservation__container .ant-btn:not([disabled]):hover {
                     background: #bb1428;
+                }
+                .reservation__container .ant-btn:disabled {
+                    background: #b7b7b7;
+                    color: #dadada;
+                }
+                .reservation__container .ant-btn:disabled:hover {
+                    background: #b7b7b7;
+                    color: #dadada;
                 }
                 .reservation__container .ant-input {
                     text-align: center;
