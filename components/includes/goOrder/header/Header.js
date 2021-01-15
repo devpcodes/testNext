@@ -1,5 +1,4 @@
-// import PropTypes from 'prop-types';
-import { useState, useEffect, memo } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useUser } from '../../../../hooks/useUser';
@@ -12,10 +11,19 @@ import { setCurrentAccount } from '../../../../store/user/action';
 import { accountGroupByType, getAccountText } from '../../../../services/user/accountGroupByType';
 
 import grid from '../../../../resources/images/components/goOrder/grid-grid-big.svg';
+import arrow from '../../../../resources/images/components/goOrder/arrow-caret-down.svg';
 import theme from '../../../../resources/styles/theme';
 
 import { Select } from 'antd';
 const { Option } = Select;
+
+const DropDownArrow = () => {
+    return (
+        <>
+            <img src={arrow} alt="arrow"></img>
+        </>
+    );
+};
 
 export const Header = () => {
     // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
@@ -30,21 +38,12 @@ export const Header = () => {
     const type = useSelector(store => store.goOrder.type);
     const userSettings = useSelector(store => store.user.userSettings);
 
-    // console.log(`==========accountssssssssssssss:`, accounts);
-
     const groupedAccount = accountGroupByType(accounts);
     const groupedTypes = Object.keys(groupedAccount);
     const accountList = groupedAccount[type];
 
-    // console.log(`============groupedAccount:`, groupedAccount);
-    // console.log(`============groupedAccountTypes:`, groupedTypes);
-    // console.log(`============type:`, type);
-    // console.log(`============accountList:`, accountList);
-
     useEffect(() => {
-        // console.log(`============groupedAccount:`, groupedAccount);
-        // console.log(`============hasMounted:`, hasMounted);
-
+        // TODO: 無帳號處理
         if (hasMounted) {
             let currentAccount;
             if (type === 'S') {
@@ -86,6 +85,8 @@ export const Header = () => {
                         style={{ width: 111 }}
                         onChange={handleTypeChange}
                         getPopupContainer={trigger => trigger.parentElement}
+                        bordered={false}
+                        suffixIcon={<DropDownArrow />}
                     >
                         {groupedTypes.map(accType => (
                             <Option key={accType}>{getAccountText(accType)}</Option>
@@ -98,6 +99,9 @@ export const Header = () => {
                         value={`${currentAccount.broker_id || ''}-${currentAccount.account || ''}`}
                         onChange={onAccountChange}
                         getPopupContainer={trigger => trigger.parentElement}
+                        bordered={false}
+                        suffixIcon={<DropDownArrow />}
+                        notFoundContent={<div></div>}
                     >
                         {accountList.map(account => (
                             <Option
@@ -141,6 +145,17 @@ export const Header = () => {
                     position: absolute;
                     top: 8px;
                     right: 10px;
+                }
+            `}</style>
+            <style jsx global>{`
+                .dropdown__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    background-color: inherit;
+                    color: #ffffff;
+                    padding: 0 16px;
+                }
+                .dropdown__container .ant-select-arrow {
+                    top: 28%;
+                    right: 11px;
                 }
             `}</style>
         </div>
