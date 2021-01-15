@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor } from '../../../../services/numFormat';
-const QuotesDetail = () => {
+const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const renderAmountSum = () => {
         if (solaceData[0]?.data?.AmountSum?.length > 0 && solaceData[0].data.AmountSum[0] != null) {
@@ -17,7 +17,10 @@ const QuotesDetail = () => {
                     <div className="item__box">
                         <span className="label">昨收</span>
                         <button className="item">
-                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data?.Reference)) ||
+                            {(!checkServer() &&
+                                !stopRender &&
+                                solaceData.length > 0 &&
+                                toDecimal(solaceData[0]?.data?.Reference)) ||
                                 '--'}
                         </button>
                     </div>
@@ -28,17 +31,22 @@ const QuotesDetail = () => {
                             style={{
                                 color:
                                     !checkServer() &&
+                                    !stopRender &&
                                     solaceData.length > 0 &&
                                     priceColor(solaceData[0]?.data?.Open, solaceData[0]?.data?.Reference),
                             }}
                         >
-                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data?.Open)) || '--'}
+                            {(!checkServer() &&
+                                !stopRender &&
+                                solaceData.length > 0 &&
+                                toDecimal(solaceData[0]?.data?.Open)) ||
+                                '--'}
                         </button>
                     </div>
                     <div className="item__box">
                         <span className="label">金額(億)</span>
                         <span className="item">
-                            {(!checkServer() && solaceData.length > 0 && renderAmountSum()) || '--'}
+                            {(!checkServer() && !stopRender && solaceData.length > 0 && renderAmountSum()) || '--'}
                         </span>
                     </div>
                 </div>
@@ -51,11 +59,13 @@ const QuotesDetail = () => {
                                 color:
                                     !checkServer() &&
                                     solaceData.length > 0 &&
+                                    !stopRender &&
                                     solaceData[0]?.data?.High?.length > 0 &&
                                     priceColor(solaceData[0]?.data?.High[0], solaceData[0]?.data?.Reference),
                             }}
                         >
                             {(!checkServer() &&
+                                !stopRender &&
                                 solaceData.length > 0 &&
                                 solaceData[0]?.data?.High?.length > 0 &&
                                 toDecimal(solaceData[0]?.data?.High[0])) ||
@@ -69,12 +79,14 @@ const QuotesDetail = () => {
                             style={{
                                 color:
                                     !checkServer() &&
+                                    !stopRender &&
                                     solaceData.length > 0 &&
                                     solaceData[0]?.data?.Low?.length > 0 &&
                                     priceColor(solaceData[0]?.data?.Low[0], solaceData[0]?.data?.Reference),
                             }}
                         >
                             {(!checkServer() &&
+                                !stopRender &&
                                 solaceData.length > 0 &&
                                 solaceData[0]?.data?.Low?.length > 0 &&
                                 toDecimal(solaceData[0]?.data?.Low[0])) ||
@@ -88,12 +100,14 @@ const QuotesDetail = () => {
                             style={{
                                 color:
                                     !checkServer() &&
+                                    !stopRender &&
                                     solaceData.length > 0 &&
                                     solaceData[0]?.data?.AvgPrice?.length > 0 &&
                                     priceColor(solaceData[0]?.data?.AvgPrice[0], solaceData[0]?.data?.Reference),
                             }}
                         >
                             {(!checkServer() &&
+                                !stopRender &&
                                 solaceData.length > 0 &&
                                 solaceData[0]?.data?.AvgPrice?.length > 0 &&
                                 toDecimal(solaceData[0]?.data?.AvgPrice[0])) ||

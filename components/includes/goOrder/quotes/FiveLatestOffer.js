@@ -2,11 +2,11 @@ import { useSelector } from 'react-redux';
 // import { useEffect } from 'react';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor } from '../../../../services/numFormat';
-const FiveLatestOffer = () => {
+const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const renderBidPrice = (priceKey, volumeKey) => {
         let data = [];
-        if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
+        if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
             if (solaceData[0].topic.indexOf('SNP') >= 0 || solaceData[0].topic.indexOf('QUT' >= 0)) {
                 // TODO 2345 我要的symbol，先寫死做測試
                 // let data = solaceData.filter(sItem => sItem.topic.indexOf('2345') >= 0);
@@ -86,7 +86,7 @@ const FiveLatestOffer = () => {
                 }
             }
         }
-        if (Object.keys(solaceData).length == 0 || data.length === 0) {
+        if (Object.keys(solaceData).length == 0 || data.length === 0 || stopRender) {
             return defaultRender(priceKey);
         }
     };

@@ -6,3 +6,10 @@ export const setType = type => {
         payload: type,
     };
 };
+
+export const setLot = type => {
+    return {
+        type: actionType.SET_LOT,
+        payload: type,
+    };
+};

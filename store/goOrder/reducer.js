@@ -2,6 +2,7 @@ import * as actionType from './actionType';
 
 const initialState = {
     type: 'S',
+    lot: 'Board',
 };
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 type: action.payload,
+            };
+        case actionType.SET_LOT:
+            return {
+                ...state,
+                lot: action.payload,
             };
         default:
             return state;
