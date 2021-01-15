@@ -4,7 +4,7 @@ import { toDecimal, priceColor } from '../../../../services/numFormat';
 const QuotesDetail = () => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const renderAmountSum = () => {
-        if (solaceData[0].data.AmountSum[0] != null) {
+        if (solaceData[0].data.AmountSum[0] != null && solaceData[0].data.AmountSum.length > 0) {
             return Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100;
         } else {
             return '';
@@ -51,10 +51,14 @@ const QuotesDetail = () => {
                                 color:
                                     !checkServer() &&
                                     solaceData.length > 0 &&
-                                    priceColor(solaceData[0]?.data.High[0], solaceData[0]?.data.Reference),
+                                    solaceData[0]?.data.High.length > 0 &&
+                                    priceColor(solaceData[0]?.data.High[0], solaceData[0]?.data?.Reference),
                             }}
                         >
-                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.High[0])) ||
+                            {(!checkServer() &&
+                                solaceData.length > 0 &&
+                                solaceData[0]?.data.High.length > 0 &&
+                                toDecimal(solaceData[0]?.data.High[0])) ||
                                 '--'}
                         </button>
                     </div>
@@ -66,10 +70,15 @@ const QuotesDetail = () => {
                                 color:
                                     !checkServer() &&
                                     solaceData.length > 0 &&
-                                    priceColor(solaceData[0]?.data.Low[0], solaceData[0]?.data.Reference),
+                                    solaceData[0]?.data.Low.length > 0 &&
+                                    priceColor(solaceData[0]?.data?.Low[0], solaceData[0]?.data?.Reference),
                             }}
                         >
-                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.Low[0])) || '--'}
+                            {(!checkServer() &&
+                                solaceData.length > 0 &&
+                                solaceData[0]?.data.Low.length > 0 &&
+                                toDecimal(solaceData[0]?.data.Low[0])) ||
+                                '--'}
                         </button>
                     </div>
                     <div className="item__box">
@@ -80,10 +89,14 @@ const QuotesDetail = () => {
                                 color:
                                     !checkServer() &&
                                     solaceData.length > 0 &&
-                                    priceColor(solaceData[0]?.data.AvgPrice[0], solaceData[0]?.data.Reference),
+                                    solaceData[0]?.data.AvgPrice.length > 0 &&
+                                    priceColor(solaceData[0]?.data?.AvgPrice[0], solaceData[0]?.data?.Reference),
                             }}
                         >
-                            {(!checkServer() && solaceData.length > 0 && toDecimal(solaceData[0]?.data.AvgPrice[0])) ||
+                            {(!checkServer() &&
+                                solaceData.length > 0 &&
+                                solaceData[0]?.data.AvgPrice.length > 0 &&
+                                toDecimal(solaceData[0]?.data?.AvgPrice[0])) ||
                                 '--'}
                         </button>
                     </div>
