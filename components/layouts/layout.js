@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, memo } from 'react';
+import { Children, cloneElement, useEffect, useState, useRef, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import { useRouter } from 'next/router';
@@ -154,7 +154,7 @@ const Layout = memo(({ children }) => {
             const arr = path.split('/');
             const redirectPath = '/' + arr[arr.length - 1];
             dispatch(setCurrentPath(redirectPath));
-            router.push('', `/SinoTrade_login`, { shallow: true });
+            router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
         }
     };
 
@@ -203,7 +203,7 @@ const Layout = memo(({ children }) => {
             if (currentPath === '' || currentPath === '/') {
                 router.push('/');
             } else {
-                router.push(currentPath.substr(1));
+                router.push(currentPath);
             }
         }, 200);
 
@@ -248,11 +248,11 @@ const Layout = memo(({ children }) => {
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
         getMenuPath.current = false;
-        setTimeout(() => {
-            if (prevPathname.current) {
-                router.push(prevPathname.current);
-            }
-        }, 500);
+        // setTimeout(() => {
+        //     if (prevPathname.current) {
+        //         router.push(prevPathname.current);
+        //     }
+        // }, 500);
         setTimeout(() => {
             CAHandler(getToken());
         }, 700);
@@ -292,17 +292,17 @@ const Layout = memo(({ children }) => {
             if (path === '/') {
                 router.push(path, '/', { shallow: true });
             } else {
-                router.push(path, `${path.substr(1)}`, { shallow: true });
+                router.push(path, `${path}`, { shallow: true });
             }
         }
     };
 
     //傳錯誤訊息給errpage
     const renderChildren = function (errMsg) {
-        return React.Children.map(children, child => {
+        return Children.map(children, child => {
             // console.log('path', router.pathname.indexOf('errPage'), router.pathname);
             if (router.pathname.indexOf('errPage') != -1) {
-                return React.cloneElement(child, {
+                return cloneElement(child, {
                     errMsg,
                 });
             } else return child;

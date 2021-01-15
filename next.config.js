@@ -7,6 +7,7 @@ if (isProd) {
         withOptimizedImages({
             basePath: '/newweb',
             assetPrefix: '/newweb',
+            trailingSlash: true,
             pwa: {
                 disable: process.env.NODE_ENV === 'development',
                 dest: 'public',
@@ -22,6 +23,7 @@ if (isProd) {
     module.exports = withOptimizedImages({
         basePath: '/newweb',
         assetPrefix: '/newweb',
+        trailingSlash: true,
         webpack: (config, { isServer, buildId, dev }) => {
             return config;
         },

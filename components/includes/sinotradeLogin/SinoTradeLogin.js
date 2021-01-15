@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { notification } from 'antd';
+// import { notification } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
 import loginImg from '../../../resources/images/pages/SinoTrade_login/img-login.jpg';
@@ -67,7 +67,13 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
                         <img src={logo} alt="永豐金證券" />
                     </a>
                     {!noCloseBtn ? (
-                        <a onClick={onClose} role="button">
+                        <a
+                            onClick={e => {
+                                e.preventDefault();
+                                onClose();
+                            }}
+                            role="button"
+                        >
                             <img className="close" src={close} alt="關閉" />
                         </a>
                     ) : null}

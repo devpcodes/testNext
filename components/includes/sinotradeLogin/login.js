@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'; //react-google-recaptcha-v3
+import { useRef, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';

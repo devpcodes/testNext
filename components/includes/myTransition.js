@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 const MyTransition = ({ isVisible, children, classNames }) => {
     // const isMobile = useSelector(store => store.layout.isMobile);

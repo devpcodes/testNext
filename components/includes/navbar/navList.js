@@ -47,7 +47,7 @@ const NavList = memo(({ id, lv2Data, twoColumnPX, toggleList }) => {
         if (id === redirectId.current) {
             if (isLogin && redirecting.current) {
                 console.log('goRedirect', id, redirectUrl.current);
-                router.push(redirectUrl.current);
+                router.push('/' + redirectUrl.current);
                 stopTrustingHandler();
                 dispatch(setMenuOpen(false));
             }
@@ -167,7 +167,7 @@ const NavList = memo(({ id, lv2Data, twoColumnPX, toggleList }) => {
                             </a>
                         )}
                         {lv3Item.url && !lv3Item.isOpen && !lv3Item.isTrust && !lv3Item.isFullUrl && (
-                            <Link href={lv3Item.url}>
+                            <Link href={'/' + lv3Item.url}>
                                 <a
                                     onClick={e => linkSetCurrentPath(e, lv3Item.needLogin, lv3Item.url)}
                                     target={lv3Item.isBlank ? '_blank' : ''}
