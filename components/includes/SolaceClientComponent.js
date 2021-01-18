@@ -88,8 +88,8 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
         updateSNPData(realTimeData);
         if (realTimeData.topic.indexOf('MKT') >= 0) {
             console.log(nextData);
-            let High = prevData.High[0];
-            let Low = prevData.Low[0];
+            let High = prevData?.High[0] || 0;
+            let Low = prevData?.Low[0] || 0;
             if (prevData.High[0] < nextData.Close[0]) {
                 // && !data.Simtrade
                 High = nextData.Close[0];
@@ -134,6 +134,20 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
             prevData.AvgPrice[0] = AvgPrice;
             prevData.DiffType[0] = DiffType;
         } else {
+            if (nextData.BidVolume != null) {
+                if (nextData.BidVolume[0] != 0) {
+                    if (Number(nextData.BidPrice[0]) === 0 && parseInt(nextData.BidPrice[0]) == 0) {
+                        nextData.BidPrice[0] = '市價';
+                    }
+                }
+            }
+            if (nextData.AskVolume != null) {
+                if (nextData.AskVolume[0] != 0) {
+                    if (Number(nextData.AskPrice[0]) === 0 && parseInt(nextData.AskPrice[0]) == 0) {
+                        nextData.AskPrice[0] = '市價';
+                    }
+                }
+            }
             Object.assign(prevData, nextData);
         }
     };
