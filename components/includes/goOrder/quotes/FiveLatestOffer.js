@@ -13,9 +13,12 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                 let data = solaceData;
                 if (data.length > 0) {
                     let volumeSum = 0;
-                    data[0].data[volumeKey].forEach((item, index) => {
-                        volumeSum += data[0].data[volumeKey][index];
-                    });
+                    if (data[0].data[volumeKey].length > 0) {
+                        data[0].data[volumeKey].forEach((item, index) => {
+                            volumeSum += data[0].data[volumeKey][index];
+                        });
+                    }
+
                     if (priceKey === 'BidPrice') {
                         return data[0].data[priceKey].map((item, index) => {
                             return (

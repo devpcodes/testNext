@@ -40,6 +40,7 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
         let symbol = xhr.topic.split('/')[3];
         let update = false;
         if (solaceData.current.length === 0) {
+            updateSNPData(xhr);
             solaceData.current.push(xhr);
         } else {
             const checkLastKey = xhr.topic.split('/')[xhr.topic.split('/').length - 1];
@@ -64,9 +65,27 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
         dispatch(setSolaceData(solaceData.current));
     };
 
+    const updateSNPData = xhr => {
+        if (xhr.topic.indexOf('SNP') >= 0) {
+            if (xhr.data.Open == 0) {
+                xhr.data.Open = '--';
+            }
+            if (xhr.data.High[0] == 0) {
+                xhr.data.High[0] = '--';
+            }
+            if (xhr.data.Low[0] == 0) {
+                xhr.data.Low[0] = '--';
+            }
+            if (xhr.data.AvgPrice[0] == 0) {
+                xhr.data.AvgPrice[0] = '--';
+            }
+        }
+    };
+
     // 更新髒數據
     const updateData = (realTimeData, prevData) => {
         const nextData = realTimeData.data;
+        updateSNPData(realTimeData);
         if (realTimeData.topic.indexOf('MKT') >= 0) {
             console.log(nextData);
             let High = prevData.High[0];
@@ -78,6 +97,13 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
             if (prevData.Low[0] > nextData.Close[0]) {
                 Low = nextData.Close[0];
             }
+            if (prevData.High[0] == 0 || prevData.High[0] == '--') {
+                prevData.High[0] = nextData.Close[0];
+            }
+            if (prevData.Low[0] == 0 || prevData.Low[0] == '--') {
+                prevData.Low[0] = nextData.Close[0];
+            }
+
             const DiffPrice = parseFloat((nextData.Close[0] - prevData.Reference).toFixed(2));
             const DiffRate = parseFloat(
                 (((nextData.Close[0] - prevData.Reference) / prevData.Reference) * 100).toFixed(2),
