@@ -5,12 +5,13 @@ const LeadingBtn = ({ containerHeight }) => {
     const [shadow, setShadow] = useState('0px -7px 6px -3px #C7C7C7');
     const winSize = useWindowSize();
     useEffect(() => {
+        console.log(winSize.height, containerHeight + 110);
         if (winSize.height < containerHeight + 110) {
             setShadow('0px -7px 6px -3px #C7C7C7');
         } else {
             setShadow('none');
         }
-    }, [winSize]);
+    }, [winSize, containerHeight]);
     return (
         <div className="container">
             <button className="btn buy">買進</button>

@@ -20,14 +20,16 @@ const OrderGO = () => {
         setTimeout(() => {
             setTopic(['MKT/*/*/2345', 'QUT/*/*/2345', 'SNP/*/*/2345']);
         }, 4000);
-
         window.addEventListener('resize', handleResize);
-        let elHeight = document.getElementById('container').clientHeight;
-        setContainerHeight(elHeight);
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+    useEffect(() => {
+        console.log('loaded...');
+        let elHeight = document.getElementById('container').clientHeight;
+        setContainerHeight(elHeight);
+    });
     const handleResize = () => {
         let elHeight = document.getElementById('container').clientHeight;
         setContainerHeight(elHeight);
