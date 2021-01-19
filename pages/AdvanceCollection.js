@@ -1,4 +1,4 @@
-import React, { useReducer, createContext } from 'react';
+import { useReducer, createContext } from 'react';
 import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayout';
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
 import { reducers } from '../store/advanceCollection/combineReducer';
@@ -7,9 +7,9 @@ export const ReducerContext = createContext();
 
 const AdvanceCollection = function () {
     return (
-        <>
+        <div>
             <ReservationStock />
-        </>
+        </div>
     );
 };
 

@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 // import TagManager from 'react-gtm-module';
 import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
-import React from 'react';
 import { initGA, logPageView } from '../services/analytics';
 
 const tagManagerArgs = {
