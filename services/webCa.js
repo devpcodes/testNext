@@ -1,5 +1,6 @@
 import jwt_decode from 'jwt-decode';
 import { Modal, notification } from 'antd';
+import { getToken } from './user/accessToken';
 
 export const sign = function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
@@ -20,7 +21,7 @@ export const sign = function (userInfo, isNeedSign = true, token) {
         console.log('CA_Component:', ca);
         var memberNo;
         if (typeof token !== 'undefined') memberNo = token;
-        else memberNo = localStorage.getItem('token');
+        else memberNo = getToken();
 
         // 簽章
         var setting = {
@@ -65,7 +66,7 @@ export const sign = function (userInfo, isNeedSign = true, token) {
     }
 };
 
-const checkCA = function (ca_content) {
+export const checkSignCA = function (ca_content) {
     console.log('CA_CONTENT', ca_content);
     if (ca_content.certSN && ca_content.plainText && ca_content.signature) {
         return true;
