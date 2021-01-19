@@ -3,9 +3,13 @@ import MyTransition from '../myTransition';
 
 import { Progress } from 'antd';
 import { Tabs, Button, Input } from 'antd';
+import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
+import { CAHandler, sign } from '../../../services/webCa';
+import CaHead from '../CaHead';
+import { getToken } from '../../../services/user/accessToken';
 
 const { TabPane } = Tabs;
 const dataSource = [
@@ -182,7 +186,41 @@ const ReservationStock = () => {
         setLoading(true);
         percentHandler();
         console.log(text, record);
+        // console.log(jwt_decode(getToken()));
+
+        //驗憑證
+        let data = getAccountSDetail(getToken());
+        console.log('token', data);
+
+        let caContent = sign(
+            {
+                idno: data.idno,
+                broker_id: data.broker_id,
+                account: data.account,
+            },
+            true,
+            getToken(),
+        );
+        checkCA(caContent);
     }, []);
+
+    //取得選擇帳號的詳細資料，驗憑證
+    const getAccountSDetail = token => {
+        let data = jwt_decode(token);
+        data = data.acts_detail.filter(item => {
+            if (item.account === selectedAccount.current.account) {
+                return true;
+            }
+        });
+        return data[0] || {};
+    };
+
+    const checkCA = caContent => {
+        if (caContent.certSN && caContent.plainText && caContent.signature) {
+            return true;
+        }
+        return false;
+    };
 
     const percentHandler = () => {
         //TODO 測試
@@ -221,6 +259,7 @@ const ReservationStock = () => {
     console.log('render PAGE=============');
     return (
         <div className="reservation__container">
+            <CaHead />
             <h1 className="title">預收股票</h1>
             <Tabs
                 defaultActiveKey={stockActiveTabKey.current}

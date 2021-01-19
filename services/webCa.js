@@ -4,7 +4,6 @@ import { Modal, notification } from 'antd';
 export const sign = function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         var signDict = {};
-        console.log('CACA', CA_Component);
         let DM;
         if (process.env.NEXT_PUBLIC_DM === 'false') {
             DM = false;
@@ -18,10 +17,10 @@ export const sign = function (userInfo, isNeedSign = true, token) {
             getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
             DM: DM,
         });
-        console.log('CACA', ca);
+        console.log('CA_Component:', ca);
         var memberNo;
         if (typeof token !== 'undefined') memberNo = token;
-        else memberNo = sessionStorage.getItem('token');
+        else memberNo = localStorage.getItem('token');
 
         // 簽章
         var setting = {
@@ -44,10 +43,10 @@ export const sign = function (userInfo, isNeedSign = true, token) {
                 },
             });
         }
-        console.log('setting', setting);
+        console.log('setting:', setting);
 
         ca.certSign(setting);
-        console.log('signature', ca.getSignature());
+        console.log('getSignature:', ca.getSignature());
         if (ca.getSignature()) {
             signDict.signature = ca.getSignature();
             signDict.plainText = ca.getSignCode();
