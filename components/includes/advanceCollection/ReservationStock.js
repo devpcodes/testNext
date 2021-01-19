@@ -7,7 +7,7 @@ import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
-import { CAHandler, sign } from '../../../services/webCa';
+import { CAHandler, sign, checkSignCA } from '../../../services/webCa';
 import CaHead from '../CaHead';
 import { getToken } from '../../../services/user/accessToken';
 
@@ -201,7 +201,9 @@ const ReservationStock = () => {
             true,
             getToken(),
         );
-        checkCA(caContent);
+        if (checkSignCA(caContent)) {
+            alert('submit data');
+        }
     }, []);
 
     //取得選擇帳號的詳細資料，驗憑證
@@ -213,13 +215,6 @@ const ReservationStock = () => {
             }
         });
         return data[0] || {};
-    };
-
-    const checkCA = caContent => {
-        if (caContent.certSN && caContent.plainText && caContent.signature) {
-            return true;
-        }
-        return false;
     };
 
     const percentHandler = () => {
