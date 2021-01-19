@@ -1,6 +1,6 @@
 const withOptimizedImages = require('next-optimized-images');
 const withPWA = require('next-pwa');
-
+const webpack = require('webpack');
 const isProd = process.env.NODE_ENV === 'production';
 if (isProd) {
     module.exports = withPWA(
@@ -15,6 +15,12 @@ if (isProd) {
                 subdomainPrefix: '/newweb',
             },
             webpack: (config, { isServer, buildId, dev }) => {
+                config.plugins.push(
+                    new webpack.ProvidePlugin({
+                        React: 'react',
+                    }),
+                );
+
                 return config;
             },
         }),
