@@ -20,6 +20,9 @@ export function toDecimal(x, n = 2) {
 // 改變價格的紅綠色
 export function priceColor(price, reference) {
     let color = '';
+    if (Number(price) == 0) {
+        return '#0d1623';
+    }
     if (isNaN(Number(price)) || isNaN(Number(reference))) {
         return '#0d1623';
     }
