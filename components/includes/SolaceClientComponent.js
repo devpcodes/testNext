@@ -1,39 +1,47 @@
-import Head from 'next/head';
 import { memo, useRef } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { solaceClient } from '../../services/solaceClient';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { setSolaceData } from '../../store/solace/action';
+import { loadScriptByURL } from '../../services/loadScriptByURL';
 
-const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
+const SolaceClientComponent = ({ subscribeTopic }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
     const topic = useRef([]);
     const solaceData = useRef([]);
     const currentSubscribe = useRef([]);
+    const [solaceLoaded, setSolaceLoaded] = useState(false);
     useEffect(() => {
-        //依賴初始化需要時間，所以延遲100毫秒做連線
-        setTimeout(() => {
-            if (solace.current == null) {
-                solace.current = solaceClient('', getCookie('user_id'));
-                solace.current.connect();
-                solace.current.setMessageEvent('ST', function (xhr) {
-                    solaceEventHandler(xhr);
-                });
+        loadScriptByURL('solace', `${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`, solaceLoadedHandler);
+        return () => {
+            if (solace.current != null) {
+                dispatch(setSolaceData({}));
+                solace.current.disconnect();
             }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (solaceLoaded) {
             subscribeHandler();
-            return () => {
-                if (solace.current != null) {
-                    dispatch(setSolaceData({}));
-                    solace.current.disconnect();
-                }
-            };
-        }, 100);
+        }
         if (subscribeTopic.length !== 0) {
             currentSubscribe.current = subscribeTopic;
         }
-    }, [subscribeTopic]);
+    }, [subscribeTopic, solaceLoaded]);
+
+    const solaceLoadedHandler = () => {
+        if (solace.current == null) {
+            solace.current = solaceClient('', getCookie('user_id'));
+            solace.current.connect();
+            solace.current.setMessageEvent('ST', function (xhr) {
+                solaceEventHandler(xhr);
+            });
+            setSolaceLoaded(true);
+        }
+    };
 
     const solaceEventHandler = xhr => {
         //symbol 可能之後有少數抓不到symbol情況 得調整
@@ -61,7 +69,7 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
                 solaceData.current.push(xhr);
             }
         }
-        filterSolaceData();
+        solaceData.current = filterSolaceData(solaceData.current);
         dispatch(setSolaceData(solaceData.current));
     };
 
@@ -82,10 +90,8 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
         }
     };
 
-    // 更新髒數據
-    const updateData = (realTimeData, prevData) => {
+    const updateMKTData = (realTimeData, prevData) => {
         const nextData = realTimeData.data;
-        updateSNPData(realTimeData);
         if (realTimeData.topic.indexOf('MKT') >= 0) {
             console.log(nextData);
             let High = prevData?.High[0] || 0;
@@ -133,7 +139,12 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
             prevData.DiffRate[0] = DiffRate;
             prevData.AvgPrice[0] = AvgPrice;
             prevData.DiffType[0] = DiffType;
-        } else {
+        }
+    };
+
+    const updateQUTData = (realTimeData, prevData) => {
+        const nextData = realTimeData.data;
+        if (realTimeData.topic.indexOf('QUT') >= 0) {
             if (nextData.BidVolume != null) {
                 if (nextData.BidVolume[0] != 0) {
                     if (Number(nextData.BidPrice[0]) === 0 && parseInt(nextData.BidPrice[0]) == 0) {
@@ -152,13 +163,21 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
         }
     };
 
+    // 更新髒數據
+    const updateData = (realTimeData, prevData) => {
+        updateSNPData(realTimeData);
+        updateMKTData(realTimeData, prevData);
+        updateQUTData(realTimeData, prevData);
+    };
+
     // 避免遇到訂閱到其它不需訂閱的資料存在redux
-    const filterSolaceData = () => {
-        solaceData.current = solaceData.current.filter(item => {
+    const filterSolaceData = currentSolaceData => {
+        currentSolaceData = currentSolaceData.filter(item => {
             if (checkTopic(item)) {
                 return true;
             }
         });
+        return currentSolaceData;
     };
 
     const checkTopic = item => {
@@ -177,22 +196,23 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
                 if (oldTopic.indexOf('SNP') === -1) {
                     solace.current.unsubscribe(oldTopic);
                 }
-                clearReduxData(oldTopic);
+                solaceData.current = clearReduxData(oldTopic, solaceData.current);
                 dispatch(setSolaceData(solaceData.current));
             });
         }
     };
 
-    const clearReduxData = topic => {
+    const clearReduxData = (topic, currentSolaceData) => {
         let symbol = topic.split('/')[3];
         const checkLastKey = topic.split('/')[topic.split('/').length - 1];
-        solaceData.current = solaceData.current.filter(val => {
+        currentSolaceData = currentSolaceData.filter(val => {
             const checkValLastKey = val.topic.split('/')[val.topic.split('/').length - 1];
             if (val.topic.split('/')[3] === symbol && checkLastKey === checkValLastKey) {
                 return false;
             }
             return true;
         });
+        return currentSolaceData;
     };
 
     const subscribeHandler = () => {
@@ -214,9 +234,7 @@ const SolaceClientComponent = ({ subscribeTopic, only } = { only: true }) => {
     };
 
     return (
-        <Head>
-            <script type="text/javascript" src={`${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`}></script>
-        </Head>
+        <>{/* <script type="text/javascript" src={`${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`}></script> */}</>
     );
 };
 
