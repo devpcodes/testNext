@@ -1,4 +1,4 @@
-import { useReducer, createContext } from 'react';
+import React, { useReducer, createContext } from 'react';
 import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayout';
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
 import { reducers } from '../store/advanceCollection/combineReducer';
