@@ -14,14 +14,6 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function Line_TradingAccount() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
-    // const isLogin = useSelector(store => store.user.isLogin);
-
-    useEffect(() => {
-        const qStr = objectToQueryHandler(router.query);
-        if (qStr) {
-            setQueryStr(qStr);
-        }
-    }, [router.query]);
 
     useEffect(() => {
         const qStr = objectToQueryHandler(router.query);
