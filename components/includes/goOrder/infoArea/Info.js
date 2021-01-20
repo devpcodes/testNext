@@ -1,4 +1,7 @@
 // import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setLot } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -6,6 +9,14 @@ import search from '../../../../resources/images/components/goOrder/edit-search.
 import theme from '../../../../resources/styles/theme';
 
 export const Info = () => {
+    const dispatch = useDispatch();
+    const lot = useSelector(store => store.goOrder.lot);
+
+    const lotHandler = () => {
+        const nextLot = lot === 'Board' ? 'Odd' : 'Board';
+        dispatch(setLot(nextLot));
+    };
+
     return (
         <div className="info__container">
             <div className="row">
@@ -27,10 +38,10 @@ export const Info = () => {
             </div>
             <div className="row">
                 <div className="market__container">
-                    <div className="lot__box">
-                        <div className="board box box--active">整</div>
-                        <div className="odd box">零</div>
-                    </div>
+                    <button className="lot__box" onClick={lotHandler}>
+                        <div className={`board box ${lot === 'Board' ? 'box--active' : ''}`}>整</div>
+                        <div className={`odd box ${lot === 'Odd' ? 'box--active' : ''}`}>零</div>
+                    </button>
                     <div className="market__box">上市</div>
                 </div>
                 <div className="more__container">
@@ -109,7 +120,9 @@ export const Info = () => {
                     font-size: 1.5rem;
                     font-weight: 500;
                 }
-                .lot__box {
+                button.lot__box {
+                    border: none;
+                    padding: 0;
                     width: 44px;
                     height: 22px;
                     border-radius: 2px;
