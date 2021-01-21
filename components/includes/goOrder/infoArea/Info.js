@@ -11,6 +11,7 @@ import theme from '../../../../resources/styles/theme';
 export const Info = () => {
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
+    // const solaceData = useSelector(store => store.solace.solaceData);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -39,8 +40,8 @@ export const Info = () => {
             <div className="row">
                 <div className="market__container">
                     <button className="lot__box" onClick={lotHandler}>
-                        <div className={`board box ${lot === 'Board' ? 'box--active' : ''}`}>整</div>
-                        <div className={`odd box ${lot === 'Odd' ? 'box--active' : ''}`}>零</div>
+                        <div className="box board">整</div>
+                        <div className="box odd">零</div>
                     </button>
                     <div className="market__box">上市</div>
                 </div>
@@ -126,19 +127,22 @@ export const Info = () => {
                     width: 44px;
                     height: 22px;
                     border-radius: 2px;
-                    background-color: ${theme.colors.normalBg};
+                    background-color: ${lot === 'Board' ? theme.colors.normalBg : '#f5e8d7'};
                 }
                 .lot__box .box {
                     display: inline-block;
-                    color: #a9b6cb;
                     padding: 1px 3px 1px 4px;
-                }
-                .lot__box .box--active {
                     width: 22px;
                     height: 22px;
                     border-radius: 2px;
-                    background-color: #0d1623;
-                    color: ${theme.colors.text};
+                }
+                .lot__box .box.board {
+                    background-color: ${lot === 'Board' ? '#0d1623' : 'inherit'};
+                    color: ${lot === 'Board' ? theme.colors.text : theme.colors.secondary};
+                }
+                .lot__box .box.odd {
+                    background-color: ${lot === 'Odd' ? theme.colors.secondary : 'inherit'};
+                    color: ${lot === 'Odd' ? theme.colors.text : '#a9b6cb'};
                 }
                 .market__box {
                     width: 42px;
