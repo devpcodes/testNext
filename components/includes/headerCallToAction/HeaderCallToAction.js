@@ -21,7 +21,7 @@ export const HeaderCallToAction = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const platform = useSelector(store => store.general.platform);
 
-    const getGoOrderUrl = currentQuery => {
+    const getGoOrderUrl = (currentQuery, platform) => {
         const newQuery = {
             nav: 0,
         };
@@ -62,11 +62,11 @@ export const HeaderCallToAction = () => {
         const iTop = (window.screen.availHeight - 30 - iHeight) / 2; //視窗的垂直位置;
         const iLeft = window.screen.availLeft + (window.screen.availWidth - 10 - iWidth) / 2; //視窗的水平位置;
         return window.open(
-            `${getGoOrderUrl(router.query)}`,
+            `${getGoOrderUrl(router.query, platform)}`,
             'goOrder',
             `height=${iHeight},innerHeight=${iHeight},width=${iWidth},innerWidth=${iWidth},top=${iTop},left=${iLeft}`,
         );
-    }, []);
+    }, [router.query, platform]);
 
     const goLogIn = useCallback(() => {
         if (router.pathname !== '/errPage') {
@@ -74,7 +74,7 @@ export const HeaderCallToAction = () => {
         }
         // 無真正的 SinoTrade_login 頁面
         router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
-    }, []);
+    }, [router.pathname]);
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
 
