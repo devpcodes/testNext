@@ -24,6 +24,7 @@
         "eslint-config-prettier"
     ], // 套用第三方事先定義好的規則
     "rules": {
+        "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off", // Next.js 不需要引入 react
         "jsx-a11y/anchor-is-valid": [
             "error",

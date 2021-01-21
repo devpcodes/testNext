@@ -1,10 +1,10 @@
 import jwt_decode from 'jwt-decode';
 import { Modal, notification } from 'antd';
+import { getToken } from './user/accessToken';
 
 export const sign = function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         var signDict = {};
-        console.log('CACA', CA_Component);
         let DM;
         if (process.env.NEXT_PUBLIC_DM === 'false') {
             DM = false;
@@ -18,10 +18,10 @@ export const sign = function (userInfo, isNeedSign = true, token) {
             getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
             DM: DM,
         });
-        console.log('CACA', ca);
+        console.log('CA_Component:', ca);
         var memberNo;
         if (typeof token !== 'undefined') memberNo = token;
-        else memberNo = sessionStorage.getItem('token');
+        else memberNo = getToken();
 
         // 簽章
         var setting = {
@@ -44,10 +44,10 @@ export const sign = function (userInfo, isNeedSign = true, token) {
                 },
             });
         }
-        console.log('setting', setting);
+        console.log('setting:', setting);
 
         ca.certSign(setting);
-        console.log('signature', ca.getSignature());
+        console.log('getSignature:', ca.getSignature());
         if (ca.getSignature()) {
             signDict.signature = ca.getSignature();
             signDict.plainText = ca.getSignCode();
@@ -66,7 +66,7 @@ export const sign = function (userInfo, isNeedSign = true, token) {
     }
 };
 
-const checkCA = function (ca_content) {
+export const checkSignCA = function (ca_content) {
     console.log('CA_CONTENT', ca_content);
     if (ca_content.certSN && ca_content.plainText && ca_content.signature) {
         return true;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// import { useSelector } from 'react-redux';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
@@ -13,13 +14,6 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function Line_TradingAccount() {
     const router = useRouter();
     const [queryStr, setQueryStr] = useState('');
-
-    useEffect(() => {
-        const qStr = objectToQueryHandler(router.query);
-        if (qStr) {
-            setQueryStr(qStr);
-        }
-    }, []);
 
     useEffect(() => {
         const qStr = objectToQueryHandler(router.query);

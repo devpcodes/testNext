@@ -70,7 +70,7 @@ export const HeaderCallToAction = () => {
             dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         }
         // 無真正的 SinoTrade_login 頁面
-        router.push('', `/SinoTrade_login`, { shallow: true });
+        router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
     };
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;

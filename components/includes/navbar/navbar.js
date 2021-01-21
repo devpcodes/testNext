@@ -77,10 +77,11 @@ const Navbar = memo(() => {
         dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
     };
 
-    const goLogin = () => {
+    const goLogin = e => {
+        e.preventDefault();
         setCurrentPathHandler();
         dispatch(setMenuOpen(false));
-        router.push('', `/SinoTrade_login`, { shallow: true });
+        router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
     };
 
     const goSignUp = () => {
@@ -143,7 +144,7 @@ const Navbar = memo(() => {
                                             {lv1Item.title}
                                         </a>
                                     ) : (
-                                        <Link href={lv1Item.url}>
+                                        <Link href={'/' + lv1Item.url}>
                                             <a
                                                 className={`navbar__lv1__item__title ${lv1Item.url ? 'no__lv2' : ''}`}
                                                 onClick={menuItemClickHandler}

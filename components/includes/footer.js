@@ -82,10 +82,6 @@ const footerData = [
                 title: '永豐MMA交易網',
                 link: 'https://mma.sinopac.com/MemberPortal/Member/NextWebLogin.aspx',
             },
-            {
-                title: '永豐信用卡服務網',
-                link: 'https://card.sinopac.com/',
-            },
         ],
     },
 ];
