@@ -204,8 +204,6 @@ const ReservationStock = () => {
 
     const clickHandler = (text, record) => {
         if (validateQty(record.qty, record.load_qty, record.stock_amount)) {
-            setLoading(true);
-            percentHandler();
             console.log(text, record);
             // console.log(jwt_decode(getToken()));
             submitData(record);
@@ -251,64 +249,72 @@ const ReservationStock = () => {
         let data = getAccountsDetail(token);
 
         //未驗憑證
-        const resData = await postApplyEarmark(
-            token,
-            data.broker_id,
-            data.account,
-            record.code,
-            String(record.qty),
-            '0',
-        );
-        submitSuccess();
-        if (resData && resData !== '伺服器錯誤') {
-            Modal.success({
-                content: resData,
-                onOk() {
-                    dataHandler(1);
-                    // resetDataHandler();
-                },
-            });
-        } else {
-            Modal.error({
-                content: resData,
-                onOk() {
-                    dataHandler(1);
-                    // resetDataHandler();
-                },
-            });
-        }
+        // const resData = await postApplyEarmark(
+        //     token,
+        //     data.broker_id,
+        //     data.account,
+        //     record.code,
+        //     String(record.qty),
+        //     '0',
+        // );
+        // submitSuccess();
+        // if (resData && resData !== '伺服器錯誤') {
+        //     Modal.success({
+        //         content: resData,
+        //         onOk() {
+        //             dataHandler(1);
+        //             // resetDataHandler();
+        //         },
+        //     });
+        // } else {
+        //     Modal.error({
+        //         content: resData,
+        //         onOk() {
+        //             dataHandler(1);
+        //             // resetDataHandler();
+        //         },
+        //     });
+        // }
 
         //驗憑證
-        // let data = getAccountsDetail(getToken());
-        // let caContent = sign(
-        //     {
-        //         idno: data.idno,
-        //         broker_id: data.broker_id,
-        //         account: data.account,
-        //     },
-        //     true,
-        //     getToken(),
-        // );
+        let caContent = sign(
+            {
+                idno: data.idno,
+                broker_id: data.broker_id,
+                account: data.account,
+            },
+            true,
+            token,
+        );
 
-        // if (checkSignCA(caContent)) {
-        //     const resData = await postApplyEarmark(token, data.broker_id, data.account, record.code, String(record.qty), '0');
-        //     submitSuccess();
-        //     if(resData && resData !== '伺服器錯誤'){
-        //         Modal.success({
-        //             content: resData,
-        //             onOk() {
-        //                 dataHandler();
-        //             }
-        //         });
-        //     }else{
-        //         Modal.error({
-        //             content: resData,
-        //             onOk() {
-        //                 dataHandler();
-        //             }
-        //         });
-        //     }
-        // }
+        if (checkSignCA(caContent)) {
+            setLoading(true);
+            percentHandler();
+            const resData = await postApplyEarmark(
+                token,
+                data.broker_id,
+                data.account,
+                record.code,
+                String(record.qty),
+                '0',
+            );
+            submitSuccess();
+            if (resData && resData !== '伺服器錯誤') {
+                Modal.success({
+                    content: resData,
+                    onOk() {
+                        dataHandler();
+                    },
+                });
+            } else {
+                Modal.error({
+                    content: resData,
+                    onOk() {
+                        dataHandler();
+                    },
+                });
+            }
+        }
     };
 
     //取得選擇帳號的詳細資料，驗憑證
