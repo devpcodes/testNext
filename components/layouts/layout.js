@@ -190,6 +190,7 @@ const Layout = memo(({ children }) => {
 
     const noLoginPage = function (errMsg) {
         prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
+        console.log('prevPathname', prevPathname.current);
         setVerifySuccess(false);
         notification.error({
             placement: 'topRight',

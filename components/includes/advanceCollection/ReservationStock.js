@@ -1,7 +1,8 @@
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import MyTransition from '../myTransition';
 
-import { Tabs, Button, Input, Progress, Modal } from 'antd';
+import { Tabs, Button, Input, Progress, Modal, notification } from 'antd';
+import moment from 'moment';
 import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
@@ -51,6 +52,15 @@ const ReservationStock = () => {
     const [defaultValue, setDefaultValue] = useState('');
 
     useEffect(() => {
+        if (state.accountsReducer.disabled) {
+            notification.warning({
+                message: state.accountsReducer.disabled,
+                top: '100px',
+            });
+        }
+    }, [state.accountsReducer.disabled]);
+
+    useEffect(() => {
         selectedAccount.current = state.accountsReducer.selected;
         dataHandler(stockActiveTabKey.current);
         if (!init.current) {
@@ -75,12 +85,32 @@ const ReservationStock = () => {
                 render: (text, record, index) => {
                     return (
                         <Button
-                            disabled={state.accountsReducer.disabled}
+                            // disabled={state.accountsReducer.disabled}
                             onClick={clickHandler.bind(null, text, record)}
                         >
                             {text}
                         </Button>
                     );
+                },
+            },
+            {
+                title: '股票類別',
+                dataIndex: 'load_type',
+                key: 'load_type',
+                index: 2,
+                render: (text, record, index) => {
+                    switch (text) {
+                        case '':
+                            return '一般';
+                        case '1':
+                            return '全額管理';
+                        case '2':
+                            return '收足款券';
+                        case '3':
+                            return '處置一二';
+                        default:
+                            break;
+                    }
                 },
             },
             {
@@ -123,30 +153,33 @@ const ReservationStock = () => {
                 dataIndex: 'order_datetime',
                 key: 'order_datetime',
                 index: 1,
+                render: (text, record, index) => {
+                    return moment(text).format('HH:mm');
+                },
             },
             {
                 title: '股票代號',
                 dataIndex: 'code',
                 key: 'code',
-                index: 2,
+                index: 3,
             },
             {
                 title: '股票名稱',
                 dataIndex: 'code_name',
                 key: 'code_name',
-                index: 3,
+                index: 4,
             },
             {
                 title: '預收股數',
                 dataIndex: 'apply_amount',
                 key: 'apply_amount',
-                index: 4,
+                index: 5,
             },
             {
                 title: '狀態',
                 dataIndex: 'order_status_msg',
                 key: 'order_status_msg',
-                index: 5,
+                index: 6,
             },
         ];
         setColumnsData(stockColumns.current);
@@ -303,14 +336,14 @@ const ReservationStock = () => {
                 Modal.success({
                     content: resData,
                     onOk() {
-                        dataHandler();
+                        dataHandler(1);
                     },
                 });
             } else {
                 Modal.error({
                     content: resData,
                     onOk() {
-                        dataHandler();
+                        dataHandler(1);
                     },
                 });
             }
@@ -458,7 +491,7 @@ const ReservationStock = () => {
             <style jsx>{`
                 .reservation__container {
                     margin: 20px auto 0 auto;
-                    max-width: 900px;
+                    max-width: 1000px;
                     font-size: 0px;
                     padding-left: 20px;
                     padding-right: 20px;
@@ -488,6 +521,9 @@ const ReservationStock = () => {
                 }
             `}</style>
             <style jsx global>{`
+                .ant-notification-notice-with-icon .ant-notification-notice-message {
+                    font-size: 1.5rem !important;
+                }
                 .reservation__container .ant-progress.ant-progress-circle {
                     position: fixed;
                     z-index: 999;
