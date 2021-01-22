@@ -11,6 +11,7 @@ import CaHead from '../CaHead';
 import { getToken } from '../../../services/user/accessToken';
 import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
 import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
+import { fetchEarmarkStatus } from '../../../services/components/reservationStock/fetchEarmarkStatus';
 
 const { TabPane } = Tabs;
 
@@ -37,6 +38,7 @@ const ReservationStock = () => {
     const [percent, setPercent] = useState(0);
     const [loading, setLoading] = useState(false);
     const [stockInventory, setStockInventory] = useState([]);
+    const [statusData, setStatusData] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
 
     const stockColumns = useRef([]);
@@ -50,7 +52,7 @@ const ReservationStock = () => {
 
     useEffect(() => {
         selectedAccount.current = state.accountsReducer.selected;
-        dataHandler();
+        dataHandler(stockActiveTabKey.current);
         if (!init.current) {
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             init.current = true;
@@ -118,8 +120,8 @@ const ReservationStock = () => {
         stockColumns2.current = [
             {
                 title: '委託時間',
-                dataIndex: 'time',
-                key: 'time',
+                dataIndex: 'order_datetime',
+                key: 'order_datetime',
                 index: 1,
             },
             {
@@ -130,43 +132,69 @@ const ReservationStock = () => {
             },
             {
                 title: '股票名稱',
-                dataIndex: 'stockName',
-                key: 'stockName',
+                dataIndex: 'code_name',
+                key: 'code_name',
                 index: 3,
             },
             {
-                title: '已預收股數',
-                dataIndex: 'invetory',
-                key: 'invetory',
+                title: '預收股數',
+                dataIndex: 'apply_amount',
+                key: 'apply_amount',
                 index: 4,
+            },
+            {
+                title: '狀態',
+                dataIndex: 'order_status_msg',
+                key: 'order_status_msg',
+                index: 5,
             },
         ];
         setColumnsData(stockColumns.current);
     }, [stockInventory]);
 
-    const dataHandler = async () => {
+    const dataHandler = async activeKey => {
         if (getToken()) {
             let data = getAccountsDetail(getToken());
             if (data.broker_id && data.account) {
                 setDataLoading(true);
-                let resData = await fetchStockInventory(getToken(), data.broker_id, data.account);
-                resData = resData.map((item, index) => {
-                    item.key = String(index);
-                    item.action = '申請';
-                    item.qty = '';
-                    return item;
-                });
-                setStockInventory(resData);
+                if (activeKey == 1) {
+                    await fetchInventory(getToken(), data.broker_id, data.account);
+                } else {
+                    await fetchStatus(getToken(), data.broker_id, data.account);
+                }
+
                 setDataLoading(false);
             }
         }
     };
 
+    const fetchInventory = async (token, brokerId, account) => {
+        let resData = await fetchStockInventory(token, brokerId, account);
+        resData = resData.map((item, index) => {
+            item.key = String(index);
+            item.action = '申請';
+            item.qty = '';
+            return item;
+        });
+        setStockInventory(resData);
+    };
+
+    const fetchStatus = async (token, brokerId, account) => {
+        let resData = await fetchEarmarkStatus(token, brokerId, account);
+        resData = resData.map((item, index) => {
+            item.key = String(index);
+            return item;
+        });
+        setStatusData(resData);
+    };
+
     const changleHandler = activeKey => {
         stockActiveTabKey.current = activeKey;
         if (activeKey == 1) {
+            dataHandler(activeKey);
             setColumnsData(stockColumns.current);
         } else {
+            dataHandler(activeKey);
             setColumnsData(stockColumns2.current);
         }
         if (state.accountsReducer.selected) {
@@ -174,8 +202,7 @@ const ReservationStock = () => {
         }
     };
 
-    const clickHandler = useCallback((text, record) => {
-        console.log('selected', selectedAccount.current, record);
+    const clickHandler = (text, record) => {
         if (validateQty(record.qty, record.load_qty, record.stock_amount)) {
             setLoading(true);
             percentHandler();
@@ -183,7 +210,7 @@ const ReservationStock = () => {
             // console.log(jwt_decode(getToken()));
             submitData(record);
         }
-    }, []);
+    };
 
     const validateQty = (value, loadQty, stockAmount) => {
         const regex = /^[0-9]{1,20}$/;
@@ -210,6 +237,14 @@ const ReservationStock = () => {
         return false;
     };
 
+    // const resetDataHandler = () => {
+    //     const stockInventoryData = stockInventory.map((item, i) => {
+    //         item.qty = '';
+    //         return item;
+    //     });
+    //     setStockInventory(stockInventoryData);
+    // }
+
     const submitData = async record => {
         //token, branch, account, symbol, qty, category
         const token = getToken();
@@ -229,14 +264,16 @@ const ReservationStock = () => {
             Modal.success({
                 content: resData,
                 onOk() {
-                    dataHandler();
+                    dataHandler(1);
+                    // resetDataHandler();
                 },
             });
         } else {
             Modal.error({
                 content: resData,
                 onOk() {
-                    dataHandler();
+                    dataHandler(1);
+                    // resetDataHandler();
                 },
             });
         }
@@ -256,7 +293,7 @@ const ReservationStock = () => {
         // if (checkSignCA(caContent)) {
         //     const resData = await postApplyEarmark(token, data.broker_id, data.account, record.code, String(record.qty), '0');
         //     submitSuccess();
-        //     if(resData){
+        //     if(resData && resData !== '伺服器錯誤'){
         //         Modal.success({
         //             content: resData,
         //             onOk() {
@@ -296,7 +333,7 @@ const ReservationStock = () => {
             }
             nowPercent.current += Math.floor(Math.random() * 5);
             setPercent(nowPercent.current);
-        }, Math.floor(Math.random() * 50));
+        }, Math.floor(Math.random() * 20));
     };
 
     const submitSuccess = () => {
@@ -328,7 +365,7 @@ const ReservationStock = () => {
                 animated={{ inkBar: true, tabPane: true }}
                 onChange={changleHandler}
             >
-                <TabPane tab="預收股票申請" key="1">
+                <TabPane tab="預收股票申請" key="1" disabled={dataLoading}>
                     <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
                     <ApplyContent
                         key="table1"
@@ -355,15 +392,31 @@ const ReservationStock = () => {
                         }}
                     />
                 </TabPane>
-                <TabPane tab="預收股票查詢" key="2">
+                <TabPane tab="預收股票查詢" key="2" disabled={dataLoading}>
                     <Accounts key="2" style={{ marginTop: '35px' }} value={defaultValue} />
                     <ApplyContent
                         key="table2"
                         scroll={{ x: 860 }}
                         contenterTitle={'預收股票查詢'}
-                        dataSource={dataSource2}
+                        dataSource={statusData}
                         columns={columnsData}
                         pagination={false}
+                        loading={{
+                            indicator: (
+                                <div
+                                    style={{
+                                        marginTop: '20px',
+                                        color: 'black',
+                                        fontSize: '1.6rem',
+                                        width: '100%',
+                                        transform: 'translateX(-49%) translateY(-54px)',
+                                    }}
+                                >
+                                    資料加載中...
+                                </div>
+                            ),
+                            spinning: dataLoading,
+                        }}
                     />
                 </TabPane>
             </Tabs>
