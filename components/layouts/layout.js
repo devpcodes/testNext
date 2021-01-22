@@ -249,11 +249,11 @@ const Layout = memo(({ children }) => {
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
         getMenuPath.current = false;
-        // setTimeout(() => {
-        //     if (prevPathname.current) {
-        //         router.push(prevPathname.current);
-        //     }
-        // }, 500);
+        setTimeout(() => {
+            if (prevPathname.current) {
+                router.push(prevPathname.current);
+            }
+        }, 500);
         setTimeout(() => {
             CAHandler(getToken());
         }, 700);
