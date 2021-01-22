@@ -55,23 +55,27 @@ const ApplyTable = ({ ...props }) => {
         <div className="applyTable__container">
             {width <= 580 || width == null ? (
                 <>
-                    {props.dataSource.map((item, key) => {
-                        return (
-                            <div className="item__box" key={key}>
-                                {columnsData.length > 0 &&
-                                    columnsData.map((column, key2) => {
-                                        return (
-                                            <div key={key2}>
-                                                {mobileColumnHandler(column, item)}
-                                                {column.render == null ? (
-                                                    <span className="val">{item[column.dataIndex]}</span>
-                                                ) : null}
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-                        );
-                    })}
+                    {props.dataSource.length > 0 ? (
+                        props.dataSource.map((item, key) => {
+                            return (
+                                <div className="item__box" key={key}>
+                                    {columnsData.length > 0 &&
+                                        columnsData.map((column, key2) => {
+                                            return (
+                                                <div key={key2}>
+                                                    {mobileColumnHandler(column, item)}
+                                                    {column.render == null ? (
+                                                        <span className="val">{item[column.dataIndex]}</span>
+                                                    ) : null}
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <div style={{ textAlign: 'center', marginTop: '20px' }}>查無資料</div>
+                    )}
                 </>
             ) : (
                 <Table {...props} />
