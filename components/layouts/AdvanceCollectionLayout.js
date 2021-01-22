@@ -29,8 +29,8 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
         if (time.isBetween(beforeTime, afterTime)) {
             return true;
         } else {
-            alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
-            // dispatch({type: DISABLED, payload: true});
+            // alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
+            dispatch({ type: DISABLED, payload: `目前非申請時間，請於營業日${startTime}-${endTime}申請` });
             return true;
         }
     };
