@@ -3,6 +3,7 @@ import * as actionType from './actionType';
 const initialState = {
     type: 'S',
     lot: 'Board',
+    code: '2890',
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 lot: action.payload,
+            };
+        case actionType.SET_CODE:
+            return {
+                ...state,
+                code: action.payload,
             };
         default:
             return state;

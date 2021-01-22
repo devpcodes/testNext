@@ -1,5 +1,7 @@
-// import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { Search } from '../search/Search';
 
 import { setLot } from '../../../../store/goOrder/action';
 
@@ -9,6 +11,7 @@ import search from '../../../../resources/images/components/goOrder/edit-search.
 import theme from '../../../../resources/styles/theme';
 
 export const Info = () => {
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     // const solaceData = useSelector(store => store.solace.solaceData);
@@ -16,6 +19,18 @@ export const Info = () => {
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
         dispatch(setLot(nextLot));
+    };
+
+    const showSearch = () => {
+        setIsSearchVisible(true);
+    };
+
+    const handleCancel = useCallback(() => {
+        setIsSearchVisible(false);
+    }, []);
+
+    const shareHandler = () => {
+        console.log('share!!!');
     };
 
     return (
@@ -26,8 +41,12 @@ export const Info = () => {
                     <div className="product__code">2330</div>
                 </div>
                 <div className="toolbar__container">
-                    <img src={share} alt="share" className="share"></img>
-                    <img src={search} alt="search" className="search"></img>
+                    <button className="share" onClick={shareHandler}>
+                        <img src={share} alt="share"></img>
+                    </button>
+                    <button className="search" onClick={showSearch}>
+                        <img src={search} alt="search"></img>
+                    </button>
                 </div>
             </div>
             <div className="row">
@@ -54,7 +73,13 @@ export const Info = () => {
                     <div className="text__box brown">+ 自選</div>
                 </div>
             </div>
+            <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
             <style jsx>{`
+                button {
+                    border: none;
+                    padding: 0;
+                    background-color: inherit;
+                }
                 .info__container {
                     margin: 16px;
                     font-weight: 600;
@@ -122,8 +147,6 @@ export const Info = () => {
                     font-weight: 500;
                 }
                 button.lot__box {
-                    border: none;
-                    padding: 0;
                     width: 44px;
                     height: 22px;
                     border-radius: 2px;

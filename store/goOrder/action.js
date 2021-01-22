@@ -13,3 +13,10 @@ export const setLot = type => {
         payload: type,
     };
 };
+
+export const setCode = code => {
+    return {
+        type: actionType.SET_CODE,
+        payload: code,
+    };
+};
