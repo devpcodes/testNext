@@ -69,9 +69,9 @@ axios.interceptors.response.use(
 );
 
 // A8 instance：設置 call A8 server 的最低配置
-const createA8Instance = (version = a8DefaultVersion, auth = a8Auth) =>
+const createA8Instance = (version = a8DefaultVersion, auth = a8Auth, baseUrl) =>
     axios.create({
-        baseURL: `${process.env.NEXT_PUBLIC_A8}/${version}/`,
+        baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8}/${version}/`,
         timeout: 7000,
         auth,
         validateStatus: function (status) {
@@ -79,8 +79,8 @@ const createA8Instance = (version = a8DefaultVersion, auth = a8Auth) =>
         },
     });
 
-export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal = true) => {
-    const a8Ins = createA8Instance(version, auth);
+export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal = true, baseUrl = '') => {
+    const a8Ins = createA8Instance(version, auth, baseUrl);
 
     a8Ins.interceptors.response.use(
         response => response,
@@ -89,6 +89,26 @@ export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal =
         },
     );
 
+    return a8Ins;
+};
+
+const createA8StpInstance = baseUrl =>
+    axios.create({
+        baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8}/${version}/`,
+        timeout: 7000,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getA8StpInstance = (modal = true, baseUrl = '') => {
+    const a8Ins = createA8StpInstance(baseUrl);
+    a8Ins.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
     return a8Ins;
 };
 

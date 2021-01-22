@@ -61,6 +61,13 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
             </Head>
             <PageHead title={'永豐金理財網'} />
             {verifySuccess && <div className="page__container">{children}</div>}
+            <style jsx>{`
+                .page__container {
+                    padding-top: 20px;
+                    margin-bottom: 40px;
+                    min-height: 700px;
+                }
+            `}</style>
         </>
     );
 };
