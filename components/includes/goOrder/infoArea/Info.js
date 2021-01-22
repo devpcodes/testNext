@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { trim } from 'lodash';
 
 import { Search } from '../search/Search';
 
+import { priceColor, getArrow } from '../../../../services/numFormat';
 import { setLot } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
@@ -14,7 +16,20 @@ export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
-    // const solaceData = useSelector(store => store.solace.solaceData);
+    const code = useSelector(store => store.goOrder.code);
+    const solaceData = useSelector(store => store.solace.solaceData);
+    // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
+    const [
+        { data: { Name = '', Close = [], DiffPrice = [], DiffRate = [], VolSum = [], Reference = 0 } = {} } = {},
+    ] = Array.isArray(solaceData) ? solaceData : [{}];
+
+    // console.log(`======solaceData:`, solaceData);
+    // console.log(`==============Name:`, Name);
+    // console.log(`==============Close:`, Close);
+    // console.log(`==============DiffPrice:`, DiffPrice);
+    // console.log(`==============DiffRate:`, DiffRate);
+    // console.log(`==============VolSum:`, VolSum);
+    // console.log(`==============Reference:`, Reference);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -37,8 +52,8 @@ export const Info = () => {
         <div className="info__container">
             <div className="row">
                 <div className="product__container">
-                    <div className="product__name">台積電</div>
-                    <div className="product__code">2330</div>
+                    <div className="product__name">{trim(Name)}</div>
+                    <div className="product__code">{code}</div>
                 </div>
                 <div className="toolbar__container">
                     <button className="share" onClick={shareHandler}>
@@ -50,9 +65,11 @@ export const Info = () => {
                 </div>
             </div>
             <div className="row">
-                <div className="price__container">503.5 ▲ 6.00 (+1.40%)</div>
+                <div className="price__container">{`${Close[0] || ''} ${getArrow(Close[0], Reference)} ${
+                    trim(DiffPrice[0], '-') || ''
+                } (${trim(DiffRate[0], '-') || ''}%)`}</div>
                 <div className="volume__container">
-                    <div className="volume">總量 251543</div>
+                    <div className="volume">{`總量 ${VolSum[0] || '-'}`}</div>
                     <div className="unit">張</div>
                 </div>
             </div>
@@ -121,7 +138,7 @@ export const Info = () => {
                     display: flex;
                     align-items: flex-end;
                     width: calc((8 / 12) * 100%);
-                    color: ${theme.colors.loss};
+                    color: ${priceColor(Close[0], Reference)};
                     font-size: 2rem;
                 }
                 .volume__container {

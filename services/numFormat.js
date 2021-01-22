@@ -35,3 +35,22 @@ export function priceColor(price, reference) {
     }
     return color;
 }
+
+// 取得漲跌箭頭符號
+export function getArrow(price, reference) {
+    let arrow = '';
+    if (Number(price) == 0) {
+        return '';
+    }
+    if (isNaN(Number(price)) || isNaN(Number(reference))) {
+        return '';
+    }
+    if (parseFloat(price) > parseFloat(reference)) {
+        arrow = '▲';
+    } else if (price < reference) {
+        arrow = '▼';
+    } else {
+        arrow = '';
+    }
+    return arrow;
+}
