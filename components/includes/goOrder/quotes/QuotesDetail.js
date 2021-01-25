@@ -8,7 +8,9 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
     const renderAmountSum = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
-                return Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100;
+                return isNaN(Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100)
+                    ? '--'
+                    : Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100;
             } else {
                 if (solaceData[0]?.data?.AmountSum?.length > 0 && solaceData[0].data.AmountSum[0] != null) {
                     return Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100;
