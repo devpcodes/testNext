@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor } from '../../../../services/numFormat';
@@ -17,97 +18,124 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         }
         return 0;
     };
-    const renderBidPrice = (priceKey, volumeKey) => {
-        let data = [];
-        if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
-            if (solaceData[0].topic.indexOf('SNP') >= 0 || solaceData[0].topic.indexOf('QUT' >= 0)) {
-                let data = solaceData;
-                if (data.length > 0) {
-                    console.log('pk', priceKey);
-                    if (priceKey === 'BidPrice' || priceKey === 'OddlotBidPrice') {
-                        return data[0].data[priceKey].map((item, index) => {
-                            return (
-                                <div className="item" key={index}>
-                                    <span className="hL"></span>
-                                    <span className="volume">{data[0].data[volumeKey][index]}</span>
-                                    <div
-                                        className="box"
-                                        style={{
-                                            width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
-                                        }}
-                                    >
-                                        <div
-                                            className="box__content"
-                                            style={{
-                                                width:
-                                                    Math.round(
-                                                        (data[0].data[volumeKey][index] * 100) /
-                                                            getVolumeSum(volumeKey),
-                                                    ) + '%',
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <span
-                                        className="price"
-                                        style={{
-                                            color: priceColor(
-                                                item,
-                                                lot === 'Odd' ? data[0].data.OddlotReference : data[0].data.Reference,
-                                            ),
-                                            width: toDecimal(item).length * 8 + 'px',
-                                        }}
-                                    >
-                                        {toDecimal(item)}
-                                    </span>
-                                </div>
-                            );
-                        });
-                    } else {
-                        return data[0].data[priceKey].map((item, index) => {
-                            return (
-                                <div className="item" key={index}>
-                                    <span className="hL"></span>
-                                    <span
-                                        className="volume"
-                                        style={{
-                                            color: priceColor(
-                                                item,
-                                                lot === 'Odd' ? data[0].data.OddlotReference : data[0].data.Reference,
-                                            ),
-                                            width: toDecimal(item).length * 8 + 'px',
-                                        }}
-                                    >
-                                        {toDecimal(item)}
-                                    </span>
-                                    <div
-                                        className="box"
-                                        style={{
-                                            width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
-                                        }}
-                                    >
-                                        <div
-                                            className="box__content"
-                                            style={{
-                                                width:
-                                                    Math.round(
-                                                        (data[0].data[volumeKey][index] * 100) /
-                                                            getVolumeSum(volumeKey),
-                                                    ) + '%',
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <span className="price">{data[0].data[volumeKey][index]}</span>
-                                </div>
-                            );
-                        });
+
+    const simtradeHandler = price => {
+        if (lot === 'Odd') {
+            if (!!solaceData[0]?.data?.OddlotSimtrade) {
+                return price + '*';
+            } else {
+                return price;
+            }
+        } else {
+            if (!!solaceData[0]?.data?.Simtrade) {
+                return price + '*';
+            } else {
+                return price;
+            }
+        }
+    };
+
+    const renderBidPrice = useCallback(
+        (priceKey, volumeKey) => {
+            let data = [];
+            if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
+                if (solaceData[0].topic.indexOf('SNP') >= 0 || solaceData[0].topic.indexOf('QUT' >= 0)) {
+                    let data = solaceData;
+                    if (data.length > 0) {
+                        if (priceKey === 'BidPrice' || priceKey === 'OddlotBidPrice') {
+                            if (data[0].data[priceKey] != null && Array.isArray(data[0].data[priceKey])) {
+                                return data[0].data[priceKey].map((item, index) => {
+                                    return (
+                                        <div className="item" key={index}>
+                                            <span className="hL"></span>
+                                            <span className="volume">{data[0].data[volumeKey][index]}</span>
+                                            <div
+                                                className="box"
+                                                style={{
+                                                    width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
+                                                }}
+                                            >
+                                                <div
+                                                    className="box__content"
+                                                    style={{
+                                                        width:
+                                                            Math.round(
+                                                                (data[0].data[volumeKey][index] * 100) /
+                                                                    getVolumeSum(volumeKey),
+                                                            ) + '%',
+                                                    }}
+                                                ></div>
+                                            </div>
+                                            <span
+                                                className="price"
+                                                style={{
+                                                    color: priceColor(
+                                                        item,
+                                                        lot === 'Odd'
+                                                            ? data[0].data.OddlotReference
+                                                            : data[0].data.Reference,
+                                                    ),
+                                                    width: toDecimal(item).length * 8 + 'px',
+                                                }}
+                                            >
+                                                {simtradeHandler(toDecimal(item))}
+                                            </span>
+                                        </div>
+                                    );
+                                });
+                            }
+                        } else {
+                            if (data[0].data[priceKey] != null && Array.isArray(data[0].data[priceKey])) {
+                                return data[0].data[priceKey].map((item, index) => {
+                                    return (
+                                        <div className="item" key={index}>
+                                            <span className="hL"></span>
+                                            <span
+                                                className="volume"
+                                                style={{
+                                                    color: priceColor(
+                                                        item,
+                                                        lot === 'Odd'
+                                                            ? data[0].data.OddlotReference
+                                                            : data[0].data.Reference,
+                                                    ),
+                                                    width: toDecimal(item).length * 8 + 'px',
+                                                }}
+                                            >
+                                                {simtradeHandler(toDecimal(item))}
+                                            </span>
+                                            <div
+                                                className="box"
+                                                style={{
+                                                    width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
+                                                }}
+                                            >
+                                                <div
+                                                    className="box__content"
+                                                    style={{
+                                                        width:
+                                                            Math.round(
+                                                                (data[0].data[volumeKey][index] * 100) /
+                                                                    getVolumeSum(volumeKey),
+                                                            ) + '%',
+                                                    }}
+                                                ></div>
+                                            </div>
+                                            <span className="price">{data[0].data[volumeKey][index]}</span>
+                                        </div>
+                                    );
+                                });
+                            }
+                        }
                     }
                 }
             }
-        }
-        if (Object.keys(solaceData).length == 0 || data.length === 0 || stopRender) {
-            return defaultRender(priceKey);
-        }
-    };
+            if (Object.keys(solaceData).length == 0 || data.length === 0 || stopRender) {
+                return defaultRender(priceKey);
+            }
+        },
+        [lot, solaceData],
+    );
 
     const defaultRender = priceKey => {
         if (priceKey === 'BidPrice' || priceKey === 'OddlotBidPrice') {

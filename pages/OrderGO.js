@@ -12,6 +12,7 @@ const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
     const code = useSelector(store => store.goOrder.code);
+    const lot = useSelector(store => store.goOrder.lot);
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
@@ -21,10 +22,12 @@ const OrderGO = () => {
     }, []);
 
     useEffect(() => {
-        setTimeout(() => {
+        if (lot === 'Odd') {
+            setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+        } else {
             setTopic([`MKT/*/*/${code}`, `QUT/*/*/${code}`, `SNP/*/*/${code}`]);
-        }, 10);
-    }, [code]);
+        }
+    }, [lot, code]);
 
     useEffect(() => {
         console.log('loaded...');
