@@ -35,6 +35,24 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         }
     };
 
+    const HLHandler = price => {
+        if (lot === 'Odd') {
+            if (solaceData[0].data.High == price) {
+                return 'H';
+            }
+            if (solaceData[0].data.Low == price) {
+                return 'L';
+            }
+        } else {
+            if (Array.isArray(solaceData[0].data.High) && solaceData[0].data.High[0] == price) {
+                return 'H';
+            }
+            if (Array.isArray(solaceData[0].data.Low) && solaceData[0].data.Low[0] == price) {
+                return 'L';
+            }
+        }
+    };
+
     const renderBidPrice = useCallback(
         (priceKey, volumeKey) => {
             let data = [];
@@ -47,7 +65,21 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                 return data[0].data[priceKey].map((item, index) => {
                                     return (
                                         <div className="item" key={index}>
-                                            <span className="hL"></span>
+                                            <span
+                                                style={{
+                                                    color: priceColor(
+                                                        item,
+                                                        lot === 'Odd'
+                                                            ? data[0].data.OddlotReference
+                                                            : data[0].data.Reference,
+                                                    ),
+                                                    fontSize: '1.4rem',
+                                                    marginTop: '1px',
+                                                }}
+                                                className="hL"
+                                            >
+                                                {HLHandler(item)}
+                                            </span>
                                             <span className="volume">{data[0].data[volumeKey][index]}</span>
                                             <div
                                                 className="box"
@@ -89,7 +121,22 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                 return data[0].data[priceKey].map((item, index) => {
                                     return (
                                         <div className="item" key={index}>
-                                            <span className="hL"></span>
+                                            <span
+                                                style={{
+                                                    color: priceColor(
+                                                        item,
+                                                        lot === 'Odd'
+                                                            ? data[0].data.OddlotReference
+                                                            : data[0].data.Reference,
+                                                    ),
+                                                    fontSize: '1.4rem',
+                                                    marginTop: '1px',
+                                                    textAlign: 'right',
+                                                }}
+                                                className="hL"
+                                            >
+                                                {HLHandler(item)}
+                                            </span>
                                             <span
                                                 className="volume"
                                                 style={{
