@@ -3,51 +3,128 @@ import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor } from '../../../../services/numFormat';
 const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
+    const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
+
     const renderAmountSum = () => {
-        if (solaceData[0]?.data?.AmountSum?.length > 0 && solaceData[0].data.AmountSum[0] != null) {
-            return Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100;
+        if (!checkServer() && !stopRender && solaceData.length > 0) {
+            if (lot === 'Odd') {
+                return Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100 || '--';
+            } else {
+                if (solaceData[0]?.data?.AmountSum?.length > 0 && solaceData[0].data.AmountSum[0] != null) {
+                    return Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100;
+                } else {
+                    return '--';
+                }
+            }
         } else {
-            return '';
+            return '--';
         }
     };
+
+    const getReference = () => {
+        if (!checkServer() && !stopRender && solaceData.length > 0) {
+            if (lot === 'Odd') {
+                return toDecimal(solaceData[0]?.data?.OddlotReference) || '--';
+            } else {
+                return toDecimal(solaceData[0]?.data?.Reference) || '--';
+            }
+        } else {
+            return '--';
+        }
+    };
+
+    const getOpen = () => {
+        if (!checkServer() && !stopRender && solaceData.length > 0) {
+            if (lot === 'Odd') {
+                return simtradeHandler(toDecimal(solaceData[0]?.data?.OddlotOpen)) || '--';
+            } else {
+                return simtradeHandler(toDecimal(solaceData[0]?.data?.Open)) || '--';
+            }
+        } else {
+            return '--';
+        }
+    };
+
+    const getHigh = () => {
+        if (!checkServer() && !stopRender && solaceData.length > 0) {
+            if (lot === 'Odd') {
+                return simtradeHandler(toDecimal(solaceData[0]?.data?.OddlotHigh)) || '--';
+            } else {
+                if (solaceData[0]?.data?.High?.length > 0) {
+                    return simtradeHandler(toDecimal(solaceData[0]?.data?.High[0])) || '--';
+                }
+            }
+        } else {
+            return '--';
+        }
+    };
+
+    const getLow = () => {
+        if (!checkServer() && !stopRender && solaceData.length > 0) {
+            if (lot === 'Odd') {
+                return simtradeHandler(toDecimal(solaceData[0]?.data?.OddlotLow)) || '--';
+            } else {
+                if (solaceData[0]?.data?.Low?.length > 0) {
+                    return simtradeHandler(toDecimal(solaceData[0]?.data?.Low[0])) || '--';
+                }
+            }
+        } else {
+            return '--';
+        }
+    };
+
+    const getAvgPrice = () => {
+        if (!checkServer() && !stopRender && solaceData.length > 0) {
+            if (lot === 'Odd') {
+                return toDecimal(solaceData[0]?.data?.OddlotAvgPrice) || '--';
+            } else {
+                if (solaceData[0]?.data?.AvgPrice?.length > 0) {
+                    return toDecimal(solaceData[0]?.data?.AvgPrice[0]) || '--';
+                }
+            }
+        } else {
+            return '--';
+        }
+    };
+
+    const simtradeHandler = price => {
+        if (lot === 'Odd') {
+            if (!!solaceData[0]?.data?.OddlotSimtrade) {
+                return price + '*';
+            } else {
+                return price;
+            }
+        } else {
+            if (!!solaceData[0]?.data?.Simtrade) {
+                return price + '*';
+            } else {
+                return price;
+            }
+        }
+    };
+
     return (
         <>
             <div className="quotes__container">
                 <div className="item__container--top">
                     <div className="item__box">
                         <span className="label">昨收</span>
-                        <button className="item">
-                            {(!checkServer() &&
-                                !stopRender &&
-                                solaceData.length > 0 &&
-                                toDecimal(solaceData[0]?.data?.Reference)) ||
-                                '--'}
-                        </button>
+                        <button className="item">{getReference()}</button>
                     </div>
                     <div className="item__box">
                         <span className="label">開盤</span>
                         <button
                             className="item"
                             style={{
-                                color:
-                                    !checkServer() &&
-                                    !stopRender &&
-                                    solaceData.length > 0 &&
-                                    priceColor(solaceData[0]?.data?.Open, solaceData[0]?.data?.Reference),
+                                color: priceColor(getOpen(), getReference()),
                             }}
                         >
-                            {(!checkServer() &&
-                                !stopRender &&
-                                solaceData.length > 0 &&
-                                toDecimal(solaceData[0]?.data?.Open)) ||
-                                '--'}
+                            {getOpen()}
                         </button>
                     </div>
                     <div className="item__box">
                         <span className="label">金額(億)</span>
-                        <span className="item">
-                            {(!checkServer() && !stopRender && solaceData.length > 0 && renderAmountSum()) || '--'}
-                        </span>
+                        <span className="item">{renderAmountSum()}</span>
                     </div>
                 </div>
                 <div>
@@ -56,20 +133,10 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
                         <button
                             className="item"
                             style={{
-                                color:
-                                    !checkServer() &&
-                                    solaceData.length > 0 &&
-                                    !stopRender &&
-                                    solaceData[0]?.data?.High?.length > 0 &&
-                                    priceColor(solaceData[0]?.data?.High[0], solaceData[0]?.data?.Reference),
+                                color: priceColor(getHigh(), getReference()),
                             }}
                         >
-                            {(!checkServer() &&
-                                !stopRender &&
-                                solaceData.length > 0 &&
-                                solaceData[0]?.data?.High?.length > 0 &&
-                                toDecimal(solaceData[0]?.data?.High[0])) ||
-                                '--'}
+                            {getHigh()}
                         </button>
                     </div>
                     <div className="item__box">
@@ -77,20 +144,10 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
                         <button
                             className="item"
                             style={{
-                                color:
-                                    !checkServer() &&
-                                    !stopRender &&
-                                    solaceData.length > 0 &&
-                                    solaceData[0]?.data?.Low?.length > 0 &&
-                                    priceColor(solaceData[0]?.data?.Low[0], solaceData[0]?.data?.Reference),
+                                color: priceColor(getLow(), getReference()),
                             }}
                         >
-                            {(!checkServer() &&
-                                !stopRender &&
-                                solaceData.length > 0 &&
-                                solaceData[0]?.data?.Low?.length > 0 &&
-                                toDecimal(solaceData[0]?.data?.Low[0])) ||
-                                '--'}
+                            {getLow()}
                         </button>
                     </div>
                     <div className="item__box">
@@ -98,20 +155,10 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
                         <button
                             className="item"
                             style={{
-                                color:
-                                    !checkServer() &&
-                                    !stopRender &&
-                                    solaceData.length > 0 &&
-                                    solaceData[0]?.data?.AvgPrice?.length > 0 &&
-                                    priceColor(solaceData[0]?.data?.AvgPrice[0], solaceData[0]?.data?.Reference),
+                                color: priceColor(getAvgPrice(), getReference()),
                             }}
                         >
-                            {(!checkServer() &&
-                                !stopRender &&
-                                solaceData.length > 0 &&
-                                solaceData[0]?.data?.AvgPrice?.length > 0 &&
-                                toDecimal(solaceData[0]?.data?.AvgPrice[0])) ||
-                                '--'}
+                            {getAvgPrice()}
                         </button>
                     </div>
                 </div>

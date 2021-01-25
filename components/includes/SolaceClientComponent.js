@@ -44,6 +44,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     };
 
     const solaceEventHandler = xhr => {
+        console.log('xhr', xhr);
         //symbol 可能之後有少數抓不到symbol情況 得調整
         let symbol = xhr.topic.split('/')[3];
         let update = false;
@@ -74,7 +75,10 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     };
 
     const updateSNPData = xhr => {
-        if (xhr.topic.indexOf('SNP') >= 0) {
+        if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') >= 0) {
+            return;
+        }
+        if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') === -1) {
             if (xhr.data.Open == 0) {
                 xhr.data.Open = '--';
             }
@@ -92,7 +96,10 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
 
     const updateMKTData = (realTimeData, prevData) => {
         const nextData = realTimeData.data;
-        if (realTimeData.topic.indexOf('MKT') >= 0) {
+        if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') >= 0) {
+            Object.assign(prevData, nextData);
+        }
+        if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') === -1) {
             console.log(nextData);
             let High = prevData?.High[0] || 0;
             let Low = prevData?.Low[0] || 0;
@@ -182,6 +189,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
 
     const checkTopic = item => {
         return currentSubscribe.current.some(topic => {
+            console.log('=======', item, topic);
             let symbol = topic.split('/')[3];
             let dataSymbol = item.topic.split('/')[3];
             if (symbol == dataSymbol) {

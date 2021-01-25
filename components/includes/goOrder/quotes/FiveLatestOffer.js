@@ -1,25 +1,30 @@
 import { useSelector } from 'react-redux';
-// import { useEffect } from 'react';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor } from '../../../../services/numFormat';
 const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
+    const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
+
+    const getVolumeSum = keyName => {
+        if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
+            var volumeSum = 0;
+            if (solaceData[0].data[keyName].length > 0) {
+                solaceData[0].data[keyName].forEach((item, index) => {
+                    volumeSum += solaceData[0].data[keyName][index];
+                });
+                return volumeSum;
+            }
+        }
+        return 0;
+    };
     const renderBidPrice = (priceKey, volumeKey) => {
         let data = [];
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
             if (solaceData[0].topic.indexOf('SNP') >= 0 || solaceData[0].topic.indexOf('QUT' >= 0)) {
-                // TODO 2345 我要的symbol，先寫死做測試
-                // let data = solaceData.filter(sItem => sItem.topic.indexOf('2345') >= 0);
                 let data = solaceData;
                 if (data.length > 0) {
-                    let volumeSum = 0;
-                    if (data[0].data[volumeKey].length > 0) {
-                        data[0].data[volumeKey].forEach((item, index) => {
-                            volumeSum += data[0].data[volumeKey][index];
-                        });
-                    }
-
-                    if (priceKey === 'BidPrice') {
+                    console.log('pk', priceKey);
+                    if (priceKey === 'BidPrice' || priceKey === 'OddlotBidPrice') {
                         return data[0].data[priceKey].map((item, index) => {
                             return (
                                 <div className="item" key={index}>
@@ -35,15 +40,20 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                             className="box__content"
                                             style={{
                                                 width:
-                                                    Math.round((data[0].data[volumeKey][index] * 100) / volumeSum) +
-                                                    '%',
+                                                    Math.round(
+                                                        (data[0].data[volumeKey][index] * 100) /
+                                                            getVolumeSum(volumeKey),
+                                                    ) + '%',
                                             }}
                                         ></div>
                                     </div>
                                     <span
                                         className="price"
                                         style={{
-                                            color: priceColor(item, data[0].data.Reference),
+                                            color: priceColor(
+                                                item,
+                                                lot === 'Odd' ? data[0].data.OddlotReference : data[0].data.Reference,
+                                            ),
                                             width: toDecimal(item).length * 8 + 'px',
                                         }}
                                     >
@@ -60,7 +70,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                     <span
                                         className="volume"
                                         style={{
-                                            color: priceColor(item, data[0].data.Reference),
+                                            color: priceColor(
+                                                item,
+                                                lot === 'Odd' ? data[0].data.OddlotReference : data[0].data.Reference,
+                                            ),
                                             width: toDecimal(item).length * 8 + 'px',
                                         }}
                                     >
@@ -76,8 +89,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                             className="box__content"
                                             style={{
                                                 width:
-                                                    Math.round((data[0].data[volumeKey][index] * 100) / volumeSum) +
-                                                    '%',
+                                                    Math.round(
+                                                        (data[0].data[volumeKey][index] * 100) /
+                                                            getVolumeSum(volumeKey),
+                                                    ) + '%',
                                             }}
                                         ></div>
                                     </div>
@@ -95,7 +110,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     };
 
     const defaultRender = priceKey => {
-        if (priceKey === 'BidPrice') {
+        if (priceKey === 'BidPrice' || priceKey === 'OddlotBidPrice') {
             return [1, 2, 3, 4, 5].map((item, index) => (
                 <div className="item" key={index}>
                     <span className="hL"></span>
@@ -134,8 +149,16 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                     </div>
                 </div>
                 <div className="five__content">
-                    <div className="buy__box">{renderBidPrice('BidPrice', 'BidVolume')}</div>
-                    <div className="sell__box">{renderBidPrice('AskPrice', 'AskVolume')}</div>
+                    <div className="buy__box">
+                        {lot !== 'Odd'
+                            ? renderBidPrice('BidPrice', 'BidVolume')
+                            : renderBidPrice('OddlotBidPrice', 'OddlotBidShares')}
+                    </div>
+                    <div className="sell__box">
+                        {lot !== 'Odd'
+                            ? renderBidPrice('AskPrice', 'AskVolume')
+                            : renderBidPrice('OddlotAskPrice', 'OddlotAskShares')}
+                    </div>
                 </div>
                 <span className="blackLine"></span>
             </div>
