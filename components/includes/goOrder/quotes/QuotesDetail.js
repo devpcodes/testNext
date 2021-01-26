@@ -1,10 +1,9 @@
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor } from '../../../../services/numFormat';
-const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
+const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
-
     const renderAmountSum = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
@@ -90,6 +89,9 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
     };
 
     const simtradeHandler = price => {
+        if (isNaN(Number(price))) {
+            return price;
+        }
         if (lot === 'Odd') {
             if (!!solaceData[0]?.data?.OddlotSimtrade) {
                 return price + '*';
@@ -107,7 +109,7 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
 
     return (
         <>
-            <div className="quotes__container">
+            <div className="quotes__container" style={{ display: show ? 'block' : 'none' }}>
                 <div className="item__container--top">
                     <div className="item__box">
                         <span className="label">昨收</span>
@@ -190,7 +192,7 @@ const QuotesDetail = ({ stopRender } = { stopRender: false }) => {
                     color: #0d1623;
                     font-weight: bold;
                 }
-                @media (max-width: 350px) {
+                @media (max-width: 370px) {
                     .item {
                         font-size: 1.4rem;
                     }

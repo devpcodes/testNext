@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Drawer } from 'antd';
 
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
@@ -11,8 +12,12 @@ import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
+    const [leadingBtnShow, setLeadingBtnShow] = useState(true);
+    const [drawerVisible, setDrawerVisible] = useState(false);
+    const [drawerHeight, setDrawerHeight] = useState(300);
     const code = useSelector(store => store.goOrder.code);
     const lot = useSelector(store => store.goOrder.lot);
+    const bs = useSelector(store => store.goOrder.bs);
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
@@ -30,6 +35,15 @@ const OrderGO = () => {
     }, [lot, code]);
 
     useEffect(() => {
+        if (bs !== '') {
+            setLeadingBtnShow(false);
+            setTimeout(() => {
+                setDrawerVisible(true);
+            }, 0);
+        }
+    }, [bs]);
+
+    useEffect(() => {
         console.log('loaded...');
         let elHeight = document.getElementById('container').clientHeight;
         setContainerHeight(elHeight);
@@ -42,15 +56,35 @@ const OrderGO = () => {
 
     return (
         <>
-            <div id="container">
+            <div className="OrderGO__container" id="container">
                 <PageHead title={'快速下單'} />
                 <Header />
                 <Info />
                 <SolaceClientComponent subscribeTopic={topic} only={true} />
                 <QuoteContainer />
+                <Drawer
+                    closable={true}
+                    visible={drawerVisible}
+                    placement={'bottom'}
+                    mask={false}
+                    onClose={() => {
+                        if (drawerHeight == 100) {
+                            setDrawerHeight(300);
+                        } else {
+                            setDrawerHeight(100);
+                        }
+                    }}
+                    height={drawerHeight}
+                >
+                    <p>Some contents...</p>
+                </Drawer>
             </div>
-            <LeadingBtn containerHeight={containerHeight} />
-            <style jsx>{``}</style>
+            <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
+            <style global jsx>{`
+                .ant-drawer-bottom.ant-drawer-open.no-mask {
+                    transition: all 0.3s !important;
+                }
+            `}</style>
         </>
     );
 };

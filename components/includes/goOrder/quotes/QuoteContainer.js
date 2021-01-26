@@ -7,9 +7,11 @@ import { setLot } from '../../../../store/goOrder/action';
 
 const QuoteContainer = () => {
     const [stopRenderNum, setStopRenderNum] = useState(1);
+    const [quotesDetailShow, setQuotesDetailShow] = useState(true);
     const slider = useRef(null);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
+    const bs = useSelector(store => store.goOrder.bs);
 
     useEffect(() => {
         if (lot === 'Odd') {
@@ -25,8 +27,14 @@ const QuoteContainer = () => {
         }
     }, [lot]);
 
+    useEffect(() => {
+        if (bs === 'B' || bs === 'S') {
+            setQuotesDetailShow(false);
+        }
+    }, [bs]);
+
     return (
-        <>
+        <div className="quote__container">
             <Carousel
                 afterChange={current => {
                     console.log('current', current);
@@ -43,11 +51,11 @@ const QuoteContainer = () => {
                 }}
             >
                 <div>
-                    <QuotesDetail stopRender={stopRenderNum === 0 ? true : false} />
+                    <QuotesDetail stopRender={stopRenderNum === 0 ? true : false} show={quotesDetailShow} />
                     <FiveLatestOffer stopRender={stopRenderNum === 0 ? true : false} />
                 </div>
                 <div>
-                    <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} />
+                    <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} show={quotesDetailShow} />
                     <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
                 </div>
             </Carousel>
@@ -72,7 +80,7 @@ const QuoteContainer = () => {
                     width: 4px;
                 }
             `}</style>
-        </>
+        </div>
     );
 };
 

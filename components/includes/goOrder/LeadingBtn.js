@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useWindowSize } from '../../../hooks/useWindowSize';
+import { setBs } from '../../../store/goOrder/action';
+import { useDispatch } from 'react-redux';
 
-const LeadingBtn = ({ containerHeight }) => {
+const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
+    const dispatch = useDispatch();
     const [shadow, setShadow] = useState('0px -7px 6px -3px #C7C7C7');
     const winSize = useWindowSize();
+
     useEffect(() => {
         console.log(winSize.height, containerHeight + 110);
         if (winSize.height < containerHeight + 110) {
@@ -12,10 +16,18 @@ const LeadingBtn = ({ containerHeight }) => {
             setShadow('none');
         }
     }, [winSize, containerHeight]);
+
+    const bsHandler = type => {
+        dispatch(setBs(type));
+    };
     return (
-        <div className="container">
-            <button className="btn buy">買進</button>
-            <button className="btn sell">賣出</button>
+        <div className="container" style={{ display: show ? 'block' : 'none' }}>
+            <button className="btn buy" onClick={bsHandler.bind(null, 'B')}>
+                買進
+            </button>
+            <button className="btn sell" onClick={bsHandler.bind(null, 'S')}>
+                賣出
+            </button>
             <style jsx>{`
                 .container {
                     padding: 16px;

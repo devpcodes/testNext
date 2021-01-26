@@ -1,8 +1,8 @@
 // 強制小數點n位
 export function toDecimal(x, n = 2) {
-    var f = parseFloat(x);
-    if (isNaN(f)) {
-        return false;
+    var num = parseFloat(x);
+    if (isNaN(num)) {
+        return x;
     }
     var f = Math.round(x * Math.pow(10, n)) / Math.pow(10, n);
     var s = f.toString();
@@ -14,6 +14,7 @@ export function toDecimal(x, n = 2) {
     while (s.length <= rs + n) {
         s += '0';
     }
+    console.log('ss', s, n);
     return s;
 }
 

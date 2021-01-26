@@ -80,12 +80,43 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                             >
                                                 {HLHandler(item)}
                                             </span>
-                                            <span className="volume">{data[0].data[volumeKey][index]}</span>
+                                            <span
+                                                className="volume"
+                                                style={sellPriceStyleHandler(data[0].data[volumeKey][index], 'buy')}
+                                            >
+                                                {data[0].data[volumeKey][index]}
+                                            </span>
+                                            <span
+                                                className="price"
+                                                style={{
+                                                    color: priceColor(
+                                                        item,
+                                                        lot === 'Odd'
+                                                            ? data[0].data.OddlotReference
+                                                            : data[0].data.Reference,
+                                                    ),
+                                                    width:
+                                                        toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2)
+                                                            .length *
+                                                            8 +
+                                                        'px',
+                                                    float: 'right',
+                                                }}
+                                            >
+                                                {simtradeHandler(
+                                                    toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2),
+                                                )}
+                                            </span>
                                             <div
                                                 className="box"
-                                                style={{
-                                                    width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
-                                                }}
+                                                style={sellBoxStyleHandler(
+                                                    data[0].data[volumeKey][index],
+                                                    !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
+                                                    'buy',
+                                                )}
+                                                // style={{
+                                                //     width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
+                                                // }}
                                             >
                                                 <div
                                                     className="box__content"
@@ -98,20 +129,6 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     }}
                                                 ></div>
                                             </div>
-                                            <span
-                                                className="price"
-                                                style={{
-                                                    color: priceColor(
-                                                        item,
-                                                        lot === 'Odd'
-                                                            ? data[0].data.OddlotReference
-                                                            : data[0].data.Reference,
-                                                    ),
-                                                    width: toDecimal(item).length * 8 + 'px',
-                                                }}
-                                            >
-                                                {simtradeHandler(toDecimal(item))}
-                                            </span>
                                         </div>
                                     );
                                 });
@@ -146,16 +163,23 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
-                                                    width: toDecimal(item).length * 8 + 'px',
+                                                    width:
+                                                        toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2)
+                                                            .length *
+                                                            8 +
+                                                        'px',
                                                 }}
                                             >
-                                                {simtradeHandler(toDecimal(item))}
+                                                {simtradeHandler(
+                                                    toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2),
+                                                )}
                                             </span>
                                             <div
                                                 className="box"
-                                                style={{
-                                                    width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
-                                                }}
+                                                style={sellBoxStyleHandler(
+                                                    data[0].data[volumeKey][index],
+                                                    !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
+                                                )}
                                             >
                                                 <div
                                                     className="box__content"
@@ -168,7 +192,12 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     }}
                                                 ></div>
                                             </div>
-                                            <span className="price">{data[0].data[volumeKey][index]}</span>
+                                            <span
+                                                className="price"
+                                                style={sellPriceStyleHandler(data[0].data[volumeKey][index])}
+                                            >
+                                                {data[0].data[volumeKey][index]}
+                                            </span>
                                         </div>
                                     );
                                 });
@@ -183,6 +212,49 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         },
         [lot, solaceData],
     );
+
+    const sellBoxStyleHandler = (amount, simtrade, type = 'sell') => {
+        let w;
+        if (String(amount).length <= 4) {
+            w = '98px';
+        } else if (String(amount).length == 5) {
+            w = '108px';
+        } else {
+            w = '118px';
+        }
+        if (type === 'sell') {
+            return {
+                width: `calc(100% - ${w})`,
+                paddingLeft: `${simtrade ? '9px' : '5px'}`,
+            };
+        } else {
+            return {
+                width: `calc(100% - ${w})`,
+                float: 'right',
+            };
+        }
+    };
+
+    const sellPriceStyleHandler = (amount, type = 'sell') => {
+        let w;
+        if (String(amount).length <= 4) {
+            w = '35px';
+        } else if (String(amount).length == 5) {
+            w = '45px';
+        } else {
+            w = '55px';
+        }
+        if (type === 'sell') {
+            return {
+                width: w,
+                float: 'right',
+            };
+        } else {
+            return {
+                width: w,
+            };
+        }
+    };
 
     const defaultRender = priceKey => {
         if (priceKey === 'BidPrice' || priceKey === 'OddlotBidPrice') {

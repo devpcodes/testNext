@@ -20,3 +20,10 @@ export const setCode = code => {
         payload: code,
     };
 };
+
+export const setBs = bs => {
+    return {
+        type: actionType.SET_BS,
+        payload: bs,
+    };
+};

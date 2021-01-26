@@ -13,11 +13,12 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     const solaceData = useRef([]);
     const currentSubscribe = useRef([]);
     const [solaceLoaded, setSolaceLoaded] = useState(false);
+    const [SNPLoaded, setSNPLoaded] = useState(false);
     useEffect(() => {
         loadScriptByURL('solace', `${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`, solaceLoadedHandler);
         return () => {
             if (solace.current != null) {
-                dispatch(setSolaceData({}));
+                dispatch(setSolaceData([]));
                 solace.current.disconnect();
             }
         };
@@ -31,6 +32,12 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             currentSubscribe.current = subscribeTopic;
         }
     }, [subscribeTopic, solaceLoaded]);
+
+    useEffect(() => {
+        if (SNPLoaded) {
+            subscribeMKTQUT();
+        }
+    }, [SNPLoaded]);
 
     const solaceLoadedHandler = () => {
         if (solace.current == null) {
@@ -51,7 +58,13 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         if (solaceData.current.length === 0) {
             updateSNPData(xhr);
             solaceData.current.push(xhr);
+            setSNPLoaded(true);
         } else {
+            // const hasSNP = solaceData.current.some((item)=>{item.topic.indexOf('SNP') >= 0})
+            // console.log('sssss===', solaceData.current)
+            // if(!hasSNP) {
+            //     return;
+            // }
             const checkLastKey = xhr.topic.split('/')[xhr.topic.split('/').length - 1];
             solaceData.current = solaceData.current.map(val => {
                 if (val != null) {
@@ -101,20 +114,22 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         }
         if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') === -1) {
             console.log(nextData);
-            let High = prevData?.High[0] || 0;
-            let Low = prevData?.Low[0] || 0;
-            if (prevData.High[0] < nextData.Close[0]) {
-                // && !data.Simtrade
-                High = nextData.Close[0];
-            }
-            if (prevData.Low[0] > nextData.Close[0]) {
-                Low = nextData.Close[0];
-            }
-            if (prevData.High[0] == 0 || prevData.High[0] == '--') {
-                prevData.High[0] = nextData.Close[0];
-            }
-            if (prevData.Low[0] == 0 || prevData.Low[0] == '--') {
-                prevData.Low[0] = nextData.Close[0];
+            let High = Array.isArray(prevData?.High) && (prevData?.High[0] || 0);
+            let Low = Array.isArray(prevData?.Low) && (prevData?.Low[0] || 0);
+            if (Array.isArray(prevData?.High) && Array.isArray(prevData?.Low)) {
+                if (prevData.High[0] < nextData.Close[0]) {
+                    // && !data.Simtrade
+                    High = nextData.Close[0];
+                }
+                if (prevData.Low[0] > nextData.Close[0]) {
+                    Low = nextData.Close[0];
+                }
+                if (prevData.High[0] == 0 || prevData.High[0] == '--') {
+                    prevData.High[0] = nextData.Close[0];
+                }
+                if (prevData.Low[0] == 0 || prevData.Low[0] == '--') {
+                    prevData.Low[0] = nextData.Close[0];
+                }
             }
 
             const DiffPrice = parseFloat((nextData.Close[0] - prevData.Reference).toFixed(2));
@@ -189,10 +204,12 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
 
     const checkTopic = item => {
         return currentSubscribe.current.some(topic => {
-            console.log('=======', item, topic);
             let symbol = topic.split('/')[3];
             let dataSymbol = item.topic.split('/')[3];
-            if (symbol == dataSymbol) {
+
+            let symbolLength = topic.split('/').length;
+            let dataSymbolLength = item.topic.split('/').length;
+            if (symbol == dataSymbol && dataSymbolLength === symbolLength) {
                 return true;
             }
         });
@@ -204,6 +221,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                 if (oldTopic.indexOf('SNP') === -1) {
                     solace.current.unsubscribe(oldTopic);
                 }
+                setSNPLoaded(false);
                 solaceData.current = clearReduxData(oldTopic, solaceData.current);
                 dispatch(setSolaceData(solaceData.current));
             });
@@ -233,12 +251,18 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                     solace.current.createCacheSession(topic, function () {
                         console.log('createCacheSession success');
                     });
-                } else {
-                    solace.current.subscribe(topic);
                 }
             });
             topic.current = subscribeTopic;
         }
+    };
+
+    const subscribeMKTQUT = () => {
+        subscribeTopic.forEach(topic => {
+            if (topic.indexOf('SNP') === -1) {
+                solace.current.subscribe(topic);
+            }
+        });
     };
 
     return (

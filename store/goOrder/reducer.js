@@ -4,6 +4,7 @@ const initialState = {
     type: 'S',
     lot: 'Board',
     code: '2890',
+    bs: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 code: action.payload,
+            };
+        case actionType.SET_BS:
+            return {
+                ...state,
+                bs: action.payload,
             };
         default:
             return state;

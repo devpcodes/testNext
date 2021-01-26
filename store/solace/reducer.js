@@ -1,6 +1,6 @@
 import * as actionType from './actionType';
 const initialState = {
-    solaceData: {},
+    solaceData: [],
 };
 
 const reducer = (state = initialState, action) => {
