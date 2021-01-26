@@ -13,8 +13,6 @@ import search from '../../../../resources/images/components/goOrder/edit-search.
 
 import theme from '../../../../resources/styles/theme';
 
-// TODO: 切換顯示零股行情資料 & 試搓資料
-
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -25,24 +23,82 @@ const moreItems = [
     { id: '6', color: 'brown', text: '+ 自選' },
 ];
 
+const trimMinus = value => {
+    return trim(value, '-');
+};
+
+const simTradeHandler = (price, isSimTrade) => {
+    if (isNaN(Number(price))) {
+        return price;
+    }
+
+    if (isSimTrade) {
+        return price + '*';
+    } else {
+        return price;
+    }
+};
+
+// 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
+// TODO: 注意 solaceData 盤中如果出現兩個 object，需再另外處理這個情況
+const solaceDataHandler = (solaceData, lot) => {
+    const isSimTrade = lot === 'Odd' ? !!solaceData[0]?.data?.OddlotSimtrade : !!solaceData[0]?.data?.Simtrade;
+
+    if (lot === 'Odd') {
+        const [
+            {
+                data: {
+                    Name = '',
+                    OddlotClose = 0,
+                    OddlotDiffPrice = 0,
+                    OddlotDiffRate = 0,
+                    OddlotSharesSum = 0,
+                    OddlotReference = 0,
+                } = {},
+            } = {},
+        ] = solaceData;
+
+        return {
+            name: Name,
+            close: OddlotClose,
+            diffPrice: OddlotDiffPrice,
+            diffRate: OddlotDiffRate,
+            volSum: OddlotSharesSum,
+            reference: OddlotReference,
+            isSimTrade,
+        };
+    } else {
+        const [
+            { data: { Name = '', Close = [], DiffPrice = [], DiffRate = [], VolSum = [], Reference = 0 } = {} } = {},
+        ] = solaceData;
+
+        return {
+            name: Name,
+            close: Close[0] || 0,
+            diffPrice: DiffPrice[0] || 0,
+            diffRate: DiffRate[0] || 0,
+            volSum: VolSum[0] || 0,
+            reference: Reference,
+            isSimTrade,
+        };
+    }
+};
+
 export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
     const solaceData = useSelector(store => store.solace.solaceData);
-    // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
-    const [
-        { data: { Name = '', Close = [], DiffPrice = [], DiffRate = [], VolSum = [], Reference = 0 } = {} } = {},
-    ] = Array.isArray(solaceData) ? solaceData : [{}];
+    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
 
     // console.log(`======solaceData:`, solaceData);
-    // console.log(`==============Name:`, Name);
-    // console.log(`==============Close:`, Close);
-    // console.log(`==============DiffPrice:`, DiffPrice);
-    // console.log(`==============DiffRate:`, DiffRate);
-    // console.log(`==============VolSum:`, VolSum);
-    // console.log(`==============Reference:`, Reference);
+    // console.log(`==============name:`, name);
+    // console.log(`==============close:`, close);
+    // console.log(`==============diffPrice:`, diffPrice);
+    // console.log(`==============diffRate:`, diffRate);
+    // console.log(`==============volSum:`, volSum);
+    // console.log(`==============reference:`, reference);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -65,7 +121,7 @@ export const Info = () => {
         <div className="info__container">
             <div className="row">
                 <div className="product__container">
-                    <div className="product__name">{trim(Name)}</div>
+                    <div className="product__name">{trim(name)}</div>
                     <div className="product__code">{code}</div>
                 </div>
                 <div className="toolbar__container">
@@ -78,11 +134,12 @@ export const Info = () => {
                 </div>
             </div>
             <div className="row">
-                <div className="price__container">{`${Close[0] || ''} ${getArrow(Close[0], Reference)} ${
-                    trim(DiffPrice[0], '-') || ''
-                } (${trim(DiffRate[0], '-') || ''}%)`}</div>
+                <div className="price__container">{`${simTradeHandler(close, isSimTrade)} ${getArrow(
+                    close,
+                    reference,
+                )} ${simTradeHandler(trimMinus(diffPrice), isSimTrade)} (${trimMinus(diffRate)}%)`}</div>
                 <div className="volume__container">
-                    <div className="volume">{`總量 ${VolSum[0] || '-'}`}</div>
+                    <div className="volume">{`總量 ${volSum}`}</div>
                     <div className="unit">張</div>
                 </div>
             </div>
@@ -148,7 +205,7 @@ export const Info = () => {
                     display: flex;
                     align-items: flex-end;
                     width: calc((8 / 12) * 100%);
-                    color: ${priceColor(Close[0], Reference)};
+                    color: ${priceColor(close, reference)};
                     font-size: 2rem;
                 }
                 .volume__container {
