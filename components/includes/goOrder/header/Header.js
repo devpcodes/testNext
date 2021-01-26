@@ -42,6 +42,10 @@ export const Header = () => {
     const groupedTypes = Object.keys(groupedAccount);
     const accountList = groupedAccount[type];
 
+    // TODO: 頁面登入權限處理 (未登入導到登入頁)
+    // TODO: query string 傳入 type 處理
+    // TODO: 連動 current account 的處理
+
     useEffect(() => {
         // TODO: 無帳號處理
         if (hasMounted) {

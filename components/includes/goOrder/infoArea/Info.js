@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { trim } from 'lodash';
 
 import { Search } from '../search/Search';
+import { TextBox } from './TextBox';
 
 import { priceColor, getArrow } from '../../../../services/numFormat';
 import { setLot } from '../../../../store/goOrder/action';
@@ -11,6 +12,18 @@ import share from '../../../../resources/images/components/goOrder/basic-share-o
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
 
 import theme from '../../../../resources/styles/theme';
+
+// TODO: 切換顯示零股行情資料 & 試搓資料
+
+// TODO: 暫時寫死，需發 API 查詢相關資料顯示
+const moreItems = [
+    { id: '1', color: 'dark', text: '融' },
+    { id: '2', color: 'red', text: '詳' },
+    { id: '3', color: 'orange', text: '存' },
+    { id: '4', color: 'green', text: '借' },
+    { id: '5', color: 'blue', text: '學' },
+    { id: '6', color: 'brown', text: '+ 自選' },
+];
 
 export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -82,12 +95,9 @@ export const Info = () => {
                     <div className="market__box">上市</div>
                 </div>
                 <div className="more__container">
-                    <div className="text__box dark">融</div>
-                    <div className="text__box red">詳</div>
-                    <div className="text__box orange">存</div>
-                    <div className="text__box green">借</div>
-                    <div className="text__box blue">學</div>
-                    <div className="text__box brown">+ 自選</div>
+                    {moreItems.map(item => (
+                        <TextBox key={item.id} color={item.color} text={item.text} />
+                    ))}
                 </div>
             </div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
@@ -200,38 +210,6 @@ export const Info = () => {
                     width: calc((8 / 12) * 100%);
                     font-size: 1.5rem;
                     font-weight: 500;
-                }
-                .text__box {
-                    height: 22px;
-                    padding: 1px 3.8px;
-                    border-radius: 2px;
-                }
-                .text__box ~ .text__box {
-                    margin-left: 4px;
-                }
-                .text__box.dark {
-                    color: ${theme.colors.darkBg};
-                    background-color: rgba(13, 22, 35, 0.1);
-                }
-                .text__box.red {
-                    color: #c43826;
-                    background-color: rgba(196, 56, 38, 0.1);
-                }
-                .text__box.orange {
-                    color: #ff9100;
-                    background-color: rgba(255, 210, 152, 0.27);
-                }
-                .text__box.green {
-                    color: #22a16f;
-                    background-color: rgba(34, 161, 111, 0.1);
-                }
-                .text__box.blue {
-                    color: #254a91;
-                    background-color: rgba(37, 74, 145, 0.1);
-                }
-                .text__box.brown {
-                    color: #daa360;
-                    background-color: rgba(218, 163, 96, 0.12);
                 }
             `}</style>
         </div>
