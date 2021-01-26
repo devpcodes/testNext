@@ -5,6 +5,7 @@ const initialState = {
     lot: 'Board',
     code: '2890',
     bs: '',
+    panelHeight: 360,
 };
 
 const reducer = (state = initialState, action) => {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 bs: action.payload,
+            };
+        case actionType.SET_PANEL_HEIGHT:
+            return {
+                ...state,
+                panelHeight: action.payload,
             };
         default:
             return state;

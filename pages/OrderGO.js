@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Drawer } from 'antd';
 
 import { PageHead } from '../components/includes/PageHead';
@@ -8,16 +8,19 @@ import { Header } from '../components/includes/goOrder/header/Header';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
 import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
 import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
+import { setPanelHeight } from '../store/goOrder/action';
 
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
     const [leadingBtnShow, setLeadingBtnShow] = useState(true);
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const [drawerHeight, setDrawerHeight] = useState(300);
+    // const [drawerHeight, setDrawerHeight] = useState(300);
     const code = useSelector(store => store.goOrder.code);
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
+    const panelHeight = useSelector(store => store.goOrder.panelHeight);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
@@ -68,13 +71,13 @@ const OrderGO = () => {
                     placement={'bottom'}
                     mask={false}
                     onClose={() => {
-                        if (drawerHeight == 100) {
-                            setDrawerHeight(300);
+                        if (panelHeight == 80) {
+                            dispatch(setPanelHeight(360));
                         } else {
-                            setDrawerHeight(100);
+                            dispatch(setPanelHeight(80));
                         }
                     }}
-                    height={drawerHeight}
+                    height={panelHeight}
                 >
                     <p>Some contents...</p>
                 </Drawer>
@@ -83,6 +86,17 @@ const OrderGO = () => {
             <style global jsx>{`
                 .ant-drawer-bottom.ant-drawer-open.no-mask {
                     transition: all 0.3s !important;
+                }
+                .ant-drawer-bottom.ant-drawer-open .ant-drawer-content-wrapper {
+                    box-shadow: 0 -6px 16px -8px rgba(0, 0, 0, 0.5), 0 -9px 28px 0 rgba(0, 0, 0, 0.1),
+                        0 -12px 48px 16px rgba(0, 0, 0, 0.005);
+                    border-radius: 8px;
+                }
+                .ant-drawer-content {
+                    border-radius: 8px;
+                }
+                .ant-drawer-body {
+                    overflow: hidden;
                 }
             `}</style>
         </>

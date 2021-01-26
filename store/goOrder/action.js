@@ -27,3 +27,10 @@ export const setBs = bs => {
         payload: bs,
     };
 };
+
+export const setPanelHeight = h => {
+    return {
+        type: actionType.SET_PANEL_HEIGHT,
+        payload: h,
+    };
+};
