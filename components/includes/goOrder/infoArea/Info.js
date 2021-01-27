@@ -5,7 +5,7 @@ import { trim } from 'lodash';
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
 
-import { priceColor, getArrow } from '../../../../services/numFormat';
+import { priceColor, getArrow, toDecimal } from '../../../../services/numFormat';
 import { setLot } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
@@ -137,7 +137,9 @@ export const Info = () => {
                 <div className="price__container">{`${simTradeHandler(close, isSimTrade)} ${getArrow(
                     close,
                     reference,
-                )} ${simTradeHandler(trimMinus(diffPrice), isSimTrade)} (${trimMinus(diffRate)}%)`}</div>
+                )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(
+                    toDecimal(diffRate),
+                )}%)`}</div>
                 <div className="volume__container">
                     <div className="volume">{`總量 ${volSum}`}</div>
                     <div className="unit">張</div>

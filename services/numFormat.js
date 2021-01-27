@@ -14,7 +14,7 @@ export function toDecimal(x, n = 2) {
     while (s.length <= rs + n) {
         s += '0';
     }
-    console.log('ss', s, n);
+    // console.log('ss', s, n);
     return s;
 }
 
