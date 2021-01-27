@@ -1,7 +1,7 @@
 import { trim } from 'lodash';
 
 // 強制小數點n位
-export function toDecimal(x, n = 2) {
+export function toDecimal(x, n = 2, replaceStr = null) {
     var num = parseFloat(x);
     if (isNaN(num)) {
         return x;
@@ -16,7 +16,14 @@ export function toDecimal(x, n = 2) {
     while (s.length <= rs + n) {
         s += '0';
     }
-    // console.log('ss', s, n);
+    if (replaceStr != null) {
+        if (!isNaN(Number(s)) && Number(s) == 0) {
+            s = replaceStr;
+        }
+        if (isNaN(Number(s))) {
+            s = replaceStr;
+        }
+    }
     return s;
 }
 

@@ -104,7 +104,11 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 }}
                                             >
                                                 {simtradeHandler(
-                                                    toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2),
+                                                    toDecimal(
+                                                        item,
+                                                        String(item).split('.')[0].length >= 4 ? 1 : 2,
+                                                        '--',
+                                                    ),
                                                 )}
                                             </span>
                                             <div
@@ -171,7 +175,11 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 }}
                                             >
                                                 {simtradeHandler(
-                                                    toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2),
+                                                    toDecimal(
+                                                        item,
+                                                        String(item).split('.')[0].length >= 4 ? 1 : 2,
+                                                        '--',
+                                                    ),
                                                 )}
                                             </span>
                                             <div
