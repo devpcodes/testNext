@@ -9,7 +9,8 @@ import SolaceClientComponent from '../components/includes/SolaceClientComponent'
 import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
 import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
 import { setPanelHeight } from '../store/goOrder/action';
-
+import PanelTabs from '../components/includes/goOrder/panel/PanelTabs';
+import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png';
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
@@ -78,8 +79,17 @@ const OrderGO = () => {
                         }
                     }}
                     height={panelHeight}
+                    closeIcon={
+                        <img
+                            style={{
+                                marginTop: '-4px',
+                                transform: panelHeight == 360 ? 'rotate(0)' : 'rotate(180deg)',
+                            }}
+                            src={arrow}
+                        />
+                    }
                 >
-                    <p>Some contents...</p>
+                    <PanelTabs />
                 </Drawer>
             </div>
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
@@ -97,6 +107,8 @@ const OrderGO = () => {
                 }
                 .ant-drawer-body {
                     overflow: hidden;
+                    padding: 0;
+                    padding-top: 14px;
                 }
             `}</style>
         </>
