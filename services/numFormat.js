@@ -1,3 +1,5 @@
+import { trim } from 'lodash';
+
 // 強制小數點n位
 export function toDecimal(x, n = 2) {
     var num = parseFloat(x);
@@ -55,3 +57,40 @@ export function getArrow(price, reference) {
     }
     return arrow;
 }
+
+// 根據升降單位顯示價格小數位
+export const formatPrice = price => {
+    const num = Number(price);
+    if (isNaN(num)) {
+        return price;
+    }
+    if (num <= 50) {
+        return num.toFixed(2);
+    } else if (num > 50 && num <= 500) {
+        return num.toFixed(1);
+    } else if (num > 500) {
+        return num.toFixed(0);
+    } else {
+        return num.toString();
+    }
+};
+
+// 去掉數字的減號
+export const trimMinus = value => {
+    if (isNaN(Number(value))) {
+        return value;
+    }
+    return trim(String(value), '-');
+};
+
+// 轉換試搓價格的顯示
+export const simTradeHandler = (price, isSimTrade) => {
+    if (isNaN(Number(price))) {
+        return price;
+    }
+    if (isSimTrade) {
+        return price + '*';
+    } else {
+        return price;
+    }
+};

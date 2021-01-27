@@ -5,7 +5,14 @@ import { trim } from 'lodash';
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
 
-import { priceColor, getArrow, toDecimal } from '../../../../services/numFormat';
+import {
+    priceColor,
+    getArrow,
+    toDecimal,
+    formatPrice,
+    trimMinus,
+    simTradeHandler,
+} from '../../../../services/numFormat';
 import { setLot } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
@@ -22,22 +29,6 @@ const moreItems = [
     { id: '5', color: 'blue', text: '學' },
     { id: '6', color: 'brown', text: '+ 自選' },
 ];
-
-const trimMinus = value => {
-    return trim(value, '-');
-};
-
-const simTradeHandler = (price, isSimTrade) => {
-    if (isNaN(Number(price))) {
-        return price;
-    }
-
-    if (isSimTrade) {
-        return price + '*';
-    } else {
-        return price;
-    }
-};
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 // TODO: 注意 solaceData 盤中如果出現兩個 object，需再另外處理這個情況
@@ -134,7 +125,7 @@ export const Info = () => {
                 </div>
             </div>
             <div className="row">
-                <div className="price__container">{`${simTradeHandler(close, isSimTrade)} ${getArrow(
+                <div className="price__container">{`${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(
                     close,
                     reference,
                 )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(
