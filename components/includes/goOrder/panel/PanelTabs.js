@@ -1,27 +1,44 @@
 import { useState } from 'react';
 import { Tabs } from 'antd';
+import { useDispatch } from 'react-redux';
+import TradingContainer from './TradingContainer';
+import { setBs } from '../../../../store/goOrder/action';
 
 const { TabPane } = Tabs;
+
+export const themeColor = {
+    buyTabColor: '#f45a4c',
+    buyGradient: '#fff6f5',
+    sellTabColor: '#22a16f',
+    sellGradient: '#e9fff6',
+    tradingAccColor: '#254a91',
+    tradingGradient: '#eaf1ff',
+};
+
 const PanelTabs = () => {
-    const [tabColor, setTabColor] = useState('#f45a4c');
-    const [gradient, setGradient] = useState('#fff6f5');
+    const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
+    const [gradient, setGradient] = useState(themeColor.buyGradient);
+    const dispatch = useDispatch();
+
     const tabChangeHandler = activeKey => {
         switch (activeKey) {
             case '1':
-                setTabColor('#f45a4c');
-                setGradient('#fff6f5');
+                dispatch(setBs('B'));
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
                 break;
             case '2':
-                setTabColor('#22a16f');
-                setGradient('#e9fff6');
+                dispatch(setBs('S'));
+                setTabColor(themeColor.sellTabColor);
+                setGradient(themeColor.sellGradient);
                 break;
             case '3':
-                setTabColor('#254a91');
-                setGradient('#eaf1ff');
+                setTabColor(themeColor.tradingAccColor);
+                setGradient(themeColor.tradingGradient);
                 break;
             default:
-                setTabColor('#f45a4c');
-                setGradient('#fff6f5');
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
                 break;
         }
     };
@@ -29,10 +46,10 @@ const PanelTabs = () => {
         <div className="tabs__container">
             <Tabs defaultActiveKey="1" onChange={tabChangeHandler}>
                 <TabPane tab="買進" key="1">
-                    Content of Tab Pane 1
+                    <TradingContainer />
                 </TabPane>
                 <TabPane tab="賣出" key="2">
-                    Content of Tab Pane 2
+                    <TradingContainer />
                 </TabPane>
                 <TabPane tab="成委回" key="3">
                     Content of Tab Pane 3

@@ -3,3 +3,7 @@ export const SET_LOT = 'SET_LOT';
 export const SET_CODE = 'SET_CODE';
 export const SET_BS = 'SET_BS';
 export const SET_PANEL_HEIGHT = 'SET_PANEL_HEIGHT';
+export const SET_ORD_TYPE = 'SET_PRICE_TYPE';
+export const SET_TRADE_TIME = 'SET_TRADE_TIME';
+export const SET_TIME_IN_FORCE = 'SET_TIME_IN_FORCE';
+export const SET_ORD_COUND = 'SET_ORD_COUND';

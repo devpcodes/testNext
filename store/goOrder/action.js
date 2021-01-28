@@ -34,3 +34,31 @@ export const setPanelHeight = h => {
         payload: h,
     };
 };
+
+export const setOrdType = type => {
+    return {
+        type: actionType.SET_ORD_TYPE,
+        payload: type,
+    };
+};
+
+export const setTradeTime = type => {
+    return {
+        type: actionType.SET_TRADE_TIME,
+        payload: type,
+    };
+};
+
+export const setTimeInForce = type => {
+    return {
+        type: actionType.SET_TIME_IN_FORCE,
+        payload: type,
+    };
+};
+
+export const setOrdCount = type => {
+    return {
+        type: actionType.SET_ORD_COUND,
+        payload: type,
+    };
+};

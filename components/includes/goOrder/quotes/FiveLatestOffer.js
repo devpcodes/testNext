@@ -116,11 +116,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 <div
                                                     className="box__content"
                                                     style={{
-                                                        width:
-                                                            Math.round(
-                                                                (data[0].data[volumeKey][index] * 100) /
-                                                                    getVolumeSum(volumeKey),
-                                                            ) + '%',
+                                                        width: boxContentWidth(
+                                                            (data[0].data[volumeKey][index] * 100) /
+                                                                getVolumeSum(volumeKey),
+                                                        ),
                                                     }}
                                                 ></div>
                                             </div>
@@ -175,11 +174,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 <div
                                                     className="box__content"
                                                     style={{
-                                                        width:
-                                                            Math.round(
-                                                                (data[0].data[volumeKey][index] * 100) /
-                                                                    getVolumeSum(volumeKey),
-                                                            ) + '%',
+                                                        width: boxContentWidth(
+                                                            (data[0].data[volumeKey][index] * 100) /
+                                                                getVolumeSum(volumeKey),
+                                                        ),
                                                     }}
                                                 ></div>
                                             </div>
@@ -204,20 +202,24 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         [lot, solaceData],
     );
 
+    const boxContentWidth = price => {
+        if (Math.round(price) == 0) {
+            return '1%';
+        } else {
+            return Math.round(price) + '%';
+        }
+    };
+
     const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength) => {
         let w;
-        if (String(amount).length + priceLength <= 9) {
-            w = '98px';
-        } else {
+        if (String(amount).length + priceLength >= 10) {
             w = '108px';
+        } else if (String(amount).length + priceLength >= 8) {
+            w = '100px';
+        } else {
+            w = '90px';
         }
-        // if (String(amount).length <= 4) {
-        //     w = '98px';
-        // } else if (String(amount).length == 5) {
-        //     w = '108px';
-        // } else {
-        //     w = '118px';
-        // }
+
         if (type === 'sell') {
             return {
                 width: `calc(100% - ${w})`,
