@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
-import { toDecimal, priceColor } from '../../../../services/numFormat';
+import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
 const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
@@ -25,9 +25,9 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getReference = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
-                return toDecimal(solaceData[0]?.data?.OddlotReference) || '--';
+                return formatPrice(solaceData[0]?.data?.OddlotReference, '--') || '--';
             } else {
-                return toDecimal(solaceData[0]?.data?.Reference) || '--';
+                return formatPrice(solaceData[0]?.data?.Reference, '--') || '--';
             }
         } else {
             return '--';

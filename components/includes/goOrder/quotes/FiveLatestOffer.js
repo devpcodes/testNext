@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
-import { toDecimal, priceColor } from '../../../../services/numFormat';
+import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
 const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
@@ -95,21 +95,11 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
-                                                    width:
-                                                        toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2)
-                                                            .length *
-                                                            8 +
-                                                        'px',
+                                                    width: formatPrice(item).length * 8 + 'px',
                                                     float: 'right',
                                                 }}
                                             >
-                                                {simtradeHandler(
-                                                    toDecimal(
-                                                        item,
-                                                        String(item).split('.')[0].length >= 4 ? 1 : 2,
-                                                        '--',
-                                                    ),
-                                                )}
+                                                {simtradeHandler(formatPrice(item, '--'))}
                                             </span>
                                             <div
                                                 className="box"
@@ -167,20 +157,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
-                                                    width:
-                                                        toDecimal(item, String(item).split('.')[0].length >= 4 ? 1 : 2)
-                                                            .length *
-                                                            8 +
-                                                        'px',
+                                                    width: formatPrice(item).length * 8 + 'px',
                                                 }}
                                             >
-                                                {simtradeHandler(
-                                                    toDecimal(
-                                                        item,
-                                                        String(item).split('.')[0].length >= 4 ? 1 : 2,
-                                                        '--',
-                                                    ),
-                                                )}
+                                                {simtradeHandler(formatPrice(item, '--'))}
                                             </span>
                                             <div
                                                 className="box"

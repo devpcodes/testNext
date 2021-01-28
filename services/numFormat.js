@@ -66,8 +66,11 @@ export function getArrow(price, reference) {
 }
 
 // 根據升降單位顯示價格小數位
-export const formatPrice = price => {
+export const formatPrice = (price, replace) => {
     const num = Number(price);
+    if (num == 0 && replace != null) {
+        return replace;
+    }
     if (isNaN(num)) {
         return price;
     }
