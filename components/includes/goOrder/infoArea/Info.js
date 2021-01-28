@@ -133,7 +133,7 @@ export const Info = () => {
                 )}%)`}</div>
                 <div className="volume__container">
                     <div className="volume">{`總量 ${volSum}`}</div>
-                    <div className="unit">張</div>
+                    <div className="unit">{lot === 'Odd' ? '股' : '張'}</div>
                 </div>
             </div>
             <div className="row">
