@@ -104,3 +104,15 @@ export const simTradeHandler = (price, isSimTrade) => {
         return price;
     }
 };
+
+//
+export const formatAmountSum = amount => {
+    if (isNaN(Number(amount))) {
+        return amount;
+    }
+    if (Number(amount) < 10) {
+        return toDecimal(amount, 2);
+    } else {
+        return toDecimal(amount, 0).split('.')[0];
+    }
+};

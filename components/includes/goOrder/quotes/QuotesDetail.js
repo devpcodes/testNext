@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
-import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
+import { toDecimal, priceColor, formatPrice, formatAmountSum } from '../../../../services/numFormat';
 const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
@@ -9,10 +9,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
             if (lot === 'Odd') {
                 return isNaN(Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100)
                     ? '--'
-                    : Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100;
+                    : formatAmountSum(Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100);
             } else {
                 if (solaceData[0]?.data?.AmountSum?.length > 0 && solaceData[0].data.AmountSum[0] != null) {
-                    return Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100;
+                    return formatAmountSum(Math.round(parseInt(solaceData[0].data.AmountSum[0]) / 1000000) / 100);
                 } else {
                     return '--';
                 }
@@ -192,14 +192,14 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
                     color: #0d1623;
                     font-weight: bold;
                 }
-                @media (max-width: 370px) {
+                /* @media (max-width: 370px) {
                     .item {
                         font-size: 1.4rem;
                     }
                     .label {
                         font-size: 1.4rem;
                     }
-                }
+                } */
                 .item__box {
                     font-size: 0;
                     display: inline-block;
