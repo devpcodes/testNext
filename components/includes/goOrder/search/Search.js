@@ -1,9 +1,10 @@
-import { memo, useState } from 'react';
+import { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
 import MyTransition from '../../myTransition';
 import { setCode } from '../../../../store/goOrder/action';
+import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 import theme from '../../../../resources/styles/theme';
 import searchImg from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -12,10 +13,11 @@ import closeImg from '../../../../resources/images/components/goOrder/menu-close
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
     const [value, setValue] = useState('');
+    const [products, setProducts] = useState([]);
 
-    const selectHandler = value => {
-        // console.log(value);
-        dispatch(setCode(value));
+    const selectHandler = e => {
+        console.log(e.currentTarget);
+        // dispatch(setCode(value));
     };
 
     const changeHandler = e => {
@@ -27,6 +29,19 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const clearHandler = () => {
         setValue('');
     };
+
+    useEffect(() => {
+        console.log(`========:`, value);
+
+        async function fetchData(keyword) {
+            const { result } = await fetchProducts(keyword);
+            console.log(`result:`, result);
+            setProducts(result);
+        }
+        if (isVisible || value !== '') {
+            fetchData(value);
+        }
+    }, [value]);
 
     return (
         <MyTransition isVisible={isVisible} classNames={'loginMobile'}>
@@ -52,7 +67,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         </button>
                     </div>
                     <section className="dropdown__container">
-                        <article className="dropdown__group">
+                        {/* <article className="dropdown__group">
                             <div className="group__title">最近搜尋</div>
                             <div className="group__item">
                                 <span className="item__code">6531</span>
@@ -73,6 +88,15 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                 <div className="item__code">006208</div>
                                 <div className="item__name">富邦台灣加權</div>
                             </div>
+                        </article> */}
+                        <article className="dropdown__group">
+                            <div className="group__title">個股</div>
+                            {products.map(item => (
+                                <div className="group__item" key={item.id} onClick={selectHandler}>
+                                    <div className="item__code">{item.symbol}</div>
+                                    <div className="item__name">{item.name_zh}</div>
+                                </div>
+                            ))}
                         </article>
                     </section>
                 </div>
@@ -163,7 +187,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         font-weight: 500;
                     }
                     .group__item .item__code {
-                        width: 65px;
+                        width: 25%;
                     }
                     .group__item .item__code,
                     .group__item .item__name {
