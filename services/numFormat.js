@@ -65,6 +65,7 @@ export function getArrow(price, reference) {
     return arrow;
 }
 
+// TODO: 股票與權證升降單位不一樣
 // 根據升降單位顯示價格小數位
 export const formatPrice = (price, replace) => {
     const num = Number(price);
