@@ -107,6 +107,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     data[0].data[volumeKey][index],
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'buy',
+                                                    formatPrice(item, '--').length,
                                                 )}
                                                 // style={{
                                                 //     width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
@@ -167,6 +168,8 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 style={sellBoxStyleHandler(
                                                     data[0].data[volumeKey][index],
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
+                                                    'sell',
+                                                    formatPrice(item, '--').length,
                                                 )}
                                             >
                                                 <div
@@ -201,15 +204,20 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         [lot, solaceData],
     );
 
-    const sellBoxStyleHandler = (amount, simtrade, type = 'sell') => {
+    const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength) => {
         let w;
-        if (String(amount).length <= 4) {
+        if (String(amount).length + priceLength <= 9) {
             w = '98px';
-        } else if (String(amount).length == 5) {
-            w = '108px';
         } else {
-            w = '118px';
+            w = '108px';
         }
+        // if (String(amount).length <= 4) {
+        //     w = '98px';
+        // } else if (String(amount).length == 5) {
+        //     w = '108px';
+        // } else {
+        //     w = '118px';
+        // }
         if (type === 'sell') {
             return {
                 width: `calc(100% - ${w})`,

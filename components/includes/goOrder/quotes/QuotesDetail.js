@@ -37,9 +37,9 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getOpen = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
-                return simtradeHandler(toDecimal(solaceData[0]?.data?.OddlotOpen, 2, '--')) || '--';
+                return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotOpen, '--')) || '--';
             } else {
-                return simtradeHandler(toDecimal(solaceData[0]?.data?.Open, 2, '--')) || '--';
+                return simtradeHandler(formatPrice(solaceData[0]?.data?.Open, '--')) || '--';
             }
         } else {
             return '--';
@@ -49,10 +49,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getHigh = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
-                return simtradeHandler(toDecimal(solaceData[0]?.data?.OddlotHigh, 2, '--')) || '--';
+                return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotHigh, '--')) || '--';
             } else {
                 if (solaceData[0]?.data?.High?.length > 0) {
-                    return simtradeHandler(toDecimal(solaceData[0]?.data?.High[0], 2, '--')) || '--';
+                    return simtradeHandler(formatPrice(solaceData[0]?.data?.High[0], '--')) || '--';
                 }
             }
         } else {
@@ -63,10 +63,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getLow = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
-                return simtradeHandler(toDecimal(solaceData[0]?.data?.OddlotLow, 2, '--')) || '--';
+                return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotLow, '--')) || '--';
             } else {
                 if (solaceData[0]?.data?.Low?.length > 0) {
-                    return simtradeHandler(toDecimal(solaceData[0]?.data?.Low[0], 2, '--')) || '--';
+                    return simtradeHandler(formatPrice(solaceData[0]?.data?.Low[0], '--')) || '--';
                 }
             }
         } else {
@@ -77,10 +77,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getAvgPrice = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd') {
-                return toDecimal(solaceData[0]?.data?.OddlotAvgPrice, 2, '--') || '--';
+                return formatPrice(solaceData[0]?.data?.OddlotAvgPrice, '--') || '--';
             } else {
                 if (solaceData[0]?.data?.AvgPrice?.length > 0) {
-                    return toDecimal(solaceData[0]?.data?.AvgPrice[0], 2, '--') || '--';
+                    return formatPrice(solaceData[0]?.data?.AvgPrice[0], '--') || '--';
                 }
             }
         } else {
