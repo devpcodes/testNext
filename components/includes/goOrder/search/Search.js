@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
@@ -11,9 +11,21 @@ import closeImg from '../../../../resources/images/components/goOrder/menu-close
 
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
+    const [value, setValue] = useState('');
+
     const selectHandler = value => {
-        console.log(value);
+        // console.log(value);
         dispatch(setCode(value));
+    };
+
+    const changeHandler = e => {
+        const value = e.target.value;
+        // console.log(`e.target.value:`, value);
+        setValue(value);
+    };
+
+    const clearHandler = () => {
+        setValue('');
     };
 
     return (
@@ -23,8 +35,17 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                     <div className="topBar__container">
                         <div className="autoComplete__container">
                             <img src={searchImg} alt="search"></img>
-                            <input type="text" placeholder="請輸入股票代碼或名稱" className="autoComplete__input" />
-                            <img src={closeImg} alt="search"></img>
+                            <input
+                                type="text"
+                                name="inputOfSearch"
+                                placeholder="請輸入股票代碼或名稱"
+                                value={value}
+                                onChange={changeHandler}
+                                className="autoComplete__input"
+                            />
+                            <button onClick={clearHandler}>
+                                <img src={closeImg} alt="search"></img>
+                            </button>
                         </div>
                         <button className="cancel__btn" onClick={handleCancel}>
                             取消
@@ -43,14 +64,14 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                             </div>
                         </article>
                         <article className="dropdown__group">
-                            <div className="group__title">最近搜尋</div>
+                            <div className="group__title">本日熱門搜尋</div>
                             <div className="group__item">
                                 <div className="item__code">6531</div>
                                 <div className="item__name">愛普</div>
                             </div>
                             <div className="group__item">
-                                <div className="item__code">6531</div>
-                                <div className="item__name">愛普</div>
+                                <div className="item__code">006208</div>
+                                <div className="item__name">富邦台灣加權</div>
                             </div>
                         </article>
                     </section>
