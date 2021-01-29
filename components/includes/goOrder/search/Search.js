@@ -1,6 +1,6 @@
 import { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import MyTransition from '../../myTransition';
 import { setCode } from '../../../../store/goOrder/action';
@@ -12,36 +12,81 @@ import closeImg from '../../../../resources/images/components/goOrder/menu-close
 
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
-    const [value, setValue] = useState('');
+    const [keyword, setKeyword] = useState('');
     const [products, setProducts] = useState([]);
+    const type = useSelector(store => store.goOrder.type);
 
-    const selectHandler = e => {
-        console.log(e.currentTarget);
-        // dispatch(setCode(value));
+    const selectHandler = id => {
+        const selectedProduct = products.find(product => product.id === id);
+        dispatch(setCode(selectedProduct?.symbol));
+        cancelHandler();
+    };
+
+    const enterHandler = keyword => {
+        const selectedProduct = products.find(
+            product => product.symbol === keyword || product.name_zh === keyword || product.name === keyword,
+        );
+        if (selectedProduct) {
+            dispatch(setCode(selectedProduct?.symbol));
+            cancelHandler();
+        }
     };
 
     const changeHandler = e => {
-        const value = e.target.value;
-        // console.log(`e.target.value:`, value);
-        setValue(value);
+        const keyword = e.target.value;
+        setKeyword(keyword);
     };
 
     const clearHandler = () => {
-        setValue('');
+        setKeyword('');
+    };
+
+    const cancelHandler = () => {
+        clearHandler();
+        handleCancel();
     };
 
     useEffect(() => {
-        console.log(`========:`, value);
+        // if (!isVisible) return;
 
-        async function fetchData(keyword) {
-            const { result } = await fetchProducts(keyword);
-            console.log(`result:`, result);
-            setProducts(result);
+        const getMarketType = type => {
+            switch (type) {
+                case 'S':
+                    return ['S'];
+                case 'H':
+                    return ['SB'];
+                case 'F':
+                    return ['F'];
+                case 'O':
+                    return ['O'];
+                default:
+                    return ['S', 'SB', 'F', 'O'];
+            }
+        };
+
+        async function fetchData() {
+            const data = {
+                query: keyword,
+                marketType: getMarketType(type),
+                limit: 30,
+                isOrder: true,
+            };
+            try {
+                const { result } = await fetchProducts(data);
+                // console.log(`====== result:`, result);
+                setProducts(result);
+            } catch (error) {
+                console.error(`fetchProducts-error:`, error);
+            }
         }
-        if (isVisible || value !== '') {
-            fetchData(value);
+
+        if (keyword === '') {
+            // console.log('---------------------');
+            setProducts([]);
+        } else if (isVisible && keyword !== '') {
+            fetchData();
         }
-    }, [value]);
+    }, [keyword]);
 
     return (
         <MyTransition isVisible={isVisible} classNames={'loginMobile'}>
@@ -54,15 +99,25 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                 type="text"
                                 name="inputOfSearch"
                                 placeholder="請輸入股票代碼或名稱"
-                                value={value}
+                                value={keyword}
                                 onChange={changeHandler}
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter') {
+                                        enterHandler(keyword);
+                                    }
+                                }}
                                 className="autoComplete__input"
                             />
                             <button onClick={clearHandler}>
                                 <img src={closeImg} alt="search"></img>
                             </button>
                         </div>
-                        <button className="cancel__btn" onClick={handleCancel}>
+                        <button
+                            className="cancel__btn"
+                            onClick={() => {
+                                cancelHandler();
+                            }}
+                        >
                             取消
                         </button>
                     </div>
@@ -90,11 +145,25 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                             </div>
                         </article> */}
                         <article className="dropdown__group">
-                            <div className="group__title">個股</div>
+                            {/* {!!products.length && type === 'S' && <div className="group__title">個股</div>} */}
                             {products.map(item => (
-                                <div className="group__item" key={item.id} onClick={selectHandler}>
+                                <div
+                                    className="group__item"
+                                    key={item.id}
+                                    onClick={() => {
+                                        selectHandler(item.id);
+                                    }}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') {
+                                            selectHandler(item.id);
+                                        }
+                                    }}
+                                    role="option"
+                                    aria-selected="false"
+                                    tabIndex={0}
+                                >
                                     <div className="item__code">{item.symbol}</div>
-                                    <div className="item__name">{item.name_zh}</div>
+                                    <div className="item__name">{item.name_zh || item.name}</div>
                                 </div>
                             ))}
                         </article>
@@ -145,6 +214,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                     .autoComplete__container .autoComplete__input {
                         height: 22px;
                         width: calc(100% - 56px);
+                        line-height: 22px;
                         font-size: 1.6rem;
                         color: ${theme.colors.darkBg};
                     }
