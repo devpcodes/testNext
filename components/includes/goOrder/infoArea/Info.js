@@ -168,6 +168,7 @@ export const Info = () => {
                 .row {
                     display: flex;
                     flex-wrap: wrap;
+                    justify-content: space-between;
                 }
                 .row ~ .row {
                     margin-top: 8px;
@@ -175,7 +176,7 @@ export const Info = () => {
                 .product__container {
                     display: flex;
                     align-items: flex-end;
-                    width: calc((9 / 12) * 100%);
+                    max-width: calc((9 / 12) * 100%);
                     color: ${theme.colors.darkBg};
                 }
                 .product__name {
@@ -189,7 +190,7 @@ export const Info = () => {
                     display: flex;
                     justify-content: flex-end;
                     align-items: flex-end;
-                    width: calc((3 / 12) * 100%);
+                    max-width: calc((3 / 12) * 100%);
                 }
                 .toolbar__container .search {
                     margin-left: 1rem;
@@ -197,7 +198,7 @@ export const Info = () => {
                 .price__container {
                     display: flex;
                     align-items: flex-end;
-                    width: calc((8 / 12) * 100%);
+                    max-width: calc((8 / 12) * 100%);
                     color: ${priceColor(close, reference)};
                     font-size: 2rem;
                 }
@@ -205,7 +206,7 @@ export const Info = () => {
                     display: flex;
                     justify-content: flex-end;
                     align-items: flex-end;
-                    width: calc((4 / 12) * 100%);
+                    max-width: calc((4 / 12) * 100%);
                     color: ${theme.colors.darkBg};
                 }
                 .volume__container .volume {
@@ -219,7 +220,7 @@ export const Info = () => {
                 .market__container {
                     display: flex;
                     align-items: flex-end;
-                    width: calc((4 / 12) * 100%);
+                    max-width: calc((4 / 12) * 100%);
                     font-size: 1.5rem;
                     font-weight: 500;
                 }
@@ -257,7 +258,7 @@ export const Info = () => {
                     display: flex;
                     justify-content: flex-end;
                     align-items: flex-end;
-                    width: calc((8 / 12) * 100%);
+                    max-width: calc((8 / 12) * 100%);
                     font-size: 1.5rem;
                     font-weight: 500;
                 }
