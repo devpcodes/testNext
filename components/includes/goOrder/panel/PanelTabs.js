@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
 import { useDispatch } from 'react-redux';
 import TradingContainer from './TradingContainer';
@@ -16,25 +17,40 @@ export const themeColor = {
 };
 
 const PanelTabs = () => {
+    const bs = useSelector(store => store.goOrder.bs);
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
     const [gradient, setGradient] = useState(themeColor.buyGradient);
+    const [tabKey, setTabKey] = useState('1');
     const dispatch = useDispatch();
-
+    useEffect(() => {
+        if (bs === 'B') {
+            setTabKey('1');
+            setTabColor(themeColor.buyTabColor);
+            setGradient(themeColor.buyGradient);
+        } else {
+            setTabKey('2');
+            setTabColor(themeColor.sellTabColor);
+            setGradient(themeColor.sellGradient);
+        }
+    }, [bs]);
     const tabChangeHandler = activeKey => {
         switch (activeKey) {
             case '1':
                 dispatch(setBs('B'));
                 setTabColor(themeColor.buyTabColor);
                 setGradient(themeColor.buyGradient);
+                setTabKey(activeKey);
                 break;
             case '2':
                 dispatch(setBs('S'));
                 setTabColor(themeColor.sellTabColor);
                 setGradient(themeColor.sellGradient);
+                setTabKey(activeKey);
                 break;
             case '3':
                 setTabColor(themeColor.tradingAccColor);
                 setGradient(themeColor.tradingGradient);
+                setTabKey(activeKey);
                 break;
             default:
                 setTabColor(themeColor.buyTabColor);
@@ -44,7 +60,7 @@ const PanelTabs = () => {
     };
     return (
         <div className="tabs__container">
-            <Tabs defaultActiveKey="1" onChange={tabChangeHandler}>
+            <Tabs activeKey={tabKey} onChange={tabChangeHandler}>
                 <TabPane tab="買進" key="1">
                     <TradingContainer />
                 </TabPane>

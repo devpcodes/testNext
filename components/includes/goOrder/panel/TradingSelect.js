@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import selectIcon from '../../../../resources/images/components/goOrder/arrow-selectdown.png';
 
@@ -14,6 +14,12 @@ const TradingSelect = () => {
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
     const timeInForce = useSelector(store => store.goOrder.time_in_force);
     const ordCound = useSelector(store => store.goOrder.ord_cond);
+
+    const [ordCoundOption, setOrdCoundOption] = useState([
+        { txt: '現股', val: '0' },
+        { txt: '融資', val: '3' },
+        { txt: '融券', val: '4' },
+    ]);
     useEffect(() => {
         if (lot === 'Board' && tradeTime === 'ing') {
             dispatch(setOrdType(' '));
@@ -27,6 +33,8 @@ const TradingSelect = () => {
         if (lot === 'Odd' && tradeTime === 'after') {
             dispatch(setOrdType('2'));
         }
+
+        updateOrdCound(lot);
     }, [lot, tradeTime]);
 
     const lotChange = value => {
@@ -40,6 +48,19 @@ const TradingSelect = () => {
     };
     const ordCoundChange = value => {
         dispatch(setOrdCount(value));
+    };
+    const updateOrdCound = lot => {
+        // 零股交易只有現股
+        if (lot === 'Odd') {
+            setOrdCoundOption([{ txt: '現股', val: '0' }]);
+            dispatch(setOrdCount('0'));
+        } else {
+            setOrdCoundOption([
+                { txt: '現股', val: '0' },
+                { txt: '融資', val: '3' },
+                { txt: '融券', val: '4' },
+            ]);
+        }
     };
     return (
         <div className="select__container">
@@ -57,9 +78,13 @@ const TradingSelect = () => {
             </div>
             <div className="selectBox">
                 <Select value={ordCound} suffixIcon={<img src={selectIcon} />} onChange={ordCoundChange}>
-                    <Option value="0">現股</Option>
-                    <Option value="3">融資</Option>
-                    <Option value="4">融券</Option>
+                    {ordCoundOption.map((item, index) => {
+                        return (
+                            <Option key={index} value={item.val}>
+                                {item.txt}
+                            </Option>
+                        );
+                    })}
                 </Select>
             </div>
             <div className="selectBox">
@@ -78,24 +103,24 @@ const TradingSelect = () => {
                 }
             `}</style>
             <style global jsx>{`
-                .trading__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                .select__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
                     width: calc((100vw - 32px - 24px) / 4);
                     height: 40px;
                     background: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                     border: none;
                 }
-                .trading__container .ant-select-single .ant-select-selector .ant-select-selection-item,
+                .select__container .ant-select-single .ant-select-selector .ant-select-selection-item,
                 .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
                     line-height: 40px;
                     color: #ffffff;
                     letter-spacing: 1px;
                     font-size: 1.6rem;
                 }
-                .trading__container .ant-select-arrow {
+                .select__container .ant-select-arrow {
                     top: 38%;
                     right: 11px;
                 }
-                .trading__container .ant-select-single.ant-select-show-arrow .ant-select-selection-item,
+                .select__container .ant-select-single.ant-select-show-arrow .ant-select-selection-item,
                 .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
                     padding-right: 0;
                 }

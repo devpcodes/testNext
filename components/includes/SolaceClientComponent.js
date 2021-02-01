@@ -111,6 +111,11 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         const nextData = realTimeData.data;
         if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') >= 0) {
             Object.assign(prevData, nextData);
+
+            // 刪simtrade
+            if (nextData.OddlotSimtrade == null) {
+                delete prevData['OddlotSimtrade'];
+            }
         }
         if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') === -1) {
             console.log(nextData);
@@ -161,6 +166,11 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             prevData.DiffRate[0] = DiffRate;
             prevData.AvgPrice[0] = AvgPrice;
             prevData.DiffType[0] = DiffType;
+
+            // 刪simtrade
+            if (nextData.Simtrade == null) {
+                delete prevData['Simtrade'];
+            }
         }
     };
 
@@ -182,6 +192,17 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
                 }
             }
             Object.assign(prevData, nextData);
+
+            // 刪simtrade
+            if (realTimeData.topic.indexOf('ODDLOT') >= 0) {
+                if (nextData.OddlotSimtrade == null) {
+                    delete prevData['OddlotSimtrade'];
+                }
+            } else {
+                if (nextData.Simtrade == null) {
+                    delete prevData['Simtrade'];
+                }
+            }
         }
     };
 
