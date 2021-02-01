@@ -29,15 +29,10 @@ function BigProfitLoss() {
                     <p className="text">查詢時間：2021.01.29 10:53</p>
                     {!isMobile && <p className="text">交易幣別：新台幣</p>}
                 </div>
-                <DataCard title={'買進成交總金額'} subTitle={'含手續費'} number={'168,168,000'} styleType={'buy'} />
-                <DataCard
-                    title={'賣出成交總金額'}
-                    subTitle={'含手續費及交易稅'}
-                    number={'912,951,213'}
-                    styleType={'sell'}
-                />
-                <DataCard title={'當日已實現損益'} number={'+8,168,005'} />
-                <DataCard title={'未實現損益'} number={'-999,168,752'} />
+                <DataCard title={'買進成交總金額'} subTitle={'含手續費'} value={168168000} styleType={'buy'} />
+                <DataCard title={'賣出成交總金額'} subTitle={'含手續費及交易稅'} value={912951213} styleType={'sell'} />
+                <DataCard title={'當日已實現損益'} value={8168005} numberStyle={true} />
+                <DataCard title={'未實現損益'} value={-999168752} numberStyle={true} />
                 {isMobile && <p className="text__remark">註：金額皆含手續費或交易稅</p>}
             </div>
             <style jsx>{`
@@ -68,12 +63,16 @@ function BigProfitLoss() {
                 button.reload__btn {
                     width: 128px;
                     height: 44px;
-                    background-color: #c43826;
+                    background-color: ${theme.colors.primary};
                     font-size: 1.6rem;
                     color: #ffffff;
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    transition: ${theme.button.transition};
+                }
+                button.reload__btn:hover {
+                    background-color: ${theme.colors.primaryHover};
                 }
                 button.reload__btn span {
                     margin: 0 0 0 8px;

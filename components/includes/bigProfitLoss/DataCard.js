@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import theme from '../../../resources/styles/theme';
+import { formatNum } from '../../../services/formatNum';
 
-export const DataCard = memo(({ title, subTitle, number, styleType }) => {
+export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     const getColor = styleType => {
@@ -18,6 +19,31 @@ export const DataCard = memo(({ title, subTitle, number, styleType }) => {
         }
     };
 
+    const getNumberColor = value => {
+        let color = '#0d1623';
+        if (Number(value) == 0 || isNaN(Number(value))) {
+            return color;
+        }
+        if (Number(value) > 0) {
+            color = '#f45a4c';
+        } else if (Number(value) < 0) {
+            color = '#22a16f';
+        }
+        return color;
+    };
+
+    const formatValue = (value, numberStyle) => {
+        if (typeof value !== 'number') {
+            return '--';
+        }
+
+        let formatVal = formatNum(value);
+        if (numberStyle && Number(value) > 0) {
+            formatVal = `+${formatVal}`;
+        }
+        return formatVal;
+    };
+
     return (
         <>
             <article className="data__container">
@@ -25,9 +51,9 @@ export const DataCard = memo(({ title, subTitle, number, styleType }) => {
                     <p className="data__title">{title}</p>
                     {!isMobile && <p className="data__sub-title">{subTitle}</p>}
                 </div>
-                <div className="data__number">{number}</div>
+                <div className="data__number">{formatValue(value, numberStyle)}</div>
             </article>
-            <style jsx global>{`
+            <style jsx>{`
                 p {
                     margin: 0;
                 }
@@ -36,7 +62,6 @@ export const DataCard = memo(({ title, subTitle, number, styleType }) => {
                     justify-content: space-between;
                     align-items: center;
                     width: 100%;
-                    height: 110px;
                     margin: 16px 0;
                     padding: 28px 32px;
                     border: solid 1px #e6ebf5;
@@ -54,6 +79,7 @@ export const DataCard = memo(({ title, subTitle, number, styleType }) => {
                     line-height: 22px;
                     font-size: 1.6rem;
                     color: #a9b6cb;
+                    margin-top: 4px;
                 }
                 .data__container .data__number {
                     height: 56px;
@@ -61,11 +87,10 @@ export const DataCard = memo(({ title, subTitle, number, styleType }) => {
                     font-size: 4rem;
                     font-weight: 600;
                     text-align: right;
-                    color: #0d1623;
+                    color: ${numberStyle ? getNumberColor(value) : '#0d1623'};
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .data__container {
-                        height: 90px;
                         margin: 8px 0;
                         padding: 16px;
                         display: block;
@@ -91,13 +116,15 @@ export const DataCard = memo(({ title, subTitle, number, styleType }) => {
 DataCard.propTypes = {
     title: PropTypes.string.isRequired,
     subTitle: PropTypes.string,
-    number: PropTypes.any.isRequired, // TODO: 串資料後，需改成 number
+    value: PropTypes.number.isRequired,
     styleType: PropTypes.string,
+    numberStyle: PropTypes.bool,
 };
 
 DataCard.defaultProps = {
     subTitle: '',
     styleType: '',
+    numberStyle: false,
 };
 
 DataCard.displayName = 'DataCard';
