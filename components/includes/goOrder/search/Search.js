@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
 import MyTransition from '../../myTransition';
-import { setCode } from '../../../../store/goOrder/action';
+import { setCode, setProductInfo } from '../../../../store/goOrder/action';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 import theme from '../../../../resources/styles/theme';
@@ -18,8 +18,11 @@ export const Search = memo(({ isVisible, handleCancel }) => {
 
     const selectHandler = id => {
         const selectedProduct = products.find(product => product.id === id);
-        dispatch(setCode(selectedProduct?.symbol));
-        cancelHandler();
+        if (selectedProduct) {
+            dispatch(setCode(selectedProduct?.symbol));
+            dispatch(setProductInfo(selectedProduct));
+            cancelHandler();
+        }
     };
 
     const enterHandler = keyword => {
@@ -28,6 +31,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
         );
         if (selectedProduct) {
             dispatch(setCode(selectedProduct?.symbol));
+            dispatch(setProductInfo(selectedProduct));
             cancelHandler();
         }
     };

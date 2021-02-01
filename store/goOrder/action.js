@@ -21,6 +21,13 @@ export const setCode = code => {
     };
 };
 
+export const setProductInfo = info => {
+    return {
+        type: actionType.SET_PRODUCT_INFO,
+        payload: info,
+    };
+};
+
 export const setBs = bs => {
     return {
         type: actionType.SET_BS,
