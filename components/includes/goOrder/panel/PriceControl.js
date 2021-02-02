@@ -7,7 +7,7 @@ const { Option } = Select;
 const PriceControl = ({ title }) => {
     const bs = useSelector(store => store.goOrder.bs);
     return (
-        <div className="price__container">
+        <div className="price_control">
             <div className="select__box">
                 {title === '限價' ? (
                     <Select value=" " suffixIcon={<img src={selectIcon} />}>
@@ -35,7 +35,7 @@ const PriceControl = ({ title }) => {
                     font-size: 1.6rem;
                     color: #0d1623;
                 }
-                .price__container {
+                .price_control {
                     margin-top: 8px;
                     height: 46px;
                 }
@@ -55,35 +55,35 @@ const PriceControl = ({ title }) => {
                     text-align: right;
                     vertical-align: top;
                 }
-                .price__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                .price_control .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
                     /* width: calc((100vw - 100px) / 4); */
                     height: 40px;
                     background: white;
                     border: none;
                     padding: 0;
                 }
-                .price__container .ant-select {
+                .price_control .ant-select {
                     margin-right: 8px;
                     width: 54px;
                 }
-                .price__container .ant-select-single.ant-select-show-arrow .ant-select-selection-item {
+                .price_control .ant-select-single.ant-select-show-arrow .ant-select-selection-item {
                     color: #0d1623;
                     font-size: 1.6rem;
                 }
-                .price__container
+                .price_control
                     .ant-select-focused.ant-select-single:not(.ant-select-customize-input)
                     .ant-select-selector {
                     box-shadow: none;
                 }
-                .price__container .ant-input:placeholder-shown {
+                .price_control .ant-input:placeholder-shown {
                     height: 45px;
                     /* width: 80%; */
                 }
-                .price__container .ant-select-arrow {
+                .price_control .ant-select-arrow {
                     top: 24%;
                     right: 7px;
                 }
-                .price__container .ant-btn {
+                .price_control .ant-btn {
                     display: inline-block;
                     height: 46px;
                     border: none;
@@ -99,19 +99,19 @@ const PriceControl = ({ title }) => {
                 .btn__box .ant-btn {
                     display: inline-block;
                 }
-                .price__container .ant-btn > span {
+                .price_control .ant-btn > span {
                     margin-left: -2px;
                 }
-                .price__container .ant-input-focused,
+                .price_control .ant-input-focused,
                 .ant-input:focus {
                     box-shadow: none;
                 }
-                .price__container .ant-input {
+                .price_control .ant-input {
                     height: 46px;
                     font-size: 2.6rem;
                     color: black;
                 }
-                .price__container .ant-input:hover {
+                .price_control .ant-input:hover {
                     border-color: #dedede;
                 }
             `}</style>
