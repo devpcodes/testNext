@@ -135,7 +135,8 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
             ) : (
                 <Select
                     className="account__select"
-                    defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
+                    // defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
+                    value={`${currentAccount.broker_id}-${currentAccount.account}`}
                     style={{ width: dropdownWidth }}
                     onChange={handleChange}
                     getPopupContainer={trigger => trigger.parentElement}

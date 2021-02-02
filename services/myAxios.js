@@ -5,6 +5,7 @@ import { logout } from './user/logoutFetcher';
 import { getCurrentPath } from './getCurrentPath';
 
 const lykanDefaultVersion = 'v1';
+const divoDefaultVersion = 'v1';
 const a8DefaultVersion = 'v1';
 const a8Auth = {
     username: 'nweb',
@@ -132,6 +133,30 @@ export const getLykanInstance = (version = lykanDefaultVersion, modal = true) =>
     );
 
     return LykanIns;
+};
+
+// Divo instance：設置 call lykan server 的最低配置
+const createDivoInstance = (version = divoDefaultVersion) =>
+    axios.create({
+        baseURL: `${process.env.NEXT_PUBLIC_DIVO}/${version}/`,
+        timeout: 7000,
+        withCredentials: true,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getDivoInstance = (version = divoDefaultVersion, modal = true) => {
+    const DivoIns = createDivoInstance(version);
+
+    DivoIns.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
+
+    return DivoIns;
 };
 
 export default axios;
