@@ -20,6 +20,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const accountInput = useRef(null);
 
     const recaptchaReady = useSelector(store => store.layout.recaptchaReady);
+    const platform = useSelector(store => store.general.platform);
 
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
@@ -320,6 +321,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // const reCaptchaLoadReady = () => {
     //     setReCaptchaReady(true);
     // };
+    const getSignUpUrl = () => {
+        if (platform === 'udn') {
+            return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+        } else {
+            return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+        }
+    };
     return (
         <div className="login__container">
             {/* <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} /> */}
@@ -478,7 +486,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     {!isIframe ? (
                         <a
                             target="_blank"
-                            href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            href={getSignUpUrl()}
+                            // href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
                             className="a__link"
                         >
                             還不是永豐金證券客戶
