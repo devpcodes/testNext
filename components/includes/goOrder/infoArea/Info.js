@@ -31,7 +31,6 @@ const moreItems = [
 ];
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
-// TODO: 注意 solaceData 盤中如果出現兩個 object，需再另外處理這個情況
 const solaceDataHandler = (solaceData, lot) => {
     const isSimTrade = lot === 'Odd' ? !!solaceData[0]?.data?.OddlotSimtrade : !!solaceData[0]?.data?.Simtrade;
 
@@ -39,7 +38,7 @@ const solaceDataHandler = (solaceData, lot) => {
         const [
             {
                 data: {
-                    Name = '',
+                    Name = '', // TODO: 等 Solace 提供零股中文名欄位時要補上，解構出的名稱由 `Name` 改為 Solace 定義的名稱
                     OddlotClose = 0,
                     OddlotDiffPrice = 0,
                     OddlotDiffRate = 0,
