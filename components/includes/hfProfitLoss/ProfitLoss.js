@@ -5,9 +5,9 @@ import { Select } from 'antd';
 import { DataCard } from './DataCard';
 
 import theme from '../../../resources/styles/theme';
-import reloadImg from '../../../resources/images/components/BigProfitLoss/ic_reload.svg';
-import dropdownImg from '../../../resources/images/components/BigProfitLoss/arrow-chevron-down.svg';
-import { getProfitLoss } from '../../../services/components/bigProfitLoss/profitLossFetcher';
+import reloadImg from '../../../resources/images/components/hfProfitLoss/ic_reload.svg';
+import dropdownImg from '../../../resources/images/components/hfProfitLoss/arrow-chevron-down.svg';
+import { getProfitLoss } from '../../../services/components/hfProfitLoss/profitLossFetcher';
 import { getToken } from '../../../services/user/accessToken';
 import { setCurrentAccount } from '../../../store/user/action';
 
