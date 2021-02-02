@@ -1,18 +1,44 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { Select } from 'antd';
 import { DataCard } from './DataCard';
 
 import theme from '../../../resources/styles/theme';
-import reloadImg from '../../../resources/images/pages/BigProfitLoss/ic_reload.svg';
+import reloadImg from '../../../resources/images/components/BigProfitLoss/ic_reload.svg';
+import dropdownImg from '../../../resources/images/components/BigProfitLoss/arrow-chevron-down.svg';
 import { getProfitLoss } from '../../../services/components/bigProfitLoss/profitLossFetcher';
 import { getToken } from '../../../services/user/accessToken';
+import { setCurrentAccount } from '../../../store/user/action';
+
+const { Option } = Select;
+
+const DropDownArrow = () => {
+    return (
+        <>
+            <img src={dropdownImg} alt="arrow" className="dropDownArrow__img"></img>
+        </>
+    );
+};
 
 export const ProfitLoss = () => {
+    const dispatch = useDispatch();
     const isMobile = useSelector(store => store.layout.isMobile);
+    const accounts = useSelector(store => store.user.accounts);
     const currentAccount = useSelector(store => store.user.currentAccount);
+
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [stockAccounts, setStockAccounts] = useState([]);
+    const [selectedAccount, setSelectedAccount] = useState(null);
+
+    const handleChange = value => {
+        const selectedAccount = stockAccounts.find(account => `${account.broker_id}-${account.account}` === value);
+        if (selectedAccount) {
+            dispatch(setCurrentAccount(selectedAccount));
+            setSelectedAccount(selectedAccount);
+        }
+    };
 
     const formatDate = date => {
         let newDate = '--';
@@ -39,7 +65,6 @@ export const ProfitLoss = () => {
         setIsLoading(true);
         try {
             const res = await getProfitLoss(data);
-            // console.log(`========= res:`, res);
             setData(res.result);
             setIsLoading(false);
         } catch (error) {
@@ -48,25 +73,65 @@ export const ProfitLoss = () => {
         }
     };
 
-    useEffect(() => {
-        // console.log(`========== currentAccount:`, currentAccount);
-        if (Object.keys(currentAccount).length !== 0) {
-            fetchData(currentAccount);
+    const getData = selectedAccount => {
+        if (selectedAccount != null) {
+            fetchData(selectedAccount);
         }
-    }, [currentAccount]);
+    };
+
+    useEffect(() => {
+        const stockAccounts = accounts.filter(account => account.accttype === 'S');
+        setStockAccounts(stockAccounts);
+    }, [accounts]);
+
+    useEffect(() => {
+        if (currentAccount?.accttype === 'S') {
+            const selectedAccount = stockAccounts.find(
+                account =>
+                    `${account.broker_id}-${account.account}` ===
+                    `${currentAccount.broker_id}-${currentAccount.account}`,
+            );
+            if (selectedAccount) {
+                setSelectedAccount(selectedAccount);
+            }
+        }
+    }, [currentAccount, stockAccounts]);
+
+    useEffect(() => {
+        getData(selectedAccount);
+    }, [selectedAccount]);
 
     return (
         <>
             <div className="body__container">
                 <div className="topBar__container">
-                    <div className="account__container"></div>
-                    <button
-                        className="reload__btn"
-                        onClick={() => {
-                            fetchData(currentAccount);
+                    <Select
+                        // defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
+                        value={
+                            selectedAccount ? `${selectedAccount?.broker_id}-${selectedAccount?.account}` : '無可用帳號'
+                        }
+                        style={{
+                            width: isMobile ? 'calc(100% - 56px)' : 260,
+                            border: 'solid 1px #a9b6cb',
+                            height: 44,
+                            fontSize: '1.6rem',
+                            display: 'flex',
+                            alignItems: 'center',
                         }}
-                        disabled={isLoading}
+                        onChange={handleChange}
+                        getPopupContainer={trigger => trigger.parentElement}
+                        bordered={false}
+                        suffixIcon={<DropDownArrow />}
+                        notFoundContent={null}
                     >
+                        {stockAccounts.map(account => (
+                            <Option
+                                key={account.datacount}
+                                value={`${account.broker_id}-${account.account}`}
+                            >{`${account.broker_id}-${account.account} ${account.username}`}</Option>
+                        ))}
+                    </Select>
+                    <button className="reload__btn" onClick={() => getData(selectedAccount)} disabled={isLoading}>
                         <img src={reloadImg} alt="reload"></img>
                         {!isMobile && <span>更新</span>}
                     </button>
@@ -107,11 +172,6 @@ export const ProfitLoss = () => {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                }
-                .account__container {
-                    width: 260px;
-                    height: 44px;
-                    border: solid 1px #a9b6cb;
                 }
                 button.reload__btn {
                     width: 128px;
@@ -165,9 +225,6 @@ export const ProfitLoss = () => {
                         width: 100%;
                         padding: 16px;
                     }
-                    .account__container {
-                        width: calc(100% - 56px);
-                    }
                     button.reload__btn {
                         width: 44px;
                     }
@@ -180,6 +237,13 @@ export const ProfitLoss = () => {
                         font-size: 1.6rem;
                         color: #a9b6cb;
                     }
+                }
+            `}</style>
+            <style jsx global>{`
+                .topBar__container .dropDownArrow__img {
+                    position: absolute;
+                    top: -6px;
+                    right: 0px;
                 }
             `}</style>
         </>

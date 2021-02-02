@@ -116,7 +116,7 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
 DataCard.propTypes = {
     title: PropTypes.string.isRequired,
     subTitle: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    value: PropTypes.node.isRequired,
     styleType: PropTypes.string,
     numberStyle: PropTypes.bool,
 };
@@ -124,6 +124,7 @@ DataCard.propTypes = {
 DataCard.defaultProps = {
     subTitle: '',
     styleType: '',
+    value: '--',
     numberStyle: false,
 };
 
