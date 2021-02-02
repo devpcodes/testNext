@@ -33,7 +33,7 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
     };
 
     const formatValue = (value, numberStyle) => {
-        if (typeof value !== 'number') {
+        if ((typeof value !== 'number' && typeof value !== 'string') || isNaN(Number(value))) {
             return '--';
         }
 
@@ -116,7 +116,7 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
 DataCard.propTypes = {
     title: PropTypes.string.isRequired,
     subTitle: PropTypes.string,
-    value: PropTypes.number.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     styleType: PropTypes.string,
     numberStyle: PropTypes.bool,
 };
