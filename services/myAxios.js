@@ -98,12 +98,13 @@ const createA8StpInstance = baseUrl =>
         },
     });
 
-export const getA8StpInstance = (modal = true, baseUrl = '') => {
+export const getA8StpInstance = (modal = false, baseUrl = '') => {
     const a8Ins = createA8StpInstance(baseUrl);
     a8Ins.interceptors.response.use(
         response => response,
         error => {
-            return errorHandler(error, modal);
+            return error.response;
+            // return errorHandler(error, modal);
         },
     );
     return a8Ins;

@@ -291,16 +291,8 @@ const ReservationStock = () => {
         //     '0',
         // );
         // submitSuccess();
-        // if (resData && resData !== '伺服器錯誤') {
+        // if(resData){
         //     Modal.success({
-        //         content: resData,
-        //         onOk() {
-        //             dataHandler(1);
-        //             // resetDataHandler();
-        //         },
-        //     });
-        // } else {
-        //     Modal.error({
         //         content: resData,
         //         onOk() {
         //             dataHandler(1);
@@ -332,18 +324,12 @@ const ReservationStock = () => {
                 '0',
             );
             submitSuccess();
-            if (resData && resData !== '伺服器錯誤') {
+            if (resData) {
                 Modal.success({
                     content: resData,
                     onOk() {
                         dataHandler(1);
-                    },
-                });
-            } else {
-                Modal.error({
-                    content: resData,
-                    onOk() {
-                        dataHandler(1);
+                        // resetDataHandler();
                     },
                 });
             }
