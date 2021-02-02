@@ -69,3 +69,11 @@ export const setOrdCount = type => {
         payload: type,
     };
 };
+
+export const setPriceType = type => {
+    console.log('tt', type);
+    return {
+        type: actionType.SET_PRICE_TYPE,
+        payload: type,
+    };
+};

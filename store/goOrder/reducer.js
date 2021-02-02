@@ -11,6 +11,7 @@ const initialState = {
     tradeTime: 'ing', // ing, after
     time_in_force: '0', // 0 3 4
     ord_cond: '0', // 0 3 4
+    price_type: ' ', // ' ', 4 2 3 1
 };
 
 const reducer = (state = initialState, action) => {
@@ -65,7 +66,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 ord_cond: action.payload,
             };
-
+        case actionType.SET_PRICE_TYPE:
+            console.log('reducer', action.payload);
+            return {
+                ...state,
+                price_type: action.payload,
+            };
         default:
             return state;
     }

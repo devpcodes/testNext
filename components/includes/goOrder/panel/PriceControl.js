@@ -1,21 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { Select, Input, Button } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import selectIcon from '../../../../resources/images/components/goOrder/arrow-chevron-down_black.png';
 import { themeColor } from './PanelTabs';
 import { checkServer } from '../../../../services/checkServer';
 import { formatPrice } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
+import { setPriceType } from '../../../../store/goOrder/action';
 
 const { Option } = Select;
 const PriceControl = ({ title }) => {
+    const dispatch = useDispatch();
     const currentCode = useRef('');
     const currentLot = useRef('');
 
     const bs = useSelector(store => store.goOrder.bs);
     const code = useSelector(store => store.goOrder.code);
     const lot = useSelector(store => store.goOrder.lot);
+    const ordType = useSelector(store => store.goOrder.ord_type);
     const solaceData = useSelector(store => store.solace.solaceData);
+    const priceType = useSelector(store => store.goOrder.price_type);
+
     const [ordPrice, setOrderPrice] = useState('');
     const [priceTypeOption, setPriceTypeOption] = useState([
         { txt: '限價', val: ' ' },
@@ -34,11 +39,35 @@ const PriceControl = ({ title }) => {
         }
 
         setPriceHandler();
+        setPriceTypeOptionHandler();
     }, [code, lot, solaceData]);
+
+    const setPriceTypeOptionHandler = () => {
+        if (lot === 'Odd') {
+            if (priceType === '4') {
+                dispatch(setPriceType(' '));
+            }
+
+            setPriceTypeOption([
+                { txt: '限價', val: ' ' },
+                { txt: '漲停', val: '2' },
+                { txt: '跌停', val: '3' },
+                { txt: '平盤', val: '1' },
+            ]);
+        } else {
+            setPriceTypeOption([
+                { txt: '限價', val: ' ' },
+                { txt: '市價', val: '4' },
+                { txt: '漲停', val: '2' },
+                { txt: '跌停', val: '3' },
+                { txt: '平盤', val: '1' },
+            ]);
+        }
+    };
 
     const setPriceHandler = () => {
         if (lot === 'Odd') {
-            if (code !== '' && !checkServer() && solaceData.length > 0 && solaceData[0].data.OddlotClose != null) {
+            if (code !== '' && !checkServer() && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {
                     currentCode.current = code;
                     currentLot.current = lot;
@@ -57,6 +86,10 @@ const PriceControl = ({ title }) => {
     };
 
     const priceChangeHandler = e => {
+        var regex = /^[0-9/.]*$/;
+        if (!regex.test(e.target.value)) {
+            return;
+        }
         setOrderPrice(e.target.value);
     };
 
@@ -64,9 +97,17 @@ const PriceControl = ({ title }) => {
         const type = getStockType(code).type;
         let unit;
         if (symbol === '+') {
+            if (isNaN(Number(ordPrice))) {
+                setOrderPrice('');
+                return;
+            }
             unit = getStockPriceRange(type, ordPrice, true);
             setOrderPrice(formatPrice(parseFloat(ordPrice) + unit));
         } else {
+            if (isNaN(Number(ordPrice))) {
+                setOrderPrice('');
+                return;
+            }
             unit = getStockPriceRange(type, ordPrice, true);
             if (parseFloat(ordPrice) - unit <= unit) {
                 setOrderPrice(formatPrice(unit));
@@ -75,11 +116,38 @@ const PriceControl = ({ title }) => {
             }
         }
     };
+
+    const priceTypeHandler = value => {
+        dispatch(setPriceType(value));
+    };
+
+    const getPriceValHandler = () => {
+        if (ordType === 'P') {
+            return '定價';
+        }
+        if (priceType === ' ') {
+            return ordPrice;
+        } else {
+            const inpVal = priceTypeOption.filter(item => {
+                return item.val === priceType;
+            });
+            return inpVal[0].txt;
+        }
+    };
+
+    const focusHandler = () => {
+        if (title === '限價') {
+            if (priceType !== ' ') {
+                dispatch(setPriceType(' '));
+            }
+        }
+    };
+
     return (
         <div className="price_control">
             <div className="select__box">
-                {title === '限價' ? (
-                    <Select value=" " suffixIcon={<img src={selectIcon} />}>
+                {title === '限價' && ordType !== 'P' ? (
+                    <Select value={priceType} suffixIcon={<img src={selectIcon} />} onChange={priceTypeHandler}>
                         {priceTypeOption.map((item, index) => {
                             return (
                                 <Option key={index} value={item.val}>
@@ -89,15 +157,29 @@ const PriceControl = ({ title }) => {
                         })}
                     </Select>
                 ) : (
-                    <div className="select__label">{title}</div>
+                    <div className="select__label">{title === '限價' ? '價格' : title}</div>
                 )}
             </div>
             <div className="input__box">
-                <Input value={title === '限價' ? ordPrice : ''} onChange={priceChangeHandler} />
+                <Input
+                    disabled={title === '限價' && ordType === 'P'}
+                    value={title === '限價' ? getPriceValHandler() : ''}
+                    onChange={priceChangeHandler}
+                    onFocus={focusHandler}
+                />
             </div>
             <div className="btn__box">
-                <Button onClick={onClickHandler.bind(null, '-')}>-</Button>
-                <Button onClick={onClickHandler.bind(null, '+')} style={{ marginLeft: '8px' }}>
+                <Button
+                    disabled={(title === '限價' && priceType !== ' ') || (title === '限價' && ordType === 'P')}
+                    onClick={onClickHandler.bind(null, '-')}
+                >
+                    -
+                </Button>
+                <Button
+                    disabled={(title === '限價' && priceType !== ' ') || (title === '限價' && ordType === 'P')}
+                    onClick={onClickHandler.bind(null, '+')}
+                    style={{ marginLeft: '8px' }}
+                >
                     +
                 </Button>
             </div>
@@ -107,6 +189,7 @@ const PriceControl = ({ title }) => {
                     width: 62px;
                     font-size: 1.6rem;
                     color: #0d1623;
+                    margin-top: 4px;
                 }
                 .price_control {
                     margin-top: 8px;
@@ -186,6 +269,23 @@ const PriceControl = ({ title }) => {
                 }
                 .price_control .ant-input:hover {
                     border-color: #dedede;
+                }
+
+                .price_control .ant-btn[disabled] {
+                    background-color: #d2d2d2;
+                    color: #ffffff;
+                }
+                .price_control .ant-btn[disabled],
+                .ant-btn[disabled]:active {
+                    background-color: #d2d2d2;
+                    color: #ffffff;
+                }
+                .price_control .ant-btn[disabled],
+                .ant-btn[disabled]:active,
+                .ant-btn[disabled]:focus,
+                .ant-btn[disabled]:hover {
+                    background-color: #d2d2d2;
+                    color: #ffffff;
                 }
             `}</style>
         </div>
