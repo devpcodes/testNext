@@ -360,7 +360,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (platform === 'udn') {
             return (
                 <div className="ad_container">
-                    <img className="ad__img" src={udnAD} />
+                    <a href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
+                        <img className="ad__img" src={udnAD} />
+                    </a>
                 </div>
             );
         }
