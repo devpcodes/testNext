@@ -333,26 +333,31 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const logoHandler = () => {
         // let title = null;
-        if (isPC || isIframe) {
+        if (isIframe) {
             return;
         }
 
-        if (platform === 'udn') {
+        if (platform === 'udn' && !isPC) {
             return (
                 <div className="udn__container">
                     <img className="logo__dark" src={logoDark} alt="永豐金證券" />
                 </div>
             );
         } else {
-            // if(!isIframe){
-            //     title = <p className="login__title">歡迎來到永豐金證券</p>
-            // }
-            return (
-                <>
-                    <div className="login__logo"></div>
-                    <p className="login__title">歡迎來到永豐金證券</p>
-                </>
-            );
+            if (isPC) {
+                return (
+                    <>
+                        <p className="login__title">歡迎來到永豐金證券</p>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <div className="login__logo"></div>
+                        <p className="login__title">歡迎來到永豐金證券</p>
+                    </>
+                );
+            }
         }
     };
 
