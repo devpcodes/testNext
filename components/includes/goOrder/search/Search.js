@@ -16,6 +16,12 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const [products, setProducts] = useState([]);
     const type = useSelector(store => store.goOrder.type);
 
+    const getMatchStr = (str, replace) => {
+        const re = new RegExp(replace, 'i');
+        const replacement = match => `<span style="color:#daa360;">${match}</span>`;
+        return str.replace(re, replacement);
+    };
+
     const selectHandler = id => {
         const selectedProduct = products.find(product => product.id === id);
         if (selectedProduct) {
@@ -166,8 +172,16 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                     aria-selected="false"
                                     tabIndex={0}
                                 >
-                                    <div className="item__code">{item.symbol}</div>
-                                    <div className="item__name">{item.name_zh || item.name}</div>
+                                    <div
+                                        className="item__code"
+                                        dangerouslySetInnerHTML={{ __html: getMatchStr(item.symbol, keyword) }}
+                                    ></div>
+                                    <div
+                                        className="item__name"
+                                        dangerouslySetInnerHTML={{
+                                            __html: getMatchStr(item.name_zh || item.name, keyword),
+                                        }}
+                                    ></div>
                                 </div>
                             ))}
                         </article>
