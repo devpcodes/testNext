@@ -732,6 +732,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     position: absolute;
                     bottom: 0;
                     left: 0;
+                    min-width: 100%;
                 }
                 .ad__img {
                     width: 100%;
@@ -747,7 +748,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .logo__dark {
                     width: 223px;
-                    height: 53px;
+                    /* height: 53px; */
                 }
 
                 .login__logo {
