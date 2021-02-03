@@ -92,7 +92,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const handleResize = () => {
-        setContainerHeight(window.innerHeight + 'px');
+        let imgWidth = 860;
+        let newH = Math.round((272 * window.innerWidth) / imgWidth);
+        console.log('nnn', newH);
+        setContainerHeight(window.innerHeight - newH + 'px');
     };
 
     const winKeyDownHandler = function (e) {
@@ -371,7 +374,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const adHandler = () => {
-        if (platform === 'udn') {
+        if (platform === 'udn' && !isPC) {
             return (
                 <div className="ad_container">
                     <a href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
@@ -721,7 +724,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 .login__box {
                     position: ${popup ? 'fixed' : 'static'};
                     width: ${isPC ? '512px' : '101%'};
-                    height: ${isPC ? '548px' : containerHeight};
+                    height: ${isPC ? '548px' : '100vh'};
                     z-index: 9999;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
@@ -739,7 +742,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 .ad_container {
                     position: absolute;
-                    bottom: 0;
+                    top: ${containerHeight || '100vh'};
                     left: 0;
                     min-width: 100%;
                 }
