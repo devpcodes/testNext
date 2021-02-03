@@ -26,6 +26,7 @@ export const ProfitLoss = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const accounts = useSelector(store => store.user.accounts);
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const userSettings = useSelector(store => store.user.userSettings);
 
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -81,9 +82,16 @@ export const ProfitLoss = () => {
 
     useEffect(() => {
         const stockAccounts = accounts.filter(account => account.accttype === 'S');
-        setStockAccounts(stockAccounts);
+        if (Array.isArray(stockAccounts) && stockAccounts.length) {
+            setStockAccounts(stockAccounts);
+        }
     }, [accounts]);
 
+    /*
+        處理與個人選單帳號連動的邏輯。
+        因定時洗價損益查詢功能只限台股帳號，個人選單帳號為台股時，與個人選單連動；
+        個人選單帳號非台股時，以個人化設定的台股帳號或第一筆台股帳號為預設帳號顯示。
+    */
     useEffect(() => {
         if (currentAccount?.accttype === 'S') {
             const selectedAccount = stockAccounts.find(
@@ -93,6 +101,15 @@ export const ProfitLoss = () => {
             );
             if (selectedAccount) {
                 setSelectedAccount(selectedAccount);
+            }
+        } else if (currentAccount?.accttype !== 'S' && Array.isArray(stockAccounts) && stockAccounts.length) {
+            const selectedAccount = stockAccounts.find(
+                account => `${account.broker_id}-${account.account}` === userSettings?.defaultStockAccount,
+            );
+            if (selectedAccount) {
+                setSelectedAccount(selectedAccount);
+            } else {
+                setSelectedAccount(stockAccounts[0]);
             }
         }
     }, [currentAccount, stockAccounts]);
