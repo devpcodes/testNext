@@ -10,7 +10,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function hfProfitLoss() {
     return (
         <>
-            <PageHead title={'損益查詢'} />
+            <PageHead title={'定時洗價損益'} />
             <ProfitLoss />
         </>
     );
