@@ -731,6 +731,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 .ad_container {
                     position: absolute;
                     bottom: 0;
+                    left: 0;
                 }
                 .ad__img {
                     width: 100%;
