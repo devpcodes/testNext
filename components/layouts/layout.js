@@ -190,6 +190,7 @@ const Layout = memo(({ children }) => {
 
     const noLoginPage = function (errMsg) {
         prevPathname.current = router.pathname + objectToQueryHandler(queryStr.current);
+        console.log('prevPathname', prevPathname.current);
         setVerifySuccess(false);
         notification.error({
             placement: 'topRight',
@@ -248,11 +249,11 @@ const Layout = memo(({ children }) => {
         dispatch(showLoginHandler(false));
         dispatch(setIsLogin(true));
         getMenuPath.current = false;
-        // setTimeout(() => {
-        //     if (prevPathname.current) {
-        //         router.push(prevPathname.current);
-        //     }
-        // }, 500);
+        setTimeout(() => {
+            if (prevPathname.current) {
+                router.push(prevPathname.current);
+            }
+        }, 500);
         setTimeout(() => {
             CAHandler(getToken());
         }, 700);

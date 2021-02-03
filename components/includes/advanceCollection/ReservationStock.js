@@ -1,46 +1,20 @@
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import MyTransition from '../myTransition';
 
-import { Progress } from 'antd';
-import { Tabs, Button, Input } from 'antd';
+import { Tabs, Button, Input, Progress, Modal, notification } from 'antd';
+import moment from 'moment';
 import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
-import { CAHandler, sign, checkSignCA } from '../../../services/webCa';
+import { sign, checkSignCA } from '../../../services/webCa';
 import CaHead from '../CaHead';
 import { getToken } from '../../../services/user/accessToken';
+import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
+import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
+import { fetchEarmarkStatus } from '../../../services/components/reservationStock/fetchEarmarkStatus';
 
 const { TabPane } = Tabs;
-const dataSource = [
-    {
-        key: '1',
-        stockCode: '2330',
-        stockName: '台積電',
-        invetory: 1000,
-        alreadyNum: 1000,
-        applyNum: '',
-        action: '申請',
-    },
-    {
-        key: '2',
-        stockCode: '2330',
-        stockName: '台積電',
-        invetory: 1000,
-        alreadyNum: 1000,
-        applyNum: '',
-        action: '申請',
-    },
-    {
-        key: '3',
-        stockCode: '2330',
-        stockName: '台積電',
-        invetory: 1000,
-        alreadyNum: 1000,
-        applyNum: '',
-        action: '申請',
-    },
-];
 
 const dataSource2 = [
     {
@@ -64,6 +38,9 @@ const ReservationStock = () => {
     const [columnsData, setColumnsData] = useState([]);
     const [percent, setPercent] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [stockInventory, setStockInventory] = useState([]);
+    const [statusData, setStatusData] = useState([]);
+    const [dataLoading, setDataLoading] = useState(false);
 
     const stockColumns = useRef([]);
     const nowPercent = useRef(0);
@@ -75,89 +52,18 @@ const ReservationStock = () => {
     const [defaultValue, setDefaultValue] = useState('');
 
     useEffect(() => {
-        console.log('state', state);
+        if (state.accountsReducer.disabled) {
+            notification.warning({
+                message: state.accountsReducer.disabled,
+                top: '100px',
+            });
+        }
+    }, [state.accountsReducer.disabled]);
 
+    useEffect(() => {
         selectedAccount.current = state.accountsReducer.selected;
-        stockColumns.current = [
-            {
-                title: '',
-                dataIndex: 'action',
-                key: 'action',
-                index: 6,
-                render: (text, record, index) => {
-                    return (
-                        <Button
-                            disabled={state.accountsReducer.disabled}
-                            onClick={clickHandler.bind(null, text, record)}
-                        >
-                            {text}
-                        </Button>
-                    );
-                },
-            },
-            {
-                title: '股票代號',
-                dataIndex: 'stockCode',
-                key: 'stockCode',
-                index: 1,
-            },
-            {
-                title: '股票名稱',
-                dataIndex: 'stockName',
-                key: 'stockName',
-                index: 2,
-            },
-            {
-                title: '昨日庫存(股數)',
-                dataIndex: 'invetory',
-                key: 'invetory',
-                index: 3,
-            },
-            {
-                title: '已圈存股數',
-                dataIndex: 'alreadyNum',
-                key: 'alreadyNum',
-                index: 4,
-            },
-            {
-                title: '申請預收股數',
-                dataIndex: 'applyNum',
-                key: 'applyNum',
-                index: 5,
-                render: (text, record, index) => {
-                    return <Input defaultValue={text} onChange={inpChangeHandler.bind(null, record)} />;
-                },
-            },
-        ];
-        stockColumns2.current = [
-            {
-                title: '委託時間',
-                dataIndex: 'time',
-                key: 'time',
-                index: 1,
-            },
-            {
-                title: '股票代號',
-                dataIndex: 'symbol',
-                key: 'symbol',
-                index: 2,
-            },
-            {
-                title: '股票名稱',
-                dataIndex: 'stockName',
-                key: 'stockName',
-                index: 3,
-            },
-            {
-                title: '已預收股數',
-                dataIndex: 'invetory',
-                key: 'invetory',
-                index: 4,
-            },
-        ];
-
+        dataHandler(stockActiveTabKey.current);
         if (!init.current) {
-            setColumnsData(stockColumns.current);
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             init.current = true;
         }
@@ -169,11 +75,159 @@ const ReservationStock = () => {
         };
     }, [state.accountsReducer.selected]);
 
+    useEffect(() => {
+        stockColumns.current = [
+            {
+                title: '',
+                dataIndex: 'action',
+                key: 'action',
+                index: 6,
+                render: (text, record, index) => {
+                    return (
+                        <Button
+                            // disabled={state.accountsReducer.disabled}
+                            onClick={clickHandler.bind(null, text, record)}
+                        >
+                            {text}
+                        </Button>
+                    );
+                },
+            },
+            {
+                title: '股票類別',
+                dataIndex: 'load_type',
+                key: 'load_type',
+                index: 2,
+                render: (text, record, index) => {
+                    switch (text) {
+                        case '':
+                            return '一般';
+                        case '1':
+                            return '全額管理';
+                        case '2':
+                            return '收足款券';
+                        case '3':
+                            return '處置一二';
+                        default:
+                            break;
+                    }
+                },
+            },
+            {
+                title: '股票代號',
+                dataIndex: 'code',
+                key: 'code',
+                index: 1,
+            },
+            {
+                title: '股票名稱',
+                dataIndex: 'code_name',
+                key: 'code_name',
+                index: 2,
+            },
+            {
+                title: '昨日庫存(股數)',
+                dataIndex: 'stock_amount',
+                key: 'stock_amount',
+                index: 3,
+            },
+            {
+                title: '已圈存股數',
+                dataIndex: 'load_qty',
+                key: 'load_qty',
+                index: 4,
+            },
+            {
+                title: '申請預收股數',
+                dataIndex: 'qty',
+                key: 'qty',
+                index: 5,
+                render: (text, record, index) => {
+                    return <Input value={text} onChange={inpChangeHandler.bind(null, record, stockInventory)} />;
+                },
+            },
+        ];
+        stockColumns2.current = [
+            {
+                title: '委託時間',
+                dataIndex: 'order_datetime',
+                key: 'order_datetime',
+                index: 1,
+                render: (text, record, index) => {
+                    return moment(text).format('HH:mm');
+                },
+            },
+            {
+                title: '股票代號',
+                dataIndex: 'code',
+                key: 'code',
+                index: 3,
+            },
+            {
+                title: '股票名稱',
+                dataIndex: 'code_name',
+                key: 'code_name',
+                index: 4,
+            },
+            {
+                title: '預收股數',
+                dataIndex: 'apply_amount',
+                key: 'apply_amount',
+                index: 5,
+            },
+            {
+                title: '狀態',
+                dataIndex: 'order_status_msg',
+                key: 'order_status_msg',
+                index: 6,
+            },
+        ];
+        setColumnsData(stockColumns.current);
+    }, [stockInventory]);
+
+    const dataHandler = async activeKey => {
+        if (getToken()) {
+            let data = getAccountsDetail(getToken());
+            if (data.broker_id && data.account) {
+                setDataLoading(true);
+                if (activeKey == 1) {
+                    await fetchInventory(getToken(), data.broker_id, data.account);
+                } else {
+                    await fetchStatus(getToken(), data.broker_id, data.account);
+                }
+
+                setDataLoading(false);
+            }
+        }
+    };
+
+    const fetchInventory = async (token, brokerId, account) => {
+        let resData = await fetchStockInventory(token, brokerId, account);
+        resData = resData.map((item, index) => {
+            item.key = String(index);
+            item.action = '申請';
+            item.qty = '';
+            return item;
+        });
+        setStockInventory(resData);
+    };
+
+    const fetchStatus = async (token, brokerId, account) => {
+        let resData = await fetchEarmarkStatus(token, brokerId, account);
+        resData = resData.map((item, index) => {
+            item.key = String(index);
+            return item;
+        });
+        setStatusData(resData);
+    };
+
     const changleHandler = activeKey => {
         stockActiveTabKey.current = activeKey;
         if (activeKey == 1) {
+            dataHandler(activeKey);
             setColumnsData(stockColumns.current);
         } else {
+            dataHandler(activeKey);
             setColumnsData(stockColumns2.current);
         }
         if (state.accountsReducer.selected) {
@@ -181,17 +235,73 @@ const ReservationStock = () => {
         }
     };
 
-    const clickHandler = useCallback((text, record) => {
-        console.log('selected', selectedAccount.current, record);
-        setLoading(true);
-        percentHandler();
-        console.log(text, record);
-        // console.log(jwt_decode(getToken()));
+    const clickHandler = (text, record) => {
+        if (validateQty(record.qty, record.load_qty, record.stock_amount)) {
+            console.log(text, record);
+            // console.log(jwt_decode(getToken()));
+            submitData(record);
+        }
+    };
+
+    const validateQty = (value, loadQty, stockAmount) => {
+        const regex = /^[0-9]{1,20}$/;
+        if (!isNaN(value) && regex.test(value)) {
+            if (Number(value) + Number(loadQty) <= Number(stockAmount)) {
+                return true;
+            } else {
+                Modal.error({
+                    content: '超過可申請股數',
+                });
+                return false;
+            }
+        }
+        if (value === '') {
+            Modal.error({
+                content: '請輸入申請股數',
+            });
+        } else {
+            Modal.error({
+                content: '只能輸入數字',
+            });
+        }
+
+        return false;
+    };
+
+    // const resetDataHandler = () => {
+    //     const stockInventoryData = stockInventory.map((item, i) => {
+    //         item.qty = '';
+    //         return item;
+    //     });
+    //     setStockInventory(stockInventoryData);
+    // }
+
+    const submitData = async record => {
+        //token, branch, account, symbol, qty, category
+        const token = getToken();
+        let data = getAccountsDetail(token);
+
+        //未驗憑證
+        // const resData = await postApplyEarmark(
+        //     token,
+        //     data.broker_id,
+        //     data.account,
+        //     record.code,
+        //     String(record.qty),
+        //     '0',
+        // );
+        // submitSuccess();
+        // if(resData){
+        //     Modal.success({
+        //         content: resData,
+        //         onOk() {
+        //             dataHandler(1);
+        //             // resetDataHandler();
+        //         },
+        //     });
+        // }
 
         //驗憑證
-        let data = getAccountSDetail(getToken());
-        console.log('token', data);
-
         let caContent = sign(
             {
                 idno: data.idno,
@@ -199,15 +309,35 @@ const ReservationStock = () => {
                 account: data.account,
             },
             true,
-            getToken(),
+            token,
         );
+
         if (checkSignCA(caContent)) {
-            alert('submit data');
+            setLoading(true);
+            percentHandler();
+            const resData = await postApplyEarmark(
+                token,
+                data.broker_id,
+                data.account,
+                record.code,
+                String(record.qty),
+                '0',
+            );
+            submitSuccess();
+            if (resData) {
+                Modal.success({
+                    content: resData,
+                    onOk() {
+                        dataHandler(1);
+                        // resetDataHandler();
+                    },
+                });
+            }
         }
-    }, []);
+    };
 
     //取得選擇帳號的詳細資料，驗憑證
-    const getAccountSDetail = token => {
+    const getAccountsDetail = token => {
         let data = jwt_decode(token);
         data = data.acts_detail.filter(item => {
             if (item.account === selectedAccount.current.account) {
@@ -218,11 +348,6 @@ const ReservationStock = () => {
     };
 
     const percentHandler = () => {
-        //TODO 測試
-        setTimeout(() => {
-            submitSuccess();
-        }, 1000);
-
         nowPercent.current = 0;
         setPercent(nowPercent.current);
         timer.current = window.setInterval(() => {
@@ -233,7 +358,7 @@ const ReservationStock = () => {
             }
             nowPercent.current += Math.floor(Math.random() * 5);
             setPercent(nowPercent.current);
-        }, Math.floor(Math.random() * 50));
+        }, Math.floor(Math.random() * 20));
     };
 
     const submitSuccess = () => {
@@ -245,13 +370,17 @@ const ReservationStock = () => {
         }, 50);
     };
 
-    const inpChangeHandler = useCallback((record, e) => {
+    const inpChangeHandler = (record, stockInventory, e) => {
         const { value } = e.target;
-        record.applyNum = Number(value);
-        console.log('record', value, record);
-    }, []);
+        const stockInventoryData = stockInventory.map((item, i) => {
+            if (item.key == record.key) {
+                item.qty = value;
+            }
+            return item;
+        });
+        setStockInventory(stockInventoryData);
+    };
 
-    console.log('render PAGE=============');
     return (
         <div className="reservation__container">
             <CaHead />
@@ -261,26 +390,58 @@ const ReservationStock = () => {
                 animated={{ inkBar: true, tabPane: true }}
                 onChange={changleHandler}
             >
-                <TabPane tab="預收股票申請" key="1">
+                <TabPane tab="預收股票申請" key="1" disabled={dataLoading}>
                     <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
                     <ApplyContent
                         key="table1"
                         scroll={{ x: 860 }}
                         contenterTitle={'預收股票申請'}
-                        dataSource={dataSource}
+                        dataSource={stockInventory}
                         columns={columnsData}
                         pagination={false}
+                        loading={{
+                            indicator: (
+                                <div
+                                    style={{
+                                        marginTop: '20px',
+                                        color: 'black',
+                                        fontSize: '1.6rem',
+                                        width: '100%',
+                                        transform: 'translateX(-49%) translateY(-54px)',
+                                    }}
+                                >
+                                    資料加載中...
+                                </div>
+                            ),
+                            spinning: dataLoading,
+                        }}
                     />
                 </TabPane>
-                <TabPane tab="預收股票查詢" key="2">
+                <TabPane tab="預收股票查詢" key="2" disabled={dataLoading}>
                     <Accounts key="2" style={{ marginTop: '35px' }} value={defaultValue} />
                     <ApplyContent
                         key="table2"
                         scroll={{ x: 860 }}
                         contenterTitle={'預收股票查詢'}
-                        dataSource={dataSource2}
+                        dataSource={statusData}
                         columns={columnsData}
                         pagination={false}
+                        loading={{
+                            indicator: (
+                                <div
+                                    style={{
+                                        marginTop: '20px',
+                                        color: 'black',
+                                        fontSize: '1.6rem',
+                                        width: '100%',
+                                        transform: 'translateX(-49%) translateY(-54px)',
+                                    }}
+                                >
+                                    資料加載中...
+                                </div>
+                            ),
+                            spinning: dataLoading,
+                        }}
                     />
                 </TabPane>
             </Tabs>
@@ -316,7 +477,7 @@ const ReservationStock = () => {
             <style jsx>{`
                 .reservation__container {
                     margin: 20px auto 0 auto;
-                    max-width: 900px;
+                    max-width: 1000px;
                     font-size: 0px;
                     padding-left: 20px;
                     padding-right: 20px;
@@ -346,6 +507,9 @@ const ReservationStock = () => {
                 }
             `}</style>
             <style jsx global>{`
+                .ant-notification-notice-with-icon .ant-notification-notice-message {
+                    font-size: 1.5rem !important;
+                }
                 .reservation__container .ant-progress.ant-progress-circle {
                     position: fixed;
                     z-index: 999;

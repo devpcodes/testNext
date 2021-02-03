@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
@@ -11,6 +11,8 @@ import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-clos
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
 import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
+import logoDark from '../../../resources/images/logo/logo-dark.svg';
+import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
@@ -20,11 +22,14 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const accountInput = useRef(null);
 
     const recaptchaReady = useSelector(store => store.layout.recaptchaReady);
+    const platform = useSelector(store => store.general.platform);
 
     const [encryptAccount, setEncryptAccount] = useState('');
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
+
+    const [containerHeight, setContainerHeight] = useState('100vh');
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
@@ -54,6 +59,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
 
         window.addEventListener('keypress', winKeyDownHandler, false);
+        window.addEventListener('resize', handleResize);
+        handleResize();
         if (checkIframe()) {
             setIsIframe(true);
         }
@@ -65,6 +72,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
     // useEffect(() => {
@@ -81,6 +89,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 account = changedFields[0].value;
             }
         }
+    };
+
+    const handleResize = () => {
+        let imgWidth = 860;
+        let newH = Math.round((272 * window.innerWidth) / imgWidth);
+        console.log('nnn', newH);
+        setContainerHeight(window.innerHeight - newH + 'px');
     };
 
     const winKeyDownHandler = function (e) {
@@ -320,6 +335,56 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // const reCaptchaLoadReady = () => {
     //     setReCaptchaReady(true);
     // };
+    const getSignUpUrl = () => {
+        if (platform === 'udn') {
+            return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+        } else {
+            return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+        }
+    };
+
+    const logoHandler = () => {
+        // let title = null;
+        if (isIframe) {
+            return;
+        }
+
+        if (platform === 'udn' && !isPC) {
+            return (
+                <div className="udn__container">
+                    <img className="logo__dark" src={logoDark} alt="永豐金證券" />
+                </div>
+            );
+        } else {
+            if (isPC) {
+                return (
+                    <>
+                        <p className="login__title">歡迎來到永豐金證券</p>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <div className="login__logo"></div>
+                        <p className="login__title">歡迎來到永豐金證券</p>
+                    </>
+                );
+            }
+        }
+    };
+
+    const adHandler = () => {
+        if (platform === 'udn' && !isPC) {
+            return (
+                <div className="ad_container">
+                    <a href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
+                        <img className="ad__img" src={udnAD} />
+                    </a>
+                </div>
+            );
+        }
+    };
+
     return (
         <div className="login__container">
             {/* <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} /> */}
@@ -354,8 +419,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         <span className="close__img"></span>
                     </div>
                 ) : null}
-                {isPC ? null : !isIframe && <div className="login__logo"></div>}
-                {!isIframe && <p className="login__title">歡迎來到永豐金證券</p>}
+                {logoHandler()}
+                {/* {isPC ? null : !isIframe && <div className="login__logo"></div>} */}
+                {/* {!isIframe && <p className="login__title">歡迎來到永豐金證券</p>} */}
                 {isPC ? (
                     <div className="loginService__box">
                         <span className="service__title">登入後享受更多服務</span>
@@ -478,7 +544,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     {!isIframe ? (
                         <a
                             target="_blank"
-                            href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            href={getSignUpUrl()}
+                            // href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
                             className="a__link"
                         >
                             還不是永豐金證券客戶
@@ -494,18 +561,18 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                         </a>
                     )}
                 </p>
-                <div style={{ textAlign: 'center', color: 'rgba(0,0,0,.32)', fontSize: '1.2rem' }}>
-                    This site is protected by reCAPTCHA and the Google
+                <div style={{ textAlign: 'center', color: '#a9b6cb', fontSize: '1.2rem', letterSpacing: '0.3px' }}>
+                    此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
                     <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
                         {' '}
-                        Privacy Policy{' '}
+                        《隱私權聲明》{' '}
                     </a>{' '}
-                    and
+                    與
                     <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
                         {' '}
-                        Terms of Service{' '}
+                        《服務條款》{' '}
                     </a>{' '}
-                    apply.
+                    。
                 </div>
             </div>
             {popup ? (
@@ -521,6 +588,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     tabIndex="0"
                 ></div>
             ) : null}
+            {adHandler()}
             <style jsx>{`
                 .login__container {
                     position: relative;
@@ -552,7 +620,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 .close__img:hover {
                     transform: scale(0.9, 0.9) translateZ(0);
                 }
-                .login__box {
+                /* .login__box {
                     position: ${popup ? 'fixed' : 'static'};
                     width: ${isPC ? '512px' : '101%'};
                     height: ${isPC ? '548px' : '100vh'};
@@ -565,7 +633,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     background-color: ${isPC ? '#f9fbff' : 'white'};
                     border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
                     overflow-y: ${isIframe ? 'hidden' : 'auto'};
-                }
+                } */
                 .overLay {
                     position: fixed;
                     display: ${isPC ? 'block' : 'none'};
@@ -579,13 +647,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     z-index: 2;
                     cursor: pointer;
                 }
-                .login__logo {
+                /* .login__logo {
                     width: 8.7rem;
                     height: 9rem;
                     background: url(${logo}) no-repeat center center;
                     margin: 0 auto;
                     margin-top: 37px;
-                }
+                } */
                 .input::placeholder {
                     font-size: 1.8rem;
                 }
@@ -603,12 +671,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     color: #0d1623;
                     margin-top: 20px;
                 }
-                .login__title {
+                /* .login__title {
                     font-size: ${isPC ? '3.6rem' : '2.4rem'};
                     text-align: ${isPC ? 'left' : 'center'};
                     margin-top: ${isPC ? '42px' : '20px'};
                     margin-bottom: ${isPC ? '6px' : '20px'};
-                }
+                } */
                 .service__title {
                     display: block;
                     font-size: 1.8rem;
@@ -653,6 +721,64 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
             `}</style>
             <style global jsx>{`
+                .login__box {
+                    position: ${popup ? 'fixed' : 'static'};
+                    width: ${isPC ? '512px' : '101%'};
+                    height: ${isPC ? '548px' : '100vh'};
+                    z-index: 9999;
+                    top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
+                    left: 50%;
+                    transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};
+                    padding: ${isPC ? '0 41px' : platform === 'udn' ? '7%' : '0 20px'};
+                    padding-top: ${popup ? '0' : '1px'};
+                    background-color: ${isPC ? '#f9fbff' : 'white'};
+                    border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
+                    overflow-y: ${isIframe ? 'hidden' : 'auto'};
+                }
+                @media (max-width: 330px), print {
+                    .login__box {
+                        padding: ${isPC ? '0 41px' : '0 20px'};
+                    }
+                }
+                .ad_container {
+                    position: absolute;
+                    top: ${containerHeight || '100vh'};
+                    left: 0;
+                    min-width: 100%;
+                    z-index: 10000;
+                }
+                .ad__img {
+                    width: 100%;
+                }
+                .udn__container {
+                    margin-bottom: 20px;
+                    margin-top: 30px;
+                }
+                @media (max-width: 330px), print {
+                    .udn__container {
+                        margin-top: 20px;
+                    }
+                }
+                .logo__dark {
+                    width: 223px;
+                    /* height: 53px; */
+                }
+
+                .login__logo {
+                    width: 8.7rem;
+                    height: 9rem;
+                    background: url(${logo}) no-repeat center center;
+                    margin: 0 auto;
+                    margin-top: 37px;
+                }
+                .login__title {
+                    font-size: ${isPC ? '3.6rem' : '2.4rem'};
+                    text-align: ${isPC ? 'left' : 'center'};
+                    margin-top: ${isPC ? '42px' : '20px'};
+                    margin-bottom: ${isPC ? '6px' : '20px'};
+                    font-weight: bold;
+                    color: rgb(13, 22, 35);
+                }
                 .grecaptcha-badge {
                     display: none !important;
                 }

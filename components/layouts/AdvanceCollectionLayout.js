@@ -29,8 +29,8 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
         if (time.isBetween(beforeTime, afterTime)) {
             return true;
         } else {
-            alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
-            // dispatch({type: DISABLED, payload: true});
+            // alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
+            dispatch({ type: DISABLED, payload: `目前非申請時間，請於營業日${startTime}-${endTime}申請` });
             return true;
         }
     };
@@ -61,6 +61,13 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
             </Head>
             <PageHead title={'永豐金理財網'} />
             {verifySuccess && <div className="page__container">{children}</div>}
+            <style jsx>{`
+                .page__container {
+                    padding-top: 20px;
+                    margin-bottom: 40px;
+                    min-height: 700px;
+                }
+            `}</style>
         </>
     );
 };

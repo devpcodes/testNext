@@ -8,6 +8,6 @@ export const useLoginClosBtn = () => {
     const [noCloseBtn, setNoCloseBtn] = useState(false);
     useEffect(() => {
         setNoCloseBtn(noCloseBtns.includes(platform));
-    }, []);
+    }, [platform]);
     return noCloseBtn;
 };
