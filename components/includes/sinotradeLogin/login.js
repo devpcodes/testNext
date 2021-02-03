@@ -333,7 +333,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const logoHandler = () => {
         // let title = null;
-        if (isPC && isIframe) {
+        if (isPC || isIframe) {
             return;
         }
 
