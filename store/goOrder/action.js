@@ -71,9 +71,15 @@ export const setOrdCount = type => {
 };
 
 export const setPriceType = type => {
-    console.log('tt', type);
     return {
         type: actionType.SET_PRICE_TYPE,
         payload: type,
+    };
+};
+
+export const setOrdQty = qty => {
+    return {
+        type: actionType.SET_ORD_QTY,
+        payload: qty,
     };
 };

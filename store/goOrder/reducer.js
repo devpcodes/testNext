@@ -12,6 +12,7 @@ const initialState = {
     time_in_force: '0', // 0 3 4
     ord_cond: '0', // 0 3 4
     price_type: ' ', // ' ', 4 2 3 1
+    ord_qty: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -71,6 +72,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 price_type: action.payload,
+            };
+        case actionType.SET_ORD_QTY:
+            console.log('reducer', action.payload);
+            return {
+                ...state,
+                ord_qty: action.payload,
             };
         default:
             return state;

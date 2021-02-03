@@ -6,7 +6,7 @@ import { themeColor } from './PanelTabs';
 import { checkServer } from '../../../../services/checkServer';
 import { formatPrice } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
-import { setPriceType } from '../../../../store/goOrder/action';
+import { setPriceType, setOrdQty } from '../../../../store/goOrder/action';
 
 const { Option } = Select;
 const PriceControl = ({ title }) => {
@@ -20,6 +20,7 @@ const PriceControl = ({ title }) => {
     const ordType = useSelector(store => store.goOrder.ord_type);
     const solaceData = useSelector(store => store.solace.solaceData);
     const priceType = useSelector(store => store.goOrder.price_type);
+    const ordQty = useSelector(store => store.goOrder.ord_qty);
 
     const [ordPrice, setOrderPrice] = useState('');
     const [priceTypeOption, setPriceTypeOption] = useState([
@@ -86,33 +87,56 @@ const PriceControl = ({ title }) => {
     };
 
     const priceChangeHandler = e => {
-        var regex = /^[0-9/.]*$/;
+        var regex;
+        if (title === '張數' || title === '股數') {
+            regex = /^[0-9/]*$/;
+        } else {
+            regex = /^[0-9/.]*$/;
+        }
+
         if (!regex.test(e.target.value)) {
             return;
         }
-        setOrderPrice(e.target.value);
+        if (title === '張數' || title === '股數') {
+            dispatch(setOrdQty(e.target.value));
+        } else {
+            setOrderPrice(e.target.value);
+        }
     };
 
     const onClickHandler = symbol => {
         const type = getStockType(code).type;
-        let unit;
-        if (symbol === '+') {
-            if (isNaN(Number(ordPrice))) {
-                setOrderPrice('');
-                return;
-            }
-            unit = getStockPriceRange(type, ordPrice, true);
-            setOrderPrice(formatPrice(parseFloat(ordPrice) + unit));
-        } else {
-            if (isNaN(Number(ordPrice))) {
-                setOrderPrice('');
-                return;
-            }
-            unit = getStockPriceRange(type, ordPrice, true);
-            if (parseFloat(ordPrice) - unit <= unit) {
-                setOrderPrice(formatPrice(unit));
+        if (title === '限價') {
+            let unit;
+            if (symbol === '+') {
+                if (isNaN(Number(ordPrice))) {
+                    setOrderPrice('');
+                    return;
+                }
+                unit = getStockPriceRange(type, ordPrice, true);
+                setOrderPrice(formatPrice(parseFloat(ordPrice) + unit));
             } else {
-                setOrderPrice(formatPrice(parseFloat(ordPrice) - unit));
+                if (isNaN(Number(ordPrice))) {
+                    setOrderPrice('');
+                    return;
+                }
+                unit = getStockPriceRange(type, ordPrice, true);
+                if (parseFloat(ordPrice) - unit <= unit) {
+                    setOrderPrice(formatPrice(unit));
+                } else {
+                    setOrderPrice(formatPrice(parseFloat(ordPrice) - unit));
+                }
+            }
+        } else {
+            let unit = 1;
+            if (symbol === '+') {
+                dispatch(setOrdQty(Number(ordQty) + unit));
+            } else {
+                if (ordQty - unit === 0) {
+                    dispatch(setOrdQty(Number(ordQty)));
+                } else {
+                    dispatch(setOrdQty(Number(ordQty) - unit));
+                }
             }
         }
     };
@@ -163,7 +187,7 @@ const PriceControl = ({ title }) => {
             <div className="input__box">
                 <Input
                     disabled={title === '限價' && ordType === 'P'}
-                    value={title === '限價' ? getPriceValHandler() : ''}
+                    value={title === '限價' ? getPriceValHandler() : ordQty}
                     onChange={priceChangeHandler}
                     onFocus={focusHandler}
                 />

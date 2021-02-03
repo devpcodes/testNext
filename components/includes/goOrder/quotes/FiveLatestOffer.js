@@ -203,11 +203,16 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     );
 
     const boxContentWidth = price => {
-        if (Math.round(price) == 0) {
-            return '1%';
+        if (isNaN(Number(price)) || Math.ceil(price) == 0) {
+            return '0%';
         } else {
             return Math.round(price) + '%';
         }
+        // if (Math.ceil(price) >= 0) {
+        //     return '1%';
+        // } else {
+        //     return Math.round(price) + '%';
+        // }
     };
 
     const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength) => {
