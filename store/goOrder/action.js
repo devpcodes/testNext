@@ -83,3 +83,10 @@ export const setOrdQty = qty => {
         payload: qty,
     };
 };
+
+export const setOrderPrice = price => {
+    return {
+        type: actionType.SET_ORD_PRICE,
+        payload: price,
+    };
+};

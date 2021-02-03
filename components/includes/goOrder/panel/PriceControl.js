@@ -6,7 +6,7 @@ import { themeColor } from './PanelTabs';
 import { checkServer } from '../../../../services/checkServer';
 import { formatPrice } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
-import { setPriceType, setOrdQty } from '../../../../store/goOrder/action';
+import { setPriceType, setOrdQty, setOrderPrice } from '../../../../store/goOrder/action';
 
 const { Option } = Select;
 const PriceControl = ({ title }) => {
@@ -21,8 +21,9 @@ const PriceControl = ({ title }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const priceType = useSelector(store => store.goOrder.price_type);
     const ordQty = useSelector(store => store.goOrder.ord_qty);
+    const ordPrice = useSelector(store => store.goOrder.ord_price);
 
-    const [ordPrice, setOrderPrice] = useState('');
+    // const [ordPrice, setOrderPrice] = useState('');
     const [priceTypeOption, setPriceTypeOption] = useState([
         { txt: '限價', val: ' ' },
         { txt: '市價', val: '4' },
@@ -33,7 +34,7 @@ const PriceControl = ({ title }) => {
     useEffect(() => {
         // 整零切換先清空價格
         if (lot !== currentLot.current || code !== currentCode.current) {
-            setOrderPrice('');
+            dispatch(setOrderPrice(''));
         }
         if (code === currentCode.current && lot === currentLot.current) {
             return;
@@ -72,7 +73,7 @@ const PriceControl = ({ title }) => {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {
                     currentCode.current = code;
                     currentLot.current = lot;
-                    setOrderPrice(formatPrice(solaceData[0].data.OddlotClose));
+                    dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
                 }
             }
         } else {
@@ -80,7 +81,7 @@ const PriceControl = ({ title }) => {
                 if (solaceData[0].topic.indexOf(code) >= 0) {
                     currentCode.current = code;
                     currentLot.current = lot;
-                    setOrderPrice(formatPrice(solaceData[0].data.Close[0]));
+                    dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
                 }
             }
         }
@@ -100,7 +101,7 @@ const PriceControl = ({ title }) => {
         if (title === '張數' || title === '股數') {
             dispatch(setOrdQty(e.target.value));
         } else {
-            setOrderPrice(e.target.value);
+            dispatch(setOrderPrice(e.target.value));
         }
     };
 
@@ -110,21 +111,21 @@ const PriceControl = ({ title }) => {
             let unit;
             if (symbol === '+') {
                 if (isNaN(Number(ordPrice))) {
-                    setOrderPrice('');
+                    dispatch(setOrderPrice(''));
                     return;
                 }
                 unit = getStockPriceRange(type, ordPrice, true);
-                setOrderPrice(formatPrice(parseFloat(ordPrice) + unit));
+                dispatch(setOrderPrice(formatPrice(parseFloat(ordPrice) + unit)));
             } else {
                 if (isNaN(Number(ordPrice))) {
-                    setOrderPrice('');
+                    dispatch(setOrderPrice(''));
                     return;
                 }
                 unit = getStockPriceRange(type, ordPrice, true);
                 if (parseFloat(ordPrice) - unit <= unit) {
-                    setOrderPrice(formatPrice(unit));
+                    dispatch(setOrderPrice(formatPrice(unit)));
                 } else {
-                    setOrderPrice(formatPrice(parseFloat(ordPrice) - unit));
+                    dispatch(setOrderPrice(formatPrice(parseFloat(ordPrice) - unit)));
                 }
             }
         } else {
