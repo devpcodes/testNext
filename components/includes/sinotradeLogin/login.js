@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
@@ -745,6 +745,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     top: ${containerHeight || '100vh'};
                     left: 0;
                     min-width: 100%;
+                    z-index: 10000;
                 }
                 .ad__img {
                     width: 100%;
