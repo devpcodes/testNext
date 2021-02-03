@@ -31,7 +31,7 @@ const PriceControl = ({ title }) => {
     ]);
     useEffect(() => {
         // 整零切換先清空價格
-        if (lot !== currentLot.current) {
+        if (lot !== currentLot.current || code !== currentCode.current) {
             setOrderPrice('');
         }
         if (code === currentCode.current && lot === currentLot.current) {
