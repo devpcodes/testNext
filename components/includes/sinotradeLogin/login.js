@@ -562,7 +562,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     )}
                 </p>
                 <div style={{ textAlign: 'center', color: '#a9b6cb', fontSize: '1.2rem', letterSpacing: '0.3px' }}>
-                    此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，近一步了解
+                    此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
                     <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
                         {' '}
                         《隱私權聲明》{' '}
