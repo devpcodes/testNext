@@ -138,7 +138,7 @@ export const ProfitLoss = () => {
                 </div>
                 <div className="text__container">
                     <p className="text">
-                        查詢時間：{`${formatDate(data?.updateDate)} ${formatTime(data?.updateTime)}`}
+                        更新時間：{`${formatDate(data?.updateDate)} ${formatTime(data?.updateTime)}`}
                     </p>
                     {!isMobile && <p className="text">交易幣別：新台幣</p>}
                 </div>
