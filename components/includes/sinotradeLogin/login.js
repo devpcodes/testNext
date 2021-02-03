@@ -28,6 +28,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [accountFontSize, setAccountFontSize] = useState('1.8rem');
     const [isLoading, setIsLoading] = useState(false);
     const [isIframe, setIsIframe] = useState(false);
+
+    const [containerHeight, setContainerHeight] = useState('100vh');
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
@@ -57,6 +59,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
 
         window.addEventListener('keypress', winKeyDownHandler, false);
+        window.addEventListener('resize', handleResize);
+        handleResize();
         if (checkIframe()) {
             setIsIframe(true);
         }
@@ -68,6 +72,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
     // useEffect(() => {
@@ -84,6 +89,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 account = changedFields[0].value;
             }
         }
+    };
+
+    const handleResize = () => {
+        setContainerHeight(window.innerHeight + 'px');
     };
 
     const winKeyDownHandler = function (e) {
@@ -712,7 +721,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 .login__box {
                     position: ${popup ? 'fixed' : 'static'};
                     width: ${isPC ? '512px' : '101%'};
-                    height: ${isPC ? '548px' : '100vh'};
+                    height: ${isPC ? '548px' : containerHeight};
                     z-index: 9999;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
