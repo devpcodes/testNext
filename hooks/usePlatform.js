@@ -20,6 +20,12 @@ export const usePlatform = () => {
     }, [router.query]);
 
     useEffect(() => {
+        if (router.query.platform) {
+            setNwPlatform(router.query.platform.toLowerCase());
+        }
+    });
+
+    useEffect(() => {
         dispatch(setPlatform(nwPlatform));
     }, [nwPlatform]);
 
