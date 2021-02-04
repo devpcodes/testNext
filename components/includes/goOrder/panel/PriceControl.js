@@ -39,7 +39,7 @@ const PriceControl = ({ title }) => {
         if (code === currentCode.current && lot === currentLot.current) {
             return;
         }
-
+        console.log(code, lot, solaceData.topic);
         setPriceHandler();
         setPriceTypeOptionHandler();
     }, [code, lot, solaceData]);
@@ -68,12 +68,17 @@ const PriceControl = ({ title }) => {
     };
 
     const setPriceHandler = () => {
+        console.log('sssss', solaceData);
         if (lot === 'Odd') {
             if (code !== '' && !checkServer() && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {
                     currentCode.current = code;
                     currentLot.current = lot;
-                    dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
+                    if (Number(solaceData[0].data.OddlotClose) == 0) {
+                        dispatch(setOrderPrice(''));
+                    } else {
+                        dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
+                    }
                 }
             }
         } else {
@@ -81,7 +86,11 @@ const PriceControl = ({ title }) => {
                 if (solaceData[0].topic.indexOf(code) >= 0) {
                     currentCode.current = code;
                     currentLot.current = lot;
-                    dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
+                    if (Number(solaceData[0].data.Close[0]) == 0) {
+                        dispatch(setOrderPrice(''));
+                    } else {
+                        dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
+                    }
                 }
             }
         }
