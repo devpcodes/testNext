@@ -33,13 +33,14 @@ const PriceControl = ({ title }) => {
     ]);
     useEffect(() => {
         // 整零切換先清空價格
+        // console.log(code, lot, solaceData.topic, 'cc:', currentLot.current);
         if (lot !== currentLot.current || code !== currentCode.current) {
             dispatch(setOrderPrice(''));
         }
         if (code === currentCode.current && lot === currentLot.current) {
             return;
         }
-        console.log(code, lot, solaceData.topic);
+
         setPriceHandler();
         setPriceTypeOptionHandler();
     }, [code, lot, solaceData]);
@@ -68,7 +69,8 @@ const PriceControl = ({ title }) => {
     };
 
     const setPriceHandler = () => {
-        console.log('sssss', solaceData);
+        // console.log('sssss', solaceData);
+        // currentLot.current = lot;
         if (lot === 'Odd') {
             if (code !== '' && !checkServer() && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {

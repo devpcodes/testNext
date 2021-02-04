@@ -90,3 +90,10 @@ export const setOrderPrice = price => {
         payload: price,
     };
 };
+
+export const setIsFirstSell = boo => {
+    return {
+        type: actionType.IS_FIRST_SELL,
+        payload: boo,
+    };
+};
