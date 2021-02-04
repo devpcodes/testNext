@@ -89,6 +89,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
 
     const updateSNPData = xhr => {
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') >= 0) {
+            // xhr.data.OddlotClose = 0;
             return;
         }
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') === -1) {
