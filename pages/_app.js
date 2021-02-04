@@ -132,6 +132,7 @@ function MyApp({ Component, pageProps, router }) {
     return (
         <>
             <Head>
+                {/* <script type="text/javascript" src={`${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`}></script> */}
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge, chrome=1" />
                 {/* Target older browsers like IE 10 and lower. */}
                 <link rel="icon" href={`${process.env.NEXT_PUBLIC_SUBPATH}/favicon.ico`} />

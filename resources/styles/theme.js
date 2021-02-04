@@ -4,12 +4,12 @@ const theme = {
         text: '#ffffff',
         darkBg: '#0d1623',
         lightBg: '#ffffff',
+        normalBg: '#e6ebf5',
         primary: '#c43826',
         primaryHover: '#9d1200',
         secondary: '#daa360',
         secondaryHover: '#ad7633',
         loss: '#22a16f',
-        accountHover: '#e6ebf5',
         menuTagNew: '#254A91',
     },
     button: {
