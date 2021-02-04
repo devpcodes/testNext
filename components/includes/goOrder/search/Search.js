@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,12 +9,15 @@ import { fetchProducts } from '../../../../services/components/goOrder/productFe
 import theme from '../../../../resources/styles/theme';
 import searchImg from '../../../../resources/images/components/goOrder/edit-search.svg';
 import closeImg from '../../../../resources/images/components/goOrder/menu-close-big.svg';
+import { useLocalStorage } from '../../../../hooks/useLocalStorage';
 
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('');
     const [products, setProducts] = useState([]);
     const type = useSelector(store => store.goOrder.type);
+    const textInput = useRef(null);
+    const [searchHistory, setSearchHistory] = useLocalStorage('newweb_search_history', []);
 
     const getMatchStr = (str, replace) => {
         const re = new RegExp(replace, 'i');
@@ -22,9 +25,16 @@ export const Search = memo(({ isVisible, handleCancel }) => {
         return str.replace(re, replacement);
     };
 
+    const saveSearchHistory = selectedProduct => {
+        const newSearchHistory = searchHistory.slice();
+        newSearchHistory.push(selectedProduct);
+        setSearchHistory(newSearchHistory);
+    };
+
     const selectHandler = id => {
         const selectedProduct = products.find(product => product.id === id);
         if (selectedProduct) {
+            saveSearchHistory(selectedProduct);
             dispatch(setCode(selectedProduct?.symbol));
             dispatch(setProductInfo(selectedProduct));
             cancelHandler();
@@ -36,6 +46,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             product => product.symbol === keyword || product.name_zh === keyword || product.name === keyword,
         );
         if (selectedProduct) {
+            saveSearchHistory(selectedProduct);
             dispatch(setCode(selectedProduct?.symbol));
             dispatch(setProductInfo(selectedProduct));
             cancelHandler();
@@ -98,6 +109,12 @@ export const Search = memo(({ isVisible, handleCancel }) => {
         }
     }, [keyword]);
 
+    useEffect(() => {
+        if (isVisible) {
+            textInput.current.focus();
+        }
+    }, [isVisible]);
+
     return (
         <MyTransition isVisible={isVisible} classNames={'loginMobile'}>
             <>
@@ -117,6 +134,10 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                     }
                                 }}
                                 className="autoComplete__input"
+                                ref={textInput}
+                                onFocus={e => {
+                                    console.log('Focused on input');
+                                }}
                             />
                             <button onClick={clearHandler}>
                                 <img src={closeImg} alt="search"></img>
