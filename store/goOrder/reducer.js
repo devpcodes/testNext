@@ -14,6 +14,7 @@ const initialState = {
     price_type: ' ', // ' ', 4 2 3 1
     ord_qty: '1',
     ord_price: '',
+    is_first_sell: 'N', //Y N
 };
 
 const reducer = (state = initialState, action) => {
@@ -84,6 +85,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 ord_price: action.payload,
+            };
+        case actionType.IS_FIRST_SELL:
+            return {
+                ...state,
+                is_first_sell: action.payload,
             };
         default:
             return state;

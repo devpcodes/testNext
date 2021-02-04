@@ -214,7 +214,7 @@ export const solaceClient = function (solaceName, userId) {
         if (subscriber.session !== null) {
             try {
                 if (this.subscribeTopicCount[topicName] == 1) {
-                    this.session.unsubscribe(solace.SolclientFactory.createTopic(topicName), false, topicName, 10000);
+                    this.session.unsubscribe(solace.SolclientFactory.createTopic(topicName), true, topicName, 10000);
                     subscriber.log('=== Unsubscribing from topic: ' + topicName + '===');
                 } else subscriber.log('=== private Topic: ' + topicName + '===');
                 if (this.subscribeTopicCount[topicName] > 0) this.subscribeTopicCount[topicName] -= 1;
