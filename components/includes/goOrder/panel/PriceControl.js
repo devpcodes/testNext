@@ -13,6 +13,7 @@ const PriceControl = ({ title }) => {
     const dispatch = useDispatch();
     const currentCode = useRef('');
     const currentLot = useRef('');
+    const setPriceOK = useRef(false);
 
     const bs = useSelector(store => store.goOrder.bs);
     const code = useSelector(store => store.goOrder.code);
@@ -35,11 +36,11 @@ const PriceControl = ({ title }) => {
         // 整零切換先清空價格
         // console.log(code, lot, solaceData.topic, 'cc:', currentLot.current);
         if (lot !== currentLot.current || code !== currentCode.current) {
+            setPriceOK.current = false;
             dispatch(setOrderPrice(''));
         }
-        if (code === currentCode.current && lot === currentLot.current) {
-            return;
-        }
+        currentLot.current = lot;
+        currentCode.current = code;
 
         setPriceHandler();
         setPriceTypeOptionHandler();
@@ -69,29 +70,30 @@ const PriceControl = ({ title }) => {
     };
 
     const setPriceHandler = () => {
-        // console.log('sssss', solaceData);
-        // currentLot.current = lot;
+        if (setPriceOK.current) return;
         if (lot === 'Odd') {
             if (code !== '' && !checkServer() && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {
-                    currentCode.current = code;
-                    currentLot.current = lot;
-                    if (Number(solaceData[0].data.OddlotClose) == 0) {
-                        dispatch(setOrderPrice(''));
-                    } else {
-                        dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
+                    if (!isNaN(Number(ordPrice))) {
+                        if (Number(solaceData[0].data.OddlotClose) == 0) {
+                            dispatch(setOrderPrice(''));
+                        } else {
+                            dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
+                            setPriceOK.current = true;
+                        }
                     }
                 }
             }
         } else {
             if (code !== '' && !checkServer() && solaceData.length > 0 && Array.isArray(solaceData[0].data.Close)) {
                 if (solaceData[0].topic.indexOf(code) >= 0) {
-                    currentCode.current = code;
-                    currentLot.current = lot;
-                    if (Number(solaceData[0].data.Close[0]) == 0) {
-                        dispatch(setOrderPrice(''));
-                    } else {
-                        dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
+                    if (!isNaN(Number(ordPrice))) {
+                        if (Number(solaceData[0].data.Close[0]) == 0) {
+                            dispatch(setOrderPrice(''));
+                        } else {
+                            dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
+                            setPriceOK.current = true;
+                        }
                     }
                 }
             }
@@ -113,12 +115,14 @@ const PriceControl = ({ title }) => {
             dispatch(setOrdQty(e.target.value));
         } else {
             dispatch(setOrderPrice(e.target.value));
+            setPriceOK.current = true;
         }
     };
 
     const onClickHandler = symbol => {
         const type = getStockType(code).type;
         if (title === '限價') {
+            if (ordPrice === '') return;
             let unit;
             if (symbol === '+') {
                 if (isNaN(Number(ordPrice))) {
