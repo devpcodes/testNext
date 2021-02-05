@@ -100,10 +100,14 @@ const OrderGO = () => {
                 .ant-drawer-bottom.ant-drawer-open .ant-drawer-content-wrapper {
                     box-shadow: 0 -6px 16px -8px rgba(0, 0, 0, 0.5), 0 -9px 28px 0 rgba(0, 0, 0, 0.1),
                         0 -12px 48px 16px rgba(0, 0, 0, 0.005);
-                    border-radius: 8px;
+                    /* border-radius: 8px; */
+                    border-top-right-radius: 8px;
+                    border-top-left-radius: 8px;
                 }
                 .ant-drawer-content {
-                    border-radius: 8px;
+                    border-top-right-radius: 8px;
+                    border-top-left-radius: 8px;
+                    overflow: hidden;
                 }
                 .ant-drawer-body {
                     overflow: hidden;
