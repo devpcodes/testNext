@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
 import MyTransition from '../../myTransition';
+import { SearchItem } from './SearchItem';
 import { setCode, setProductInfo } from '../../../../store/goOrder/action';
-import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
+import { fetchPopularStocks, fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 import theme from '../../../../resources/styles/theme';
 import searchImg from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -15,42 +16,53 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('');
     const [products, setProducts] = useState([]);
+    const [popularItems, setPopularItems] = useState([]);
+    const [searchHistory, setSearchHistory] = useLocalStorage('newweb_search_history', []);
     const type = useSelector(store => store.goOrder.type);
     const textInput = useRef(null);
-    const [searchHistory, setSearchHistory] = useLocalStorage('newweb_search_history', []);
-
-    const getMatchStr = (str, replace) => {
-        const re = new RegExp(replace, 'i');
-        const replacement = match => `<span style="color:#daa360;">${match}</span>`;
-        return str.replace(re, replacement);
-    };
 
     const saveSearchHistory = selectedProduct => {
-        const newSearchHistory = searchHistory.slice();
+        const maxLength = 5;
+        const newSearchHistory = [...searchHistory];
+        const index = newSearchHistory.findIndex(item => item.symbol === selectedProduct.symbol);
+        console.log(`========== index:`, index);
+        if (index >= 0) {
+            newSearchHistory.splice(index, 1);
+        }
         newSearchHistory.push(selectedProduct);
-        setSearchHistory(newSearchHistory);
+        console.log(`========== newSearchHistory:`, newSearchHistory);
+        newSearchHistory.slice(Math.max(newSearchHistory - maxLength, 0));
+
+        // setSearchHistory(newSearchHistory);
     };
 
-    const selectHandler = id => {
-        const selectedProduct = products.find(product => product.id === id);
-        if (selectedProduct) {
-            saveSearchHistory(selectedProduct);
-            dispatch(setCode(selectedProduct?.symbol));
-            dispatch(setProductInfo(selectedProduct));
+    const selectHandler = item => {
+        if (item) {
+            saveSearchHistory(item);
+            dispatch(setCode(item?.symbol));
+            dispatch(setProductInfo(item));
             cancelHandler();
         }
+    };
+
+    const getPopularItems = async () => {
+        try {
+            const res = await fetchPopularStocks();
+            setPopularItems(res.result);
+        } catch (error) {
+            console.error(`fetchPopularItems-error:`, error);
+        }
+    };
+
+    const focusHandler = () => {
+        getPopularItems();
     };
 
     const enterHandler = keyword => {
         const selectedProduct = products.find(
             product => product.symbol === keyword || product.name_zh === keyword || product.name === keyword,
         );
-        if (selectedProduct) {
-            saveSearchHistory(selectedProduct);
-            dispatch(setCode(selectedProduct?.symbol));
-            dispatch(setProductInfo(selectedProduct));
-            cancelHandler();
-        }
+        selectHandler(selectedProduct);
     };
 
     const changeHandler = e => {
@@ -85,7 +97,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             }
         };
 
-        async function fetchData() {
+        const fetchData = async () => {
             const data = {
                 query: keyword,
                 marketType: getMarketType(type),
@@ -99,7 +111,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             } catch (error) {
                 console.error(`fetchProducts-error:`, error);
             }
-        }
+        };
 
         if (keyword === '') {
             // console.log('---------------------');
@@ -135,9 +147,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                 }}
                                 className="autoComplete__input"
                                 ref={textInput}
-                                onFocus={e => {
-                                    console.log('Focused on input');
-                                }}
+                                onFocus={focusHandler}
                             />
                             <button onClick={clearHandler}>
                                 <img src={closeImg} alt="search"></img>
@@ -153,59 +163,38 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         </button>
                     </div>
                     <section className="dropdown__container">
-                        {/* <article className="dropdown__group">
-                            <div className="group__title">最近搜尋</div>
-                            <div className="group__item">
-                                <span className="item__code">6531</span>
-                                <span className="item__name">愛普</span>
-                            </div>
-                            <div className="group__item">
-                                <span className="item__code">6531</span>
-                                <span className="item__name">愛普</span>
-                            </div>
-                        </article>
-                        <article className="dropdown__group">
-                            <div className="group__title">本日熱門搜尋</div>
-                            <div className="group__item">
-                                <div className="item__code">6531</div>
-                                <div className="item__name">愛普</div>
-                            </div>
-                            <div className="group__item">
-                                <div className="item__code">006208</div>
-                                <div className="item__name">富邦台灣加權</div>
-                            </div>
-                        </article> */}
-                        <article className="dropdown__group">
-                            {/* {!!products.length && type === 'S' && <div className="group__title">個股</div>} */}
-                            {products.map(item => (
-                                <div
-                                    className="group__item"
-                                    key={item.id}
-                                    onClick={() => {
-                                        selectHandler(item.id);
-                                    }}
-                                    onKeyDown={e => {
-                                        if (e.key === 'Enter') {
-                                            selectHandler(item.id);
-                                        }
-                                    }}
-                                    role="option"
-                                    aria-selected="false"
-                                    tabIndex={0}
-                                >
-                                    <div
-                                        className="item__code"
-                                        dangerouslySetInnerHTML={{ __html: getMatchStr(item.symbol, keyword) }}
-                                    ></div>
-                                    <div
-                                        className="item__name"
-                                        dangerouslySetInnerHTML={{
-                                            __html: getMatchStr(item.name_zh || item.name, keyword),
-                                        }}
-                                    ></div>
-                                </div>
-                            ))}
-                        </article>
+                        {keyword ? (
+                            <article className="dropdown__group">
+                                {/* {<div className="group__title">個股</div>} */}
+                                {products.map(item => (
+                                    <SearchItem
+                                        key={item.id}
+                                        item={item}
+                                        keyword={keyword}
+                                        selectHandler={selectHandler}
+                                        isMatched={true}
+                                    />
+                                ))}
+                            </article>
+                        ) : (
+                            <>
+                                <article className="dropdown__group">
+                                    <div className="group__title">最近搜尋</div>
+                                    {searchHistory
+                                        .slice()
+                                        .reverse()
+                                        .map(item => (
+                                            <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
+                                        ))}
+                                </article>
+                                <article className="dropdown__group">
+                                    <div className="group__title">本日熱門搜尋</div>
+                                    {popularItems.map(item => (
+                                        <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
+                                    ))}
+                                </article>
+                            </>
+                        )}
                     </section>
                 </div>
                 <style jsx>{`
@@ -272,6 +261,8 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                     }
                     .dropdown__container {
                         width: 100%;
+                        height: calc(100% - 68px);
+                        overflow-y: scroll;
                         border-bottom: solid 1px ${theme.colors.normalBg};
                     }
                     .dropdown__group {
@@ -285,26 +276,6 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         padding: 0 16px;
                         background-color: ${theme.colors.normalBg};
                         font-size: 1.2rem;
-                    }
-                    .dropdown__group .group__item {
-                        width: 100%;
-                        height: 44px;
-                        padding: 0 16px;
-                        display: flex;
-                        align-items: center;
-                        font-size: 1.6rem;
-                        font-weight: 500;
-                    }
-                    .group__item .item__code {
-                        width: 25%;
-                    }
-                    .group__item .item__code,
-                    .group__item .item__name {
-                        height: 22px;
-                        line-height: 22px;
-                    }
-                    .group__item ~ .group__item {
-                        border-top: solid 1px ${theme.colors.normalBg};
                     }
                 `}</style>
             </>
