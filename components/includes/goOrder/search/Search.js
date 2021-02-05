@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import MyTransition from '../../myTransition';
 import { SearchItem } from './SearchItem';
-import { setCode, setProductInfo } from '../../../../store/goOrder/action';
+import { setCode, setLot, setProductInfo } from '../../../../store/goOrder/action';
 import { fetchPopularStocks, fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 import theme from '../../../../resources/styles/theme';
@@ -40,6 +40,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
         if (item) {
             saveSearchHistory(item);
             dispatch(setCode(item?.symbol));
+            dispatch(setLot('Board'));
             dispatch(setProductInfo(item));
             cancelHandler();
         }
