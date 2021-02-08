@@ -11,6 +11,9 @@ import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
 import { setPanelHeight } from '../store/goOrder/action';
 import PanelTabs from '../components/includes/goOrder/panel/PanelTabs';
 import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png';
+import chart from '../components/includes/goOrder/chart/chart';
+// import chart from '../components/includes/chart';
+
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
@@ -92,6 +95,7 @@ const OrderGO = () => {
                     <PanelTabs />
                 </Drawer>
             </div>
+            <chart />
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
             <style global jsx>{`
                 .ant-drawer-bottom.ant-drawer-open.no-mask {
