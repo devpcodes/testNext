@@ -74,6 +74,8 @@ const solaceDataHandler = (solaceData, lot) => {
     }
 };
 
+// TODO: 判斷上市/上櫃/興櫃股票
+// TODO: 零股顯示價差
 export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const dispatch = useDispatch();
@@ -81,14 +83,6 @@ export const Info = () => {
     const code = useSelector(store => store.goOrder.code);
     const solaceData = useSelector(store => store.solace.solaceData);
     const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
-
-    // console.log(`======solaceData:`, solaceData);
-    // console.log(`==============name:`, name);
-    // console.log(`==============close:`, close);
-    // console.log(`==============diffPrice:`, diffPrice);
-    // console.log(`==============diffRate:`, diffRate);
-    // console.log(`==============volSum:`, volSum);
-    // console.log(`==============reference:`, reference);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
