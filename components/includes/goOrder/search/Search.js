@@ -1,10 +1,11 @@
 import { memo, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { isEmpty, isEqual, uniqWith } from 'lodash';
 
 import MyTransition from '../../myTransition';
 import { SearchItem } from './SearchItem';
-import { setCode, setLot, setProductInfo } from '../../../../store/goOrder/action';
+import { setCode, setLot, setProductInfo, setType } from '../../../../store/goOrder/action';
 import { fetchPopularStocks, fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 import theme from '../../../../resources/styles/theme';
@@ -17,29 +18,64 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const [keyword, setKeyword] = useState('');
     const [products, setProducts] = useState([]);
     const [popularItems, setPopularItems] = useState([]);
+    const [historyByType, setHistoryByType] = useState([]);
     const [searchHistory, setSearchHistory] = useLocalStorage('newweb_search_history', []);
     const type = useSelector(store => store.goOrder.type);
     const textInput = useRef(null);
 
+    const getMarketType = type => {
+        switch (type) {
+            case 'S':
+                return 'S';
+            case 'H':
+                return 'SB';
+            case 'F':
+                return 'F';
+            case 'O':
+                return 'O';
+            default:
+                return 'S';
+        }
+    };
+
+    const getTypeByMarketType = marketType => {
+        switch (marketType) {
+            case 'S':
+                return 'S';
+            case 'SB':
+                return 'H';
+            case 'F':
+                return 'F';
+            case 'O':
+                return 'O';
+            default:
+                return 'S';
+        }
+    };
+
     const saveSearchHistory = selectedProduct => {
         const maxLength = 5;
-        const newSearchHistory = [...searchHistory];
-        const index = newSearchHistory.findIndex(item => item.symbol === selectedProduct.symbol);
-        console.log(`========== index:`, index);
+        const newSearchHistory = uniqWith(searchHistory, isEqual); // copy 並自動濾除重複的項目
+        const index = newSearchHistory.findIndex(
+            item => item.symbol === selectedProduct.symbol && item.marketType === selectedProduct.marketType,
+        );
         if (index >= 0) {
             newSearchHistory.splice(index, 1);
         }
         newSearchHistory.push(selectedProduct);
-        console.log(`========== newSearchHistory:`, newSearchHistory);
-        newSearchHistory.slice(Math.max(newSearchHistory - maxLength, 0));
 
-        // setSearchHistory(newSearchHistory);
+        const historyByType = newSearchHistory.filter(item => item.marketType === getMarketType(type));
+        const lastHistoryByType = historyByType.slice(Math.max(historyByType.length - maxLength, 0));
+        const otherHistory = searchHistory.filter(item => item.marketType !== getMarketType(type));
+
+        setSearchHistory([...lastHistoryByType, ...otherHistory]);
     };
 
     const selectHandler = item => {
         if (item) {
             saveSearchHistory(item);
             dispatch(setCode(item?.symbol));
+            dispatch(setType(getTypeByMarketType(item?.marketType)));
             dispatch(setLot('Board'));
             dispatch(setProductInfo(item));
             cancelHandler();
@@ -47,6 +83,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     };
 
     const getPopularItems = async () => {
+        // TODO: 目前僅有台股，未來需要依市場 (type) 取得對應的熱門商品
         try {
             const res = await fetchPopularStocks();
             setPopularItems(res.result);
@@ -81,33 +118,20 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     };
 
     useEffect(() => {
-        // if (!isVisible) return;
+        const historyByType = searchHistory.filter(item => item.marketType === getMarketType(type));
+        setHistoryByType(historyByType);
+    }, [type, searchHistory]);
 
-        const getMarketType = type => {
-            switch (type) {
-                case 'S':
-                    return ['S'];
-                case 'H':
-                    return ['SB'];
-                case 'F':
-                    return ['F'];
-                case 'O':
-                    return ['O'];
-                default:
-                    return ['S', 'SB', 'F', 'O'];
-            }
-        };
-
+    useEffect(() => {
         const fetchData = async () => {
             const data = {
                 query: keyword,
-                marketType: getMarketType(type),
+                marketType: [getMarketType(type)],
                 limit: 30,
                 isOrder: true,
             };
             try {
                 const { result } = await fetchProducts(data);
-                // console.log(`====== result:`, result);
                 setProducts(result);
             } catch (error) {
                 console.error(`fetchProducts-error:`, error);
@@ -115,7 +139,6 @@ export const Search = memo(({ isVisible, handleCancel }) => {
         };
 
         if (keyword === '') {
-            // console.log('---------------------');
             setProducts([]);
         } else if (isVisible && keyword !== '') {
             fetchData();
@@ -180,8 +203,8 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         ) : (
                             <>
                                 <article className="dropdown__group">
-                                    <div className="group__title">最近搜尋</div>
-                                    {searchHistory
+                                    {!isEmpty(historyByType) && <div className="group__title">最近搜尋</div>}
+                                    {historyByType
                                         .slice()
                                         .reverse()
                                         .map(item => (
@@ -190,9 +213,10 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                 </article>
                                 <article className="dropdown__group">
                                     <div className="group__title">本日熱門搜尋</div>
-                                    {popularItems.map(item => (
-                                        <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
-                                    ))}
+                                    {type === 'S' &&
+                                        popularItems.map(item => (
+                                            <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
+                                        ))}
                                 </article>
                             </>
                         )}
@@ -263,7 +287,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                     .dropdown__container {
                         width: 100%;
                         height: calc(100% - 68px);
-                        overflow-y: scroll;
+                        overflow-y: auto;
                         border-bottom: solid 1px ${theme.colors.normalBg};
                     }
                     .dropdown__group {
