@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drawer } from 'antd';
+import dynamic from 'next/dynamic';
 
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
@@ -11,6 +12,9 @@ import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
 import { setPanelHeight } from '../store/goOrder/action';
 import PanelTabs from '../components/includes/goOrder/panel/PanelTabs';
 import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png';
+
+const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
+
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
@@ -64,6 +68,7 @@ const OrderGO = () => {
                 <PageHead title={'快速下單'} />
                 <Header />
                 <Info />
+                <Chart />
                 <SolaceClientComponent subscribeTopic={topic} only={true} />
                 <QuoteContainer />
                 <Drawer
@@ -92,6 +97,7 @@ const OrderGO = () => {
                     <PanelTabs />
                 </Drawer>
             </div>
+            <chart />
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
             <style global jsx>{`
                 .ant-drawer-bottom.ant-drawer-open.no-mask {
