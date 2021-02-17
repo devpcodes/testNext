@@ -270,9 +270,11 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         if (subscribeTopic.length > 0) {
             subscribeTopic.forEach(topic => {
                 if (topic.indexOf('SNP') >= 0) {
-                    solace.current.createCacheSession(topic, function () {
-                        console.log('createCacheSession success');
-                    });
+                    setTimeout(() => {
+                        solace.current.createCacheSession(topic, function () {
+                            console.log('createCacheSession success');
+                        });
+                    }, 100);
                 }
             });
             topic.current = subscribeTopic;

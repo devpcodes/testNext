@@ -12,3 +12,5 @@ export const SET_PRICE_TYPE = 'SET_PRICE_TYPE';
 export const SET_ORD_QTY = 'SET_ORD_QTY';
 export const SET_ORD_PRICE = 'SET_ORD_PRICE';
 export const IS_FIRST_SELL = 'IS_FIRST_SELL';
+export const SET_T30 = 'SET_T30';
+export const SET_TRANSACTION_COST = 'SET_TRANSACTION_COST';

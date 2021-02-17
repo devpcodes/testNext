@@ -15,6 +15,8 @@ const initialState = {
     ord_qty: '1',
     ord_price: '',
     is_first_sell: 'N', //Y N
+    T30Data: {},
+    transactionCost: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -90,6 +92,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 is_first_sell: action.payload,
+            };
+        case actionType.SET_T30:
+            return {
+                ...state,
+                T30Data: action.payload,
+            };
+        case actionType.SET_TRANSACTION_COST:
+            return {
+                ...state,
+                transactionCost: action.payload,
             };
         default:
             return state;

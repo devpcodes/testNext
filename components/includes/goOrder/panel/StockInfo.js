@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Switch } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { stockInfoFetcher } from '../../../../services/stock/stockInfoFetcher';
-import { setIsFirstSell } from '../../../../store/goOrder/action';
+import { setIsFirstSell, setT30 } from '../../../../store/goOrder/action';
 
 const StockInfo = () => {
     const dispatch = useDispatch();
@@ -20,6 +20,7 @@ const StockInfo = () => {
 
     const fetchInfo = async () => {
         const res = await stockInfoFetcher(code);
+        dispatch(setT30(res));
         setStockInfo(res);
     };
 

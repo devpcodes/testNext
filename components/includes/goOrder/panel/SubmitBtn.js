@@ -1,9 +1,79 @@
 import { Button } from 'antd';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { checkServer } from '../../../../services/checkServer';
+import { formatNum } from '../../../../services/formatNum';
+import { formatPrice } from '../../../../services/numFormat';
+import { getTransactionCost } from '../../../../services/stock/transactionCost';
+import { setTransactionCost } from '../../../../store/goOrder/action';
 import { themeColor } from './PanelTabs';
 
 const SubmitBtn = () => {
+    const dispatch = useDispatch();
+    const code = useSelector(store => store.goOrder.code);
     const bs = useSelector(store => store.goOrder.bs);
+    const T30Data = useSelector(store => store.goOrder.T30Data);
+    const ord_price = useSelector(store => store.goOrder.ord_price);
+    const offerShare = useSelector(store => store.goOrder.ord_qty);
+    const solaceData = useSelector(store => store.solace.solaceData);
+    const ord_type = useSelector(store => store.goOrder.ord_type);
+    const ord_cond = useSelector(store => store.goOrder.ord_cond);
+    const tradeTime = useSelector(store => store.goOrder.tradeTime);
+    const price_type = useSelector(store => store.goOrder.price_type);
+    const transactionCost = useSelector(store => store.goOrder.transactionCost);
+
+    useEffect(() => {
+        let capitalPercent = T30Data['資成數'] == null ? 0 : T30Data['資成數'] / 10;
+        let voucherPercent = T30Data['券成數'] == null ? 0 : T30Data['券成數'] / 10;
+        let dealing = bs === 'B' ? 'BUY' : 'SELL';
+        let unit;
+        let reference;
+        if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
+            unit = solaceData[0].data.Unit || solaceData[0].data.OddlotUnit;
+            reference = solaceData[0].data.Reference || solaceData[0].data.OddlotReference;
+        }
+        if ((ord_type === '2' || ord_type === 'C') && unit) {
+            unit = unit / 1000;
+        }
+        let tradeType = getTradeType(ord_cond);
+        const offerPrice = getOfferPrice(ord_price, reference, price_type);
+        let cost = getTransactionCost(offerPrice, offerShare, unit, dealing, capitalPercent, voucherPercent, tradeType);
+        if (price_type === '4') {
+            cost = '市價';
+        }
+        if (tradeTime === 'after') {
+            cost = '盤後';
+        }
+        dispatch(setTransactionCost(cost));
+        console.log('cost', cost);
+    }, [code, T30Data, ord_price, bs, offerShare, solaceData, ord_type, ord_cond, tradeTime, price_type]);
+
+    const getOfferPrice = (ordPrice, reference, price_type) => {
+        let offerPrice = ordPrice;
+        if (price_type === '2') {
+            offerPrice = formatPrice(Number(reference) * 1.1);
+        }
+        if (price_type === '3') {
+            offerPrice = formatPrice(Number(reference) * 0.9);
+        }
+        if (price_type === '1') {
+            offerPrice = formatPrice(reference);
+        }
+        return offerPrice;
+    };
+
+    const getTradeType = ordCond => {
+        let tradeType = '';
+        if (ordCond === '0') {
+            tradeType = 'BYCASH';
+        } else if (ordCond === '3') {
+            tradeType = 'BYSOURCE';
+        } else if (ordCond === '4') {
+            tradeType = 'BYSECURITY';
+        }
+        return tradeType;
+    };
+
     return (
         <div className="submit__container">
             <Button
@@ -16,7 +86,7 @@ const SubmitBtn = () => {
             >
                 委託賣出
             </Button>
-            <div className="estimatedAmount">預估金額 432,500元(台幣)</div>
+            <div className="estimatedAmount">預估金額 {formatNum(transactionCost) || '--'}元(台幣)</div>
             <style global jsx>{`
                 .submit__container {
                     position: absolute;
@@ -45,6 +115,8 @@ const SubmitBtn = () => {
                     color: #ffffff;
                     font-size: 1.6rem;
                     opacity: 0.6;
+                    width: 100%;
+                    text-align: center;
                 }
             `}</style>
         </div>

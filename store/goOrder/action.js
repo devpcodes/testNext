@@ -97,3 +97,17 @@ export const setIsFirstSell = boo => {
         payload: boo,
     };
 };
+
+export const setT30 = data => {
+    return {
+        type: actionType.SET_T30,
+        payload: data,
+    };
+};
+
+export const setTransactionCost = cost => {
+    return {
+        type: actionType.SET_TRANSACTION_COST,
+        payload: cost,
+    };
+};
