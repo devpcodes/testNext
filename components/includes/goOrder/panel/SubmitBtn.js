@@ -84,7 +84,7 @@ const SubmitBtn = () => {
                 }}
                 type="primary"
             >
-                委託賣出
+                {bs === 'B' ? '委託買進' : '委託賣出'}
             </Button>
             <div className="estimatedAmount">預估金額 {formatNum(transactionCost) || '--'}元(台幣)</div>
             <style global jsx>{`

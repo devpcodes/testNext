@@ -9,8 +9,8 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const winSize = useWindowSize();
 
     useEffect(() => {
-        console.log(winSize.height, containerHeight + 110);
-        if (winSize.height < containerHeight + 110) {
+        // console.log('hhhhh====111', winSize.height, containerHeight + 110, containerHeight);
+        if (winSize.height <= containerHeight + 110) {
             setShadow('0px -7px 6px -3px #C7C7C7');
         } else {
             setShadow('none');

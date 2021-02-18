@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drawer } from 'antd';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
@@ -12,8 +12,9 @@ import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
 import { setPanelHeight } from '../store/goOrder/action';
 import PanelTabs from '../components/includes/goOrder/panel/PanelTabs';
 import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png';
+import { useWindowSize } from '../hooks/useWindowSize';
 
-const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
+// const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
 
 const OrderGO = () => {
     const [topic, setTopic] = useState([]);
@@ -26,7 +27,7 @@ const OrderGO = () => {
     const bs = useSelector(store => store.goOrder.bs);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const dispatch = useDispatch();
-
+    const winSize = useWindowSize();
     useEffect(() => {
         window.addEventListener('resize', handleResize);
         return () => {
@@ -62,15 +63,28 @@ const OrderGO = () => {
         setContainerHeight(elHeight);
     };
 
+    const openContainerHeight = () => {
+        if (bs === '') {
+            return 'auto';
+        }
+
+        if (panelHeight == 360) {
+            return winSize.height - 360 - 44 + 'px';
+        } else {
+            return 'auto';
+        }
+    };
+
     return (
         <>
             <div className="OrderGO__container" id="container">
                 <PageHead title={'快速下單'} />
-                <Header />
-                <Info />
-                <Chart />
                 <SolaceClientComponent subscribeTopic={topic} only={true} />
-                <QuoteContainer />
+                <Header />
+                <div className="open__container">
+                    <Info />
+                    <QuoteContainer />
+                </div>
                 <Drawer
                     closable={true}
                     visible={drawerVisible}
@@ -99,6 +113,12 @@ const OrderGO = () => {
             </div>
             <chart />
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
+            <style jsx>{`
+                .open__container {
+                    height: ${openContainerHeight()};
+                    overflow: auto;
+                }
+            `}</style>
             <style global jsx>{`
                 .ant-drawer-bottom.ant-drawer-open.no-mask {
                     transition: all 0.3s !important;

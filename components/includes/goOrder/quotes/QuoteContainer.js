@@ -1,10 +1,12 @@
+import dynamic from 'next/dynamic';
 import { Carousel } from 'antd';
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import QuotesDetail from './QuotesDetail';
 import FiveLatestOffer from './FiveLatestOffer';
 import { setLot } from '../../../../store/goOrder/action';
-
+import { useWindowSize } from '../../../../hooks/useWindowSize';
+const Chart = dynamic(() => import('../chart/chart'), { ssr: false });
 const QuoteContainer = () => {
     const [stopRenderNum, setStopRenderNum] = useState(1);
     const [quotesDetailShow, setQuotesDetailShow] = useState(true);
@@ -13,7 +15,8 @@ const QuoteContainer = () => {
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
-
+    const winSize = useWindowSize();
+    const quoteContainerElement = useRef(null);
     useEffect(() => {
         if (lot === 'Odd') {
             setStopRenderNum(0);
@@ -34,18 +37,27 @@ const QuoteContainer = () => {
         }
     }, [bs]);
 
+    useEffect(() => {
+        setTimeout(() => {
+            quoteContainerElement.current.scrollTop = 0;
+        }, 100);
+    }, [panelHeight]);
+
     const quoteContainerStyleHandler = () => {
         console.log(panelHeight, 'hhh');
         if (panelHeight >= 100 && bs !== '') {
             return {
-                transform: 'translateY(-60px)',
+                transform: 'translateY(-360px)', //-60
             };
         }
     };
 
     return (
-        <div className="quote__container">
+        <div className="quote__container" ref={quoteContainerElement}>
             <div className="quote__container--content" style={quoteContainerStyleHandler()}>
+                {/* <div style={{display: panelHeight >= 100 && bs !== '' ? 'none' : 'block'}}> */}
+                <Chart />
+                {/* </div> */}
                 <Carousel
                     afterChange={current => {
                         console.log('current', current);
@@ -73,11 +85,12 @@ const QuoteContainer = () => {
             </div>
             <style jsx>{`
                 .quote__container {
-                    overflow: hidden;
-                    height: 230px;
+                    overflow: ${bs === '' || panelHeight == 80 ? 'auto' : 'hidden'};
+                    height: ${panelHeight > 100 && bs !== '' ? 180 : winSize.height - 274}px;
                 }
                 .quote__container--content {
                     transition: all 0.3s;
+                    transition-delay: 0.2s;
                 }
             `}</style>
             <style global jsx>{`
