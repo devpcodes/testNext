@@ -21,6 +21,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const [historyByType, setHistoryByType] = useState([]);
     const [searchHistory, setSearchHistory] = useLocalStorage('newweb_search_history', []);
     const type = useSelector(store => store.goOrder.type);
+    const code = useSelector(store => store.goOrder.code);
     const textInput = useRef(null);
 
     const getMarketType = type => {
@@ -72,6 +73,10 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     };
 
     const selectHandler = item => {
+        if (code == item?.symbol) {
+            cancelHandler();
+            return;
+        }
         if (item) {
             saveSearchHistory(item);
             dispatch(setCode(item?.symbol));

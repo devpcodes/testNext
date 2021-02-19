@@ -76,7 +76,6 @@ const solaceDataHandler = (solaceData, lot) => {
     }
 };
 
-// TODO: 判斷上市/上櫃/興櫃股票
 // TODO: 零股顯示價差
 export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -100,7 +99,7 @@ export const Info = () => {
                 dispatch(setProductInfo(oldProductInfo));
             }
         }
-    }, [solaceData, productInfo]);
+    }, [solaceData]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
