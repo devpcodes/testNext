@@ -5,7 +5,7 @@ import { checkServer } from '../../../../services/checkServer';
 import { formatNum } from '../../../../services/formatNum';
 import { formatPrice } from '../../../../services/numFormat';
 import { getTransactionCost } from '../../../../services/stock/transactionCost';
-import { setTransactionCost } from '../../../../store/goOrder/action';
+import { setConfirmBoxOpen, setTransactionCost } from '../../../../store/goOrder/action';
 import { themeColor } from './PanelTabs';
 
 const SubmitBtn = () => {
@@ -45,7 +45,6 @@ const SubmitBtn = () => {
             cost = '盤後';
         }
         dispatch(setTransactionCost(cost));
-        console.log('cost', cost);
     }, [code, T30Data, ord_price, bs, offerShare, solaceData, ord_type, ord_cond, tradeTime, price_type]);
 
     const getOfferPrice = (ordPrice, reference, price_type) => {
@@ -74,8 +73,12 @@ const SubmitBtn = () => {
         return tradeType;
     };
 
+    const submitHandler = () => {
+        dispatch(setConfirmBoxOpen(true));
+    };
+
     return (
-        <div className="submit__container">
+        <div onClick={submitHandler} className="submit__container">
             <Button
                 style={{
                     width: '100%',

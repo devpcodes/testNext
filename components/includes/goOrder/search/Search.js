@@ -157,7 +157,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     }, [isVisible]);
 
     return (
-        <MyTransition isVisible={isVisible} classNames={'loginMobile'}>
+        <MyTransition isVisible={isVisible} classNames={'loginMobile2'}>
             <>
                 <div className="search__container">
                     <div className="topBar__container">

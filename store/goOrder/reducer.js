@@ -5,7 +5,7 @@ const initialState = {
     lot: 'Board', // Odd
     code: '2890',
     productInfo: null,
-    bs: '',
+    bs: '', //B S
     panelHeight: 360, // 80
     ord_type: ' ', // ' ', C, P, 2
     tradeTime: 'ing', // ing, after
@@ -17,6 +17,7 @@ const initialState = {
     is_first_sell: 'N', //Y N
     T30Data: {},
     transactionCost: '',
+    confirmBox: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -102,6 +103,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 transactionCost: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_OPEN:
+            return {
+                ...state,
+                confirmBox: action.payload,
             };
         default:
             return state;

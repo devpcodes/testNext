@@ -111,3 +111,10 @@ export const setTransactionCost = cost => {
         payload: cost,
     };
 };
+
+export const setConfirmBoxOpen = boo => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_OPEN,
+        payload: boo,
+    };
+};

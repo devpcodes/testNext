@@ -13,6 +13,8 @@ import { setPanelHeight } from '../store/goOrder/action';
 import PanelTabs from '../components/includes/goOrder/panel/PanelTabs';
 import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png';
 import { useWindowSize } from '../hooks/useWindowSize';
+import ConfirmBox from '../components/includes/goOrder/confirmBox';
+import MyTransition from '../components/includes/myTransition';
 
 // const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
 
@@ -25,6 +27,7 @@ const OrderGO = () => {
     const code = useSelector(store => store.goOrder.code);
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
+    const confirmBox = useSelector(store => store.goOrder.confirmBox);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const dispatch = useDispatch();
     const winSize = useWindowSize();
@@ -108,7 +111,13 @@ const OrderGO = () => {
                         />
                     }
                 >
+                    {/* <div style={{display: confirmBox ? 'none' : 'block'}}>
+                        <PanelTabs />
+                    </div> */}
                     <PanelTabs />
+                    <MyTransition isVisible={confirmBox} classNames={'loginMobile2'}>
+                        <ConfirmBox title="委託確認" />
+                    </MyTransition>
                 </Drawer>
             </div>
             <chart />
