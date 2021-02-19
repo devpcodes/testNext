@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { trim } from 'lodash';
 
@@ -13,12 +13,14 @@ import {
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
-import { setLot } from '../../../../store/goOrder/action';
+import { setLot, setProductInfo } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
 
 import theme from '../../../../resources/styles/theme';
+import { checkServer } from '../../../../services/checkServer';
+import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
 
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
@@ -81,8 +83,24 @@ export const Info = () => {
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
     const solaceData = useSelector(store => store.solace.solaceData);
     const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
+
+    useEffect(() => {
+        if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
+            if (solaceData[0].data.Jck1 != null) {
+                const marketId = solaceData[0].data.Jck1;
+                const market = marketIdToMarket(marketId);
+                const solaceName = solaceData[0].data.Name;
+
+                let oldProductInfo = { ...productInfo };
+                oldProductInfo.solaceMarket = market;
+                oldProductInfo.solaceName = trim(solaceName);
+                dispatch(setProductInfo(oldProductInfo));
+            }
+        }
+    }, [solaceData]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -97,6 +115,14 @@ export const Info = () => {
         setIsSearchVisible(false);
     }, []);
 
+    const lotWidthHandler = () => {
+        if (productInfo?.solaceMarket && productInfo.solaceMarket !== '興櫃' && productInfo.solaceMarket !== '權證') {
+            return { width: '44px' };
+        } else {
+            return { width: '22px' };
+        }
+    };
+
     const shareHandler = () => {
         console.log('share!!!');
     };
@@ -105,7 +131,14 @@ export const Info = () => {
         <div className="info__container">
             <div className="row">
                 <div className="product__container">
-                    <div className="product__name">{trim(name)}</div>
+                    <div
+                        className="product__name"
+                        style={{
+                            fontSize: trim(productInfo?.solaceName).length >= 5 ? '2rem' : '2.6rem',
+                        }}
+                    >
+                        {trim(productInfo?.solaceName)}
+                    </div>
                     <div className="product__code">{code}</div>
                 </div>
                 <div className="toolbar__container">
@@ -131,11 +164,13 @@ export const Info = () => {
             </div>
             <div className="row">
                 <div className="market__container">
-                    <button className="lot__box" onClick={lotHandler}>
+                    <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
                         <div className="box board">整</div>
-                        <div className="box odd">零</div>
+                        {productInfo?.solaceMarket &&
+                            productInfo.solaceMarket !== '興櫃' &&
+                            productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>}
                     </button>
-                    <div className="market__box">上市</div>
+                    {productInfo?.solaceMarket != null && <div className="market__box">{productInfo.solaceMarket}</div>}
                 </div>
                 <div className="more__container">
                     {moreItems.map(item => (
@@ -194,6 +229,11 @@ export const Info = () => {
                     max-width: calc((8 / 12) * 100%);
                     color: ${priceColor(close, reference)};
                     font-size: 2rem;
+                }
+                @media (max-width: 340px), print {
+                    .price__container {
+                        font-size: 1.8rem;
+                    }
                 }
                 .volume__container {
                     display: flex;

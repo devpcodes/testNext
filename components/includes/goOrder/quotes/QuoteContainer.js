@@ -37,12 +37,6 @@ const QuoteContainer = () => {
         }
     }, [bs]);
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         quoteContainerElement.current.scrollTop = 0;
-    //     }, 500);
-    // }, [panelHeight]);
-
     const quoteContainerStyleHandler = () => {
         console.log(panelHeight, 'hhh');
         if (panelHeight >= 100 && bs !== '') {
