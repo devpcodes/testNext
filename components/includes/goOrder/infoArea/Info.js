@@ -100,7 +100,7 @@ export const Info = () => {
                 dispatch(setProductInfo(oldProductInfo));
             }
         }
-    }, [solaceData]);
+    }, [solaceData, productInfo]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -245,10 +245,20 @@ export const Info = () => {
                 .volume__container .volume {
                     font-size: 1.6rem;
                 }
+                @media (max-width: 340px), print {
+                    .volume__container .volume {
+                        font-size: 1.4rem;
+                    }
+                }
                 .volume__container .unit {
                     font-size: 1.2rem;
                     font-weight: 500;
                     margin: 0 0 2px 4px;
+                }
+                @media (max-width: 340px), print {
+                    .volume__container .unit {
+                        margin: 0 0 0 4px;
+                    }
                 }
                 .market__container {
                     display: flex;
