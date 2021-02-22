@@ -3,7 +3,7 @@ import { themeColor } from './panel/PanelTabs';
 import arrow from '../../../resources/images/components/goOrder/arrow-chevron-down.png';
 import { setConfirmBoxOpen } from '../../../store/goOrder/action';
 //style={{display: show ? 'block' : 'none'}}
-const ConfirmBox = ({ show, title }) => {
+const OrderConfirmBox = ({ show, title }) => {
     const dispatch = useDispatch();
     const closeHandler = () => {
         dispatch(setConfirmBoxOpen(false));
@@ -47,4 +47,4 @@ const ConfirmBox = ({ show, title }) => {
     );
 };
 
-export default ConfirmBox;
+export default OrderConfirmBox;
