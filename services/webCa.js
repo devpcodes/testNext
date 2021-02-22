@@ -157,7 +157,7 @@ export const renewCert = function (user_idNo, token, callBack) {
 };
 
 //憑證檢查
-export const CAHandler = function (token) {
+export const CAHandler = function (token, cb) {
     const tokenVal = jwt_decode(token);
     const checkData = checkCert(tokenVal.user_id);
     if (checkData.suggestAction != 'None') {
@@ -177,6 +177,8 @@ export const CAHandler = function (token) {
                 },
             });
         }, 600);
+    } else {
+        cb();
     }
 };
 

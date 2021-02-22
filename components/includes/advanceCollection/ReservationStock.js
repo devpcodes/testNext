@@ -7,7 +7,7 @@ import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
-import { sign, checkSignCA } from '../../../services/webCa';
+import { sign, checkSignCA, CAHandler } from '../../../services/webCa';
 import CaHeadTest from '../CaHeadTest';
 import { getToken } from '../../../services/user/accessToken';
 import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
@@ -181,6 +181,12 @@ const ReservationStock = () => {
                 key: 'order_status_msg',
                 index: 6,
             },
+            {
+                title: '狀態說明',
+                dataIndex: 'order_status_description',
+                key: 'order_status_description',
+                index: 7,
+            },
         ];
         setColumnsData(stockColumns.current);
     }, [stockInventory]);
@@ -302,17 +308,40 @@ const ReservationStock = () => {
         // }
 
         //驗憑證
-        let caContent = sign(
-            {
-                idno: data.idno,
-                broker_id: data.broker_id,
-                account: data.account,
-            },
-            true,
-            token,
-        );
+        // let caContent = sign(
+        //     {
+        //         idno: data.idno,
+        //         broker_id: data.broker_id,
+        //         account: data.account,
+        //     },
+        //     true,
+        //     token,
+        // );
 
-        if (checkSignCA(caContent)) {
+        // if (checkSignCA(caContent)) {
+        //     setLoading(true);
+        //     percentHandler();
+        //     const resData = await postApplyEarmark(
+        //         token,
+        //         data.broker_id,
+        //         data.account,
+        //         record.code,
+        //         String(record.qty),
+        //         '0',
+        //     );
+        //     submitSuccess();
+        //     if (resData) {
+        //         Modal.success({
+        //             content: resData,
+        //             onOk() {
+        //                 dataHandler(1);
+        //                 // resetDataHandler();
+        //             },
+        //         });
+        //     }
+        // }
+
+        CAHandler(token, async () => {
             setLoading(true);
             percentHandler();
             const resData = await postApplyEarmark(
@@ -333,7 +362,7 @@ const ReservationStock = () => {
                     },
                 });
             }
-        }
+        });
     };
 
     //取得選擇帳號的詳細資料，驗憑證

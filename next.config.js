@@ -31,6 +31,11 @@ if (isProd) {
         assetPrefix: '/newweb',
         trailingSlash: true,
         webpack: (config, { isServer, buildId, dev }) => {
+            config.plugins.push(
+                new webpack.ProvidePlugin({
+                    React: 'react',
+                }),
+            );
             return config;
         },
     });
