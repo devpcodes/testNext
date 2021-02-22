@@ -23,17 +23,17 @@ const Chart = function () {
                 quantity: Math.round(Math.random() * 1000),
             });
         }
-        console.log(data);
         x.data = data;
 
         // 時間軸設定
         let timeAxis = x.xAxes.push(new am4charts.DateAxis());
         timeAxis.dataFields.category = 'time';
-        timeAxis.title.text = '時間';
-        timeAxis.fontSize = '15px';
-        timeAxis.tooltip.label.fontSize = 12;
+        timeAxis.fontSize = 12;
+        timeAxis.tooltip.label.fontSize = 10;
         timeAxis.baseInterval = { timeUnit: 'minute', count: 1 };
         timeAxis.renderer.grid.template.location = 0;
+        timeAxis.renderer.labels.template.location = 0.0001; // 不可設0
+        timeAxis.renderer.minGridDistance = 1; // 手機板刻度固定
         timeAxis.gridIntervals.setAll([
             { timeUnit: 'hour', count: 1 },
             { timeUnit: 'hour', count: 1 },
@@ -41,6 +41,9 @@ const Chart = function () {
             { timeUnit: 'hour', count: 1 },
             { timeUnit: 'minute', count: 30 },
         ]);
+        // timeAxis.renderer.line.stroke = am4core.color("#333");
+        // timeAxis.renderer.line.strokeOpacity = 1;
+        // timeAxis.renderer.line.strokeWidth = 1;
 
         // 價格軸設定
         let priceAxis = x.yAxes.push(new am4charts.ValueAxis());
@@ -52,17 +55,21 @@ const Chart = function () {
         priceAxis.calculateTotals = true;
 
         priceAxis.dataFields.category = 'price';
-        priceAxis.fontSize = '15px';
-        priceAxis.tooltip.label.fontSize = 12;
+        priceAxis.fontSize = 12;
+        priceAxis.tooltip.label.fontSize = 10;
+
+        // priceAxis.renderer.labels.template.fill = '#22a16f'
+        // priceAxis.renderer.labels.template.fill = '#123'
 
         // 線圖設定
         let series = x.series.push(new am4charts.LineSeries());
         series.dataFields.dateX = 'date';
         series.dataFields.valueY = 'value';
-        // series.tooltipText = '{valueY.value}';
-        series.tooltip.label.fontSize = 12;
+        series.tooltipText = '{valueY.value}';
+        series.tooltip.label.fontSize = 10;
         x.cursor = new am4charts.XYCursor();
 
+        // 漲區塊設定
         let uRange = priceAxis.createSeriesRange(series);
         uRange.value = 300;
         uRange.endValue = 10000;
@@ -70,28 +77,19 @@ const Chart = function () {
         uRange.contents.fill = am4core.color('#f00');
         uRange.contents.fillOpacity = 0.1;
 
+        // 跌區塊設定
         let dRange = priceAxis.createSeriesRange(series);
         dRange.value = 0;
         dRange.endValue = 300;
         dRange.contents.stroke = am4core.color('#22a16f');
-        dRange.contents.fill = am4core.color('#22a16f');
+        dRange.contents.fill = am4core.color('#000');
         dRange.contents.fillOpacity = 0.1;
-
-        // let uMiddleRange = priceAxis.axisRanges.create();
-        // uMiddleRange.value = 300;
-        // uMiddleRange.endValue = 10000;
-        // uMiddleRange.label.disabled = false;
-        // uMiddleRange.label.rotation = 90;
-        // uMiddleRange.label.fill = am4core.color("#000");
-        // uMiddleRange.label.adapter.add("horizontalCenter", function() {
-        //     return "middle";
-        // });
 
         return () => {
             x.dispose();
         };
     }, []);
-    return <div id="chartdiv" style={{ width: '100%', height: '300px' }}></div>;
+    return <div id="chartdiv" style={{ width: '100%', height: '250px' }}></div>;
 };
 
 export default Chart;
