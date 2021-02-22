@@ -106,6 +106,7 @@ const OrderGO = () => {
                             style={{
                                 marginTop: '-4px',
                                 transform: panelHeight == 360 ? 'rotate(0)' : 'rotate(180deg)',
+                                marginRight: '-3px',
                             }}
                             src={arrow}
                         />
@@ -120,7 +121,7 @@ const OrderGO = () => {
                     </MyTransition>
                 </Drawer>
             </div>
-            <chart />
+            {/* <chart /> */}
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
             <style jsx>{`
                 .open__container {
