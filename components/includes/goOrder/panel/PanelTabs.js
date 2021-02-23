@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 import { useDispatch } from 'react-redux';
 import TradingContainer from './TradingContainer';
 import { setBs } from '../../../../store/goOrder/action';
+import SearchList from '../searchList/SearchList';
 
 const { TabPane } = Tabs;
 
@@ -68,7 +69,7 @@ const PanelTabs = () => {
                     <TradingContainer />
                 </TabPane>
                 <TabPane tab="成委回" key="3">
-                    Content of Tab Pane 3
+                    <SearchList />
                 </TabPane>
             </Tabs>
             <style global jsx>{`
