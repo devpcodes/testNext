@@ -178,7 +178,9 @@ export const CAHandler = function (token, cb) {
             });
         }, 600);
     } else {
-        cb();
+        if (cb != null) {
+            cb();
+        }
     }
 };
 
