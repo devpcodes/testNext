@@ -1,18 +1,28 @@
-import { Table, Space } from 'antd';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Table, Space, Skeleton, Button } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
+import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
+import { getToken } from '../../../../services/user/accessToken';
+import {
+    mappingCommissionedCode,
+    mappingStatusMsg,
+    mappingShowChangeBtn,
+} from '../../../../services/components/goOrder/dataMapping';
+import { themeColor } from '../panel/PanelTabs';
 const columns = [
     {
         title: '時間',
         dataIndex: 'tran_time',
         key: 'tran_time',
-        render: text => {
+        render: (text, record) => {
             const timeStr = timeFormatter(text);
             const timeArr = timeStr.split(':');
             return (
-                <>
+                <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
                     <p className="item">{timeArr[0] + ':' + timeArr[1]}</p>
                     <p className="item time__str--down">{':' + timeArr[2]}</p>
-                </>
+                </div>
             );
         },
     },
@@ -20,17 +30,22 @@ const columns = [
         title: '商品',
         dataIndex: 'name_zh',
         key: 'name_zh',
-        render: text => {
+        render: (text, record) => {
             return (
-                <>
+                <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
                     <p className="item">{text}</p>
                     <p className="item">
-                        <span className="flag" style={{ background: '#f45a4c' }}>
-                            現
+                        <span
+                            className="flag"
+                            style={{
+                                background: record.ord_bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor,
+                            }}
+                        >
+                            {mappingCommissionedCode(record.ord_type2, record.market_id, record.ord_type1)}
                         </span>
-                        <span className="timeInForce">ROD</span>
+                        <span className="timeInForce">{record.time_in_force}</span>
                     </p>
-                </>
+                </div>
             );
         },
     },
@@ -38,12 +53,12 @@ const columns = [
         title: '委託價/量',
         dataIndex: 'price',
         key: 'price',
-        render: text => {
+        render: (text, record) => {
             return (
-                <>
+                <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
                     <p className="item">{text}</p>
-                    <p className="item--down">{1000}</p>
-                </>
+                    <p className="item--down">{record.qty}</p>
+                </div>
             );
         },
     },
@@ -51,51 +66,112 @@ const columns = [
         title: '成交價/量',
         dataIndex: 'match_price',
         key: 'match_price',
-        render: text => {
+        render: (text, record) => {
             return (
-                <>
+                <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
                     <p className="item">{text}</p>
-                    <p className="item--down">{1000}</p>
-                </>
+                    <p className="item--down">{record.match_qty}</p>
+                </div>
             );
         },
     },
     {
         title: '狀態',
-        key: 'status',
-        render: (text, record) => (
-            <>
-                <p className="item">完全</p>
-                <p className="item">成交</p>
-            </>
-        ),
+        dataIndex: 'status_code',
+        key: 'status_code',
+        render: (text, record) => {
+            let val = mappingStatusMsg(text);
+            let val1 = '';
+            let val2 = '';
+            if (val.length >= 4) {
+                val1 = val.substr(0, 2);
+                val2 = val.substr(2);
+            } else {
+                val1 = val;
+            }
+
+            let showBtn = mappingShowChangeBtn(text);
+            return (
+                <>
+                    {showBtn === true ? (
+                        <>
+                            <Button
+                                style={{
+                                    width: '50px',
+                                    height: '28px',
+                                    textAlign: 'center',
+                                    padding: 0,
+                                    verticalAlign: 'middle',
+                                    backgroundColor: 'rgba(37, 74, 145, 0.16)',
+                                    color: '#254a91',
+                                    letterSpacing: '-2px',
+                                    border: 'none',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.5rem',
+                                }}
+                            >
+                                刪改
+                            </Button>
+                        </>
+                    ) : (
+                        <div style={{ opacity: text === '4' ? 0.45 : 1 }}>
+                            <p style={{ color: text === '1' ? '#c43826' : '' }} className="item">
+                                {val1}
+                            </p>
+                            <p style={{ color: text === '1' ? '#c43826' : '' }} className="item">
+                                {val2}
+                            </p>
+                        </div>
+                    )}
+                </>
+            );
+        },
     },
 ];
 
-const data = [
-    {
-        key: '1',
-        name_zh: '台積電',
-        tran_time: '090425',
-        price: 435.5,
-        qty: 1000,
-        match_price: 435.5,
-        match_qty: 1000,
-    },
-    {
-        key: '2',
-        name_zh: '台積電',
-        tran_time: '090425',
-        price: 435.5,
-        qty: 1000,
-        match_price: 435.5,
-        match_qty: 1000,
-    },
-];
-const SearchList = () => {
+const SearchList = ({ active }) => {
+    const userInfo = useSelector(store => store.user.currentAccount);
+    // const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        getOrderStatus();
+    }, [userInfo, active]);
+
+    const getOrderStatus = async () => {
+        const account = userInfo.account;
+        const action = 'account';
+        const broker_id = userInfo.broker_id;
+        const stock_id = '';
+        const token = getToken();
+        const user_id = userInfo.idno;
+        // setLoading(true);
+        let data = await orderStatusQueryFetcher({
+            account,
+            action,
+            broker_id,
+            stock_id,
+            token,
+            user_id,
+        });
+        if (data.length > 0) {
+            data = data.map((item, index) => {
+                item.key = index;
+                return item;
+            });
+        }
+        // setLoading(false);
+        setData(data);
+        console.log('res', data);
+    };
     return (
         <div className="searchList__container">
-            <Table columns={columns} dataSource={data} pagination={false} />
+            <Table
+                columns={columns}
+                dataSource={data}
+                pagination={false}
+                scroll={{ y: 240 }}
+                // loading={{ indicator: <p></p>, spinning: loading }}
+            />
             <style global jsx>{`
                 .searchList__container {
                     margin-top: -16px;
@@ -133,6 +209,7 @@ const SearchList = () => {
                     line-height: 16px;
                     width: 18px;
                     text-align: center;
+                    vertical-align: baseline;
                 }
                 .searchList__container .time__str--down {
                     color: #a9b6cb;
@@ -163,7 +240,7 @@ const SearchList = () => {
                 .searchList__container .ant-table-tbody > tr > td:nth-child(5) {
                     text-align: center;
                     padding-top: 11px;
-                    vertical-align: top;
+                    vertical-align: middle;
                 }
 
                 .searchList__container .ant-table-thead > tr > th {
@@ -204,6 +281,19 @@ const SearchList = () => {
                 }
                 .searchList__container .ant-table-column-sorter-up.active {
                     color: black;
+                }
+                .searchList__container .ant-table-cell-scrollbar {
+                    position: absolute;
+                    right: -25px;
+                }
+                .searchList__container .ant-table-thead tr {
+                    background: #e6ebf5;
+                }
+                .searchList__container .ant-skeleton {
+                    position: absolute;
+                    top: 78px;
+                    left: 16px;
+                    z-index: 10;
                 }
             `}</style>
         </div>

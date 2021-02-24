@@ -69,7 +69,7 @@ const PanelTabs = () => {
                     <TradingContainer />
                 </TabPane>
                 <TabPane tab="成委回" key="3">
-                    <SearchList />
+                    <SearchList active={tabKey === '3' ? true : false} />
                 </TabPane>
             </Tabs>
             <style global jsx>{`
