@@ -10,6 +10,7 @@ import {
     mappingShowChangeBtn,
 } from '../../../../services/components/goOrder/dataMapping';
 import { themeColor } from '../panel/PanelTabs';
+import arrow from '../../../../resources/images/components/goOrder/arrow-sort-down.png';
 const columns = [
     {
         title: '時間',
@@ -30,6 +31,7 @@ const columns = [
         title: '商品',
         dataIndex: 'name_zh',
         key: 'name_zh',
+        sorter: (a, b) => a.name_zh.length - b.name_zh.length,
         render: (text, record) => {
             return (
                 <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
@@ -133,6 +135,8 @@ const SearchList = ({ active }) => {
     const userInfo = useSelector(store => store.user.currentAccount);
     // const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [sortTimeInfo, setSortTimeInfo] = useState({ order: 'desc' });
+    const [sortProductInfo, setProductTimeInfo] = useState({ order: 'none' });
     useEffect(() => {
         getOrderStatus();
     }, [userInfo, active]);
@@ -145,7 +149,7 @@ const SearchList = ({ active }) => {
         const token = getToken();
         const user_id = userInfo.idno;
         // setLoading(true);
-        let data = await orderStatusQueryFetcher({
+        let res = await orderStatusQueryFetcher({
             account,
             action,
             broker_id,
@@ -153,23 +157,59 @@ const SearchList = ({ active }) => {
             token,
             user_id,
         });
-        if (data.length > 0) {
-            data = data.map((item, index) => {
+        res = res.sort(function (a, b) {
+            return Number(b.tran_time) - Number(a.tran_time);
+        });
+        if (res.length > 0) {
+            res = res.map((item, index) => {
                 item.key = index;
                 return item;
             });
         }
         // setLoading(false);
-        setData(data);
-        console.log('res', data);
+        setData(res);
+        console.log('res', res);
+    };
+
+    const sortTimeHandler = () => {
+        let sortData = data.sort((a, b) => {
+            if (sortTimeInfo.order === 'desc' || sortTimeInfo.order === 'none') {
+                setSortTimeInfo({ order: 'asc' });
+                return Number(a.tran_time) - Number(b.tran_time);
+            } else {
+                setSortTimeInfo({ order: 'desc' });
+                return Number(b.tran_time) - Number(a.tran_time);
+            }
+        });
+        // sortData[0].tran_time = '111111'
+        // sortData.map((item, index)=>{
+        //     item.key = index;
+        //     return item;
+        // })
+        console.log('dd', sortData);
+        setData(sortData);
     };
     return (
         <div className="searchList__container">
+            <img
+                onClick={sortTimeHandler}
+                src={arrow}
+                style={{
+                    position: 'absolute',
+                    top: '61px',
+                    left: '42px',
+                    zIndex: 1,
+                    transform: 'rotate(180deg)',
+                }}
+            />
             <Table
                 columns={columns}
                 dataSource={data}
                 pagination={false}
                 scroll={{ y: 240 }}
+                onChange={() => {
+                    alert('change');
+                }}
                 // loading={{ indicator: <p></p>, spinning: loading }}
             />
             <style global jsx>{`
@@ -274,6 +314,7 @@ const SearchList = ({ active }) => {
                     padding: 0;
                 }
                 .searchList__container .ant-table-column-sorter-full {
+                    display: none;
                     margin-top: -7px;
                 }
                 .searchList__container .ant-table-column-sorter-down.active {
