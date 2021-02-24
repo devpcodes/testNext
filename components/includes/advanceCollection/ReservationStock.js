@@ -85,7 +85,7 @@ const ReservationStock = () => {
                 render: (text, record, index) => {
                     return (
                         <Button
-                            disabled={state.accountsReducer.disabled}
+                            // disabled={state.accountsReducer.disabled}
                             onClick={clickHandler.bind(null, text, record)}
                         >
                             {text}
