@@ -236,24 +236,26 @@ const SearchList = ({ active }) => {
     return (
         <div className="searchList__container">
             <img
+                className="icon__arrow--1"
                 onClick={sortTimeHandler.bind(null, 'ord_time')}
                 src={arrow}
                 style={{
                     position: 'absolute',
                     top: '61px',
-                    left: '42px',
+                    // left: '12%',
                     zIndex: 1,
                     transform: `rotate(${sortIconHandler('ord_time')}deg)`,
                     opacity: sortKey === 'ord_time' ? 1 : 0.3,
                 }}
             />
             <img
+                className="icon__arrow--2"
                 onClick={sortTimeHandler.bind(null, 'name_zh')}
                 src={arrow}
                 style={{
                     position: 'absolute',
                     top: '61px',
-                    left: '102px',
+                    left: '20%',
                     zIndex: 1,
                     transform: `rotate(${sortIconHandler('name_zh')}deg)`,
                     opacity: sortKey === 'name_zh' ? 1 : 0.3,
@@ -265,7 +267,7 @@ const SearchList = ({ active }) => {
                 style={{
                     position: 'absolute',
                     top: '61px',
-                    left: '343px',
+                    left: '92%',
                     zIndex: 1,
                     transform: `rotate(${sortIconHandler('status_code')}deg)`,
                     opacity: sortKey === 'status_code' ? 1 : 0.3,
@@ -328,7 +330,7 @@ const SearchList = ({ active }) => {
                 }
                 .searchList__container .ant-table-tbody > tr > td:first-child {
                     padding-left: 16px;
-                    padding-right: 10px;
+                    padding-right: 5px;
                     vertical-align: top;
                 }
                 .searchList__container .ant-table-tbody > tr > td:nth-child(3) {
@@ -402,8 +404,18 @@ const SearchList = ({ active }) => {
                     left: 16px;
                     z-index: 10;
                 }
-                .searchList__container .ant-table-column-has-sorters {
-                    background: #e6ebf5 !important;
+                .icon__arrow--1 {
+                    left: 43px;
+                }
+                @media (max-width: 325px) {
+                    .icon__arrow--2 {
+                        left: 22px;
+                    }
+                }
+                @media (max-width: 400px) {
+                    .icon__arrow--2 {
+                        left: 10%;
+                    }
                 }
             `}</style>
         </div>
