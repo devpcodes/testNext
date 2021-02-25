@@ -255,7 +255,7 @@ const SearchList = ({ active }) => {
                 style={{
                     position: 'absolute',
                     top: '61px',
-                    left: '20%',
+                    left: '27%',
                     zIndex: 1,
                     transform: `rotate(${sortIconHandler('name_zh')}deg)`,
                     opacity: sortKey === 'name_zh' ? 1 : 0.3,
