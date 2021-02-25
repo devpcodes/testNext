@@ -227,9 +227,9 @@ const SearchList = ({ active }) => {
     const sortIconHandler = key => {
         if (sortKey === key) {
             if (sortOrder === 'ascend') {
-                return 0;
-            } else {
                 return 180;
+            } else {
+                return 0;
             }
         }
     };
@@ -277,9 +277,10 @@ const SearchList = ({ active }) => {
                 columns={columns}
                 dataSource={data}
                 pagination={false}
-                scroll={{ y: 240 }}
+                scroll={{ y: 215 }}
                 showSorterTooltip={false}
             />
+            <div className="sum__box">- 1筆委託中，2筆成交 -</div>
             <style global jsx>{`
                 .searchList__container {
                     margin-top: -16px;
@@ -419,6 +420,16 @@ const SearchList = ({ active }) => {
                     .searchList__container .icon__arrow--2 {
                         left: 10%;
                     }
+                }
+                .searchList__container td.ant-table-column-sort {
+                    background: white;
+                }
+                .sum__box {
+                    text-align: center;
+                    margin-top: 10px;
+                    font-size: 1.2rem;
+                    color: #a9b6cb;
+                    letter-spacing: 1px;
                 }
             `}</style>
         </div>
