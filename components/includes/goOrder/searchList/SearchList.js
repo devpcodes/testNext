@@ -105,7 +105,7 @@ const SearchList = ({ active }) => {
                     if (mappingShowChangeBtn(b.status_code)) {
                         valb = '刪改';
                     }
-                    return sortString(vala, valb);
+                    return sortString(valb, vala);
                 },
                 sortOrder: sortKey === 'status_code' && sortOrder,
                 render: (text, record) => {
@@ -404,16 +404,19 @@ const SearchList = ({ active }) => {
                     left: 16px;
                     z-index: 10;
                 }
-                .icon__arrow--1 {
+                .searchList__container .ant-table-column-has-sorters {
+                    background: #e6ebf5 !important;
+                }
+                .searchList__container .icon__arrow--1 {
                     left: 43px;
                 }
                 @media (max-width: 325px) {
-                    .icon__arrow--2 {
+                    .searchList__container .icon__arrow--2 {
                         left: 22px;
                     }
                 }
                 @media (max-width: 400px) {
-                    .icon__arrow--2 {
+                    .searchList__container .icon__arrow--2 {
                         left: 10%;
                     }
                 }
