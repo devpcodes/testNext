@@ -51,7 +51,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     };
 
     const solaceEventHandler = xhr => {
-        console.log('xhr', xhr);
+        // console.log('xhr', xhr);
         //symbol 可能之後有少數抓不到symbol情況 得調整
         let symbol = xhr.topic.split('/')[3];
         let update = false;
