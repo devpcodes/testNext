@@ -105,7 +105,7 @@ const SearchList = ({ active }) => {
                     if (mappingShowChangeBtn(b.status_code)) {
                         valb = '刪改';
                     }
-                    return sortString(valb, vala);
+                    return sortString(vala, valb);
                 },
                 sortOrder: sortKey === 'status_code' && sortOrder,
                 render: (text, record) => {
@@ -165,9 +165,9 @@ const SearchList = ({ active }) => {
     }, [userInfo, active]);
 
     const sortString = (a, b) => {
-        if (a.length > b.length) {
+        if (a.trim().length < b.trim().length) {
             return -1;
-        } else if (a.length < b.length) {
+        } else if (a.trim().length > b.trim().length) {
             return 1;
         } else {
             const stringA = a.toUpperCase();
@@ -277,10 +277,10 @@ const SearchList = ({ active }) => {
                 columns={columns}
                 dataSource={data}
                 pagination={false}
-                scroll={{ y: 215 }}
+                scroll={{ y: 240 }}
                 showSorterTooltip={false}
             />
-            <div className="sum__box">- 1筆委託中，2筆成交 -</div>
+            {/* <div className="sum__box">- 1筆委託中，2筆成交 -</div> */}
             <style global jsx>{`
                 .searchList__container {
                     margin-top: -16px;
