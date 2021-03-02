@@ -12,59 +12,69 @@ const Chart = function () {
     const lot = useSelector(store => store.goOrder.lot);
     const solaceData = useSelector(store => store.solace.solaceData);
     const [kline, setKline] = useState({});
-
     const fetchMinuteKline = async () => {
         const res = await fetchStockMinuteKline(code);
         setKline(res);
     };
-
-    let chart = am4core.create('chartdiv', am4charts.XYChart);
-
     // 抓取 kLine 資料
     useEffect(() => {
         if (code !== '') {
+            am4core.options.autoDispose = true;
             fetchMinuteKline();
         }
     }, [code, lot]);
 
-    // solace
-
+    // 接上 solace 資料
     useEffect(() => {
-        // get MKT Data
-        console.log(' get MKT Data ');
-        console.log(solaceData);
+        if (solaceData && solaceData.length > 0) {
+            if (solaceData[0].topic.indexOf('MKT') !== -1) {
+                let chart = am4core.registry.baseSprites.find(c => c.htmlContainer.id === 'chartdiv');
+                let chartData = {
+                    ts: new Date(`${solaceData[0].data.Date} ${solaceData[0].data.Time}`),
+                    Close: solaceData[0].data.Close[0],
+                };
+                chart.addData(chartData);
+            }
+        }
     }, [solaceData]);
 
-    // page Load draw 2 times bug
     useEffect(() => {
+        drawChart();
+    }, [kline]);
+
+    const drawChart = () => {
         if (!_.isEmpty(kline)) {
-            am4core.options.autoDispose = true;
-            kline.OHCL.map(function (a) {
+            let chart = am4core.create('chartdiv', am4charts.XYChart);
+            kline.OHCL.map(function (a, b) {
                 a.ts = new Date(a.ts);
             });
 
             chart.data = kline.OHCL;
+
+            // 補齊第一根線
+            chart.data.unshift(chart.data[0]);
+            new Date(chart.data[0].ts.setHours(9, 0, 0, 0));
+            chart.data[0].Close = kline.Reference;
 
             // 時間軸設定
             let timeAxis = chart.xAxes.push(new am4charts.DateAxis());
             timeAxis.dataFields.category = 'time';
             timeAxis.fontSize = 12;
             timeAxis.tooltip.label.fontSize = 10;
-            timeAxis.baseInterval = { timeUnit: 'minute', count: 1 };
+            timeAxis.baseInterval = { timeUnit: 'second', count: 1 };
             timeAxis.renderer.grid.template.location = 0;
             timeAxis.renderer.labels.template.location = 0.0001; // 不可設0
             timeAxis.renderer.minGridDistance = 1; // 手機板刻度固定
-
-            timeAxis.min = new Date(2021, 1, 25, 9).getTime();
-            timeAxis.max = new Date(2021, 1, 25, 13, 30).getTime();
+            // timeAxis.minZoomCount = 1;
+            timeAxis.min = new Date().setHours(9, 0, 0, 0);
+            timeAxis.max = new Date().setHours(13, 30, 0, 0);
+            timeAxis.groupData = true;
+            timeAxis.groupCount = 1500;
             timeAxis.cursorTooltipEnabled = false;
-
             timeAxis.gridIntervals.setAll([
                 { timeUnit: 'hour', count: 1 },
-                { timeUnit: 'hour', count: 1 },
-                { timeUnit: 'hour', count: 1 },
-                { timeUnit: 'hour', count: 1 },
-                { timeUnit: 'minute', count: 30 },
+                { timeUnit: 'minute', count: 1 },
+                { timeUnit: 'second', count: 1 },
             ]);
 
             // 價格軸設定
@@ -87,7 +97,6 @@ const Chart = function () {
             series.tooltipText = '{valueY.value}';
             series.tooltip.label.fontSize = 10;
             series.numberFormatter.numberFormat = '#.00';
-
             chart.cursor = new am4charts.XYCursor();
 
             // 漲區塊設定
@@ -105,8 +114,13 @@ const Chart = function () {
             dRange.contents.stroke = am4core.color('#22a16f');
             dRange.contents.fill = am4core.color('#000');
             dRange.contents.fillOpacity = 0.1;
+
+            return () => {
+                chart.dispose();
+            };
         }
-    }, [kline]);
+    };
+
     return <div id="chartdiv" style={{ width: '100%', height: '250px' }}></div>;
 };
 

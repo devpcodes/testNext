@@ -13,6 +13,6 @@ export const fetchStockMinuteKline = async function (code, modal = true) {
         }
     } catch (error) {
         console.log(error);
-        return '伺服器錯誤';
+        return {};
     }
 };
