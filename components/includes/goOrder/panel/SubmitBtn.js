@@ -5,7 +5,12 @@ import { checkServer } from '../../../../services/checkServer';
 import { formatNum } from '../../../../services/formatNum';
 import { formatPrice } from '../../../../services/numFormat';
 import { getTransactionCost } from '../../../../services/stock/transactionCost';
-import { setConfirmBoxOpen, setTransactionCost } from '../../../../store/goOrder/action';
+import {
+    setConfirmBoxOpen,
+    setTransactionCost,
+    setConfirmBoxTitle,
+    setConfirmBoxColor,
+} from '../../../../store/goOrder/action';
 import { themeColor } from './PanelTabs';
 
 const SubmitBtn = () => {
@@ -74,7 +79,11 @@ const SubmitBtn = () => {
     };
 
     const submitHandler = () => {
+        let color = bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor;
+
         dispatch(setConfirmBoxOpen(true));
+        dispatch(setConfirmBoxTitle('委託確認'));
+        dispatch(setConfirmBoxColor(color));
     };
 
     return (

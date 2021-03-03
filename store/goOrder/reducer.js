@@ -18,6 +18,9 @@ const initialState = {
     T30Data: {},
     transactionCost: '',
     confirmBox: false,
+    confirmBoxTitle: '委託確認', //刪改委託單 委託確認 ；關聯到內部內容
+    confirmBoxColor: '',
+    confirmBoxChanValInfo: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -108,6 +111,21 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 confirmBox: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_TITLE:
+            return {
+                ...state,
+                confirmBoxTitle: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_COLOR:
+            return {
+                ...state,
+                confirmBoxColor: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_CHANGEVALINFO:
+            return {
+                ...state,
+                confirmBoxChanValInfo: action.payload,
             };
         default:
             return state;

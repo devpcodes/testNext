@@ -118,3 +118,21 @@ export const setConfirmBoxOpen = boo => {
         payload: boo,
     };
 };
+export const setConfirmBoxTitle = title => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_TITLE,
+        payload: title,
+    };
+};
+export const setConfirmBoxColor = color => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_COLOR,
+        payload: color,
+    };
+};
+export const setConfirmBoxChangeValInfo = info => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_CHANGEVALINFO,
+        payload: info,
+    };
+};

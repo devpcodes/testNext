@@ -28,6 +28,9 @@ const OrderGO = () => {
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
     const confirmBox = useSelector(store => store.goOrder.confirmBox);
+    const confirmBoxTitle = useSelector(store => store.goOrder.confirmBoxTitle);
+    const confirmBoxColor = useSelector(store => store.goOrder.confirmBoxColor);
+
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const dispatch = useDispatch();
     const winSize = useWindowSize();
@@ -117,7 +120,7 @@ const OrderGO = () => {
                     </div> */}
                     <PanelTabs />
                     <MyTransition isVisible={confirmBox} classNames={'loginMobile2'}>
-                        <OrderConfirmBox title="委託確認" />
+                        <OrderConfirmBox title={confirmBoxTitle} color={confirmBoxColor} />
                     </MyTransition>
                 </Drawer>
             </div>

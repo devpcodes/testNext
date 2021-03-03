@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Table, Space, Skeleton, Button } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
@@ -11,14 +11,27 @@ import {
 } from '../../../../services/components/goOrder/dataMapping';
 import { themeColor } from '../panel/PanelTabs';
 import arrow from '../../../../resources/images/components/goOrder/searchList-arrow-caret-up.svg';
+import {
+    setConfirmBoxTitle,
+    setConfirmBoxOpen,
+    setConfirmBoxColor,
+    setConfirmBoxChangeValInfo,
+} from '../../../../store/goOrder/action';
 
 const SearchList = ({ active }) => {
+    const dispatch = useDispatch();
     const userInfo = useSelector(store => store.user.currentAccount);
     // const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
+    const clickHandler = (text, record) => {
+        dispatch(setConfirmBoxChangeValInfo(record));
+        dispatch(setConfirmBoxOpen(true));
+        dispatch(setConfirmBoxTitle('刪改委託單'));
+        dispatch(setConfirmBoxColor('#254a91'));
+    };
     useEffect(() => {
         const newColumns = [
             {
@@ -118,7 +131,6 @@ const SearchList = ({ active }) => {
                     } else {
                         val1 = val;
                     }
-
                     let showBtn = mappingShowChangeBtn(text);
                     return (
                         <>
@@ -138,6 +150,7 @@ const SearchList = ({ active }) => {
                                             fontWeight: 'bold',
                                             fontSize: '1.5rem',
                                         }}
+                                        onClick={clickHandler.bind(null, text, record)}
                                     >
                                         刪改
                                     </Button>
