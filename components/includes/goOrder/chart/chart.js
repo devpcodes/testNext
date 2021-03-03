@@ -33,7 +33,7 @@ const Chart = function () {
                     ts: new Date(`${solaceData[0].data.Date} ${solaceData[0].data.Time}`),
                     Close: solaceData[0].data.Close[0],
                 };
-                // chart.addData(chartData);
+                chart.addData(chartData);
             }
         }
     }, [solaceData]);
