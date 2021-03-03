@@ -6,7 +6,7 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { fetchStockMinuteKline } from '../../../../services/stock/stockMinuteKlineFetcher';
 
 am4core.useTheme(am4themes_animated);
-
+am4core.addLicense(process.env.NEXT_PUBLIC_AMCHART_LICENSE);
 const Chart = function () {
     const code = useSelector(store => store.goOrder.code);
     const lot = useSelector(store => store.goOrder.lot);
