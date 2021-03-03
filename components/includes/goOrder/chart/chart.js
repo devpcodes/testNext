@@ -52,7 +52,7 @@ const Chart = function () {
             chart.data = kline.OHCL;
 
             // 補齊第一根線 (缺零股和數量)
-            if (Array.isArray(array) && array.length) {
+            if (Array.isArray(chart.data) && chart.data.length) {
                 let firstTick = Object.assign({}, chart.data[0]);
                 firstTick.ts = new Date(chart.data[0].ts).setHours(9, 0, 0, 0);
                 firstTick.Close = kline.Reference;
