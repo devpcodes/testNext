@@ -42,7 +42,7 @@ const QuoteContainer = () => {
         if (panelHeight >= 100 && bs !== '') {
             quoteContainerElement.current.scrollTop = 0;
             return {
-                transform: 'translateY(-360px)', //-60
+                transform: 'translateY(-310px)', //-60
             };
         }
     };
