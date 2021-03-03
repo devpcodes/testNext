@@ -33,7 +33,7 @@ const Chart = function () {
                     ts: new Date(`${solaceData[0].data.Date} ${solaceData[0].data.Time}`),
                     Close: solaceData[0].data.Close[0],
                 };
-                chart.addData(chartData);
+                // chart.addData(chartData);
             }
         }
     }, [solaceData]);
@@ -43,7 +43,7 @@ const Chart = function () {
     }, [kline]);
 
     const drawChart = () => {
-        if (!_.isEmpty(kline)) {
+        if (!_.isEmpty(kline) && kline.OHCL.length > 0) {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
             kline.OHCL.map(function (a, b) {
                 a.ts = new Date(a.ts);
