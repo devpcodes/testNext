@@ -18,7 +18,7 @@ import { getCookie } from '../../../services/components/layouts/cookieController
 import { getToken } from '../../../services/user/accessToken';
 
 const qtyUnit = 1;
-const ChangeTradingInfoBox = () => {
+const ChTradingInfoBox = () => {
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [priceVal, setPriceVal] = useState('');
@@ -350,4 +350,4 @@ const ChangeTradingInfoBox = () => {
     );
 };
 
-export default ChangeTradingInfoBox;
+export default ChTradingInfoBox;

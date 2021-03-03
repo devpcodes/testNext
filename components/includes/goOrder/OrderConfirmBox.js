@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import arrow from '../../../resources/images/components/goOrder/arrow-chevron-down.png';
 import { setConfirmBoxOpen } from '../../../store/goOrder/action';
-import ChangeTradingInfoBox from './changeTradingInfoBox';
+import ChTradingInfoBox from './ChTradingInfoBox';
 import OrderBox from './OrderBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
@@ -17,7 +17,7 @@ const OrderConfirmBox = ({ title, color }) => {
             </div>
             <div className="line"></div>
             {title === '委託確認' && <OrderBox />}
-            {title === '刪改委託單' && <ChangeTradingInfoBox />}
+            {title === '刪改委託單' && <ChTradingInfoBox />}
             <style jsx>{`
                 .confirm__container {
                     display: block;
