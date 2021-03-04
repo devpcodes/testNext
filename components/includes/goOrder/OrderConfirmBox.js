@@ -12,7 +12,7 @@ const OrderConfirmBox = ({ title, color }) => {
     return (
         <div className="confirm__container">
             <div className="title">
-                {title}
+                {title === '刪改委託單' || '' ? '' : title}
                 <img onClick={closeHandler} className="back__icon" src={arrow} />
             </div>
             <div className="line"></div>
@@ -33,6 +33,7 @@ const OrderConfirmBox = ({ title, color }) => {
                     font-size: 2rem;
                     color: ${color};
                     font-weight: bold;
+                    height: 30px;
                 }
                 .line {
                     background: ${color};
@@ -45,6 +46,7 @@ const OrderConfirmBox = ({ title, color }) => {
                     position: absolute;
                     left: 13px;
                     cursor: pointer;
+                    z-index: 9;
                 }
             `}</style>
         </div>

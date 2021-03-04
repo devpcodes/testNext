@@ -43,7 +43,17 @@ const SearchList = ({ active }) => {
                 title: '時間',
                 dataIndex: 'ord_time',
                 key: 'ord_time',
-                sorter: (a, b) => Number(a.ord_time) - Number(b.ord_time),
+                sorter: (a, b) => {
+                    let newA;
+                    let newB;
+                    newA = a.ord_time.substr(0, 6);
+                    newB = b.ord_time.substr(0, 6);
+                    if (newA == newB) {
+                        newA = a.ord_time;
+                        newB = b.ord_time;
+                    }
+                    return Number(newA) - Number(newB);
+                },
                 sortOrder: sortKey === 'ord_time' && sortOrder,
                 render: (text, record) => {
                     const timeStr = timeFormatter(text, false);
@@ -137,7 +147,6 @@ const SearchList = ({ active }) => {
                         val1 = val;
                     }
                     let showBtn = mappingShowChangeBtn(text);
-                    console.log('nn', record);
                     return (
                         <>
                             {showBtn === true ? (

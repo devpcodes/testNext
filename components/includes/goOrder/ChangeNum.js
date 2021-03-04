@@ -12,7 +12,7 @@ const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHand
             <div className="select__box">
                 <div className="select__label">
                     {title}
-                    <img className="info__icon" src={infoIcon} />
+                    {/* <img className="info__icon" src={infoIcon} /> */}
                 </div>
             </div>
             <div className="input__box">
