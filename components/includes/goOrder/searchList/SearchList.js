@@ -27,13 +27,16 @@ const SearchList = ({ active }) => {
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
+
     const clickHandler = (text, record) => {
+        // alert('123')
+        maskClickHandler();
         dispatch(setConfirmBoxChangeValInfo(record));
         dispatch(setConfirmBoxOpen(true));
         dispatch(setConfirmBoxTitle('刪改委託單'));
         dispatch(setConfirmBoxColor('#254a91'));
-        maskClickHandler();
     };
+
     useEffect(() => {
         const newColumns = [
             {
@@ -134,6 +137,7 @@ const SearchList = ({ active }) => {
                         val1 = val;
                     }
                     let showBtn = mappingShowChangeBtn(text);
+                    console.log('nn', record);
                     return (
                         <>
                             {showBtn === true ? (
@@ -222,7 +226,7 @@ const SearchList = ({ active }) => {
             },
         ];
         setColumns(newColumns);
-    }, [sortKey, sortOrder]);
+    }, [sortKey, sortOrder, data]);
 
     useEffect(() => {
         getOrderStatus();
@@ -234,9 +238,9 @@ const SearchList = ({ active }) => {
                 item.showControlBtn = false;
                 return item;
             });
+            setShowMask(false);
             setData(newData);
         }
-        setShowMask(false);
     };
 
     const sortString = (a, b) => {
@@ -358,10 +362,11 @@ const SearchList = ({ active }) => {
                     width: '100%',
                     height: '100vh',
                     position: 'fixed',
-                    top: 0,
+                    top: '-340px',
                     background: 'white',
                     opacity: 0,
                     display: showMask ? 'block' : 'none',
+                    zIndex: 999,
                 }}
                 onClick={maskClickHandler}
             ></div>
