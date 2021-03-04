@@ -17,6 +17,7 @@ import { postUpdatePrice } from '../../../../services/components/goOrder/postUpd
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { getToken } from '../../../../services/user/accessToken';
 import { setConfirmBoxOpen } from '../../../../store/goOrder/action';
+import { CAHandler } from '../../../../services/webCa';
 
 const qtyUnit = 1;
 const ChangeBox = ({ type, tabKey }) => {
@@ -134,54 +135,58 @@ const ChangeBox = ({ type, tabKey }) => {
             certSN: '6036E563',
             type: 'web',
         };
-        setSubmitLoading(true);
-        const ID = currentAccount.idno;
-        const IP = getCookie('client_ip');
-        const account = currentAccount.account;
-        const broker_id = currentAccount.broker_id;
-        const is_preorder = mappingIspreOrder(info.ord_no);
-        const market_id = info.market_id;
-        const ord_bs = info.ord_bs;
-        const ord_cond = info.ord_type2;
-        const ord_no = info.ord_no;
-        const ord_price = priceVal;
-        const ord_qty = qtyVal;
-        const ord_seq = padLeft(info.sord_seq, 6);
-        const ord_type = info.ord_type1;
-        const stock_id = info.stock_id;
         const token = getToken();
-        const web_id = '129';
-        const ca_content = signDict;
-        const resVal = await postUpdatePrice({
-            ID,
-            IP,
-            account,
-            broker_id,
-            is_preorder,
-            market_id,
-            ord_bs,
-            ord_cond,
-            ord_no,
-            ord_price,
-            ord_qty,
-            ord_seq,
-            ord_type,
-            stock_id,
-            token,
-            web_id,
-            ca_content,
-            postName: type,
+        CAHandler(token, async () => {
+            setSubmitLoading(true);
+            const ID = currentAccount.idno;
+            //TODO cookie之後會廢掉
+            const IP = getCookie('client_ip');
+            const account = currentAccount.account;
+            const broker_id = currentAccount.broker_id;
+            const is_preorder = mappingIspreOrder(info.ord_no);
+            const market_id = info.market_id;
+            const ord_bs = info.ord_bs;
+            const ord_cond = info.ord_type2;
+            const ord_no = info.ord_no;
+            const ord_price = priceVal;
+            const ord_qty = qtyVal;
+            const ord_seq = padLeft(info.sord_seq, 6);
+            const ord_type = info.ord_type1;
+            const stock_id = info.stock_id;
+
+            const web_id = '129';
+            const ca_content = signDict;
+            const resVal = await postUpdatePrice({
+                ID,
+                IP,
+                account,
+                broker_id,
+                is_preorder,
+                market_id,
+                ord_bs,
+                ord_cond,
+                ord_no,
+                ord_price,
+                ord_qty,
+                ord_seq,
+                ord_type,
+                stock_id,
+                token,
+                web_id,
+                ca_content,
+                postName: type,
+            });
+            setSubmitLoading(false);
+            if (resVal.indexOf('成功') >= 0) {
+                Modal.success({
+                    content: resVal,
+                });
+            } else {
+                Modal.warning({
+                    content: resVal,
+                });
+            }
         });
-        setSubmitLoading(false);
-        if (resVal.indexOf('成功') >= 0) {
-            Modal.success({
-                content: resVal,
-            });
-        } else {
-            Modal.warning({
-                content: resVal,
-            });
-        }
     };
     return (
         <>
