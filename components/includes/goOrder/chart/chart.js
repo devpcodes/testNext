@@ -43,13 +43,15 @@ const Chart = function () {
     }, [kline]);
 
     const drawChart = () => {
-        if (!_.isEmpty(kline) && kline.OHCL.length > 0) {
+        if (!_.isEmpty(kline)) {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
-            kline.OHCL.map(function (a, b) {
-                a.ts = new Date(a.ts);
-            });
 
-            chart.data = kline.OHCL;
+            if (kline.OHCL.length > 0) {
+                kline.OHCL.map(function (a, b) {
+                    a.ts = new Date(a.ts);
+                });
+                chart.data = kline.OHCL;
+            }
 
             // 補齊第一根線 (缺零股和數量)
             if (Array.isArray(chart.data) && chart.data.length) {
@@ -82,17 +84,18 @@ const Chart = function () {
 
             // 價格軸設定
             let priceAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            priceAxis.strictMinMax = true;
             priceAxis.min = kline.DownLimit; // 跌停
             priceAxis.max = kline.UpLimit; // 漲停
+
             priceAxis.baseValue = kline.Reference; // 平盤價
-            priceAxis.strictMinMax = true;
-            priceAxis.calculateTotals = true;
             priceAxis.dataFields.category = 'price';
             priceAxis.fontSize = 12;
             priceAxis.tooltip.label.fontSize = 10;
-            priceAxis.strictMinMax = true;
             priceAxis.cursorTooltipEnabled = false;
 
+            // priceAxis.includeRangesInMinMax = true
+            // priceAxis.calculateTotals = true;
             // 線圖設定
             let series = chart.series.push(new am4charts.LineSeries());
             series.dataFields.dateX = 'ts';
