@@ -137,6 +137,12 @@ const ChangeBox = ({ type, tabKey }) => {
         };
         const token = getToken();
         CAHandler(token, async () => {
+            let DM;
+            if (process.env.NEXT_PUBLIC_DM === 'false') {
+                DM = false;
+            } else {
+                DM = true;
+            }
             const ca = new CA_Component({
                 windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
                 webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
@@ -147,7 +153,7 @@ const ChangeBox = ({ type, tabKey }) => {
             signDict.plainText = ca.getSignCode();
             signDict.certSN = ca.getCertSN();
             signDict.type = 'web'; //goOrder.shell.isDevicePC() ? "web" : "mobile";
-
+            console.log('signDict', signDict);
             setSubmitLoading(true);
             const ID = currentAccount.idno;
             //TODO cookie之後會廢掉
