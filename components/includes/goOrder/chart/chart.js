@@ -28,10 +28,15 @@ const Chart = function () {
     useEffect(() => {
         if (solaceData && solaceData.length > 0) {
             if (solaceData[0].topic.indexOf('MKT') !== -1) {
+                const time =
+                    lot === 'Board'
+                        ? `${solaceData[0].data.Date} ${solaceData[0].data.Time}`
+                        : `${solaceData[0].data.Date} ${solaceData[0].data.OddlotTime}`;
+                const close = lot === 'Board' ? solaceData[0].data.Close[0] : solaceData[0].data.OddlotClose;
                 let chart = am4core.registry.baseSprites.find(c => c.htmlContainer.id === 'chartdiv');
                 let chartData = {
-                    ts: new Date(`${solaceData[0].data.Date} ${solaceData[0].data.Time}`),
-                    Close: solaceData[0].data.Close[0],
+                    ts: new Date(time),
+                    Close: close,
                 };
                 chart.addData(chartData);
             }
