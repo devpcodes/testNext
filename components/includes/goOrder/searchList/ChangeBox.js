@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Tooltip, Modal, Tabs } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../panel/PanelTabs';
-import ChangeNum from '../ChangeNum';
+import ChangeNum from './ChangeNum';
 import {
     mappingCommissionedCode,
     mappingWebId,

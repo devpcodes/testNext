@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Tooltip, Modal, Tabs } from 'antd';
-import ChangeBox from './searchList/ChangeBox';
+import ChangeBox from './ChangeBox';
 
 const { TabPane } = Tabs;
 const ChTradingInfoBox = () => {

@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import arrow from '../../../resources/images/components/goOrder/arrow-chevron-down.png';
 import { setConfirmBoxOpen } from '../../../store/goOrder/action';
-import ChTradingInfoBox from './ChTradingInfoBox';
+import ChTradingInfoBox from './searchList/ChTradingInfoBox';
 import OrderBox from './OrderBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
