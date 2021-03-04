@@ -84,7 +84,6 @@ const ChangeBox = ({ type, tabKey }) => {
     const plusQtyHandler = () => {
         setQtyVal(Number(qtyVal) + qtyUnit);
         plusDisabledHandler(Number(qtyVal) + qtyUnit);
-        console.log('pppppp====', Number(qtyVal) + qtyUnit);
     };
 
     const minusQtyHandler = () => {
@@ -171,9 +170,10 @@ const ChangeBox = ({ type, tabKey }) => {
             token,
             web_id,
             ca_content,
+            postName: type,
         });
         setSubmitLoading(false);
-        if (resVal === '改價成功') {
+        if (resVal.indexOf('成功') >= 0) {
             Modal.success({
                 content: resVal,
             });

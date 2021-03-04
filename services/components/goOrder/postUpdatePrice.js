@@ -18,8 +18,15 @@ export const postUpdatePrice = async function ({
     token,
     web_id,
     ca_content,
+    postName,
 }) {
-    const url = `/Equity/updatePrice`;
+    var url = `/Equity/updatePrice`;
+    if (postName === 'price') {
+        url = `/Equity/updatePrice`;
+    } else {
+        url = '/Equity/updateQty';
+    }
+
     const res = await await getA8Instance('v2', undefined, true).post(url, {
         ID,
         IP,
