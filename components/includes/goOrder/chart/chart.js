@@ -30,7 +30,6 @@ const Chart = function () {
     // 抓取 kLine 資料
     useEffect(() => {
         if (code !== '') {
-            am4core.options.autoDispose = true;
             fetchMinuteKline();
         }
     }, [code, lot]);
@@ -73,7 +72,6 @@ const Chart = function () {
         console.log(kline);
         if (!_.isEmpty(kline)) {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
-            console.log(11111);
             if (kline.OHCL.length > 0) {
                 kline.OHCL.map(function (a, b) {
                     a.ts = new Date(a.ts);
