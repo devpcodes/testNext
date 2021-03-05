@@ -1,24 +1,27 @@
 import { useEffect, useState } from 'react';
-import { Button, Tooltip, Modal } from 'antd';
+import { Button, Tooltip, Modal, Tabs } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { themeColor } from './panel/PanelTabs';
+import { themeColor } from '../panel/PanelTabs';
 import ChangeNum from './ChangeNum';
 import {
     mappingCommissionedCode,
     mappingWebId,
     mappingIspreOrder,
     padLeft,
-} from '../../../services/components/goOrder/dataMapping';
-import { timeFormatter } from '../../../services/timeFormatter';
-import { formatPrice } from '../../../services/numFormat';
-import { getStockPriceRange, getStockType } from '../../../services/stockTickType';
-import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle.svg';
-import { postUpdatePrice } from '../../../services/components/goOrder/postUpdatePrice';
-import { getCookie } from '../../../services/components/layouts/cookieController';
-import { getToken } from '../../../services/user/accessToken';
+} from '../../../../services/components/goOrder/dataMapping';
+import { timeFormatter } from '../../../../services/timeFormatter';
+import { formatPrice } from '../../../../services/numFormat';
+import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
+import infoIcon from '../../../../resources/images/components/goOrder/attention-info-circle.svg';
+import { postUpdatePrice } from '../../../../services/components/goOrder/postUpdatePrice';
+import { getCookie } from '../../../../services/components/layouts/cookieController';
+import { getToken } from '../../../../services/user/accessToken';
+import { setConfirmBoxOpen } from '../../../../store/goOrder/action';
+import { CAHandler } from '../../../../services/webCa';
 
 const qtyUnit = 1;
-const ChTradingInfoBox = () => {
+const ChangeBox = ({ type, tabKey }) => {
+    const dispatch = useDispatch();
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [priceVal, setPriceVal] = useState('');
@@ -33,6 +36,23 @@ const ChTradingInfoBox = () => {
                 : Number(info.qty);
         setQtyVal(qty);
     }, [info]);
+
+    useEffect(() => {
+        switch (tabKey) {
+            case '1':
+                setPriceVal(info.price);
+                break;
+            case '2':
+                const qty =
+                    mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                        ? Number(info.qty) / 1000
+                        : Number(info.qty);
+                setQtyVal(qty);
+                break;
+            default:
+                break;
+        }
+    }, [tabKey]);
 
     const plusPriceHandler = () => {
         if (isNaN(Number(priceVal))) {
@@ -81,9 +101,13 @@ const ChTradingInfoBox = () => {
         if (isNaN(Number(val))) {
             return;
         } else {
-            if (Number(val) >= Number(info.qty)) {
+            const qty =
+                mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                    ? Number(info.qty) / 1000
+                    : Number(info.qty);
+            if (Number(val) >= qty) {
                 plusDisabledHandler(val);
-                setQtyVal(info.qty);
+                setQtyVal(qty);
                 return;
             }
         }
@@ -92,80 +116,77 @@ const ChTradingInfoBox = () => {
     };
 
     const plusDisabledHandler = val => {
-        if (Number(val) >= Number(info.qty)) {
+        const qty =
+            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                ? Number(info.qty) / 1000
+                : Number(info.qty);
+        if (Number(val) >= qty) {
             setDisabledPlus(true);
         } else {
             setDisabledPlus(false);
         }
     };
 
-    const checkPriceBtn = () => {
-        // 檢查市價
-        if (info.price_flag === '1' || info.price_flag == null) {
-            return false;
-        }
-        // 檢查盤後零股 / 盤中零股 / 定盤
-        if (info.ord_type1 === '2' || info.ord_type1 === 'C' || info.ord_type1 === 'P') {
-            return false;
-        }
-        return true;
-    };
-
     const submitData = async () => {
-        const signDict = {
+        var signDict = {
             signature:
                 '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',
             plainText: 'ACCIFFACDJ1582264901237',
             certSN: '6036E563',
             type: 'web',
         };
-        setSubmitLoading(true);
-        const ID = currentAccount.idno;
-        const IP = getCookie('client_ip');
-        const account = currentAccount.account;
-        const broker_id = currentAccount.broker_id;
-        const is_preorder = mappingIspreOrder(info.ord_no);
-        const market_id = info.market_id;
-        const ord_bs = info.ord_bs;
-        const ord_cond = info.ord_type2;
-        const ord_no = info.ord_no;
-        const ord_price = priceVal;
-        const ord_qty = qtyVal;
-        const ord_seq = padLeft(info.sord_seq, 6);
-        const ord_type = info.ord_type1;
-        const stock_id = info.stock_id;
         const token = getToken();
-        const web_id = '129';
-        const ca_content = signDict;
-        const resVal = await postUpdatePrice({
-            ID,
-            IP,
-            account,
-            broker_id,
-            is_preorder,
-            market_id,
-            ord_bs,
-            ord_cond,
-            ord_no,
-            ord_price,
-            ord_qty,
-            ord_seq,
-            ord_type,
-            stock_id,
-            token,
-            web_id,
-            ca_content,
+        CAHandler(token, async () => {
+            setSubmitLoading(true);
+            const ID = currentAccount.idno;
+            //TODO cookie之後會廢掉
+            const IP = getCookie('client_ip');
+            const account = currentAccount.account;
+            const broker_id = currentAccount.broker_id;
+            const is_preorder = mappingIspreOrder(info.ord_no);
+            const market_id = info.market_id;
+            const ord_bs = info.ord_bs;
+            const ord_cond = info.ord_type2;
+            const ord_no = info.ord_no;
+            const ord_price = priceVal;
+            const ord_qty = qtyVal;
+            const ord_seq = padLeft(info.sord_seq, 6);
+            const ord_type = info.ord_type1;
+            const stock_id = info.stock_id;
+
+            const web_id = '129';
+            const ca_content = signDict;
+            const resVal = await postUpdatePrice({
+                ID,
+                IP,
+                account,
+                broker_id,
+                is_preorder,
+                market_id,
+                ord_bs,
+                ord_cond,
+                ord_no,
+                ord_price,
+                ord_qty,
+                ord_seq,
+                ord_type,
+                stock_id,
+                token,
+                web_id,
+                ca_content,
+                postName: type,
+            });
+            setSubmitLoading(false);
+            if (resVal.indexOf('成功') >= 0) {
+                Modal.success({
+                    content: resVal,
+                });
+            } else {
+                Modal.warning({
+                    content: resVal,
+                });
+            }
         });
-        setSubmitLoading(false);
-        if (resVal === '改價成功') {
-            Modal.success({
-                content: resVal,
-            });
-        } else {
-            Modal.warning({
-                content: resVal,
-            });
-        }
     };
     return (
         <>
@@ -198,6 +219,7 @@ const ChTradingInfoBox = () => {
                         </Tooltip>
                     </div>
                 </div>
+
                 <div className="price__box">
                     <span className="price__label">委託價格</span>
                     <span className="price__val">{info.price}</span>
@@ -213,10 +235,10 @@ const ChTradingInfoBox = () => {
                         {mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零' ? '張' : '股'}
                     </span>
                 </div>
-                {checkPriceBtn() && (
+                {type === 'price' && (
                     <ChangeNum
                         key="2"
-                        title="改價"
+                        title="新價格"
                         defaultVal={info.price}
                         val={priceVal}
                         plusClickHandler={plusPriceHandler}
@@ -224,20 +246,22 @@ const ChTradingInfoBox = () => {
                         changeHandler={priceChangeHandler}
                     />
                 )}
-                <ChangeNum
-                    key="1"
-                    title="改量"
-                    defaultVal={
-                        mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                            ? Number(info.qty) / 1000
-                            : Number(info.qty)
-                    }
-                    val={qtyVal}
-                    plusClickHandler={plusQtyHandler}
-                    minusClickHandler={minusQtyHandler}
-                    changeHandler={qtyChangeHandler}
-                    disabledPlus={disabledPlus}
-                />
+                {type === 'qty' && (
+                    <ChangeNum
+                        key="1"
+                        title="欲減量"
+                        defaultVal={
+                            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                                ? Number(info.qty) / 1000
+                                : Number(info.qty)
+                        }
+                        val={qtyVal}
+                        plusClickHandler={plusQtyHandler}
+                        minusClickHandler={minusQtyHandler}
+                        changeHandler={qtyChangeHandler}
+                        disabledPlus={disabledPlus}
+                    />
+                )}
                 <div className="btn__container">
                     <Button
                         style={{
@@ -251,10 +275,10 @@ const ChTradingInfoBox = () => {
                             color: 'black',
                         }}
                         onClick={() => {
-                            closeHandler();
+                            dispatch(setConfirmBoxOpen(false));
                         }}
                     >
-                        刪單
+                        取消
                     </Button>
                     <Button
                         style={{
@@ -279,7 +303,7 @@ const ChTradingInfoBox = () => {
                     margin-top: -4px;
                 }
                 .tradingInfo__container {
-                    padding: 12px 16px 16px 16px;
+                    padding: 0 16px 0 16px;
                 }
                 .ord__char {
                     display: inline-block;
@@ -334,7 +358,7 @@ const ChTradingInfoBox = () => {
                     /* margin-top: 35px; */
                     position: absolute;
                     padding-right: 32px;
-                    top: 265px;
+                    top: 275px;
                 }
             `}</style>
             <style jsx global>{`
@@ -350,4 +374,4 @@ const ChTradingInfoBox = () => {
     );
 };
 
-export default ChTradingInfoBox;
+export default ChangeBox;

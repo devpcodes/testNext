@@ -1,7 +1,7 @@
-import { Select, Input, Button } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { themeColor } from './panel/PanelTabs';
-import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle.svg';
+import { Input, Button } from 'antd';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { themeColor } from '../panel/PanelTabs';
+// import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle.svg';
 const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHandler, disabledPlus }) => {
     const valChangeHandler = e => {
         console.log(e.target.value);
@@ -12,7 +12,7 @@ const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHand
             <div className="select__box">
                 <div className="select__label">
                     {title}
-                    <img className="info__icon" src={infoIcon} />
+                    {/* <img className="info__icon" src={infoIcon} /> */}
                 </div>
             </div>
             <div className="input__box">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, Space, Skeleton, Button } from 'antd';
+import { Table, Space, Skeleton, Button, Tooltip } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import { getToken } from '../../../../services/user/accessToken';
@@ -26,19 +26,34 @@ const SearchList = ({ active }) => {
     const [columns, setColumns] = useState([]);
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
+    const [showMask, setShowMask] = useState(false);
+
     const clickHandler = (text, record) => {
+        // alert('123')
+        maskClickHandler();
         dispatch(setConfirmBoxChangeValInfo(record));
         dispatch(setConfirmBoxOpen(true));
         dispatch(setConfirmBoxTitle('刪改委託單'));
         dispatch(setConfirmBoxColor('#254a91'));
     };
+
     useEffect(() => {
         const newColumns = [
             {
                 title: '時間',
                 dataIndex: 'ord_time',
                 key: 'ord_time',
-                sorter: (a, b) => Number(a.ord_time) - Number(b.ord_time),
+                sorter: (a, b) => {
+                    let newA;
+                    let newB;
+                    newA = a.ord_time.substr(0, 6);
+                    newB = b.ord_time.substr(0, 6);
+                    if (newA == newB) {
+                        newA = a.ord_time;
+                        newB = b.ord_time;
+                    }
+                    return Number(newA) - Number(newB);
+                },
                 sortOrder: sortKey === 'ord_time' && sortOrder,
                 render: (text, record) => {
                     const timeStr = timeFormatter(text, false);
@@ -135,7 +150,51 @@ const SearchList = ({ active }) => {
                     return (
                         <>
                             {showBtn === true ? (
-                                <>
+                                <Tooltip
+                                    arrowPointAtCenter={true}
+                                    placement="bottomRight"
+                                    visible={record.showControlBtn}
+                                    title={
+                                        <>
+                                            <Button
+                                                style={{
+                                                    width: '102px',
+                                                    height: '44px',
+                                                    margin: '0 16px 12px 4px',
+                                                    padding: '12px 10px 12px 8px',
+                                                    borderRadius: '2px',
+                                                    backgroundColor: '#c43826',
+                                                    fontSize: '1.6rem',
+                                                    margin: '0 auto',
+                                                    color: 'white',
+                                                    display: 'block',
+                                                    border: 'none',
+                                                }}
+                                            >
+                                                刪單
+                                            </Button>
+                                            <Button
+                                                style={{
+                                                    width: '102px',
+                                                    height: '44px',
+                                                    margin: '12px 16px 0 4px',
+                                                    padding: '12px 9px',
+                                                    borderRadius: '2px',
+                                                    backgroundColor: '#254a91',
+                                                    fontSize: '1.6rem',
+                                                    margin: '0 auto',
+                                                    marginTop: '12px',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                }}
+                                                onClick={clickHandler.bind(null, text, record)}
+                                            >
+                                                改單
+                                            </Button>
+                                        </>
+                                    }
+                                    color="white"
+                                >
                                     <Button
                                         style={{
                                             width: '50px',
@@ -150,11 +209,16 @@ const SearchList = ({ active }) => {
                                             fontWeight: 'bold',
                                             fontSize: '1.5rem',
                                         }}
-                                        onClick={clickHandler.bind(null, text, record)}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            record.showControlBtn = true;
+                                            setShowMask(true);
+                                            console.log('re', record);
+                                        }}
                                     >
                                         刪改
                                     </Button>
-                                </>
+                                </Tooltip>
                             ) : (
                                 <div style={{ opacity: text === '4' ? 0.45 : 1 }}>
                                     <p style={{ color: text === '1' ? '#c43826' : '' }} className="item">
@@ -171,11 +235,22 @@ const SearchList = ({ active }) => {
             },
         ];
         setColumns(newColumns);
-    }, [sortKey, sortOrder]);
+    }, [sortKey, sortOrder, data]);
 
     useEffect(() => {
         getOrderStatus();
     }, [userInfo, active]);
+
+    const maskClickHandler = () => {
+        if (data.length > 0) {
+            const newData = data.map((item, index) => {
+                item.showControlBtn = false;
+                return item;
+            });
+            setShowMask(false);
+            setData(newData);
+        }
+    };
 
     const sortString = (a, b) => {
         if (a.trim().length < b.trim().length) {
@@ -211,12 +286,10 @@ const SearchList = ({ active }) => {
             token,
             user_id,
         });
-        // res = res.sort(function (a, b) {
-        //     return Number(b.tran_time) - Number(a.tran_time);
-        // });
         if (res.length > 0) {
             res = res.map((item, index) => {
                 item.key = index;
+                item.showControlBtn = false;
                 return item;
             });
         }
@@ -293,6 +366,19 @@ const SearchList = ({ active }) => {
                 scroll={{ y: 240 }}
                 showSorterTooltip={false}
             />
+            <div
+                style={{
+                    width: '100%',
+                    height: '100vh',
+                    position: 'fixed',
+                    top: '-340px',
+                    background: 'white',
+                    opacity: 0,
+                    display: showMask ? 'block' : 'none',
+                    zIndex: 999,
+                }}
+                onClick={maskClickHandler}
+            ></div>
             {/* <div className="sum__box">- 1筆委託中，2筆成交 -</div> */}
             <style global jsx>{`
                 .searchList__container {
@@ -443,6 +529,16 @@ const SearchList = ({ active }) => {
                     font-size: 1.2rem;
                     color: #a9b6cb;
                     letter-spacing: 1px;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-tooltip-inner {
+                    color: white;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
+                    margin-right: -4px;
+                    z-index: 3;
                 }
             `}</style>
         </div>

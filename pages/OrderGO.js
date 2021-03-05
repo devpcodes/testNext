@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drawer } from 'antd';
 // import dynamic from 'next/dynamic';
-
+import CaHead from '../components/includes/CaHead';
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
 import { Header } from '../components/includes/goOrder/header/Header';
@@ -84,6 +84,7 @@ const OrderGO = () => {
     return (
         <>
             <div className="OrderGO__container" id="container">
+                <CaHead />
                 <PageHead title={'快速下單'} />
                 <SolaceClientComponent subscribeTopic={topic} only={true} />
                 <Header />

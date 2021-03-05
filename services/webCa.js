@@ -188,6 +188,7 @@ export const CAHandler = function (token, cb) {
 const caResultDataHandler = async function (suggestAction, userIdNo, token) {
     if (suggestAction === 'ApplyCert') {
         const msg = await applyCert(userIdNo, token);
+        console.log('msg', msg);
         // console.log('ApplyCert憑證回傳訊息', msg);
         notification.open({
             message: '系統訊息',
@@ -197,6 +198,7 @@ const caResultDataHandler = async function (suggestAction, userIdNo, token) {
     }
     if (suggestAction == 'RenewCert') {
         const msg = await renewCert(userIdNo, token);
+        console.log('msg', msg);
         // console.log('RenewCert憑證回傳訊息', msg);
         notification.open({
             message: '系統訊息',
