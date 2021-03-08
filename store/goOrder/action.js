@@ -136,3 +136,9 @@ export const setConfirmBoxChangeValInfo = info => {
         payload: info,
     };
 };
+export const setConfirmBoxClickSource = source => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_CLICK_SOURCE,
+        payload: source,
+    };
+};

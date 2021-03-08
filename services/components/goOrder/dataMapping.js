@@ -141,3 +141,20 @@ export const padLeft = function (str, lenght) {
     if (str.length >= lenght) return str;
     else return padLeft('0' + str, lenght);
 };
+
+export const mappingPriceMsg = function (price, type, flag, ord_type1) {
+    if (ord_type1 === 'P') {
+        return '定盤';
+    }
+    if (flag == 1) {
+        return '市價';
+    } else if (type == 1) {
+        return '平盤';
+    } else if (type == 2) {
+        return '漲停';
+    } else if (type == 3) {
+        return '跌停';
+    } else {
+        return price;
+    }
+};

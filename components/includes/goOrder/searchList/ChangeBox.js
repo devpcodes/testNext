@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button, Tooltip, Modal, Tabs } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../panel/PanelTabs';
@@ -16,7 +16,7 @@ import infoIcon from '../../../../resources/images/components/goOrder/attention-
 import { postUpdatePrice } from '../../../../services/components/goOrder/postUpdatePrice';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { getToken } from '../../../../services/user/accessToken';
-import { setConfirmBoxOpen } from '../../../../store/goOrder/action';
+import { setConfirmBoxOpen, setConfirmBoxClickSource } from '../../../../store/goOrder/action';
 import { CAHandler } from '../../../../services/webCa';
 
 const qtyUnit = 1;
@@ -29,7 +29,7 @@ const ChangeBox = ({ type, tabKey }) => {
     const [disabledPlus, setDisabledPlus] = useState(true);
     const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
-        setPriceVal(info.price);
+        setPriceVal(info.price == 0 ? '' : info.price);
         const qty =
             mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
                 ? Number(info.qty) / 1000
@@ -40,7 +40,7 @@ const ChangeBox = ({ type, tabKey }) => {
     useEffect(() => {
         switch (tabKey) {
             case '1':
-                setPriceVal(info.price);
+                setPriceVal(info.price == 0 ? '' : info.price);
                 break;
             case '2':
                 const qty =
@@ -201,17 +201,22 @@ const ChangeBox = ({ type, tabKey }) => {
                         <Tooltip
                             placement="bottom"
                             title={
-                                <span>
-                                    委託時間 {timeFormatter(info.ord_time, false)}
+                                <>
+                                    <span>委託時間</span>
+                                    <span className="tooltip__val">{timeFormatter(info.ord_time, false)}</span>
                                     <br />
-                                    委託條件 {info.time_in_force}
+                                    <span>委託條件 </span>
+                                    <span className="tooltip__val">{info.time_in_force}</span>
                                     <br />
-                                    委託書號 {info.ord_no}
+                                    <span>委託書號 </span>
+                                    <span className="tooltip__val">{info.ord_no}</span>
                                     <br />
-                                    網路單號 {info.sord_seq}
+                                    <span>網路單號 </span>
+                                    <span className="tooltip__val">{info.sord_seq}</span>
                                     <br />
-                                    下單來源 {mappingWebId(info.web_id)}
-                                </span>
+                                    <span>下單來源</span>
+                                    <span className="tooltip__val">{mappingWebId(info.web_id)}</span>
+                                </>
                             }
                             color="white"
                         >
@@ -276,6 +281,7 @@ const ChangeBox = ({ type, tabKey }) => {
                         }}
                         onClick={() => {
                             dispatch(setConfirmBoxOpen(false));
+                            dispatch(setConfirmBoxClickSource(''));
                         }}
                     >
                         取消
@@ -327,7 +333,7 @@ const ChangeBox = ({ type, tabKey }) => {
                     color: black;
                 }
                 .bs {
-                    color: ${themeColor.buyTabColor};
+                    color: ${info.ord_bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                 }
                 .price__box {
                     margin-top: 13px;
@@ -363,11 +369,16 @@ const ChangeBox = ({ type, tabKey }) => {
             `}</style>
             <style jsx global>{`
                 .ant-tooltip-inner {
-                    color: black;
+                    color: #0d1623;
                     font-size: 1.6rem;
                     box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
                     padding: 16px;
                     line-height: 25px;
+                }
+                .tooltip__val {
+                    font-weight: bold;
+                    margin-left: 5px;
+                    color: #0d1623;
                 }
             `}</style>
         </>
