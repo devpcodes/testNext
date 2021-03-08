@@ -9,13 +9,7 @@ am4core.useTheme(am4themes_animated);
 am4core.addLicense(process.env.NEXT_PUBLIC_AMCHART_LICENSE);
 let watermark;
 
-// setTimeout(function(){
-//     let chart = am4core.registry.baseSprites.find(c => c.htmlContainer.id === 'chartdiv');
-//     console.log(chart.plotContainer.children.indexOf(watermark))
-//     console.log(chart.plotContainer.children.getIndex(7))
-//     let a = chart.plotContainer.children.getIndex(7)
-//     a.text = "ddddddddd"
-// }, 5000)
+// 缺暫停交易 StopTrade = 1
 
 const Chart = function () {
     const code = useSelector(store => store.goOrder.code);
@@ -36,15 +30,19 @@ const Chart = function () {
 
     // 接上 solace 資料
     useEffect(() => {
-        let chart = am4core.registry.baseSprites.find(c => c.htmlContainer.id === 'chartdiv');
-        if (chart) {
-        }
         if (solaceData && solaceData.length > 0) {
-            // console.log(chart)
-            // StopTrade = 1
-            // watermark.text = '盤前試撮'
-            if (solaceData[0].OddlotSimtrade === 1 || solaceData[0].Simtrade === 1) {
+            let chart = am4core.registry.baseSprites.find(c => c.htmlContainer.id === 'chartdiv');
+            if (chart) {
+                let chartWatermark = chart.plotContainer.children.getIndex(
+                    chart.plotContainer.children.indexOf(watermark),
+                );
+                if (chartWatermark) {
+                    solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
+                        ? (chartWatermark.text = '盤前試撮')
+                        : (chartWatermark.text = '');
+                }
             }
+
             if (solaceData[0].topic.indexOf('MKT') !== -1) {
                 const time =
                     lot === 'Board'
@@ -69,7 +67,6 @@ const Chart = function () {
     }, [kline]);
 
     const drawChart = () => {
-        console.log(kline);
         if (!_.isEmpty(kline)) {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
             if (kline.OHCL.length > 0) {
@@ -78,12 +75,13 @@ const Chart = function () {
                 });
                 chart.data = kline.OHCL;
             }
-
+            console.log(chart.data);
             // 補齊第一根線 (缺零股和數量)
             if (Array.isArray(chart.data) && chart.data.length) {
+                console.log(chart.data[0]);
                 let firstTick = Object.assign({}, chart.data[0]);
                 firstTick.ts = new Date(chart.data[0].ts).setHours(9, 0, 0, 0);
-                firstTick.Close = kline.Open;
+                firstTick.Close = chart.data[0].Open;
                 chart.data.unshift(firstTick);
             }
 
@@ -133,27 +131,33 @@ const Chart = function () {
             });
 
             // 線圖設定
-            let series = chart.series.push(new am4charts.LineSeries());
-            series.dataFields.dateX = 'ts';
-            series.dataFields.valueY = 'Close';
-            series.tooltipText = '{valueY.value}';
-            series.tooltip.label.fontSize = 10;
-            series.numberFormatter.numberFormat = '#.00';
+            let priceSeries = chart.series.push(new am4charts.LineSeries());
+            priceSeries.dataFields.dateX = 'ts';
+            priceSeries.dataFields.valueY = 'Close';
+            priceSeries.tooltipText = '{valueY.value}';
+            priceSeries.tooltip.label.fontSize = 12;
+            priceSeries.numberFormatter.numberFormat = '#.00';
 
-            series.tooltip.getFillFromObject = false;
-            series.tooltip.background.fill = am4core.color('#000');
-            series.tooltip.label.fill = am4core.color('#fff');
+            priceSeries.tooltip.getFillFromObject = false;
+            priceSeries.tooltip.background.fill = am4core.color('#000');
+            priceSeries.tooltip.label.fill = am4core.color('#fff');
 
-            series.adapter.add('tooltipText', function (ev, b) {
+            priceSeries.adapter.add('tooltipText', function (ev, b) {
                 var text = '[bold, #fff]{valueY}[/]\n';
                 return text;
             });
+
+            //
+            // let volumeSeries = chart.series.push(new am4charts.ColumnSeries());
+            // volumeSeries.dataFields.dateX = "ts";
+            // volumeSeries.dataFields.valueX = "Volume";
+            // volumeSeries.columns.template.fillOpacity = 0.5;
+            // volumeSeries.columns.template.strokeOpacity = 0;
 
             chart.cursor = new am4charts.XYCursor();
 
             // waterMark
             watermark = new am4core.Label();
-            watermark.text = 'TEST';
             watermark.align = 'left';
             watermark.valign = 'top';
             watermark.fontSize = 20;
@@ -161,12 +165,13 @@ const Chart = function () {
             watermark.marginTop = 5;
             watermark.marginLeft = 5;
             watermark.fontWeight = 600;
-            watermark.id = 'watermark';
-            watermark.text = '1231242354';
+            solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
+                ? (watermark.text = '盤前試撮')
+                : (watermark.text = '');
             chart.plotContainer.children.push(watermark);
 
             // 漲區塊設定
-            let uRange = priceAxis.createSeriesRange(series);
+            let uRange = priceAxis.createSeriesRange(priceSeries);
             uRange.value = kline.Reference; // 平盤價
             uRange.endValue = kline.UpLimit; // 漲停
             uRange.contents.stroke = am4core.color('#f00');
@@ -174,7 +179,7 @@ const Chart = function () {
             uRange.contents.fillOpacity = 0.1;
 
             // // 跌區塊設定
-            let dRange = priceAxis.createSeriesRange(series);
+            let dRange = priceAxis.createSeriesRange(priceSeries);
             dRange.value = kline.DownLimit; // 跌停
             dRange.endValue = kline.Reference; // 平盤價
             dRange.contents.stroke = am4core.color('#22a16f');
