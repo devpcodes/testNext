@@ -308,7 +308,7 @@ const ReservationStock = () => {
         // }
 
         //驗憑證
-        let caContent = signCert(
+        signCert(
             {
                 idno: data.idno,
                 broker_id: data.broker_id,
@@ -316,8 +316,9 @@ const ReservationStock = () => {
             },
             true,
             token,
-        );
-        console.log(caContent);
+        ).then(signDict => {
+            console.log(signDict);
+        });
         // if (checkSignCA(caContent)) {
         //     setLoading(true);
         //     percentHandler();
