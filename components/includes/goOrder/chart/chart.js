@@ -111,19 +111,19 @@ const Chart = function () {
             priceAxis.strictMinMax = true;
             priceAxis.min = kline.DownLimit; // 跌停
             priceAxis.max = kline.UpLimit; // 漲停
-
+            priceAxis.strictMinMax = true;
             priceAxis.baseValue = kline.Reference; // 平盤價
             priceAxis.dataFields.category = 'price';
             priceAxis.fontSize = 12;
             priceAxis.tooltip.label.fontSize = 10;
             priceAxis.cursorTooltipEnabled = false;
-            priceAxis.minGridDistance = 30;
+            priceAxis.renderer.minGridDistance = 18;
 
             priceAxis.renderer.labels.template.adapter.add('text', (label, target, key) => {
                 if (label > kline.Reference) {
-                    return '[#f00]' + label;
+                    return `[#f00]${label}`;
                 } else if (label < kline.Reference) {
-                    return '[#22a16f]' + label;
+                    return `[#22a16f]${label}`;
                 } else {
                     return label;
                 }
@@ -190,7 +190,7 @@ const Chart = function () {
         }
     };
 
-    return <div id="chartdiv" style={{ width: '100%', height: '250px' }}></div>;
+    return <div id="chartdiv" style={{ width: '100%', height: '160px' }}></div>;
 };
 
 export default Chart;
