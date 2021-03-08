@@ -165,9 +165,8 @@ const Chart = function () {
             watermark.marginTop = 5;
             watermark.marginLeft = 5;
             watermark.fontWeight = 600;
-            solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
-                ? (watermark.text = '盤前試撮')
-                : (watermark.text = '');
+            watermark.text = '';
+
             chart.plotContainer.children.push(watermark);
 
             // 漲區塊設定
