@@ -7,7 +7,7 @@ import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
-import { sign, checkSignCA, CAHandler } from '../../../services/webCa';
+import { sign, checkSignCA, CAHandler, signCert } from '../../../services/webCa';
 // import CaHead from '../CaHead';
 import { getToken } from '../../../services/user/accessToken';
 import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
