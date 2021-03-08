@@ -5,6 +5,7 @@ import { getToken } from './user/accessToken';
 export const signCert = async function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         let DM;
+        let signDict = {};
         if (process.env.NEXT_PUBLIC_DM === 'false') {
             DM = false;
         } else {
