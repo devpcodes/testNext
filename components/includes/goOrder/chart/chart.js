@@ -75,10 +75,9 @@ const Chart = function () {
                 });
                 chart.data = kline.OHCL;
             }
-            console.log(chart.data);
+
             // 補齊第一根線 (缺零股和數量)
             if (Array.isArray(chart.data) && chart.data.length) {
-                console.log(chart.data[0]);
                 let firstTick = Object.assign({}, chart.data[0]);
                 firstTick.ts = new Date(chart.data[0].ts).setHours(9, 0, 0, 0);
                 firstTick.Close = chart.data[0].Open;
@@ -166,7 +165,11 @@ const Chart = function () {
             watermark.marginLeft = 5;
             watermark.fontWeight = 600;
             watermark.text = '';
-
+            if (solaceData && solaceData.length > 0) {
+                solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
+                    ? (watermark.text = '盤前試撮')
+                    : (watermark.text = '');
+            }
             chart.plotContainer.children.push(watermark);
 
             // 漲區塊設定
