@@ -307,8 +307,19 @@ const ReservationStock = () => {
         //     });
         // }
 
-        //驗憑證
-        let caContent = await signCert(
+        //驗憑證(1)
+        // let caContent = await signCert(
+        //     {
+        //         idno: data.idno,
+        //         broker_id: data.broker_id,
+        //         account: data.account,
+        //     },
+        //     true,
+        //     token,
+        // );
+
+        //驗憑證(2)
+        let caContent = sign(
             {
                 idno: data.idno,
                 broker_id: data.broker_id,
@@ -317,8 +328,8 @@ const ReservationStock = () => {
             true,
             token,
         );
-        console.log(caContent);
 
+        console.log(caContent);
         if (caContent) {
             setLoading(true);
             percentHandler();
