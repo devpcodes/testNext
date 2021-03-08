@@ -2,6 +2,76 @@ import jwt_decode from 'jwt-decode';
 import { Modal, notification } from 'antd';
 import { getToken } from './user/accessToken';
 
+export const signCert = async function (userInfo, isNeedSign = true, token) {
+    if (isNeedSign) {
+        let DM;
+        if (process.env.NEXT_PUBLIC_DM === 'false') {
+            DM = false;
+        } else {
+            DM = true;
+        }
+
+        // 產生簽章元件
+        var ca = new CA_Component({
+            businessNo: 'NewWeb_web',
+            apiVersion: '1.0',
+            hashKeyNo: '2',
+            returnParams: '',
+            windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+            webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+            getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+            DM: DM,
+        });
+
+        const checkCertResult = ca.checkCert(userInfo.idno);
+        const suggestAction = checkCertResult.suggestAction;
+        let hashKey;
+        const verifyNo = +new Date();
+        const getIdentifyNoInput = {
+            businessNo: 'NewWeb_web',
+            apiVersion: '1.0',
+            hashKeyNo: '2',
+            verifyNo: verifyNo,
+            returnParams: '',
+            memberNo: userInfo.idno,
+            raFunc: suggestAction,
+        };
+
+        const res = await fetch(process.env.NEXT_PUBLIC_GETIDENTIfYNOURL, {
+            body: JSON.stringify(getIdentifyNoInput),
+            headers: {
+                'content-type': 'application/json',
+                Authorization: 'Basic bndlYjpOd2ViMTIz',
+            },
+            method: 'POST',
+        });
+        const content = await res.json();
+        console.log(content.result.hashKey);
+        hashKey = content.result.hashKey;
+
+        ca.certSign({
+            userID: userInfo.idno,
+            signTxt: userInfo.idno + verifyNo,
+            identifyNo: hashKey,
+            verifyNo: verifyNo,
+        });
+
+        if (ca.getSignature()) {
+            signDict.signature = ca.getSignature();
+            signDict.plainText = ca.getSignCode();
+            signDict.certSN = ca.getCertSN();
+            signDict.type = 'web';
+            signDict.success = true;
+        } else {
+            signDict.success = false;
+        }
+
+        ca = null;
+        console.log('signDict', signDict);
+        return signDict;
+    }
+};
+
 export const sign = function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         var signDict = {};
