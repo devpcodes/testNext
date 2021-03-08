@@ -319,29 +319,29 @@ const ReservationStock = () => {
         );
         console.log(caContent);
 
-        // if (checkSignCA(caContent)) {
-        //     setLoading(true);
-        //     percentHandler();
-        //     const resData = await postApplyEarmark(
-        //         token,
-        //         data.broker_id,
-        //         data.account,
-        //         record.code,
-        //         String(record.qty),
-        //         '0',
-        //         caContent,
-        //     );
-        //     submitSuccess();
-        //     if (resData) {
-        //         Modal.success({
-        //             content: resData,
-        //             onOk() {
-        //                 dataHandler(1);
-        //                 // resetDataHandler();
-        //             },
-        //         });
-        //     }
-        // }
+        if (caContent) {
+            setLoading(true);
+            percentHandler();
+            const resData = await postApplyEarmark(
+                token,
+                data.broker_id,
+                data.account,
+                record.code,
+                String(record.qty),
+                '0',
+                caContent,
+            );
+            submitSuccess();
+            if (resData) {
+                Modal.success({
+                    content: resData,
+                    onOk() {
+                        dataHandler(1);
+                        // resetDataHandler();
+                    },
+                });
+            }
+        }
 
         // CAHandler(token, async () => {
         //     setLoading(true);
