@@ -308,17 +308,41 @@ const ReservationStock = () => {
         // }
 
         //驗憑證
-        // let caContent = sign(
-        //     {
-        //         idno: data.idno,
-        //         broker_id: data.broker_id,
-        //         account: data.account,
-        //     },
-        //     true,
-        //     token,
-        // );
+        let caContent = signCert(
+            {
+                idno: data.idno,
+                broker_id: data.broker_id,
+                account: data.account,
+            },
+            true,
+            token,
+        );
 
-        // if (checkSignCA(caContent)) {
+        if (checkSignCA(caContent)) {
+            setLoading(true);
+            percentHandler();
+            const resData = await postApplyEarmark(
+                token,
+                data.broker_id,
+                data.account,
+                record.code,
+                String(record.qty),
+                '0',
+                caContent,
+            );
+            submitSuccess();
+            if (resData) {
+                Modal.success({
+                    content: resData,
+                    onOk() {
+                        dataHandler(1);
+                        // resetDataHandler();
+                    },
+                });
+            }
+        }
+
+        // CAHandler(token, async () => {
         //     setLoading(true);
         //     percentHandler();
         //     const resData = await postApplyEarmark(
@@ -339,30 +363,7 @@ const ReservationStock = () => {
         //             },
         //         });
         //     }
-        // }
-
-        CAHandler(token, async () => {
-            setLoading(true);
-            percentHandler();
-            const resData = await postApplyEarmark(
-                token,
-                data.broker_id,
-                data.account,
-                record.code,
-                String(record.qty),
-                '0',
-            );
-            submitSuccess();
-            if (resData) {
-                Modal.success({
-                    content: resData,
-                    onOk() {
-                        dataHandler(1);
-                        // resetDataHandler();
-                    },
-                });
-            }
-        });
+        // });
     };
 
     //取得選擇帳號的詳細資料，驗憑證

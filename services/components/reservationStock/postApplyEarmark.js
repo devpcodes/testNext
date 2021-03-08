@@ -1,7 +1,7 @@
 import { Modal } from 'antd';
 import { getA8StpInstance } from '../../myAxios';
 
-export const postApplyEarmark = async function (token, branch, account, symbol, qty, category) {
+export const postApplyEarmark = async function (token, branch, account, symbol, qty, category, ca_content) {
     try {
         const url = '/stp/api/applyEarmark';
         // const baseUrl = 'https://servicerd.sinotrade.com.tw';
@@ -12,6 +12,7 @@ export const postApplyEarmark = async function (token, branch, account, symbol, 
             symbol,
             qty,
             category,
+            ca_content,
         });
         if (res?.data?.success === true) {
             return res.data?.result || '';
