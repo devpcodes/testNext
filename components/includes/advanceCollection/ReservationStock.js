@@ -8,7 +8,7 @@ import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
 import { sign, checkSignCA, CAHandler } from '../../../services/webCa';
-import CaHead from '../CaHead';
+// import CaHead from '../CaHead';
 import { getToken } from '../../../services/user/accessToken';
 import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
 import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
@@ -412,7 +412,7 @@ const ReservationStock = () => {
 
     return (
         <div className="reservation__container">
-            <CaHead />
+            {/* <CaHead /> */}
             <h1 className="title">預收股票</h1>
             <Tabs
                 defaultActiveKey={stockActiveTabKey.current}
