@@ -317,7 +317,27 @@ const ReservationStock = () => {
             true,
             token,
         ).then(signDict => {
-            console.log(signDict);
+            setLoading(true);
+            percentHandler();
+            const resData = await postApplyEarmark(
+                token,
+                data.broker_id,
+                data.account,
+                record.code,
+                String(record.qty),
+                '0',
+                signDict,
+            );
+            submitSuccess();
+            if (resData) {
+                Modal.success({
+                    content: resData,
+                    onOk() {
+                        dataHandler(1);
+                        // resetDataHandler();
+                    },
+                });
+            }
         });
         // if (checkSignCA(caContent)) {
         //     setLoading(true);
