@@ -8,6 +8,7 @@ import {
     mappingCommissionedCode,
     mappingStatusMsg,
     mappingShowChangeBtn,
+    mappingPriceMsg,
 } from '../../../../services/components/goOrder/dataMapping';
 import { themeColor } from '../panel/PanelTabs';
 import arrow from '../../../../resources/images/components/goOrder/searchList-arrow-caret-up.svg';
@@ -16,11 +17,16 @@ import {
     setConfirmBoxOpen,
     setConfirmBoxColor,
     setConfirmBoxChangeValInfo,
+    setCode,
+    setLot,
+    setConfirmBoxClickSource,
 } from '../../../../store/goOrder/action';
 
 const SearchList = ({ active }) => {
     const dispatch = useDispatch();
     const userInfo = useSelector(store => store.user.currentAccount);
+    const clickSource = useSelector(store => store.goOrder.confirmBoxClickSource);
+    const confirmOpen = useSelector(store => store.goOrder.confirmBoxOpen);
     // const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -28,14 +34,38 @@ const SearchList = ({ active }) => {
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
 
-    const clickHandler = (text, record) => {
-        // alert('123')
+    const changeClickHandler = (text, record) => {
         maskClickHandler();
+        dispatch(setCode(record.stock_id.trim()));
+        dispatch(setLot('Board'));
         dispatch(setConfirmBoxChangeValInfo(record));
         dispatch(setConfirmBoxOpen(true));
         dispatch(setConfirmBoxTitle('刪改委託單'));
         dispatch(setConfirmBoxColor('#254a91'));
     };
+
+    const rowClickHandler = (e, record) => {
+        console.log('check', e.target.innerHTML);
+        if (e.target.innerHTML.indexOf('刪') >= 0 || e.target.innerHTML.indexOf('改') >= 0) {
+            return;
+        }
+        if (record.status_code == 4) {
+            return;
+        }
+        console.log('row click', record, mappingStatusMsg(record.status_code));
+        dispatch(setCode(record.stock_id.trim()));
+        dispatch(setLot('Board'));
+        dispatch(setConfirmBoxChangeValInfo(record));
+        dispatch(setConfirmBoxOpen(true));
+        dispatch(setConfirmBoxTitle('委託明細'));
+        dispatch(setConfirmBoxColor('#254a91'));
+    };
+
+    // useEffect(() => {
+    //     if(clickSource === 'detail' && !confirmOpen){
+    //         dispatch(setConfirmBoxClickSource(''));
+    //     }
+    // },[clickSource, confirmOpen])
 
     useEffect(() => {
         const newColumns = [
@@ -101,7 +131,9 @@ const SearchList = ({ active }) => {
                 render: (text, record) => {
                     return (
                         <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
-                            <p className="item">{text}</p>
+                            <p className="item">
+                                {mappingPriceMsg(record.price, record.price_type, record.price_flag, record.ord_type1)}
+                            </p>
                             <p className="item--down">{record.qty}</p>
                         </div>
                     );
@@ -187,7 +219,9 @@ const SearchList = ({ active }) => {
                                                     color: 'white',
                                                     border: 'none',
                                                 }}
-                                                onClick={clickHandler.bind(null, text, record)}
+                                                onClick={() => {
+                                                    changeClickHandler(text, record);
+                                                }}
                                             >
                                                 改單
                                             </Button>
@@ -213,7 +247,6 @@ const SearchList = ({ active }) => {
                                             e.preventDefault();
                                             record.showControlBtn = true;
                                             setShowMask(true);
-                                            console.log('re', record);
                                         }}
                                     >
                                         刪改
@@ -365,6 +398,13 @@ const SearchList = ({ active }) => {
                 pagination={false}
                 scroll={{ y: 240 }}
                 showSorterTooltip={false}
+                onRow={record => {
+                    return {
+                        onClick: e => {
+                            rowClickHandler(e, record);
+                        },
+                    };
+                }}
             />
             <div
                 style={{

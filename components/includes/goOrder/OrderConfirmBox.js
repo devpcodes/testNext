@@ -1,13 +1,21 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import arrow from '../../../resources/images/components/goOrder/arrow-chevron-down.png';
-import { setConfirmBoxOpen } from '../../../store/goOrder/action';
+import { setConfirmBoxOpen, setConfirmBoxTitle, setConfirmBoxClickSource } from '../../../store/goOrder/action';
 import ChTradingInfoBox from './searchList/ChTradingInfoBox';
+import DetailBox from './searchList/DetailBox';
 import OrderBox from './OrderBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
     const dispatch = useDispatch();
+    const clickSource = useSelector(store => store.goOrder.confirmBoxClickSource);
     const closeHandler = () => {
-        dispatch(setConfirmBoxOpen(false));
+        if (clickSource === 'detail') {
+            dispatch(setConfirmBoxTitle('委託明細'));
+            dispatch(setConfirmBoxClickSource(''));
+        } else {
+            dispatch(setConfirmBoxOpen(false));
+            dispatch(setConfirmBoxClickSource(''));
+        }
     };
     return (
         <div className="confirm__container">
@@ -18,6 +26,7 @@ const OrderConfirmBox = ({ title, color }) => {
             <div className="line"></div>
             {title === '委託確認' && <OrderBox />}
             {title === '刪改委託單' && <ChTradingInfoBox />}
+            {title === '委託明細' && <DetailBox />}
             <style jsx>{`
                 .confirm__container {
                     display: block;

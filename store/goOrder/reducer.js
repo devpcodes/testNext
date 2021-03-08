@@ -21,6 +21,7 @@ const initialState = {
     confirmBoxTitle: '委託確認', //刪改委託單 委託確認 ；關聯到內部內容
     confirmBoxColor: '',
     confirmBoxChanValInfo: {},
+    confirmBoxClickSource: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -126,6 +127,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 confirmBoxChanValInfo: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_CLICK_SOURCE:
+            return {
+                ...state,
+                confirmBoxClickSource: action.payload,
             };
         default:
             return state;
