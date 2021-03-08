@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './panel/PanelTabs';
 import { setConfirmBoxOpen } from '../../../store/goOrder/action';
 import { formatNum } from '../../../services/formatNum';
+import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle2.svg';
+import infoIconSell from '../../../resources/images/components/goOrder/attention-info-circle3.svg';
 const OrderBox = () => {
     const dispatch = useDispatch();
     const solaceName = useSelector(store => store.goOrder.productInfo.solaceName);
@@ -80,6 +82,26 @@ const OrderBox = () => {
                     <span className="label">預估金額</span>
                     <span className="val">{formatNum(transactionCost)}元(台幣)</span>
                 </div>
+                {lot !== 'Board' && (
+                    <Tooltip
+                        placement="topLeft"
+                        title={
+                            <>
+                                零股交易手續費參考：股價×
+                                <br />
+                                股數×0.1425%，每筆手續費
+                                <br />
+                                最低1元，不足1元，以1元計。
+                            </>
+                        }
+                        color="white"
+                    >
+                        <div className="oddDescription">
+                            <img src={bs === 'B' ? infoIcon : infoIconSell} />
+                            零股交易手續費
+                        </div>
+                    </Tooltip>
+                )}
             </div>
             <div className="btn__box">
                 <Button
@@ -195,10 +217,29 @@ const OrderBox = () => {
                     width: 100%;
                     height: 84px;
                     text-align: left;
-                    margin-top: 54px;
+                    margin-top: ${lot !== 'Board' ? '14px' : '54px'};
                     padding-bottom: 16px;
                     padding-left: 16px;
                     padding-right: 16px;
+                }
+                .oddDescription {
+                    margin-top: 14px;
+                    font-size: 1.6rem;
+                    color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                    display: inline-block;
+                }
+                .oddDescription img {
+                    margin-right: 3px;
+                    margin-top: -3px;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-tooltip-inner {
+                    color: #0d1623;
+                    font-size: 1.6rem;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
                 }
             `}</style>
         </>
