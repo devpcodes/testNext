@@ -190,7 +190,7 @@ const Chart = function () {
         }
     };
 
-    return <div id="chartdiv" style={{ width: '100%', height: '160px' }}></div>;
+    return <div id="chartdiv" style={{ width: '100%', height: '200px' }}></div>;
 };
 
 export default Chart;
