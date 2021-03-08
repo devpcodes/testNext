@@ -308,7 +308,7 @@ const ReservationStock = () => {
         // }
 
         //驗憑證
-        signCert(
+        let caContent = await signCert(
             {
                 idno: data.idno,
                 broker_id: data.broker_id,
@@ -316,29 +316,9 @@ const ReservationStock = () => {
             },
             true,
             token,
-        ).then(signDict => {
-            setLoading(true);
-            percentHandler();
-            const resData = await postApplyEarmark(
-                token,
-                data.broker_id,
-                data.account,
-                record.code,
-                String(record.qty),
-                '0',
-                signDict,
-            );
-            submitSuccess();
-            if (resData) {
-                Modal.success({
-                    content: resData,
-                    onOk() {
-                        dataHandler(1);
-                        // resetDataHandler();
-                    },
-                });
-            }
-        });
+        );
+        console.log(caContent);
+
         // if (checkSignCA(caContent)) {
         //     setLoading(true);
         //     percentHandler();
