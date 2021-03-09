@@ -71,6 +71,7 @@ const Chart = function () {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
             if (kline.OHCL.length > 0) {
                 kline.OHCL.map(function (a, b) {
+                    a.ts = a.ts.replace(new RegExp(/-/gm), '/');
                     a.ts = new Date(a.ts);
                 });
                 chart.data = kline.OHCL;
