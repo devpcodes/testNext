@@ -3,7 +3,7 @@ import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { accountGroupByType } from '../../../../services/user/accountGroupByType';
+import { accountGroupByType, getAccountText } from '../../../../services/user/accountGroupByType';
 import { setCurrentAccount } from '../../../../store/user/action';
 
 import { AccountList } from './AccountList';
@@ -25,19 +25,6 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
 
     const groupedAccount = accountGroupByType(accounts);
     const groupedAccountTypes = Object.keys(groupedAccount);
-
-    const getAccountText = accType => {
-        switch (accType) {
-            case 'S':
-                return '國內證券';
-            case 'H':
-                return '海外證券';
-            case 'F':
-                return '期權';
-            default:
-                return '其他';
-        }
-    };
 
     useEffect(() => {
         if (!personalAreaVisible || !isMobile) {
@@ -297,7 +284,7 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     padding-left: 20px;
                 }
                 .account__container .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-                    background-color: ${theme.colors.accountHover};
+                    background-color: ${theme.colors.normalBg};
                 }
                 .account__container .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
                     background-color: #ffffff;

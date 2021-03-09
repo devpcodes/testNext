@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
@@ -74,10 +74,10 @@ export const TradingQuickView = () => {
         }
     }, [currentAccount.accttype, unRealPrtlos, summarisePrtlos, SBunRealPrtlos, SBdeliveryTrial, openProfitLossSum]);
 
-    const handleUpdateDate = () => {
+    const handleUpdateDate = useCallback(() => {
         const formatDateToken = 'YYYY/MM/DD HH:mm:ss';
         setUpdateDate(moment().format(formatDateToken));
-    };
+    }, []);
 
     //根據證期權取得對應的帳號資料
     const getDataHandler = function (type) {

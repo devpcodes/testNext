@@ -106,6 +106,24 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     transform: translate(100%, 0);
                     transition: all 300ms;
                 }
+
+                .loginMobile2-enter {
+                    transform: translate(-768px, 0);
+                    opacity: 1;
+                    transition: all 0ms;
+                }
+                .loginMobile2-enter-active {
+                    transform: translate(0.1px, 0);
+                    transition: transform 400ms;
+                }
+                .loginMobile2-exit {
+                    transform: translate(0.1px, 0);
+                    opacity: 1;
+                }
+                .loginMobile2-exit-active {
+                    transform: translate(-768px, 0);
+                    transition: all 600ms;
+                }
             `}</style>
         </>
     );

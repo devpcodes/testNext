@@ -7,8 +7,8 @@ import jwt_decode from 'jwt-decode';
 import Accounts from './Accounts';
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
-import { sign, checkSignCA } from '../../../services/webCa';
-import CaHead from '../CaHead';
+import { sign, checkSignCA, CAHandler, signCert } from '../../../services/webCa';
+// import CaHead from '../CaHead';
 import { getToken } from '../../../services/user/accessToken';
 import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
 import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
@@ -85,7 +85,7 @@ const ReservationStock = () => {
                 render: (text, record, index) => {
                     return (
                         <Button
-                            // disabled={state.accountsReducer.disabled}
+                            disabled={state.accountsReducer.disabled}
                             onClick={clickHandler.bind(null, text, record)}
                         >
                             {text}
@@ -180,6 +180,12 @@ const ReservationStock = () => {
                 dataIndex: 'order_status_msg',
                 key: 'order_status_msg',
                 index: 6,
+            },
+            {
+                title: '狀態說明',
+                dataIndex: 'order_status_description',
+                key: 'order_status_description',
+                index: 7,
             },
         ];
         setColumnsData(stockColumns.current);
@@ -301,7 +307,18 @@ const ReservationStock = () => {
         //     });
         // }
 
-        //驗憑證
+        //驗憑證(1)
+        // let caContent = await signCert(
+        //     {
+        //         idno: data.idno,
+        //         broker_id: data.broker_id,
+        //         account: data.account,
+        //     },
+        //     true,
+        //     token,
+        // );
+
+        //驗憑證(2)
         let caContent = sign(
             {
                 idno: data.idno,
@@ -312,6 +329,7 @@ const ReservationStock = () => {
             token,
         );
 
+        console.log('newCaContent', caContent);
         if (checkSignCA(caContent)) {
             setLoading(true);
             percentHandler();
@@ -322,6 +340,7 @@ const ReservationStock = () => {
                 record.code,
                 String(record.qty),
                 '0',
+                caContent,
             );
             submitSuccess();
             if (resData) {
@@ -334,6 +353,29 @@ const ReservationStock = () => {
                 });
             }
         }
+
+        // CAHandler(token, async () => {
+        //     setLoading(true);
+        //     percentHandler();
+        //     const resData = await postApplyEarmark(
+        //         token,
+        //         data.broker_id,
+        //         data.account,
+        //         record.code,
+        //         String(record.qty),
+        //         '0',
+        //     );
+        //     submitSuccess();
+        //     if (resData) {
+        //         Modal.success({
+        //             content: resData,
+        //             onOk() {
+        //                 dataHandler(1);
+        //                 // resetDataHandler();
+        //             },
+        //         });
+        //     }
+        // });
     };
 
     //取得選擇帳號的詳細資料，驗憑證
@@ -383,7 +425,7 @@ const ReservationStock = () => {
 
     return (
         <div className="reservation__container">
-            <CaHead />
+            {/* <CaHead /> */}
             <h1 className="title">預收股票</h1>
             <Tabs
                 defaultActiveKey={stockActiveTabKey.current}

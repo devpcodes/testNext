@@ -1,7 +1,7 @@
-import { Select } from 'antd';
 import { useEffect, useState } from 'react';
-const { Option } = Select;
+import { Select } from 'antd';
 
+const { Option } = Select;
 const AccountSelect = ({ data, onSelect, value, ...props } = { value: '' }) => {
     const [selectedValue, setSelectedValue] = useState('');
     useEffect(() => {
@@ -74,6 +74,9 @@ const AccountSelect = ({ data, onSelect, value, ...props } = { value: '' }) => {
                 }
                 .accountSelect__container .ant-select-selector {
                     box-shadow: none !important;
+                }
+                .account__container .ant-select-arrow {
+                    display: block;
                 }
             `}</style>
         </div>

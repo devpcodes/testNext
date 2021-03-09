@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -20,7 +21,7 @@ export const HeaderCallToAction = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const platform = useSelector(store => store.general.platform);
 
-    const getGoOrderUrl = currentQuery => {
+    const getGoOrderUrl = (currentQuery, platform) => {
         const newQuery = {
             nav: 0,
         };
@@ -49,29 +50,31 @@ export const HeaderCallToAction = () => {
         return `${process.env.NEXT_PUBLIC_SUBPATH}/goOrder${queryString}`;
     };
 
-    const goSignUp = () => {
+    const goSignUp = useCallback(() => {
         return window.open(
             'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
         );
-    };
-    const goOrder = () => {
+    }, []);
+
+    const goOrder = useCallback(() => {
         const iHeight = 700;
         const iWidth = 440;
         const iTop = (window.screen.availHeight - 30 - iHeight) / 2; //視窗的垂直位置;
         const iLeft = window.screen.availLeft + (window.screen.availWidth - 10 - iWidth) / 2; //視窗的水平位置;
         return window.open(
-            `${getGoOrderUrl(router.query)}`,
+            `${getGoOrderUrl(router.query, platform)}`,
             'goOrder',
             `height=${iHeight},innerHeight=${iHeight},width=${iWidth},innerWidth=${iWidth},top=${iTop},left=${iLeft}`,
         );
-    };
-    const goLogIn = () => {
+    }, [router.query, platform]);
+
+    const goLogIn = useCallback(() => {
         if (router.pathname !== '/errPage') {
             dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
         }
         // 無真正的 SinoTrade_login 頁面
         router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
-    };
+    }, [router.pathname]);
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;
 
