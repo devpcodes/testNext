@@ -337,7 +337,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // };
     const getSignUpUrl = () => {
         if (platform === 'udn') {
-            return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+            return 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
         } else {
             return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
         }
@@ -377,7 +377,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (platform === 'udn' && !isPC) {
             return (
                 <div className="ad_container">
-                    <a href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
+                    <a href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
                         <img className="ad__img" src={udnAD} />
                     </a>
                 </div>
