@@ -79,6 +79,7 @@ const solaceDataHandler = (solaceData, lot) => {
 // TODO: 零股顯示價差
 export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
@@ -126,6 +127,10 @@ export const Info = () => {
         console.log('share!!!');
     };
 
+    const setMoreDetailIsVisitable = () => {
+        isMoreDetailVisitable ? setIsMoreDetailVisitable(false) : setIsMoreDetailVisitable(true);
+    };
+
     return (
         <div className="info__container">
             <div className="row">
@@ -171,10 +176,15 @@ export const Info = () => {
                     </button>
                     {productInfo?.solaceMarket != null && <div className="market__box">{productInfo.solaceMarket}</div>}
                 </div>
-                <div className="more__container">
+                <div className="more__container" onClick={setMoreDetailIsVisitable}>
                     {moreItems.map(item => (
                         <TextBox key={item.id} color={item.color} text={item.text} />
                     ))}
+                </div>
+            </div>
+            <div className="more__info__container">
+                <div className="information__box">
+                    <button className="btn add__self__select">加入自選</button>
                 </div>
             </div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
@@ -303,6 +313,31 @@ export const Info = () => {
                     max-width: calc((8 / 12) * 100%);
                     font-size: 1.5rem;
                     font-weight: 500;
+                    position: relative;
+                    cursor: pointer;
+                }
+                .more__info__container {
+                    background: #fff;
+                    display: block;
+                    left: 0;
+                    margin-top: 12px;
+                    position: absolute;
+                    padding: 0 16px 12px 16px;
+                    width: 100%;
+                    z-index: 1;
+                    display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
+                }
+                .more__info__container .information__box {
+                    padding-top: 12px;
+                    border-top: 1px solid #0d1623;
+                }
+                .more__info__container .add__self__select {
+                    width: 100%;
+                    height: 52px;
+                    border-radius: 2px;
+                    background-color: #c43826;
+                    color: #fff;
+                    font-size: 1.6rem;
                 }
             `}</style>
         </div>
