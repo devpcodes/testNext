@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
@@ -80,7 +80,13 @@ const SubmitBtn = () => {
 
     const submitHandler = () => {
         let color = bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor;
-
+        if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
+            Modal.error({
+                title: '資料格式錯誤',
+                content: '請確認價格或張數(股數)資料填寫正確',
+            });
+            return;
+        }
         dispatch(setConfirmBoxOpen(true));
         dispatch(setConfirmBoxTitle('委託確認'));
         dispatch(setConfirmBoxColor(color));

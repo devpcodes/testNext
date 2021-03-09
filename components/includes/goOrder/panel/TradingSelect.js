@@ -22,7 +22,7 @@ const TradingSelect = () => {
     ]);
     useEffect(() => {
         if (lot === 'Board' && tradeTime === 'ing') {
-            dispatch(setOrdType(' '));
+            dispatch(setOrdType('0'));
         }
         if (lot === 'Board' && tradeTime === 'after') {
             dispatch(setOrdType('P'));

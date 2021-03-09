@@ -7,7 +7,7 @@ const initialState = {
     productInfo: null,
     bs: '', //B S
     panelHeight: 360, // 80
-    ord_type: ' ', // ' ', C, P, 2
+    ord_type: '0', // '0', C, P, 2
     tradeTime: 'ing', // ing, after
     time_in_force: '0', // 0 3 4
     ord_cond: '0', // 0 3 4
