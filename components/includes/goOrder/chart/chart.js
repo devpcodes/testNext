@@ -109,8 +109,14 @@ const Chart = function () {
             // 價格軸設定
             let priceAxis = chart.yAxes.push(new am4charts.ValueAxis());
             priceAxis.strictMinMax = true;
-            priceAxis.min = kline.DownLimit; // 跌停
-            priceAxis.max = kline.UpLimit; // 漲停
+            if (kline.DownLimit === 0.01 && kline.UpLimit === 9999.95) {
+                priceAxis.max = parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2));
+                priceAxis.min = parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2));
+            } else {
+                priceAxis.min = kline.DownLimit; // 跌停
+                priceAxis.max = kline.UpLimit; // 漲停
+            }
+
             priceAxis.strictMinMax = true;
             priceAxis.baseValue = kline.Reference; // 平盤價
             priceAxis.dataFields.category = 'price';
