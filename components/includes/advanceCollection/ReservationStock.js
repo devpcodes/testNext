@@ -330,7 +330,7 @@ const ReservationStock = () => {
         );
 
         console.log('newCaContent', caContent);
-        if (checkSignCA) {
+        if (checkSignCA(caContent)) {
             setLoading(true);
             percentHandler();
             const resData = await postApplyEarmark(
