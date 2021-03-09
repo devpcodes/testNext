@@ -129,11 +129,17 @@ const OrderBox = () => {
             if (res.success === 'True') {
                 Modal.success({
                     content: '委託成功',
+                    onOk: () => {
+                        closeHandler();
+                    },
                 });
             } else {
                 Modal.error({
                     title: '委託失敗',
                     content: res.result.msg,
+                    onOk: () => {
+                        closeHandler();
+                    },
                 });
             }
         }
