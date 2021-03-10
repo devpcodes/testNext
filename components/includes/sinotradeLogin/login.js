@@ -377,7 +377,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (platform === 'udn' && !isPC) {
             return (
                 <div className="ad_container">
-                    <a href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
+                    <a
+                        target="_blank"
+                        href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login"
+                    >
                         <img className="ad__img" src={udnAD} />
                     </a>
                 </div>
