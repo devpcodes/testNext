@@ -27,6 +27,7 @@ import { postCancel } from '../../../../services/components/goOrder/postCancel';
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
+import { usePlatform } from '../../../../hooks/usePlatform';
 
 const SearchList = ({ active }) => {
     const dispatch = useDispatch();
@@ -39,7 +40,9 @@ const SearchList = ({ active }) => {
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
-    const [submitLoading, setSubmitLoading] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const platform = usePlatform();
+
     const changeClickHandler = (text, record) => {
         maskClickHandler();
         dispatch(setCode(record.stock_id.trim()));
@@ -79,8 +82,16 @@ const SearchList = ({ active }) => {
             true,
             token,
         );
+        // var ca_content = {
+        //     signature:
+        //         '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',
+        //     plainText: 'ACCIFFACDJ1582264901237',
+        //     certSN: '6036E563',
+        //     type: 'web',
+        // };
         if (checkSignCA(ca_content)) {
-            setSubmitLoading(true);
+            // setSubmitLoading(true);
+            setSubmitSuccess(false);
             const ID = userInfo.idno;
             //TODO cookie之後會廢掉
             const IP = getCookie('client_ip');
@@ -112,8 +123,9 @@ const SearchList = ({ active }) => {
                 web_id,
                 ca_content,
             });
-            setSubmitLoading(false);
+            // setSubmitLoading(false);
             if (resVal.indexOf('成功') >= 0) {
+                setSubmitSuccess(true);
                 Modal.success({
                     content: resVal,
                 });
@@ -260,7 +272,15 @@ const SearchList = ({ active }) => {
                                                     display: 'block',
                                                     border: 'none',
                                                 }}
-                                                onClick={cancelSubmitHandler.bind(null, record)}
+                                                onClick={() => {
+                                                    maskClickHandler();
+                                                    Modal.info({
+                                                        content: '確認刪除此筆資料嗎？',
+                                                        onOk: () => {
+                                                            cancelSubmitHandler(record);
+                                                        },
+                                                    });
+                                                }}
                                             >
                                                 刪單
                                             </Button>
@@ -281,7 +301,6 @@ const SearchList = ({ active }) => {
                                                 onClick={() => {
                                                     changeClickHandler(text, record);
                                                 }}
-                                                loading={submitLoading}
                                             >
                                                 改單
                                             </Button>
@@ -332,7 +351,7 @@ const SearchList = ({ active }) => {
 
     useEffect(() => {
         getOrderStatus();
-    }, [userInfo, active]);
+    }, [userInfo, active, submitSuccess]);
 
     const maskClickHandler = () => {
         if (data.length > 0) {
