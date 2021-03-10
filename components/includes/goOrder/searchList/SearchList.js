@@ -10,6 +10,7 @@ import {
     mappingShowChangeBtn,
     mappingPriceMsg,
     mappingIspreOrder,
+    padLeft,
 } from '../../../../services/components/goOrder/dataMapping';
 import { themeColor } from '../panel/PanelTabs';
 import arrow from '../../../../resources/images/components/goOrder/searchList-arrow-caret-up.svg';
