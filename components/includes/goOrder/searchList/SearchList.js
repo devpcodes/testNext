@@ -271,11 +271,13 @@ const SearchList = ({ active }) => {
                                                 }}
                                                 onClick={() => {
                                                     maskClickHandler();
-                                                    Modal.info({
+                                                    Modal.confirm({
                                                         content: '確認刪除此筆資料嗎？',
                                                         onOk: () => {
                                                             cancelSubmitHandler(record);
                                                         },
+                                                        okText: '確認',
+                                                        cancelText: '取消',
                                                     });
                                                 }}
                                             >
