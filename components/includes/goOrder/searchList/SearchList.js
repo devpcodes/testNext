@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, Space, Skeleton, Button, Tooltip } from 'antd';
+import { Table, Space, Skeleton, Button, Tooltip, Modal } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import { getToken } from '../../../../services/user/accessToken';
@@ -9,6 +9,7 @@ import {
     mappingStatusMsg,
     mappingShowChangeBtn,
     mappingPriceMsg,
+    mappingIspreOrder,
 } from '../../../../services/components/goOrder/dataMapping';
 import { themeColor } from '../panel/PanelTabs';
 import arrow from '../../../../resources/images/components/goOrder/searchList-arrow-caret-up.svg';
@@ -21,6 +22,8 @@ import {
     setLot,
     setConfirmBoxClickSource,
 } from '../../../../store/goOrder/action';
+import { postCancel } from '../../../../services/components/goOrder/postCancel';
+import { checkSignCA, sign } from '../../../../services/webCa';
 
 const SearchList = ({ active }) => {
     const dispatch = useDispatch();
@@ -33,7 +36,7 @@ const SearchList = ({ active }) => {
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
-
+    const [submitLoading, setSubmitLoading] = useState(false);
     const changeClickHandler = (text, record) => {
         maskClickHandler();
         dispatch(setCode(record.stock_id.trim()));
@@ -61,11 +64,63 @@ const SearchList = ({ active }) => {
         dispatch(setConfirmBoxColor('#254a91'));
     };
 
-    // useEffect(() => {
-    //     if(clickSource === 'detail' && !confirmOpen){
-    //         dispatch(setConfirmBoxClickSource(''));
-    //     }
-    // },[clickSource, confirmOpen])
+    const cancelSubmitHandler = async record => {
+        console.log('record', record);
+        const token = getToken();
+        const ca_content = sign(
+            {
+                idno: userInfo.idno,
+                broker_id: userInfo.broker_id,
+                account: userInfo.account,
+            },
+            true,
+            token,
+        );
+        if (checkSignCA(ca_content)) {
+            setSubmitLoading(true);
+            const ID = userInfo.idno;
+            //TODO cookie之後會廢掉
+            const IP = getCookie('client_ip');
+            const account = userInfo.account;
+            const broker_id = userInfo.broker_id;
+            const is_preorder = mappingIspreOrder(record.ord_no);
+            const market_id = record.market_id;
+            const ord_bs = record.ord_bs;
+            const ord_cond = record.ord_type2;
+            const ord_no = record.ord_no;
+            const ord_seq = padLeft(record.sord_seq, 6);
+            const ord_type = record.ord_type1;
+            const stock_id = record.stock_id;
+            const web_id = getWebId(platform, 'stock');
+            const resVal = await postCancel({
+                ID,
+                IP,
+                account,
+                broker_id,
+                is_preorder,
+                market_id,
+                ord_bs,
+                ord_cond,
+                ord_no,
+                ord_seq,
+                ord_type,
+                stock_id,
+                token,
+                web_id,
+                ca_content,
+            });
+            setSubmitLoading(false);
+            if (resVal.indexOf('成功') >= 0) {
+                Modal.success({
+                    content: resVal,
+                });
+            } else {
+                Modal.warning({
+                    content: resVal,
+                });
+            }
+        }
+    };
 
     useEffect(() => {
         const newColumns = [
@@ -202,6 +257,7 @@ const SearchList = ({ active }) => {
                                                     display: 'block',
                                                     border: 'none',
                                                 }}
+                                                onClick={cancelSubmitHandler.bind(null, record)}
                                             >
                                                 刪單
                                             </Button>
@@ -222,6 +278,7 @@ const SearchList = ({ active }) => {
                                                 onClick={() => {
                                                     changeClickHandler(text, record);
                                                 }}
+                                                loading={submitLoading}
                                             >
                                                 改單
                                             </Button>
@@ -435,6 +492,7 @@ const SearchList = ({ active }) => {
                     font-size: 1.6rem;
                     font-weight: bold;
                     color: #a9b6cb;
+                    white-space: nowrap;
                 }
                 .searchList__container .timeInForce {
                     color: #a9b6cb;

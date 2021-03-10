@@ -44,6 +44,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             solace.current = solaceClient('', getCookie('user_id'));
             solace.current.connect();
             solace.current.setMessageEvent('ST', function (xhr) {
+                console.log('solace', xhr);
                 solaceEventHandler(xhr);
             });
             setSolaceLoaded(true);
@@ -55,7 +56,8 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         //symbol 可能之後有少數抓不到symbol情況 得調整
         let symbol = xhr.topic.split('/')[3];
         let update = false;
-        if (solaceData.current.length === 0) {
+        //solaceData.current.length === 0
+        if (xhr.topic.indexOf('SNP') >= 0) {
             updateSNPData(xhr);
             solaceData.current.push(xhr);
             setSNPLoaded(true);
@@ -161,6 +163,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             }
             // console.log(DiffPrice, DiffRate, AvgPrice, DiffType);
             Object.assign(prevData, nextData);
+            console.log('prev', prevData);
             prevData.High[0] = High;
             prevData.Low[0] = Low;
             prevData.DiffPrice[0] = DiffPrice;
