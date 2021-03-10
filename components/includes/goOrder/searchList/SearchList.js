@@ -124,16 +124,10 @@ const SearchList = ({ active }) => {
                 ca_content,
             });
             // setSubmitLoading(false);
-            if (resVal.indexOf('成功') >= 0) {
-                setSubmitSuccess(true);
-                Modal.success({
-                    content: resVal,
-                });
-            } else {
-                Modal.warning({
-                    content: resVal,
-                });
-            }
+            setSubmitSuccess(true);
+            Modal.info({
+                content: resVal,
+            });
         }
     };
 
