@@ -25,6 +25,7 @@ import {
 import { postCancel } from '../../../../services/components/goOrder/postCancel';
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
+import { getCookie } from '../../../../services/components/layouts/cookieController';
 
 const SearchList = ({ active }) => {
     const dispatch = useDispatch();
