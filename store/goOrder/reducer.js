@@ -22,6 +22,7 @@ const initialState = {
     confirmBoxColor: '',
     confirmBoxChanValInfo: {},
     confirmBoxClickSource: '',
+    searchListSubmitSuccess: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -132,6 +133,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 confirmBoxClickSource: action.payload,
+            };
+        case actionType.SET_SEARCHLIST_SUBMITSUCCESS:
+            return {
+                ...state,
+                searchListSubmitSuccess: action.payload,
             };
         default:
             return state;

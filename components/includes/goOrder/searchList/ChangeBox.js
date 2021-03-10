@@ -16,7 +16,11 @@ import infoIcon from '../../../../resources/images/components/goOrder/attention-
 import { postUpdatePrice } from '../../../../services/components/goOrder/postUpdatePrice';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { getToken } from '../../../../services/user/accessToken';
-import { setConfirmBoxOpen, setConfirmBoxClickSource } from '../../../../store/goOrder/action';
+import {
+    setConfirmBoxOpen,
+    setConfirmBoxClickSource,
+    setSearchListSubmitSuccess,
+} from '../../../../store/goOrder/action';
 import { CAHandler, sign, checkSignCA } from '../../../../services/webCa';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
@@ -32,12 +36,17 @@ const ChangeBox = ({ type, tabKey }) => {
     const [submitLoading, setSubmitLoading] = useState(false);
     const platform = usePlatform();
     useEffect(() => {
+        console.log('info', info);
         setPriceVal(info.price == 0 ? '' : info.price);
-        const qty =
-            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                ? Number(info.qty) / 1000
-                : Number(info.qty);
-        setQtyVal(qty);
+        // const qty =
+        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+        //         ? Number(info.qty) / 1000
+        //         : Number(info.qty);
+        // const cancelQty =
+        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+        //         ? Number(info.cancel_qty) / 1000
+        //         : Number(info.cancel_qty);
+        setQtyVal(getQtyHandler());
     }, [info]);
 
     useEffect(() => {
@@ -46,11 +55,16 @@ const ChangeBox = ({ type, tabKey }) => {
                 setPriceVal(info.price == 0 ? '' : info.price);
                 break;
             case '2':
-                const qty =
-                    mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                        ? Number(info.qty) / 1000
-                        : Number(info.qty);
-                setQtyVal(qty);
+                // const qty =
+                //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                //         ? Number(info.qty) / 1000
+                //         : Number(info.qty);
+                // const cancelQty =
+                //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                //         ? Number(info.cancel_qty) / 1000
+                //         : Number(info.cancel_qty);
+
+                setQtyVal(getQtyHandler());
                 break;
             default:
                 break;
@@ -104,13 +118,17 @@ const ChangeBox = ({ type, tabKey }) => {
         if (isNaN(Number(val))) {
             return;
         } else {
-            const qty =
-                mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                    ? Number(info.qty) / 1000
-                    : Number(info.qty);
-            if (Number(val) >= qty) {
+            // const qty =
+            //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+            //         ? Number(info.qty) / 1000
+            //         : Number(info.qty);
+            // const cancelQty =
+            //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+            //         ? Number(info.cancel_qty) / 1000
+            //         : Number(info.cancel_qty);
+            if (Number(val) >= getQtyHandler()) {
                 plusDisabledHandler(val);
-                setQtyVal(qty);
+                setQtyVal(getQtyHandler());
                 return;
             }
         }
@@ -119,11 +137,15 @@ const ChangeBox = ({ type, tabKey }) => {
     };
 
     const plusDisabledHandler = val => {
-        const qty =
-            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                ? Number(info.qty) / 1000
-                : Number(info.qty);
-        if (Number(val) >= qty) {
+        // const qty =
+        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+        //         ? Number(info.qty) / 1000
+        //         : Number(info.qty);
+        // const cancelQty =
+        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+        //         ? Number(info.cancel_qty) / 1000
+        //         : Number(info.cancel_qty);
+        if (Number(val) >= getQtyHandler()) {
             setDisabledPlus(true);
         } else {
             setDisabledPlus(false);
@@ -150,6 +172,7 @@ const ChangeBox = ({ type, tabKey }) => {
         );
         if (checkSignCA(ca_content)) {
             setSubmitLoading(true);
+            dispatch(setSearchListSubmitSuccess(false));
             const ID = currentAccount.idno;
             //TODO cookie之後會廢掉
             const IP = getCookie('client_ip');
@@ -192,12 +215,29 @@ const ChangeBox = ({ type, tabKey }) => {
                 Modal.success({
                     content: resVal,
                 });
+                closeHandler();
+                dispatch(setSearchListSubmitSuccess(true));
             } else {
                 Modal.warning({
                     content: resVal,
                 });
             }
         }
+    };
+    const closeHandler = () => {
+        dispatch(setConfirmBoxOpen(false));
+        dispatch(setConfirmBoxClickSource(''));
+    };
+    const getQtyHandler = () => {
+        const qty =
+            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                ? Number(info.qty) / 1000
+                : Number(info.qty);
+        const cancelQty =
+            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                ? Number(info.cancel_qty) / 1000
+                : Number(info.cancel_qty);
+        return qty - cancelQty;
     };
     return (
         <>
@@ -241,12 +281,8 @@ const ChangeBox = ({ type, tabKey }) => {
                     <span className="price__val">{info.price}</span>
                 </div>
                 <div className="qty__box">
-                    <span className="qty__label">委託數量</span>
-                    <span className="qty__val">
-                        {mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                            ? Number(info.qty) / 1000
-                            : info.qty}
-                    </span>
+                    <span className="qty__label">剩餘數量</span>
+                    <span className="qty__val">{getQtyHandler()}</span>
                     <span className="qty__unit">
                         {mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零' ? '張' : '股'}
                     </span>
@@ -291,8 +327,7 @@ const ChangeBox = ({ type, tabKey }) => {
                             color: 'black',
                         }}
                         onClick={() => {
-                            dispatch(setConfirmBoxOpen(false));
-                            dispatch(setConfirmBoxClickSource(''));
+                            closeHandler();
                         }}
                     >
                         取消

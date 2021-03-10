@@ -22,6 +22,7 @@ import {
     setCode,
     setLot,
     setConfirmBoxClickSource,
+    setSearchListSubmitSuccess,
 } from '../../../../store/goOrder/action';
 import { postCancel } from '../../../../services/components/goOrder/postCancel';
 import { checkSignCA, sign } from '../../../../services/webCa';
@@ -34,13 +35,14 @@ const SearchList = ({ active }) => {
     const userInfo = useSelector(store => store.user.currentAccount);
     const clickSource = useSelector(store => store.goOrder.confirmBoxClickSource);
     const confirmOpen = useSelector(store => store.goOrder.confirmBoxOpen);
+    const submitSuccess = useSelector(store => store.goOrder.searchListSubmitSuccess);
     // const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
-    const [submitSuccess, setSubmitSuccess] = useState(false);
+    // const [submitSuccess, setSubmitSuccess] = useState(false);
     const platform = usePlatform();
 
     const changeClickHandler = (text, record) => {
@@ -91,7 +93,7 @@ const SearchList = ({ active }) => {
         // };
         if (checkSignCA(ca_content)) {
             // setSubmitLoading(true);
-            setSubmitSuccess(false);
+            // setSubmitSuccess(false);
             const ID = userInfo.idno;
             //TODO cookie之後會廢掉
             const IP = getCookie('client_ip');
@@ -124,7 +126,8 @@ const SearchList = ({ active }) => {
                 ca_content,
             });
             // setSubmitLoading(false);
-            setSubmitSuccess(true);
+            // setSubmitSuccess(true);
+            dispatch(setSearchListSubmitSuccess(true));
             Modal.info({
                 content: resVal,
             });
@@ -345,7 +348,13 @@ const SearchList = ({ active }) => {
 
     useEffect(() => {
         getOrderStatus();
-    }, [userInfo, active, submitSuccess]);
+    }, [userInfo, active]);
+
+    useEffect(() => {
+        if (submitSuccess) {
+            getOrderStatus();
+        }
+    }, [submitSuccess]);
 
     const maskClickHandler = () => {
         if (data.length > 0) {
@@ -401,6 +410,7 @@ const SearchList = ({ active }) => {
         }
         // setLoading(false);
         setData(res);
+        dispatch(setSearchListSubmitSuccess(false));
     };
 
     const sortTimeHandler = key => {
