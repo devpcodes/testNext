@@ -4,6 +4,7 @@ import { trim } from 'lodash';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
+import SelfSelectStock from '../selfSelectStock/SelfSelectStock';
 
 import {
     priceColor,
@@ -80,6 +81,7 @@ const solaceDataHandler = (solaceData, lot) => {
 export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
+    const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
@@ -130,6 +132,14 @@ export const Info = () => {
     const setMoreDetailIsVisitable = () => {
         isMoreDetailVisitable ? setIsMoreDetailVisitable(false) : setIsMoreDetailVisitable(true);
     };
+
+    const showSelfSelect = () => {
+        setIsSelfSelectVisitable(true);
+    };
+
+    const closeSelfSelect = useCallback(() => {
+        setIsSelfSelectVisitable(false);
+    }, []);
 
     return (
         <div className="info__container">
@@ -184,10 +194,13 @@ export const Info = () => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <button className="btn add__self__select">加入自選</button>
+                    <button className="btn add__self__select" onClick={showSelfSelect}>
+                        加入自選
+                    </button>
                 </div>
             </div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
+            <SelfSelectStock isVisible={isSelfSelectVisitable} handleClose={closeSelfSelect} isEdit={false} />
             <style jsx>{`
                 button {
                     border: none;
