@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
+import { setOrderPrice } from '../../../../store/goOrder/action';
 const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
-
+    const dispatch = useDispatch();
     const getVolumeSum = keyName => {
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
             var volumeSum = 0;
@@ -50,6 +51,12 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
             if (Array.isArray(solaceData[0].data.Low) && solaceData[0].data.Low[0] == price) {
                 return 'L';
             }
+        }
+    };
+
+    const priceClickHandler = val => {
+        if (!isNaN(Number(val))) {
+            dispatch(setOrderPrice(val));
         }
     };
 
@@ -98,6 +105,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     width: formatPrice(item).length * 8 + 'px',
                                                     float: 'right',
                                                 }}
+                                                onClick={priceClickHandler.bind(
+                                                    null,
+                                                    simtradeHandler(formatPrice(item, '--')),
+                                                )}
                                             >
                                                 {simtradeHandler(formatPrice(item, '--'))}
                                             </span>
@@ -159,6 +170,10 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     ),
                                                     width: formatPrice(item).length * 8 + 'px',
                                                 }}
+                                                onClick={priceClickHandler.bind(
+                                                    null,
+                                                    simtradeHandler(formatPrice(item, '--')),
+                                                )}
                                             >
                                                 {simtradeHandler(formatPrice(item, '--'))}
                                             </span>
