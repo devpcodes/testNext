@@ -5,7 +5,7 @@ import { Drawer } from 'antd';
 import CaHead from '../components/includes/CaHead';
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
-import { Header } from '../components/includes/goOrder/header/Header';
+import Header from '../components/includes/goOrder/header/Header';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
 import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
 import LeadingBtn from '../components/includes/goOrder/LeadingBtn';

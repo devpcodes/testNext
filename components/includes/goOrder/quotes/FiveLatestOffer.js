@@ -55,9 +55,17 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     };
 
     const priceClickHandler = val => {
+        val = val.split('*')[0];
         if (!isNaN(Number(val))) {
             dispatch(setOrderPrice(val));
         }
+    };
+
+    const getWidthHandler = item => {
+        if (formatPrice(item).length <= 2) {
+            return '40px';
+        }
+        return formatPrice(item).length * 8 + 'px';
     };
 
     const renderBidPrice = useCallback(
@@ -102,7 +110,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
-                                                    width: formatPrice(item).length * 8 + 'px',
+                                                    width: getWidthHandler(item), //formatPrice(item).length * 8 + 'px'
                                                     float: 'right',
                                                 }}
                                                 onClick={priceClickHandler.bind(
@@ -168,7 +176,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
-                                                    width: formatPrice(item).length * 8 + 'px',
+                                                    width: getWidthHandler(item),
                                                 }}
                                                 onClick={priceClickHandler.bind(
                                                     null,

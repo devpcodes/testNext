@@ -148,3 +148,9 @@ export const setSearchListSubmitSuccess = boo => {
         payload: boo,
     };
 };
+export const setDefaultOrdPrice = price => {
+    return {
+        type: actionType.SET_DEFAULT_ORD_PRICE,
+        payload: price,
+    };
+};
