@@ -27,6 +27,7 @@ import theme from '../../../../resources/styles/theme';
 
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
+
 const { Option } = Select;
 
 const DropDownArrow = () => {
@@ -90,12 +91,19 @@ const Header = () => {
                 dispatch(setBs(router.query.bs));
             }, 1000);
         }
+
         if (router.query.price != null) {
             dispatch(setDefaultOrdPrice(router.query.price));
         }
+
         if (router.query.qty != null) {
             dispatch(setOrdQty(router.query.qty));
+        } else {
+            if (userSettings.stockOrderUnit != null) {
+                dispatch(setOrdQty(userSettings.stockOrderUnit));
+            }
         }
+
         if (router.query.session != null) {
             //盤中零股
             if (router.query.session === 'C') {
@@ -112,7 +120,7 @@ const Header = () => {
                 dispatch(setTradeTime('after'));
             }
         }
-    }, [router]);
+    }, [router, userSettings]);
 
     // TODO 零股資料完整後可以刪掉
     useEffect(() => {
@@ -148,6 +156,12 @@ const Header = () => {
             dispatch(setCurrentAccount(currentAccount));
         }
     }, [type]);
+
+    // const getUserSetting = async () => {
+    //     const token = getToken();
+    //     // const userSetting = await fetchUserSettings(token, '');
+    //     console.log('userSetting', userSetting)
+    // }
 
     const handleTypeChange = value => {
         dispatch(setType(value));

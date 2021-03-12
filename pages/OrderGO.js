@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drawer } from 'antd';
 // import dynamic from 'next/dynamic';
@@ -30,6 +30,7 @@ const OrderGO = () => {
     const confirmBox = useSelector(store => store.goOrder.confirmBox);
     const confirmBoxTitle = useSelector(store => store.goOrder.confirmBoxTitle);
     const confirmBoxColor = useSelector(store => store.goOrder.confirmBoxColor);
+    const currentAccount = useSelector(store => store.user.currentAccount);
 
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const dispatch = useDispatch();
@@ -86,7 +87,9 @@ const OrderGO = () => {
             <div className="OrderGO__container" id="container">
                 <CaHead />
                 <PageHead title={'快速下單'} />
-                <SolaceClientComponent subscribeTopic={topic} only={true} />
+                {currentAccount.idno != null && (
+                    <SolaceClientComponent subscribeTopic={topic} idno={currentAccount.idno} />
+                )}
                 <Header />
                 <div className="open__container">
                     <Info />

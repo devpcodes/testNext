@@ -34,6 +34,7 @@ const OrderBox = () => {
     useEffect(() => {
         orderName.current = solaceName;
     }, []);
+
     const closeHandler = () => {
         dispatch(setConfirmBoxOpen(false));
     };

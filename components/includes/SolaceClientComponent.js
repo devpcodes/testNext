@@ -1,12 +1,12 @@
 import { memo, useRef } from 'react';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { solaceClient } from '../../services/solaceClient';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { setSolaceData } from '../../store/solace/action';
 import { loadScriptByURL } from '../../services/loadScriptByURL';
 
-const SolaceClientComponent = ({ subscribeTopic }) => {
+const SolaceClientComponent = ({ subscribeTopic, idno }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
     const topic = useRef([]);
@@ -14,6 +14,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     const currentSubscribe = useRef([]);
     const [solaceLoaded, setSolaceLoaded] = useState(false);
     const [SNPLoaded, setSNPLoaded] = useState(false);
+
     useEffect(() => {
         loadScriptByURL('solace', `${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`, solaceLoadedHandler);
         return () => {
@@ -41,7 +42,8 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
 
     const solaceLoadedHandler = () => {
         if (solace.current == null) {
-            solace.current = solaceClient('', getCookie('user_id'));
+            console.log('============ID', idno);
+            solace.current = solaceClient('', idno);
             solace.current.connect();
             solace.current.setMessageEvent('ST', function (xhr) {
                 console.log('solace', xhr);
