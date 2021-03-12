@@ -3,7 +3,7 @@ import * as actionType from './actionType';
 const initialState = {
     type: 'S',
     lot: 'Board', // Odd
-    code: '2890',
+    code: '',
     productInfo: null,
     bs: '', //B S
     panelHeight: 360, // 80
@@ -23,6 +23,7 @@ const initialState = {
     confirmBoxChanValInfo: {},
     confirmBoxClickSource: '',
     searchListSubmitSuccess: false,
+    defaultOrdPrice: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -138,6 +139,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 searchListSubmitSuccess: action.payload,
+            };
+        case actionType.SET_DEFAULT_ORD_PRICE:
+            return {
+                ...state,
+                defaultOrdPrice: action.payload,
             };
         default:
             return state;

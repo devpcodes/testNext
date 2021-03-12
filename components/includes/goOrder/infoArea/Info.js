@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { trim } from 'lodash';
 
@@ -90,7 +90,7 @@ export const Info = () => {
     const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
 
     useEffect(() => {
-        if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
+        if (solaceData.length > 0 && solaceData[0].topic != null) {
             if (solaceData[0].data.Jck1 != null) {
                 const marketId = solaceData[0].data.Jck1;
                 const market = marketIdToMarket(marketId);
