@@ -17,6 +17,7 @@
     "dependencies": {
         "@amcharts/amcharts4": "^4.9.34",
         "antd": "^4.5.2",
+        "array-move": "^3.0.1",
         "axios": "^0.20.0",
         "bignumber.js": "^9.0.1",
         "cross-env": "^7.0.2",
@@ -42,6 +43,7 @@
         "react-ga": "^3.3.0",
         "react-gtm-module": "^2.0.11",
         "react-redux": "^7.2.1",
+        "react-sortable-hoc": "^1.11.0",
         "react-transition-group": "^4.4.1",
         "redux": "^4.0.5",
         "redux-devtools-extension": "^2.13.8",

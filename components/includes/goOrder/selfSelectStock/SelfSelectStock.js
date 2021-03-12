@@ -1,5 +1,6 @@
 import React, { useState, memo, useEffect } from 'react';
 import { Modal, Button, Checkbox } from 'antd';
+import SortableList from '../sortableList/sortable';
 
 const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
@@ -58,40 +59,46 @@ const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                 maskClosable={false}
                 afterClose={afterModalClose}
             >
-                <ul className="self__select__list add">
-                    <li className="self__select__items">
-                        <Checkbox>自選組合一 (2) </Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合二 (12)</Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合三 (34)</Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合四 (23)</Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合一 (2) </Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合二 (12)</Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合三 (34)</Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合四 (23)</Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合一 (2) </Checkbox>
-                    </li>
-                    <li className="self__select__items">
-                        <Checkbox>自選組合二 (12)</Checkbox>
-                    </li>
-                </ul>
+                <section className="add">
+                    <ul className="self__select__list">
+                        <li className="self__select__items">
+                            <Checkbox>自選組合一 (2) </Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合二 (12)</Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合三 (34)</Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合四 (23)</Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合一 (2) </Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合二 (12)</Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合三 (34)</Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合四 (23)</Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合一 (2) </Checkbox>
+                        </li>
+                        <li className="self__select__items">
+                            <Checkbox>自選組合二 (12)</Checkbox>
+                        </li>
+                    </ul>
+                </section>
 
-                <ul className="self__select__list edit">
+                <section className="edit">
+                    <SortableList />
+                </section>
+
+                {/* <ul className="self__select__list">
                     <li className="self__select__items">自選組合一 (2)</li>
                     <li className="self__select__items">自選組合一 (2)</li>
                     <li className="self__select__items">自選組合一 (2)</li>
@@ -103,18 +110,18 @@ const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                     <li className="self__select__items">自選組合一 (2)</li>
                     <li className="self__select__items">自選組合一 (2)</li>
                     <li className="self__select__items">自選組合一 (2)</li>
-                </ul>
+                </ul> */}
             </Modal>
             <style jsx>{`
                 .self__select__list {
                     padding: 0;
                     margin: 0;
                 }
-                .self__select__list.add,
+                .add,
                 .header__tool__btn.edit__btn {
                     display: ${isEditSelfSelectGroup === true ? 'none' : 'block'};
                 }
-                .self__select__list.edit,
+                .edit,
                 .header__tool__btn.complete__btn {
                     display: ${isEditSelfSelectGroup === true ? 'block' : 'none'};
                 }
