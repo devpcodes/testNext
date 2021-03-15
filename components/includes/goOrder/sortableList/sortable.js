@@ -5,7 +5,7 @@ import arrayMove from 'array-move';
 import pen from '../../../../resources/images/components/goOrder/edit-edit.svg';
 import hamburger from '../../../../resources/images/components/goOrder/menu-hamburger.svg';
 
-const sortableList = memo(() => {
+const sortableList = memo(({ handleEdit }) => {
     const [listContent, setListContent] = useState([
         '自選股 1 ',
         '自選股 2',
@@ -14,14 +14,20 @@ const sortableList = memo(() => {
         '自選股 5',
         '自選股 6',
     ]);
+
+    const editGroupName = () => {
+        handleEdit(true);
+    };
+
     const DragHandle = sortableHandle(() => (
-        <span class="sort__icon">
+        <span className="sort__icon">
             <img src={hamburger} alt="sort"></img>
         </span>
     ));
+
     const SortableItem = sortableElement(({ value }) => (
         <li className="sortable__list__item">
-            <span className="edit__icon">
+            <span className="edit__icon" onClick={editGroupName}>
                 <img src={pen} alt="pen"></img>
             </span>
             <span className="self__select__name">{value}</span>
@@ -50,7 +56,6 @@ const sortableList = memo(() => {
                     padding: 0;
                     margin: 0;
                 }
-
                 .sortable__list__item {
                     list-style: none;
                     padding: 11px 0;

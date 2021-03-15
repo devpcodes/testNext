@@ -1,9 +1,11 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo, useEffect, useCallback } from 'react';
 import { Modal, Button, Checkbox } from 'antd';
 import SortableList from '../sortableList/sortable';
+import EditSelectStock from '../selfSelectStock/EditSelectStock';
 
-const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
+const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
+    const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
 
     useEffect(() => {
         setIsModalVisible(isVisible);
@@ -16,6 +18,10 @@ const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
         setIsModalVisible(false);
         handleClose(false);
     };
+
+    const handleEditSelfSelectName = useCallback(isOpen => {
+        setIsEditSelfSelectNameVisitable(isOpen);
+    }, []);
 
     const handleCancel = () => {
         setIsModalVisible(false);
@@ -48,16 +54,27 @@ const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                         </span>
                     </p>
                 }
+                className="add__select__self"
                 visible={isModalVisible}
-                onOk={handleOk}
                 onCancel={handleCancel}
                 bodyStyle={{ maxHeight: 300, overflow: 'auto' }}
-                okText="確認"
                 cancelButtonProps={{ style: { display: 'none' } }}
-                okButtonProps={{ disabled: isEditSelfSelectGroup }}
-                zIndex="14999"
+                zIndex="14998"
                 maskClosable={false}
                 afterClose={afterModalClose}
+                destroyOnClose={true}
+                footer={[
+                    <Button
+                        key="confirm"
+                        type="primary"
+                        className="confirm"
+                        danger
+                        onClick={handleOk}
+                        disabled={isEditSelfSelectGroup ? true : false}
+                    >
+                        確認
+                    </Button>,
+                ]}
             >
                 <section className="add">
                     <ul className="self__select__list">
@@ -95,22 +112,10 @@ const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                 </section>
 
                 <section className="edit">
-                    <SortableList />
+                    <SortableList handleEdit={handleEditSelfSelectName} />
                 </section>
 
-                {/* <ul className="self__select__list">
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                    <li className="self__select__items">自選組合一 (2)</li>
-                </ul> */}
+                <EditSelectStock isVisible={isEditSelfSelectNameVisitable} handler={handleEditSelfSelectName} />
             </Modal>
             <style jsx>{`
                 .self__select__list {
@@ -149,44 +154,35 @@ const SelfSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                 }
             `}</style>
             <style jsx global>{`
-                .ant-modal-title {
+                .add__select__self .ant-modal-title {
                     text-align: center;
                     font-size: 1.6 rem;
                     font-weight: bold;
                 }
-                .ant-checkbox-checked .ant-checkbox-inner {
+                .add__select__self .ant-checkbox-checked .ant-checkbox-inner {
                     background-color: #c43826;
                     border-color: #c43826;
                 }
-                .ant-checkbox-input:focus + .ant-checkbox-inner,
-                .ant-checkbox-wrapper:hover .ant-checkbox-inner,
-                .ant-checkbox:hover .ant-checkbox-inner {
+                .add__select__self .ant-checkbox-input:focus + .ant-checkbox-inner,
+                .add__select__self .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+                .add__select__self .ant-checkbox:hover .ant-checkbox-inner {
                     border-color: #c43826;
                 }
-                .ant-modal-close {
+                .add__select__self .ant-modal-close {
                     left: 0;
                 }
-                .ant-modal-footer {
+                .add__select__self .ant-modal-footer {
                     text-align: center;
                 }
-                .ant-modal-footer .ant-btn {
+                .confirm {
                     width: 98%;
-                }
-                .ant-btn-primary {
-                    background: #c43826;
-                    border-color: #c43826;
-                    height: 52px;
+                    height: 50px;
                     font-size: 1.6rem;
-                }
-                .ant-btn-primary:focus,
-                .ant-btn-primary:hover {
-                    color: #fff;
-                    background: #c43826;
-                    border-color: #c43826;
+                    font-weight: bold;
                 }
             `}</style>
         </>
     );
 });
 
-export default SelfSelectStock;
+export default AddSelectStock;

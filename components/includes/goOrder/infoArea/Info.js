@@ -4,7 +4,7 @@ import { trim } from 'lodash';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
-import SelfSelectStock from '../selfSelectStock/SelfSelectStock';
+import AddSelectStock from '../selfSelectStock/AddSelectStock';
 
 import {
     priceColor,
@@ -200,7 +200,7 @@ export const Info = () => {
                 </div>
             </div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <SelfSelectStock isVisible={isSelfSelectVisitable} handleClose={closeSelfSelect} isEdit={false} />
+            <AddSelectStock isVisible={isSelfSelectVisitable} handleClose={closeSelfSelect} isEdit={false} />
             <style jsx>{`
                 button {
                     border: none;
