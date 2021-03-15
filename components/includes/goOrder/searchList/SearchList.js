@@ -666,6 +666,14 @@ const SearchList = ({ active }) => {
                     margin-right: -4px;
                     z-index: 3;
                 }
+                .ant-btn-primary {
+                    background: #c43826;
+                    border-color: #c43826;
+                    height: 32px;
+                    font-size: 1.6rem;
+                    width: 63px;
+                    vertical-align: top;
+                }
             `}</style>
         </div>
     );

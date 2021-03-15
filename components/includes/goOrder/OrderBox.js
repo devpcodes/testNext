@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Tooltip, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './panel/PanelTabs';
-import { setConfirmBoxOpen } from '../../../store/goOrder/action';
+import { setConfirmBoxOpen, setResetData } from '../../../store/goOrder/action';
 import { formatNum } from '../../../services/formatNum';
 import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle2.svg';
 import infoIconSell from '../../../resources/images/components/goOrder/attention-info-circle3.svg';
@@ -28,6 +28,8 @@ const OrderBox = () => {
     const stockId = useSelector(store => store.goOrder.code);
     const transactionCost = useSelector(store => store.goOrder.transactionCost);
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const userSettings = useSelector(store => store.user.userSettings);
+
     const orderName = useRef('');
     const [submitLoading, setSubmitLoading] = useState(false);
     const platform = usePlatform();
@@ -70,6 +72,14 @@ const OrderBox = () => {
                 return 'IOC';
             case '4':
                 return 'FOK';
+        }
+    };
+    const checkReset = () => {
+        if (userSettings.clearAfterStockOrdered != null && userSettings.clearAfterStockOrdered) {
+            dispatch(setResetData(true));
+            setTimeout(() => {
+                dispatch(setResetData(false));
+            }, 500);
         }
     };
     const submitHandler = async () => {
@@ -132,6 +142,7 @@ const OrderBox = () => {
                     content: '委託成功',
                     onOk: () => {
                         closeHandler();
+                        checkReset();
                     },
                 });
             } else {
@@ -329,6 +340,14 @@ const OrderBox = () => {
                     box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
                     padding: 16px;
                     line-height: 25px;
+                }
+                .ant-btn-primary {
+                    background: #c43826;
+                    border-color: #c43826;
+                    height: 32px;
+                    font-size: 1.6rem;
+                    width: 63px;
+                    vertical-align: top;
                 }
             `}</style>
         </>

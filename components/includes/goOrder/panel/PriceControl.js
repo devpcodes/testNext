@@ -59,7 +59,7 @@ const PriceControl = ({ title }) => {
 
         setPriceHandler();
         setPriceTypeOptionHandler();
-    }, [code, lot, solaceData]);
+    }, [code, lot, solaceData, defaultOrdPrice]);
 
     const setPriceTypeOptionHandler = () => {
         if (lot === 'Odd') {

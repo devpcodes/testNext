@@ -24,6 +24,7 @@ const initialState = {
     confirmBoxClickSource: '',
     searchListSubmitSuccess: false,
     defaultOrdPrice: '',
+    resetData: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -144,6 +145,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 defaultOrdPrice: action.payload,
+            };
+        case actionType.SET_RESET_DATA:
+            return {
+                ...state,
+                resetData: action.payload,
             };
         default:
             return state;

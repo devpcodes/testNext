@@ -154,3 +154,9 @@ export const setDefaultOrdPrice = price => {
         payload: price,
     };
 };
+export const setResetData = boo => {
+    return {
+        type: actionType.SET_RESET_DATA,
+        payload: boo,
+    };
+};

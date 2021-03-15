@@ -15,6 +15,15 @@ import {
     setTransactionCost,
     setConfirmBoxTitle,
     setConfirmBoxColor,
+    setResetData,
+    setOrdQty,
+    setLot,
+    setOrdType,
+    setTradeTime,
+    setTimeInForce,
+    setOrdCount,
+    setPriceType,
+    setDefaultOrdPrice,
 } from '../../../../store/goOrder/action';
 import { themeColor } from './PanelTabs';
 
@@ -22,6 +31,7 @@ const SubmitBtn = () => {
     const dispatch = useDispatch();
     const code = useSelector(store => store.goOrder.code);
     const bs = useSelector(store => store.goOrder.bs);
+    const lot = useSelector(store => store.goOrder.lot);
     const T30Data = useSelector(store => store.goOrder.T30Data);
     const ord_price = useSelector(store => store.goOrder.ord_price);
     const offerShare = useSelector(store => store.goOrder.ord_qty);
@@ -42,6 +52,7 @@ const SubmitBtn = () => {
     const priceType = useSelector(store => store.goOrder.price_type);
     const stockId = useSelector(store => store.goOrder.code);
     const is_first_sell = useSelector(store => store.goOrder.is_first_sell);
+    const resetData = useSelector(store => store.goOrder.resetData);
 
     const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
@@ -69,16 +80,40 @@ const SubmitBtn = () => {
         dispatch(setTransactionCost(cost));
     }, [code, T30Data, ord_price, bs, offerShare, solaceData, ord_type, ord_cond, tradeTime, price_type]);
 
+    useEffect(() => {
+        if (resetData) {
+            dispatch(setOrdQty(userSettings.stockOrderUnit || '1'));
+            dispatch(setOrdType('0'));
+            dispatch(setTradeTime('ing'));
+            dispatch(setTimeInForce('0'));
+            dispatch(setOrdCount('0'));
+            dispatch(setPriceType(' '));
+            dispatch(setLot('Board'));
+
+            //確認切回整股後取當時現價
+            setTimeout(() => {
+                if (solaceData.length > 0 && lot === 'Board') {
+                    dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.Close[0])));
+                    // if(lot === 'Board'){
+                    //     dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.Close[0])))
+                    // }else{
+                    //     dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.OddlotClose)))
+                    // }
+                }
+            }, 500);
+        }
+    }, [resetData, solaceData]);
+
     const getOfferPrice = (ordPrice, reference, price_type) => {
         let offerPrice = ordPrice;
         if (price_type === '2') {
-            offerPrice = formatPrice(Number(reference) * 1.1);
+            offerPrice = Number(reference) * 1.1;
         }
         if (price_type === '3') {
-            offerPrice = formatPrice(Number(reference) * 0.9);
+            offerPrice = Number(reference) * 0.9;
         }
         if (price_type === '1') {
-            offerPrice = formatPrice(reference);
+            offerPrice = reference;
         }
         return offerPrice;
     };
@@ -104,7 +139,7 @@ const SubmitBtn = () => {
             });
             return;
         }
-        if (userSettings.confirmAfterStockOrdered) {
+        if (userSettings.confirmAfterStockOrdered != null && userSettings.confirmAfterStockOrdered) {
             dispatch(setConfirmBoxOpen(true));
             dispatch(setConfirmBoxTitle('委託確認'));
             dispatch(setConfirmBoxColor(color));
@@ -112,7 +147,14 @@ const SubmitBtn = () => {
             submitDataHandler();
         }
     };
-
+    const checkReset = () => {
+        if (userSettings.clearAfterStockOrdered != null && userSettings.clearAfterStockOrdered) {
+            dispatch(setResetData(true));
+            setTimeout(() => {
+                dispatch(setResetData(false));
+            }, 500);
+        }
+    };
     const submitDataHandler = async () => {
         const token = getToken();
         const ID = currentAccount.idno;
@@ -172,6 +214,9 @@ const SubmitBtn = () => {
             if (res.success === 'True') {
                 Modal.success({
                     content: '委託成功',
+                    onOk: () => {
+                        checkReset();
+                    },
                 });
             } else {
                 Modal.error({
