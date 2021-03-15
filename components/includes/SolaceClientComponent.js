@@ -42,8 +42,9 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
 
     const solaceLoadedHandler = () => {
         if (solace.current == null) {
-            console.log('============ID', idno);
-            solace.current = solaceClient('', idno);
+            // console.log('============ID', idno);
+            solace.current = solaceClient('', getCookie('user_id'));
+            // solace.current = solaceClient('', idno);
             solace.current.connect();
             solace.current.setMessageEvent('ST', function (xhr) {
                 console.log('solace', xhr);
