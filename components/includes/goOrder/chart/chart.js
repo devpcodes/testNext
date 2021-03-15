@@ -125,6 +125,7 @@ const Chart = function () {
             priceAxis.tooltip.label.fontSize = 10;
             priceAxis.cursorTooltipEnabled = false;
             priceAxis.renderer.minGridDistance = 18;
+            priceAxis.adjustLabelPrecision = true;
 
             priceAxis.renderer.labels.template.adapter.add('text', (label, target, key) => {
                 if (label > kline.Reference) {
@@ -194,6 +195,13 @@ const Chart = function () {
             dRange.contents.stroke = am4core.color('#22a16f');
             dRange.contents.fill = am4core.color('#22a16f');
             dRange.contents.fillOpacity = 0.1;
+
+            let label = chart.createChild(am4core.Label);
+            label.text = kline.Reference;
+            label.fontSize = 12;
+            label.isMeasured = false;
+            label.x = '10';
+            label.y = '77';
         }
     };
 
