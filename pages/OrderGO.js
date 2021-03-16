@@ -15,6 +15,7 @@ import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png
 import { useWindowSize } from '../hooks/useWindowSize';
 import OrderConfirmBox from '../components/includes/goOrder/OrderConfirmBox';
 import MyTransition from '../components/includes/myTransition';
+import { checkLogin } from '../services/components/layouts/checkLogin';
 
 // const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
 
@@ -43,6 +44,9 @@ const OrderGO = () => {
     }, []);
 
     useEffect(() => {
+        if (code === '') {
+            setTopic([]);
+        }
         if (lot === 'Odd') {
             setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
         } else {
@@ -87,9 +91,8 @@ const OrderGO = () => {
             <div className="OrderGO__container" id="container">
                 <CaHead />
                 <PageHead title={'快速下單'} />
-                {currentAccount.idno != null && (
-                    <SolaceClientComponent subscribeTopic={topic} idno={currentAccount.idno} />
-                )}
+                {checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={currentAccount.idno} />}
+                {!checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
                 <Header />
                 <div className="open__container">
                     <Info />

@@ -6,6 +6,7 @@ import QuotesDetail from './QuotesDetail';
 import FiveLatestOffer from './FiveLatestOffer';
 import { setLot } from '../../../../store/goOrder/action';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
+import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 const Chart = dynamic(() => import('../chart/chart'), { ssr: false });
 const QuoteContainer = () => {
     const [stopRenderNum, setStopRenderNum] = useState(1);
@@ -17,6 +18,10 @@ const QuoteContainer = () => {
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const winSize = useWindowSize();
     const quoteContainerElement = useRef(null);
+
+    const { socalLogin } = useCheckSocialLogin();
+    const isLogin = useSelector(store => store.user.isLogin);
+
     useEffect(() => {
         if (lot === 'Odd') {
             setStopRenderNum(0);
@@ -44,6 +49,14 @@ const QuoteContainer = () => {
             return {
                 transform: 'translateY(-290px)', //-60
             };
+        }
+    };
+
+    const otherHeightHandler = () => {
+        if (isLogin) {
+            return 274;
+        } else {
+            return 314;
         }
     };
 
@@ -81,7 +94,7 @@ const QuoteContainer = () => {
             <style jsx>{`
                 .quote__container {
                     overflow: ${bs === '' || panelHeight == 80 ? 'auto' : 'hidden'};
-                    height: ${panelHeight > 100 && bs !== '' ? 180 : winSize.height - 274}px;
+                    height: ${panelHeight > 100 && bs !== '' ? 180 : winSize.height - otherHeightHandler()}px;
                 }
                 .quote__container--content {
                     transition: all 0.3s;

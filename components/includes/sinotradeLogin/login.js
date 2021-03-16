@@ -14,6 +14,7 @@ import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
 import logoDark from '../../../resources/images/logo/logo-dark.svg';
 import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
+import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
@@ -195,6 +196,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
+    const redirectHandler = () => {
+        console.log('router', router.query.redirectUrl);
+        if (router.query.redirectUrl != null) {
+            const query = router.query;
+            const queryStr = objectToQueryHandler(query);
+            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${router.query.redirectUrl + queryStr}`;
+        }
+    };
+
     const checkFirstLogin = function (data) {
         if (data.result.isFirstLogin != null && data.result.isFirstLogin) {
             Modal.success({
@@ -249,6 +259,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //神策傳送成功後 做的事
     const afterSensors = function () {
+        redirectHandler();
         //iframe登入處理(來自舊理財網)
         if (isIframe) {
             iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);

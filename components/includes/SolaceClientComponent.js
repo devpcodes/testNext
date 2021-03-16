@@ -5,6 +5,7 @@ import { solaceClient } from '../../services/solaceClient';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { setSolaceData } from '../../store/solace/action';
 import { loadScriptByURL } from '../../services/loadScriptByURL';
+import { checkLogin } from '../../services/components/layouts/checkLogin';
 
 const SolaceClientComponent = ({ subscribeTopic, idno }) => {
     const solace = useRef(null);
@@ -35,14 +36,13 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
     }, [subscribeTopic, solaceLoaded]);
 
     useEffect(() => {
-        if (SNPLoaded) {
+        if (SNPLoaded && checkLogin()) {
             subscribeMKTQUT();
         }
     }, [SNPLoaded]);
 
     const solaceLoadedHandler = () => {
         if (solace.current == null) {
-            // console.log('============ID', idno);
             solace.current = solaceClient('', idno);
             solace.current.connect();
             solace.current.setMessageEvent('ST', function (xhr) {
@@ -276,6 +276,11 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             subscribeTopic.forEach(topic => {
                 if (topic.indexOf('SNP') >= 0) {
                     setTimeout(() => {
+                        if (!checkLogin()) {
+                            if (topic.split('/')[3] === '') {
+                                return;
+                            }
+                        }
                         solace.current.createCacheSession(topic, function () {
                             console.log('createCacheSession success');
                         });

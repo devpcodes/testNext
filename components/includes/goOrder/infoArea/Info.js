@@ -1,5 +1,7 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { Button } from 'antd';
 import { trim } from 'lodash';
 
 import { Search } from '../search/Search';
@@ -14,7 +16,7 @@ import {
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
-import { setLot, setProductInfo } from '../../../../store/goOrder/action';
+import { setCode, setLot, setProductInfo } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -22,19 +24,23 @@ import search from '../../../../resources/images/components/goOrder/edit-search.
 import theme from '../../../../resources/styles/theme';
 import { checkServer } from '../../../../services/checkServer';
 import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
+import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
+import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
+import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
 
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
-    { id: '2', color: 'red', text: '詳' },
+    // { id: '2', color: 'red', text: '詳' },
     { id: '3', color: 'orange', text: '存' },
-    { id: '4', color: 'green', text: '借' },
+    // { id: '4', color: 'green', text: '借' },
     { id: '5', color: 'blue', text: '學' },
     { id: '6', color: 'brown', text: '+ 自選' },
 ];
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 const solaceDataHandler = (solaceData, lot) => {
+    const code = useSelector(store => store.goOrder.code);
     const isSimTrade = lot === 'Odd' ? !!solaceData[0]?.data?.OddlotSimtrade : !!solaceData[0]?.data?.Simtrade;
 
     if (lot === 'Odd') {
@@ -82,6 +88,11 @@ export const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
+    const [hour, setHour] = useState('');
+    const [min, setMin] = useState('');
+    const [sec, setSec] = useState('');
+    const [tradingDate, setTradingDate] = useState('');
+    const [reloadLoading, setReloadLoading] = useState(false);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
@@ -89,8 +100,14 @@ export const Info = () => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
 
+    const { socalLogin } = useCheckSocialLogin();
+    const isLogin = useSelector(store => store.user.isLogin);
+
     useEffect(() => {
         if (solaceData.length > 0 && solaceData[0].topic != null) {
+            setTimeout(() => {
+                setReloadLoading(false);
+            }, 100);
             if (solaceData[0].data.Jck1 != null) {
                 const marketId = solaceData[0].data.Jck1;
                 const market = marketIdToMarket(marketId);
@@ -141,55 +158,134 @@ export const Info = () => {
         setIsSelfSelectVisitable(false);
     }, []);
 
+    const reloadHandler = () => {
+        setReloadLoading(true);
+        dispatch(setCode(''));
+        setTimeout(() => {
+            dispatch(setCode(code));
+        }, 100);
+    };
+
+    useEffect(() => {
+        if (code === '') {
+            return;
+        }
+        getTimeOver();
+    }, [code, lot]);
+
+    const getTimeOver = async () => {
+        const currentDate = moment().format('YYYYMMDD');
+        const res = await fetchCheckTradingDate(currentDate);
+        if (res.result.hasTrading) {
+            setTradingDate(true);
+            setHour(res.result.remainingTime.hours);
+            setMin(res.result.remainingTime.minutes);
+            setSec(res.result.remainingTime.seconds);
+        } else {
+            setTradingDate(false);
+        }
+    };
+
+    const getTimeWording = (hour, min, sec) => {
+        if (!tradingDate) {
+            return '非台股交易日';
+        }
+
+        if ((hour === '' && min === '' && sec === '') || tradingDate === '') {
+            return '';
+        }
+        if (hour === '0' && min === '0' && sec === '0') {
+            return '台股已收盤';
+        }
+        if (hour === '0' && min === '0' && sec !== '0') {
+            return `距離台股收盤還有${sec}秒鐘`;
+        }
+        if (hour !== '0' || min !== '0') {
+            return `距離台股收盤還有${hour}小時${min}分鐘`;
+        }
+    };
+
     return (
         <div className="info__container">
-            <div className="row">
-                <div className="product__container">
-                    <div
-                        className="product__name"
+            {!isLogin && !socalLogin && (
+                <div className="noLogin__box">
+                    {hour !== '' && <img className="noLoginIcon" src={icon} />}
+                    <span className="endTime">{getTimeWording(hour, min, sec)}</span>
+                    <Button
                         style={{
-                            fontSize: trim(productInfo?.solaceName).length >= 5 ? '2rem' : '2.6rem',
+                            width: '70px',
+                            height: '28px',
+                            margin: '0 0 0 9px',
+                            padding: '4px 1px 4px 2px',
+                            borderRadius: '2px',
+                            backgroundColor: '#254a91',
+                            color: 'white',
+                            height: '28px',
+                            position: 'absolute',
+                            right: '16px',
+                            top: '8px',
+                            border: 'none',
+                        }}
+                        loading={reloadLoading}
+                        onClick={() => {
+                            reloadHandler();
                         }}
                     >
-                        {trim(productInfo?.solaceName)}
+                        更新
+                    </Button>
+                </div>
+            )}
+            <div className="info__box">
+                <div className="row">
+                    <div className="product__container">
+                        <div
+                            className="product__name"
+                            style={{
+                                fontSize: trim(productInfo?.solaceName).length >= 5 ? '2rem' : '2.6rem',
+                            }}
+                        >
+                            {trim(productInfo?.solaceName)}
+                        </div>
+                        <div className="product__code">{code}</div>
                     </div>
-                    <div className="product__code">{code}</div>
+                    <div className="toolbar__container">
+                        <button className="share" onClick={shareHandler}>
+                            <img src={share} alt="share"></img>
+                        </button>
+                        <button className="search" onClick={showSearch}>
+                            <img src={search} alt="search"></img>
+                        </button>
+                    </div>
                 </div>
-                <div className="toolbar__container">
-                    <button className="share" onClick={shareHandler}>
-                        <img src={share} alt="share"></img>
-                    </button>
-                    <button className="search" onClick={showSearch}>
-                        <img src={search} alt="search"></img>
-                    </button>
+                <div className="row">
+                    <div className="price__container">{`${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(
+                        close,
+                        reference,
+                    )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(
+                        toDecimal(diffRate),
+                    )}%)`}</div>
+                    <div className="volume__container">
+                        <div className="volume">{`總量 ${volSum}`}</div>
+                        <div className="unit">{lot === 'Odd' ? '股' : '張'}</div>
+                    </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="price__container">{`${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(
-                    close,
-                    reference,
-                )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(
-                    toDecimal(diffRate),
-                )}%)`}</div>
-                <div className="volume__container">
-                    <div className="volume">{`總量 ${volSum}`}</div>
-                    <div className="unit">{lot === 'Odd' ? '股' : '張'}</div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="market__container">
-                    <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
-                        <div className="box board">整</div>
-                        {productInfo?.solaceMarket &&
-                            productInfo.solaceMarket !== '興櫃' &&
-                            productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>}
-                    </button>
-                    {productInfo?.solaceMarket != null && <div className="market__box">{productInfo.solaceMarket}</div>}
-                </div>
-                <div className="more__container" onClick={setMoreDetailIsVisitable}>
-                    {moreItems.map(item => (
-                        <TextBox key={item.id} color={item.color} text={item.text} />
-                    ))}
+                <div className="row">
+                    <div className="market__container">
+                        <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
+                            <div className="box board">整</div>
+                            {productInfo?.solaceMarket &&
+                                productInfo.solaceMarket !== '興櫃' &&
+                                productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>}
+                        </button>
+                        {productInfo?.solaceMarket != null && (
+                            <div className="market__box">{productInfo.solaceMarket}</div>
+                        )}
+                    </div>
+                    <div className="more__container" onClick={setMoreDetailIsVisitable}>
+                        {moreItems.map(item => (
+                            <TextBox key={item.id} color={item.color} text={item.text} />
+                        ))}
+                    </div>
                 </div>
             </div>
             <div className="more__info__container">
@@ -202,18 +298,37 @@ export const Info = () => {
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
             <AddSelectStock isVisible={isSelfSelectVisitable} handleClose={closeSelfSelect} isEdit={false} />
             <style jsx>{`
+                .noLogin__box {
+                    height: 44px;
+                    background-color: #e6ebf5;
+                    position: relative;
+                }
+                .noLoginIcon {
+                    margin-left: 16px;
+                }
+                .endTime {
+                    color: #254a91;
+                    font-size: 1.4rem;
+                    display: inline-block;
+                    line-height: 44px;
+                    margin-left: 8px;
+                }
                 button {
                     border: none;
                     padding: 0;
                     background-color: inherit;
                 }
                 .info__container {
-                    margin: 16px;
+                    margin: 0;
                     font-weight: 600;
                     font-stretch: normal;
                     font-style: normal;
                     line-height: normal;
                     letter-spacing: normal;
+                }
+                .info__box {
+                    margin: 16px;
+                    margin-top: 14px;
                 }
                 .row {
                     display: flex;
@@ -261,7 +376,7 @@ export const Info = () => {
                     display: flex;
                     justify-content: flex-end;
                     align-items: flex-end;
-                    max-width: calc((4 / 12) * 100%);
+                    max-width: calc((5 / 12) * 100%);
                     color: ${theme.colors.darkBg};
                 }
                 .volume__container .volume {
@@ -353,6 +468,15 @@ export const Info = () => {
                     font-size: 1.6rem;
                 }
             `}</style>
+            {/* <style jsx global>{`
+                .endTime {
+                    color: #254a91;
+                    font-size: 1.4rem;
+                    display: inline-block;
+                    line-height: 44px;
+                    margin-left: 8px;
+                }
+            `}</style> */}
         </div>
     );
 };

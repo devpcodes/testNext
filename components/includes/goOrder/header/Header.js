@@ -24,9 +24,11 @@ import { accountGroupByType, getAccountText } from '../../../../services/user/ac
 import grid from '../../../../resources/images/components/goOrder/grid-grid-big.svg';
 import arrow from '../../../../resources/images/components/goOrder/arrow-caret-down.svg';
 import theme from '../../../../resources/styles/theme';
+import logo from '../../../../resources/images/components/goOrder/logo.svg';
 
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
+import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 
 const { Option } = Select;
 
@@ -41,6 +43,7 @@ const DropDownArrow = () => {
 const Header = () => {
     // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
     const { isLogin } = useUser();
+    const { socalLogin } = useCheckSocialLogin();
     // 來源別相關的處理
     const platform = usePlatform();
     const hasMounted = useHasMounted();
@@ -52,6 +55,7 @@ const Header = () => {
     const userSettings = useSelector(store => store.user.userSettings);
     const solaceData = useSelector(store => store.solace.solaceData);
     const productInfo = useSelector(store => store.goOrder.productInfo);
+    // const socalLogin = useSelector(store => store.user.socalLogin)
 
     const groupedAccount = accountGroupByType(accounts);
     const groupedTypes = Object.keys(groupedAccount);
@@ -184,44 +188,58 @@ const Header = () => {
                 <div className="secondary"></div>
             </div>
             <div className="main__container">
-                <div className="dropdown__container">
-                    <Select
-                        defaultValue={type}
-                        style={{ width: 111 }}
-                        onChange={handleTypeChange}
-                        getPopupContainer={trigger => trigger.parentElement}
-                        bordered={false}
-                        suffixIcon={<DropDownArrow />}
-                    >
-                        {groupedTypes.map(accType => (
-                            <Option key={accType}>{getAccountText(accType)}</Option>
-                        ))}
-                    </Select>
-                </div>
-                <div className="dropdown__container">
-                    <Select
-                        style={{ width: 136 }}
-                        value={`${currentAccount.broker_id || ''}-${currentAccount.account || ''}`}
-                        onChange={onAccountChange}
-                        getPopupContainer={trigger => trigger.parentElement}
-                        bordered={false}
-                        suffixIcon={<DropDownArrow />}
-                        notFoundContent={<div></div>}
-                    >
-                        {accountList.map(account => (
-                            <Option
-                                key={`${account.broker_id}-${account.account}`}
-                            >{`${account.bhname} ${account.username}`}</Option>
-                        ))}
-                    </Select>
-                </div>
-                <button className="grid__button">
-                    <img src={grid} alt="grid"></img>
-                </button>
+                {isLogin && (
+                    <>
+                        <div className="dropdown__container">
+                            <Select
+                                defaultValue={type}
+                                style={{ width: 111 }}
+                                onChange={handleTypeChange}
+                                getPopupContainer={trigger => trigger.parentElement}
+                                bordered={false}
+                                suffixIcon={<DropDownArrow />}
+                            >
+                                {groupedTypes.map(accType => (
+                                    <Option key={accType}>{getAccountText(accType)}</Option>
+                                ))}
+                            </Select>
+                        </div>
+                        <div className="dropdown__container">
+                            <Select
+                                style={{ width: 136 }}
+                                value={`${currentAccount.broker_id || ''}-${currentAccount.account || ''}`}
+                                onChange={onAccountChange}
+                                getPopupContainer={trigger => trigger.parentElement}
+                                bordered={false}
+                                suffixIcon={<DropDownArrow />}
+                                notFoundContent={<div></div>}
+                            >
+                                {accountList.map(account => (
+                                    <Option
+                                        key={`${account.broker_id}-${account.account}`}
+                                    >{`${account.bhname} ${account.username}`}</Option>
+                                ))}
+                            </Select>
+                        </div>
+                    </>
+                )}
+                {socalLogin && 12345}
+                {!socalLogin && !isLogin && (
+                    <>
+                        <img className="logo" src={logo} />
+                        <button className="grid__button">
+                            開戶 / 登入
+                            {/* <img src={grid} alt="grid"></img> */}
+                        </button>
+                    </>
+                )}
             </div>
             <style jsx>{`
                 .Header__container {
                     width: 100%;
+                }
+                .logo {
+                    margin-left: 16px;
                 }
                 .colorArea__container {
                     display: flex;
@@ -246,10 +264,14 @@ const Header = () => {
                 }
                 button.grid__button {
                     border: none;
-                    background-color: inherit;
+                    background-color: #c43826;
                     position: absolute;
-                    top: 8px;
-                    right: 10px;
+                    top: 0;
+                    right: 0;
+                    width: 112px;
+                    color: white;
+                    height: 44px;
+                    font-size: 1.6rem;
                 }
             `}</style>
             <style jsx global>{`
