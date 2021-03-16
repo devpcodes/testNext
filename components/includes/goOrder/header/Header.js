@@ -29,6 +29,7 @@ import logo from '../../../../resources/images/components/goOrder/logo.svg';
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
+import { AccountAvatar } from '../../AccountAvatar';
 
 const { Option } = Select;
 
@@ -65,6 +66,19 @@ const Header = () => {
     const init = useRef(false);
     const goCheckLot = useRef(false);
     const checkSolaceConnect = useRef(false);
+
+    const accountElement = (
+        <AccountAvatar
+            style={{
+                width: '26px',
+                height: '26px',
+                lineHeight: '26px',
+                fontSize: '1.2rem',
+            }}
+        >
+            {currentAccount.username && currentAccount.username[0]}
+        </AccountAvatar>
+    );
 
     // TODO: 頁面登入權限處理 (未登入導到登入頁)
     // TODO: query string 傳入 type 處理
@@ -221,6 +235,7 @@ const Header = () => {
                                 ))}
                             </Select>
                         </div>
+                        <div className="accountElement">{accountElement}</div>
                     </>
                 )}
                 {socalLogin && 12345}
@@ -235,6 +250,10 @@ const Header = () => {
                 )}
             </div>
             <style jsx>{`
+                .accountElement {
+                    position: absolute;
+                    right: 16px;
+                }
                 .Header__container {
                     width: 100%;
                 }
@@ -283,6 +302,9 @@ const Header = () => {
                 .dropdown__container .ant-select-arrow {
                     top: 28%;
                     right: 11px;
+                }
+                .ant-avatar-string {
+                    line-height: 26px !important;
                 }
             `}</style>
         </div>

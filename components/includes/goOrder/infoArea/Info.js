@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useMemo } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { Button } from 'antd';
@@ -16,10 +16,11 @@ import {
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
-import { setCode, setLot, setProductInfo } from '../../../../store/goOrder/action';
+import { setCode, setLot, setProductInfo, setHaveCA } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
+import warning from '../../../../resources/images/components/goOrder/attention-warning.svg';
 
 import theme from '../../../../resources/styles/theme';
 import { checkServer } from '../../../../services/checkServer';
@@ -27,7 +28,8 @@ import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
-
+import { checkCert, caResultDataHandler } from '../../../../services/webCa';
+import { getToken } from '../../../../services/user/accessToken';
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -93,15 +95,21 @@ export const Info = () => {
     const [sec, setSec] = useState('');
     const [tradingDate, setTradingDate] = useState('');
     const [reloadLoading, setReloadLoading] = useState(false);
+    const [checkCA, setCheckCA] = useState(false);
+    const [reCheckCA, setReCheckCA] = useState(null);
+
     const dispatch = useDispatch();
+
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const solaceData = useSelector(store => store.solace.solaceData);
-    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
-
-    const { socalLogin } = useCheckSocialLogin();
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const isLogin = useSelector(store => store.user.isLogin);
+
+    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
+    const { socalLogin } = useCheckSocialLogin();
+    const suggestAction = useRef('');
 
     useEffect(() => {
         if (solaceData.length > 0 && solaceData[0].topic != null) {
@@ -120,6 +128,31 @@ export const Info = () => {
             }
         }
     }, [solaceData]);
+
+    useEffect(() => {
+        if (reCheckCA || reCheckCA == null) {
+            if (currentAccount.idno) {
+                const checkData = checkCert(currentAccount.idno);
+                suggestAction.current = checkData.suggestAction;
+
+                if (checkData.suggestAction == 'None') {
+                    setCheckCA(true);
+                    dispatch(setHaveCA(true));
+                } else {
+                    setCheckCA(false);
+                    dispatch(setHaveCA(false));
+                }
+                setReCheckCA(false);
+            }
+        }
+    }, [reCheckCA, currentAccount]);
+
+    useEffect(() => {
+        if (code === '') {
+            return;
+        }
+        getTimeOver();
+    }, [code, lot]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -166,13 +199,6 @@ export const Info = () => {
         }, 100);
     };
 
-    useEffect(() => {
-        if (code === '') {
-            return;
-        }
-        getTimeOver();
-    }, [code, lot]);
-
     const getTimeOver = async () => {
         const currentDate = moment().format('YYYYMMDD');
         const res = await fetchCheckTradingDate(currentDate);
@@ -194,15 +220,32 @@ export const Info = () => {
         if ((hour === '' && min === '' && sec === '') || tradingDate === '') {
             return '';
         }
-        if (hour === '0' && min === '0' && sec === '0') {
+        if (hour == '0' && min == '0' && sec == '0') {
             return '台股已收盤';
         }
-        if (hour === '0' && min === '0' && sec !== '0') {
+        if (hour == '0' && min == '0' && sec != '0') {
             return `距離台股收盤還有${sec}秒鐘`;
         }
-        if (hour !== '0' || min !== '0') {
+        if (hour != '0' || min != '0') {
             return `距離台股收盤還有${hour}小時${min}分鐘`;
         }
+    };
+
+    // const checkWebCaHandler = () => {
+    //     const checkData = checkCert(currentAccount.idno);
+    //     suggestAction.current = checkData.suggestAction;
+
+    //     if(checkData.suggestAction == 'None'){
+    //         return false;
+    //     }else{
+    //         return true;
+    //     }
+    // }
+
+    const signCaHandler = async () => {
+        const token = getToken();
+        await caResultDataHandler(suggestAction.current, currentAccount.idno, token);
+        setReCheckCA(true);
     };
 
     return (
@@ -220,7 +263,6 @@ export const Info = () => {
                             borderRadius: '2px',
                             backgroundColor: '#254a91',
                             color: 'white',
-                            height: '28px',
                             position: 'absolute',
                             right: '16px',
                             top: '8px',
@@ -232,6 +274,35 @@ export const Info = () => {
                         }}
                     >
                         更新
+                    </Button>
+                </div>
+            )}
+            {isLogin && !checkCA && (
+                <div className="noLogin__box">
+                    <img className="warningIcon" src={warning} />
+                    <span className="endTime">下單交易前請先安裝憑證！</span>
+                    <Button
+                        style={{
+                            width: '70px',
+                            height: '28px',
+                            margin: '0 0 0 9px',
+                            padding: '4px 1px 4px 2px',
+                            borderRadius: '2px',
+                            backgroundColor: '#254a91',
+                            color: 'white',
+                            lineHeight: '20px',
+                            position: 'absolute',
+                            right: '16px',
+                            top: '8px',
+                            border: 'none',
+                            letterSpacing: '-1px',
+                        }}
+                        loading={reloadLoading}
+                        onClick={() => {
+                            signCaHandler();
+                        }}
+                    >
+                        安裝
                     </Button>
                 </div>
             )}
@@ -305,6 +376,10 @@ export const Info = () => {
                 }
                 .noLoginIcon {
                     margin-left: 16px;
+                }
+                .warningIcon {
+                    margin-left: 16px;
+                    margin-top: -1px;
                 }
                 .endTime {
                     color: #254a91;

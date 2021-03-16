@@ -145,7 +145,8 @@ export const checkSignCA = function (ca_content) {
     return false;
 };
 
-const checkCert = function (userIdNo) {
+// 檢查憑證
+export const checkCert = function (userIdNo) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
         DM = false;
@@ -169,6 +170,7 @@ const checkCert = function (userIdNo) {
     return checkData;
 };
 
+// 安裝憑證
 export const applyCert = function (user_idNo, token, callBack) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
@@ -200,6 +202,7 @@ export const applyCert = function (user_idNo, token, callBack) {
     });
 };
 
+// 安裝憑證
 export const renewCert = function (user_idNo, token, callBack) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
@@ -227,7 +230,7 @@ export const renewCert = function (user_idNo, token, callBack) {
     });
 };
 
-//憑證檢查
+//憑證檢查整合安裝
 export const CAHandler = function (token, cb) {
     const tokenVal = jwt_decode(token);
     const checkData = checkCert(tokenVal.user_id);
@@ -256,7 +259,7 @@ export const CAHandler = function (token, cb) {
 };
 
 //憑證安裝
-const caResultDataHandler = async function (suggestAction, userIdNo, token) {
+export const caResultDataHandler = async function (suggestAction, userIdNo, token) {
     if (suggestAction === 'ApplyCert') {
         const msg = await applyCert(userIdNo, token);
         console.log('msg', msg);

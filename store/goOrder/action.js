@@ -160,3 +160,9 @@ export const setResetData = boo => {
         payload: boo,
     };
 };
+export const setHaveCA = boo => {
+    return {
+        type: actionType.SET_CHECK_CA,
+        payload: boo,
+    };
+};

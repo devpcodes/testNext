@@ -16,6 +16,7 @@ const QuoteContainer = () => {
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
+    const checkCA = useSelector(store => store.goOrder.checkCA);
     const winSize = useWindowSize();
     const quoteContainerElement = useRef(null);
 
@@ -53,7 +54,7 @@ const QuoteContainer = () => {
     };
 
     const otherHeightHandler = () => {
-        if (isLogin) {
+        if (isLogin && checkCA) {
             return 274;
         } else {
             return 314;

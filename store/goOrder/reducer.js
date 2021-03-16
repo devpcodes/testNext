@@ -25,6 +25,7 @@ const initialState = {
     searchListSubmitSuccess: false,
     defaultOrdPrice: '',
     resetData: false,
+    checkCA: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -150,6 +151,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 resetData: action.payload,
+            };
+        case actionType.SET_CHECK_CA:
+            return {
+                ...state,
+                checkCA: action.payload,
             };
         default:
             return state;
