@@ -197,12 +197,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const redirectHandler = () => {
-        console.log('router', router.query.redirectUrl);
         if (router.query.redirectUrl != null) {
             const query = router.query;
+            const redirectUrl = query.redirectUrl;
             delete query.redirectUrl;
             const queryStr = objectToQueryHandler(query);
-            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${router.query.redirectUrl + queryStr}`;
+            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
         }
     };
 
