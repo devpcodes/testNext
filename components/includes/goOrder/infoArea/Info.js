@@ -145,12 +145,6 @@ export const Info = () => {
                 setReCheckCA(false);
             }
         }
-        notification.open({
-            message: '系統訊息',
-            description: 'test',
-            top: 70,
-            duration: null,
-        });
     }, [reCheckCA, currentAccount]);
 
     useEffect(() => {
