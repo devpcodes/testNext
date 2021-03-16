@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import { trim } from 'lodash';
 
 import { Search } from '../search/Search';
@@ -145,6 +145,12 @@ export const Info = () => {
                 setReCheckCA(false);
             }
         }
+        notification.open({
+            message: '系統訊息',
+            description: 'test',
+            top: 70,
+            duration: null,
+        });
     }, [reCheckCA, currentAccount]);
 
     useEffect(() => {

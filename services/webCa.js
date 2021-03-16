@@ -268,6 +268,9 @@ export const caResultDataHandler = async function (suggestAction, userIdNo, toke
             message: '系統訊息',
             description: msg,
             top: 70,
+            style: {
+                width: '200px',
+            },
         });
     }
     if (suggestAction == 'RenewCert') {
@@ -278,6 +281,9 @@ export const caResultDataHandler = async function (suggestAction, userIdNo, toke
             message: '系統訊息',
             description: msg,
             top: 70,
+            style: {
+                width: '200px',
+            },
         });
     }
 };
