@@ -61,7 +61,7 @@ const SubmitBtn = () => {
         let dealing = bs === 'B' ? 'BUY' : 'SELL';
         let unit;
         let reference;
-        if (!checkServer() && solaceData.length > 0 && solaceData[0].topic != null) {
+        if (solaceData.length > 0 && solaceData[0].topic != null) {
             unit = solaceData[0].data.Unit || solaceData[0].data.OddlotUnit;
             reference = solaceData[0].data.Reference || solaceData[0].data.OddlotReference;
         }
@@ -71,6 +71,7 @@ const SubmitBtn = () => {
         let tradeType = getTradeType(ord_cond);
         const offerPrice = getOfferPrice(ord_price, reference, price_type);
         let cost = getTransactionCost(offerPrice, offerShare, unit, dealing, capitalPercent, voucherPercent, tradeType);
+        console.log('===cost===', offerPrice, offerShare, unit, dealing, capitalPercent, voucherPercent, tradeType);
         if (price_type === '4') {
             cost = '市價';
         }

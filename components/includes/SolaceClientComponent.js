@@ -7,6 +7,8 @@ import { setSolaceData } from '../../store/solace/action';
 import { loadScriptByURL } from '../../services/loadScriptByURL';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 
+var OddlotUnit = 0;
+var OddlotReference = 0;
 const SolaceClientComponent = ({ subscribeTopic, idno }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
@@ -93,10 +95,21 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
 
     const updateSNPData = xhr => {
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') >= 0) {
+            //TODO 因為solace沒資料，先從零股拿
+            if (xhr.data.OddlotReference == 0) {
+                xhr.data.OddlotReference = OddlotReference;
+            }
+            if (xhr.data.OddlotUnit == 0) {
+                xhr.data.OddlotUnit = OddlotUnit;
+            }
             // xhr.data.OddlotClose = 0;
             return;
         }
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') === -1) {
+            // TODO SOLACE OddlotReference OddlotUnit 永遠0...
+            OddlotReference = xhr.data.Reference;
+            OddlotUnit = xhr.data.Unit;
+
             if (xhr.data.Open == 0) {
                 xhr.data.Open = '--';
             }

@@ -14,12 +14,45 @@ const TradingSelect = () => {
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
     const timeInForce = useSelector(store => store.goOrder.time_in_force);
     const ordCound = useSelector(store => store.goOrder.ord_cond);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
 
     const [ordCoundOption, setOrdCoundOption] = useState([
         { txt: '現股', val: '0' },
         { txt: '融資', val: '3' },
         { txt: '融券', val: '4' },
     ]);
+    const [lotOption, setLotOption] = useState([
+        { txt: '整股', val: 'Board' },
+        { txt: '零股', val: 'Odd' },
+    ]);
+    const [tradeTimeOption, setTradeTimeOption] = useState([
+        { txt: '盤中', val: 'ing' },
+        { txt: '盤後', val: 'after' },
+    ]);
+
+    useEffect(() => {
+        if (productInfo != null && productInfo.solaceMarket != null) {
+            if (productInfo.solaceMarket === '權證') {
+                setLotOption([{ txt: '整股', val: 'Board' }]);
+            } else {
+                setLotOption([
+                    { txt: '整股', val: 'Board' },
+                    { txt: '零股', val: 'Odd' },
+                ]);
+            }
+
+            if (productInfo.solaceMarket === '興櫃') {
+                dispatch(setTradeTime('ing'));
+                setTradeTimeOption([{ txt: '盤中', val: 'ing' }]);
+            } else {
+                setTradeTimeOption([
+                    { txt: '盤中', val: 'ing' },
+                    { txt: '盤後', val: 'after' },
+                ]);
+            }
+        }
+    }, [lot, productInfo]);
+
     useEffect(() => {
         if (lot === 'Board' && tradeTime === 'ing') {
             dispatch(setOrdType('0'));
@@ -66,14 +99,28 @@ const TradingSelect = () => {
         <div className="select__container">
             <div className="selectBox">
                 <Select value={lot} suffixIcon={<img src={selectIcon} />} onChange={lotChange}>
-                    <Option value="Board">整股</Option>
-                    <Option value="Odd">零股</Option>
+                    {/* <Option value="Board">整股</Option>
+                    <Option value="Odd">零股</Option> */}
+                    {lotOption.map((item, index) => {
+                        return (
+                            <Option key={index} value={item.val}>
+                                {item.txt}
+                            </Option>
+                        );
+                    })}
                 </Select>
             </div>
             <div className="selectBox">
                 <Select value={tradeTime} suffixIcon={<img src={selectIcon} />} onChange={tradeTimeChange}>
-                    <Option value="ing">盤中</Option>
-                    <Option value="after">盤後</Option>
+                    {/* <Option value="ing">盤中</Option>
+                    <Option value="after">盤後</Option> */}
+                    {tradeTimeOption.map((item, index) => {
+                        return (
+                            <Option key={index} value={item.val}>
+                                {item.txt}
+                            </Option>
+                        );
+                    })}
                 </Select>
             </div>
             <div className="selectBox">
