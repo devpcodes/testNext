@@ -6,6 +6,7 @@ import { setOrderPrice } from '../../../../store/goOrder/action';
 const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
+    const checkLot = useSelector(store => store.goOrder.checkLot);
     const dispatch = useDispatch();
     const getVolumeSum = keyName => {
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
@@ -21,7 +22,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     };
 
     const simtradeHandler = price => {
-        if (lot === 'Odd') {
+        if (lot === 'Odd' && checkLot) {
             if (!!solaceData[0]?.data?.OddlotSimtrade) {
                 return price + '*';
             } else {
@@ -37,7 +38,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
     };
 
     const HLHandler = price => {
-        if (lot === 'Odd') {
+        if (lot === 'Odd' && checkLot) {
             if (solaceData[0].data.High == price) {
                 return 'H';
             }
@@ -84,7 +85,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 style={{
                                                     color: priceColor(
                                                         item,
-                                                        lot === 'Odd'
+                                                        lot === 'Odd' && checkLot
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
@@ -106,7 +107,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 style={{
                                                     color: priceColor(
                                                         item,
-                                                        lot === 'Odd'
+                                                        lot === 'Odd' && checkLot
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
@@ -155,7 +156,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 style={{
                                                     color: priceColor(
                                                         item,
-                                                        lot === 'Odd'
+                                                        lot === 'Odd' && checkLot
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
@@ -172,7 +173,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                 style={{
                                                     color: priceColor(
                                                         item,
-                                                        lot === 'Odd'
+                                                        lot === 'Odd' && checkLot
                                                             ? data[0].data.OddlotReference
                                                             : data[0].data.Reference,
                                                     ),
@@ -222,7 +223,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                 return defaultRender(priceKey);
             }
         },
-        [lot, solaceData],
+        [lot, solaceData, checkLot],
     );
 
     const boxContentWidth = price => {
@@ -323,14 +324,14 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                 </div>
                 <div className="five__content">
                     <div className="buy__box">
-                        {lot !== 'Odd'
-                            ? renderBidPrice('BidPrice', 'BidVolume')
-                            : renderBidPrice('OddlotBidPrice', 'OddlotBidShares')}
+                        {lot === 'Odd' && checkLot
+                            ? renderBidPrice('OddlotBidPrice', 'OddlotBidShares')
+                            : renderBidPrice('BidPrice', 'BidVolume')}
                     </div>
                     <div className="sell__box">
-                        {lot !== 'Odd'
-                            ? renderBidPrice('AskPrice', 'AskVolume')
-                            : renderBidPrice('OddlotAskPrice', 'OddlotAskShares')}
+                        {lot === 'Odd' && checkLot
+                            ? renderBidPrice('OddlotAskPrice', 'OddlotAskShares')
+                            : renderBidPrice('AskPrice', 'AskVolume')}
                     </div>
                 </div>
                 <span className="blackLine"></span>

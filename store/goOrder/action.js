@@ -166,3 +166,9 @@ export const setHaveCA = boo => {
         payload: boo,
     };
 };
+export const setCheckLot = boo => {
+    return {
+        type: actionType.SET_CHECK_LOT,
+        payload: boo,
+    };
+};

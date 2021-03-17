@@ -26,6 +26,7 @@ const initialState = {
     defaultOrdPrice: '',
     resetData: false,
     checkCA: false,
+    checkLot: true,
 };
 
 const reducer = (state = initialState, action) => {
@@ -156,6 +157,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 checkCA: action.payload,
+            };
+        case actionType.SET_CHECK_LOT:
+            return {
+                ...state,
+                checkLot: action.payload,
             };
         default:
             return state;

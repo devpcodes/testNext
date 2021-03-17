@@ -32,6 +32,7 @@ const OrderGO = () => {
     const confirmBoxTitle = useSelector(store => store.goOrder.confirmBoxTitle);
     const confirmBoxColor = useSelector(store => store.goOrder.confirmBoxColor);
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
 
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const dispatch = useDispatch();
@@ -48,11 +49,20 @@ const OrderGO = () => {
             setTopic([]);
         }
         if (lot === 'Odd') {
-            setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+            if (
+                productInfo != null &&
+                (productInfo.solaceMarket == '興櫃' ||
+                    productInfo.solaceMarket == '上櫃' ||
+                    productInfo.solaceMarket == '權證')
+            ) {
+                return;
+            } else {
+                setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+            }
         } else {
             setTopic([`MKT/*/*/${code}`, `QUT/*/*/${code}`, `SNP/*/*/${code}`]);
         }
-    }, [lot, code]);
+    }, [lot, code, productInfo]);
 
     useEffect(() => {
         if (bs !== '') {

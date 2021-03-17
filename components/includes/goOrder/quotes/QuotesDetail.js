@@ -4,9 +4,10 @@ import { toDecimal, priceColor, formatPrice, formatAmountSum } from '../../../..
 const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
+    const checkLot = useSelector(store => store.goOrder.checkLot);
     const renderAmountSum = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
-            if (lot === 'Odd') {
+            if (lot === 'Odd' && checkLot) {
                 return isNaN(Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100)
                     ? '--'
                     : formatAmountSum(Math.round(parseInt(solaceData[0]?.data?.OddlotAmountSum) / 1000000) / 100);
@@ -24,7 +25,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
 
     const getReference = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
-            if (lot === 'Odd') {
+            if (lot === 'Odd' && checkLot) {
                 return formatPrice(solaceData[0]?.data?.OddlotReference, '--') || '--';
             } else {
                 return formatPrice(solaceData[0]?.data?.Reference, '--') || '--';
@@ -36,7 +37,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
 
     const getOpen = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
-            if (lot === 'Odd') {
+            if (lot === 'Odd' && checkLot) {
                 return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotOpen, '--')) || '--';
             } else {
                 return simtradeHandler(formatPrice(solaceData[0]?.data?.Open, '--')) || '--';
@@ -48,7 +49,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
 
     const getHigh = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
-            if (lot === 'Odd') {
+            if (lot === 'Odd' && checkLot) {
                 return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotHigh, '--')) || '--';
             } else {
                 if (solaceData[0]?.data?.High?.length > 0) {
@@ -62,7 +63,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
 
     const getLow = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
-            if (lot === 'Odd') {
+            if (lot === 'Odd' && checkLot) {
                 return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotLow, '--')) || '--';
             } else {
                 if (solaceData[0]?.data?.Low?.length > 0) {
@@ -76,7 +77,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
 
     const getAvgPrice = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
-            if (lot === 'Odd') {
+            if (lot === 'Odd' && checkLot) {
                 return formatPrice(solaceData[0]?.data?.OddlotAvgPrice, '--') || '--';
             } else {
                 if (solaceData[0]?.data?.AvgPrice?.length > 0) {
@@ -92,7 +93,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
         if (isNaN(Number(price))) {
             return price;
         }
-        if (lot === 'Odd') {
+        if (lot === 'Odd' && checkLot) {
             if (!!solaceData[0]?.data?.OddlotSimtrade) {
                 return price + '*';
             } else {

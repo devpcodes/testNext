@@ -4,27 +4,32 @@ import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import QuotesDetail from './QuotesDetail';
 import FiveLatestOffer from './FiveLatestOffer';
-import { setLot } from '../../../../store/goOrder/action';
+import { setCheckLot, setLot } from '../../../../store/goOrder/action';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
+
 const Chart = dynamic(() => import('../chart/chart'), { ssr: false });
 const QuoteContainer = () => {
     const [stopRenderNum, setStopRenderNum] = useState(1);
     const [quotesDetailShow, setQuotesDetailShow] = useState(true);
+
     const slider = useRef(null);
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const checkCA = useSelector(store => store.goOrder.checkCA);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
+    const checkLot = useSelector(store => store.goOrder.checkLot);
+    const solaceData = useSelector(store => store.solace.solaceData);
+
     const winSize = useWindowSize();
     const quoteContainerElement = useRef(null);
 
-    const { socalLogin } = useCheckSocialLogin();
     const isLogin = useSelector(store => store.user.isLogin);
 
     useEffect(() => {
-        if (lot === 'Odd') {
+        if (lot === 'Odd' && checkLot) {
             setStopRenderNum(0);
             if (slider.current != null) {
                 slider.current.goTo(1);
@@ -35,13 +40,26 @@ const QuoteContainer = () => {
                 slider.current.goTo(0);
             }
         }
-    }, [lot]);
+    }, [lot, checkLot]);
 
     useEffect(() => {
         if (bs === 'B' || bs === 'S') {
             setQuotesDetailShow(false);
         }
     }, [bs]);
+
+    useEffect(() => {
+        if (productInfo != null) {
+            if (
+                productInfo.solaceMarket != null &&
+                (productInfo.solaceMarket == '興櫃' || productInfo.solaceMarket == '權證')
+            ) {
+                dispatch(setCheckLot(false));
+            } else {
+                dispatch(setCheckLot(true));
+            }
+        }
+    }, [productInfo]);
 
     const quoteContainerStyleHandler = () => {
         console.log(panelHeight, 'hhh');
@@ -69,7 +87,6 @@ const QuoteContainer = () => {
                 {/* </div> */}
                 <Carousel
                     afterChange={current => {
-                        console.log('current', current);
                         if (current) {
                             setStopRenderNum(0);
                             dispatch(setLot('Odd'));
@@ -86,10 +103,12 @@ const QuoteContainer = () => {
                         <QuotesDetail stopRender={stopRenderNum === 0 ? true : false} show={true} />
                         <FiveLatestOffer stopRender={stopRenderNum === 0 ? true : false} />
                     </div>
-                    <div>
-                        <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} show={true} />
-                        <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
-                    </div>
+                    {checkLot && (
+                        <div>
+                            <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} show={true} />
+                            <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
+                        </div>
+                    )}
                 </Carousel>
             </div>
             <style jsx>{`

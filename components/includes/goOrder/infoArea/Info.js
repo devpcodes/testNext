@@ -41,11 +41,12 @@ const moreItems = [
 ];
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
-const solaceDataHandler = (solaceData, lot) => {
+const solaceDataHandler = (solaceData, lot, checkLot) => {
     const code = useSelector(store => store.goOrder.code);
-    const isSimTrade = lot === 'Odd' ? !!solaceData[0]?.data?.OddlotSimtrade : !!solaceData[0]?.data?.Simtrade;
+    const isSimTrade =
+        lot === 'Odd' && checkLot ? !!solaceData[0]?.data?.OddlotSimtrade : !!solaceData[0]?.data?.Simtrade;
 
-    if (lot === 'Odd') {
+    if (lot === 'Odd' && checkLot) {
         const [
             {
                 data: {
@@ -106,8 +107,13 @@ export const Info = () => {
     const solaceData = useSelector(store => store.solace.solaceData);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isLogin = useSelector(store => store.user.isLogin);
+    const checkLot = useSelector(store => store.goOrder.checkLot);
 
-    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot);
+    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(
+        solaceData,
+        lot,
+        checkLot,
+    );
     const { socalLogin } = useCheckSocialLogin();
     const suggestAction = useRef('');
 
@@ -483,7 +489,7 @@ export const Info = () => {
                     width: 44px;
                     height: 22px;
                     border-radius: 2px;
-                    background-color: ${lot === 'Board' ? theme.colors.normalBg : '#f5e8d7'};
+                    background-color: ${lot === 'Odd' && checkLot ? '#f5e8d7' : theme.colors.normalBg};
                 }
                 .lot__box .box {
                     display: inline-block;
@@ -493,12 +499,12 @@ export const Info = () => {
                     border-radius: 2px;
                 }
                 .lot__box .box.board {
-                    background-color: ${lot === 'Board' ? '#0d1623' : 'inherit'};
-                    color: ${lot === 'Board' ? theme.colors.text : theme.colors.secondary};
+                    background-color: ${lot === 'Odd' && checkLot ? 'inherit' : '#0d1623'};
+                    color: ${lot === 'Odd' && checkLot ? theme.colors.secondary : theme.colors.text};
                 }
                 .lot__box .box.odd {
                     background-color: ${lot === 'Odd' ? theme.colors.secondary : 'inherit'};
-                    color: ${lot === 'Odd' ? theme.colors.text : '#a9b6cb'};
+                    color: ${lot === 'Odd' && checkLot ? theme.colors.text : '#a9b6cb'};
                 }
                 .market__box {
                     width: 42px;

@@ -25,6 +25,7 @@ const PriceControl = ({ title }) => {
     const priceType = useSelector(store => store.goOrder.price_type);
     const ordQty = useSelector(store => store.goOrder.ord_qty);
     const ordPrice = useSelector(store => store.goOrder.ord_price);
+    const checkLot = useSelector(store => store.goOrder.checkLot);
 
     const defaultOrdPrice = useSelector(store => store.goOrder.defaultOrdPrice);
     // const [ordPrice, setOrderPrice] = useState('');
@@ -86,7 +87,7 @@ const PriceControl = ({ title }) => {
 
     const setPriceHandler = () => {
         if (setPrice) return;
-        if (lot === 'Odd') {
+        if (lot === 'Odd' && checkLot) {
             if (code !== '' && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {
                     if (!isNaN(Number(ordPrice))) {
