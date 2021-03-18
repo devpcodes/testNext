@@ -30,6 +30,7 @@ import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import { AccountAvatar } from '../../AccountAvatar';
+import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
 
 const { Option } = Select;
 
@@ -213,6 +214,16 @@ const Header = () => {
         dispatch(setCurrentAccount(account));
     };
 
+    const loginClickHandler = () => {
+        const query = router.query;
+        const queryStr = objectToQueryHandler(query);
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
+    };
+
     if (!hasMounted) {
         return null;
     }
@@ -269,9 +280,8 @@ const Header = () => {
                 {!socalLogin && !isLogin && (
                     <>
                         <img className="logo" src={logo} />
-                        <button className="grid__button">
+                        <button className="grid__button" onClick={loginClickHandler}>
                             開戶 / 登入
-                            {/* <img src={grid} alt="grid"></img> */}
                         </button>
                     </>
                 )}
