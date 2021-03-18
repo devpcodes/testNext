@@ -32,6 +32,7 @@ const Chart = function () {
     useEffect(() => {
         if (solaceData && solaceData.length > 0) {
             let chart = am4core.registry.baseSprites.find(c => c.htmlContainer.id === 'chartdiv');
+
             if (chart) {
                 let chartWatermark = chart.plotContainer.children.getIndex(
                     chart.plotContainer.children.indexOf(watermark),
@@ -41,19 +42,19 @@ const Chart = function () {
                         ? (chartWatermark.text = '盤前試撮')
                         : (chartWatermark.text = '');
                 }
-            }
 
-            if (solaceData[0].topic.indexOf('MKT') !== -1) {
-                const time =
-                    lot === 'Board'
-                        ? `${solaceData[0].data.Date} ${solaceData[0].data.Time}`
-                        : `${solaceData[0].data.Date} ${solaceData[0].data.OddlotTime}`;
-                const close = lot === 'Board' ? solaceData[0].data.Close[0] : solaceData[0].data.OddlotClose;
-                let chartData = {
-                    ts: new Date(time),
-                    Close: close,
-                };
-                chart.addData(chartData);
+                if (solaceData[0].topic.indexOf('MKT') !== -1) {
+                    const time =
+                        lot === 'Board'
+                            ? `${solaceData[0].data.Date} ${solaceData[0].data.Time}`
+                            : `${solaceData[0].data.Date} ${solaceData[0].data.OddlotTime}`;
+                    const close = lot === 'Board' ? solaceData[0].data.Close[0] : solaceData[0].data.OddlotClose;
+                    let chartData = {
+                        ts: new Date(time),
+                        Close: close,
+                    };
+                    chart.addData(chartData);
+                }
             }
         }
     }, [solaceData]);
@@ -71,6 +72,7 @@ const Chart = function () {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
             if (kline.OHCL.length > 0) {
                 kline.OHCL.map(function (a, b) {
+                    a.ts = a.ts.replace(new RegExp(/-/gm), '/');
                     a.ts = new Date(a.ts);
                 });
                 chart.data = kline.OHCL;
@@ -124,6 +126,7 @@ const Chart = function () {
             priceAxis.tooltip.label.fontSize = 10;
             priceAxis.cursorTooltipEnabled = false;
             priceAxis.renderer.minGridDistance = 18;
+            priceAxis.adjustLabelPrecision = true;
 
             priceAxis.renderer.labels.template.adapter.add('text', (label, target, key) => {
                 if (label > kline.Reference) {
@@ -193,6 +196,13 @@ const Chart = function () {
             dRange.contents.stroke = am4core.color('#22a16f');
             dRange.contents.fill = am4core.color('#22a16f');
             dRange.contents.fillOpacity = 0.1;
+
+            let label = chart.createChild(am4core.Label);
+            label.text = kline.Reference;
+            label.fontSize = 12;
+            label.isMeasured = false;
+            label.x = '10';
+            label.y = '77';
         }
     };
 

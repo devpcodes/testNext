@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Drawer } from 'antd';
 // import dynamic from 'next/dynamic';
 import CaHead from '../components/includes/CaHead';
 import { PageHead } from '../components/includes/PageHead';
 import { Info } from '../components/includes/goOrder/infoArea/Info';
-import { Header } from '../components/includes/goOrder/header/Header';
+import Header from '../components/includes/goOrder/header/Header';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
 import QuoteContainer from '../components/includes/goOrder/quotes/QuoteContainer';
 import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
@@ -15,6 +15,7 @@ import arrow from '../resources/images/components/goOrder/arrow-chevron-down.png
 import { useWindowSize } from '../hooks/useWindowSize';
 import OrderConfirmBox from '../components/includes/goOrder/OrderConfirmBox';
 import MyTransition from '../components/includes/myTransition';
+import { checkLogin } from '../services/components/layouts/checkLogin';
 
 // const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
 
@@ -30,6 +31,9 @@ const OrderGO = () => {
     const confirmBox = useSelector(store => store.goOrder.confirmBox);
     const confirmBoxTitle = useSelector(store => store.goOrder.confirmBoxTitle);
     const confirmBoxColor = useSelector(store => store.goOrder.confirmBoxColor);
+    const currentAccount = useSelector(store => store.user.currentAccount);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
+    const checkLot = useSelector(store => store.goOrder.checkLot);
 
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const dispatch = useDispatch();
@@ -42,12 +46,19 @@ const OrderGO = () => {
     }, []);
 
     useEffect(() => {
+        if (code === '') {
+            setTopic([]);
+        }
         if (lot === 'Odd') {
-            setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+            if (!checkLot) {
+                return;
+            } else {
+                setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+            }
         } else {
             setTopic([`MKT/*/*/${code}`, `QUT/*/*/${code}`, `SNP/*/*/${code}`]);
         }
-    }, [lot, code]);
+    }, [lot, code, checkLot]);
 
     useEffect(() => {
         if (bs !== '') {
@@ -86,7 +97,8 @@ const OrderGO = () => {
             <div className="OrderGO__container" id="container">
                 <CaHead />
                 <PageHead title={'快速下單'} />
-                <SolaceClientComponent subscribeTopic={topic} only={true} />
+                {checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={currentAccount.idno} />}
+                {!checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
                 <Header />
                 <div className="open__container">
                     <Info />

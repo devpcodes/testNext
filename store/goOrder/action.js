@@ -142,3 +142,33 @@ export const setConfirmBoxClickSource = source => {
         payload: source,
     };
 };
+export const setSearchListSubmitSuccess = boo => {
+    return {
+        type: actionType.SET_SEARCHLIST_SUBMITSUCCESS,
+        payload: boo,
+    };
+};
+export const setDefaultOrdPrice = price => {
+    return {
+        type: actionType.SET_DEFAULT_ORD_PRICE,
+        payload: price,
+    };
+};
+export const setResetData = boo => {
+    return {
+        type: actionType.SET_RESET_DATA,
+        payload: boo,
+    };
+};
+export const setHaveCA = boo => {
+    return {
+        type: actionType.SET_CHECK_CA,
+        payload: boo,
+    };
+};
+export const setCheckLot = boo => {
+    return {
+        type: actionType.SET_CHECK_LOT,
+        payload: boo,
+    };
+};

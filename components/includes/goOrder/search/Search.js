@@ -5,7 +5,7 @@ import { isEmpty, isEqual, uniqWith } from 'lodash';
 
 import MyTransition from '../../myTransition';
 import { SearchItem } from './SearchItem';
-import { setCode, setLot, setProductInfo, setType } from '../../../../store/goOrder/action';
+import { setCode, setLot, setProductInfo, setType, setCheckLot } from '../../../../store/goOrder/action';
 import { fetchPopularStocks, fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 import theme from '../../../../resources/styles/theme';
@@ -82,6 +82,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             dispatch(setCode(item?.symbol));
             dispatch(setType(getTypeByMarketType(item?.marketType)));
             dispatch(setLot('Board'));
+            dispatch(setCheckLot(false));
             dispatch(setProductInfo(item));
             cancelHandler();
         }

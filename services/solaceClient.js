@@ -22,7 +22,7 @@ export const solaceClient = function (solaceName, userId) {
         applicationDescription: process.env.SOLACE_APPLICATION_DESCRIPTION,
     };
     // connectSetting.clientName = clientName;
-    console.log('clientName...', clientName, connectSetting);
+    // console.log('clientName...', clientName, connectSetting);
 
     const parseSdtMap = function (container_p) {
         var map = {};

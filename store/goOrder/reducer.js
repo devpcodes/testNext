@@ -3,11 +3,11 @@ import * as actionType from './actionType';
 const initialState = {
     type: 'S',
     lot: 'Board', // Odd
-    code: '2890',
+    code: '',
     productInfo: null,
     bs: '', //B S
     panelHeight: 360, // 80
-    ord_type: ' ', // ' ', C, P, 2
+    ord_type: '0', // '0', C, P, 2
     tradeTime: 'ing', // ing, after
     time_in_force: '0', // 0 3 4
     ord_cond: '0', // 0 3 4
@@ -22,6 +22,11 @@ const initialState = {
     confirmBoxColor: '',
     confirmBoxChanValInfo: {},
     confirmBoxClickSource: '',
+    searchListSubmitSuccess: false,
+    defaultOrdPrice: '',
+    resetData: false,
+    checkCA: false,
+    checkLot: true,
 };
 
 const reducer = (state = initialState, action) => {
@@ -132,6 +137,31 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 confirmBoxClickSource: action.payload,
+            };
+        case actionType.SET_SEARCHLIST_SUBMITSUCCESS:
+            return {
+                ...state,
+                searchListSubmitSuccess: action.payload,
+            };
+        case actionType.SET_DEFAULT_ORD_PRICE:
+            return {
+                ...state,
+                defaultOrdPrice: action.payload,
+            };
+        case actionType.SET_RESET_DATA:
+            return {
+                ...state,
+                resetData: action.payload,
+            };
+        case actionType.SET_CHECK_CA:
+            return {
+                ...state,
+                checkCA: action.payload,
+            };
+        case actionType.SET_CHECK_LOT:
+            return {
+                ...state,
+                checkLot: action.payload,
             };
         default:
             return state;

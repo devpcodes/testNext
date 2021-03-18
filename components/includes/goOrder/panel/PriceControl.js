@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { Select, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import selectIcon from '../../../../resources/images/components/goOrder/arrow-chevron-down_black.png';
@@ -6,14 +6,16 @@ import { themeColor } from './PanelTabs';
 import { checkServer } from '../../../../services/checkServer';
 import { formatPrice } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
-import { setPriceType, setOrdQty, setOrderPrice } from '../../../../store/goOrder/action';
+import { setPriceType, setOrdQty, setOrderPrice, setDefaultOrdPrice } from '../../../../store/goOrder/action';
 
 const { Option } = Select;
+
+var remeberLot = '';
+var remeberCode = '';
+var setPrice = false;
+
 const PriceControl = ({ title }) => {
     const dispatch = useDispatch();
-    const currentCode = useRef('');
-    const currentLot = useRef('');
-    const setPriceOK = useRef(false);
 
     const bs = useSelector(store => store.goOrder.bs);
     const code = useSelector(store => store.goOrder.code);
@@ -23,7 +25,9 @@ const PriceControl = ({ title }) => {
     const priceType = useSelector(store => store.goOrder.price_type);
     const ordQty = useSelector(store => store.goOrder.ord_qty);
     const ordPrice = useSelector(store => store.goOrder.ord_price);
+    const checkLot = useSelector(store => store.goOrder.checkLot);
 
+    const defaultOrdPrice = useSelector(store => store.goOrder.defaultOrdPrice);
     // const [ordPrice, setOrderPrice] = useState('');
     const [priceTypeOption, setPriceTypeOption] = useState([
         { txt: '限價', val: ' ' },
@@ -35,16 +39,28 @@ const PriceControl = ({ title }) => {
     useEffect(() => {
         // 整零切換先清空價格
         // console.log(code, lot, solaceData.topic, 'cc:', currentLot.current);
-        if (lot !== currentLot.current || code !== currentCode.current) {
-            setPriceOK.current = false;
+        if (defaultOrdPrice !== '') {
+            dispatch(setOrderPrice(defaultOrdPrice));
+            dispatch(setDefaultOrdPrice(''));
+            remeberLot = lot;
+            remeberCode = code;
+
+            setPrice = true;
+            return;
+        }
+
+        if (lot !== remeberLot || code !== remeberCode) {
+            setPrice = false;
+            dispatch(setDefaultOrdPrice(''));
             dispatch(setOrderPrice(''));
         }
-        currentLot.current = lot;
-        currentCode.current = code;
+
+        remeberLot = lot;
+        remeberCode = code;
 
         setPriceHandler();
         setPriceTypeOptionHandler();
-    }, [code, lot, solaceData]);
+    }, [code, lot, solaceData, defaultOrdPrice]);
 
     const setPriceTypeOptionHandler = () => {
         if (lot === 'Odd') {
@@ -70,29 +86,29 @@ const PriceControl = ({ title }) => {
     };
 
     const setPriceHandler = () => {
-        if (setPriceOK.current) return;
-        if (lot === 'Odd') {
-            if (code !== '' && !checkServer() && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
+        if (setPrice) return;
+        if (lot === 'Odd' && checkLot) {
+            if (code !== '' && solaceData.length > 0 && solaceData[0].data.OddlotOpen != null) {
                 if (solaceData[0].topic.indexOf(code) >= 0 && solaceData[0].topic.indexOf('ODDLT')) {
                     if (!isNaN(Number(ordPrice))) {
                         if (Number(solaceData[0].data.OddlotClose) == 0) {
                             dispatch(setOrderPrice(''));
                         } else {
                             dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
-                            setPriceOK.current = true;
+                            setPrice = true;
                         }
                     }
                 }
             }
         } else {
-            if (code !== '' && !checkServer() && solaceData.length > 0 && Array.isArray(solaceData[0].data.Close)) {
+            if (code !== '' && solaceData.length > 0 && Array.isArray(solaceData[0].data.Close)) {
                 if (solaceData[0].topic.indexOf(code) >= 0) {
                     if (!isNaN(Number(ordPrice))) {
                         if (Number(solaceData[0].data.Close[0]) == 0) {
                             dispatch(setOrderPrice(''));
                         } else {
                             dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
-                            setPriceOK.current = true;
+                            setPrice = true;
                         }
                     }
                 }
@@ -115,7 +131,7 @@ const PriceControl = ({ title }) => {
             dispatch(setOrdQty(e.target.value));
         } else {
             dispatch(setOrderPrice(e.target.value));
-            setPriceOK.current = true;
+            setPrice = true;
         }
     };
 
@@ -331,5 +347,8 @@ const PriceControl = ({ title }) => {
         </div>
     );
 };
-
-export default PriceControl;
+function arePropsEqual(prevProps, nextProps) {
+    console.log('==========render============');
+    return true;
+}
+export default memo(PriceControl, arePropsEqual);

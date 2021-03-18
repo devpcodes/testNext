@@ -1,12 +1,15 @@
 import { memo, useRef } from 'react';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { solaceClient } from '../../services/solaceClient';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { setSolaceData } from '../../store/solace/action';
 import { loadScriptByURL } from '../../services/loadScriptByURL';
+import { checkLogin } from '../../services/components/layouts/checkLogin';
 
-const SolaceClientComponent = ({ subscribeTopic }) => {
+var OddlotUnit = 0;
+var OddlotReference = 0;
+const SolaceClientComponent = ({ subscribeTopic, idno }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
     const topic = useRef([]);
@@ -14,6 +17,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     const currentSubscribe = useRef([]);
     const [solaceLoaded, setSolaceLoaded] = useState(false);
     const [SNPLoaded, setSNPLoaded] = useState(false);
+
     useEffect(() => {
         loadScriptByURL('solace', `${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`, solaceLoadedHandler);
         return () => {
@@ -34,16 +38,17 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
     }, [subscribeTopic, solaceLoaded]);
 
     useEffect(() => {
-        if (SNPLoaded) {
+        if (SNPLoaded && checkLogin()) {
             subscribeMKTQUT();
         }
     }, [SNPLoaded]);
 
     const solaceLoadedHandler = () => {
         if (solace.current == null) {
-            solace.current = solaceClient('', getCookie('user_id'));
+            solace.current = solaceClient('', idno);
             solace.current.connect();
             solace.current.setMessageEvent('ST', function (xhr) {
+                console.log('solace', xhr);
                 solaceEventHandler(xhr);
             });
             setSolaceLoaded(true);
@@ -55,7 +60,8 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
         //symbol 可能之後有少數抓不到symbol情況 得調整
         let symbol = xhr.topic.split('/')[3];
         let update = false;
-        if (solaceData.current.length === 0) {
+        //solaceData.current.length === 0
+        if (xhr.topic.indexOf('SNP') >= 0) {
             updateSNPData(xhr);
             solaceData.current.push(xhr);
             setSNPLoaded(true);
@@ -89,10 +95,21 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
 
     const updateSNPData = xhr => {
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') >= 0) {
+            //TODO 因為solace沒資料，先從零股拿
+            if (xhr.data.OddlotReference == 0) {
+                xhr.data.OddlotReference = OddlotReference;
+            }
+            if (xhr.data.OddlotUnit == 0) {
+                xhr.data.OddlotUnit = OddlotUnit;
+            }
             // xhr.data.OddlotClose = 0;
             return;
         }
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') === -1) {
+            // TODO SOLACE OddlotReference OddlotUnit 永遠0...
+            OddlotReference = xhr.data.Reference;
+            OddlotUnit = xhr.data.Unit;
+
             if (xhr.data.Open == 0) {
                 xhr.data.Open = '--';
             }
@@ -161,6 +178,7 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             }
             // console.log(DiffPrice, DiffRate, AvgPrice, DiffType);
             Object.assign(prevData, nextData);
+            console.log('prev', prevData);
             prevData.High[0] = High;
             prevData.Low[0] = Low;
             prevData.DiffPrice[0] = DiffPrice;
@@ -271,6 +289,11 @@ const SolaceClientComponent = ({ subscribeTopic }) => {
             subscribeTopic.forEach(topic => {
                 if (topic.indexOf('SNP') >= 0) {
                     setTimeout(() => {
+                        if (!checkLogin()) {
+                            if (topic.split('/')[3] === '') {
+                                return;
+                            }
+                        }
                         solace.current.createCacheSession(topic, function () {
                             console.log('createCacheSession success');
                         });

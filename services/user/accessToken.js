@@ -1,6 +1,12 @@
+import { checkServer } from '../checkServer';
+
 export const getToken = () => {
-    const token = window.localStorage.getItem('newweb_token');
-    return token || '';
+    if (!checkServer()) {
+        const token = window.localStorage.getItem('newweb_token');
+        return token || '';
+    } else {
+        return '';
+    }
 };
 
 export const setToken = token => {

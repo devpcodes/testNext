@@ -14,6 +14,7 @@ import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
 import logoDark from '../../../resources/images/logo/logo-dark.svg';
 import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
+import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
@@ -195,6 +196,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
+    const redirectHandler = () => {
+        if (router.query.redirectUrl != null) {
+            const query = router.query;
+            const redirectUrl = query.redirectUrl;
+            delete query.redirectUrl;
+            const queryStr = objectToQueryHandler(query);
+            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
+        }
+    };
+
     const checkFirstLogin = function (data) {
         if (data.result.isFirstLogin != null && data.result.isFirstLogin) {
             Modal.success({
@@ -249,6 +260,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //神策傳送成功後 做的事
     const afterSensors = function () {
+        redirectHandler();
         //iframe登入處理(來自舊理財網)
         if (isIframe) {
             iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
@@ -337,7 +349,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // };
     const getSignUpUrl = () => {
         if (platform === 'udn') {
-            return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+            return 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
         } else {
             return 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
         }
@@ -377,7 +389,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (platform === 'udn' && !isPC) {
             return (
                 <div className="ad_container">
-                    <a href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login">
+                    <a
+                        target="_blank"
+                        href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login"
+                    >
                         <img className="ad__img" src={udnAD} />
                     </a>
                 </div>

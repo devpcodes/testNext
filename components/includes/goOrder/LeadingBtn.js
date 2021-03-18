@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import { setBs } from '../../../store/goOrder/action';
 import { useDispatch } from 'react-redux';
+import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
+import { checkLogin } from '../../../services/components/layouts/checkLogin';
 
 const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const [shadow, setShadow] = useState('0px -7px 6px -3px #C7C7C7');
     const winSize = useWindowSize();
 
@@ -18,7 +22,17 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     }, [winSize, containerHeight]);
 
     const bsHandler = type => {
-        dispatch(setBs(type));
+        if (checkLogin()) {
+            dispatch(setBs(type));
+            return;
+        }
+        const query = router.query;
+        const queryStr = objectToQueryHandler(query);
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
     };
     return (
         <div className="container" style={{ display: show ? 'block' : 'none' }}>
@@ -36,7 +50,7 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
                     bottom: 0;
                     left: 0;
                     background-color: white;
-                    z-index: 10000;
+                    z-index: 999;
                     box-shadow: ${shadow};
                     -webkit-box-shadow: ${shadow};
                     -moz-box-shadow: ${shadow};
