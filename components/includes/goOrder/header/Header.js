@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Avatar } from 'antd';
 import { useRouter } from 'next/router';
 import { Select } from 'antd';
 
@@ -11,7 +12,6 @@ import {
     setBs,
     setCode,
     setType,
-    setOrderPrice,
     setDefaultOrdPrice,
     setOrdQty,
     setLot,
@@ -21,7 +21,7 @@ import { setCurrentAccount } from '../../../../store/user/action';
 
 import { accountGroupByType, getAccountText } from '../../../../services/user/accountGroupByType';
 
-import grid from '../../../../resources/images/components/goOrder/grid-grid-big.svg';
+// import grid from '../../../../resources/images/components/goOrder/grid-grid-big.svg';
 import arrow from '../../../../resources/images/components/goOrder/arrow-caret-down.svg';
 import theme from '../../../../resources/styles/theme';
 import logo from '../../../../resources/images/components/goOrder/logo.svg';
@@ -56,7 +56,7 @@ const Header = () => {
     const userSettings = useSelector(store => store.user.userSettings);
     const solaceData = useSelector(store => store.solace.solaceData);
     const productInfo = useSelector(store => store.goOrder.productInfo);
-    // const socalLogin = useSelector(store => store.user.socalLogin)
+    const socalLoginData = useSelector(store => store.user.socalLogin);
 
     const groupedAccount = accountGroupByType(accounts);
     const groupedTypes = Object.keys(groupedAccount);
@@ -175,6 +175,28 @@ const Header = () => {
         }
     }, [type]);
 
+    const socalLoginChildren = useMemo(() => {
+        if (socalLoginData._id != null) {
+            if (socalLoginData.img != null && socalLoginData.img) {
+                return (
+                    <div className="socal__box">
+                        <span className="socalName">{socalLoginData.name}</span>
+                        <Avatar src={socalLoginData.img} size={26} />
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="socal__box">
+                        <span className="socalName">{socalLoginData.name}</span>
+                        <Avatar size={26}>{socalLoginData.name.substr(0, 1)}</Avatar>
+                    </div>
+                );
+            }
+        } else {
+            return null;
+        }
+    }, [socalLoginData]);
+
     // const getUserSetting = async () => {
     //     const token = getToken();
     //     // const userSetting = await fetchUserSettings(token, '');
@@ -238,7 +260,12 @@ const Header = () => {
                         <div className="accountElement">{accountElement}</div>
                     </>
                 )}
-                {socalLogin && 12345}
+                {socalLogin && (
+                    <>
+                        <img className="logo" src={logo} />
+                        {socalLoginChildren}
+                    </>
+                )}
                 {!socalLogin && !isLogin && (
                     <>
                         <img className="logo" src={logo} />
@@ -305,6 +332,15 @@ const Header = () => {
                 }
                 .ant-avatar-string {
                     line-height: 26px !important;
+                }
+                .socalName {
+                    font-size: 1.6rem;
+                    color: white;
+                    margin-right: 8px;
+                }
+                .socal__box {
+                    position: absolute;
+                    right: 16px;
                 }
             `}</style>
         </div>

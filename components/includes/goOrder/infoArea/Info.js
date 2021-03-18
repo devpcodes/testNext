@@ -256,7 +256,7 @@ export const Info = () => {
 
     return (
         <div className="info__container">
-            {!isLogin && !socalLogin && (
+            {!isLogin && (
                 <div className="noLogin__box">
                     {hour !== '' && <img className="noLoginIcon" src={icon} />}
                     <span className="endTime">{getTimeWording(hour, min, sec)}</span>

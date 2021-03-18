@@ -38,3 +38,10 @@ export const setCurrentAccount = account => {
         payload: account,
     };
 };
+
+export const setSocalLoginData = socalData => {
+    return {
+        type: actionType.SET_SOCAL_LOGIN,
+        payload: socalData,
+    };
+};
