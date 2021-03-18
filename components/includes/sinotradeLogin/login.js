@@ -199,13 +199,21 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
-    const redirectHandler = () => {
+    const redirectHandler = (redirect = true) => {
         if (router.query.redirectUrl != null) {
             const query = router.query;
             const redirectUrl = query.redirectUrl;
             delete query.redirectUrl;
             const queryStr = objectToQueryHandler(query);
-            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
+            if (redirect) {
+                window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
+            } else {
+                return `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
+            }
+        } else {
+            if (!redirect) {
+                return `${process.env.NEXT_PUBLIC_SUBPATH}` + '/';
+            }
         }
     };
 
@@ -423,7 +431,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     {!isPC && !isIframe && !noCloseBtn ? (
                         <div
                             className="close__box"
-                            onClick={onClose}
                             onKeyDown={event => {
                                 if (event.key === 'Enter') {
                                     onClose();
@@ -437,6 +444,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 alt="關閉"
                                 className="close__icon"
                                 src={platform === 'udn' ? udnCloseIcon : closeMobile}
+                                onClick={() => {
+                                    redirectHandler();
+                                    onClose();
+                                }}
                             />
                             {platform === 'udn' && <div className="line"></div>}
                             {platform === 'udn' && (
@@ -456,6 +467,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                 lineHeight: '44px',
                                             }}
                                             icon={<img style={{ marginTop: '-3px' }} src={googleIcon} />}
+                                            onClick={() => {
+                                                let redirectUrl =
+                                                    location.protocol +
+                                                    '//' +
+                                                    location.hostname +
+                                                    redirectHandler(false);
+                                                window.location =
+                                                    'https://webrd.sinotrade.com.tw/social/oauth/google?redirect=' +
+                                                    redirectUrl;
+                                            }}
                                         >
                                             Google
                                         </Button>
@@ -475,6 +496,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                             icon={
                                                 <img style={{ marginRight: '2px', marginTop: '-3px' }} src={fbIcon} />
                                             }
+                                            onClick={() => {
+                                                let redirectUrl =
+                                                    location.protocol +
+                                                    '//' +
+                                                    location.hostname +
+                                                    redirectHandler(false);
+                                                window.location =
+                                                    'https://webrd.sinotrade.com.tw/social/oauth/facebook?redirect=' +
+                                                    redirectUrl;
+                                            }}
                                         >
                                             Facebook
                                         </Button>
@@ -676,9 +707,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             ) : null}
             {adHandler()}
             <style jsx>{`
-                .login__box2 {
-                    height: ${platform === 'udn' ? '740px' : 'auto'};
-                }
                 .login__container {
                     position: relative;
                     display: ${popup ? 'block' : isPC ? 'inline-block' : 'block'};
@@ -688,6 +716,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     display: flex;
                     justify-content: space-between;
                     margin-bottom: 10px;
+                    margin-top: 5px;
                 }
                 .segment__line {
                     height: 1px;
@@ -834,6 +863,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
             `}</style>
             <style global jsx>{`
+                .login__box2 {
+                    height: ${platform === 'udn' ? '740px' : 'auto'};
+                }
                 .login__box {
                     /* isPC ? '548px' : '100vh' */
                     position: ${popup ? 'fixed' : 'static'};
