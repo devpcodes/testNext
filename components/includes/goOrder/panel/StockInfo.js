@@ -104,6 +104,11 @@ const StockInfo = () => {
                     margin-right: 5px;
                     font-weight: bold;
                 }
+                @media (max-width: 350px) {
+                    .info__item {
+                        font-size: 1.1rem;
+                    }
+                }
                 .info__container .ant-switch-small {
                     width: 46px;
                     margin-left: 14px;
