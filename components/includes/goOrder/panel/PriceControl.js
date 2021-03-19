@@ -71,11 +71,11 @@ const PriceControl = ({ title }) => {
         setPriceTypeOptionHandler();
     }, [code, lot, solaceData, defaultOrdPrice]);
 
-    const getUnit = useMemo(() => {
+    const getUnit = () => {
         if (solaceData.length > 0 && solaceData[0].data.Unit != null) {
             return solaceData[0].data.Unit;
         }
-    }, [solaceData, code, lot]);
+    };
 
     const bodyClickHandler = () => {
         setShowTooltip(false);
@@ -246,7 +246,7 @@ const PriceControl = ({ title }) => {
                                 color="white"
                                 arrowPointAtCenter={true}
                                 placement="topLeft"
-                                title={'1單位=' + getUnit + '股'}
+                                title={'1單位=' + getUnit() + '股'}
                                 visible={showTooltip}
                             >
                                 <img
