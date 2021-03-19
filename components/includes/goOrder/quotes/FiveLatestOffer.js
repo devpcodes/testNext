@@ -394,7 +394,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                     height: 24px;
                     margin: 0 0 3px;
                     padding: 0 0 3px;
-                    background-color: #e6ebf5;
+                    background-color: ${lot === 'Odd' ? '#f5e8d7' : '#e6ebf5'};
                     font-size: 0;
                 }
                 .buySell__left {

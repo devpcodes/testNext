@@ -121,7 +121,7 @@ const OrderGO = () => {
                         <img
                             style={{
                                 marginTop: '-4px',
-                                transform: panelHeight == 360 ? 'rotate(0)' : 'rotate(180deg)',
+                                transform: panelHeight == 360 ? 'rotate(180deg)' : 'rotate(0)',
                                 marginRight: '-3px',
                             }}
                             src={arrow}
