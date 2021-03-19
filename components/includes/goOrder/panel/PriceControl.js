@@ -246,7 +246,7 @@ const PriceControl = ({ title }) => {
                                 color="white"
                                 arrowPointAtCenter={true}
                                 placement="topLeft"
-                                title={`1單位=${getUnit}股`}
+                                title={'1單位=' + getUnit + '股'}
                                 visible={showTooltip}
                             >
                                 <img

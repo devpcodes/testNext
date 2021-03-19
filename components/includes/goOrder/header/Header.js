@@ -239,16 +239,18 @@ const Header = () => {
                     <>
                         <div className="dropdown__container">
                             <Select
-                                defaultValue={type}
+                                // defaultValue={type}
+                                defaultValue={'S'}
                                 style={{ width: 111 }}
-                                onChange={handleTypeChange}
+                                // onChange={handleTypeChange}
                                 getPopupContainer={trigger => trigger.parentElement}
                                 bordered={false}
                                 suffixIcon={<DropDownArrow />}
                             >
-                                {groupedTypes.map(accType => (
+                                {/* {groupedTypes.map(accType => (
                                     <Option key={accType}>{getAccountText(accType)}</Option>
-                                ))}
+                                ))} */}
+                                <Option value={'S'}>國內證券</Option>
                             </Select>
                         </div>
                         <div className="dropdown__container">
