@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, memo } from 'react';
-import { Select, Input, Button } from 'antd';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { Select, Input, Button, Tooltip } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import selectIcon from '../../../../resources/images/components/goOrder/arrow-chevron-down_black.png';
 import { themeColor } from './PanelTabs';
@@ -7,6 +7,7 @@ import { checkServer } from '../../../../services/checkServer';
 import { formatPrice } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
 import { setPriceType, setOrdQty, setOrderPrice, setDefaultOrdPrice } from '../../../../store/goOrder/action';
+import infoIcon from '../../../../resources/images/components/goOrder/attention-info-circle.svg';
 
 const { Option } = Select;
 
@@ -28,7 +29,9 @@ const PriceControl = ({ title }) => {
     const checkLot = useSelector(store => store.goOrder.checkLot);
 
     const defaultOrdPrice = useSelector(store => store.goOrder.defaultOrdPrice);
+
     // const [ordPrice, setOrderPrice] = useState('');
+    const [showTooltip, setShowTooltip] = useState(false);
     const [priceTypeOption, setPriceTypeOption] = useState([
         { txt: '限價', val: ' ' },
         { txt: '市價', val: '4' },
@@ -36,6 +39,12 @@ const PriceControl = ({ title }) => {
         { txt: '跌停', val: '3' },
         { txt: '平盤', val: '1' },
     ]);
+    useEffect(() => {
+        document.body.addEventListener('click', bodyClickHandler);
+        return () => {
+            document.body.removeEventListener('click', bodyClickHandler);
+        };
+    }, []);
     useEffect(() => {
         // 整零切換先清空價格
         // console.log(code, lot, solaceData.topic, 'cc:', currentLot.current);
@@ -61,6 +70,16 @@ const PriceControl = ({ title }) => {
         setPriceHandler();
         setPriceTypeOptionHandler();
     }, [code, lot, solaceData, defaultOrdPrice]);
+
+    const getUnit = useMemo(() => {
+        if (solaceData.length > 0 && solaceData[0].data.Unit != null) {
+            return solaceData[0].data.Unit;
+        }
+    }, [solaceData, code, lot]);
+
+    const bodyClickHandler = () => {
+        setShowTooltip(false);
+    };
 
     const setPriceTypeOptionHandler = () => {
         if (lot === 'Odd') {
@@ -199,6 +218,13 @@ const PriceControl = ({ title }) => {
         }
     };
 
+    const tooltipClickHandler = e => {
+        e.stopPropagation();
+        if (!showTooltip) {
+            setShowTooltip(true);
+        }
+    };
+
     return (
         <div className="price_control">
             <div className="select__box">
@@ -213,7 +239,29 @@ const PriceControl = ({ title }) => {
                         })}
                     </Select>
                 ) : (
-                    <div className="select__label">{title === '限價' ? '價格' : title}</div>
+                    <div className="select__label">
+                        {title === '限價' ? '價格' : title}
+                        {title !== '限價' && lot !== 'Odd' ? (
+                            <Tooltip
+                                color="white"
+                                arrowPointAtCenter={true}
+                                placement="topLeft"
+                                title={`1單位=${getUnit}股`}
+                                visible={showTooltip}
+                            >
+                                <img
+                                    style={{
+                                        marginLeft: '5px',
+                                        marginTop: '-2px',
+                                    }}
+                                    src={infoIcon}
+                                    onClick={tooltipClickHandler}
+                                />
+                            </Tooltip>
+                        ) : (
+                            ''
+                        )}
+                    </div>
                 )}
             </div>
             <div className="input__box">
@@ -241,6 +289,20 @@ const PriceControl = ({ title }) => {
             </div>
             <style jsx>{``}</style>
             <style global jsx>{`
+                .ant-tooltip-inner {
+                    color: black;
+                    font-size: 1.6rem;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
+                    height: 56px;
+                    font-weight: bold;
+                }
+                .tooltip__val {
+                    font-weight: bold;
+                    margin-left: 5px;
+                    color: black;
+                }
                 .select__label {
                     width: 62px;
                     font-size: 1.6rem;
@@ -347,8 +409,8 @@ const PriceControl = ({ title }) => {
         </div>
     );
 };
-function arePropsEqual(prevProps, nextProps) {
-    console.log('==========render============');
-    return true;
-}
-export default memo(PriceControl, arePropsEqual);
+// function arePropsEqual(prevProps, nextProps) {
+//     console.log('==========render============');
+//     return true;
+// }
+export default PriceControl;

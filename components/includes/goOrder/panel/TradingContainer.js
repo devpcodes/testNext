@@ -7,8 +7,11 @@ import SubmitBtn from './SubmitBtn';
 
 const TradingContainer = () => {
     const lot = useSelector(store => store.goOrder.lot);
+    const code = useSelector(store => store.goOrder.code);
     const priceChildren = useMemo(() => <PriceControl key="2" title="限價" />, []);
-    const qtyChildren = useMemo(() => <PriceControl key="1" title={lot === 'Odd' ? '股數' : '張數'} />, []);
+    const qtyChildren = useMemo(() => {
+        return <PriceControl key="1" title={lot === 'Odd' ? '股數' : '張數'} />;
+    }, [lot, code]);
     return (
         <div className="trading__container">
             <TradingSelect />
