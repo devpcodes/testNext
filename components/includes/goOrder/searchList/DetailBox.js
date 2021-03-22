@@ -119,7 +119,9 @@ const DetailBox = () => {
                             fontWeight: 'bold',
                             border: 'none',
                         }}
-                        // onClick={}
+                        onClick={() => {
+                            window.open(process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount');
+                        }}
                         // loading={}
                     >
                         查看庫存
