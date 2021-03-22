@@ -172,3 +172,9 @@ export const setCheckLot = boo => {
         payload: boo,
     };
 };
+export const setWebsocketEvent = boo => {
+    return {
+        type: actionType.SET_WEBSOCKET_EVENT,
+        payload: boo,
+    };
+};

@@ -27,6 +27,7 @@ const initialState = {
     resetData: false,
     checkCA: false,
     checkLot: true,
+    websocketEvent: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -162,6 +163,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 checkLot: action.payload,
+            };
+        case actionType.SET_WEBSOCKET_EVENT:
+            return {
+                ...state,
+                websocketEvent: action.payload,
             };
         default:
             return state;

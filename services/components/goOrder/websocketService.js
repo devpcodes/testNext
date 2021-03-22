@@ -86,15 +86,15 @@ export const webSocketLogin = function (accounts) {
             var exp = new Date(); //new Date("December 31, 9998");
             exp.setTime(exp.getTime() + 24 * 60 * 60 * 1000);
             console.log('service event============', response);
-            if (response && response.data) {
-                var event = new CustomEvent('webSocketEvent', {
-                    detail: response.data,
-                });
-                window.dispatchEvent(event);
-                // if (typeof response.data == "object") ReportMsg["info"](response.data);
-                // else ReportMsg["info"]($.parseJSON(response.data));
-                // if ($(".reportRefresh").length >= 1) { $(".reportRefresh").trigger("click") }
-            }
+            // if (response && response.data) {
+            //     var event = new CustomEvent('webSocketEvent', {
+            //         detail: response.data,
+            //     });
+            //     window.dispatchEvent(event);
+            //     // if (typeof response.data == "object") ReportMsg["info"](response.data);
+            //     // else ReportMsg["info"]($.parseJSON(response.data));
+            //     // if ($(".reportRefresh").length >= 1) { $(".reportRefresh").trigger("click") }
+            // }
         },
         webSocket: '',
     };

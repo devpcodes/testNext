@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Table, Space, Skeleton, Button, Tooltip, Modal } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
@@ -23,6 +23,7 @@ import {
     setLot,
     setConfirmBoxClickSource,
     setSearchListSubmitSuccess,
+    setWebsocketEvent,
 } from '../../../../store/goOrder/action';
 import { postCancel } from '../../../../services/components/goOrder/postCancel';
 import { checkSignCA, sign } from '../../../../services/webCa';
@@ -30,18 +31,25 @@ import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { usePlatform } from '../../../../hooks/usePlatform';
 
+const waitSeconds = 5;
 const SearchList = ({ active }) => {
     const dispatch = useDispatch();
     const userInfo = useSelector(store => store.user.currentAccount);
-    const clickSource = useSelector(store => store.goOrder.confirmBoxClickSource);
-    const confirmOpen = useSelector(store => store.goOrder.confirmBoxOpen);
+    const websocketEvent = useSelector(store => store.goOrder.websocketEvent);
+    // const clickSource = useSelector(store => store.goOrder.confirmBoxClickSource);
+    const confirmBox = useSelector(store => store.goOrder.confirmBox);
     const submitSuccess = useSelector(store => store.goOrder.searchListSubmitSuccess);
     // const [loading, setLoading] = useState(false);
+
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [sortKey, setSortKey] = useState('ord_time');
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
+    const [reFetch, setReFetch] = useState(false);
+
+    const timer = useRef(null);
+    const currentSeconds = useRef(0);
     // const [submitSuccess, setSubmitSuccess] = useState(false);
     const platform = usePlatform();
 
@@ -71,6 +79,14 @@ const SearchList = ({ active }) => {
         dispatch(setConfirmBoxTitle('委託明細'));
         dispatch(setConfirmBoxColor('#254a91'));
     };
+
+    useEffect(() => {
+        return () => {
+            if (timer.current) {
+                window.clearInterval(timer.current);
+            }
+        };
+    }, []);
 
     const cancelSubmitHandler = async record => {
         console.log('record', record);
@@ -349,7 +365,9 @@ const SearchList = ({ active }) => {
     }, [sortKey, sortOrder, data]);
 
     useEffect(() => {
-        getOrderStatus();
+        if (active) {
+            getOrderStatus();
+        }
     }, [userInfo, active]);
 
     useEffect(() => {
@@ -357,6 +375,29 @@ const SearchList = ({ active }) => {
             getOrderStatus();
         }
     }, [submitSuccess]);
+
+    useEffect(() => {
+        if (websocketEvent && !confirmBox) {
+            if (currentSeconds.current === 0) {
+                timer.current = window.setInterval(() => {
+                    currentSeconds.current += 1;
+                    timerHandler();
+                }, 1000);
+
+                dispatch(setWebsocketEvent(false));
+                getOrderStatus();
+                setReFetch(false);
+            }
+        }
+    }, [websocketEvent, reFetch, confirmBox]);
+
+    const timerHandler = () => {
+        if (currentSeconds.current >= waitSeconds) {
+            window.clearInterval(timer.current);
+            currentSeconds.current = 0;
+            setReFetch(true);
+        }
+    };
 
     const maskClickHandler = () => {
         if (data.length > 0) {
