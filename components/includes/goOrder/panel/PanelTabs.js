@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import TradingContainer from './TradingContainer';
 import { setBs } from '../../../../store/goOrder/action';
 import SearchList from '../searchList/SearchList';
+import { webSocketLogin } from '../../../../services/components/goOrder/websocketService';
+import { getCookie } from '../../../../services/components/layouts/cookieController';
 
 const { TabPane } = Tabs;
 
@@ -23,6 +25,13 @@ const PanelTabs = () => {
     const [gradient, setGradient] = useState(themeColor.buyGradient);
     const [tabKey, setTabKey] = useState('1');
     const dispatch = useDispatch();
+    useEffect(() => {
+        //TODO accounts 之後會廢掉
+        const myWebsocket = webSocketLogin(getCookie('accounts'));
+        window.addEventListener('webSocketEvent', function (e) {
+            console.log('websocket=============', e.detail);
+        });
+    }, []);
     useEffect(() => {
         if (bs === 'B') {
             setTabKey('1');

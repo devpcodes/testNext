@@ -295,7 +295,7 @@ const PriceControl = ({ title }) => {
                     box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
                     padding: 16px;
                     line-height: 25px;
-                    height: 56px;
+                    /* height: 56px; */
                     font-weight: bold;
                 }
                 .tooltip__val {

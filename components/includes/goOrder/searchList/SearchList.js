@@ -658,7 +658,7 @@ const SearchList = ({ active }) => {
                 }
             `}</style>
             <style jsx global>{`
-                .ant-tooltip-inner {
+                .searchList__container .ant-tooltip-inner {
                     color: white;
                     box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
                     padding: 16px;
@@ -666,7 +666,7 @@ const SearchList = ({ active }) => {
                     margin-right: -4px;
                     z-index: 3;
                 }
-                .ant-btn-primary {
+                .searchList__container .ant-btn-primary {
                     background: #c43826;
                     border-color: #c43826;
                     height: 32px;

@@ -9,6 +9,7 @@ import { useWindowSize } from '../../../../hooks/useWindowSize';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 
 const Chart = dynamic(() => import('../chart/chart'), { ssr: false });
+let currentCode = '';
 const QuoteContainer = () => {
     const [stopRenderNum, setStopRenderNum] = useState(1);
     const [quotesDetailShow, setQuotesDetailShow] = useState(true);
@@ -17,6 +18,7 @@ const QuoteContainer = () => {
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
+    const code = useSelector(store => store.goOrder.code);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const checkCA = useSelector(store => store.goOrder.checkCA);
     const productInfo = useSelector(store => store.goOrder.productInfo);
@@ -40,7 +42,7 @@ const QuoteContainer = () => {
                 slider.current.goTo(0);
             }
         }
-    }, [lot, checkLot]);
+    }, [lot, checkLot, solaceData]);
 
     useEffect(() => {
         if (bs === 'B' || bs === 'S') {
@@ -88,9 +90,11 @@ const QuoteContainer = () => {
                 <Carousel
                     afterChange={current => {
                         if (current) {
+                            console.log('current', current);
                             setStopRenderNum(0);
                             dispatch(setLot('Odd'));
                         } else {
+                            console.log('current', current);
                             setStopRenderNum(1);
                             dispatch(setLot('Board'));
                         }
