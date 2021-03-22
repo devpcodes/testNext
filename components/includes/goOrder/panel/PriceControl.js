@@ -71,6 +71,10 @@ const PriceControl = ({ title }) => {
         setPriceTypeOptionHandler();
     }, [code, lot, solaceData, defaultOrdPrice]);
 
+    useEffect(() => {
+        dispatch(setOrdQty('1'));
+    }, [lot, code]);
+
     const getUnit = () => {
         if (solaceData.length > 0 && solaceData[0].data.Unit != null) {
             return solaceData[0].data.Unit;
