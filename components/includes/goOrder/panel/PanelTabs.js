@@ -34,10 +34,10 @@ const PanelTabs = () => {
             myWebsocket.onmessage = sockeHandler;
         }
         //TODO test
-        window.setInterval(() => {
-            console.log('tabKey', currentTabKey);
-            dispatch(setWebsocketEvent(true));
-        }, 5000);
+        // window.setInterval(() => {
+        //     console.log('tabKey', currentTabKey);
+        //     dispatch(setWebsocketEvent(true));
+        // }, 5000);
         // setTimeout(() => {
         //     dispatch(setWebsocketEvent(true));
         // }, 5000);

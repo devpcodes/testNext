@@ -367,6 +367,10 @@ const SearchList = ({ active }) => {
     useEffect(() => {
         if (active) {
             getOrderStatus();
+        } else {
+            if (timer.current) {
+                window.clearInterval(timer.current);
+            }
         }
     }, [userInfo, active]);
 
@@ -377,7 +381,7 @@ const SearchList = ({ active }) => {
     }, [submitSuccess]);
 
     useEffect(() => {
-        if (websocketEvent && !confirmBox) {
+        if (websocketEvent && !confirmBox && active) {
             if (currentSeconds.current === 0) {
                 timer.current = window.setInterval(() => {
                     currentSeconds.current += 1;
@@ -389,7 +393,7 @@ const SearchList = ({ active }) => {
                 setReFetch(false);
             }
         }
-    }, [websocketEvent, reFetch, confirmBox]);
+    }, [websocketEvent, reFetch, confirmBox, active]);
 
     const timerHandler = () => {
         if (currentSeconds.current >= waitSeconds) {
