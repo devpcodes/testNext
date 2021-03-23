@@ -310,7 +310,6 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
             ));
         }
     };
-    console.log('lot............', lot);
     return (
         <>
             <div className="five__container">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
 import { useDispatch } from 'react-redux';
@@ -69,7 +69,7 @@ const PanelTabs = () => {
             console.log('websocket data error:', err);
         }
     };
-    const tabChangeHandler = activeKey => {
+    const tabChangeHandler = useCallback(activeKey => {
         currentTabKey = activeKey;
         switch (activeKey) {
             case '1':
@@ -95,12 +95,56 @@ const PanelTabs = () => {
                 setGradient(themeColor.buyGradient);
                 break;
         }
-    };
+    }, []);
+    // const tabChangeHandler = activeKey => {
+    //     currentTabKey = activeKey;
+    //     switch (activeKey) {
+    //         case '1':
+    //             dispatch(setBs('B'));
+    //             setTabColor(themeColor.buyTabColor);
+    //             setGradient(themeColor.buyGradient);
+    //             setTabKey(activeKey);
+    //             break;
+    //         case '2':
+    //             dispatch(setBs('S'));
+    //             setTabColor(themeColor.sellTabColor);
+    //             setGradient(themeColor.sellGradient);
+    //             setTabKey(activeKey);
+    //             break;
+    //         case '3':
+    //             setTabColor(themeColor.tradingAccColor);
+    //             setGradient(themeColor.tradingGradient);
+    //             setTabKey(activeKey);
+    //             dispatch(setWebsocketEvent(false));
+    //             break;
+    //         default:
+    //             setTabColor(themeColor.buyTabColor);
+    //             setGradient(themeColor.buyGradient);
+    //             break;
+    //     }
+    // };
+
+    const tabChildren = useMemo(() => {
+        return (
+            <Tabs activeKey={tabKey} onChange={tabChangeHandler}>
+                <TabPane tab="買進" key="1">
+                    <TradingContainer />
+                </TabPane>
+                <TabPane tab="賣出" key="2">
+                    <TradingContainer />
+                </TabPane>
+                <TabPane tab="成委回" key="3">
+                    {tabKey === '3' && <SearchList active={tabKey === '3' ? true : false} />}
+                </TabPane>
+            </Tabs>
+        );
+    }, [tabKey]);
 
     return (
         <div className="tabs__container">
             {websocketEvent && currentTabKey !== '3' && <span className="socket__icon"></span>}
-            <Tabs activeKey={tabKey} onChange={tabChangeHandler}>
+            {tabChildren}
+            {/* <Tabs activeKey={tabKey} onChange={tabChangeHandler}>
                 <TabPane tab="買進" key="1">
                     <TradingContainer />
                 </TabPane>
@@ -110,7 +154,7 @@ const PanelTabs = () => {
                 <TabPane tab="成委回" key="3">
                     <SearchList active={tabKey === '3' ? true : false} />
                 </TabPane>
-            </Tabs>
+            </Tabs> */}
             <style jsx>{`
                 .socket__icon {
                     border-radius: 50%;
