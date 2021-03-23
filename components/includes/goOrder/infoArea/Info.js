@@ -110,6 +110,7 @@ export const Info = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isLogin = useSelector(store => store.user.isLogin);
     const checkLot = useSelector(store => store.goOrder.checkLot);
+    const selectInfo = useSelector(store => store.goOrder.selectInfo);
 
     const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(
         solaceData,
@@ -400,7 +401,7 @@ export const Info = () => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <button className="btn add__self__select" onClick={showSelfSelect}>
+                    <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
                         加入自選
                     </button>
                 </div>
@@ -585,6 +586,12 @@ export const Info = () => {
                     background-color: #c43826;
                     color: #fff;
                     font-size: 1.6rem;
+                }
+                .more__info__container .add__self__select:disabled {
+                    color: rgba(0, 0, 0, 0.25);
+                    background: #f5f5f5;
+                    border: 1px solid #d9d9d9;
+                    cursor: no-drop;
                 }
             `}</style>
             {/* <style jsx global>{`

@@ -75,11 +75,10 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                     </Button>,
                 ]}
             >
-                <section className="add">
-                    <ul className="self__select__list">
-                        {console.log(selectInfo)}
-                        {!!selectInfo &&
-                            selectInfo.data.map((d, i) => (
+                {!!selectInfo && (
+                    <section className="add">
+                        <ul className="self__select__list">
+                            {selectInfo.data.map((d, i) => (
                                 <li className="self__select__items" key={i}>
                                     <Checkbox key={d.id} defaultChecked={d.isExist}>
                                         {' '}
@@ -87,12 +86,15 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                                     </Checkbox>
                                 </li>
                             ))}
-                    </ul>
-                </section>
+                        </ul>
+                    </section>
+                )}
 
-                <section className="edit">
-                    <SortableList handleComplete={handleComplete} />
-                </section>
+                {!!selectInfo && (
+                    <section className="edit">
+                        <SortableList handleComplete={handleComplete} />
+                    </section>
+                )}
             </Modal>
             <style jsx>{`
                 .self__select__list {
