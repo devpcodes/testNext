@@ -1,12 +1,14 @@
-import { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useCallback, memo } from 'react';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
 import { setOrderPrice } from '../../../../store/goOrder/action';
-const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
-    const solaceData = useSelector(store => store.solace.solaceData);
-    const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
-    const checkLot = useSelector(store => store.goOrder.checkLot);
+
+const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRender: false }) => {
+    // const solaceData = useSelector(store => store.solace.solaceData);
+    // const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
+    // const checkLot = useSelector(store => store.goOrder.checkLot);
+
     const dispatch = useDispatch();
     const getVolumeSum = keyName => {
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
@@ -308,6 +310,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
             ));
         }
     };
+    console.log('lot............', lot);
     return (
         <>
             <div className="five__container">
@@ -494,11 +497,30 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         </>
     );
 };
-// @media (max-width: 350px) {
-//     .five__container .box {
-//         width: calc(100% - 96px);
-//         margin-top: 6px;
-//     }
-// }
 
-export default FiveLatestOffer;
+const mapStateToProps = state => {
+    return {
+        solaceData: state.solace.solaceData,
+        lot: state.goOrder.lot,
+        checkLot: state.goOrder.checkLot,
+    };
+};
+function arePropsEqual(prevProps, nextProps) {
+    if (prevProps.checkLot !== nextProps.checkLot) {
+        return false;
+    }
+    if (prevProps.lot !== nextProps.lot) {
+        return false;
+    }
+    if (nextProps.solaceData.length && nextProps.solaceData.length > 0) {
+        if (
+            nextProps.solaceData[0].topic.indexOf('QUT') !== -1 ||
+            nextProps.solaceData[0].topic.indexOf('SNP') !== -1
+        ) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export default connect(mapStateToProps, null)(memo(FiveLatestOffer, arePropsEqual));
