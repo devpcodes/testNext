@@ -37,7 +37,7 @@ const sortableList = memo(handleComplete => {
             <span className="edit__icon" onClick={() => editGroupName(value)}>
                 <img src={pen} alt="pen"></img>
             </span>
-            <span className="self__select__name">{value.name}</span>
+            <span className="self__select__name">{value.selectName}</span>
             <DragHandle />
         </li>
     ));
@@ -54,7 +54,7 @@ const sortableList = memo(handleComplete => {
         <>
             <SortableContainer onSortEnd={onSortEnd} useDragHandle>
                 {listContent.map((value, index) => (
-                    <SortableItem key={`item-${value.id}`} index={index} value={value} />
+                    <SortableItem key={`item-${value.selectId}`} index={index} value={value} />
                 ))}
             </SortableContainer>
 

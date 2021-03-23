@@ -246,6 +246,7 @@ export const Info = () => {
             symbol: code,
             exchange: exchange,
             market: type,
+            isShowDetail: true,
             token: getToken(),
         };
         const res = await fetchCheckSelfSelect(reqData);

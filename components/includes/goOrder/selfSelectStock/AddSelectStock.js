@@ -80,9 +80,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                         <ul className="self__select__list">
                             {selectInfo.data.map((d, i) => (
                                 <li className="self__select__items" key={i}>
-                                    <Checkbox key={d.id} defaultChecked={d.isExist}>
+                                    <Checkbox key={d.selectId} defaultChecked={d.isExist}>
                                         {' '}
-                                        {d.name}{' '}
+                                        {d.selectName}{' '}
                                     </Checkbox>
                                 </li>
                             ))}
