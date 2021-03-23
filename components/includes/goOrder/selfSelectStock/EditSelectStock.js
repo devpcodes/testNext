@@ -1,18 +1,29 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo, useEffect, useRef } from 'react';
 import { Modal, Button, Input } from 'antd';
+import { fetchUpdateSelect } from '../../../../services/selfSelect/updateSelectMenu';
+import { getToken } from '../../../../services/user/accessToken';
+import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 
-const EditSelectStock = memo(({ isVisible, handler }) => {
+const EditSelectStock = memo(({ isVisible, editData, handler, handleComplete }) => {
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
-    const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
+    const [isModalVisible, setIsModalVisible] = useState(isVisible);
+    const [groupName, setGroupName] = useState('');
+    const token = getToken();
+    const textInput = useRef(null);
     const handleClose = () => {
         handler(false);
     };
 
-    const handleConfirm = () => {
-        alert('handleConfirm');
+    const handleConfirm = async () => {
+        const res = await fetchUpdateSelect(editData.id, textInput.current.state.value, token);
+        if (res.success && res.message === 'OK') {
+            handleComplete.handleComplete();
+            // handleComplete()
+            handler(false);
+        }
     };
 
     return (
@@ -44,7 +55,7 @@ const EditSelectStock = memo(({ isVisible, handler }) => {
                     </Button>,
                 ]}
             >
-                <Input placeholder="編輯自選名稱" />
+                <Input placeholder="編輯自選名稱" ref={textInput} />
             </Modal>
             <style jsx>{``}</style>
             <style jsx global>{`

@@ -16,7 +16,7 @@ import {
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
-import { setCode, setLot, setProductInfo, setHaveCA } from '../../../../store/goOrder/action';
+import { setCode, setLot, setProductInfo, setHaveCA, setSelectInfo } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -28,6 +28,7 @@ import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
+import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import { checkCert, caResultDataHandler } from '../../../../services/webCa';
 import { getToken } from '../../../../services/user/accessToken';
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
@@ -103,6 +104,7 @@ export const Info = () => {
 
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
+    const type = useSelector(store => store.goOrder.type);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const solaceData = useSelector(store => store.solace.solaceData);
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -153,12 +155,24 @@ export const Info = () => {
         }
     }, [reCheckCA, currentAccount]);
 
-    useEffect(() => {
+    useEffect(async () => {
         if (code === '') {
             return;
         }
         getTimeOver();
     }, [code, lot]);
+
+    useEffect(async () => {
+        if (!isLogin) {
+            return;
+        }
+        getSelect();
+    }, [code, isLogin]);
+
+    // useEffect(() => {
+    //     // 更新+自選
+    //     console.log(selectDate)
+    // }, [selectDate])
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -216,6 +230,25 @@ export const Info = () => {
         } else {
             setTradingDate(false);
         }
+    };
+
+    const getSelect = async () => {
+        let exchange;
+        switch (type) {
+            case 'S':
+                exchange = 'TAI';
+                break;
+            default:
+                break;
+        }
+        const reqData = {
+            symbol: code,
+            exchange: exchange,
+            market: type,
+            token: getToken(),
+        };
+        const res = await fetchCheckSelfSelect(reqData);
+        dispatch(setSelectInfo(res));
     };
 
     const getTimeWording = (hour, min, sec) => {
@@ -373,7 +406,12 @@ export const Info = () => {
                 </div>
             </div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <AddSelectStock isVisible={isSelfSelectVisitable} handleClose={closeSelfSelect} isEdit={false} />
+            <AddSelectStock
+                isVisible={isSelfSelectVisitable}
+                handleClose={closeSelfSelect}
+                isEdit={false}
+                handleComplete={getSelect}
+            />
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;

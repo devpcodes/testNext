@@ -28,6 +28,13 @@ export const setProductInfo = info => {
     };
 };
 
+export const setSelectInfo = info => {
+    return {
+        type: actionType.SET_SELECT_INFO,
+        payload: info,
+    };
+};
+
 export const setBs = bs => {
     return {
         type: actionType.SET_BS,

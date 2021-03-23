@@ -1,23 +1,30 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
+import EditSelectStock from '../selfSelectStock/EditSelectStock';
 
 import pen from '../../../../resources/images/components/goOrder/edit-edit.svg';
 import hamburger from '../../../../resources/images/components/goOrder/menu-hamburger.svg';
 
-const sortableList = memo(({ handleEdit }) => {
-    const [listContent, setListContent] = useState([
-        '自選股 1 ',
-        '自選股 2',
-        '自選股 3',
-        '自選股 4',
-        '自選股 5',
-        '自選股 6',
-    ]);
+const sortableList = memo(handleComplete => {
+    const selectInfo = useSelector(store => store.goOrder.selectInfo);
+    const [listContent, setListContent] = useState(selectInfo.data);
+    const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
+    const [editGroupData, setEditGroupData] = useState({});
 
-    const editGroupName = () => {
-        handleEdit(true);
+    useEffect(() => {
+        setListContent(selectInfo.data);
+    }, [selectInfo]);
+
+    const editGroupName = value => {
+        setEditGroupData(value);
+        setIsEditSelfSelectNameVisitable(true);
     };
+
+    const handleEditSelfSelectName = useCallback(isOpen => {
+        setIsEditSelfSelectNameVisitable(isOpen);
+    }, []);
 
     const DragHandle = sortableHandle(() => (
         <span className="sort__icon">
@@ -27,10 +34,10 @@ const sortableList = memo(({ handleEdit }) => {
 
     const SortableItem = sortableElement(({ value }) => (
         <li className="sortable__list__item">
-            <span className="edit__icon" onClick={editGroupName}>
+            <span className="edit__icon" onClick={() => editGroupName(value)}>
                 <img src={pen} alt="pen"></img>
             </span>
-            <span className="self__select__name">{value}</span>
+            <span className="self__select__name">{value.name}</span>
             <DragHandle />
         </li>
     ));
@@ -47,9 +54,17 @@ const sortableList = memo(({ handleEdit }) => {
         <>
             <SortableContainer onSortEnd={onSortEnd} useDragHandle>
                 {listContent.map((value, index) => (
-                    <SortableItem key={`item-${value}`} index={index} value={value} />
+                    <SortableItem key={`item-${value.id}`} index={index} value={value} />
                 ))}
             </SortableContainer>
+
+            <EditSelectStock
+                isVisible={isEditSelfSelectNameVisitable}
+                editData={editGroupData}
+                handler={handleEditSelfSelectName}
+                handleComplete={handleComplete}
+            />
+
             <style jsx global>{`
                 .sortable__list {
                     list-style: none;

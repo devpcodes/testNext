@@ -1,11 +1,14 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button, Checkbox } from 'antd';
 import SortableList from '../sortableList/sortable';
 import EditSelectStock from '../selfSelectStock/EditSelectStock';
+import { setSelectInfo } from '../../../../store/goOrder/action';
 
-const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
+const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete }) => {
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
+    const selectInfo = useSelector(store => store.goOrder.selectInfo);
 
     useEffect(() => {
         setIsModalVisible(isVisible);
@@ -18,10 +21,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
         setIsModalVisible(false);
         handleClose(false);
     };
-
-    const handleEditSelfSelectName = useCallback(isOpen => {
-        setIsEditSelfSelectNameVisitable(isOpen);
-    }, []);
 
     const handleCancel = () => {
         setIsModalVisible(false);
@@ -78,44 +77,22 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
             >
                 <section className="add">
                     <ul className="self__select__list">
-                        <li className="self__select__items">
-                            <Checkbox>自選組合一 (2) </Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合二 (12)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合三 (34)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合四 (23)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合一 (2) </Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合二 (12)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合三 (34)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合四 (23)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合一 (2) </Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合二 (12)</Checkbox>
-                        </li>
+                        {console.log(selectInfo)}
+                        {!!selectInfo &&
+                            selectInfo.data.map((d, i) => (
+                                <li className="self__select__items" key={i}>
+                                    <Checkbox key={d.id} defaultChecked={d.isExist}>
+                                        {' '}
+                                        {d.name}{' '}
+                                    </Checkbox>
+                                </li>
+                            ))}
                     </ul>
                 </section>
 
                 <section className="edit">
-                    <SortableList handleEdit={handleEditSelfSelectName} />
+                    <SortableList handleComplete={handleComplete} />
                 </section>
-
-                <EditSelectStock isVisible={isEditSelfSelectNameVisitable} handler={handleEditSelfSelectName} />
             </Modal>
             <style jsx>{`
                 .self__select__list {

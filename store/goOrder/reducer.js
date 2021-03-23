@@ -5,6 +5,7 @@ const initialState = {
     lot: 'Board', // Odd
     code: '',
     productInfo: null,
+    selectInfo: null,
     bs: '', //B S
     panelHeight: 360, // 80
     ord_type: '0', // '0', C, P, 2
@@ -51,6 +52,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 productInfo: action.payload,
+            };
+        case actionType.SET_SELECT_INFO:
+            return {
+                ...state,
+                selectInfo: action.payload,
             };
         case actionType.SET_BS:
             return {
