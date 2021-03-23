@@ -128,10 +128,10 @@ const PanelTabs = () => {
         return (
             <Tabs activeKey={tabKey} onChange={tabChangeHandler}>
                 <TabPane tab="買進" key="1">
-                    <TradingContainer />
+                    {tabKey === '1' && <TradingContainer />}
                 </TabPane>
                 <TabPane tab="賣出" key="2">
-                    <TradingContainer />
+                    {tabKey === '2' && <TradingContainer />}
                 </TabPane>
                 <TabPane tab="成委回" key="3">
                     {tabKey === '3' && <SearchList active={tabKey === '3' ? true : false} />}

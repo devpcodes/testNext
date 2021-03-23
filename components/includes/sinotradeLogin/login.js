@@ -475,7 +475,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                         location.hostname +
                                                         redirectHandler(false);
                                                     window.location =
-                                                        'https://webrd.sinotrade.com.tw/social/oauth/google?redirect=' +
+                                                        location.protocol +
+                                                        '//' +
+                                                        location.hostname +
+                                                        '/social/oauth/google?source=newweb&redirect=' +
                                                         redirectUrl;
                                                 }}
                                             >
@@ -507,7 +510,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                         location.hostname +
                                                         redirectHandler(false);
                                                     window.location =
-                                                        'https://webrd.sinotrade.com.tw/social/oauth/facebook?redirect=' +
+                                                        location.protocol +
+                                                        '//' +
+                                                        location.hostname +
+                                                        '/social/oauth/facebook?source=newweb&redirect=' +
                                                         redirectUrl;
                                                 }}
                                             >
