@@ -64,14 +64,14 @@ const SearchList = ({ active }) => {
     };
 
     const rowClickHandler = (e, record) => {
-        console.log('check', e.target.innerHTML);
+        // console.log('check', e.target.innerHTML);
         if (e.target.innerHTML.indexOf('刪') >= 0 || e.target.innerHTML.indexOf('改') >= 0) {
             return;
         }
         if (record.status_code == 4) {
             return;
         }
-        console.log('row click', record, mappingStatusMsg(record.status_code));
+        // console.log('row click', record, mappingStatusMsg(record.status_code));
         dispatch(setCode(record.stock_id.trim()));
         dispatch(setLot('Board'));
         dispatch(setConfirmBoxChangeValInfo(record));
@@ -89,7 +89,7 @@ const SearchList = ({ active }) => {
     }, []);
 
     const cancelSubmitHandler = async record => {
-        console.log('record', record);
+        // console.log('record', record);
         const token = getToken();
         const ca_content = sign(
             {

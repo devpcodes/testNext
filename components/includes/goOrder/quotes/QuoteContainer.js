@@ -71,11 +71,11 @@ const QuoteContainer = () => {
             <Carousel
                 afterChange={current => {
                     if (current) {
-                        console.log('current', current);
+                        // console.log('current', current);
                         setStopRenderNum(0);
                         dispatch(setLot('Odd'));
                     } else {
-                        console.log('current', current);
+                        // console.log('current', current);
                         setStopRenderNum(1);
                         dispatch(setLot('Board'));
                     }

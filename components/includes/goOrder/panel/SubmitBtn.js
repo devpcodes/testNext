@@ -71,7 +71,7 @@ const SubmitBtn = () => {
         let tradeType = getTradeType(ord_cond);
         const offerPrice = getOfferPrice(ord_price, reference, price_type);
         let cost = getTransactionCost(offerPrice, offerShare, unit, dealing, capitalPercent, voucherPercent, tradeType);
-        console.log('===cost===', offerPrice, offerShare, unit, dealing, capitalPercent, voucherPercent, tradeType);
+        // console.log('===cost===', offerPrice, offerShare, unit, dealing, capitalPercent, voucherPercent, tradeType);
         if (price_type === '4') {
             cost = '市價';
         }

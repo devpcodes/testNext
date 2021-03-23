@@ -89,13 +89,13 @@ const reducer = (state = initialState, action) => {
                 ord_cond: action.payload,
             };
         case actionType.SET_PRICE_TYPE:
-            console.log('reducer', action.payload);
+            // console.log('reducer', action.payload);
             return {
                 ...state,
                 price_type: action.payload,
             };
         case actionType.SET_ORD_QTY:
-            console.log('reducer', action.payload);
+            // console.log('reducer', action.payload);
             return {
                 ...state,
                 ord_qty: action.payload,
