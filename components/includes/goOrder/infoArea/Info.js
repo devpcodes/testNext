@@ -160,8 +160,10 @@ export const Info = () => {
         if (code === '') {
             return;
         }
-        getTimeOver();
-    }, [code, lot]);
+        if (!isLogin) {
+            getTimeOver();
+        }
+    }, [code, lot, isLogin]);
 
     useEffect(async () => {
         if (!isLogin) {
