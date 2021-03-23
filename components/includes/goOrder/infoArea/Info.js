@@ -360,7 +360,7 @@ export const Info = () => {
                         >
                             {trim(productInfo?.solaceName)}
                         </div>
-                        <div className="product__code">{code}</div>
+                        <div className="product__code">{code || '2890'}</div>
                     </div>
                     <div className="toolbar__container">
                         <button className="share" onClick={shareHandler}>

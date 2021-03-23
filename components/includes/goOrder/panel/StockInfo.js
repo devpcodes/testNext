@@ -60,7 +60,6 @@ const StockInfo = () => {
     }, [stockInfo]);
 
     const switchChangeHandler = val => {
-        console.log('vv', val);
         if (val) {
             dispatch(setIsFirstSell('Y'));
         } else {
