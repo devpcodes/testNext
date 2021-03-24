@@ -224,6 +224,14 @@ const Header = () => {
             'redirectUrl=OrderGO';
     };
 
+    const currentAccountHandler = () => {
+        if (currentAccount.accttype !== type) {
+            return '--';
+        } else {
+            return `${currentAccount.broker_id || ''}-${currentAccount.account || ''}`;
+        }
+    };
+
     if (!hasMounted) {
         return null;
     }
@@ -256,7 +264,7 @@ const Header = () => {
                         <div className="dropdown__container">
                             <Select
                                 style={{ width: 136 }}
-                                value={`${currentAccount.broker_id || ''}-${currentAccount.account || ''}`}
+                                value={currentAccountHandler()}
                                 onChange={onAccountChange}
                                 getPopupContainer={trigger => trigger.parentElement}
                                 bordered={false}

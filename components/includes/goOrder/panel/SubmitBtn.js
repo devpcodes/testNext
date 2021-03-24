@@ -44,6 +44,8 @@ const SubmitBtn = () => {
     const userSettings = useSelector(store => store.user.userSettings);
 
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const type = useSelector(store => store.goOrder.type);
+
     const ordCond = useSelector(store => store.goOrder.ord_cond);
     const timeInForce = useSelector(store => store.goOrder.time_in_force);
     const ordPrice = useSelector(store => store.goOrder.ord_price);
@@ -133,6 +135,13 @@ const SubmitBtn = () => {
 
     const submitHandler = () => {
         let color = bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor;
+        if (currentAccount.accttype !== type) {
+            Modal.error({
+                title: '無可交易帳號',
+                // content: '請確認價格或張數(股數)資料填寫正確',
+            });
+            return;
+        }
         if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
             Modal.error({
                 title: '資料格式錯誤',
