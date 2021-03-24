@@ -14,6 +14,10 @@ import infoIcon from '../../../../resources/images/components/goOrder/attention-
 const DetailBox = () => {
     const dispatch = useDispatch();
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
+    const clickHandler = () => {
+        dispatch(setConfirmBoxTitle('成交明細'));
+        dispatch(setConfirmBoxClickSource('detail'));
+    };
     return (
         <>
             <div className="detail__container">
@@ -62,7 +66,7 @@ const DetailBox = () => {
                             <span className="item__label">取消數量</span>
                             <span className="item__val">{info.cancel_qty}</span>
                         </div>
-                        <div className="item">
+                        <div className="item" onClick={clickHandler}>
                             <span className="item__label">成交均價</span>
                             <span className="item__val">{info.match_price}</span>
                         </div>

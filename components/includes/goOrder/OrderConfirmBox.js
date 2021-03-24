@@ -4,6 +4,7 @@ import { setConfirmBoxOpen, setConfirmBoxTitle, setConfirmBoxClickSource } from 
 import ChTradingInfoBox from './searchList/ChTradingInfoBox';
 import DetailBox from './searchList/DetailBox';
 import OrderBox from './OrderBox';
+import DealInfoBox from './searchList/DealInfoBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
     const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const OrderConfirmBox = ({ title, color }) => {
             {title === '委託確認' && <OrderBox />}
             {title === '刪改委託單' && <ChTradingInfoBox />}
             {title === '委託明細' && <DetailBox />}
+            {title === '成交明細' && <DealInfoBox />}
             <style jsx>{`
                 .confirm__container {
                     display: block;

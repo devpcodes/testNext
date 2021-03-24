@@ -8,7 +8,6 @@ import { setCheckLot, setLot } from '../../../../store/goOrder/action';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 
 const Chart = dynamic(() => import('../chart/chart'), { ssr: false });
-let currentCode = '';
 const QuoteContainer = () => {
     const [stopRenderNum, setStopRenderNum] = useState(1);
     const [quotesDetailShow, setQuotesDetailShow] = useState(true);
