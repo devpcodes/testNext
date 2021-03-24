@@ -1,15 +1,15 @@
 import { getLykanInstance } from '../myAxios';
 
-export const fetchUpdateSelect = async function (selectId, selectName, token) {
+export const fetchAddSelectMember = async function ({ selectId, selectList, token }) {
     try {
-        const reqUrl = '/select/updateSelectMenu';
+        const reqUrl = '/select/addSelectMember';
         const res = await getLykanInstance().post(reqUrl, {
             selectId,
-            selectName,
+            selectList,
             token,
         });
         if (res.data.success != null && res.data.success === true) {
-            return res.data;
+            return res.data.result;
         } else {
             return {};
         }

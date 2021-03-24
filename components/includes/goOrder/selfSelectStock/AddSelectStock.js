@@ -1,14 +1,14 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox } from 'antd';
 import SortableList from '../sortableList/sortable';
-import EditSelectStock from '../selfSelectStock/EditSelectStock';
-import { setSelectInfo } from '../../../../store/goOrder/action';
+import { fetchAddSelectMember } from '../../../../services/selfSelect/addSelectMember';
 
 const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete }) => {
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
-    const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
+    const [selectItem, setSelectItem] = useState([]);
+    const [selectDefaultValue, setSelectDefaultValue] = useState([]);
 
     useEffect(() => {
         setIsModalVisible(isVisible);
@@ -16,10 +16,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
     const handleOk = () => {
-        // 存檔
-        alert(123456);
-        setIsModalVisible(false);
-        handleClose(false);
+        // setIsModalVisible(false);
+        // handleClose(false);
     };
 
     const handleCancel = () => {
@@ -39,6 +37,29 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
         setIsEditSelfSelectGroup(false);
     };
 
+    useEffect(() => {
+        let options = [];
+        let defaultValue = [];
+
+        selectInfo.data.forEach(element => {
+            const optionItems = {
+                label: `${element.selectName} (${element.selectCount})`,
+                value: element.selectId,
+                disabled: !element.isAllowAdd && !element.isExist,
+            };
+            options.push(optionItems);
+            if (element.isExist) {
+                defaultValue.push(element.selectId);
+            }
+        });
+        setSelectItem(options);
+        setSelectDefaultValue(defaultValue);
+        console.log(options, defaultValue);
+    }, [selectInfo]);
+
+    const onChange = checkedValues => {
+        console.log('checked = ', checkedValues);
+    };
     return (
         <>
             <Modal
@@ -78,14 +99,21 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                 {!!selectInfo && (
                     <section className="add">
                         <ul className="self__select__list">
-                            {selectInfo.data.map((d, i) => (
+                            <Checkbox.Group
+                                options={selectItem}
+                                defaultValue={selectDefaultValue}
+                                onChange={onChange}
+                            />
+
+                            <Checkbox.Group />
+
+                            {/* {selectInfo.data.map((d, i) => (
                                 <li className="self__select__items" key={i}>
-                                    <Checkbox key={d.selectId} defaultChecked={d.isExist}>
-                                        {' '}
-                                        {d.selectName}{' '}
+                                    <Checkbox className="self__select__checkbox" value={d.selectId} defaultChecked={d.isAllowAdd && d.isExist} disabled={!d.isAllowAdd}>
+                                        {` ${d.selectName} (${d.selectCount})`}
                                     </Checkbox>
                                 </li>
-                            ))}
+                            ))} */}
                         </ul>
                     </section>
                 )}
@@ -158,6 +186,10 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                     height: 50px;
                     font-size: 1.6rem;
                     font-weight: bold;
+                }
+                .ant-checkbox-group-item {
+                    display: block;
+                    padding: 4px 0;
                 }
             `}</style>
         </>

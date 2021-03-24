@@ -57,7 +57,6 @@ const sortableList = memo(handleComplete => {
                     <SortableItem key={`item-${value.selectId}`} index={index} value={value} />
                 ))}
             </SortableContainer>
-
             <EditSelectStock
                 isVisible={isEditSelfSelectNameVisitable}
                 editData={editGroupData}

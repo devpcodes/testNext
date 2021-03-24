@@ -1,8 +1,7 @@
 import React, { useState, memo, useEffect, useRef } from 'react';
 import { Modal, Button, Input } from 'antd';
-import { fetchUpdateSelect } from '../../../../services/selfSelect/updateSelectMenu';
+import { fetchUpdateSelectGroupName } from '../../../../services/selfSelect/updateSelectGroupName';
 import { getToken } from '../../../../services/user/accessToken';
-import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 
 const EditSelectStock = memo(({ isVisible, editData, handler, handleComplete }) => {
     useEffect(() => {
@@ -10,18 +9,16 @@ const EditSelectStock = memo(({ isVisible, editData, handler, handleComplete }) 
     }, [isVisible]);
 
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
-    const [groupName, setGroupName] = useState('');
     const token = getToken();
     const textInput = useRef(null);
     const handleClose = () => {
         handler(false);
     };
-
+    console.log(handleComplete);
     const handleConfirm = async () => {
-        const res = await fetchUpdateSelect(editData.id, textInput.current.state.value, token);
+        const res = await fetchUpdateSelectGroupName(editData.selectId, textInput.current.state.value, token);
         if (res.success && res.message === 'OK') {
             handleComplete.handleComplete();
-            // handleComplete()
             handler(false);
         }
     };

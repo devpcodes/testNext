@@ -235,7 +235,7 @@ export const Info = () => {
         }
     };
 
-    const getSelect = async () => {
+    const getSelect = useCallback(async () => {
         let exchange;
         switch (type) {
             case 'S':
@@ -253,7 +253,7 @@ export const Info = () => {
         };
         const res = await fetchCheckSelfSelect(reqData);
         dispatch(setSelectInfo(res));
-    };
+    });
 
     const getTimeWording = (hour, min, sec) => {
         if (!tradingDate) {
