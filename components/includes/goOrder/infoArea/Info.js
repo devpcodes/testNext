@@ -172,11 +172,6 @@ export const Info = () => {
         getSelect();
     }, [code, isLogin]);
 
-    // useEffect(() => {
-    //     // 更新+自選
-    //     console.log(selectDate)
-    // }, [selectDate])
-
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
         dispatch(setLot(nextLot));

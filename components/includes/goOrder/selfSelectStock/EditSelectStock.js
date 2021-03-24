@@ -14,7 +14,6 @@ const EditSelectStock = memo(({ isVisible, editData, handler, handleComplete }) 
     const handleClose = () => {
         handler(false);
     };
-    console.log(handleComplete);
     const handleConfirm = async () => {
         const res = await fetchUpdateSelectGroupName(editData.selectId, textInput.current.state.value, token);
         if (res.success && res.message === 'OK') {

@@ -2,13 +2,17 @@ import React, { useState, memo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox } from 'antd';
 import SortableList from '../sortableList/sortable';
-import { fetchAddSelectMember } from '../../../../services/selfSelect/addSelectMember';
+import { fetchQuickEditSelectMember } from '../../../../services/selfSelect/quickEditSelectMember';
+import { getToken } from '../../../../services/user/accessToken';
 
 const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete }) => {
+    const code = useSelector(store => store.goOrder.code);
+    const type = useSelector(store => store.goOrder.type);
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
-    const [selectItem, setSelectItem] = useState([]);
-    const [selectDefaultValue, setSelectDefaultValue] = useState([]);
+    const [selectItem, setSelectItem] = useState([]); // 選項
+    const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
+    const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
 
     useEffect(() => {
         setIsModalVisible(isVisible);
@@ -16,8 +20,31 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
     const handleOk = () => {
-        // setIsModalVisible(false);
-        // handleClose(false);
+        let resData = [];
+        selectItem.forEach(item => {
+            // 複委託期貨選擇權規格未出來。先 for 證券用。
+            if (item.disabled === true) {
+                return;
+            }
+
+            let exchange;
+            switch (type) {
+                case 'S':
+                    exchange = 'TAI';
+                    break;
+                default:
+                    break;
+            }
+            const select = {
+                selectId: item.value,
+                symbol: code,
+                exchange: exchange,
+                market: type,
+                action: selectCheckedValue.indexOf(item.value) === -1 ? 'D' : 'A',
+            };
+            resData.push(select);
+        });
+        fetchQuickEditSelectMember(resData, getToken());
     };
 
     const handleCancel = () => {
@@ -38,27 +65,29 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
     };
 
     useEffect(() => {
-        let options = [];
-        let defaultValue = [];
-
-        selectInfo.data.forEach(element => {
-            const optionItems = {
-                label: `${element.selectName} (${element.selectCount})`,
-                value: element.selectId,
-                disabled: !element.isAllowAdd && !element.isExist,
-            };
-            options.push(optionItems);
-            if (element.isExist) {
-                defaultValue.push(element.selectId);
-            }
-        });
-        setSelectItem(options);
-        setSelectDefaultValue(defaultValue);
-        console.log(options, defaultValue);
-    }, [selectInfo]);
+        if (selectInfo && selectInfo.data && Array.isArray(selectInfo.data)) {
+            let options = [];
+            let defaultValue = [];
+            selectInfo.data.forEach(element => {
+                const optionItems = {
+                    label: `${element.selectName} (${element.selectCount})`,
+                    value: element.selectId,
+                    disabled: !element.isAllowAdd && !element.isExist,
+                };
+                options.push(optionItems);
+                if (element.isExist) {
+                    defaultValue.push(element.selectId);
+                }
+            });
+            setSelectItem(options);
+            setSelectDefaultValue(defaultValue);
+            setSelectCheckedValue(defaultValue);
+        }
+    }, [isModalVisible, selectInfo]);
 
     const onChange = checkedValues => {
         console.log('checked = ', checkedValues);
+        setSelectCheckedValue(checkedValues);
     };
     return (
         <>
@@ -96,7 +125,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                     </Button>,
                 ]}
             >
-                {!!selectInfo && (
+                {
                     <section className="add">
                         <ul className="self__select__list">
                             <Checkbox.Group
@@ -116,7 +145,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                             ))} */}
                         </ul>
                     </section>
-                )}
+                }
 
                 {!!selectInfo && (
                     <section className="edit">
