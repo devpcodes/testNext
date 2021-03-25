@@ -411,7 +411,7 @@ export const Info = ({ stockid }) => {
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
-                handleComplete={getSelect}
+                reloadSelect={getSelect}
             />
             <style jsx>{`
                 .noLogin__box {

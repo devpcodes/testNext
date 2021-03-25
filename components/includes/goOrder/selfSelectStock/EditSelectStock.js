@@ -3,7 +3,7 @@ import { Modal, Button, Input } from 'antd';
 import { fetchUpdateSelectGroupName } from '../../../../services/selfSelect/updateSelectGroupName';
 import { getToken } from '../../../../services/user/accessToken';
 
-const EditSelectStock = memo(({ isVisible, editData, handler, handleComplete }) => {
+const EditSelectStock = memo(({ isVisible, editData, handler, reloadSelect }) => {
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
@@ -14,10 +14,11 @@ const EditSelectStock = memo(({ isVisible, editData, handler, handleComplete }) 
     const handleClose = () => {
         handler(false);
     };
+
     const handleConfirm = async () => {
         const res = await fetchUpdateSelectGroupName(editData.selectId, textInput.current.state.value, token);
         if (res.success && res.message === 'OK') {
-            handleComplete.handleComplete();
+            reloadSelect();
             handler(false);
         }
     };

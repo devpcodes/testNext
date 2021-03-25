@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox } from 'antd';
 import SortableList from '../sortableList/sortable';
 import { fetchQuickEditSelectMember } from '../../../../services/selfSelect/quickEditSelectMember';
+import { fetchUpdateSelectGroup } from '../../../../services/selfSelect/updateSelectGroup';
 import { getToken } from '../../../../services/user/accessToken';
 
-const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete }) => {
+const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) => {
     const code = useSelector(store => store.goOrder.code);
     const type = useSelector(store => store.goOrder.type);
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
@@ -13,10 +14,16 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
     const [selectItem, setSelectItem] = useState([]); // 選項
     const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
+    const [selectCheckedSort, setSelectCheckedSort] = useState([]);
 
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
+
+    // useEffect(() => {
+
+    // },[isEditSelfSelectGroup])
+    console.log(selectCheckedValue);
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
     const handleOk = async () => {
@@ -45,9 +52,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
             reqData.push(select);
         });
         const res = await fetchQuickEditSelectMember(reqData, getToken());
-        if (res.message === 'OK' && res.success) {
-            alert('儲存成功 !');
-        }
+        handleCancel();
     };
 
     const handleCancel = () => {
@@ -59,13 +64,23 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
         setIsEditSelfSelectGroup(true);
     };
 
-    const completeSelfSelectGroupEdit = () => {
+    const completeSelfSelectGroupEdit = async () => {
+        let sortArray = [];
+        selectCheckedSort.forEach(data => {
+            sortArray.push({ selectId: data.selectId });
+        });
+        await fetchUpdateSelectGroup(sortArray, getToken());
+        await reloadSelect();
         setIsEditSelfSelectGroup(false);
     };
 
     const afterModalClose = () => {
         setIsEditSelfSelectGroup(false);
     };
+
+    const handleCheckedSort = useCallback(sortArray => {
+        setSelectCheckedSort(sortArray);
+    });
 
     useEffect(() => {
         if (selectInfo && selectInfo.data && Array.isArray(selectInfo.data)) {
@@ -84,7 +99,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
             });
             setSelectItem(options);
             setSelectDefaultValue(defaultValue);
-            setSelectCheckedValue(defaultValue);
+            // setSelectCheckedValue(defaultValue);
         }
     }, [isModalVisible, selectInfo]);
 
@@ -152,7 +167,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
 
                 {!!selectInfo && (
                     <section className="edit">
-                        <SortableList handleComplete={handleComplete} />
+                        <SortableList reloadSelect={reloadSelect} handleCheckedSort={handleCheckedSort} />
                     </section>
                 )}
             </Modal>

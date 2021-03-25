@@ -7,12 +7,12 @@ import EditSelectStock from '../selfSelectStock/EditSelectStock';
 import pen from '../../../../resources/images/components/goOrder/edit-edit.svg';
 import hamburger from '../../../../resources/images/components/goOrder/menu-hamburger.svg';
 
-const sortableList = memo(handleComplete => {
+const sortableList = memo(({ reloadSelect, handleCheckedSort }) => {
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const [listContent, setListContent] = useState(selectInfo.data);
     const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
     const [editGroupData, setEditGroupData] = useState({});
-
+    console.log(handleCheckedSort);
     useEffect(() => {
         setListContent(selectInfo.data);
     }, [selectInfo]);
@@ -48,10 +48,7 @@ const sortableList = memo(handleComplete => {
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
         setListContent(arrayMove(listContent, oldIndex, newIndex));
-    };
-
-    const save = () => {
-        console.log(listContent);
+        handleCheckedSort(arrayMove(listContent, oldIndex, newIndex));
     };
 
     return (
@@ -65,7 +62,7 @@ const sortableList = memo(handleComplete => {
                 isVisible={isEditSelfSelectNameVisitable}
                 editData={editGroupData}
                 handler={handleEditSelfSelectName}
-                handleComplete={handleComplete}
+                reloadSelect={reloadSelect}
             />
 
             <style jsx global>{`
