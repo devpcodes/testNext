@@ -19,7 +19,22 @@ import { checkLogin } from '../services/components/layouts/checkLogin';
 
 // const Chart = dynamic(() => import('../components/includes/goOrder/chart/chart'), { ssr: false });
 
-const OrderGO = () => {
+export async function getServerSideProps(context) {
+    let requestStockId;
+    if (context.req.query != null) {
+        if (context.req.query.stockid != null) {
+            requestStockId = context.req.query.stockid;
+            return {
+                props: { requestStockId },
+            };
+        }
+    }
+    return {
+        props: {},
+    };
+}
+
+const OrderGO = ({ requestStockId }) => {
     const [topic, setTopic] = useState([]);
     const [containerHeight, setContainerHeight] = useState(0);
     const [leadingBtnShow, setLeadingBtnShow] = useState(true);
@@ -101,7 +116,7 @@ const OrderGO = () => {
                 {!checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
                 <Header />
                 <div className="open__container">
-                    <Info />
+                    <Info stockid={requestStockId} />
                     <QuoteContainer />
                 </div>
                 <Drawer

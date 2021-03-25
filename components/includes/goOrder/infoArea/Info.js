@@ -88,7 +88,7 @@ const solaceDataHandler = (solaceData, lot, checkLot) => {
 };
 
 // TODO: 零股顯示價差
-export const Info = () => {
+export const Info = ({ stockid }) => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
@@ -355,7 +355,7 @@ export const Info = () => {
                         >
                             {trim(productInfo?.solaceName)}
                         </div>
-                        <div className="product__code">{code || '2890'}</div>
+                        <div className="product__code">{code || stockid || '2890'}</div>
                     </div>
                     <div className="toolbar__container">
                         <button className="share" onClick={shareHandler}>
