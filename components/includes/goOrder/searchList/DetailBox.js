@@ -5,6 +5,7 @@ import {
     mappingWebId,
     mappingPriceMsg,
     mappingStatusMsg,
+    mappingShowChangeBtn,
 } from '../../../../services/components/goOrder/dataMapping';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { themeColor } from '../panel/PanelTabs';
@@ -17,6 +18,9 @@ const DetailBox = () => {
     const clickHandler = () => {
         dispatch(setConfirmBoxTitle('成交明細'));
         dispatch(setConfirmBoxClickSource('detail'));
+    };
+    const showHandler = () => {
+        return mappingShowChangeBtn(info.status_code);
     };
     return (
         <>
@@ -95,28 +99,30 @@ const DetailBox = () => {
                     </div>
                 </div>
                 <div className="btn__container">
+                    {showHandler() && (
+                        <Button
+                            style={{
+                                height: '60px',
+                                width: 'calc( 50% - 8px )',
+                                marginRight: '16px',
+                                backgroundColor: '#e6ebf5',
+                                border: 'none',
+                                fontSize: '2rem',
+                                fontWeight: 'bold',
+                                color: 'black',
+                            }}
+                            onClick={() => {
+                                dispatch(setConfirmBoxTitle('刪改委託單'));
+                                dispatch(setConfirmBoxClickSource('detail'));
+                            }}
+                        >
+                            刪改委託單
+                        </Button>
+                    )}
                     <Button
                         style={{
                             height: '60px',
-                            width: 'calc( 50% - 8px )',
-                            marginRight: '16px',
-                            backgroundColor: '#e6ebf5',
-                            border: 'none',
-                            fontSize: '2rem',
-                            fontWeight: 'bold',
-                            color: 'black',
-                        }}
-                        onClick={() => {
-                            dispatch(setConfirmBoxTitle('刪改委託單'));
-                            dispatch(setConfirmBoxClickSource('detail'));
-                        }}
-                    >
-                        刪改委託單
-                    </Button>
-                    <Button
-                        style={{
-                            height: '60px',
-                            width: 'calc( 50% - 8px )',
+                            width: showHandler() ? 'calc( 50% - 8px )' : '100%',
                             backgroundColor: '#254a91',
                             color: 'white',
                             fontSize: '2rem',
@@ -210,6 +216,9 @@ const DetailBox = () => {
                     font-weight: bold;
                     margin-left: 5px;
                     color: #0d1623;
+                }
+                .detail__container .ant-btn:disabled {
+                    color: white !important;
                 }
             `}</style>
         </>
