@@ -18,7 +18,8 @@ const EditSelectStock = memo(({ isVisible, editData, handler, reloadSelect }) =>
     const handleConfirm = async () => {
         const res = await fetchUpdateSelectGroupName(editData.selectId, textInput.current.state.value, token);
         if (res.success && res.message === 'OK') {
-            reloadSelect();
+            editData.selectName = textInput.current.state.value;
+            reloadSelect(editData);
             handler(false);
         }
     };
