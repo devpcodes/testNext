@@ -50,6 +50,10 @@ const sortableList = memo(handleComplete => {
         setListContent(arrayMove(listContent, oldIndex, newIndex));
     };
 
+    const save = () => {
+        console.log(listContent);
+    };
+
     return (
         <>
             <SortableContainer onSortEnd={onSortEnd} useDragHandle>

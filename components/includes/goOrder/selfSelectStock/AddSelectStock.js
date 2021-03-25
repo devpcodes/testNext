@@ -19,8 +19,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
     }, [isVisible]);
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
-    const handleOk = () => {
-        let resData = [];
+    const handleOk = async () => {
+        let reqData = [];
         selectItem.forEach(item => {
             // 複委託期貨選擇權規格未出來。先 for 證券用。
             if (item.disabled === true) {
@@ -42,9 +42,12 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, handleComplete })
                 market: type,
                 action: selectCheckedValue.indexOf(item.value) === -1 ? 'D' : 'A',
             };
-            resData.push(select);
+            reqData.push(select);
         });
-        fetchQuickEditSelectMember(resData, getToken());
+        const res = await fetchQuickEditSelectMember(reqData, getToken());
+        if (res.message === 'OK' && res.success) {
+            alert('儲存成功 !');
+        }
     };
 
     const handleCancel = () => {

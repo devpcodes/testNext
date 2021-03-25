@@ -171,7 +171,7 @@ export const Info = ({ stockid }) => {
             return;
         }
         getSelect();
-    }, [code, isLogin]);
+    }, [code, isLogin, isSelfSelectVisitable]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
