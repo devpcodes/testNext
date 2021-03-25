@@ -62,8 +62,12 @@ const QuoteContainer = () => {
     }, [productInfo]);
 
     const chartChildren = useMemo(() => {
-        return <Chart />;
-    }, []);
+        if (panelHeight < 100) {
+            return <Chart />;
+        } else {
+            return <div style={{ height: '230px' }}></div>;
+        }
+    }, [panelHeight]);
 
     const quoteContainer = useMemo(() => {
         return (
