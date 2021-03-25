@@ -62,12 +62,15 @@ const QuoteContainer = () => {
     }, [productInfo]);
 
     const chartChildren = useMemo(() => {
+        if (bs === '') {
+            return <Chart />;
+        }
         if (panelHeight < 100) {
             return <Chart />;
         } else {
             return <div style={{ height: '230px' }}></div>;
         }
-    }, [panelHeight]);
+    }, [panelHeight, bs]);
 
     const quoteContainer = useMemo(() => {
         return (
