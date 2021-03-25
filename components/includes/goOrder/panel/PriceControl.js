@@ -27,7 +27,7 @@ const PriceControl = ({ title }) => {
     const ordQty = useSelector(store => store.goOrder.ord_qty);
     const ordPrice = useSelector(store => store.goOrder.ord_price);
     const checkLot = useSelector(store => store.goOrder.checkLot);
-
+    const productInfo = useSelector(store => store.goOrder.productInfo);
     const defaultOrdPrice = useSelector(store => store.goOrder.defaultOrdPrice);
 
     // const [ordPrice, setOrderPrice] = useState('');
@@ -68,8 +68,8 @@ const PriceControl = ({ title }) => {
         remeberCode = code;
 
         setPriceHandler();
-        setPriceTypeOptionHandler();
-    }, [code, lot, solaceData, defaultOrdPrice]);
+        setPriceTypeOptionHandler(lot, priceType, productInfo);
+    }, [code, lot, solaceData, defaultOrdPrice, productInfo]);
 
     useEffect(() => {
         dispatch(setOrdQty('1'));
@@ -85,7 +85,12 @@ const PriceControl = ({ title }) => {
         setShowTooltip(false);
     };
 
-    const setPriceTypeOptionHandler = () => {
+    const setPriceTypeOptionHandler = (lot, priceType, productInfo) => {
+        if (productInfo.solaceMarket != null && productInfo.solaceMarket === '興櫃') {
+            dispatch(setPriceType(' '));
+            setPriceTypeOption([{ txt: '限價', val: ' ' }]);
+            return;
+        }
         if (lot === 'Odd') {
             if (priceType === '4') {
                 dispatch(setPriceType(' '));

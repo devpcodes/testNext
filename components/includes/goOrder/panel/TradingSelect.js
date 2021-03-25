@@ -16,6 +16,7 @@ const TradingSelect = () => {
     const ordCound = useSelector(store => store.goOrder.ord_cond);
     const productInfo = useSelector(store => store.goOrder.productInfo);
 
+    const [timeInForceDisabled, setTimeInForceDisabled] = useState(false);
     const [ordCoundOption, setOrdCoundOption] = useState([
         { txt: '現股', val: '0' },
         { txt: '融資', val: '3' },
@@ -28,6 +29,11 @@ const TradingSelect = () => {
     const [tradeTimeOption, setTradeTimeOption] = useState([
         { txt: '盤中', val: 'ing' },
         { txt: '盤後', val: 'after' },
+    ]);
+    const [timeInForceOption, setTimeInForceOption] = useState([
+        { txt: 'ROD', val: '0' },
+        { txt: 'IOC', val: '3' },
+        { txt: 'FOK', val: '4' },
     ]);
 
     useEffect(() => {
@@ -43,6 +49,7 @@ const TradingSelect = () => {
 
             if (productInfo.solaceMarket === '興櫃') {
                 dispatch(setTradeTime('ing'));
+                dispatch(setTimeInForce('0'));
                 setTradeTimeOption([{ txt: '盤中', val: 'ing' }]);
             } else {
                 setTradeTimeOption([
@@ -66,9 +73,36 @@ const TradingSelect = () => {
         if (lot === 'Odd' && tradeTime === 'after') {
             dispatch(setOrdType('2'));
         }
+        timeInForceOptionHandler(lot, tradeTime, productInfo);
+        updateOrdCound(lot, productInfo);
+    }, [lot, tradeTime, productInfo]);
 
-        updateOrdCound(lot);
-    }, [lot, tradeTime]);
+    // ROD IOC FOK 設定
+    const timeInForceOptionHandler = (lot, tradeTime, productInfo) => {
+        if (productInfo?.solaceMarket === '興櫃') {
+            dispatch(setTimeInForce('0'));
+            setTimeInForceDisabled(true);
+            return;
+        } else {
+            setTimeInForceDisabled(false);
+        }
+
+        if (lot === 'Odd') {
+            dispatch(setTimeInForce('0'));
+            setTimeInForceOption([{ txt: 'ROD', val: '0' }]);
+        } else {
+            if (tradeTime === 'ing') {
+                setTimeInForceOption([
+                    { txt: 'ROD', val: '0' },
+                    { txt: 'IOC', val: '3' },
+                    { txt: 'FOK', val: '4' },
+                ]);
+            }
+            if (tradeTime === 'after') {
+                setTimeInForceOption([{ txt: 'ROD', val: '0' }]);
+            }
+        }
+    };
 
     const lotChange = value => {
         dispatch(setLot(value));
@@ -82,7 +116,15 @@ const TradingSelect = () => {
     const ordCoundChange = value => {
         dispatch(setOrdCount(value));
     };
-    const updateOrdCound = lot => {
+    const updateOrdCound = (lot, productInfo) => {
+        if (productInfo?.solaceMarket != null) {
+            if (productInfo.solaceMarket === '興櫃') {
+                setOrdCoundOption([{ txt: '現股', val: '0' }]);
+                dispatch(setOrdCount('0'));
+                return;
+            }
+        }
+
         // 零股交易只有現股
         if (lot === 'Odd') {
             setOrdCoundOption([{ txt: '現股', val: '0' }]);
@@ -135,10 +177,22 @@ const TradingSelect = () => {
                 </Select>
             </div>
             <div className="selectBox">
-                <Select value={timeInForce} suffixIcon={<img src={selectIcon} />} onChange={timeInForceChange}>
-                    <Option value="0">ROD</Option>
+                <Select
+                    value={timeInForce}
+                    suffixIcon={<img src={selectIcon} />}
+                    onChange={timeInForceChange}
+                    disabled={timeInForceDisabled}
+                >
+                    {/* <Option value="0">ROD</Option>
                     <Option value="3">IOC</Option>
-                    <Option value="4">FOK</Option>
+                    <Option value="4">FOK</Option> */}
+                    {timeInForceOption.map((item, index) => {
+                        return (
+                            <Option key={index} value={item.val}>
+                                {item.txt}
+                            </Option>
+                        );
+                    })}
                 </Select>
             </div>
             <style jsx>{`
@@ -170,6 +224,11 @@ const TradingSelect = () => {
                 .select__container .ant-select-single.ant-select-show-arrow .ant-select-selection-item,
                 .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
                     padding-right: 0;
+                }
+                .select__container
+                    .ant-select.ant-select-single.ant-select-show-arrow.ant-select-disabled
+                    .ant-select-selector {
+                    background: #d2d2d2;
                 }
             `}</style>
         </div>
