@@ -70,7 +70,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
 
     const completeSelfSelectGroupEdit = async () => {
         let sortArray = [];
-        const isSocalLogin = socalLogin.length > 0 ? true : false;
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
         const token = isSocalLogin ? getSocalToken() : getToken();
         selectCheckedSort.forEach(data => {
             sortArray.push({ selectId: data.selectId });
