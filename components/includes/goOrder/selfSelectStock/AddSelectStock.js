@@ -10,7 +10,6 @@ import { getSocalToken } from '../../../../services/user/accessToken';
 const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) => {
     const code = useSelector(store => store.goOrder.code);
     const type = useSelector(store => store.goOrder.type);
-    // const isLogin = useSelector(store => store.user.isLogin);
     const socalLogin = useSelector(store => store.user.socalLogin);
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
@@ -31,7 +30,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
 
     const handleOk = async () => {
         let reqData = [];
-        const isSocalLogin = socalLogin.length > 0 ? true : false;
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
         const token = isSocalLogin ? getSocalToken() : getToken();
         selectItem.forEach(item => {
             // 複委託期貨選擇權規格未出來。先 for 證券用。

@@ -121,7 +121,6 @@ export const Info = ({ stockid }) => {
     const checkLot = useSelector(store => store.goOrder.checkLot);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const userSettings = useSelector(store => store.user.userSettings);
-
     const { close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot, checkLot);
 
     const router = useRouter();
@@ -231,7 +230,7 @@ export const Info = ({ stockid }) => {
     }, [code, lot, isLogin]);
 
     useEffect(async () => {
-        if (!isLogin && socalLoginData.length === 0) {
+        if (!isLogin && Object.keys(socalLoginData).length === 0) {
             return;
         }
         getSelect();
@@ -297,7 +296,7 @@ export const Info = ({ stockid }) => {
 
     const getSelect = useCallback(async () => {
         let exchange;
-        const isSocalLogin = socalLoginData.length > 0 ? true : false;
+        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
         switch (type) {
             case 'S':
                 exchange = 'TAI';

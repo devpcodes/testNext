@@ -18,7 +18,7 @@ const EditSelectStock = memo(({ isVisible, editData, handler, reloadSelect }) =>
     };
 
     const handleConfirm = async () => {
-        const isSocalLogin = socalLogin.length > 0 ? true : false;
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
         const token = isSocalLogin ? getSocalToken() : getToken();
         const res = await fetchUpdateSelectGroupName(
             editData.selectId,
