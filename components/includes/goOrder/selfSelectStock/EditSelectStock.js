@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Modal, Button, Input } from 'antd';
 import { fetchUpdateSelectGroupName } from '../../../../services/selfSelect/updateSelectGroupName';
 import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 
 const EditSelectStock = memo(({ isVisible, editData, handler, reloadSelect }) => {
     useEffect(() => {
