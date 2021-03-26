@@ -12,7 +12,7 @@ const sortableList = memo(({ handleCheckedSort }) => {
     const [listContent, setListContent] = useState(selectInfo.data);
     const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
     const [editGroupData, setEditGroupData] = useState({});
-    console.log(handleCheckedSort);
+
     useEffect(() => {
         setListContent(selectInfo.data);
     }, [selectInfo]);

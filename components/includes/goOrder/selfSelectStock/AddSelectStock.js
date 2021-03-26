@@ -23,7 +23,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
     // useEffect(() => {
 
     // },[isEditSelfSelectGroup])
-    console.log(selectCheckedValue);
+
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
     const handleOk = async () => {
@@ -104,7 +104,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
     }, [isModalVisible, selectInfo]);
 
     const onChange = checkedValues => {
-        console.log('checked = ', checkedValues);
         setSelectCheckedValue(checkedValues);
     };
     return (

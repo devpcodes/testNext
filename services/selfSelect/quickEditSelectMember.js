@@ -1,7 +1,6 @@
 import { getLykanInstance } from '../myAxios';
 
 export const fetchQuickEditSelectMember = async function (selectList, token) {
-    console.log();
     try {
         const reqUrl = '/select/quickEditSelectMember';
         const res = await getLykanInstance().post(reqUrl, { selectList, token });
