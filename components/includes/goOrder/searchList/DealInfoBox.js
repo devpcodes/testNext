@@ -296,6 +296,7 @@ const DealInfoBox = () => {
                 .table__container .ant-table-tbody > tr > td:first-child {
                     padding-left: 16px;
                     padding-right: 5px;
+                    white-space: nowrap;
                 }
                 .table__container .ant-table-tbody > tr > td:nth-child(2) {
                     text-align: right;
