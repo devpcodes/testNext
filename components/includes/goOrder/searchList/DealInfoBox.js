@@ -2,62 +2,58 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tooltip, Table } from 'antd';
 import { mappingCommissionedCode } from '../../../../services/components/goOrder/dataMapping';
+import { fetchMatchDetailToday } from '../../../../services/components/goOrder/fetchMatchDetailToday';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { themeColor } from '../panel/PanelTabs';
 import arrow from '../../../../resources/images/components/goOrder/searchList-arrow-caret-up.svg';
+import { getToken } from '../../../../services/user/accessToken';
+import { formatNum } from '../../../../services/formatNum';
 
-const data = [{ ord_time: '120101', price: 1000, qty: 2, key: 1 }];
+// const data = [{ ord_time: '120101', price: 1000, qty: 2, key: 1 }];
 
 const DealInfoBox = () => {
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
+    const userInfo = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
-    const [sortKey, setSortKey] = useState('ord_time');
+    const [data, setData] = useState([]);
+    const [sortKey, setSortKey] = useState('match_time');
     const [sortOrder, setSortOrder] = useState('descend');
+    useEffect(() => {
+        fetchData();
+    }, []);
     useEffect(() => {
         const newColumns = [
             {
                 title: '成交時間',
-                dataIndex: 'ord_time',
-                key: 'ord_time',
+                dataIndex: 'match_time',
+                key: 'match_time',
                 sorter: (a, b) => {
                     let newA;
                     let newB;
-                    newA = a.ord_time.substr(0, 6);
-                    newB = b.ord_time.substr(0, 6);
-                    if (newA == newB) {
-                        newA = a.ord_time;
-                        newB = b.ord_time;
-                    }
+                    newA = a.match_time.split(':');
+                    newB = b.match_time.split(':');
+                    newA = newA.join('');
+                    newB = newB.join('');
                     return Number(newA) - Number(newB);
                 },
-                sortOrder: sortKey === 'ord_time' && sortOrder,
+                sortOrder: sortKey === 'match_time' && sortOrder,
                 render: (text, record) => {
-                    console.log('tt', text);
-                    const timeStr = timeFormatter(text, false);
-                    const timeArr = timeStr.split(':');
+                    const decima = text.split('.')[1];
+                    const num = text.split('.')[0];
                     return (
                         <div>
-                            <p className="item">{timeArr[0] + ':' + timeArr[1] + ':' + timeArr[2]}</p>
+                            <p className="item" style={{ display: 'inline' }}>
+                                {num}
+                            </p>
+                            <span style={{ color: '#a9b6cb' }}>.{decima}</span>
                         </div>
                     );
                 },
             },
             {
                 title: '成交價',
-                dataIndex: 'price',
-                key: 'price',
-                render: (text, record) => {
-                    return (
-                        <div>
-                            <p className="item--down">{record.price}</p>
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '成交量',
-                dataIndex: 'qty',
-                key: 'qty',
+                dataIndex: 'match_price',
+                key: 'match_price',
                 render: (text, record) => {
                     return (
                         <div>
@@ -66,9 +62,42 @@ const DealInfoBox = () => {
                     );
                 },
             },
+            {
+                title: '成交量',
+                dataIndex: 'match_chqty',
+                key: 'match_chqty',
+                render: (text, record) => {
+                    return (
+                        <div>
+                            <p className="item">{formatNum(text)}</p>
+                        </div>
+                    );
+                },
+            },
         ];
         setColumns(newColumns);
-    }, []);
+    }, [sortKey, sortOrder, data]);
+    const fetchData = async () => {
+        const account = userInfo.account;
+        const broker_id = userInfo.broker_id;
+        const token = getToken();
+        const ord_no = info.ord_no;
+        const stock_id = info.stock_id.trim();
+        let res = await fetchMatchDetailToday({
+            account,
+            broker_id,
+            token,
+            ord_no,
+            stock_id,
+        });
+        if (res.length > 0) {
+            res = res.map((item, index) => {
+                item.key = index;
+                return item;
+            });
+        }
+        setData(res);
+    };
     const sortTimeHandler = key => {
         if (sortKey === key) {
             if (sortOrder === 'ascend') {
@@ -106,7 +135,7 @@ const DealInfoBox = () => {
             <div className="table__container">
                 <img
                     className="icon__arrow--1"
-                    onClick={sortTimeHandler.bind(null, 'ord_time')}
+                    onClick={sortTimeHandler.bind(null, 'match_time')}
                     src={arrow}
                     style={{
                         position: 'absolute',
@@ -114,8 +143,8 @@ const DealInfoBox = () => {
                         left: '69px',
                         // left: '12%',
                         zIndex: 1,
-                        transform: `rotate(${sortIconHandler('ord_time')}deg)`,
-                        opacity: sortKey === 'ord_time' ? 1 : 0.3,
+                        transform: `rotate(${sortIconHandler('match_time')}deg)`,
+                        opacity: sortKey === 'match_time' ? 1 : 0.3,
                     }}
                 />
                 <Table
@@ -191,6 +220,7 @@ const DealInfoBox = () => {
                 .item {
                     margin-top: 8px;
                 }
+
                 .btn__container {
                     font-size: 0;
                     width: 100%;
