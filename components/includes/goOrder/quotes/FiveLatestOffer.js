@@ -130,6 +130,7 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'buy',
                                                     formatPrice(item, '--').length,
+                                                    item,
                                                 )}
                                                 // style={{
                                                 //     width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
@@ -195,6 +196,7 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'sell',
                                                     formatPrice(item, '--').length,
+                                                    item,
                                                 )}
                                             >
                                                 <div
@@ -241,7 +243,11 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
         // }
     };
 
-    const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength) => {
+    const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength, item) => {
+        if (item === '市價') {
+            priceLength = 4;
+        }
+
         let w;
         if (String(amount).length + priceLength >= 10) {
             w = '108px';
