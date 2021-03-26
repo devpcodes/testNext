@@ -143,16 +143,12 @@ const OrderGO = ({ requestStockId }) => {
                         />
                     }
                 >
-                    {/* <div style={{display: confirmBox ? 'none' : 'block'}}>
-                        <PanelTabs />
-                    </div> */}
                     <PanelTabs />
                     <MyTransition isVisible={confirmBox} classNames={'loginMobile2'}>
                         <OrderConfirmBox title={confirmBoxTitle} color={confirmBoxColor} />
                     </MyTransition>
                 </Drawer>
             </div>
-            {/* <chart /> */}
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
             <style jsx>{`
                 .open__container {

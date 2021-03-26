@@ -31,6 +31,7 @@ import { fetchCheckTradingDate } from '../../../../services/components/goOrder/f
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import { checkCert, caResultDataHandler } from '../../../../services/webCa';
 import { getToken } from '../../../../services/user/accessToken';
+import { InstallCA } from './installCA';
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -138,23 +139,23 @@ export const Info = ({ stockid }) => {
         }
     }, [solaceData]);
 
-    useEffect(() => {
-        if (reCheckCA || reCheckCA == null) {
-            if (currentAccount.idno) {
-                const checkData = checkCert(currentAccount.idno);
-                suggestAction.current = checkData.suggestAction;
+    // useEffect(() => {
+    //     if (reCheckCA || reCheckCA == null) {
+    //         if (currentAccount.idno) {
+    //             const checkData = checkCert(currentAccount.idno);
+    //             suggestAction.current = checkData.suggestAction;
 
-                if (checkData.suggestAction == 'None') {
-                    setCheckCA(true);
-                    dispatch(setHaveCA(true));
-                } else {
-                    setCheckCA(false);
-                    dispatch(setHaveCA(false));
-                }
-                setReCheckCA(false);
-            }
-        }
-    }, [reCheckCA, currentAccount]);
+    //             if (checkData.suggestAction == 'None') {
+    //                 setCheckCA(true);
+    //                 dispatch(setHaveCA(true));
+    //             } else {
+    //                 setCheckCA(false);
+    //                 dispatch(setHaveCA(false));
+    //             }
+    //             setReCheckCA(false);
+    //         }
+    //     }
+    // }, [reCheckCA, currentAccount]);
 
     useEffect(async () => {
         if (code === '') {
@@ -280,11 +281,11 @@ export const Info = ({ stockid }) => {
     //     }
     // }
 
-    const signCaHandler = async () => {
-        const token = getToken();
-        await caResultDataHandler(suggestAction.current, currentAccount.idno, token);
-        setReCheckCA(true);
-    };
+    // const signCaHandler = async () => {
+    //     const token = getToken();
+    //     await caResultDataHandler(suggestAction.current, currentAccount.idno, token);
+    //     setReCheckCA(true);
+    // };
 
     return (
         <div className="info__container">
@@ -315,7 +316,8 @@ export const Info = ({ stockid }) => {
                     </Button>
                 </div>
             )}
-            {isLogin && !checkCA && (
+            {<InstallCA />}
+            {/* {isLogin && !checkCA && (
                 <div className="noLogin__box">
                     <img className="warningIcon" src={warning} />
                     <span className="endTime">下單交易前請先安裝憑證！</span>
@@ -343,7 +345,7 @@ export const Info = ({ stockid }) => {
                         安裝
                     </Button>
                 </div>
-            )}
+            )} */}
             <div className="info__box">
                 <div className="row">
                     <div className="product__container">
