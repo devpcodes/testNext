@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Select, Input, Button, Tooltip } from 'antd';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import selectIcon from '../../../../resources/images/components/goOrder/arrow-chevron-down_black.png';
 import { themeColor } from './PanelTabs';
@@ -14,9 +15,10 @@ const { Option } = Select;
 var remeberLot = '';
 var remeberCode = '';
 var setPrice = false;
-
+var init = false;
 const PriceControl = ({ title }) => {
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const bs = useSelector(store => store.goOrder.bs);
     const code = useSelector(store => store.goOrder.code);
@@ -49,12 +51,15 @@ const PriceControl = ({ title }) => {
         // 整零切換先清空價格
         // console.log(code, lot, solaceData.topic, 'cc:', currentLot.current);
         if (defaultOrdPrice !== '') {
-            dispatch(setOrderPrice(defaultOrdPrice));
-            dispatch(setDefaultOrdPrice(''));
-            remeberLot = lot;
-            remeberCode = code;
+            setTimeout(() => {
+                dispatch(setOrderPrice(defaultOrdPrice));
+                dispatch(setDefaultOrdPrice(''));
+                remeberLot = lot;
+                remeberCode = code;
 
-            setPrice = true;
+                setPrice = true;
+            }, 500);
+
             return;
         }
 
@@ -72,8 +77,12 @@ const PriceControl = ({ title }) => {
     }, [code, lot, solaceData, defaultOrdPrice, productInfo]);
 
     useEffect(() => {
-        dispatch(setOrdQty('1'));
-    }, [lot, code]);
+        if (router.query.qty == null && init) {
+            dispatch(setOrdQty('1'));
+        } else {
+            init = true;
+        }
+    }, [lot, code, router]);
 
     const getUnit = () => {
         if (solaceData.length > 0 && solaceData[0].data.Unit != null) {
@@ -86,7 +95,7 @@ const PriceControl = ({ title }) => {
     };
 
     const setPriceTypeOptionHandler = (lot, priceType, productInfo) => {
-        if (productInfo.solaceMarket != null && productInfo.solaceMarket === '興櫃') {
+        if (productInfo != null && productInfo.solaceMarket != null && productInfo.solaceMarket === '興櫃') {
             dispatch(setPriceType(' '));
             setPriceTypeOption([{ txt: '限價', val: ' ' }]);
             return;

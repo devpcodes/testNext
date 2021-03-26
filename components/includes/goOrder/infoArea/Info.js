@@ -1,8 +1,9 @@
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { Button, notification } from 'antd';
+import { Button } from 'antd';
 import { trim } from 'lodash';
+import { useRouter } from 'next/router';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
@@ -16,22 +17,30 @@ import {
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
-import { setCode, setLot, setProductInfo, setHaveCA, setSelectInfo } from '../../../../store/goOrder/action';
+import {
+    setBs,
+    setCode,
+    setLot,
+    setProductInfo,
+    setSelectInfo,
+    setDefaultOrdPrice,
+    setOrdQty,
+    setTradeTime,
+} from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
-import warning from '../../../../resources/images/components/goOrder/attention-warning.svg';
 
 import theme from '../../../../resources/styles/theme';
-import { checkServer } from '../../../../services/checkServer';
 import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
-import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
-import { checkCert, caResultDataHandler } from '../../../../services/webCa';
 import { getToken } from '../../../../services/user/accessToken';
 import { InstallWebCA } from './InstallWebCA';
+
+import { checkServer } from '../../../../services/checkServer';
+import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -98,8 +107,6 @@ export const Info = ({ stockid }) => {
     const [sec, setSec] = useState('');
     const [tradingDate, setTradingDate] = useState('');
     const [reloadLoading, setReloadLoading] = useState(false);
-    const [checkCA, setCheckCA] = useState(false);
-    const [reCheckCA, setReCheckCA] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -108,18 +115,91 @@ export const Info = ({ stockid }) => {
     const type = useSelector(store => store.goOrder.type);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const solaceData = useSelector(store => store.solace.solaceData);
-    const currentAccount = useSelector(store => store.user.currentAccount);
     const isLogin = useSelector(store => store.user.isLogin);
     const checkLot = useSelector(store => store.goOrder.checkLot);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
+    const userSettings = useSelector(store => store.user.userSettings);
 
-    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(
-        solaceData,
-        lot,
-        checkLot,
-    );
-    const { socalLogin } = useCheckSocialLogin();
-    const suggestAction = useRef('');
+    const { close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot, checkLot);
+
+    const router = useRouter();
+    const init = useRef(false);
+    const goCheckLot = useRef(false);
+    const checkSolaceConnect = useRef(false);
+    //避免畫面先初始在永豐金再跳回querystring的股票代碼，導致畫面閃礫
+    const initHandler = (() => {
+        if (!checkServer()) {
+            const stockid = getParamFromQueryString('stockid');
+            if (!init.current) {
+                if (stockid) {
+                    dispatch(setCode(stockid));
+                } else {
+                    dispatch(setCode('2890'));
+                }
+            }
+
+            setTimeout(() => {
+                init.current = true;
+            }, 1500);
+        }
+    })();
+
+    useEffect(() => {
+        if (router.query.bs != null && !init.current) {
+            // 因為畫面整個與預設畫面不同，所以延遲作業，避免一次處理太多事情，影響效能
+            setTimeout(() => {
+                dispatch(setBs(router.query.bs));
+            }, 1000);
+        }
+
+        if (router.query.price != null) {
+            dispatch(setDefaultOrdPrice(router.query.price));
+        }
+
+        if (router.query.qty != null) {
+            dispatch(setOrdQty(router.query.qty));
+        } else {
+            if (userSettings.stockOrderUnit != null) {
+                dispatch(setOrdQty(userSettings.stockOrderUnit));
+            }
+        }
+
+        if (router.query.session != null) {
+            //盤中零股
+            if (router.query.session === 'C') {
+                // TODO 零股資料完整後可以替換
+                checkSolaceConnect.current = true;
+
+                // setTimeout(() => {
+                //     dispatch(setLot('Odd'));
+                // }, 500);
+            }
+            //盤後零股和興櫃盤後 都是2
+            if (router.query.session === '2') {
+                goCheckLot.current = true;
+                dispatch(setTradeTime('after'));
+            }
+        }
+    }, [router, userSettings]);
+
+    // TODO 零股資料完整後可以刪掉
+    useEffect(() => {
+        if (solaceData.length != 0) {
+            if (checkSolaceConnect.current) {
+                dispatch(setLot('Odd'));
+                checkSolaceConnect.current = false;
+            }
+        }
+    }, [solaceData]);
+
+    useEffect(() => {
+        if (goCheckLot.current) {
+            if (productInfo != null && productInfo.solaceMarket !== '興櫃') {
+                dispatch(setLot('Odd'));
+                goCheckLot.current = false;
+            }
+        }
+    }, [productInfo]);
 
     useEffect(() => {
         if (solaceData.length > 0 && solaceData[0].topic != null) {
@@ -138,24 +218,6 @@ export const Info = ({ stockid }) => {
             }
         }
     }, [solaceData]);
-
-    // useEffect(() => {
-    //     if (reCheckCA || reCheckCA == null) {
-    //         if (currentAccount.idno) {
-    //             const checkData = checkCert(currentAccount.idno);
-    //             suggestAction.current = checkData.suggestAction;
-
-    //             if (checkData.suggestAction == 'None') {
-    //                 setCheckCA(true);
-    //                 dispatch(setHaveCA(true));
-    //             } else {
-    //                 setCheckCA(false);
-    //                 dispatch(setHaveCA(false));
-    //             }
-    //             setReCheckCA(false);
-    //         }
-    //     }
-    // }, [reCheckCA, currentAccount]);
 
     useEffect(async () => {
         if (code === '') {
@@ -270,23 +332,6 @@ export const Info = ({ stockid }) => {
         }
     };
 
-    // const checkWebCaHandler = () => {
-    //     const checkData = checkCert(currentAccount.idno);
-    //     suggestAction.current = checkData.suggestAction;
-
-    //     if(checkData.suggestAction == 'None'){
-    //         return false;
-    //     }else{
-    //         return true;
-    //     }
-    // }
-
-    // const signCaHandler = async () => {
-    //     const token = getToken();
-    //     await caResultDataHandler(suggestAction.current, currentAccount.idno, token);
-    //     setReCheckCA(true);
-    // };
-
     return (
         <div className="info__container">
             {!isLogin && (
@@ -317,35 +362,6 @@ export const Info = ({ stockid }) => {
                 </div>
             )}
             {<InstallWebCA />}
-            {/* {isLogin && !checkCA && (
-                <div className="noLogin__box">
-                    <img className="warningIcon" src={warning} />
-                    <span className="endTime">下單交易前請先安裝憑證！</span>
-                    <Button
-                        style={{
-                            width: '70px',
-                            height: '28px',
-                            margin: '0 0 0 9px',
-                            padding: '4px 1px 4px 2px',
-                            borderRadius: '2px',
-                            backgroundColor: '#254a91',
-                            color: 'white',
-                            lineHeight: '20px',
-                            position: 'absolute',
-                            right: '16px',
-                            top: '8px',
-                            border: 'none',
-                            letterSpacing: '-1px',
-                        }}
-                        loading={reloadLoading}
-                        onClick={() => {
-                            signCaHandler();
-                        }}
-                    >
-                        安裝
-                    </Button>
-                </div>
-            )} */}
             <div className="info__box">
                 <div className="row">
                     <div className="product__container">
