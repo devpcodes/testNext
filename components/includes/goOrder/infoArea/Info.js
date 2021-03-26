@@ -231,7 +231,7 @@ export const Info = ({ stockid }) => {
     }, [code, lot, isLogin]);
 
     useEffect(async () => {
-        if (!isLogin) {
+        if (!isLogin && socalLoginData.length === 0) {
             return;
         }
         getSelect();
