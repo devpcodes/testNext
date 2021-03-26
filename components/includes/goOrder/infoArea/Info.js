@@ -311,7 +311,7 @@ export const Info = ({ stockid }) => {
             market: type,
             isShowDetail: true,
             isSocalLogin: isSocalLogin,
-            token: isSocalLogin ? getToken() : getSocalToken(),
+            token: isSocalLogin ? getSocalToken() : getToken(),
         };
         const res = await fetchCheckSelfSelect(reqData);
         dispatch(setSelectInfo(res));
