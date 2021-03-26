@@ -5,10 +5,13 @@ import SortableList from '../sortableList/sortable';
 import { fetchupdateSelectStock } from '../../../../services/selfSelect/updateSelectStock';
 import { fetchUpdateSelectGroup } from '../../../../services/selfSelect/updateSelectGroup';
 import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 
 const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) => {
     const code = useSelector(store => store.goOrder.code);
     const type = useSelector(store => store.goOrder.type);
+    // const isLogin = useSelector(store => store.user.isLogin);
+    const socalLogin = useSelector(store => store.user.socalLogin);
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const [selectItem, setSelectItem] = useState([]); // 選項
@@ -28,6 +31,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
 
     const handleOk = async () => {
         let reqData = [];
+        const isSocalLogin = socalLogin.length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
         selectItem.forEach(item => {
             // 複委託期貨選擇權規格未出來。先 for 證券用。
             if (item.disabled === true) {
@@ -51,7 +56,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
             };
             reqData.push(select);
         });
-        const res = await fetchupdateSelectStock(reqData, getToken());
+        const res = await fetchupdateSelectStock(reqData, isSocalLogin, token);
         handleCancel();
     };
 
@@ -66,10 +71,12 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
 
     const completeSelfSelectGroupEdit = async () => {
         let sortArray = [];
+        const isSocalLogin = socalLogin.length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
         selectCheckedSort.forEach(data => {
             sortArray.push({ selectId: data.selectId });
         });
-        await fetchUpdateSelectGroup(sortArray, getToken());
+        await fetchUpdateSelectGroup(sortArray, isSocalLogin, token);
         await reloadSelect();
         setIsEditSelfSelectGroup(false);
     };

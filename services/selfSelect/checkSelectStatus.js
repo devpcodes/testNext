@@ -1,8 +1,8 @@
 import { getLykanInstance } from '../myAxios';
 
-export const fetchCheckSelfSelect = async function ({ symbol, exchange, market, isShowDetail, token }) {
+export const fetchCheckSelfSelect = async function ({ symbol, exchange, market, isShowDetail, isSocalLogin, token }) {
     try {
-        const reqUrl = '/select/checkSelectStatus';
+        const reqUrl = isSocalLogin ? '/social/checkSelectStatus' : '/select/checkSelectStatus';
         const res = await getLykanInstance().post(reqUrl, {
             symbol,
             exchange,

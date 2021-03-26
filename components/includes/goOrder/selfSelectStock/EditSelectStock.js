@@ -9,14 +9,22 @@ const EditSelectStock = memo(({ isVisible, editData, handler, reloadSelect }) =>
     }, [isVisible]);
 
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
-    const token = getToken();
+    const socalLogin = useSelector(store => store.user.socalLogin);
     const textInput = useRef(null);
+
     const handleClose = () => {
         handler(false);
     };
 
     const handleConfirm = async () => {
-        const res = await fetchUpdateSelectGroupName(editData.selectId, textInput.current.state.value, token);
+        const isSocalLogin = socalLogin.length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
+        const res = await fetchUpdateSelectGroupName(
+            editData.selectId,
+            textInput.current.state.value,
+            isSocalLogin,
+            token,
+        );
         if (res.success && res.message === 'OK') {
             editData.selectName = textInput.current.state.value;
             reloadSelect(editData);

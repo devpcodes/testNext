@@ -37,6 +37,7 @@ import icon from '../../../../resources/images/components/goOrder/ic-trending-up
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 import { InstallWebCA } from './InstallWebCA';
 
 import { checkServer } from '../../../../services/checkServer';
@@ -116,6 +117,7 @@ export const Info = ({ stockid }) => {
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const solaceData = useSelector(store => store.solace.solaceData);
     const isLogin = useSelector(store => store.user.isLogin);
+    const socalLoginData = useSelector(store => store.user.socalLogin);
     const checkLot = useSelector(store => store.goOrder.checkLot);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const userSettings = useSelector(store => store.user.userSettings);
@@ -295,6 +297,7 @@ export const Info = ({ stockid }) => {
 
     const getSelect = useCallback(async () => {
         let exchange;
+        const isSocalLogin = socalLoginData.length > 0 ? true : false;
         switch (type) {
             case 'S':
                 exchange = 'TAI';
@@ -307,7 +310,8 @@ export const Info = ({ stockid }) => {
             exchange: exchange,
             market: type,
             isShowDetail: true,
-            token: getToken(),
+            isSocalLogin: isSocalLogin,
+            token: isSocalLogin ? getToken() : getSocalToken(),
         };
         const res = await fetchCheckSelfSelect(reqData);
         dispatch(setSelectInfo(res));

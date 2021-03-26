@@ -1,8 +1,8 @@
 import { getLykanInstance } from '../myAxios';
 
-export const fetchUpdateSelectGroupName = async function (selectId, selectName, token) {
+export const fetchUpdateSelectGroupName = async function (selectId, selectName, isSocalLogin, token) {
     try {
-        const reqUrl = '/select/updateSelectGroupName';
+        const reqUrl = isSocalLogin ? '/social/updateSelectGroupName' : '/select/updateSelectGroupName';
         const res = await getLykanInstance().post(reqUrl, {
             selectId,
             selectName,
