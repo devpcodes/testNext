@@ -6,7 +6,7 @@ import { getToken } from '../../../../services/user/accessToken';
 import { setHaveCA } from '../../../../store/goOrder/action';
 import warning from '../../../../resources/images/components/goOrder/attention-warning.svg';
 
-export const InstallCA = () => {
+export const InstallWebCA = () => {
     const dispatch = useDispatch();
 
     const isLogin = useSelector(store => store.user.isLogin);

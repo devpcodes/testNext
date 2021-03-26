@@ -31,7 +31,7 @@ import { fetchCheckTradingDate } from '../../../../services/components/goOrder/f
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import { checkCert, caResultDataHandler } from '../../../../services/webCa';
 import { getToken } from '../../../../services/user/accessToken';
-import { InstallCA } from './installCA';
+import { InstallWebCA } from './InstallWebCA';
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -316,7 +316,7 @@ export const Info = ({ stockid }) => {
                     </Button>
                 </div>
             )}
-            {<InstallCA />}
+            {<InstallWebCA />}
             {/* {isLogin && !checkCA && (
                 <div className="noLogin__box">
                     <img className="warningIcon" src={warning} />
