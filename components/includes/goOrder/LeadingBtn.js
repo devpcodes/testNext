@@ -21,7 +21,8 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
         if (winSize.height <= containerHeight + 110) {
             setShadow('0px -7px 6px -3px #C7C7C7');
         } else {
-            setShadow('none');
+            // setShadow('none');
+            setShadow('0px -7px 6px -3px #C7C7C7');
         }
     }, [winSize, containerHeight]);
 
