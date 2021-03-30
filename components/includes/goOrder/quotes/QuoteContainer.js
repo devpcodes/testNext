@@ -25,8 +25,21 @@ const QuoteContainer = () => {
 
     const winSize = useWindowSize();
     const quoteContainerElement = useRef(null);
-
+    const currentCode = useRef(null);
     const isLogin = useSelector(store => store.user.isLogin);
+
+    useEffect(() => {
+        if (currentCode.current != code) {
+            setTimeout(() => {
+                if (slider.current != null) {
+                    setStopRenderNum(1);
+                    slider.current.goTo(0);
+                    currentCode.current = code;
+                }
+            }, 500);
+            return;
+        }
+    }, [code]);
 
     useEffect(() => {
         if (lot === 'Odd' && checkLot) {
@@ -40,7 +53,7 @@ const QuoteContainer = () => {
                 slider.current.goTo(0);
             }
         }
-    }, [lot, checkLot, solaceData, code]);
+    }, [lot, checkLot, solaceData]);
 
     useEffect(() => {
         if (bs === 'B' || bs === 'S') {

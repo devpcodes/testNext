@@ -155,7 +155,7 @@ const DetailBox = () => {
                             border: 'none',
                         }}
                         onClick={() => {
-                            window.open(process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount');
+                            window.open(process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount?option=S&tab=inventory');
                         }}
                         // loading={}
                     >

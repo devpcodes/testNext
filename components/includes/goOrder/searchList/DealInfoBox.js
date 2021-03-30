@@ -151,7 +151,7 @@ const DealInfoBox = () => {
                     columns={columns}
                     dataSource={data}
                     pagination={false}
-                    scroll={{ y: 240 }}
+                    scroll={{ y: 190 }}
                     showSorterTooltip={false}
                     // onRow={record => {
                     //     return {
