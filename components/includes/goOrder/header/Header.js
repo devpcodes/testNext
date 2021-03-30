@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Avatar } from 'antd';
+import { Avatar, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import { Select } from 'antd';
 
@@ -20,6 +20,7 @@ import logo from '../../../../resources/images/components/goOrder/logo.svg';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import { AccountAvatar } from '../../AccountAvatar';
 import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
+import { logout } from '../../../../services/user/logoutFetcher';
 
 const { Option } = Select;
 
@@ -45,6 +46,8 @@ const Header = () => {
     const userSettings = useSelector(store => store.user.userSettings);
     const socalLoginData = useSelector(store => store.user.socalLogin);
 
+    const [menuVisible, setMenuVisible] = useState(false);
+
     const groupedAccount = accountGroupByType(accounts);
     const accountList = groupedAccount[type];
 
@@ -63,6 +66,13 @@ const Header = () => {
         </AccountAvatar>
     );
 
+    useEffect(() => {
+        document.addEventListener('click', bodyClickHandler);
+        return () => {
+            document.removeEventListener('click', bodyClickHandler);
+        };
+    }, [menuVisible]);
+
     // TODO: 連動 current account 的處理
     useEffect(() => {
         // TODO: 無帳號處理
@@ -79,6 +89,14 @@ const Header = () => {
             dispatch(setCurrentAccount(currentAccount));
         }
     }, [type]);
+
+    const bodyClickHandler = e => {
+        if (e.target.className !== 'ant-tooltip-content') {
+            if (menuVisible) {
+                setMenuVisible(false);
+            }
+        }
+    };
 
     const socalLoginChildren = useMemo(() => {
         if (socalLoginData._id != null) {
@@ -130,6 +148,59 @@ const Header = () => {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            await logout();
+            window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
+        } catch (error) {
+            console.error(`logout error:`, error);
+        }
+    };
+
+    const renderMenu = () => {
+        return (
+            <>
+                <a
+                    style={{
+                        marginBottom: '8px',
+                        display: 'inline-block',
+                        color: '#0d1623',
+                        zIndex: '999',
+                        fontWeight: 'bold',
+                    }}
+                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
+                >
+                    我的帳務
+                </a>
+                <br />
+                <a
+                    style={{
+                        marginBottom: '8px',
+                        display: 'inline-block',
+                        color: '#0d1623',
+                        fontWeight: 'bold',
+                    }}
+                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
+                >
+                    我的自選
+                </a>
+                <br />
+                <a
+                    style={{
+                        display: 'inline-block',
+                        color: '#0d1623',
+                        fontWeight: 'bold',
+                    }}
+                    onClick={() => {
+                        handleLogout();
+                    }}
+                >
+                    登出
+                </a>
+            </>
+        );
+    };
+
     if (!hasMounted) {
         return null;
     }
@@ -176,13 +247,36 @@ const Header = () => {
                                 ))}
                             </Select>
                         </div>
-                        <div className="accountElement">{accountElement}</div>
+                        <Tooltip
+                            placement="topLeft"
+                            title={renderMenu()}
+                            color="white"
+                            overlayClassName="menu__tooltip"
+                            visible={menuVisible}
+                        >
+                            <div
+                                className="accountElement"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    setMenuVisible(true);
+                                }}
+                            >
+                                {accountElement}
+                            </div>
+                        </Tooltip>
                     </>
                 )}
                 {socalLogin && (
                     <>
                         <img className="logo" src={logo} />
-                        {socalLoginChildren}
+                        <Tooltip
+                            placement="topLeft"
+                            title={renderMenu()}
+                            color="white"
+                            overlayClassName="menu__tooltip--2"
+                        >
+                            {socalLoginChildren}
+                        </Tooltip>
                     </>
                 )}
                 {!socalLogin && !isLogin && (
@@ -198,6 +292,7 @@ const Header = () => {
                 .accountElement {
                     position: absolute;
                     right: 16px;
+                    cursor: pointer;
                 }
                 .Header__container {
                     width: 100%;
@@ -259,6 +354,23 @@ const Header = () => {
                 .socal__box {
                     position: absolute;
                     right: 16px;
+                }
+                .menu__tooltip .ant-tooltip-inner {
+                    color: #0d1623;
+                    font-size: 1.6rem;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
+                    margin-top: -12px;
+                }
+                .menu__tooltip--2 .ant-tooltip-inner {
+                    color: #0d1623;
+                    font-size: 1.6rem;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
+                    margin-top: -12px;
+                    margin-left: 12px;
                 }
             `}</style>
         </div>
