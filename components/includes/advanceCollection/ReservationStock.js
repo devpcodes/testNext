@@ -210,22 +210,34 @@ const ReservationStock = () => {
 
     const fetchInventory = async (token, brokerId, account) => {
         let resData = await fetchStockInventory(token, brokerId, account);
-        resData = resData.map((item, index) => {
-            item.key = String(index);
-            item.action = '申請';
-            item.qty = '';
-            return item;
-        });
-        setStockInventory(resData);
+        if (Array.isArray(resData)) {
+            resData = resData.map((item, index) => {
+                item.key = String(index);
+                item.action = '申請';
+                item.qty = '';
+                return item;
+            });
+            setStockInventory(resData);
+        } else {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
     };
 
     const fetchStatus = async (token, brokerId, account) => {
         let resData = await fetchEarmarkStatus(token, brokerId, account);
-        resData = resData.map((item, index) => {
-            item.key = String(index);
-            return item;
-        });
-        setStatusData(resData);
+        if (Array.isArray(resData)) {
+            resData = resData.map((item, index) => {
+                item.key = String(index);
+                return item;
+            });
+            setStatusData(resData);
+        } else {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
     };
 
     const changleHandler = activeKey => {
