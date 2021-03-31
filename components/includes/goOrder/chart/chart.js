@@ -112,11 +112,24 @@ const Chart = function () {
             let priceAxis = chart.yAxes.push(new am4charts.ValueAxis());
             priceAxis.strictMinMax = true;
             if (kline.DownLimit === 0.01 && kline.UpLimit === 9995) {
-                priceAxis.max = parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2));
-                priceAxis.min = parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2));
+                priceAxis.max =
+                    kline.Close > parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2))
+                        ? kline.Close
+                        : parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2));
+                priceAxis.min =
+                    kline.Close < parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2))
+                        ? kline.Close
+                        : parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2));
             } else {
                 priceAxis.min = kline.DownLimit; // 跌停
                 priceAxis.max = kline.UpLimit; // 漲停
+
+                let label = chart.createChild(am4core.Label);
+                label.text = kline.Reference;
+                label.fontSize = 12;
+                label.isMeasured = false;
+                label.x = '0';
+                label.y = '77';
             }
 
             priceAxis.strictMinMax = true;
@@ -196,13 +209,6 @@ const Chart = function () {
             dRange.contents.stroke = am4core.color('#22a16f');
             dRange.contents.fill = am4core.color('#22a16f');
             dRange.contents.fillOpacity = 0.1;
-
-            let label = chart.createChild(am4core.Label);
-            label.text = kline.Reference;
-            label.fontSize = 12;
-            label.isMeasured = false;
-            label.x = '10';
-            label.y = '77';
         }
     };
 
