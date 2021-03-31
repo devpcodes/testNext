@@ -111,7 +111,7 @@ const Chart = function () {
             // 價格軸設定
             let priceAxis = chart.yAxes.push(new am4charts.ValueAxis());
             priceAxis.strictMinMax = true;
-            if (kline.DownLimit === 0.01 && kline.UpLimit === 9999.95) {
+            if (kline.DownLimit === 0.01 && kline.UpLimit === 9995) {
                 priceAxis.max = parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2));
                 priceAxis.min = parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2));
             } else {
