@@ -241,9 +241,10 @@ const Header = () => {
                                 notFoundContent={<div></div>}
                             >
                                 {accountList.map(account => (
-                                    <Option
-                                        key={`${account.broker_id}-${account.account}`}
-                                    >{`${account.bhname} ${account.username}`}</Option>
+                                    <Option key={`${account.broker_id}-${account.account}`}>
+                                        <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                        <span className="option__username">{`${account.bhname} ${account.username}`}</span>
+                                    </Option>
                                 ))}
                             </Select>
                         </div>
@@ -334,6 +335,16 @@ const Header = () => {
                 }
             `}</style>
             <style jsx global>{`
+                .dropdown__container .ant-select-item-option-content .option__account {
+                    display: block;
+                }
+                .dropdown__container .ant-select-selection-item .option__account {
+                    display: none;
+                }
+                .ant-select-item.ant-select-item-option.ant-select-item-option-selected {
+                    background: #e6ebf5;
+                }
+
                 .dropdown__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
                     background-color: inherit;
                     color: #ffffff;
