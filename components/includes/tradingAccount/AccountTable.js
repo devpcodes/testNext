@@ -12,6 +12,9 @@ const AccountTable = ({ ...props }) => {
                 .filterBtn {
                     cursor: pointer;
                 }
+                .sino__table {
+                    margin-bottom: 20px;
+                }
                 .sino__table .ant-table table {
                     border: solid 1px #d7e0ef;
                 }

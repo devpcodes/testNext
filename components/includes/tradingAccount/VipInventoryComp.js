@@ -1,51 +1,98 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'antd';
+import Highlighter from 'react-highlight-words';
 import AccountTable from './AccountTable';
 import DropfilterCheckBox from './DropfilterCheckBox';
 import DropFilterSearch from './DropFilterSearch';
 import theme from '../../../resources/styles/theme';
-// import { AccountDropdown } from '../personalArea/accountDropdown/AccountDropdown';
-// import Download from './Download';
 import Control from './Control';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
 import filterIcon from '../../../resources/images/components/tradingAccount/ic-sort.svg';
+import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
+import { getCookie } from '../../../services/components/layouts/cookieController';
+import { getToken } from '../../../services/user/accessToken';
+import { getStockUnRealPrtlos } from '../../../store/stock/action';
+
 const VipInventoryComp = () => {
+    const dispatch = useDispatch();
     const [columns, setColumns] = useState([]);
+    const [data, setData] = useState([]);
+    const [searchColumns, setSearchColumns] = useState([]);
+    const [searchWords, setSearchWords] = useState('');
+    const currentAccount = useSelector(store => store.user.currentAccount);
+    const unRealPrtlos = useSelector(store => store.stock.UnRealPrtlos);
     const isMobile = useCheckMobile();
-    const [data, setData] = useState([
-        {
-            category: '現股',
-            product: '台積電台積電台電',
-            close: 6303,
-            yes: 10,
-            todayBuy: 5,
-            todaySell: 2,
-            key: 0,
+
+    useEffect(() => {
+        if (currentAccount.broker_id != null) {
+            getUnRealPrtlos(currentAccount);
+        }
+    }, [currentAccount]);
+
+    useEffect(() => {
+        if (Array.isArray(unRealPrtlos)) {
+            const tableData = unRealPrtlos.map((item, key) => {
+                item.stock = item.stock + ' ' + item.stocknm;
+                item.key = key;
+                return item;
+            });
+            setData(tableData);
+        }
+    }, [unRealPrtlos]);
+
+    const getUnRealPrtlos = async (currentAccount, { stock } = { stock: ' ' }) => {
+        const data = {
+            action: '',
+            bhno: currentAccount.broker_id,
+            cseq: currentAccount.account,
+            ctype: 'A', // 全部
+            sip: getCookie('client_ip'),
+            stock: stock,
+            ttype: 'A',
+            token: getToken(),
+        };
+        const modal = false;
+        dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(data, modal)));
+    };
+
+    const submitHandler = useCallback(
+        (confirm, val) => {
+            getUnRealPrtlos(currentAccount, { stock: val });
+            setSearchColumns(columns => {
+                if (!columns.includes('stock')) {
+                    columns.push('stock');
+                }
+                return columns;
+            });
+            setSearchWords(val);
+            confirm();
         },
-        {
-            category: '現股',
-            product: '永豐金',
-            close: 12.5,
-            yes: 2,
-            todayBuy: 1,
-            todaySell: 1,
-            key: 1,
-        },
-        {
-            category: '現股',
-            product: '力積電',
-            close: 110,
-            yes: 2,
-            todayBuy: 1,
-            todaySell: 1,
-            key: 2,
-        },
-    ]);
+        [currentAccount],
+    );
+
+    const searchResetHandler = confirm => {
+        if (searchColumns.indexOf('stock') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('stock');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchWords('');
+            getUnRealPrtlos(currentAccount);
+        }
+        confirm();
+    };
+
     const getColumnSearchProps = dataIndex => {
-        if (dataIndex === 'product') {
+        if (dataIndex === 'stock') {
             return {
-                // sinoFilter: true,
-                filterDropdown: () => <DropFilterSearch />,
+                filterDropdown: ({ confirm }) => (
+                    <DropFilterSearch
+                        onSubmit={submitHandler.bind(null, confirm)}
+                        onReset={searchResetHandler.bind(null, confirm)}
+                    />
+                ),
                 filterIcon: (
                     <img
                         style={{
@@ -57,6 +104,17 @@ const VipInventoryComp = () => {
                         src={filterIcon}
                     />
                 ),
+                render: text =>
+                    searchColumns.includes(dataIndex) ? (
+                        <Highlighter
+                            highlightStyle={{ padding: 0, color: '#daa360', backgroundColor: 'rgba(255,255,255,0)' }}
+                            searchWords={[searchWords]}
+                            autoEscape
+                            textToHighlight={text ? text.toString() : ''}
+                        />
+                    ) : (
+                        text
+                    ),
             };
         } else {
             return {
@@ -75,29 +133,30 @@ const VipInventoryComp = () => {
             };
         }
     };
+
     useEffect(() => {
         const newColumns = [
             {
                 title: '類別',
-                dataIndex: 'category',
-                key: 'category',
+                dataIndex: 'ttypename',
+                key: 'ttypename',
                 width: isMobile ? '80px' : '12%',
                 fixed: 'left',
-                ...getColumnSearchProps('category'),
+                ...getColumnSearchProps('ttypename'),
             },
             {
                 title: '商品',
-                dataIndex: 'product',
-                key: 'product',
+                dataIndex: 'stock',
+                key: 'stock',
                 width: isMobile ? '120px' : '20%',
                 fixed: 'left',
                 className: isMobile ? 'normalWhiteSpace' : '',
-                ...getColumnSearchProps('product'),
+                ...getColumnSearchProps('stock'),
             },
             {
                 title: '現價',
-                dataIndex: 'close',
-                key: 'close',
+                dataIndex: 'lastprice',
+                key: 'lastprice',
                 align: 'right',
                 __style__: {
                     width: 10,
@@ -106,8 +165,8 @@ const VipInventoryComp = () => {
             },
             {
                 title: '昨餘',
-                dataIndex: 'yes',
-                key: 'yes',
+                dataIndex: 'qty',
+                key: 'qty',
                 align: 'right',
                 __style__: {
                     width: 10,
@@ -116,8 +175,8 @@ const VipInventoryComp = () => {
             },
             {
                 title: '今買成',
-                dataIndex: 'todayBuy',
-                key: 'todayBuy',
+                dataIndex: 'bqty',
+                key: 'bqty',
                 align: 'right',
                 __style__: {
                     width: 10,
@@ -126,8 +185,8 @@ const VipInventoryComp = () => {
             },
             {
                 title: '今賣成',
-                dataIndex: 'todaySell',
-                key: 'todaySell',
+                dataIndex: 'sqty',
+                key: 'sqty',
                 align: 'right',
                 __style__: {
                     width: 10,
@@ -178,7 +237,7 @@ const VipInventoryComp = () => {
         ];
 
         setColumns(newColumns);
-    }, [isMobile]);
+    }, [isMobile, currentAccount, searchColumns, searchWords]);
     console.log('parent render');
     return (
         <div className="vipInventory__container">

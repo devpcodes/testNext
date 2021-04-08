@@ -75,8 +75,12 @@ const Control = ({ style, text, columns, dataSource, fileName }) => {
         </>
     );
 };
+
 Control.propTypes = {
     style: PropTypes.object,
     text: PropTypes.string,
+    columns: PropTypes.array,
+    dataSource: PropTypes.array,
+    fileName: PropTypes.string,
 };
 export default Control;

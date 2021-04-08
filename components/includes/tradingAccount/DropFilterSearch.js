@@ -1,10 +1,31 @@
-import { Input, Button, Space } from 'antd';
-const DropFilterSearch = () => {
+import { useState } from 'react';
+import { Input, Button } from 'antd';
+const DropFilterSearch = ({ onSubmit, onReset }) => {
+    const [inputVal, setInputVal] = useState('');
+
+    const onChangeHandler = e => {
+        setInputVal(e.target.value);
+    };
+
+    const resetClickHandler = () => {
+        setInputVal('');
+        onReset();
+    };
+
+    const onSubmitHandler = val => {
+        onSubmit(val);
+    };
+
     return (
         <>
             <div className="search__container">
                 <div className="input__box">
-                    <Input placeholder="請輸入股號或商品名稱" style={{ height: '38px' }} value={''} />
+                    <Input
+                        placeholder="請輸入股號或商品名稱"
+                        style={{ height: '38px' }}
+                        onChange={onChangeHandler}
+                        value={inputVal}
+                    />
                 </div>
                 <div className="searchBtn__box">
                     <Button
@@ -16,6 +37,7 @@ const DropFilterSearch = () => {
                             border: 'solid 1px #d7e0ef',
                             color: '#a9b6cb',
                         }}
+                        onClick={resetClickHandler}
                     >
                         重置
                     </Button>
@@ -28,6 +50,7 @@ const DropFilterSearch = () => {
                             padding: 0,
                             marginLeft: '12px',
                         }}
+                        onClick={onSubmitHandler.bind(null, inputVal)}
                     >
                         確定
                     </Button>
