@@ -99,24 +99,40 @@ const VipInventoryComp = () => {
                 dataIndex: 'close',
                 key: 'close',
                 align: 'right',
+                __style__: {
+                    width: 10,
+                    height: 3,
+                },
             },
             {
                 title: '昨餘',
                 dataIndex: 'yes',
                 key: 'yes',
                 align: 'right',
+                __style__: {
+                    width: 10,
+                    height: 3,
+                },
             },
             {
                 title: '今買成',
                 dataIndex: 'todayBuy',
                 key: 'todayBuy',
                 align: 'right',
+                __style__: {
+                    width: 10,
+                    height: 3,
+                },
             },
             {
                 title: '今賣成',
                 dataIndex: 'todaySell',
                 key: 'todaySell',
                 align: 'right',
+                __style__: {
+                    width: 10,
+                    height: 3,
+                },
             },
             {
                 title: '交易',
@@ -168,7 +184,7 @@ const VipInventoryComp = () => {
         <div className="vipInventory__container">
             <div className="control__container">
                 <h2 className="title">庫存查詢</h2>
-                <Control text={'1-15檔個股 (共49檔個股)'} />
+                <Control text={'1-15檔個股 (共49檔個股)'} columns={columns} dataSource={data} fileName={'庫存'} />
             </div>
             <AccountTable
                 scroll={{ x: 780 }}

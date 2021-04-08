@@ -1,6 +1,6 @@
 import downloadIcon from '../../../resources/images/components/tradingAccount/ic-download.svg';
 import refreshIcon from '../../../resources/images/components/tradingAccount/c-refresh.svg';
-const IconBtn = ({ type, style, className }) => {
+const IconBtn = ({ type, style, className, onClick }) => {
     const getImageHandler = type => {
         switch (type) {
             case 'download':
@@ -11,7 +11,7 @@ const IconBtn = ({ type, style, className }) => {
     };
     return (
         <>
-            <button className={'download__btn ' + className} style={style}>
+            <button className={'download__btn ' + className} style={style} onClick={onClick}>
                 <img src={getImageHandler(type)} />
             </button>
             <style jsx>{`

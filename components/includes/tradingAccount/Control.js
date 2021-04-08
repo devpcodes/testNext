@@ -1,10 +1,42 @@
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
 import { AccountDropdown } from '../personalArea/accountDropdown/AccountDropdown';
 import IconBtn from './IconBtn';
 
-const Control = ({ style, text }) => {
+const Control = ({ style, text, columns, dataSource, fileName }) => {
     const isMobile = useCheckMobile();
+
+    const downloadHandler = useCallback(async () => {
+        const { Excel } = await import('antd-table-saveas-excel');
+        const excel = new Excel();
+        excelStyleHandler(excel);
+        const newColumns = excelDataHandler(columns);
+        excel.addSheet(fileName).addColumns(newColumns).addDataSource(dataSource).saveAs(`${fileName}.xlsx`);
+    }, [columns, dataSource]);
+
+    const excelStyleHandler = excel => {
+        excel.setTHeadStyle({
+            background: 'FFFFFF',
+            fontSize: 12,
+            bold: false,
+            h: 'center',
+            fontName: '微軟正黑體',
+        });
+        excel.setTBodyStyle({
+            fontName: '微軟正黑體',
+        });
+    };
+
+    const excelDataHandler = tableColumns => {
+        const newColumns = tableColumns.map(item => {
+            const { title, dataIndex } = item;
+            const obj = { title, dataIndex };
+            return obj;
+        });
+        return newColumns;
+    };
+
     return (
         <>
             <div className="control__container" style={style}>
@@ -14,6 +46,7 @@ const Control = ({ style, text }) => {
                 <IconBtn
                     type={'download'}
                     style={{ verticalAlign: 'top', display: isMobile ? 'none' : 'inline-block' }}
+                    onClick={downloadHandler}
                 />
             </div>
             <style jsx>{`

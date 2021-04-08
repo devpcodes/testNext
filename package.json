@@ -17,6 +17,7 @@
     "dependencies": {
         "@amcharts/amcharts4": "^4.9.34",
         "antd": "^4.5.2",
+        "antd-table-saveas-excel": "^1.0.14",
         "array-move": "^3.0.1",
         "axios": "^0.20.0",
         "bignumber.js": "^9.0.1",
