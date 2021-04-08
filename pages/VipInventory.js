@@ -2,7 +2,7 @@ import VipInventoryComp from '../components/includes/tradingAccount/VipInventory
 
 const VipInventory = () => {
     return (
-        <div style={{ paddingLeft: '10%', paddingRight: '10%', paddingTop: '50px' }}>
+        <div>
             <VipInventoryComp />
         </div>
     );

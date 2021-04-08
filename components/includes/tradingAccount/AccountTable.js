@@ -1,82 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Table, Tooltip } from 'antd';
-
-let titleText = {};
-let init = false;
+import { Table } from 'antd';
+import theme from '../../../resources/styles/theme';
 const AccountTable = ({ ...props }) => {
-    const [columns, setColumns] = useState([]);
-    const [sinoFilterRenKey, setSinoFilterRenKey] = useState('');
-
-    useEffect(() => {
-        document.addEventListener('click', bodyClickHandler);
-        return () => {
-            document.removeEventListener('click', bodyClickHandler);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (props.columns.length > 0 && !init) {
-            props.columns.forEach(item => {
-                if (item.title != null && item.title) {
-                    let newKey = item.key;
-                    titleText[newKey] = item.title;
-                }
-            });
-            console.log('titleText', titleText, props.columns);
-            init = true;
-        }
-    }, [props.columns]);
-
-    const bodyClickHandler = e => {
-        if (e.target.className !== 'ant-tooltip-content' && e.target.className !== 'filterBtn') {
-            setSinoFilterRenKey('');
-        }
-    };
-
-    useEffect(() => {
-        setColumns(mapColumnsHandler(props.columns, sinoFilterRenKey));
-    }, [props.columns, sinoFilterRenKey]);
-
-    const filterClick = useCallback(
-        key => {
-            let newKey = key;
-            setSinoFilterRenKey(oldKey => {
-                if (!oldKey || oldKey == null) {
-                    return newKey;
-                } else {
-                    return '';
-                }
-            });
-        },
-        [sinoFilterRenKey],
-    );
-
-    const mapColumnsHandler = (columns, filterKey) => {
-        return columns.map(item => {
-            if (item.sinoFilter != null && item.sinoFilter) {
-                item.title = (
-                    <div>
-                        <div className="filterBtn" onClick={filterClick.bind(null, item.key)}>
-                            {titleText[item.key]}
-                        </div>
-                        <Tooltip
-                            visible={item.key === filterKey}
-                            title={item.sinoFilterRender}
-                            color="white"
-                            placement="bottomLeft"
-                            getPopupContainer={trigger => trigger.parentElement}
-                        />
-                    </div>
-                );
-            }
-            return item;
-        });
-    };
-
     return (
-        <>
+        <div>
             <div className="sino__table">
-                <Table columns={columns} {...props} />
+                <Table {...props} />
             </div>
 
             <style jsx global>{`
@@ -102,17 +31,96 @@ const AccountTable = ({ ...props }) => {
                 }
                 .sino__table .ant-table-thead > tr > th {
                     background-color: #f2f5fa;
+                    color: #6c7b94;
                 }
                 .sino__table .ant-table-thead > tr > th {
                     padding-top: 12px;
                     padding-bottom: 12px;
                     border-bottom: solid 1px #d7e0ef;
+                    white-space: nowrap;
+                }
+                .sino__table .ant-table-thead > tr > th:first-child {
+                    padding-left: 3%;
+                }
+                .sino__table .ant-table-thead > tr > th:last-child {
+                    padding-right: 3%;
                 }
                 .sino__table .ant-table-tbody > tr > td {
                     border-bottom: solid 1px #e6ebf5;
+                    font-size: 1.6rem;
+                    color: #0d1623;
+                    white-space: nowrap;
+                }
+                .sino__table .ant-table-tbody > tr > td:first-child {
+                    padding-left: 3%;
+                }
+                .sino__table .ant-table-tbody > tr > td:last-child {
+                    padding-right: 3%;
+                }
+                .sino__table .ant-pagination-disabled .ant-pagination-item-link {
+                    border-color: #d7e0ef;
+                }
+                .sino__table .ant-pagination-item-active a {
+                    color: white;
+                }
+                .sino__table .ant-pagination-item-active {
+                    background-color: #c43826;
+                    border: none;
+                }
+                .sino__table .ant-pagination-item {
+                    border-color: #d7e0ef;
+                    transition: all 0.3s;
+                }
+                .sino__table .ant-pagination-next .ant-pagination-item-link {
+                    border-color: #d7e0ef;
+                }
+                .sino__table .ant-pagination-item:hover a {
+                    color: #c43826;
+                }
+                .sino__table .ant-pagination-item:hover {
+                    border-color: #c43826;
+                }
+                .sino__table .ant-pagination-item-active a {
+                    color: white !important;
+                }
+                .sino__table .ant-pagination-prev:hover .ant-pagination-item-link {
+                    color: #c43826;
+                    border-color: #c43826;
+                }
+                .sino__table .ant-pagination-next:hover .ant-pagination-item-link {
+                    color: #c43826;
+                    border-color: #c43826;
+                }
+                .sino__table .ant-table-pagination.ant-pagination {
+                    margin-top: 20px;
+                }
+                .sino__table .ant-pagination-total-text {
+                    color: #6c7b94;
+                    margin-right: 16px;
+                }
+                @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .sino__table .ant-table table {
+                        border: none;
+                        border-top: solid 1px #d7e0ef;
+                    }
+                    .sino__table .ant-table-thead > tr > th {
+                        padding-top: 2px;
+                        padding-bottom: 2px;
+                    }
+                    .sino__table .ant-table-pagination.ant-pagination {
+                        width: 100%;
+                        text-align: center;
+                    }
+                    .sino__table .ant-pagination-total-text {
+                        display: block;
+                        margin-top: -15px;
+                    }
+                }
+                .sino__table .normalWhiteSpace {
+                    white-space: normal !important;
                 }
             `}</style>
-        </>
+        </div>
     );
 };
 
