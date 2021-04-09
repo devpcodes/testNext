@@ -2,6 +2,7 @@ const theme = {
     fontFamily: 'Arial, "儷黑 Pro", "LiHei Pro", "微軟正黑體", "Microsoft JhengHei", sans-serif',
     colors: {
         text: '#ffffff',
+        textDark: '#0d1623',
         darkBg: '#0d1623',
         lightBg: '#ffffff',
         normalBg: '#e6ebf5',
