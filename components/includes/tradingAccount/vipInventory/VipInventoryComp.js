@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import theme from '../../../resources/styles/theme';
+import theme from '../../../../resources/styles/theme';
 import Control from './Control';
 import VipInventoryTable from './VipInventoryTable';
 import _ from 'lodash';

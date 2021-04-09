@@ -1,5 +1,5 @@
-import downloadIcon from '../../../resources/images/components/tradingAccount/ic-download.svg';
-import refreshIcon from '../../../resources/images/components/tradingAccount/c-refresh.svg';
+import downloadIcon from '../../../../resources/images/components/tradingAccount/ic-download.svg';
+import refreshIcon from '../../../../resources/images/components/tradingAccount/c-refresh.svg';
 const IconBtn = ({ type, style, className, onClick }) => {
     const getImageHandler = type => {
         switch (type) {

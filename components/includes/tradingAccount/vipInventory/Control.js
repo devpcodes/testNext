@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useCheckMobile } from '../../../hooks/useCheckMobile';
-import { AccountDropdown } from '../personalArea/accountDropdown/AccountDropdown';
+import { useCheckMobile } from '../../../../hooks/useCheckMobile';
+import { AccountDropdown } from '../../personalArea/accountDropdown/AccountDropdown';
 import IconBtn from './IconBtn';
 
 const Control = ({ style, text, columns, dataSource, fileName }) => {

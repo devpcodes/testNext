@@ -5,13 +5,14 @@ import Highlighter from 'react-highlight-words';
 import AccountTable from './AccountTable';
 import DropfilterCheckBox from './DropfilterCheckBox';
 import DropFilterSearch from './DropFilterSearch';
-import theme from '../../../resources/styles/theme';
-import { useCheckMobile } from '../../../hooks/useCheckMobile';
-import filterIcon from '../../../resources/images/components/tradingAccount/ic-sort.svg';
-import { fetchStockUnRealPrtlos } from '../../../services/stock/stockUnRealPrtlosFetcher';
-import { getCookie } from '../../../services/components/layouts/cookieController';
-import { getToken } from '../../../services/user/accessToken';
-import { getStockUnRealPrtlos } from '../../../store/stock/action';
+// import theme from '../../../resources/styles/theme';
+import { useCheckMobile } from '../../../../hooks/useCheckMobile';
+import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
+import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
+import { fetchStockUnRealPrtlos } from '../../../../services/stock/stockUnRealPrtlosFetcher';
+import { getCookie } from '../../../../services/components/layouts/cookieController';
+import { getToken } from '../../../../services/user/accessToken';
+import { getStockUnRealPrtlos } from '../../../../store/stock/action';
 
 const VipInventoryTable = ({ getColumns, getData }) => {
     const dispatch = useDispatch();
@@ -149,6 +150,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
 
     const submitHandler = useCallback(
         (confirm, val) => {
+            confirm();
             getUnRealPrtlos(currentAccount, { stock: val });
             setSearchColumns(columns => {
                 if (!columns.includes('stock')) {
@@ -157,12 +159,12 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 return columns;
             });
             setSearchWords(val);
-            confirm();
         },
         [currentAccount],
     );
 
     const searchResetHandler = confirm => {
+        confirm();
         if (searchColumns.indexOf('stock') !== -1) {
             setSearchColumns(columns => {
                 const index = searchColumns.indexOf('stock');
@@ -172,7 +174,6 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             setSearchWords('');
             getUnRealPrtlos(currentAccount);
         }
-        confirm();
     };
 
     const getColumnSearchProps = dataIndex => {
@@ -182,6 +183,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                     <DropFilterSearch
                         onSubmit={submitHandler.bind(null, confirm)}
                         onReset={searchResetHandler.bind(null, confirm)}
+                        value={searchWords}
                     />
                 ),
                 filterIcon: (
@@ -192,7 +194,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                         }}
-                        src={filterIcon}
+                        src={searchWords !== '' ? filterIconActive : filterIcon}
                     />
                 ),
                 render: text =>
@@ -225,10 +227,18 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         }
     };
 
+    const getScrollX = data => {
+        if (data.length == 0) {
+            return {};
+        } else {
+            return { x: 780 };
+        }
+    };
+
     return (
         <>
             <AccountTable
-                scroll={{ x: 780 }}
+                scroll={getScrollX(data)}
                 columns={columns}
                 dataSource={data}
                 pagination={{

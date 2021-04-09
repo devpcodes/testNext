@@ -1,4 +1,4 @@
-import VipInventoryComp from '../components/includes/tradingAccount/VipInventoryComp';
+import VipInventoryComp from '../components/includes/tradingAccount/vipInventory/VipInventoryComp';
 
 const VipInventory = () => {
     return (

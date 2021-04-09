@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table } from 'antd';
-import theme from '../../../resources/styles/theme';
+import theme from '../../../../resources/styles/theme';
 const AccountTable = ({ ...props }) => {
     return (
         <div>
