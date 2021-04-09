@@ -184,9 +184,12 @@ function Service_ForgetPassword() {
                 }
 
                 @media (max-width: 501px) {
+                    .password__container {
+                        margin: 100px auto 0;
+                    }
                     .password__service__link {
                         display: flex;
-                        padding: 15px;
+                        padding: 20px 15px;
                     }
                     .password__service__item {
                         height: auto;
@@ -206,6 +209,13 @@ function Service_ForgetPassword() {
                         font-size: 1.6rem;
                         line-height: 19px;
                         text-align: left;
+                    }
+                    .title__container {
+                        margin: 20px 0;
+                        align-items: center;
+                    }
+                    .title {
+                        font-size: 2rem;
                     }
                 }
             `}</style>
