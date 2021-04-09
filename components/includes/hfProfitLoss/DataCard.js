@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import theme from '../../../resources/styles/theme';
 import { formatNum } from '../../../services/formatNum';
 
-export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }) => {
+export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle, subRender }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     const getColor = styleType => {
@@ -46,13 +46,24 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
 
     return (
         <>
-            <article className="data__container">
-                <div className="title__container">
-                    <p className="data__title">{title}</p>
-                    {!isMobile && <p className="data__sub-title">{subTitle}</p>}
-                </div>
-                <div className="data__number">{formatValue(value, numberStyle)}</div>
-            </article>
+            <div>
+                <article className="data__container">
+                    <div className="title__container">
+                        <p className="data__title">{title}</p>
+                        {!isMobile && <p className="data__sub-title">{subTitle}</p>}
+                    </div>
+                    <div className="data__number">{formatValue(value, numberStyle)}</div>
+                </article>
+                {subRender}
+                {/* <div>
+                        <p>手續費</p>
+                        <p>5,500</p>
+                    </div>
+                    <div>
+                        <p>交易稅</p>
+                        <p>10643</p>
+                    </div> */}
+            </div>
             <style jsx>{`
                 p {
                     margin: 0;
@@ -107,6 +118,12 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
                         font-weight: 600;
                         text-align: left;
                     }
+                }
+                .data__container {
+                    ${subRender &&
+                    `
+                        margin-bottom: 0;
+                    `}
                 }
             `}</style>
         </>

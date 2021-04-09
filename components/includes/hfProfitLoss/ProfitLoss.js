@@ -10,6 +10,7 @@ import dropdownImg from '../../../resources/images/components/hfProfitLoss/arrow
 import { getProfitLoss } from '../../../services/components/hfProfitLoss/profitLossFetcher';
 import { getToken } from '../../../services/user/accessToken';
 import { setCurrentAccount } from '../../../store/user/action';
+import { formatNum } from '../../../services/formatNum';
 
 const { Option } = Select;
 
@@ -166,9 +167,37 @@ export const ProfitLoss = () => {
                     value={data?.sellAmount}
                     styleType={'sell'}
                 />
-                <DataCard title={'當日已實現損益'} value={data?.realPrtlosSum} numberStyle={true} />
-                <DataCard title={'未實現損益'} value={data?.unrealPrtlosSum} numberStyle={true} />
-                {isMobile && <p className="text__remark">註：金額皆含手續費或交易稅</p>}
+                <DataCard
+                    title={'當日已實現損益'}
+                    value={data?.realPrtlosSum}
+                    numberStyle={true}
+                    subRender={
+                        <div>
+                            <div className="subItem">
+                                <p>手續費</p>
+                                <p>{formatNum(Number(data?.buyFee) + Number(data?.sellFee), 0)}</p>
+                            </div>
+                            <div className="subItem">
+                                <p>交易稅</p>
+                                <p>{formatNum(data?.taxSum, 0)}</p>
+                            </div>
+                        </div>
+                    }
+                />
+                <DataCard
+                    title={'未實現損益'}
+                    value={data?.unrealPrtlosSum}
+                    numberStyle={true}
+                    subRender={
+                        <div>
+                            <div className="subItem subItem__2">
+                                <p>手續費</p>
+                                <p>{formatNum(data?.buyFee, 0)}</p>
+                            </div>
+                        </div>
+                    }
+                />
+                {<p className="text__remark">註：金額皆不含手續費或交易稅</p>}
             </div>
             <style jsx>{`
                 button {
@@ -231,6 +260,11 @@ export const ProfitLoss = () => {
                     font-size: 1.6rem;
                     color: #0d1623;
                 }
+                .text__remark {
+                    margin-top: 12px;
+                    font-size: 1.6rem;
+                    color: #6c7b94;
+                }
                 @media (max-width: 1024px) {
                     .body__container {
                         width: 90%;
@@ -252,7 +286,6 @@ export const ProfitLoss = () => {
                         height: 22px;
                         line-height: 22px;
                         font-size: 1.6rem;
-                        color: #a9b6cb;
                     }
                 }
             `}</style>
@@ -261,6 +294,25 @@ export const ProfitLoss = () => {
                     position: absolute;
                     top: -6px;
                     right: 0px;
+                }
+                .subItem {
+                    display: inline-block;
+                    width: 50%;
+                    border: solid 1px #e6ebf5;
+                    border-top: none;
+                    color: #0d1623;
+                    font-size: 2rem;
+                    font-weight: bold;
+                    padding: 12px 28px;
+                }
+                .subItem__2 {
+                    width: 100%;
+                }
+                @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .subItem {
+                        font-size: 1.6rem;
+                        padding: 12px 16px;
+                    }
                 }
             `}</style>
         </>
