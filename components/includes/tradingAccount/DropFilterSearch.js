@@ -24,6 +24,7 @@ const DropFilterSearch = ({ onSubmit, onReset }) => {
                         placeholder="請輸入股號或商品名稱"
                         style={{ height: '38px' }}
                         onChange={onChangeHandler}
+                        onPressEnter={onSubmitHandler.bind(null, inputVal)}
                         value={inputVal}
                     />
                 </div>
