@@ -37,7 +37,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     useEffect(() => {
         if (Array.isArray(unRealPrtlos)) {
             const tableData = unRealPrtlos.map((item, key) => {
-                item.stock = item.stock + ' ' + item.stocknm;
+                item.product = item.stock + ' ' + item.stocknm;
                 item.key = key;
                 return item;
             });
@@ -58,12 +58,12 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             },
             {
                 title: '商品',
-                dataIndex: 'stock',
-                key: 'stock',
+                dataIndex: 'product',
+                key: 'product',
                 width: isMobile ? '120px' : '20%',
                 fixed: 'left',
                 className: 'vipInventoryStock',
-                ...getColumnSearchProps('stock'),
+                ...getColumnSearchProps('product'),
             },
             {
                 title: '現價',
@@ -153,7 +153,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     };
 
     const getColumnSearchProps = dataIndex => {
-        if (dataIndex === 'stock') {
+        if (dataIndex === 'product') {
             return {
                 filterDropdown: ({ confirm }) => (
                     <DropFilterSearch
