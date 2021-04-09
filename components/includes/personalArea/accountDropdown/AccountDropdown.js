@@ -12,7 +12,7 @@ import MyTransition from '../../myTransition';
 import theme from '../../../../resources/styles/theme';
 import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
-export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width }) => {
+export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type }) => {
     const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
 
@@ -93,29 +93,42 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width }) =
                     <MyTransition isVisible={listVisible} classNames={'accounts'}>
                         <div className="account__container--mobile accountList__container">
                             {groupedAccountTypes.map((accType, index) => {
-                                const accText = getAccountText(accType);
-                                const accountsPerGroup = groupedAccount[accType];
+                                let accText;
+                                let accountsPerGroup = [];
+                                if (type != null && accType === type) {
+                                    accText = getAccountText(accType);
+                                    accountsPerGroup = groupedAccount[accType];
+                                }
+
+                                if (type == null) {
+                                    accText = getAccountText(accType);
+                                    accountsPerGroup = groupedAccount[accType];
+                                }
+                                // const accText = getAccountText(accType);
+                                // const accountsPerGroup = groupedAccount[accType];
                                 return (
                                     !!accountsPerGroup.length && (
                                         <div className="accountList__grouped" key={index}>
                                             <span className="optGroup__accType">{accText}</span>
-                                            {accountsPerGroup.map(account => (
-                                                <div
-                                                    key={`${account.broker_id}-${account.account}`}
-                                                    className="account__card"
-                                                    data-account={`${account.broker_id}-${account.account}`}
-                                                    onClick={currentAccountHandler}
-                                                    onKeyDown={keyPressed}
-                                                    role="menuitem"
-                                                    tabIndex="0"
-                                                >
-                                                    <AccountList account={account} />
-                                                    {`${currentAccount.broker_id}-${currentAccount.account}` ===
-                                                        `${account.broker_id}-${account.account}` && (
-                                                        <img src={checkImg} alt="check"></img>
-                                                    )}
-                                                </div>
-                                            ))}
+                                            {accountsPerGroup.map(account => {
+                                                return (
+                                                    <div
+                                                        key={`${account.broker_id}-${account.account}`}
+                                                        className="account__card"
+                                                        data-account={`${account.broker_id}-${account.account}`}
+                                                        onClick={currentAccountHandler}
+                                                        onKeyDown={keyPressed}
+                                                        role="menuitem"
+                                                        tabIndex="0"
+                                                    >
+                                                        <AccountList account={account} />
+                                                        {`${currentAccount.broker_id}-${currentAccount.account}` ===
+                                                            `${account.broker_id}-${account.account}` && (
+                                                            <img src={checkImg} alt="check"></img>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )
                                 );
@@ -133,24 +146,34 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width }) =
                     getPopupContainer={trigger => trigger.parentElement}
                 >
                     {groupedAccountTypes.map((accType, index) => {
-                        const accText = getAccountText(accType);
-                        const accountsPerGroup = groupedAccount[accType];
+                        let accText;
+                        let accountsPerGroup = [];
+                        if (type != null && accType === type) {
+                            accText = getAccountText(accType);
+                            accountsPerGroup = groupedAccount[accType];
+                        }
 
+                        if (type == null) {
+                            accText = getAccountText(accType);
+                            accountsPerGroup = groupedAccount[accType];
+                        }
                         return (
                             !!accountsPerGroup.length && (
                                 <OptGroup label={<span className="optGroup__accType">{accText}</span>} key={index}>
-                                    {accountsPerGroup.map(account => (
-                                        <Option
-                                            value={`${account.broker_id}-${account.account}`}
-                                            key={`${account.broker_id}-${account.account}`}
-                                        >
-                                            <span className="option__accType">{accText} | </span>
-                                            <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
-                                            <span className="option__username">{`${account.bhname || ''} ${
-                                                account.username
-                                            }`}</span>
-                                        </Option>
-                                    ))}
+                                    {accountsPerGroup.map(account => {
+                                        return (
+                                            <Option
+                                                value={`${account.broker_id}-${account.account}`}
+                                                key={`${account.broker_id}-${account.account}`}
+                                            >
+                                                <span className="option__accType">{accText} | </span>
+                                                <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                                <span className="option__username">{`${account.bhname || ''} ${
+                                                    account.username
+                                                }`}</span>
+                                            </Option>
+                                        );
+                                    })}
                                 </OptGroup>
                             )
                         );

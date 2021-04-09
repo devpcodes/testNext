@@ -41,7 +41,12 @@ const Control = ({ style, text, columns, dataSource, fileName }) => {
         <>
             <div className="control__container" style={style}>
                 <span className="text">{text}</span>
-                <AccountDropdown personalAreaVisible={false} tradingLayout={true} width={isMobile ? '80%' : ''} />
+                <AccountDropdown
+                    type={'S'}
+                    personalAreaVisible={false}
+                    tradingLayout={true}
+                    width={isMobile ? '80%' : ''}
+                />
                 <IconBtn type={'refresh'} style={{ verticalAlign: 'top', marginRight: isMobile ? 0 : '12px' }} />
                 <IconBtn
                     type={'download'}

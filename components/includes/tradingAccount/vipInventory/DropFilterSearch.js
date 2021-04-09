@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Input, Button, Modal } from 'antd';
+import ConfirmButton from './buttons/ConfirmButton';
+import ResetButton from './buttons/ResetButton';
+
 const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     const [inputVal, setInputVal] = useState(null);
 
@@ -36,32 +39,8 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
                     />
                 </div>
                 <div className="searchBtn__box">
-                    <Button
-                        style={{
-                            display: 'inline-block',
-                            width: '52px',
-                            height: '32px',
-                            padding: 0,
-                            border: 'solid 1px #d7e0ef',
-                            color: '#a9b6cb',
-                        }}
-                        onClick={resetClickHandler}
-                    >
-                        重置
-                    </Button>
-                    <Button
-                        type="primary"
-                        style={{
-                            display: 'inline-block',
-                            width: '52px',
-                            height: '32px',
-                            padding: 0,
-                            marginLeft: '12px',
-                        }}
-                        onClick={onSubmitHandler.bind(null, inputVal)}
-                    >
-                        確定
-                    </Button>
+                    <ResetButton text="重置" onClick={resetClickHandler} />
+                    <ConfirmButton text="確定" onClick={onSubmitHandler.bind(null, inputVal)} />
                 </div>
             </div>
             <style global jsx>{`
