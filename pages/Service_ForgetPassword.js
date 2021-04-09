@@ -5,6 +5,7 @@ import { PageHead } from '../components/includes/PageHead';
 import theme from '../resources/styles/theme';
 import info from '../resources/images/pages/Service_ForgetPassword/attention-info-circle.png';
 import more from '../resources/images/pages/Service_ForgetPassword/menu-more-horizontal.png';
+import userVoice from '../resources/images/pages/Service_ForgetPassword/user-user-voice.png';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -18,7 +19,24 @@ function Service_ForgetPassword() {
             <section className="password__container">
                 <h2 className="title__container">
                     <span className="title"> 密碼專區 </span>
-                    <Popover content={<p>1231244</p>} trigger="click">
+                    <Popover
+                        title={
+                            <h5 className="service__online__title">
+                                <img className="service__online__img" src={userVoice} />
+                                線上客服
+                            </h5>
+                        }
+                        content={
+                            <a
+                                target="_blank"
+                                href="https://chatservice.sinopac.com/index.php/chat/startchat/(department)/5?site=sinotrade"
+                            >
+                                無法解決問題？試試線上客服 - 智慧小豐
+                            </a>
+                        }
+                        trigger="click"
+                        placement="bottomRight"
+                    >
                         <span className="more">
                             <img src={more} />
                         </span>
@@ -26,8 +44,19 @@ function Service_ForgetPassword() {
                 </h2>
                 <ul className="password__service__container">
                     <li className="password__service__item">
-                        <a className="password__service__link">
-                            <Popover content={<p>1231244</p>} trigger="click">
+                        <a
+                            className="password__service__link"
+                            href={`${process.env.NEXT_PUBLIC_SUBPATH}/Service_ForgetPassword_Self`}
+                        >
+                            <Popover
+                                content={
+                                    <p className="tooltips">
+                                        須持有有效憑證或開戶時留存之手機號碼進行驗證，即可線上解鎖。每日僅提供兩次線上解鎖，超過申請次數請洽詢所屬營業員或來電客服中心。
+                                    </p>
+                                }
+                                trigger="click"
+                                placement="topRight"
+                            >
                                 <img src={info} className="info" />
                             </Popover>
                             <img className="service__img" src="https://fakeimg.pl/150x150/" />
@@ -42,10 +71,11 @@ function Service_ForgetPassword() {
                         </a>
                     </li>
                     <li className="password__service__item">
-                        <a className="password__service__link">
-                            <Popover content={<p>1231244</p>} trigger="click">
-                                <img src={info} className="info" />
-                            </Popover>
+                        <a
+                            className="password__service__link"
+                            href={process.env.NEXT_PUBLIC_PASSWORD_SECURITIES}
+                            target="_blank"
+                        >
                             <img className="service__img" src="https://fakeimg.pl/150x150/" />
                             <div>
                                 <h5 className="service__title">密碼補發 - 證券戶</h5>
@@ -58,8 +88,20 @@ function Service_ForgetPassword() {
                         </a>
                     </li>
                     <li className="password__service__item">
-                        <a className="password__service__link">
-                            <Popover content={<p>1231244</p>} trigger="click">
+                        <a
+                            className="password__service__link"
+                            href={process.env.NEXT_PUBLIC_PASSWORD_FUTURE}
+                            target="_blank"
+                        >
+                            <Popover
+                                content={
+                                    <p className="tooltips">
+                                        在永豐期貨開戶的用戶，只能選擇期貨戶入口進行密碼補發。由永豐金證券開期貨帳戶的用戶，請改由證券戶入口補發。
+                                    </p>
+                                }
+                                trigger="click"
+                                placement="topRight"
+                            >
                                 <img src={info} className="info" />
                             </Popover>
                             <img className="service__img" src="https://fakeimg.pl/150x150/" />
@@ -74,8 +116,16 @@ function Service_ForgetPassword() {
                         </a>
                     </li>
                     <li className="password__service__item">
-                        <a className="password__service__link">
-                            <Popover content={<p>1231244</p>} trigger="click">
+                        <div className="password__service__link">
+                            <Popover
+                                content={
+                                    <p className="tooltips">
+                                        若前往原開戶分公司臨櫃補發密碼可當日完成。若非原開戶分公司，則須等待1至3個工作天。
+                                    </p>
+                                }
+                                trigger="click"
+                                placement="topRight"
+                            >
                                 <img src={info} className="info" />
                             </Popover>
                             <img className="service__img" src="https://fakeimg.pl/150x150/" />
@@ -87,12 +137,21 @@ function Service_ForgetPassword() {
                                     親臨分公司申請密碼補發
                                 </p>
                             </div>
-                        </a>
+                        </div>
                     </li>
                 </ul>
             </section>
 
             <style jsx>{`
+                .service__online__title {
+                    margin: 0;
+                    font-size: 1.6rem;
+                    font-weight: bold;
+                }
+
+                .tooltips {
+                    width: 230px;
+                }
                 .password__container {
                     width: 80%;
                     margin: 200px auto 0;
@@ -101,6 +160,10 @@ function Service_ForgetPassword() {
                     margin: 28px 0;
                     display: flex;
                     justify-content: space-between;
+                }
+                .service__online__img {
+                    margin-right: 5px;
+                    margin-bottom: 3px;
                 }
                 .more {
                     width: 40px;
@@ -144,6 +207,7 @@ function Service_ForgetPassword() {
                     right: 15px;
                     position: absolute;
                     top: 15px;
+                    cursor: pointer;
                 }
                 .password__service__link {
                     position: relative;
