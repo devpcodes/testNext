@@ -15,6 +15,7 @@ import { fetchInventory } from '../../../../services/stock/fetchInventory';
 const VipInventoryTable = ({ getColumns, getData }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
+    const [total, setTotal] = useState(0);
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -22,8 +23,9 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const { data: fetchData } = useSWR([currentAccount, searchWords], fetchInventory);
 
     useEffect(() => {
-        if (Array.isArray(fetchData)) {
-            const tableData = fetchData.map((item, key) => {
+        // fetchData
+        if (Array.isArray(fetchData?.data) && fetchData?.data?.length > 0) {
+            const tableData = fetchData.data.map((item, key) => {
                 item.product = item.stock + ' ' + item.stocknm;
                 item.key = key;
                 return item;
