@@ -1,11 +1,47 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table } from 'antd';
 import theme from '../../../../resources/styles/theme';
-const AccountTable = ({ ...props }) => {
+import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
+import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
+
+const AccountTable = ({ filterColumns, ...props }) => {
+    const [columns, setColumns] = useState([]);
+    useEffect(() => {
+        const newColumns = props.columns.map(item => {
+            if (item.filterDropdown != null) {
+                console.log(item.dataIndex);
+                const checkActive = checkActiveHandler(item.dataIndex, filterColumns);
+                item.filterIcon = (
+                    <img
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                        }}
+                        src={checkActive ? filterIconActive : filterIcon}
+                    />
+                );
+            }
+            return item;
+        });
+        setColumns(newColumns);
+    }, [props.columns, filterColumns]);
+
+    const checkActiveHandler = (dataIndex, filterColumns) => {
+        let active = false;
+        filterColumns.forEach(item => {
+            if (item === dataIndex) {
+                active = true;
+            }
+        });
+        return active;
+    };
+
     return (
         <div>
             <div className="sino__table">
-                <Table {...props} />
+                <Table columns={columns} {...props} />
             </div>
 
             <style jsx global>{`

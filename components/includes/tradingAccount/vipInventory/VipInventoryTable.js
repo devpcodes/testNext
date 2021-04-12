@@ -129,8 +129,8 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             confirm();
             getUnRealPrtlos(currentAccount, { stock: val });
             setSearchColumns(columns => {
-                if (!columns.includes('stock')) {
-                    columns.push('stock');
+                if (!columns.includes('product')) {
+                    columns.push('product');
                 }
                 return columns;
             });
@@ -141,9 +141,9 @@ const VipInventoryTable = ({ getColumns, getData }) => {
 
     const searchResetHandler = confirm => {
         confirm();
-        if (searchColumns.indexOf('stock') !== -1) {
+        if (searchColumns.indexOf('product') !== -1) {
             setSearchColumns(columns => {
-                const index = searchColumns.indexOf('stock');
+                const index = searchColumns.indexOf('product');
                 columns.splice(index, 1);
                 return columns;
             });
@@ -162,17 +162,6 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                         value={searchWords}
                     />
                 ),
-                filterIcon: (
-                    <img
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                        }}
-                        src={searchWords !== '' ? filterIconActive : filterIcon}
-                    />
-                ),
                 render: text =>
                     searchColumns.includes(dataIndex) ? (
                         <Highlighter
@@ -188,17 +177,6 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         } else {
             return {
                 filterDropdown: () => <DropfilterCheckBox />,
-                filterIcon: (
-                    <img
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                        }}
-                        src={filterIcon}
-                    />
-                ),
             };
         }
     };
@@ -224,6 +202,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                     defaultCurrent: 1,
                     pageSize: 10,
                 }}
+                filterColumns={searchColumns}
             />
             <style global jsx>{`
                 .page__container {

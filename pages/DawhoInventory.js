@@ -1,6 +1,6 @@
 import VipInventoryComp from '../components/includes/tradingAccount/vipInventory/VipInventoryComp';
 
-const VipInventory = () => {
+const DawhoInventory = () => {
     return (
         <div>
             <VipInventoryComp />
@@ -8,4 +8,4 @@ const VipInventory = () => {
     );
 };
 
-export default VipInventory;
+export default DawhoInventory;
