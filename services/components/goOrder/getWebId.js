@@ -7,7 +7,7 @@ const chart = [
             recommisiioned: '124',
         },
         source: {
-            id: 'cnYES',
+            id: 'cnyes',
             stock: '164',
             futuresOptions: '8',
             recommisiioned: '164',

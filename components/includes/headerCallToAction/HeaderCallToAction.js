@@ -33,8 +33,8 @@ export const HeaderCallToAction = () => {
                 queryString = objectToQueryHandler(mmaQuery);
                 break;
             }
-            case 'cnYES': {
-                const mmaQuery = Object.assign(currentQuery, newQuery, { platform: 'cnYES', source: 'cnYES' });
+            case 'cnyes': {
+                const mmaQuery = Object.assign(currentQuery, newQuery, { platform: 'cnyes', source: 'cnyes' });
                 queryString = objectToQueryHandler(mmaQuery);
                 break;
             }
