@@ -4,6 +4,8 @@ import theme from '../../../../resources/styles/theme';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
 
+// columns設定filterDropdown 會有自訂的icon產生
+// filterColumns 為現在 active的 filter key，icon會自動產生變化
 const AccountTable = ({ filterColumns, ...props }) => {
     const [columns, setColumns] = useState([]);
     useEffect(() => {

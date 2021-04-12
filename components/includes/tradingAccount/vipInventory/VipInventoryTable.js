@@ -1,42 +1,29 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'antd';
+import useSWR from 'swr';
 import Highlighter from 'react-highlight-words';
 import AccountTable from './AccountTable';
 import DropfilterCheckBox from './DropfilterCheckBox';
 import DropFilterSearch from './DropFilterSearch';
 // import theme from '../../../resources/styles/theme';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
-import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
-import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
-import { fetchStockUnRealPrtlos } from '../../../../services/stock/stockUnRealPrtlosFetcher';
-import { getCookie } from '../../../../services/components/layouts/cookieController';
-import { getToken } from '../../../../services/user/accessToken';
-import { getStockUnRealPrtlos } from '../../../../store/stock/action';
 import BuyButton from './buttons/BuyButton';
 import SellButton from './buttons/SellButton';
+import { fetchDawhoInventory } from '../../../../services/stock/fetchDawhoInventory';
 
 const VipInventoryTable = ({ getColumns, getData }) => {
-    const dispatch = useDispatch();
-
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
-
     const currentAccount = useSelector(store => store.user.currentAccount);
-    const unRealPrtlos = useSelector(store => store.stock.UnRealPrtlos);
     const isMobile = useCheckMobile();
+    const { data: fetchData } = useSWR([currentAccount, searchWords], fetchDawhoInventory);
 
     useEffect(() => {
-        if (currentAccount.broker_id != null) {
-            getUnRealPrtlos(currentAccount);
-        }
-    }, [currentAccount]);
-
-    useEffect(() => {
-        if (Array.isArray(unRealPrtlos)) {
-            const tableData = unRealPrtlos.map((item, key) => {
+        if (Array.isArray(fetchData)) {
+            const tableData = fetchData.map((item, key) => {
                 item.product = item.stock + ' ' + item.stocknm;
                 item.key = key;
                 return item;
@@ -44,7 +31,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             getData(tableData);
             setData(tableData);
         }
-    }, [unRealPrtlos]);
+    }, [fetchData]);
 
     useEffect(() => {
         const newColumns = [
@@ -109,25 +96,10 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         setColumns(newColumns);
     }, [isMobile, currentAccount, searchColumns, searchWords]);
 
-    const getUnRealPrtlos = async (currentAccount, { stock } = { stock: ' ' }) => {
-        const data = {
-            action: '',
-            bhno: currentAccount.broker_id,
-            cseq: currentAccount.account,
-            ctype: 'A', // 全部
-            sip: getCookie('client_ip'),
-            stock: stock,
-            ttype: 'A',
-            token: getToken(),
-        };
-        const modal = false;
-        dispatch(getStockUnRealPrtlos(fetchStockUnRealPrtlos(data, modal)));
-    };
-
     const submitHandler = useCallback(
         (confirm, val) => {
             confirm();
-            getUnRealPrtlos(currentAccount, { stock: val });
+            // getUnRealPrtlos(currentAccount, { stock: val });
             setSearchColumns(columns => {
                 if (!columns.includes('product')) {
                     columns.push('product');
@@ -148,7 +120,6 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 return columns;
             });
             setSearchWords('');
-            getUnRealPrtlos(currentAccount);
         }
     };
 
@@ -182,7 +153,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     };
 
     const getScrollX = data => {
-        if (data.length == 0) {
+        if (data?.length == 0) {
             return {};
         } else {
             return { x: 780 };
