@@ -50,19 +50,11 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle, 
                 <article className="data__container">
                     <div className="title__container">
                         <p className="data__title">{title}</p>
-                        {!isMobile && <p className="data__sub-title">{subTitle}</p>}
+                        {subTitle ? <p className="data__sub-title">{subTitle}</p> : null}
                     </div>
                     <div className="data__number">{formatValue(value, numberStyle)}</div>
                 </article>
                 {subRender}
-                {/* <div>
-                        <p>手續費</p>
-                        <p>5,500</p>
-                    </div>
-                    <div>
-                        <p>交易稅</p>
-                        <p>10643</p>
-                    </div> */}
             </div>
             <style jsx>{`
                 p {
@@ -75,7 +67,7 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle, 
                     width: 100%;
                     margin: 16px 0;
                     padding: 28px 32px;
-                    border: solid 1px #e6ebf5;
+                    border: solid 1px #d7e0ef;
                     background-color: #f9fbff;
                 }
                 .title__container .data__title {
@@ -117,6 +109,9 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle, 
                         font-size: 2.8rem;
                         font-weight: 600;
                         text-align: left;
+                    }
+                    .title__container .data__sub-title {
+                        font-size: 1.2rem;
                     }
                 }
                 .data__container {

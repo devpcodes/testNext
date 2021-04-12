@@ -160,44 +160,58 @@ export const ProfitLoss = () => {
                     </p>
                     {!isMobile && <p className="text">交易幣別：新台幣</p>}
                 </div>
-                <DataCard title={'買進成交總金額'} subTitle={'含手續費'} value={data?.buyAmount} styleType={'buy'} />
                 <DataCard
-                    title={'賣出成交總金額'}
-                    subTitle={'含手續費及交易稅'}
-                    value={data?.sellAmount}
-                    styleType={'sell'}
-                />
-                <DataCard
-                    title={'當日已實現損益'}
-                    value={data?.realPrtlosSum}
-                    numberStyle={true}
-                    subRender={
-                        <div>
-                            <div className="subItem">
-                                <p>手續費</p>
-                                <p>{formatNum(Number(data?.buyFee) + Number(data?.sellFee), 0)}</p>
-                            </div>
-                            <div className="subItem">
-                                <p>交易稅</p>
-                                <p>{formatNum(data?.taxSum, 0)}</p>
-                            </div>
-                        </div>
-                    }
-                />
-                <DataCard
-                    title={'未實現損益'}
-                    value={data?.unrealPrtlosSum}
-                    numberStyle={true}
+                    title={'買進成交總金額'}
+                    value={data?.buyAmount}
+                    styleType={'buy'}
                     subRender={
                         <div>
                             <div className="subItem subItem__2">
-                                <p>手續費</p>
-                                <p>{formatNum(data?.buyFee, 0)}</p>
+                                <p className="sub__info">手續費</p>
+                                <p className="sub__info-2">{formatNum(data?.buyFee, 0)}</p>
                             </div>
                         </div>
                     }
                 />
-                {<p className="text__remark">註：金額皆不含手續費或交易稅</p>}
+                <DataCard
+                    title={'賣出成交總金額'}
+                    // subTitle={'含手續費及交易稅'}
+                    value={data?.sellAmount}
+                    styleType={'sell'}
+                    subRender={
+                        <div>
+                            <div className="subItem subItem--noRightBorder">
+                                <p className="sub__info">手續費</p>
+                                <p className="sub__info-2">
+                                    {formatNum(Number(data?.buyFee) + Number(data?.sellFee), 0)}
+                                </p>
+                            </div>
+                            <div className="subItem">
+                                <p className="sub__info">交易稅</p>
+                                <p className="sub__info-2">{formatNum(data?.taxSum, 0)}</p>
+                            </div>
+                        </div>
+                    }
+                />
+                <DataCard
+                    title={'當日已實現損益'}
+                    subTitle="已扣除手續費及交易稅"
+                    value={data?.realPrtlosSum}
+                    numberStyle={true}
+                />
+                <DataCard
+                    title={'當日未實現損益'}
+                    subTitle="已扣除手續費"
+                    value={data?.unrealPrtlosSum}
+                    numberStyle={true}
+                />
+                <DataCard
+                    title={'昨日庫存未賣張數'}
+                    subTitle="單位：張"
+                    value={data?.yesterdayQty}
+                    valueFormat={false}
+                />
+                {/* {<p className="text__remark">註：金額皆不含手續費或交易稅</p>} */}
             </div>
             <style jsx>{`
                 button {
@@ -298,20 +312,37 @@ export const ProfitLoss = () => {
                 .subItem {
                     display: inline-block;
                     width: 50%;
-                    border: solid 1px #e6ebf5;
+                    border: solid 1px #d7e0ef;
                     border-top: none;
                     color: #0d1623;
                     font-size: 2rem;
                     font-weight: bold;
                     padding: 12px 28px;
                 }
+
                 .subItem__2 {
                     width: 100%;
+                }
+                .subItem--noRightBorder {
+                    border-right: none;
+                }
+                .sub__info {
+                    color: #6c7b94;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .subItem {
                         font-size: 1.6rem;
                         padding: 12px 16px;
+                    }
+                    .sub__info {
+                        color: #6c7b94;
+                        display: inline-block;
+                        font-size: 1.6rem;
+                    }
+                    .sub__info-2 {
+                        display: inline-block;
+                        font-size: 1.6rem;
+                        margin-left: 8px !important;
                     }
                 }
             `}</style>
