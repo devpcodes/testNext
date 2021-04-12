@@ -182,9 +182,7 @@ export const ProfitLoss = () => {
                         <div>
                             <div className="subItem subItem--noRightBorder">
                                 <p className="sub__info">手續費</p>
-                                <p className="sub__info-2">
-                                    {formatNum(Number(data?.buyFee) + Number(data?.sellFee), 0)}
-                                </p>
+                                <p className="sub__info-2">{formatNum(Number(data?.sellFee), 0)}</p>
                             </div>
                             <div className="subItem">
                                 <p className="sub__info">交易稅</p>

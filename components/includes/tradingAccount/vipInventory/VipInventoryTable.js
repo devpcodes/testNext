@@ -10,7 +10,7 @@ import DropFilterSearch from './DropFilterSearch';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import BuyButton from './buttons/BuyButton';
 import SellButton from './buttons/SellButton';
-import { fetchDawhoInventory } from '../../../../services/stock/fetchDawhoInventory';
+import { fetchInventory } from '../../../../services/stock/fetchInventory';
 
 const VipInventoryTable = ({ getColumns, getData }) => {
     const [columns, setColumns] = useState([]);
@@ -19,7 +19,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const [searchWords, setSearchWords] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isMobile = useCheckMobile();
-    const { data: fetchData } = useSWR([currentAccount, searchWords], fetchDawhoInventory);
+    const { data: fetchData } = useSWR([currentAccount, searchWords], fetchInventory);
 
     useEffect(() => {
         if (Array.isArray(fetchData)) {
