@@ -8,14 +8,35 @@ const VipInventoryComp = () => {
     const [data, setData] = useState([]);
 
     const getColumns = useCallback(columns => {
-        setColumns(columns);
+        var deep = _.cloneDeep(columns);
+        const formatColumns = deep.filter(item => {
+            if (item.key !== 'trade') {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        console.log('excel', formatColumns);
+        setColumns(formatColumns);
     });
 
     const getData = useCallback(data => {
         var deep = _.cloneDeep(data);
         const formatData = deep.map(item => {
-            item.qty = parseInt(item.qty);
-            item.lastprice = Number(item.lastprice);
+            switch (item.ttype) {
+                case '0':
+                    item.ttype = '現股';
+                    break;
+                case '1':
+                    item.ttype = '融資';
+                    break;
+                case '2':
+                    item.ttype = '融券';
+                    break;
+                default:
+                    item.ttype = '現股';
+                    break;
+            }
             return item;
         });
         setData(formatData);

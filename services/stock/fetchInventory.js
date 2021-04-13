@@ -2,7 +2,7 @@ import { getCookie } from '../components/layouts/cookieController';
 import { getA8Instance } from '../myAxios';
 import { getToken } from '../user/accessToken';
 
-export const fetchInventory = async (currentAccount, pageIndex = 1, pageSize = 30, searchWords = ' ') => {
+export const fetchInventory = async (currentAccount, searchWords = ' ', pageIndex = 1, pageSize = 50) => {
     if (currentAccount.broker_id != null) {
         try {
             const res = await getA8Instance(undefined, undefined, false).post('/Equity/Inventory', {

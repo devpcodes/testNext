@@ -11,22 +11,28 @@ import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import BuyButton from './buttons/BuyButton';
 import SellButton from './buttons/SellButton';
 import { fetchInventory } from '../../../../services/stock/fetchInventory';
+import { formatNum } from '../../../../services/formatNum';
 
 const VipInventoryTable = ({ getColumns, getData }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(50);
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isMobile = useCheckMobile();
-    const { data: fetchData } = useSWR([currentAccount, searchWords], fetchInventory);
+    const { data: fetchData } = useSWR([currentAccount, searchWords, currentPage, pageSize], fetchInventory);
 
     useEffect(() => {
         // fetchData
+        if (fetchData?.totalCount != null) {
+            setTotal(fetchData.totalCount);
+        }
         if (Array.isArray(fetchData?.data) && fetchData?.data?.length > 0) {
             const tableData = fetchData.data.map((item, key) => {
-                item.product = item.stock + ' ' + item.stocknm;
+                item.product = item.stock + ' ' + item.Name;
                 item.key = key;
                 return item;
             });
@@ -39,11 +45,21 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         const newColumns = [
             {
                 title: '類別',
-                dataIndex: 'ttypename',
-                key: 'ttypename',
+                dataIndex: 'ttype',
+                key: 'ttype',
                 width: isMobile ? '80px' : '12%',
                 fixed: 'left',
-                ...getColumnSearchProps('ttypename'),
+                ...getColumnSearchProps('ttype'),
+                render: (text, record) => {
+                    switch (text) {
+                        case '0':
+                            return '現股';
+                        case '1':
+                            return '融資';
+                        case '2':
+                            return '融券';
+                    }
+                },
             },
             {
                 title: '商品',
@@ -62,21 +78,30 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             },
             {
                 title: '昨餘',
-                dataIndex: 'qty',
-                key: 'qty',
+                dataIndex: 'preqty',
+                key: 'preqty',
                 align: 'right',
+                render: text => {
+                    return formatNum(text, 0);
+                },
             },
             {
                 title: '今買成',
                 dataIndex: 'bqty',
                 key: 'bqty',
                 align: 'right',
+                render: text => {
+                    return formatNum(text, 0);
+                },
             },
             {
                 title: '今賣成',
                 dataIndex: 'sqty',
                 key: 'sqty',
                 align: 'right',
+                render: text => {
+                    return formatNum(text, 0);
+                },
             },
             {
                 title: '交易',
@@ -162,6 +187,10 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         }
     };
 
+    const pageChangeHandler = (page, pageSize) => {
+        setCurrentPage(page);
+    };
+
     return (
         <>
             <AccountTable
@@ -169,11 +198,13 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 columns={columns}
                 dataSource={data}
                 pagination={{
-                    total: 21,
+                    total: total,
                     showTotal: (total, range) => `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`,
-                    defaultPageSize: 10,
+                    defaultPageSize: pageSize,
                     defaultCurrent: 1,
-                    pageSize: 10,
+                    showSizeChanger: false,
+                    onChange: pageChangeHandler,
+                    responsive: true,
                 }}
                 filterColumns={searchColumns}
             />
@@ -186,6 +217,11 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 }
                 .vipInventoryStock {
                     font-weight: bold;
+                }
+                @media (max-width: 768px) {
+                    .vipInventoryStock {
+                        white-space: normal !important;
+                    }
                 }
                 /* .ant-table-filter-dropdown {
                     width: 148px;
