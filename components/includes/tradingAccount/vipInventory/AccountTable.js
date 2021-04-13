@@ -83,7 +83,10 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     white-space: nowrap;
                 }
                 .sino__table .ant-table-thead > tr > th:first-child {
-                    padding-left: 3%;
+                    padding-left: ${props.dataSource?.length > 0 ? '3%' : 0};
+                }
+                .sino__table .ant-table-filter-column {
+                    padding-left: ${props.dataSource?.length > 0 ? 0 : '22px'};
                 }
                 .sino__table .ant-table-thead > tr > th:last-child {
                     padding-right: 3%;
@@ -95,7 +98,7 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     white-space: nowrap;
                 }
                 .sino__table .ant-table-tbody > tr > td:first-child {
-                    padding-left: 3%;
+                    padding-left: ${props.dataSource?.length > 0 ? '3%' : 0};
                 }
                 .sino__table .ant-table-tbody > tr > td:last-child {
                     padding-right: 3%;

@@ -46,6 +46,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     }, [fetchData]);
 
     useEffect(() => {
+        console.log('isMobile', isMobile);
         const newColumns = [
             {
                 title: '類別',
@@ -226,7 +227,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
 
     const getScrollX = data => {
         if (data?.length == 0) {
-            return {};
+            return { x: 780 };
         } else {
             return { x: 780 };
         }
