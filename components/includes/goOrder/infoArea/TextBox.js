@@ -12,6 +12,7 @@ export const TextBox = memo(({ color, text }) => {
                     height: 22px;
                     padding: 1px 3.8px;
                     border-radius: 2px;
+                    line-height: 20px;
                 }
                 .text__box ~ .text__box {
                     margin-left: 4px;

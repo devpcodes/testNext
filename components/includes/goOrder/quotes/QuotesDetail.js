@@ -179,6 +179,7 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
                     float: right;
                     font-weight: bold;
                     color: #0d1623;
+                    line-height: 24px;
                 }
 
                 .label {

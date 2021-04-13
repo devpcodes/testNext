@@ -122,6 +122,21 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             if (xhr.data.AvgPrice[0] == 0) {
                 xhr.data.AvgPrice[0] = '--';
             }
+
+            if (xhr.data.BidVolume != null) {
+                if (xhr.data.BidVolume[0] != 0) {
+                    if (Number(xhr.data.BidPrice[0]) === 0 && parseInt(xhr.data.BidPrice[0]) == 0) {
+                        xhr.data.BidPrice[0] = '市價';
+                    }
+                }
+            }
+            if (xhr.data.AskVolume != null) {
+                if (xhr.data.AskVolume[0] != 0) {
+                    if (Number(xhr.data.AskPrice[0]) === 0 && parseInt(xhr.data.AskPrice[0]) == 0) {
+                        xhr.data.AskPrice[0] = '市價';
+                    }
+                }
+            }
         }
     };
 
@@ -133,6 +148,9 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             // 刪simtrade
             if (nextData.OddlotSimtrade == null) {
                 delete prevData['OddlotSimtrade'];
+            }
+            if (nextData.OddlotSuspend == null) {
+                delete prevData['OddlotSuspend'];
             }
         }
         if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') === -1) {
@@ -190,6 +208,9 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             if (nextData.Simtrade == null) {
                 delete prevData['Simtrade'];
             }
+            if (nextData.StopTrade == null) {
+                delete prevData['StopTrade'];
+            }
         }
     };
 
@@ -217,9 +238,15 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
                 if (nextData.OddlotSimtrade == null) {
                     delete prevData['OddlotSimtrade'];
                 }
+                if (nextData.OddlotSuspend == null) {
+                    delete prevData['OddlotSuspend'];
+                }
             } else {
                 if (nextData.Simtrade == null) {
                     delete prevData['Simtrade'];
+                }
+                if (nextData.StopTrade == null) {
+                    delete prevData['StopTrade'];
                 }
             }
         }

@@ -1,12 +1,14 @@
-import { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useCallback, memo } from 'react';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
 import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
 import { setOrderPrice } from '../../../../store/goOrder/action';
-const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
-    const solaceData = useSelector(store => store.solace.solaceData);
-    const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
-    const checkLot = useSelector(store => store.goOrder.checkLot);
+
+const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRender: false }) => {
+    // const solaceData = useSelector(store => store.solace.solaceData);
+    // const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
+    // const checkLot = useSelector(store => store.goOrder.checkLot);
+
     const dispatch = useDispatch();
     const getVolumeSum = keyName => {
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
@@ -128,6 +130,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'buy',
                                                     formatPrice(item, '--').length,
+                                                    item,
                                                 )}
                                                 // style={{
                                                 //     width: `calc(100% - ${50 + toDecimal(item).length * 8}px)`,
@@ -193,6 +196,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'sell',
                                                     formatPrice(item, '--').length,
+                                                    item,
                                                 )}
                                             >
                                                 <div
@@ -239,7 +243,11 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         // }
     };
 
-    const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength) => {
+    const sellBoxStyleHandler = (amount, simtrade, type = 'sell', priceLength, item) => {
+        if (item === '市價') {
+            priceLength = 4;
+        }
+
         let w;
         if (String(amount).length + priceLength >= 10) {
             w = '108px';
@@ -394,7 +402,7 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
                     height: 24px;
                     margin: 0 0 3px;
                     padding: 0 0 3px;
-                    background-color: #e6ebf5;
+                    background-color: ${lot === 'Odd' && checkLot ? '#f5e8d7' : '#e6ebf5'};
                     font-size: 0;
                 }
                 .buySell__left {
@@ -494,11 +502,30 @@ const FiveLatestOffer = ({ stopRender } = { stopRender: false }) => {
         </>
     );
 };
-// @media (max-width: 350px) {
-//     .five__container .box {
-//         width: calc(100% - 96px);
-//         margin-top: 6px;
-//     }
-// }
 
-export default FiveLatestOffer;
+const mapStateToProps = state => {
+    return {
+        solaceData: state.solace.solaceData,
+        lot: state.goOrder.lot,
+        checkLot: state.goOrder.checkLot,
+    };
+};
+function arePropsEqual(prevProps, nextProps) {
+    if (prevProps.checkLot !== nextProps.checkLot) {
+        return false;
+    }
+    if (prevProps.lot !== nextProps.lot) {
+        return false;
+    }
+    if (nextProps.solaceData.length && nextProps.solaceData.length > 0) {
+        if (
+            nextProps.solaceData[0].topic.indexOf('QUT') !== -1 ||
+            nextProps.solaceData[0].topic.indexOf('SNP') !== -1
+        ) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export default connect(mapStateToProps, null)(memo(FiveLatestOffer, arePropsEqual));

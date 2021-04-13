@@ -60,7 +60,6 @@ const StockInfo = () => {
     }, [stockInfo]);
 
     const switchChangeHandler = val => {
-        console.log('vv', val);
         if (val) {
             dispatch(setIsFirstSell('Y'));
         } else {
@@ -103,6 +102,11 @@ const StockInfo = () => {
                     border: solid 1px #e6ebf5;
                     margin-right: 5px;
                     font-weight: bold;
+                }
+                @media (max-width: 350px) {
+                    .info__item {
+                        font-size: 1.1rem;
+                    }
                 }
                 .info__container .ant-switch-small {
                     width: 46px;

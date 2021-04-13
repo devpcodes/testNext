@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import { setBs } from '../../../store/goOrder/action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { checkLogin } from '../../../services/components/layouts/checkLogin';
 
@@ -10,6 +10,10 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [shadow, setShadow] = useState('0px -7px 6px -3px #C7C7C7');
+
+    const socalLoginData = useSelector(store => store.user.socalLogin);
+    const platform = useSelector(store => store.general.platform);
+
     const winSize = useWindowSize();
 
     useEffect(() => {
@@ -17,7 +21,8 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
         if (winSize.height <= containerHeight + 110) {
             setShadow('0px -7px 6px -3px #C7C7C7');
         } else {
-            setShadow('none');
+            // setShadow('none');
+            setShadow('0px -7px 6px -3px #C7C7C7');
         }
     }, [winSize, containerHeight]);
 
@@ -34,14 +39,41 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
             `${queryStr ? '&' : '?'}` +
             'redirectUrl=OrderGO';
     };
+
+    const socalClickHandler = () => {
+        switch (platform) {
+            case 'udn':
+                window.location =
+                    'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+                break;
+
+            default:
+                window.location =
+                    'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+                break;
+        }
+    };
+
     return (
         <div className="container" style={{ display: show ? 'block' : 'none' }}>
-            <button className="btn buy" onClick={bsHandler.bind(null, 'B')}>
-                買進
-            </button>
-            <button className="btn sell" onClick={bsHandler.bind(null, 'S')}>
-                賣出
-            </button>
+            {socalLoginData._id == null && (
+                <>
+                    <button className="btn buy" onClick={bsHandler.bind(null, 'B')}>
+                        買進
+                    </button>
+                    <button className="btn sell" onClick={bsHandler.bind(null, 'S')}>
+                        賣出
+                    </button>
+                </>
+            )}
+            {socalLoginData._id != null && (
+                <>
+                    <button className="btn buy" style={{ width: '100%' }} onClick={socalClickHandler}>
+                        開戶交易
+                    </button>
+                </>
+            )}
+
             <style jsx>{`
                 .container {
                     padding: 16px;

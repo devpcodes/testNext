@@ -76,7 +76,7 @@ const AccountSelect = ({ data, onSelect, value, ...props } = { value: '' }) => {
                     box-shadow: none !important;
                 }
                 .account__container .ant-select-arrow {
-                    display: block;
+                    display: block !important;
                 }
             `}</style>
         </div>

@@ -1,12 +1,11 @@
 import dynamic from 'next/dynamic';
 import { Carousel } from 'antd';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import QuotesDetail from './QuotesDetail';
 import FiveLatestOffer from './FiveLatestOffer';
 import { setCheckLot, setLot } from '../../../../store/goOrder/action';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
-import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 
 const Chart = dynamic(() => import('../chart/chart'), { ssr: false });
 const QuoteContainer = () => {
@@ -17,6 +16,7 @@ const QuoteContainer = () => {
     const dispatch = useDispatch();
     const lot = useSelector(store => store.goOrder.lot);
     const bs = useSelector(store => store.goOrder.bs);
+    const code = useSelector(store => store.goOrder.code);
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const checkCA = useSelector(store => store.goOrder.checkCA);
     const productInfo = useSelector(store => store.goOrder.productInfo);
@@ -25,8 +25,21 @@ const QuoteContainer = () => {
 
     const winSize = useWindowSize();
     const quoteContainerElement = useRef(null);
-
+    const currentCode = useRef(null);
     const isLogin = useSelector(store => store.user.isLogin);
+
+    useEffect(() => {
+        if (currentCode.current != code) {
+            setTimeout(() => {
+                if (slider.current != null) {
+                    setStopRenderNum(1);
+                    slider.current.goTo(0);
+                    currentCode.current = code;
+                }
+            }, 500);
+            return;
+        }
+    }, [code]);
 
     useEffect(() => {
         if (lot === 'Odd' && checkLot) {
@@ -40,7 +53,7 @@ const QuoteContainer = () => {
                 slider.current.goTo(0);
             }
         }
-    }, [lot, checkLot]);
+    }, [lot, checkLot, solaceData]);
 
     useEffect(() => {
         if (bs === 'B' || bs === 'S') {
@@ -61,8 +74,50 @@ const QuoteContainer = () => {
         }
     }, [productInfo]);
 
+    const chartChildren = useMemo(() => {
+        if (bs === '') {
+            return <Chart />;
+        }
+        if (panelHeight < 100) {
+            return <Chart />;
+        } else {
+            return <div style={{ height: '230px' }}></div>;
+        }
+    }, [panelHeight, bs]);
+
+    const quoteContainer = useMemo(() => {
+        return (
+            <Carousel
+                afterChange={current => {
+                    if (current) {
+                        // console.log('current', current);
+                        setStopRenderNum(0);
+                        dispatch(setLot('Odd'));
+                    } else {
+                        // console.log('current', current);
+                        setStopRenderNum(1);
+                        dispatch(setLot('Board'));
+                    }
+                }}
+                ref={ref => {
+                    slider.current = ref;
+                }}
+            >
+                <div>
+                    <QuotesDetail stopRender={stopRenderNum === 0 ? true : false} show={true} />
+                    <FiveLatestOffer stopRender={stopRenderNum === 0 ? true : false} />
+                </div>
+                {checkLot && (
+                    <div>
+                        <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} show={true} />
+                        <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
+                    </div>
+                )}
+            </Carousel>
+        );
+    }, [stopRenderNum, checkLot]);
+
     const quoteContainerStyleHandler = () => {
-        console.log(panelHeight, 'hhh');
         if (panelHeight >= 100 && bs !== '') {
             quoteContainerElement.current.scrollTop = 0;
             return {
@@ -78,19 +133,21 @@ const QuoteContainer = () => {
             return 314;
         }
     };
-
     return (
         <div className="quote__container" ref={quoteContainerElement}>
             <div className="quote__container--content" style={quoteContainerStyleHandler()}>
                 {/* <div style={{display: panelHeight >= 100 && bs !== '' ? 'none' : 'block'}}> */}
-                <Chart />
-                {/* </div> */}
-                <Carousel
+                {/* <Chart /> */}
+                {chartChildren}
+                {quoteContainer}
+                {/* <Carousel
                     afterChange={current => {
                         if (current) {
+                            console.log('current', current);
                             setStopRenderNum(0);
                             dispatch(setLot('Odd'));
                         } else {
+                            console.log('current', current);
                             setStopRenderNum(1);
                             dispatch(setLot('Board'));
                         }
@@ -109,7 +166,7 @@ const QuoteContainer = () => {
                             <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
                         </div>
                     )}
-                </Carousel>
+                </Carousel> */}
             </div>
             <style jsx>{`
                 .quote__container {
