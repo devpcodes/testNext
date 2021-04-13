@@ -1,18 +1,49 @@
 import { Button, Checkbox } from 'antd';
+import { useState, useCallback, useEffect } from 'react';
 
-const DropfilterCheckBox = () => {
+// type: String；radio: 單選； checkbox: 多選
+const DropfilterCheckBox = ({ type, onSubmit, onReset, value }) => {
+    const [checkboxValue, setValue] = useState(null);
+
+    useEffect(() => {
+        setValue(value);
+    }, [value]);
+
+    const changeHandler = useCallback(
+        checkedValue => {
+            if (type === 'radio') {
+                if (checkedValue.length > 0) {
+                    const newVal = checkedValue[checkedValue.length - 1];
+                    setValue([newVal]);
+                }
+            } else {
+                setValue(checkedValue);
+            }
+        },
+        [type],
+    );
+
+    const onClickHandler = () => {
+        onSubmit(checkboxValue);
+    };
+
+    const onResetHandler = () => {
+        setValue([]);
+        onReset();
+    };
+
     return (
         <>
             <div className="checkbox__container">
-                <Checkbox.Group>
+                <Checkbox.Group onChange={changeHandler} value={checkboxValue}>
                     <div className="checkox__box">
-                        <Checkbox value="A">現股</Checkbox>
+                        <Checkbox value="0">現股</Checkbox>
                     </div>
                     <div className="checkox__box">
-                        <Checkbox value="B">融資</Checkbox>
+                        <Checkbox value="1">融資</Checkbox>
                     </div>
                     <div className="checkox__box">
-                        <Checkbox value="C">融券</Checkbox>
+                        <Checkbox value="2">融券</Checkbox>
                     </div>
                     <div className="btn__box">
                         <Button
@@ -24,10 +55,15 @@ const DropfilterCheckBox = () => {
                                 border: 'solid 1px #d7e0ef',
                                 color: '#a9b6cb',
                             }}
+                            onClick={onResetHandler}
                         >
                             重置
                         </Button>
-                        <Button type="primary" style={{ width: '52px', height: '31px', padding: 0 }}>
+                        <Button
+                            onClick={onClickHandler}
+                            type="primary"
+                            style={{ width: '52px', height: '31px', padding: 0 }}
+                        >
                             確定
                         </Button>
                     </div>

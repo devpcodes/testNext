@@ -9,6 +9,7 @@ import filterIconActive from '../../../../resources/images/components/tradingAcc
 const AccountTable = ({ filterColumns, ...props }) => {
     const [columns, setColumns] = useState([]);
     useEffect(() => {
+        console.log('columns', filterColumns);
         const newColumns = props.columns.map(item => {
             if (item.filterDropdown != null) {
                 console.log(item.dataIndex);
@@ -37,6 +38,7 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 active = true;
             }
         });
+        console.log('active', dataIndex, filterColumns);
         return active;
     };
 

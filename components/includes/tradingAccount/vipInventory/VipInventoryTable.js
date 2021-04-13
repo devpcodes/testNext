@@ -21,16 +21,20 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const [pageSize, setPageSize] = useState(50);
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
+    const [searchTtype, setSearchTtype] = useState('A');
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isMobile = useCheckMobile();
-    const { data: fetchData } = useSWR([currentAccount, searchWords, currentPage, pageSize], fetchInventory);
+    const { data: fetchData } = useSWR(
+        [currentAccount, searchWords, searchTtype, currentPage, pageSize],
+        fetchInventory,
+    );
 
     useEffect(() => {
         // fetchData
         if (fetchData?.totalCount != null) {
             setTotal(fetchData.totalCount);
         }
-        if (Array.isArray(fetchData?.data) && fetchData?.data?.length > 0) {
+        if (Array.isArray(fetchData?.data)) {
             const tableData = fetchData.data.map((item, key) => {
                 item.product = item.stock + ' ' + item.Name;
                 item.key = key;
@@ -72,9 +76,16 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             },
             {
                 title: '現價',
-                dataIndex: 'lastprice',
-                key: 'lastprice',
+                dataIndex: 'Close',
+                key: 'Close',
                 align: 'right',
+                render: (text, record) => {
+                    if (!text) {
+                        return <span>{record.Reference}</span>;
+                    } else {
+                        return <span style={{ color: text > record.Reference ? '#f45a4c' : '#22a16f' }}>{text}</span>;
+                    }
+                },
             },
             {
                 title: '昨餘',
@@ -121,7 +132,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         ];
         getColumns(newColumns);
         setColumns(newColumns);
-    }, [isMobile, currentAccount, searchColumns, searchWords]);
+    }, [isMobile, currentAccount, searchColumns, searchWords, searchTtype]);
 
     const submitHandler = useCallback(
         (confirm, val) => {
@@ -137,6 +148,33 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         },
         [currentAccount],
     );
+
+    const onFdSubmit = useCallback((confirm, val) => {
+        confirm();
+        if (val.length > 0) {
+            setSearchColumns(columns => {
+                if (!columns.includes('ttype')) {
+                    columns.push('ttype');
+                }
+                return columns;
+            });
+            setSearchTtype(val[0]);
+            setCurrentPage(1);
+        }
+    });
+
+    const onFdReset = useCallback(confirm => {
+        confirm();
+        if (searchColumns.indexOf('ttype') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('ttype');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchTtype('A');
+            setCurrentPage(1);
+        }
+    });
 
     const searchResetHandler = confirm => {
         confirm();
@@ -174,7 +212,14 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             };
         } else {
             return {
-                filterDropdown: () => <DropfilterCheckBox />,
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'radio'}
+                        onSubmit={onFdSubmit.bind(null, confirm)}
+                        onReset={onFdReset.bind(null, confirm)}
+                        value={searchTtype === 'A' ? [] : [searchTtype]}
+                    />
+                ),
             };
         }
     };
@@ -190,7 +235,6 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const pageChangeHandler = (page, pageSize) => {
         setCurrentPage(page);
     };
-
     return (
         <>
             <AccountTable
@@ -205,6 +249,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                     showSizeChanger: false,
                     onChange: pageChangeHandler,
                     responsive: true,
+                    current: currentPage,
                 }}
                 filterColumns={searchColumns}
             />
