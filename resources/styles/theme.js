@@ -12,6 +12,7 @@ const theme = {
         secondaryHover: '#ad7633',
         loss: '#22a16f',
         menuTagNew: '#254A91',
+        textNavyBlue: '#0d1623',
     },
     button: {
         transition: 'all 0.3s ease-out',

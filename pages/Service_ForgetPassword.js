@@ -7,11 +7,20 @@ import info from '../resources/images/pages/Service_ForgetPassword/attention-inf
 import more from '../resources/images/pages/Service_ForgetPassword/menu-more-horizontal.png';
 import userVoice from '../resources/images/pages/Service_ForgetPassword/user-user-voice.png';
 
+import unlock from '../resources/images/pages/Service_ForgetPassword/img-psw-01@2x.png';
+import sendpwdS from '../resources/images/pages/Service_ForgetPassword/img-psw-02@2x.png';
+import sendpwdF from '../resources/images/pages/Service_ForgetPassword/img-psw-03@2x.png';
+import sendpwdL from '../resources/images/pages/Service_ForgetPassword/img-psw-04@2x.png';
+
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
 function Service_ForgetPassword() {
+    const hoverHandler = e => {
+        console.log(e);
+    };
+
     return (
         <>
             <PageHead title={'密碼專區'} />
@@ -28,6 +37,7 @@ function Service_ForgetPassword() {
                         }
                         content={
                             <a
+                                className="service__online__link"
                                 target="_blank"
                                 href="https://chatservice.sinopac.com/index.php/chat/startchat/(department)/5?site=sinotrade"
                             >
@@ -43,7 +53,7 @@ function Service_ForgetPassword() {
                     </Popover>
                 </h2>
                 <ul className="password__service__container">
-                    <li className="password__service__item">
+                    <li className="password__service__item" onMouseOver={hoverHandler}>
                         <a
                             className="password__service__link"
                             href={`${process.env.NEXT_PUBLIC_SUBPATH}/Service_ForgetPassword_Self`}
@@ -59,7 +69,7 @@ function Service_ForgetPassword() {
                             >
                                 <img src={info} className="info" />
                             </Popover>
-                            <img className="service__img" src="https://fakeimg.pl/150x150/" />
+                            <img className="service__img" src={unlock} />
                             <div>
                                 <h5 className="service__title">線上解鎖</h5>
                                 <p className="service__desc">
@@ -70,13 +80,13 @@ function Service_ForgetPassword() {
                             </div>
                         </a>
                     </li>
-                    <li className="password__service__item">
+                    <li className="password__service__item" onMouseOver={hoverHandler}>
                         <a
                             className="password__service__link"
                             href={process.env.NEXT_PUBLIC_PASSWORD_SECURITIES}
                             target="_blank"
                         >
-                            <img className="service__img" src="https://fakeimg.pl/150x150/" />
+                            <img className="service__img" src={sendpwdS} />
                             <div>
                                 <h5 className="service__title">密碼補發 - 證券戶</h5>
                                 <p className="service__desc">
@@ -87,7 +97,7 @@ function Service_ForgetPassword() {
                             </div>
                         </a>
                     </li>
-                    <li className="password__service__item">
+                    <li className="password__service__item" onMouseOver={hoverHandler}>
                         <a
                             className="password__service__link"
                             href={process.env.NEXT_PUBLIC_PASSWORD_FUTURE}
@@ -104,7 +114,7 @@ function Service_ForgetPassword() {
                             >
                                 <img src={info} className="info" />
                             </Popover>
-                            <img className="service__img" src="https://fakeimg.pl/150x150/" />
+                            <img className="service__img" src={sendpwdF} />
                             <div>
                                 <h5 className="service__title">密碼補發 - 期貨戶</h5>
                                 <p className="service__desc">
@@ -115,7 +125,7 @@ function Service_ForgetPassword() {
                             </div>
                         </a>
                     </li>
-                    <li className="password__service__item">
+                    <li className="password__service__item" onMouseOver={hoverHandler}>
                         <div className="password__service__link">
                             <Popover
                                 content={
@@ -128,7 +138,7 @@ function Service_ForgetPassword() {
                             >
                                 <img src={info} className="info" />
                             </Popover>
-                            <img className="service__img" src="https://fakeimg.pl/150x150/" />
+                            <img className="service__img" src={sendpwdL} />
                             <div>
                                 <h5 className="service__title">臨櫃補發密碼</h5>
                                 <p className="service__desc">
@@ -147,14 +157,27 @@ function Service_ForgetPassword() {
                     margin: 0;
                     font-size: 1.6rem;
                     font-weight: bold;
+                    padding: 10px 0px 0px 0px;
+                    color: ${theme.colors.textDark};
                 }
-
+                .service__online__link {
+                    color: #3f5372;
+                }
+                .service__online__link:hover {
+                    color: ${theme.colors.secondary};
+                }
                 .tooltips {
                     width: 230px;
+                    margin: 0;
+                }
+                .service__img {
+                    width: 150px;
+                    height: 150px;
                 }
                 .password__container {
                     width: 80%;
-                    margin: 200px auto 0;
+                    margin: 0 auto;
+                    padding: 150px 0 80px 0;
                 }
                 .title__container {
                     margin: 28px 0;
@@ -166,6 +189,7 @@ function Service_ForgetPassword() {
                     margin-bottom: 3px;
                 }
                 .more {
+                    background-color: ${theme.colors.lightBg};
                     width: 40px;
                     height: 40px;
                     border-radius: 2px;
@@ -174,6 +198,9 @@ function Service_ForgetPassword() {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                }
+                .more:hover {
+                    background-color: #f9fbff;
                 }
                 .more > img {
                     display: block;
@@ -193,12 +220,21 @@ function Service_ForgetPassword() {
                     justify-content: space-between;
                 }
                 .password__service__item {
+                    position: relative;
                     border: 1px solid #d7e0ef;
+                    background: ${theme.colors.lightBg};
                     height: 320px;
                     width: 23%;
                     min-width: 200px;
                     margin-right: 28px;
                     text-align: center;
+                    border-radius: 2px;
+                    top: 0;
+                    transition: all 0.2s linear;
+                }
+                .password__service__item:hover {
+                    top: -15px;
+                    box-shadow: 1px 1px 15px 0 rgba(169, 182, 203, 0.4);
                 }
                 .password__service__item:last-child {
                     margin-right: 0;
@@ -215,16 +251,18 @@ function Service_ForgetPassword() {
                     width: 100%;
                     height: 100%;
                     padding: 20px 0;
+                    background: ${theme.colors.lightBg};
                 }
 
                 .service__title {
                     font-size: 2rem;
                     margin: 24px 0 8px 0;
                     font-weight: bold;
+                    color: ${theme.colors.textNavyBlue};
                 }
                 .service__desc {
                     font-size: 1.6rem;
-                    color: #6c7b94;
+                    color: #3f5372;
                     line-height: 23px;
                 }
 
@@ -235,7 +273,7 @@ function Service_ForgetPassword() {
                     .password__service__item {
                         width: 46%;
                     }
-                    .password__service__item:nth-child(2n) {
+                    .password__service__item {
                         margin: 0 0 28px 0;
                     }
                 }
@@ -257,6 +295,9 @@ function Service_ForgetPassword() {
                     }
                     .password__service__item {
                         height: auto;
+                    }
+                    .password__service__item:hover {
+                        top: 0;
                     }
                     .service__img {
                         width: 70px;
@@ -283,7 +324,14 @@ function Service_ForgetPassword() {
                     }
                 }
             `}</style>
-
+            <style jsx global>{`
+                .page__container {
+                    background: #f9fbff;
+                }
+                .title__container .more.ant-popover-open {
+                    background: #d7e0ef;
+                }
+            `}</style>
             {/* <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}/Service_ForgetPassword`}
