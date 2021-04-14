@@ -9,6 +9,9 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
 
     useEffect(() => {
         setValue(parentValue);
+        if (parentValue === '') {
+            setProducts([]);
+        }
     }, [parentValue]);
 
     const fetchData = async value => {

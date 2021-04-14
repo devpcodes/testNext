@@ -21,7 +21,7 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     };
 
     const onSubmitHandler = val => {
-        const patt = /[a-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
+        const patt = /^[\sa-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
         if (patt.test(val)) {
             onSubmit(val);
         } else {

@@ -22,6 +22,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
     const [searchTtype, setSearchTtype] = useState('A');
+    const [filterSearchVal, setFilterSearchVal] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isMobile = useCheckMobile();
     const { data: fetchData } = useSWR(
@@ -46,7 +47,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     }, [fetchData]);
 
     useEffect(() => {
-        console.log('isMobile', isMobile);
+        // console.log('isMobile', isMobile);
         const newColumns = [
             {
                 title: '類別',
@@ -145,8 +146,12 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 }
                 return columns;
             });
+            // 因為送出的資料，和ui顯示不同，所以新增變數儲存
+            setFilterSearchVal(val);
+
             const submitVal = val.split(' ')[0];
             setSearchWords(submitVal);
+            setCurrentPage(1);
         },
         [currentAccount],
     );
@@ -187,6 +192,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 return columns;
             });
             setSearchWords('');
+            setFilterSearchVal('');
         }
     };
 
@@ -197,7 +203,8 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                     <DropFilterSearch
                         onSubmit={submitHandler.bind(null, confirm)}
                         onReset={searchResetHandler.bind(null, confirm)}
-                        value={searchWords}
+                        // value={searchWords}
+                        value={filterSearchVal}
                     />
                 ),
                 render: text =>
@@ -230,14 +237,14 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         if (data?.length == 0) {
             return { x: 780 };
         } else {
-            return { x: 780 };
+            return { x: 780, y: 600 };
         }
     };
 
     const pageChangeHandler = (page, pageSize) => {
         setCurrentPage(page);
     };
-    console.log('ddd', data);
+    // console.log('ddd', data);
     return (
         <>
             <AccountTable
