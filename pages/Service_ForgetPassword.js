@@ -17,10 +17,6 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 });
 
 function Service_ForgetPassword() {
-    const hoverHandler = e => {
-        console.log(e);
-    };
-
     return (
         <>
             <PageHead title={'密碼專區'} />
@@ -53,7 +49,7 @@ function Service_ForgetPassword() {
                     </Popover>
                 </h2>
                 <ul className="password__service__container">
-                    <li className="password__service__item" onMouseOver={hoverHandler}>
+                    <li className="password__service__item">
                         <a
                             className="password__service__link"
                             href={`${process.env.NEXT_PUBLIC_SUBPATH}/Service_ForgetPassword_Self`}
@@ -80,7 +76,7 @@ function Service_ForgetPassword() {
                             </div>
                         </a>
                     </li>
-                    <li className="password__service__item" onMouseOver={hoverHandler}>
+                    <li className="password__service__item">
                         <a
                             className="password__service__link"
                             href={process.env.NEXT_PUBLIC_PASSWORD_SECURITIES}
@@ -97,7 +93,7 @@ function Service_ForgetPassword() {
                             </div>
                         </a>
                     </li>
-                    <li className="password__service__item" onMouseOver={hoverHandler}>
+                    <li className="password__service__item">
                         <a
                             className="password__service__link"
                             href={process.env.NEXT_PUBLIC_PASSWORD_FUTURE}
@@ -125,7 +121,7 @@ function Service_ForgetPassword() {
                             </div>
                         </a>
                     </li>
-                    <li className="password__service__item" onMouseOver={hoverHandler}>
+                    <li className="password__service__item">
                         <div className="password__service__link">
                             <Popover
                                 content={
