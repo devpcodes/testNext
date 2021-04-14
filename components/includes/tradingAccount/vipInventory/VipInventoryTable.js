@@ -133,7 +133,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         ];
         getColumns(newColumns);
         setColumns(newColumns);
-    }, [isMobile, currentAccount, searchColumns, searchWords, searchTtype]);
+    }, [isMobile, currentAccount, searchColumns, searchWords, searchTtype, fetchData]);
 
     const submitHandler = useCallback(
         (confirm, val) => {
@@ -145,7 +145,8 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 }
                 return columns;
             });
-            setSearchWords(val);
+            const submitVal = val.split(' ')[0];
+            setSearchWords(submitVal);
         },
         [currentAccount],
     );
@@ -236,6 +237,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const pageChangeHandler = (page, pageSize) => {
         setCurrentPage(page);
     };
+    console.log('ddd', data);
     return (
         <>
             <AccountTable

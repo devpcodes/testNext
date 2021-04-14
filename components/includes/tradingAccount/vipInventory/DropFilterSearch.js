@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Button, Modal } from 'antd';
 import ConfirmButton from './buttons/ConfirmButton';
 import ResetButton from './buttons/ResetButton';
+import SearchAutoComplete from './SearchAutoComplete';
 
 const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     const [inputVal, setInputVal] = useState(null);
 
-    const onChangeHandler = e => {
-        setInputVal(e.target.value);
+    useEffect(() => {
+        setInputVal(value);
+    }, [value]);
+
+    const onChangeHandler = val => {
+        setInputVal(val);
     };
 
     const resetClickHandler = () => {
@@ -16,7 +21,7 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     };
 
     const onSubmitHandler = val => {
-        const patt = /^[a-zA-Z0-9\u4e00-\u9fa5]{0,9}$/;
+        const patt = /[a-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
         if (patt.test(val)) {
             onSubmit(val);
         } else {
@@ -26,16 +31,26 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
         }
     };
 
+    const selectHandler = val => {
+        setInputVal(val);
+    };
+
     return (
         <>
             <div className="search__container">
                 <div className="input__box">
-                    <Input
+                    {/* <Input
                         placeholder="請輸入股號或商品名稱"
                         style={{ height: '38px' }}
                         onChange={onChangeHandler}
                         onPressEnter={onSubmitHandler.bind(null, inputVal)}
-                        value={inputVal == null ? value : inputVal}
+                        // value={inputVal == null ? value : inputVal}
+                        value={inputVal}
+                    /> */}
+                    <SearchAutoComplete
+                        selectHandler={selectHandler}
+                        parentValue={inputVal}
+                        onChange={onChangeHandler}
                     />
                 </div>
                 <div className="searchBtn__box">
