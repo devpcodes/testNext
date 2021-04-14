@@ -3,9 +3,9 @@ import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { PageHead } from '../components/includes/PageHead';
 import theme from '../resources/styles/theme';
-import info from '../resources/images/pages/Service_ForgetPassword/attention-info-circle.png';
-import more from '../resources/images/pages/Service_ForgetPassword/menu-more-horizontal.png';
-import userVoice from '../resources/images/pages/Service_ForgetPassword/user-user-voice.png';
+import info from '../resources/images/pages/Service_ForgetPassword/attention-info-circle.svg';
+import more from '../resources/images/pages/Service_ForgetPassword/menu-more-horizontal.svg';
+import userVoice from '../resources/images/pages/Service_ForgetPassword/ic-support.svg';
 
 import unlock from '../resources/images/pages/Service_ForgetPassword/img-psw-01@2x.png';
 import sendpwdS from '../resources/images/pages/Service_ForgetPassword/img-psw-02@2x.png';
@@ -165,6 +165,7 @@ function Service_ForgetPassword() {
                 .tooltips {
                     width: 230px;
                     margin: 0;
+                    color: #3f5372;
                 }
                 .service__img {
                     width: 150px;
@@ -196,7 +197,7 @@ function Service_ForgetPassword() {
                     align-items: center;
                 }
                 .more:hover {
-                    background-color: #f9fbff;
+                    background-color: #f3f6fe;
                 }
                 .more > img {
                     display: block;
@@ -263,6 +264,9 @@ function Service_ForgetPassword() {
                 }
 
                 @media (max-width: 1113px) {
+                    .password__container {
+                        padding: 50px 0 50px 0;
+                    }
                     .password__service__container {
                         flex-wrap: wrap;
                     }
@@ -283,7 +287,7 @@ function Service_ForgetPassword() {
 
                 @media (max-width: 501px) {
                     .password__container {
-                        margin: 100px auto 0;
+                        padding: 10px 0 50px 0;
                     }
                     .password__service__link {
                         display: flex;
