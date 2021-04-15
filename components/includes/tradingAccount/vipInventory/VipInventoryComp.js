@@ -38,6 +38,7 @@ const VipInventoryComp = () => {
                     item.ttype = '現股';
                     break;
             }
+            item.tranqty = item.preqty + item.tranqty + item.bqty - item.sqty;
             return item;
         });
         setData(formatData);

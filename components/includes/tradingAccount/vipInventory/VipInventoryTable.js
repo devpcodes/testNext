@@ -121,6 +121,15 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
                 },
             },
             {
+                title: '今餘',
+                dataIndex: 'tranqty',
+                key: 'tranqty',
+                align: 'right',
+                render: (text, record) => {
+                    return formatNum(record.preqty + text + record.bqty - record.sqty, 0);
+                },
+            },
+            {
                 title: '交易',
                 dataIndex: 'trade',
                 key: 'trade',
