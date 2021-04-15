@@ -9,23 +9,27 @@ import filterIconActive from '../../../../resources/images/components/tradingAcc
 const AccountTable = ({ filterColumns, ...props }) => {
     const [columns, setColumns] = useState([]);
     useEffect(() => {
-        const newColumns = props.columns.map(item => {
-            if (item.filterDropdown != null) {
-                const checkActive = checkActiveHandler(item.dataIndex, filterColumns);
-                item.filterIcon = (
-                    <img
-                        style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                        }}
-                        src={checkActive ? filterIconActive : filterIcon}
-                    />
-                );
-            }
-            return item;
-        });
+        let newColumns = [];
+        if (props.columns?.length > 0) {
+            newColumns = props.columns.map(item => {
+                if (item.filterDropdown != null) {
+                    const checkActive = checkActiveHandler(item.dataIndex, filterColumns);
+                    item.filterIcon = (
+                        <img
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                            }}
+                            src={checkActive ? filterIconActive : filterIcon}
+                        />
+                    );
+                }
+                return item;
+            });
+        }
+
         setColumns(newColumns);
     }, [props.columns, filterColumns]);
 

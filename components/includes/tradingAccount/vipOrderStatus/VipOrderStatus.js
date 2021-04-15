@@ -1,4 +1,5 @@
 import Control from '../vipInventory/Control';
+import VipOrderStatusTable from './VipOrderStatusTable';
 const VipOrderStatus = () => {
     return (
         <div className="vipOrderStatus__container">
@@ -6,6 +7,8 @@ const VipOrderStatus = () => {
                 <h2 className="title">委託回報</h2>
                 <Control text={''} columns={[]} dataSource={[]} />
             </div>
+            <div></div>
+            <VipOrderStatusTable />
             <style jsx>
                 {`
                     .vipOrderStatus__container {
