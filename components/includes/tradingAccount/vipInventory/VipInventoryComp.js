@@ -7,7 +7,7 @@ const VipInventoryComp = () => {
     const [columns, setColumns] = useState([]);
     const [controlText, setControlText] = useState('');
     const [data, setData] = useState([]);
-
+    const [reload, setReload] = useState(1);
     const getColumns = useCallback(columns => {
         var deep = _.cloneDeep(columns);
         const formatColumns = deep.filter(item => {
@@ -47,13 +47,30 @@ const VipInventoryComp = () => {
         setControlText(text);
     });
 
+    const reFreshHandler = () => {
+        setReload(count => {
+            return (count += 1);
+        });
+    };
+
     return (
         <div className="vipInventory__container">
             <div className="control__container">
                 <h2 className="title">庫存查詢</h2>
-                <Control text={controlText} columns={columns} dataSource={data} fileName={'庫存'} />
+                <Control
+                    text={controlText}
+                    columns={columns}
+                    dataSource={data}
+                    fileName={'庫存'}
+                    onClick={reFreshHandler}
+                />
             </div>
-            <VipInventoryTable getColumns={getColumns} getData={getData} getPageInfoText={getPageTextHandler} />
+            <VipInventoryTable
+                getColumns={getColumns}
+                getData={getData}
+                getPageInfoText={getPageTextHandler}
+                reload={reload}
+            />
             <style jsx>
                 {`
                     .vipInventory__container {

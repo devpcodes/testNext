@@ -4,7 +4,7 @@ import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { AccountDropdown } from '../../personalArea/accountDropdown/AccountDropdown';
 import IconBtn from './IconBtn';
 
-const Control = ({ style, text, columns, dataSource, fileName }) => {
+const Control = ({ style, text, columns, dataSource, fileName, onClick }) => {
     const isMobile = useCheckMobile();
 
     const downloadHandler = useCallback(async () => {
@@ -47,12 +47,18 @@ const Control = ({ style, text, columns, dataSource, fileName }) => {
                     tradingLayout={true}
                     width={isMobile ? '80%' : ''}
                 />
-                <IconBtn type={'refresh'} style={{ verticalAlign: 'top', marginRight: isMobile ? 0 : '12px' }} />
                 <IconBtn
-                    type={'download'}
-                    style={{ verticalAlign: 'top', display: isMobile ? 'none' : 'inline-block' }}
-                    onClick={downloadHandler}
+                    onClick={onClick}
+                    type={'refresh'}
+                    style={{ verticalAlign: 'top', marginRight: isMobile ? 0 : fileName ? '12px' : 0 }}
                 />
+                {fileName && (
+                    <IconBtn
+                        type={'download'}
+                        style={{ verticalAlign: 'top', display: isMobile ? 'none' : 'inline-block' }}
+                        onClick={downloadHandler}
+                    />
+                )}
             </div>
             <style jsx>{`
                 .control__container {

@@ -15,7 +15,7 @@ import { fetchInventory } from '../../../../services/stock/fetchInventory';
 import { formatNum } from '../../../../services/formatNum';
 import { openGoOrder } from '../../../../services/openGoOrder';
 
-const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
+const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
@@ -33,15 +33,19 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
         return searchTtype;
     }, [searchTtype]);
 
-    const { data: fetchData } = useSWR([currentAccount, searchWords, tType, currentPage, pageSize], fetchInventory, {
-        onError: (error, key) => {
-            Modal.error({
-                title: '伺服器錯誤',
-            });
-            setError('伺服器錯誤');
+    const { data: fetchData } = useSWR(
+        [currentAccount, searchWords, tType, currentPage, pageSize, reload],
+        fetchInventory,
+        {
+            onError: (error, key) => {
+                Modal.error({
+                    title: '伺服器錯誤',
+                });
+                setError('伺服器錯誤');
+            },
+            errorRetryCount: 5,
         },
-        errorRetryCount: 5,
-    });
+    );
 
     useEffect(() => {
         // fetchData
