@@ -34,6 +34,27 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     const selectHandler = val => {
         setInputVal(val);
     };
+    const getStyle = () => {
+        if (inputVal?.length === 0) {
+            return {
+                width: '52px',
+                height: '31px',
+                marginRight: '12px',
+                padding: 0,
+                border: 'solid 1px #d7e0ef',
+                color: '#a9b6cb',
+            };
+        } else {
+            return {
+                width: '52px',
+                height: '31px',
+                marginRight: '12px',
+                padding: 0,
+                border: 'solid 1px #d7e0ef',
+                color: '#0d1623',
+            };
+        }
+    };
 
     return (
         <>
@@ -54,7 +75,7 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
                     />
                 </div>
                 <div className="searchBtn__box">
-                    <ResetButton text="重置" onClick={resetClickHandler} />
+                    <ResetButton text="重置" onClick={resetClickHandler} style={getStyle()} />
                     <ConfirmButton text="確定" onClick={onSubmitHandler.bind(null, inputVal)} />
                 </div>
             </div>
