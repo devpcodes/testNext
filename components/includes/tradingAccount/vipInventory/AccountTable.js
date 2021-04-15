@@ -58,7 +58,7 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 .sino__table .ant-table table {
                     // border: solid 1px #d7e0ef;
                 }
-                .ant-table-container {
+                .sino__table .ant-table-container {
                     border: solid 1px #d7e0ef;
                 }
                 .sino__table .ant-tooltip-inner {
