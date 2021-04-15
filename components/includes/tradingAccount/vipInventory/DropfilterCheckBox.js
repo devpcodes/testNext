@@ -2,7 +2,7 @@ import { Button, Checkbox } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 
 // type: String；radio: 單選； checkbox: 多選
-const DropfilterCheckBox = ({ type, onSubmit, onReset, value }) => {
+const DropfilterCheckBox = ({ type, onSubmit, onReset, value, data }) => {
     const [checkboxValue, setValue] = useState(null);
 
     useEffect(() => {
@@ -36,15 +36,13 @@ const DropfilterCheckBox = ({ type, onSubmit, onReset, value }) => {
         <>
             <div className="checkbox__container">
                 <Checkbox.Group onChange={changeHandler} value={checkboxValue}>
-                    <div className="checkox__box">
-                        <Checkbox value="0">現股</Checkbox>
-                    </div>
-                    <div className="checkox__box">
-                        <Checkbox value="1">融資</Checkbox>
-                    </div>
-                    <div className="checkox__box">
-                        <Checkbox value="2">融券</Checkbox>
-                    </div>
+                    {data.map(item => {
+                        return (
+                            <div className="checkox__box" key={item.value}>
+                                <Checkbox value={item.value}>{item.text}</Checkbox>
+                            </div>
+                        );
+                    })}
                     <div className="btn__box">
                         <Button
                             style={{

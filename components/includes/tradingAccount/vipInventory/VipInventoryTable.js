@@ -32,6 +32,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
 
     useEffect(() => {
         // fetchData
+        console.log('fetch', fetchData);
         if (fetchData?.totalCount != null) {
             setTotal(fetchData.totalCount);
         }
@@ -124,7 +125,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 width: '150px',
                 render: (text, record, index) => {
                     return (
-                        <div>
+                        <div style={{ marginLeft: '12px' }}>
                             <BuyButton text={'買進'} />
                             <SellButton text={'賣出'} />
                         </div>
@@ -183,7 +184,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
         }
     });
 
-    const searchResetHandler = confirm => {
+    const searchResetHandler = useCallback(confirm => {
         confirm();
         if (searchColumns.indexOf('product') !== -1) {
             setSearchColumns(columns => {
@@ -194,7 +195,7 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             setSearchWords('');
             setFilterSearchVal('');
         }
-    };
+    });
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'product') {
@@ -227,6 +228,11 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                         onSubmit={onFdSubmit.bind(null, confirm)}
                         onReset={onFdReset.bind(null, confirm)}
                         value={searchTtype === 'A' ? [] : [searchTtype]}
+                        data={[
+                            { text: '現股', value: '0' },
+                            { text: '融資', value: '1' },
+                            { text: '融券', value: '2' },
+                        ]}
                     />
                 ),
             };
@@ -262,6 +268,22 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                     current: currentPage,
                 }}
                 filterColumns={searchColumns}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            資料加載中...
+                        </div>
+                    ),
+                    spinning: fetchData == null ? true : false,
+                }}
             />
             <style global jsx>{`
                 .page__container {
