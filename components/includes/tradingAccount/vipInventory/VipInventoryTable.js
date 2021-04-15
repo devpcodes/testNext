@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import { Button } from 'antd';
 import useSWR from 'swr';
 import Highlighter from 'react-highlight-words';
@@ -12,6 +13,7 @@ import BuyButton from './buttons/BuyButton';
 import SellButton from './buttons/SellButton';
 import { fetchInventory } from '../../../../services/stock/fetchInventory';
 import { formatNum } from '../../../../services/formatNum';
+import { openGoOrder } from '../../../../services/openGoOrder';
 
 const VipInventoryTable = ({ getColumns, getData }) => {
     const [columns, setColumns] = useState([]);
@@ -24,7 +26,9 @@ const VipInventoryTable = ({ getColumns, getData }) => {
     const [searchTtype, setSearchTtype] = useState('A');
     const [filterSearchVal, setFilterSearchVal] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
+
     const isMobile = useCheckMobile();
+    const router = useRouter();
     const { data: fetchData } = useSWR(
         [currentAccount, searchWords, searchTtype, currentPage, pageSize],
         fetchInventory,
@@ -32,13 +36,12 @@ const VipInventoryTable = ({ getColumns, getData }) => {
 
     useEffect(() => {
         // fetchData
-        console.log('fetch', fetchData);
         if (fetchData?.totalCount != null) {
             setTotal(fetchData.totalCount);
         }
         if (Array.isArray(fetchData?.data)) {
             const tableData = fetchData.data.map((item, key) => {
-                item.product = item.stock + ' ' + item.Name;
+                item.product = item.stock + ' ' + item.name;
                 item.key = key;
                 return item;
             });
@@ -79,14 +82,14 @@ const VipInventoryTable = ({ getColumns, getData }) => {
             },
             {
                 title: '現價',
-                dataIndex: 'Close',
-                key: 'Close',
+                dataIndex: 'close',
+                key: 'close',
                 align: 'right',
                 render: (text, record) => {
                     if (!text) {
-                        return <span>{record.Reference}</span>;
+                        return <span>{record.reference}</span>;
                     } else {
-                        return <span style={{ color: text > record.Reference ? '#f45a4c' : '#22a16f' }}>{text}</span>;
+                        return <span style={{ color: text > record.reference ? '#f45a4c' : '#22a16f' }}>{text}</span>;
                     }
                 },
             },
@@ -126,8 +129,34 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 render: (text, record, index) => {
                     return (
                         <div style={{ marginLeft: '12px' }}>
-                            <BuyButton text={'買進'} />
-                            <SellButton text={'賣出'} />
+                            <BuyButton
+                                text={'買進'}
+                                onClick={() => {
+                                    openGoOrder(
+                                        {
+                                            stockid: record.stock,
+                                            bs: 'B',
+                                            qty: parseInt(record.preqty / 1000),
+                                        },
+                                        isMobile,
+                                        router,
+                                    );
+                                }}
+                            />
+                            <SellButton
+                                text={'賣出'}
+                                onClick={() => {
+                                    openGoOrder(
+                                        {
+                                            stockid: record.stock,
+                                            bs: 'S',
+                                            qty: parseInt(record.preqty / 1000),
+                                        },
+                                        isMobile,
+                                        router,
+                                    );
+                                }}
+                            />
                         </div>
                     );
                 },
