@@ -55,6 +55,7 @@ export const SearchItem = memo(({ item, keyword, selectHandler, isMatched }) => 
                     align-items: center;
                     font-size: 1.6rem;
                     font-weight: 500;
+                    cursor: pointer;
                 }
                 .group__item .item__code {
                     width: 25%;

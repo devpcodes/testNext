@@ -1,27 +1,63 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox } from 'antd';
 import SortableList from '../sortableList/sortable';
-import EditSelectStock from '../selfSelectStock/EditSelectStock';
+import { fetchupdateSelectStock } from '../../../../services/selfSelect/updateSelectStock';
+import { fetchUpdateSelectGroup } from '../../../../services/selfSelect/updateSelectGroup';
+import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 
-const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
+const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) => {
+    const code = useSelector(store => store.goOrder.code);
+    const type = useSelector(store => store.goOrder.type);
+    const socalLogin = useSelector(store => store.user.socalLogin);
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
-    const [isEditSelfSelectNameVisitable, setIsEditSelfSelectNameVisitable] = useState(false);
+    const selectInfo = useSelector(store => store.goOrder.selectInfo);
+    const [selectItem, setSelectItem] = useState([]); // 選項
+    const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
+    const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
+    const [selectCheckedSort, setSelectCheckedSort] = useState([]);
 
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
+
+    // useEffect(() => {
+
+    // },[isEditSelfSelectGroup])
+
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
-    const handleOk = () => {
-        // 存檔
-        alert(123456);
-        setIsModalVisible(false);
-        handleClose(false);
-    };
+    const handleOk = async () => {
+        let reqData = [];
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
+        selectItem.forEach(item => {
+            // 複委託期貨選擇權規格未出來。先 for 證券用。
+            if (item.disabled === true) {
+                return;
+            }
 
-    const handleEditSelfSelectName = useCallback(isOpen => {
-        setIsEditSelfSelectNameVisitable(isOpen);
-    }, []);
+            let exchange;
+            switch (type) {
+                case 'S':
+                    exchange = 'TAI';
+                    break;
+                default:
+                    break;
+            }
+            const select = {
+                selectId: item.value,
+                symbol: code,
+                exchange: exchange,
+                market: type,
+                action: selectCheckedValue.indexOf(item.value) === -1 ? 'D' : 'A',
+            };
+            reqData.push(select);
+        });
+        const res = await fetchupdateSelectStock(reqData, isSocalLogin, token);
+        handleCancel();
+    };
 
     const handleCancel = () => {
         setIsModalVisible(false);
@@ -32,7 +68,15 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
         setIsEditSelfSelectGroup(true);
     };
 
-    const completeSelfSelectGroupEdit = () => {
+    const completeSelfSelectGroupEdit = async () => {
+        let sortArray = [];
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
+        selectCheckedSort.forEach(data => {
+            sortArray.push({ selectId: data.selectId });
+        });
+        await fetchUpdateSelectGroup(sortArray, isSocalLogin, token);
+        await reloadSelect();
         setIsEditSelfSelectGroup(false);
     };
 
@@ -40,6 +84,34 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
         setIsEditSelfSelectGroup(false);
     };
 
+    const handleCheckedSort = useCallback(sortArray => {
+        setSelectCheckedSort(sortArray);
+    });
+
+    useEffect(() => {
+        if (selectInfo && selectInfo.data && Array.isArray(selectInfo.data)) {
+            let options = [];
+            let defaultValue = [];
+            selectInfo.data.forEach(element => {
+                const optionItems = {
+                    label: `${element.selectName} (${element.selectCount})`,
+                    value: element.selectId,
+                    disabled: !element.isAllowAdd && !element.isExist,
+                };
+                options.push(optionItems);
+                if (element.isExist) {
+                    defaultValue.push(element.selectId);
+                }
+            });
+            setSelectItem(options);
+            setSelectDefaultValue(defaultValue);
+            // setSelectCheckedValue(defaultValue);
+        }
+    }, [isModalVisible, selectInfo]);
+
+    const onChange = checkedValues => {
+        setSelectCheckedValue(checkedValues);
+    };
     return (
         <>
             <Modal
@@ -76,46 +148,33 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                     </Button>,
                 ]}
             >
-                <section className="add">
-                    <ul className="self__select__list">
-                        <li className="self__select__items">
-                            <Checkbox>自選組合一 (2) </Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合二 (12)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合三 (34)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合四 (23)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合一 (2) </Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合二 (12)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合三 (34)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合四 (23)</Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合一 (2) </Checkbox>
-                        </li>
-                        <li className="self__select__items">
-                            <Checkbox>自選組合二 (12)</Checkbox>
-                        </li>
-                    </ul>
-                </section>
+                {
+                    <section className="add">
+                        <ul className="self__select__list">
+                            <Checkbox.Group
+                                options={selectItem}
+                                defaultValue={selectDefaultValue}
+                                onChange={onChange}
+                            />
 
-                <section className="edit">
-                    <SortableList handleEdit={handleEditSelfSelectName} />
-                </section>
+                            <Checkbox.Group />
 
-                <EditSelectStock isVisible={isEditSelfSelectNameVisitable} handler={handleEditSelfSelectName} />
+                            {/* {selectInfo.data.map((d, i) => (
+                                <li className="self__select__items" key={i}>
+                                    <Checkbox className="self__select__checkbox" value={d.selectId} defaultChecked={d.isAllowAdd && d.isExist} disabled={!d.isAllowAdd}>
+                                        {` ${d.selectName} (${d.selectCount})`}
+                                    </Checkbox>
+                                </li>
+                            ))} */}
+                        </ul>
+                    </section>
+                }
+
+                {!!selectInfo && (
+                    <section className="edit">
+                        <SortableList reloadSelect={reloadSelect} handleCheckedSort={handleCheckedSort} />
+                    </section>
+                )}
             </Modal>
             <style jsx>{`
                 .self__select__list {
@@ -179,6 +238,10 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit }) => {
                     height: 50px;
                     font-size: 1.6rem;
                     font-weight: bold;
+                }
+                .ant-checkbox-group-item {
+                    display: block;
+                    padding: 4px 0;
                 }
             `}</style>
         </>

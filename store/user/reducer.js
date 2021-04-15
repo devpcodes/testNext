@@ -5,6 +5,7 @@ const initialState = {
     accounts: [],
     userSettings: {},
     currentAccount: {},
+    socalLogin: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 currentAccount: action.payload,
+            };
+        case actionType.SET_SOCAL_LOGIN:
+            return {
+                ...state,
+                socalLogin: action.payload,
             };
         default:
             return state;

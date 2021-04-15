@@ -1,18 +1,37 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { Modal, Button, Input } from 'antd';
+import { fetchUpdateSelectGroupName } from '../../../../services/selfSelect/updateSelectGroupName';
+import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 
-const EditSelectStock = memo(({ isVisible, handler }) => {
+const EditSelectStock = memo(({ isVisible, editData, handler, reloadSelect }) => {
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
+
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
+    const socalLogin = useSelector(store => store.user.socalLogin);
+    const textInput = useRef(null);
 
     const handleClose = () => {
         handler(false);
     };
 
-    const handleConfirm = () => {
-        alert('handleConfirm');
+    const handleConfirm = async () => {
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
+        const res = await fetchUpdateSelectGroupName(
+            editData.selectId,
+            textInput.current.state.value,
+            isSocalLogin,
+            token,
+        );
+        if (res.success && res.message === 'OK') {
+            editData.selectName = textInput.current.state.value;
+            reloadSelect(editData);
+            handler(false);
+        }
     };
 
     return (
@@ -44,7 +63,7 @@ const EditSelectStock = memo(({ isVisible, handler }) => {
                     </Button>,
                 ]}
             >
-                <Input placeholder="編輯自選名稱" />
+                <Input placeholder="編輯自選名稱" ref={textInput} />
             </Modal>
             <style jsx>{``}</style>
             <style jsx global>{`

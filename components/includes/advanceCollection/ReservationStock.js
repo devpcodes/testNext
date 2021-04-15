@@ -13,6 +13,7 @@ import { getToken } from '../../../services/user/accessToken';
 import { fetchStockInventory } from '../../../services/components/reservationStock/fetchStockInventory';
 import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
 import { fetchEarmarkStatus } from '../../../services/components/reservationStock/fetchEarmarkStatus';
+import Msg from './Msg';
 
 const { TabPane } = Tabs;
 
@@ -458,6 +459,26 @@ const ReservationStock = () => {
                             spinning: dataLoading,
                         }}
                     />
+                    <Msg
+                        style={{ marginTop: '30px' }}
+                        list={[
+                            { txt: '「注意事項」' },
+                            { txt: '1. 預收股票時間為台股交易日8:00~14:30' },
+                            { txt: '2. 必須簽署「保管劃撥帳戶契約書」後，才能申請', color: '#e46262' },
+                            {
+                                txt:
+                                    '3. 逐筆申請：點選[申請]後，請至[預收股票查詢]點選[查詢]確認已完成此筆股票預收後，再進行下一筆申請',
+                                color: '#e46262',
+                            },
+                            { txt: '4. 即時庫存股數：昨日庫存股數+今日匯撥股數+今日成交股數' },
+                            { html: '<p>&nbsp;&nbsp;&nbsp;&nbsp;可圈存股數：昨日庫存股數+今日匯撥股數</p>' },
+                            { txt: '5. 如需解除圈存股票(例如欲進行存券匯撥/公開收購)，請與所屬分公司/營業員聯繫' },
+                            {
+                                txt:
+                                    '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)',
+                            },
+                        ]}
+                    />
                 </TabPane>
                 <TabPane tab="預收股票查詢" key="2" disabled={dataLoading}>
                     <Accounts key="2" style={{ marginTop: '35px' }} value={defaultValue} />
@@ -484,6 +505,24 @@ const ReservationStock = () => {
                             ),
                             spinning: dataLoading,
                         }}
+                    />
+                    <Msg
+                        style={{ marginTop: '30px' }}
+                        list={[
+                            { txt: '「注意事項」' },
+                            { txt: '1. 預收股票時間為台股交易日8:00~14:30' },
+                            {
+                                txt:
+                                    '2. 於[預收股票申請]點選[申請]後，請至[預收股票查詢]點選[查詢]確認已完成此筆股票預收後，再進行下一筆申請',
+                                color: '#e46262',
+                            },
+                            { txt: '3. 申請預收股票後，需於集保圈存成功後，方可委託賣出', color: '#e46262' },
+                            { txt: '4. 如需解除圈存股票(例如欲進行存券匯撥/公開收購)，請與所屬分公司/營業員聯繫' },
+                            {
+                                txt:
+                                    '5. 當日圈存之委託未成交，當日晚上自動將未成交股數解除圈存(依集保公司解除圈存作業時間為主)',
+                            },
+                        ]}
                     />
                 </TabPane>
             </Tabs>

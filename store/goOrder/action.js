@@ -28,6 +28,13 @@ export const setProductInfo = info => {
     };
 };
 
+export const setSelectInfo = info => {
+    return {
+        type: actionType.SET_SELECT_INFO,
+        payload: info,
+    };
+};
+
 export const setBs = bs => {
     return {
         type: actionType.SET_BS,
@@ -169,6 +176,12 @@ export const setHaveCA = boo => {
 export const setCheckLot = boo => {
     return {
         type: actionType.SET_CHECK_LOT,
+        payload: boo,
+    };
+};
+export const setWebsocketEvent = boo => {
+    return {
+        type: actionType.SET_WEBSOCKET_EVENT,
         payload: boo,
     };
 };

@@ -1,8 +1,9 @@
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { Button, notification } from 'antd';
+import { Button } from 'antd';
 import { trim } from 'lodash';
+import { useRouter } from 'next/router';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
@@ -16,20 +17,31 @@ import {
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
-import { setCode, setLot, setProductInfo, setHaveCA } from '../../../../store/goOrder/action';
+import {
+    setBs,
+    setCode,
+    setLot,
+    setProductInfo,
+    setSelectInfo,
+    setDefaultOrdPrice,
+    setOrdQty,
+    setTradeTime,
+} from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
 import search from '../../../../resources/images/components/goOrder/edit-search.svg';
-import warning from '../../../../resources/images/components/goOrder/attention-warning.svg';
 
 import theme from '../../../../resources/styles/theme';
-import { checkServer } from '../../../../services/checkServer';
 import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
-import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
-import { checkCert, caResultDataHandler } from '../../../../services/webCa';
+import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
+import { InstallWebCA } from './InstallWebCA';
+
+import { checkServer } from '../../../../services/checkServer';
+import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -87,7 +99,7 @@ const solaceDataHandler = (solaceData, lot, checkLot) => {
 };
 
 // TODO: 零股顯示價差
-export const Info = () => {
+export const Info = ({ stockid }) => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
@@ -96,26 +108,99 @@ export const Info = () => {
     const [sec, setSec] = useState('');
     const [tradingDate, setTradingDate] = useState('');
     const [reloadLoading, setReloadLoading] = useState(false);
-    const [checkCA, setCheckCA] = useState(false);
-    const [reCheckCA, setReCheckCA] = useState(null);
 
     const dispatch = useDispatch();
 
     const lot = useSelector(store => store.goOrder.lot);
     const code = useSelector(store => store.goOrder.code);
+    const type = useSelector(store => store.goOrder.type);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const solaceData = useSelector(store => store.solace.solaceData);
-    const currentAccount = useSelector(store => store.user.currentAccount);
     const isLogin = useSelector(store => store.user.isLogin);
+    const socalLoginData = useSelector(store => store.user.socalLogin);
     const checkLot = useSelector(store => store.goOrder.checkLot);
+    const selectInfo = useSelector(store => store.goOrder.selectInfo);
+    const userSettings = useSelector(store => store.user.userSettings);
+    const { close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot, checkLot);
 
-    const { name, close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(
-        solaceData,
-        lot,
-        checkLot,
-    );
-    const { socalLogin } = useCheckSocialLogin();
-    const suggestAction = useRef('');
+    const router = useRouter();
+    const init = useRef(false);
+    const goCheckLot = useRef(false);
+    const checkSolaceConnect = useRef(false);
+    //避免畫面先初始在永豐金再跳回querystring的股票代碼，導致畫面閃礫
+    const initHandler = (() => {
+        if (!checkServer()) {
+            const stockid = getParamFromQueryString('stockid');
+            if (!init.current) {
+                if (stockid) {
+                    dispatch(setCode(stockid));
+                } else {
+                    dispatch(setCode('2890'));
+                }
+            }
+
+            setTimeout(() => {
+                init.current = true;
+            }, 1500);
+        }
+    })();
+
+    useEffect(() => {
+        if (router.query.bs != null && !init.current) {
+            // 因為畫面整個與預設畫面不同，所以延遲作業，避免一次處理太多事情，影響效能
+            setTimeout(() => {
+                dispatch(setBs(router.query.bs));
+            }, 1000);
+        }
+
+        if (router.query.price != null) {
+            dispatch(setDefaultOrdPrice(router.query.price));
+        }
+
+        if (router.query.qty != null) {
+            dispatch(setOrdQty(router.query.qty));
+        } else {
+            if (userSettings.stockOrderUnit != null) {
+                dispatch(setOrdQty(userSettings.stockOrderUnit));
+            }
+        }
+
+        if (router.query.session != null) {
+            //盤中零股
+            if (router.query.session === 'C') {
+                // TODO 零股資料完整後可以替換
+                checkSolaceConnect.current = true;
+
+                // setTimeout(() => {
+                //     dispatch(setLot('Odd'));
+                // }, 500);
+            }
+            //盤後零股和興櫃盤後 都是2
+            if (router.query.session === '2') {
+                goCheckLot.current = true;
+                dispatch(setTradeTime('after'));
+            }
+        }
+    }, [router, userSettings]);
+
+    // TODO 零股資料完整後可以刪掉
+    useEffect(() => {
+        if (solaceData.length != 0) {
+            if (checkSolaceConnect.current) {
+                dispatch(setLot('Odd'));
+                checkSolaceConnect.current = false;
+            }
+        }
+    }, [solaceData]);
+
+    useEffect(() => {
+        if (goCheckLot.current) {
+            if (productInfo != null && productInfo.solaceMarket !== '興櫃') {
+                dispatch(setLot('Odd'));
+                goCheckLot.current = false;
+            }
+        }
+    }, [productInfo]);
 
     useEffect(() => {
         if (solaceData.length > 0 && solaceData[0].topic != null) {
@@ -135,30 +220,21 @@ export const Info = () => {
         }
     }, [solaceData]);
 
-    useEffect(() => {
-        if (reCheckCA || reCheckCA == null) {
-            if (currentAccount.idno) {
-                const checkData = checkCert(currentAccount.idno);
-                suggestAction.current = checkData.suggestAction;
-
-                if (checkData.suggestAction == 'None') {
-                    setCheckCA(true);
-                    dispatch(setHaveCA(true));
-                } else {
-                    setCheckCA(false);
-                    dispatch(setHaveCA(false));
-                }
-                setReCheckCA(false);
-            }
-        }
-    }, [reCheckCA, currentAccount]);
-
-    useEffect(() => {
+    useEffect(async () => {
         if (code === '') {
             return;
         }
-        getTimeOver();
-    }, [code, lot]);
+        if (!isLogin) {
+            getTimeOver();
+        }
+    }, [code, lot, isLogin]);
+
+    useEffect(async () => {
+        if (!isLogin && Object.keys(socalLoginData).length === 0) {
+            return;
+        }
+        getSelect();
+    }, [code, isLogin, isSelfSelectVisitable]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -218,6 +294,28 @@ export const Info = () => {
         }
     };
 
+    const getSelect = useCallback(async () => {
+        let exchange;
+        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+        switch (type) {
+            case 'S':
+                exchange = 'TAI';
+                break;
+            default:
+                break;
+        }
+        const reqData = {
+            symbol: code,
+            exchange: exchange,
+            market: type,
+            isShowDetail: true,
+            isSocalLogin: isSocalLogin,
+            token: isSocalLogin ? getSocalToken() : getToken(),
+        };
+        const res = await fetchCheckSelfSelect(reqData);
+        dispatch(setSelectInfo(res));
+    });
+
     const getTimeWording = (hour, min, sec) => {
         if (!tradingDate) {
             return '非台股交易日';
@@ -237,26 +335,9 @@ export const Info = () => {
         }
     };
 
-    // const checkWebCaHandler = () => {
-    //     const checkData = checkCert(currentAccount.idno);
-    //     suggestAction.current = checkData.suggestAction;
-
-    //     if(checkData.suggestAction == 'None'){
-    //         return false;
-    //     }else{
-    //         return true;
-    //     }
-    // }
-
-    const signCaHandler = async () => {
-        const token = getToken();
-        await caResultDataHandler(suggestAction.current, currentAccount.idno, token);
-        setReCheckCA(true);
-    };
-
     return (
         <div className="info__container">
-            {!isLogin && !socalLogin && (
+            {!isLogin && (
                 <div className="noLogin__box">
                     {hour !== '' && <img className="noLoginIcon" src={icon} />}
                     <span className="endTime">{getTimeWording(hour, min, sec)}</span>
@@ -283,35 +364,7 @@ export const Info = () => {
                     </Button>
                 </div>
             )}
-            {isLogin && !checkCA && (
-                <div className="noLogin__box">
-                    <img className="warningIcon" src={warning} />
-                    <span className="endTime">下單交易前請先安裝憑證！</span>
-                    <Button
-                        style={{
-                            width: '70px',
-                            height: '28px',
-                            margin: '0 0 0 9px',
-                            padding: '4px 1px 4px 2px',
-                            borderRadius: '2px',
-                            backgroundColor: '#254a91',
-                            color: 'white',
-                            lineHeight: '20px',
-                            position: 'absolute',
-                            right: '16px',
-                            top: '8px',
-                            border: 'none',
-                            letterSpacing: '-1px',
-                        }}
-                        loading={reloadLoading}
-                        onClick={() => {
-                            signCaHandler();
-                        }}
-                    >
-                        安裝
-                    </Button>
-                </div>
-            )}
+            {<InstallWebCA />}
             <div className="info__box">
                 <div className="row">
                     <div className="product__container">
@@ -323,7 +376,7 @@ export const Info = () => {
                         >
                             {trim(productInfo?.solaceName)}
                         </div>
-                        <div className="product__code">{code}</div>
+                        <div className="product__code">{code || stockid || '2890'}</div>
                     </div>
                     <div className="toolbar__container">
                         <button className="share" onClick={shareHandler}>
@@ -367,13 +420,18 @@ export const Info = () => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <button className="btn add__self__select" onClick={showSelfSelect}>
+                    <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
                         加入自選
                     </button>
                 </div>
             </div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <AddSelectStock isVisible={isSelfSelectVisitable} handleClose={closeSelfSelect} isEdit={false} />
+            <AddSelectStock
+                isVisible={isSelfSelectVisitable}
+                handleClose={closeSelfSelect}
+                isEdit={false}
+                reloadSelect={getSelect}
+            />
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
@@ -547,6 +605,12 @@ export const Info = () => {
                     background-color: #c43826;
                     color: #fff;
                     font-size: 1.6rem;
+                }
+                .more__info__container .add__self__select:disabled {
+                    color: rgba(0, 0, 0, 0.25);
+                    background: #f5f5f5;
+                    border: 1px solid #d9d9d9;
+                    cursor: no-drop;
                 }
             `}</style>
             {/* <style jsx global>{`

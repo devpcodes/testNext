@@ -2,3 +2,4 @@ export const IS_LOGIN = 'IS_LOGIN';
 export const SET_ACCOUNTS = 'SET_ACCOUNTS';
 export const SET_USER_SETTINGS = 'SET_USER_SETTINGS';
 export const SET_CURRENT_ACCOUNT = 'SET_CURRENT_ACCOUNT';
+export const SET_SOCAL_LOGIN = 'SET_SOCAL_LOGIN';

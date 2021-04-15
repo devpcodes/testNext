@@ -5,6 +5,7 @@ const initialState = {
     lot: 'Board', // Odd
     code: '',
     productInfo: null,
+    selectInfo: null,
     bs: '', //B S
     panelHeight: 360, // 80
     ord_type: '0', // '0', C, P, 2
@@ -27,6 +28,7 @@ const initialState = {
     resetData: false,
     checkCA: false,
     checkLot: true,
+    websocketEvent: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -50,6 +52,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 productInfo: action.payload,
+            };
+        case actionType.SET_SELECT_INFO:
+            return {
+                ...state,
+                selectInfo: action.payload,
             };
         case actionType.SET_BS:
             return {
@@ -82,13 +89,13 @@ const reducer = (state = initialState, action) => {
                 ord_cond: action.payload,
             };
         case actionType.SET_PRICE_TYPE:
-            console.log('reducer', action.payload);
+            // console.log('reducer', action.payload);
             return {
                 ...state,
                 price_type: action.payload,
             };
         case actionType.SET_ORD_QTY:
-            console.log('reducer', action.payload);
+            // console.log('reducer', action.payload);
             return {
                 ...state,
                 ord_qty: action.payload,
@@ -162,6 +169,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 checkLot: action.payload,
+            };
+        case actionType.SET_WEBSOCKET_EVENT:
+            return {
+                ...state,
+                websocketEvent: action.payload,
             };
         default:
             return state;

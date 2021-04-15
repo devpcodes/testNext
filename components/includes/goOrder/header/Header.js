@@ -1,35 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Avatar, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import { Select } from 'antd';
 
 import { useUser } from '../../../../hooks/useUser';
-import { usePlatform } from '../../../../hooks/usePlatform';
 import { useHasMounted } from '../../../../hooks/useHasMounted';
 
-import {
-    setBs,
-    setCode,
-    setType,
-    setOrderPrice,
-    setDefaultOrdPrice,
-    setOrdQty,
-    setLot,
-    setTradeTime,
-} from '../../../../store/goOrder/action';
+import { setType } from '../../../../store/goOrder/action';
 import { setCurrentAccount } from '../../../../store/user/action';
 
-import { accountGroupByType, getAccountText } from '../../../../services/user/accountGroupByType';
+import { accountGroupByType } from '../../../../services/user/accountGroupByType';
 
-import grid from '../../../../resources/images/components/goOrder/grid-grid-big.svg';
+// import grid from '../../../../resources/images/components/goOrder/grid-grid-big.svg';
 import arrow from '../../../../resources/images/components/goOrder/arrow-caret-down.svg';
 import theme from '../../../../resources/styles/theme';
 import logo from '../../../../resources/images/components/goOrder/logo.svg';
 
-import { checkServer } from '../../../../services/checkServer';
-import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import { AccountAvatar } from '../../AccountAvatar';
+import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
+import { logout } from '../../../../services/user/logoutFetcher';
 
 const { Option } = Select;
 
@@ -45,8 +36,7 @@ const Header = () => {
     // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
     const { isLogin } = useUser();
     const { socalLogin } = useCheckSocialLogin();
-    // 來源別相關的處理
-    const platform = usePlatform();
+
     const hasMounted = useHasMounted();
 
     const dispatch = useDispatch();
@@ -54,18 +44,14 @@ const Header = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const type = useSelector(store => store.goOrder.type);
     const userSettings = useSelector(store => store.user.userSettings);
-    const solaceData = useSelector(store => store.solace.solaceData);
-    const productInfo = useSelector(store => store.goOrder.productInfo);
-    // const socalLogin = useSelector(store => store.user.socalLogin)
+    const socalLoginData = useSelector(store => store.user.socalLogin);
+
+    const [menuVisible, setMenuVisible] = useState(false);
 
     const groupedAccount = accountGroupByType(accounts);
-    const groupedTypes = Object.keys(groupedAccount);
     const accountList = groupedAccount[type];
 
     const router = useRouter();
-    const init = useRef(false);
-    const goCheckLot = useRef(false);
-    const checkSolaceConnect = useRef(false);
 
     const accountElement = (
         <AccountAvatar
@@ -80,85 +66,14 @@ const Header = () => {
         </AccountAvatar>
     );
 
-    // TODO: 頁面登入權限處理 (未登入導到登入頁)
-    // TODO: query string 傳入 type 處理
+    useEffect(() => {
+        document.addEventListener('click', bodyClickHandler);
+        return () => {
+            document.removeEventListener('click', bodyClickHandler);
+        };
+    }, [menuVisible]);
+
     // TODO: 連動 current account 的處理
-
-    //避免畫面先初始在永豐金再跳回querystring的股票代碼，導致畫面閃礫
-    const initHandler = (() => {
-        if (!checkServer()) {
-            const stockid = getParamFromQueryString('stockid');
-            if (!init.current) {
-                if (stockid) {
-                    dispatch(setCode(stockid));
-                } else {
-                    dispatch(setCode('2890'));
-                }
-            }
-
-            setTimeout(() => {
-                init.current = true;
-            }, 1500);
-        }
-    })();
-
-    useEffect(() => {
-        if (router.query.bs != null && !init.current) {
-            // 因為畫面整個與預設畫面不同，所以延遲作業，避免一次處理太多事情，影響效能
-            setTimeout(() => {
-                dispatch(setBs(router.query.bs));
-            }, 1000);
-        }
-
-        if (router.query.price != null) {
-            dispatch(setDefaultOrdPrice(router.query.price));
-        }
-
-        if (router.query.qty != null) {
-            dispatch(setOrdQty(router.query.qty));
-        } else {
-            if (userSettings.stockOrderUnit != null) {
-                dispatch(setOrdQty(userSettings.stockOrderUnit));
-            }
-        }
-
-        if (router.query.session != null) {
-            //盤中零股
-            if (router.query.session === 'C') {
-                // TODO 零股資料完整後可以替換
-                checkSolaceConnect.current = true;
-
-                // setTimeout(() => {
-                //     dispatch(setLot('Odd'));
-                // }, 500);
-            }
-            //盤後零股和興櫃盤後 都是2
-            if (router.query.session === '2') {
-                goCheckLot.current = true;
-                dispatch(setTradeTime('after'));
-            }
-        }
-    }, [router, userSettings]);
-
-    // TODO 零股資料完整後可以刪掉
-    useEffect(() => {
-        if (solaceData.length != 0) {
-            if (checkSolaceConnect.current) {
-                dispatch(setLot('Odd'));
-                checkSolaceConnect.current = false;
-            }
-        }
-    }, [solaceData]);
-
-    useEffect(() => {
-        if (goCheckLot.current) {
-            if (productInfo.solaceMarket !== '興櫃') {
-                dispatch(setLot('Odd'));
-                goCheckLot.current = false;
-            }
-        }
-    }, [productInfo]);
-
     useEffect(() => {
         // TODO: 無帳號處理
         if (hasMounted) {
@@ -175,11 +90,35 @@ const Header = () => {
         }
     }, [type]);
 
-    // const getUserSetting = async () => {
-    //     const token = getToken();
-    //     // const userSetting = await fetchUserSettings(token, '');
-    //     console.log('userSetting', userSetting)
-    // }
+    const bodyClickHandler = e => {
+        if (e.target.className !== 'ant-tooltip-content') {
+            if (menuVisible) {
+                setMenuVisible(false);
+            }
+        }
+    };
+
+    const socalLoginChildren = useMemo(() => {
+        if (socalLoginData._id != null) {
+            if (socalLoginData.img != null && socalLoginData.img) {
+                return (
+                    <div className="socal__box">
+                        <span className="socalName">{socalLoginData.name}</span>
+                        <Avatar src={socalLoginData.img} size={26} />
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="socal__box">
+                        <span className="socalName">{socalLoginData.name}</span>
+                        <Avatar size={26}>{socalLoginData.name.substr(0, 1)}</Avatar>
+                    </div>
+                );
+            }
+        } else {
+            return null;
+        }
+    }, [socalLoginData]);
 
     const handleTypeChange = value => {
         dispatch(setType(value));
@@ -189,6 +128,77 @@ const Header = () => {
     const onAccountChange = value => {
         const account = accountList.find(account => `${account.broker_id}-${account.account}` === value);
         dispatch(setCurrentAccount(account));
+    };
+
+    const loginClickHandler = () => {
+        const query = router.query;
+        const queryStr = objectToQueryHandler(query);
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
+    };
+
+    const currentAccountHandler = () => {
+        if (currentAccount.accttype !== type) {
+            return '--';
+        } else {
+            return `${currentAccount.broker_id || ''}-${currentAccount.account || ''}`;
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
+        } catch (error) {
+            console.error(`logout error:`, error);
+        }
+    };
+
+    const renderMenu = () => {
+        return (
+            <>
+                <a
+                    style={{
+                        marginBottom: '8px',
+                        display: 'inline-block',
+                        color: '#0d1623',
+                        zIndex: '999',
+                        fontWeight: 'bold',
+                    }}
+                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
+                >
+                    我的帳務
+                </a>
+                <br />
+                <a
+                    style={{
+                        marginBottom: '8px',
+                        display: 'inline-block',
+                        color: '#0d1623',
+                        fontWeight: 'bold',
+                    }}
+                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
+                >
+                    我的自選
+                </a>
+                <br />
+                <a
+                    style={{
+                        display: 'inline-block',
+                        color: '#0d1623',
+                        fontWeight: 'bold',
+                    }}
+                    onClick={() => {
+                        handleLogout();
+                    }}
+                >
+                    登出
+                </a>
+            </>
+        );
     };
 
     if (!hasMounted) {
@@ -206,22 +216,24 @@ const Header = () => {
                     <>
                         <div className="dropdown__container">
                             <Select
-                                defaultValue={type}
+                                // defaultValue={type}
+                                defaultValue={'S'}
                                 style={{ width: 111 }}
-                                onChange={handleTypeChange}
+                                // onChange={handleTypeChange}
                                 getPopupContainer={trigger => trigger.parentElement}
                                 bordered={false}
                                 suffixIcon={<DropDownArrow />}
                             >
-                                {groupedTypes.map(accType => (
+                                {/* {groupedTypes.map(accType => (
                                     <Option key={accType}>{getAccountText(accType)}</Option>
-                                ))}
+                                ))} */}
+                                <Option value={'S'}>國內證券</Option>
                             </Select>
                         </div>
                         <div className="dropdown__container">
                             <Select
                                 style={{ width: 136 }}
-                                value={`${currentAccount.broker_id || ''}-${currentAccount.account || ''}`}
+                                value={currentAccountHandler()}
                                 onChange={onAccountChange}
                                 getPopupContainer={trigger => trigger.parentElement}
                                 bordered={false}
@@ -229,22 +241,50 @@ const Header = () => {
                                 notFoundContent={<div></div>}
                             >
                                 {accountList.map(account => (
-                                    <Option
-                                        key={`${account.broker_id}-${account.account}`}
-                                    >{`${account.bhname} ${account.username}`}</Option>
+                                    <Option key={`${account.broker_id}-${account.account}`}>
+                                        <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                        <span className="option__username">{`${account.bhname} ${account.username}`}</span>
+                                    </Option>
                                 ))}
                             </Select>
                         </div>
-                        <div className="accountElement">{accountElement}</div>
+                        <Tooltip
+                            placement="topLeft"
+                            title={renderMenu()}
+                            color="white"
+                            overlayClassName="menu__tooltip"
+                            visible={menuVisible}
+                        >
+                            <div
+                                className="accountElement"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    setMenuVisible(true);
+                                }}
+                            >
+                                {accountElement}
+                            </div>
+                        </Tooltip>
                     </>
                 )}
-                {socalLogin && 12345}
+                {socalLogin && (
+                    <>
+                        <img className="logo" src={logo} />
+                        <Tooltip
+                            placement="topLeft"
+                            title={renderMenu()}
+                            color="white"
+                            overlayClassName="menu__tooltip--2"
+                        >
+                            {socalLoginChildren}
+                        </Tooltip>
+                    </>
+                )}
                 {!socalLogin && !isLogin && (
                     <>
                         <img className="logo" src={logo} />
-                        <button className="grid__button">
+                        <button className="grid__button" onClick={loginClickHandler}>
                             開戶 / 登入
-                            {/* <img src={grid} alt="grid"></img> */}
                         </button>
                     </>
                 )}
@@ -253,6 +293,7 @@ const Header = () => {
                 .accountElement {
                     position: absolute;
                     right: 16px;
+                    cursor: pointer;
                 }
                 .Header__container {
                     width: 100%;
@@ -294,6 +335,16 @@ const Header = () => {
                 }
             `}</style>
             <style jsx global>{`
+                .dropdown__container .ant-select-item-option-content .option__account {
+                    display: block;
+                }
+                .dropdown__container .ant-select-selection-item .option__account {
+                    display: none;
+                }
+                .ant-select-item.ant-select-item-option.ant-select-item-option-selected {
+                    background: #e6ebf5;
+                }
+
                 .dropdown__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
                     background-color: inherit;
                     color: #ffffff;
@@ -305,6 +356,32 @@ const Header = () => {
                 }
                 .ant-avatar-string {
                     line-height: 26px !important;
+                }
+                .socalName {
+                    font-size: 1.6rem;
+                    color: white;
+                    margin-right: 8px;
+                }
+                .socal__box {
+                    position: absolute;
+                    right: 16px;
+                }
+                .menu__tooltip .ant-tooltip-inner {
+                    color: #0d1623;
+                    font-size: 1.6rem;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
+                    margin-top: -12px;
+                }
+                .menu__tooltip--2 .ant-tooltip-inner {
+                    color: #0d1623;
+                    font-size: 1.6rem;
+                    box-shadow: 0 2px 15px 0 rgba(169, 182, 203, 0.7);
+                    padding: 16px;
+                    line-height: 25px;
+                    margin-top: -12px;
+                    margin-left: 12px;
                 }
             `}</style>
         </div>

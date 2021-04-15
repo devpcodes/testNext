@@ -5,6 +5,7 @@ import {
     mappingWebId,
     mappingPriceMsg,
     mappingStatusMsg,
+    mappingShowChangeBtn,
 } from '../../../../services/components/goOrder/dataMapping';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { themeColor } from '../panel/PanelTabs';
@@ -14,6 +15,37 @@ import infoIcon from '../../../../resources/images/components/goOrder/attention-
 const DetailBox = () => {
     const dispatch = useDispatch();
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
+
+    const clickHandler = status_code => {
+        if (showInfoHandler(status_code)) {
+            dispatch(setConfirmBoxTitle('成交明細'));
+            dispatch(setConfirmBoxClickSource('detail'));
+        }
+    };
+
+    const showHandler = () => {
+        return mappingShowChangeBtn(info.status_code);
+    };
+
+    const showInfoHandler = status_code => {
+        if (status_code === '2' || status_code === '3') {
+            return (
+                <span
+                    style={{
+                        marginLeft: '5px',
+                        fontSize: '1.6rem',
+                        fontWeight: 'bold',
+                        currsor: 'pointer',
+                    }}
+                >
+                    {'>'}
+                </span>
+            );
+        } else {
+            return '';
+        }
+    };
+
     return (
         <>
             <div className="detail__container">
@@ -62,9 +94,10 @@ const DetailBox = () => {
                             <span className="item__label">取消數量</span>
                             <span className="item__val">{info.cancel_qty}</span>
                         </div>
-                        <div className="item">
+                        <div className="item" onClick={clickHandler.bind(null, info.status_code)}>
                             <span className="item__label">成交均價</span>
                             <span className="item__val">{info.match_price}</span>
+                            {showInfoHandler(info.status_code)}
                         </div>
                         <div className="item">
                             <span className="item__label">委託狀態</span>
@@ -91,35 +124,39 @@ const DetailBox = () => {
                     </div>
                 </div>
                 <div className="btn__container">
+                    {showHandler() && (
+                        <Button
+                            style={{
+                                height: '60px',
+                                width: 'calc( 50% - 8px )',
+                                marginRight: '16px',
+                                backgroundColor: '#e6ebf5',
+                                border: 'none',
+                                fontSize: '2rem',
+                                fontWeight: 'bold',
+                                color: 'black',
+                            }}
+                            onClick={() => {
+                                dispatch(setConfirmBoxTitle('刪改委託單'));
+                                dispatch(setConfirmBoxClickSource('detail'));
+                            }}
+                        >
+                            刪改委託單
+                        </Button>
+                    )}
                     <Button
                         style={{
                             height: '60px',
-                            width: 'calc( 50% - 8px )',
-                            marginRight: '16px',
-                            backgroundColor: '#e6ebf5',
-                            border: 'none',
-                            fontSize: '2rem',
-                            fontWeight: 'bold',
-                            color: 'black',
-                        }}
-                        onClick={() => {
-                            dispatch(setConfirmBoxTitle('刪改委託單'));
-                            dispatch(setConfirmBoxClickSource('detail'));
-                        }}
-                    >
-                        刪改委託單
-                    </Button>
-                    <Button
-                        style={{
-                            height: '60px',
-                            width: 'calc( 50% - 8px )',
+                            width: showHandler() ? 'calc( 50% - 8px )' : '100%',
                             backgroundColor: '#254a91',
                             color: 'white',
                             fontSize: '2rem',
                             fontWeight: 'bold',
                             border: 'none',
                         }}
-                        // onClick={}
+                        onClick={() => {
+                            window.open(process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount?option=S&tab=inventory');
+                        }}
                         // loading={}
                     >
                         查看庫存
@@ -204,6 +241,9 @@ const DetailBox = () => {
                     font-weight: bold;
                     margin-left: 5px;
                     color: #0d1623;
+                }
+                .detail__container .ant-btn:disabled {
+                    color: white !important;
                 }
             `}</style>
         </>
