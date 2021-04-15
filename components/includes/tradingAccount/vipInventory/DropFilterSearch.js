@@ -39,7 +39,6 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
             return {
                 width: '52px',
                 height: '31px',
-                marginRight: '12px',
                 padding: 0,
                 border: 'solid 1px #d7e0ef',
                 color: '#a9b6cb',
@@ -48,7 +47,6 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
             return {
                 width: '52px',
                 height: '31px',
-                marginRight: '12px',
                 padding: 0,
                 border: 'solid 1px #d7e0ef',
                 color: '#0d1623',
