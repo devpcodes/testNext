@@ -122,7 +122,11 @@ function Service_ForgetPassword() {
                         </a>
                     </li>
                     <li className="password__service__item">
-                        <div className="password__service__link">
+                        <a
+                            className="password__service__link"
+                            href={process.env.NEXT_PUBLIC_SERVICE_POSITIONS}
+                            target="_blank"
+                        >
                             <Popover
                                 content={
                                     <p className="tooltips">
@@ -143,7 +147,7 @@ function Service_ForgetPassword() {
                                     親臨分公司申請密碼補發
                                 </p>
                             </div>
-                        </div>
+                        </a>
                     </li>
                 </ul>
             </section>
@@ -174,7 +178,7 @@ function Service_ForgetPassword() {
                 .password__container {
                     width: 80%;
                     margin: 0 auto;
-                    padding: 150px 0 80px 0;
+                    padding: 150px 0 180px 0;
                 }
                 .title__container {
                     margin: 28px 0;
