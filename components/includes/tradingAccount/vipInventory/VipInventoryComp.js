@@ -5,6 +5,7 @@ import VipInventoryTable from './VipInventoryTable';
 import _ from 'lodash';
 const VipInventoryComp = () => {
     const [columns, setColumns] = useState([]);
+    const [controlText, setControlText] = useState('');
     const [data, setData] = useState([]);
 
     const getColumns = useCallback(columns => {
@@ -42,13 +43,17 @@ const VipInventoryComp = () => {
         setData(formatData);
     });
 
+    const getPageTextHandler = text => {
+        setControlText(text);
+    };
+
     return (
         <div className="vipInventory__container">
             <div className="control__container">
                 <h2 className="title">庫存查詢</h2>
-                <Control text={'1-15檔個股 (共49檔個股)'} columns={columns} dataSource={data} fileName={'庫存'} />
+                <Control text={controlText} columns={columns} dataSource={data} fileName={'庫存'} />
             </div>
-            <VipInventoryTable getColumns={getColumns} getData={getData} />
+            <VipInventoryTable getColumns={getColumns} getData={getData} getPageInfoText={getPageTextHandler} />
             <style jsx>
                 {`
                     .vipInventory__container {

@@ -15,7 +15,7 @@ import { fetchInventory } from '../../../../services/stock/fetchInventory';
 import { formatNum } from '../../../../services/formatNum';
 import { openGoOrder } from '../../../../services/openGoOrder';
 
-const VipInventoryTable = ({ getColumns, getData }) => {
+const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
@@ -288,7 +288,13 @@ const VipInventoryTable = ({ getColumns, getData }) => {
                 dataSource={data}
                 pagination={{
                     total: total,
-                    showTotal: (total, range) => `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`,
+                    showTotal: (total, range) => {
+                        if (getPageInfoText != null) {
+                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
+                        }
+
+                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                    },
                     defaultPageSize: pageSize,
                     defaultCurrent: 1,
                     showSizeChanger: false,
