@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { Modal } from 'antd';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { Button } from 'antd';
 import useSWR from 'swr';
 import Highlighter from 'react-highlight-words';
 import AccountTable from './AccountTable';
@@ -25,14 +25,23 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
     const [searchWords, setSearchWords] = useState('');
     const [searchTtype, setSearchTtype] = useState('A');
     const [filterSearchVal, setFilterSearchVal] = useState('');
+    const [error, setError] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
-
     const isMobile = useCheckMobile();
     const router = useRouter();
-    const { data: fetchData } = useSWR(
-        [currentAccount, searchWords, searchTtype, currentPage, pageSize],
-        fetchInventory,
-    );
+    const tType = useMemo(() => {
+        return searchTtype;
+    }, [searchTtype]);
+
+    const { data: fetchData } = useSWR([currentAccount, searchWords, tType, currentPage, pageSize], fetchInventory, {
+        onError: (error, key) => {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+            setError('伺服器錯誤');
+        },
+        errorRetryCount: 5,
+    });
 
     useEffect(() => {
         // fetchData
@@ -40,6 +49,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
             setTotal(fetchData.totalCount);
         }
         if (Array.isArray(fetchData?.data)) {
+            setError('');
             const tableData = fetchData.data.map((item, key) => {
                 item.product = item.stock + ' ' + item.name;
                 item.key = key;
@@ -204,7 +214,9 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
                 }
                 return columns;
             });
-            setSearchTtype(val[0]);
+            // console.log('vvvv===', val)
+            // setSearchTtype(val[0]);
+            setSearchTtype(val);
             setCurrentPage(1);
         }
     });
@@ -262,10 +274,10 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
             return {
                 filterDropdown: ({ confirm }) => (
                     <DropfilterCheckBox
-                        type={'radio'}
+                        type={''}
                         onSubmit={onFdSubmit.bind(null, confirm)}
                         onReset={onFdReset.bind(null, confirm)}
-                        value={searchTtype === 'A' ? [] : [searchTtype]}
+                        value={searchTtype === 'A' ? [] : searchTtype}
                         data={[
                             { text: '現股', value: '0' },
                             { text: '融資', value: '1' },
@@ -326,7 +338,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText }) => {
                             資料加載中...
                         </div>
                     ),
-                    spinning: fetchData == null ? true : false,
+                    spinning: fetchData == null && !error ? true : false,
                 }}
             />
             <style global jsx>{`

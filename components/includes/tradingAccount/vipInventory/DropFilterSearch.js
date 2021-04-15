@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input, Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import ConfirmButton from './buttons/ConfirmButton';
 import ResetButton from './buttons/ResetButton';
 import SearchAutoComplete from './SearchAutoComplete';

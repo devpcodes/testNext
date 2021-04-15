@@ -17,7 +17,6 @@ const VipInventoryComp = () => {
                 return false;
             }
         });
-        console.log('excel', formatColumns);
         setColumns(formatColumns);
     });
 
@@ -44,9 +43,9 @@ const VipInventoryComp = () => {
         setData(formatData);
     });
 
-    const getPageTextHandler = text => {
+    const getPageTextHandler = useCallback(text => {
         setControlText(text);
-    };
+    });
 
     return (
         <div className="vipInventory__container">

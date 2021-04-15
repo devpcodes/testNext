@@ -32,6 +32,28 @@ const DropfilterCheckBox = ({ type, onSubmit, onReset, value, data }) => {
         onReset();
     };
 
+    const getStyle = () => {
+        if (checkboxValue?.length === 0) {
+            return {
+                width: '52px',
+                height: '31px',
+                marginRight: '12px',
+                padding: 0,
+                border: 'solid 1px #d7e0ef',
+                color: '#a9b6cb',
+            };
+        } else {
+            return {
+                width: '52px',
+                height: '31px',
+                marginRight: '12px',
+                padding: 0,
+                border: 'solid 1px #d7e0ef',
+                color: '#0d1623',
+            };
+        }
+    };
+
     return (
         <>
             <div className="checkbox__container">
@@ -44,17 +66,7 @@ const DropfilterCheckBox = ({ type, onSubmit, onReset, value, data }) => {
                         );
                     })}
                     <div className="btn__box">
-                        <Button
-                            style={{
-                                width: '52px',
-                                height: '31px',
-                                marginRight: '12px',
-                                padding: 0,
-                                border: 'solid 1px #d7e0ef',
-                                color: '#a9b6cb',
-                            }}
-                            onClick={onResetHandler}
-                        >
+                        <Button style={getStyle()} onClick={onResetHandler}>
                             重置
                         </Button>
                         <Button
