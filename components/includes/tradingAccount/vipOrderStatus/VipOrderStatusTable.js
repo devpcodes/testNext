@@ -1,9 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { Modal } from 'antd';
 import useSWR from 'swr';
+import { useSelector } from 'react-redux';
+import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import AccountTable from '../vipInventory/AccountTable';
+import { getToken } from '../../../../services/user/accessToken';
 
 const VipOrderStatusTable = () => {
     const [columns, setColumns] = useState([]);
+    const [data, setData] = useState([]);
+    const userInfo = useSelector(store => store.user.currentAccount);
+    const postData = useMemo(() => {
+        if (userInfo.account != null) {
+            const account = userInfo.account;
+            const action = 'account';
+            const broker_id = userInfo.broker_id;
+            const stock_id = '';
+            const token = getToken();
+            const user_id = userInfo.idno;
+            return {
+                account,
+                action,
+                broker_id,
+                stock_id,
+                token,
+                user_id,
+            };
+        } else {
+            return {};
+        }
+    }, [userInfo]);
+    const { data: fetchData } = useSWR([postData], orderStatusQueryFetcher, {
+        onError: (error, key) => {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+            setError('伺服器錯誤');
+        },
+        errorRetryCount: 3,
+        focusThrottleInterval: 10000,
+        errorRetryInterval: 10000,
+    });
+    useEffect(() => {
+        setData(fetchData);
+    }, [fetchData]);
     useEffect(() => {
         const newColumns = [
             {
@@ -18,8 +58,8 @@ const VipOrderStatusTable = () => {
             },
             {
                 title: '商品',
-                dataIndex: 'product',
-                key: 'product',
+                dataIndex: 'name_zh',
+                key: 'name_zh',
             },
             {
                 title: '買賣',
@@ -48,8 +88,8 @@ const VipOrderStatusTable = () => {
             },
             {
                 title: '成交價',
-                dataIndex: 'matchPrice',
-                key: 'matchPrice',
+                dataIndex: 'match_price',
+                key: 'match_price',
             },
             {
                 title: '成交量',
@@ -63,20 +103,20 @@ const VipOrderStatusTable = () => {
             },
             {
                 title: '委託書號',
-                dataIndex: 'orderID',
-                key: 'orderID',
+                dataIndex: 'ord_no',
+                key: 'ord_no',
             },
             {
                 title: '網路單號',
-                dataIndex: 'webID',
-                key: 'webID',
+                dataIndex: 'sord_seq',
+                key: 'sord_seq',
             },
         ];
         setColumns(newColumns);
     }, []);
     return (
         <>
-            <AccountTable scroll={{ x: 780 }} columns={columns} dataSource={[]} />
+            <AccountTable scroll={{ x: 780 }} columns={columns} dataSource={data} />
         </>
     );
 };

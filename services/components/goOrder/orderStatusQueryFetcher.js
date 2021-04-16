@@ -2,6 +2,7 @@ import { getA8Instance } from '../../myAxios';
 
 export const orderStatusQueryFetcher = async function ({ account, action, broker_id, stock_id, token, user_id }) {
     const url = `/Equity/OrderStatusQuery`;
+    if (!account) return;
     try {
         const res = await await getA8Instance('v2', undefined, true).post(url, {
             account,
@@ -21,6 +22,7 @@ export const orderStatusQueryFetcher = async function ({ account, action, broker
             return [];
         }
     } catch (error) {
+        throw error;
         return error;
     }
 };
