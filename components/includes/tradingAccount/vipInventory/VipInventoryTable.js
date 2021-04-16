@@ -43,7 +43,9 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                 });
                 setError('伺服器錯誤');
             },
-            errorRetryCount: 5,
+            errorRetryCount: 3,
+            focusThrottleInterval: 10000,
+            errorRetryInterval: 10000,
         },
     );
 

@@ -1,4 +1,5 @@
 import Control from '../vipInventory/Control';
+import theme from '../../../../resources/styles/theme';
 import VipOrderStatusTable from './VipOrderStatusTable';
 const VipOrderStatus = () => {
     return (
@@ -7,7 +8,6 @@ const VipOrderStatus = () => {
                 <h2 className="title">委託回報</h2>
                 <Control text={''} columns={[]} dataSource={[]} />
             </div>
-            <div></div>
             <VipOrderStatusTable />
             <style jsx>
                 {`
@@ -36,6 +36,22 @@ const VipOrderStatus = () => {
                     }
                     .control__container {
                         position: relative;
+                    }
+                    @media (max-width: ${theme.mobileBreakPoint}px) {
+                        .vipOrderStatus__container {
+                            padding-left: 0;
+                            padding-right: 0;
+                        }
+                        .control__container {
+                            padding-left: 20px;
+                            padding-right: 20px;
+                        }
+                        .title {
+                            font-size: 2rem;
+                            font-weight: bold;
+                            margin-top: -36px;
+                            margin-bottom: 10px;
+                        }
                     }
                 `}
             </style>

@@ -87,13 +87,13 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     white-space: nowrap;
                 }
                 .sino__table .ant-table-thead > tr > th:first-child {
-                    padding-left: ${props.dataSource?.length > 0 ? '3%' : 0};
+                    padding-left: ${props.dataSource?.length > 0 ? '3%' : '1%'};
                 }
                 .sino__table .ant-table-filter-column {
                     padding-left: ${props.dataSource?.length > 0 ? 0 : '22px'};
                 }
                 .sino__table .ant-table-thead > tr > th:last-child {
-                    padding-right: 3%;
+                    padding-right: ${props.dataSource?.length > 0 ? '3%' : 0};
                 }
                 .sino__table .ant-table-tbody > tr > td {
                     border-bottom: solid 1px #e6ebf5;
@@ -101,11 +101,12 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     color: #0d1623;
                     white-space: nowrap;
                 }
+
                 .sino__table .ant-table-tbody > tr > td:first-child {
                     padding-left: ${props.dataSource?.length > 0 ? '3%' : 0};
                 }
                 .sino__table .ant-table-tbody > tr > td:last-child {
-                    padding-right: 3%;
+                    padding-right: ${props.dataSource?.length > 0 ? '3%' : 0};
                 }
                 .sino__table .ant-pagination-disabled .ant-pagination-item-link {
                     border-color: #d7e0ef;
@@ -149,9 +150,16 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     margin-right: 16px;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .sino__table .ant-table-thead > tr > th:first-child {
+                        padding-left: ${props.dataSource?.length > 0 ? '3%' : '5px'};
+                    }
                     .sino__table .ant-table table {
                         border: none;
-                        border-top: solid 1px #d7e0ef;
+                        // border-top: solid 1px #d7e0ef;
+                    }
+                    .sino__table .ant-table-container {
+                        border-left: none;
+                        border-right: none;
                     }
                     .sino__table .ant-table-thead > tr > th {
                         padding-top: 2px;
@@ -168,6 +176,16 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 }
                 .sino__table .normalWhiteSpace {
                     white-space: normal !important;
+                }
+
+                .sino__table .ant-table-tbody > tr:last-child > td {
+                    border-bottom: none !important;
+                }
+                .sino__table .ant-table-tbody > tr:last-child > td {
+                    border-bottom: none !important;
+                }
+                .ant-table-tbody > tr:last-child > td {
+                    border-bottom: none !important;
                 }
             `}</style>
         </div>
