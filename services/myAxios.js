@@ -93,7 +93,7 @@ export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal =
 const createA8StpInstance = baseUrl =>
     axios.create({
         baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8_BASE}/`,
-        timeout: 14000,
+        timeout: 90000,
         validateStatus: function (status) {
             return status >= 200 && status < 300;
         },
