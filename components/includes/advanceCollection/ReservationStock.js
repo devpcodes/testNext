@@ -128,8 +128,8 @@ const ReservationStock = () => {
             },
             {
                 title: '昨日庫存(股數)',
-                dataIndex: 'stock_amount',
-                key: 'stock_amount',
+                dataIndex: 'stock_amount_t1',
+                key: 'stock_amount_t1',
                 index: 3,
             },
             {
