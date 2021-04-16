@@ -1,6 +1,8 @@
 import Control from '../vipInventory/Control';
 import theme from '../../../../resources/styles/theme';
 import VipOrderStatusTable from './VipOrderStatusTable';
+import SumColmn from './SumColumn';
+
 const VipOrderStatus = () => {
     return (
         <div className="vipOrderStatus__container">
@@ -8,9 +10,16 @@ const VipOrderStatus = () => {
                 <h2 className="title">委託回報</h2>
                 <Control text={''} columns={[]} dataSource={[]} />
             </div>
+            <div className="sum__container">
+                <SumColmn />
+            </div>
             <VipOrderStatusTable />
             <style jsx>
                 {`
+                    .sum__container {
+                        margin-bottom: 17px;
+                        margin-top: -7px;
+                    }
                     .vipOrderStatus__container {
                         padding-left: 10%;
                         padding-right: 10%;
@@ -51,6 +60,9 @@ const VipOrderStatus = () => {
                             font-weight: bold;
                             margin-top: -36px;
                             margin-bottom: 10px;
+                        }
+                        .sum__container {
+                            padding: 0 20px;
                         }
                     }
                 `}

@@ -171,7 +171,8 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     }
                     .sino__table .ant-pagination-total-text {
                         display: block;
-                        margin-top: -15px;
+                        margin-top: -10px;
+                        margin-right: 0;
                     }
                 }
                 .sino__table .normalWhiteSpace {

@@ -37,16 +37,23 @@ const Control = ({ style, text, columns, dataSource, fileName, onClick }) => {
         return newColumns;
     };
 
+    const getWidth = () => {
+        if (isMobile) {
+            if (fileName == null) {
+                return 'calc( 100% - 40px - 12px)';
+            } else {
+                return '80%';
+            }
+        } else {
+            return '';
+        }
+    };
+
     return (
         <>
             <div className="control__container" style={style}>
                 <span className="text">{text}</span>
-                <AccountDropdown
-                    type={'S'}
-                    personalAreaVisible={false}
-                    tradingLayout={true}
-                    width={isMobile ? '80%' : ''}
-                />
+                <AccountDropdown type={'S'} personalAreaVisible={false} tradingLayout={true} width={getWidth()} />
                 <IconBtn
                     onClick={onClick}
                     type={'refresh'}
