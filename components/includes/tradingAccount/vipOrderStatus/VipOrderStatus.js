@@ -1,19 +1,30 @@
+import { useCallback, useState } from 'react';
 import Control from '../vipInventory/Control';
 import theme from '../../../../resources/styles/theme';
 import VipOrderStatusTable from './VipOrderStatusTable';
 import SumColmn from './SumColumn';
+import DelButton from './buttons/DelButton';
 
 const VipOrderStatus = () => {
+    const [showDel, setShowDel] = useState(false);
+    const delBtnHandler = useCallback(data => {
+        if (data.length > 0) {
+            setShowDel(true);
+        } else {
+            setShowDel(false);
+        }
+    });
     return (
         <div className="vipOrderStatus__container">
             <div className="control__container">
                 <h2 className="title">委託回報</h2>
+                {showDel && <DelButton text="刪單" style={{ marginBottom: '22px', marginTop: '-4px' }} />}
                 <Control text={''} columns={[]} dataSource={[]} />
             </div>
             <div className="sum__container">
                 <SumColmn />
             </div>
-            <VipOrderStatusTable />
+            <VipOrderStatusTable showDelBtn={delBtnHandler} />
             <style jsx>
                 {`
                     .sum__container {

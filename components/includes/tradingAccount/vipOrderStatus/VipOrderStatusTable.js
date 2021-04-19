@@ -1,12 +1,19 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Modal } from 'antd';
 import useSWR from 'swr';
 import { useSelector } from 'react-redux';
 import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import AccountTable from '../vipInventory/AccountTable';
 import { getToken } from '../../../../services/user/accessToken';
+import {
+    mappingCommissionedCode,
+    mappingCommissionedCodeTradingAcc,
+    mappingShowChangeBtn,
+    mappingStatusMsg,
+} from '../../../../services/components/goOrder/dataMapping';
+import ControlBtns from './ControlBtns';
 
-const VipOrderStatusTable = () => {
+const VipOrderStatusTable = ({ showDelBtn }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const userInfo = useSelector(store => store.user.currentAccount);
@@ -42,7 +49,24 @@ const VipOrderStatusTable = () => {
         errorRetryInterval: 10000,
     });
     useEffect(() => {
-        setData(fetchData);
+        console.log('data', fetchData);
+        let newData = [];
+        if (Array.isArray(fetchData)) {
+            newData = fetchData.sort((a, b) => {
+                if (a.ord_time.length <= 6) {
+                    a.ord_time += '000';
+                }
+                if (b.ord_time.length <= 6) {
+                    b.ord_time += '000';
+                }
+                return Number(b.ord_time) - Number(a.ord_time);
+            });
+            newData = newData.map((item, index) => {
+                item.key = index;
+                return item;
+            });
+            setData(newData);
+        }
     }, [fetchData]);
     useEffect(() => {
         const newColumns = [
@@ -50,24 +74,49 @@ const VipOrderStatusTable = () => {
                 title: '動作',
                 dataIndex: 'active',
                 key: 'active',
+                render: (text, record) => {
+                    return (
+                        <ControlBtns
+                            ord_bs={record.ord_bs}
+                            status_code={record.status_code}
+                            price_flag={record.price_flag}
+                            order_type1={record.order_type1}
+                        />
+                    );
+                },
             },
             {
                 title: '狀態',
-                dataIndex: 'status',
-                key: 'status',
+                dataIndex: 'status_code',
+                key: 'status_code',
+                render: (text, record) => {
+                    return mappingStatusMsg(text);
+                },
             },
             {
                 title: '商品',
                 dataIndex: 'name_zh',
                 key: 'name_zh',
                 render: (text, record) => {
-                    return record.stock_id + ' ' + (record.name_zh || '');
+                    return <span style={{ fontWeight: 'bold' }}>{record.stock_id + ' ' + (record.name_zh || '')}</span>;
                 },
             },
             {
                 title: '買賣',
                 dataIndex: 'buySell',
                 key: 'buySell',
+                render: (text, record) => {
+                    return (
+                        <span style={{ color: record.ord_bs === 'B' ? '#f45a4c' : '#22a16f' }}>
+                            {mappingCommissionedCodeTradingAcc(
+                                record.ord_bs,
+                                record.ord_type2,
+                                record.market_id,
+                                record.ord_type1,
+                            )}
+                        </span>
+                    );
+                },
             },
             {
                 title: '條件',
@@ -119,10 +168,27 @@ const VipOrderStatusTable = () => {
             },
         ];
         setColumns(newColumns);
-    }, []);
+    }, [data]);
+    const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
+        console.log(selectedRowKeys, selectedRows);
+        if (showDelBtn != null) {
+            showDelBtn(selectedRows);
+        }
+    });
     return (
         <>
-            <AccountTable scroll={{ x: 780 }} columns={columns} dataSource={data} />
+            <AccountTable
+                scroll={{ x: 780 }}
+                columns={columns}
+                dataSource={data}
+                rowSelection={{
+                    type: 'checkbox',
+                    getCheckboxProps: record => {
+                        return { disabled: !mappingShowChangeBtn(record.status_code) };
+                    },
+                    onChange: changeSelectedHandler,
+                }}
+            />
         </>
     );
 };

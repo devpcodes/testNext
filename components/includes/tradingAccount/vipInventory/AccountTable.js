@@ -188,6 +188,27 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 .ant-table-tbody > tr:last-child > td {
                     border-bottom: none !important;
                 }
+                .sino__table .ant-checkbox-input:focus + .ant-checkbox-inner,
+                .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+                .ant-checkbox:hover .ant-checkbox-inner {
+                    border-color: #c43826;
+                }
+                .sino__table .ant-checkbox-checked .ant-checkbox-inner {
+                    background-color: #c43826;
+                    border-color: #c43826;
+                }
+                .sino__table .ant-checkbox.ant-checkbox-checked:hover {
+                    border-color: #c43826 !important;
+                }
+                .sino__table .ant-checkbox-checked:after {
+                    border: none;
+                }
+                .sino__table .ant-checkbox-indeterminate .ant-checkbox-inner:after {
+                    background-color: #c43826;
+                }
+                .sino__table .ant-table-tbody > tr.ant-table-row-selected > td {
+                    background: #f7f8fb;
+                }
             `}</style>
         </div>
     );
