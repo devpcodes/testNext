@@ -60,6 +60,9 @@ const VipOrderStatusTable = () => {
                 title: '商品',
                 dataIndex: 'name_zh',
                 key: 'name_zh',
+                render: (text, record) => {
+                    return record.stock_id + ' ' + (record.name_zh || '');
+                },
             },
             {
                 title: '買賣',
@@ -68,23 +71,23 @@ const VipOrderStatusTable = () => {
             },
             {
                 title: '條件',
-                dataIndex: 'rod',
-                key: 'rod',
+                dataIndex: 'time_in_force',
+                key: 'time_in_force',
             },
             {
                 title: '委託價',
-                dataIndex: 'orderPrice',
-                key: 'orderPrice',
+                dataIndex: 'price',
+                key: 'price',
             },
             {
                 title: '委託量',
-                dataIndex: 'orderQty',
-                key: 'orderQty',
+                dataIndex: 'qty',
+                key: 'qty',
             },
             {
                 title: '取消量',
-                dataIndex: 'cancelQty',
-                key: 'cancelQty',
+                dataIndex: 'cancel_qty',
+                key: 'cancel_qty',
             },
             {
                 title: '成交價',
@@ -93,13 +96,16 @@ const VipOrderStatusTable = () => {
             },
             {
                 title: '成交量',
-                dataIndex: 'matchQty',
-                key: 'matchQty',
+                dataIndex: 'match_qty',
+                key: 'match_qty',
             },
             {
                 title: '剩餘量',
-                dataIndex: 'qty',
-                key: 'qty',
+                dataIndex: 'last_qty',
+                key: 'last_qty',
+                render: (text, record) => {
+                    return <>{record.qty - record.cancel_qty}</>;
+                },
             },
             {
                 title: '委託書號',
