@@ -128,8 +128,8 @@ const ReservationStock = () => {
             },
             {
                 title: '昨日庫存(股數)',
-                dataIndex: 'stock_amount',
-                key: 'stock_amount',
+                dataIndex: 'stock_amount_t1',
+                key: 'stock_amount_t1',
                 index: 3,
             },
             {
@@ -210,22 +210,34 @@ const ReservationStock = () => {
 
     const fetchInventory = async (token, brokerId, account) => {
         let resData = await fetchStockInventory(token, brokerId, account);
-        resData = resData.map((item, index) => {
-            item.key = String(index);
-            item.action = '申請';
-            item.qty = '';
-            return item;
-        });
-        setStockInventory(resData);
+        if (Array.isArray(resData)) {
+            resData = resData.map((item, index) => {
+                item.key = String(index);
+                item.action = '申請';
+                item.qty = '';
+                return item;
+            });
+            setStockInventory(resData);
+        } else {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
     };
 
     const fetchStatus = async (token, brokerId, account) => {
         let resData = await fetchEarmarkStatus(token, brokerId, account);
-        resData = resData.map((item, index) => {
-            item.key = String(index);
-            return item;
-        });
-        setStatusData(resData);
+        if (Array.isArray(resData)) {
+            resData = resData.map((item, index) => {
+                item.key = String(index);
+                return item;
+            });
+            setStatusData(resData);
+        } else {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
     };
 
     const changleHandler = activeKey => {
@@ -472,7 +484,7 @@ const ReservationStock = () => {
                             },
                             { txt: '4. 即時庫存股數：昨日庫存股數+今日匯撥股數+今日成交股數' },
                             { html: '<p>&nbsp;&nbsp;&nbsp;&nbsp;可圈存股數：昨日庫存股數+今日匯撥股數</p>' },
-                            { txt: '5. 如需解除圈存股票(例如欲進行存券匯撥/公開收購)，請與所屬分公司/營業員聯繫' },
+                            { txt: '5. 網路申請不提供解圈服務及相關資訊' },
                             {
                                 txt:
                                     '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)',
@@ -517,7 +529,7 @@ const ReservationStock = () => {
                                 color: '#e46262',
                             },
                             { txt: '3. 申請預收股票後，需於集保圈存成功後，方可委託賣出', color: '#e46262' },
-                            { txt: '4. 如需解除圈存股票(例如欲進行存券匯撥/公開收購)，請與所屬分公司/營業員聯繫' },
+                            { txt: '4. 網路申請不提供解圈服務及相關資訊' },
                             {
                                 txt:
                                     '5. 當日圈存之委託未成交，當日晚上自動將未成交股數解除圈存(依集保公司解除圈存作業時間為主)',

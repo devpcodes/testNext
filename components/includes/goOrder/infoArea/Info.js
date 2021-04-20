@@ -42,6 +42,7 @@ import { InstallWebCA } from './InstallWebCA';
 
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
+
 // TODO: 暫時寫死，需發 API 查詢相關資料顯示
 const moreItems = [
     { id: '1', color: 'dark', text: '融' },
@@ -425,6 +426,7 @@ export const Info = ({ stockid }) => {
                     </button>
                 </div>
             </div>
+            <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
             <AddSelectStock
                 isVisible={isSelfSelectVisitable}
@@ -591,7 +593,7 @@ export const Info = ({ stockid }) => {
                     position: absolute;
                     padding: 0 16px 12px 16px;
                     width: 100%;
-                    z-index: 1;
+                    z-index: 1001;
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
                 .more__info__container .information__box {
@@ -611,6 +613,16 @@ export const Info = ({ stockid }) => {
                     background: #f5f5f5;
                     border: 1px solid #d9d9d9;
                     cursor: no-drop;
+                }
+                .page__mask {
+                    position: fixed;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 1000;
+                    height: calc(100% - 230px);
+                    background-color: rgb(0 0 0 / 30%);
+                    display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
             `}</style>
             {/* <style jsx global>{`
