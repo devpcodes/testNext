@@ -1,4 +1,5 @@
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import MyTransition from '../myTransition';
 
 import { Tabs, Button, Input, Progress, Modal, notification } from 'antd';
@@ -50,8 +51,11 @@ const ReservationStock = () => {
     const stockActiveTabKey = useRef('1');
     const init = useRef(false);
     const selectedAccount = useRef({});
+    const isWebView = useRef(false);
+
     const [defaultValue, setDefaultValue] = useState('');
 
+    const router = useRouter();
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -60,6 +64,12 @@ const ReservationStock = () => {
             });
         }
     }, [state.accountsReducer.disabled]);
+
+    useEffect(() => {
+        if (router.query.iswebview === 'true') {
+            isWebView.current = true;
+        }
+    }, [router.query]);
 
     useEffect(() => {
         selectedAccount.current = state.accountsReducer.selected;
