@@ -86,6 +86,7 @@ const Layout = memo(({ children }) => {
             if (!Object.keys(navData).length) {
                 console.log('================= first =================');
                 updateNavData();
+                sessionAddSource();
             }
         }, 10);
 
@@ -164,6 +165,23 @@ const Layout = memo(({ children }) => {
             isMobile: prevIsMobile.current,
         };
         dispatch(setNavItems(data));
+    };
+
+    // 為相容舊版本下單盒，舊下單盒移除後可拔除
+    const sessionAddSource = () => {
+        const sourceList = {
+            mma: 'mma',
+            udn: 'udn',
+            line: 'u168',
+            cnyes: 'cnyes',
+        };
+        console.log('*************************************');
+        const itemkey = router.asPath.split('platform=')[1].toLocaleLowerCase();
+        console.log(itemkey);
+        console.log('*************************************');
+        if (sourceList[itemkey]) {
+            sessionStorage.setItem('source', sourceList[itemkey]);
+        }
     };
 
     //驗證有沒有瀏覽頁面的權限
