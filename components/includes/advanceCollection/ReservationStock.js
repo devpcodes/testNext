@@ -350,6 +350,7 @@ const ReservationStock = () => {
             },
             true,
             token,
+            isWebView.current,
         );
 
         console.log('newCaContent', caContent);
