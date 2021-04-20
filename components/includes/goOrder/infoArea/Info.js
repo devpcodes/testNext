@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
+import { InfoBox } from './InfoBox';
 import AddSelectStock from '../selfSelectStock/AddSelectStock';
 
 import {
@@ -435,6 +436,7 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
+                    <InfoBox code={2890} />
                     <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
                         加入自選
                     </button>
