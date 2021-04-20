@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Modal } from 'antd';
 import useSWR from 'swr';
 import { useSelector } from 'react-redux';
-import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
+import { orderStatusQueryFetcherWithSWR } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import AccountTable from '../vipInventory/AccountTable';
 import { getToken } from '../../../../services/user/accessToken';
 import {
@@ -17,6 +17,11 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const userInfo = useSelector(store => store.user.currentAccount);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [error, setError] = useState('');
     const postData = useMemo(() => {
         if (userInfo.account != null) {
             const account = userInfo.account;
@@ -32,12 +37,14 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 stock_id,
                 token,
                 user_id,
+                pageIndex: currentPage,
+                pageSize,
             };
         } else {
             return {};
         }
-    }, [userInfo]);
-    const { data: fetchData } = useSWR([postData], orderStatusQueryFetcher, {
+    }, [userInfo, currentPage, pageSize]);
+    const { data: fetchData } = useSWR([JSON.stringify(postData)], orderStatusQueryFetcherWithSWR, {
         onError: (error, key) => {
             Modal.error({
                 title: '伺服器錯誤',
@@ -50,9 +57,13 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
     });
     useEffect(() => {
         console.log('data', fetchData);
+        if (fetchData?.totalCount != null) {
+            setTotal(fetchData.totalCount);
+        }
         let newData = [];
-        if (Array.isArray(fetchData)) {
-            newData = fetchData.sort((a, b) => {
+        if (Array.isArray(fetchData?.data)) {
+            setError('');
+            newData = fetchData.data.sort((a, b) => {
                 if (a.ord_time.length <= 6) {
                     a.ord_time += '000';
                 }
@@ -127,31 +138,37 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 title: '委託價',
                 dataIndex: 'price',
                 key: 'price',
+                align: 'right',
             },
             {
                 title: '委託量',
                 dataIndex: 'qty',
                 key: 'qty',
+                align: 'right',
             },
             {
                 title: '取消量',
                 dataIndex: 'cancel_qty',
                 key: 'cancel_qty',
+                align: 'right',
             },
             {
                 title: '成交價',
                 dataIndex: 'match_price',
                 key: 'match_price',
+                align: 'right',
             },
             {
                 title: '成交量',
                 dataIndex: 'match_qty',
                 key: 'match_qty',
+                align: 'right',
             },
             {
                 title: '剩餘量',
                 dataIndex: 'last_qty',
                 key: 'last_qty',
+                align: 'right',
                 render: (text, record) => {
                     return <>{record.qty - record.cancel_qty}</>;
                 },
@@ -160,33 +177,81 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 title: '委託書號',
                 dataIndex: 'ord_no',
                 key: 'ord_no',
+                align: 'center',
             },
             {
                 title: '網路單號',
                 dataIndex: 'sord_seq',
                 key: 'sord_seq',
+                align: 'center',
             },
         ];
         setColumns(newColumns);
-    }, [data]);
+    }, [data, currentPage]);
+
     const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
         console.log(selectedRowKeys, selectedRows);
+        setSelectedRowKeys(selectedRowKeys);
         if (showDelBtn != null) {
             showDelBtn(selectedRows);
         }
     });
+
+    const pageChangeHandler = (page, pageSize) => {
+        setCurrentPage(page);
+        setSelectedRowKeys([]);
+    };
+
+    const getCheckboxProps = useCallback(
+        record => {
+            return { disabled: !mappingShowChangeBtn(record.status_code) };
+        },
+        [data, currentPage],
+    );
+
     return (
         <>
             <AccountTable
                 scroll={{ x: 780 }}
                 columns={columns}
                 dataSource={data}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            資料加載中...
+                        </div>
+                    ),
+                    spinning: fetchData == null && !error ? true : false,
+                }}
+                pagination={{
+                    total: total,
+                    showTotal: (total, range) => {
+                        // if (getPageInfoText != null) {
+                        //     getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
+                        // }
+
+                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                    },
+                    defaultPageSize: pageSize,
+                    defaultCurrent: 1,
+                    showSizeChanger: false,
+                    onChange: pageChangeHandler,
+                    responsive: true,
+                    current: currentPage,
+                }}
                 rowSelection={{
                     type: 'checkbox',
-                    getCheckboxProps: record => {
-                        return { disabled: !mappingShowChangeBtn(record.status_code) };
-                    },
+                    getCheckboxProps,
                     onChange: changeSelectedHandler,
+                    selectedRowKeys,
                 }}
             />
         </>

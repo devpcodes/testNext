@@ -4,7 +4,7 @@ const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1 }) => {
     const [showControlBtn, setShowControlBtn] = useState(false);
     useEffect(() => {
         setShowControlBtn(mappingShowChangeBtn(status_code));
-    }, [status]);
+    }, [ord_bs, status_code, price_flag, order_type1]);
     return (
         <div>
             {showControlBtn && (

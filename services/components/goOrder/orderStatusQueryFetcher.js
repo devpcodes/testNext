@@ -1,25 +1,58 @@
 import { getA8Instance } from '../../myAxios';
-
-export const orderStatusQueryFetcher = async function ({ account, action, broker_id, stock_id, token, user_id }) {
+export const orderStatusQueryFetcherWithSWR = async function (strObj) {
+    return await orderStatusQueryFetcher(JSON.parse(strObj));
+};
+export const orderStatusQueryFetcher = async function ({
+    account,
+    action,
+    broker_id,
+    stock_id,
+    token,
+    user_id,
+    pageIndex,
+    pageSize,
+}) {
     const url = `/Equity/OrderStatusQuery`;
     if (!account) return;
     try {
-        const res = await await getA8Instance('v2', undefined, true).post(url, {
-            account,
-            action,
-            broker_id,
-            stock_id,
-            token,
-            user_id,
-        });
-        if (res.data.success === 'True') {
-            if (Array.isArray(res.data.result)) {
-                return res.data.result;
+        let res;
+        if (pageIndex != null && pageSize != null) {
+            res = await await getA8Instance('v2', undefined, true).post(url, {
+                account,
+                action,
+                broker_id,
+                stock_id,
+                token,
+                user_id,
+                pageIndex,
+                pageSize,
+            });
+        } else {
+            res = await await getA8Instance('v2', undefined, true).post(url, {
+                account,
+                action,
+                broker_id,
+                stock_id,
+                token,
+                user_id,
+            });
+        }
+        if (pageSize == null) {
+            if (res.data.success === 'True') {
+                if (Array.isArray(res.data.result)) {
+                    return res.data.result;
+                } else {
+                    return [];
+                }
             } else {
                 return [];
             }
         } else {
-            return [];
+            if (res.data?.success === 'True') {
+                return res.data?.result;
+            } else {
+                throw 'error';
+            }
         }
     } catch (error) {
         throw error;
