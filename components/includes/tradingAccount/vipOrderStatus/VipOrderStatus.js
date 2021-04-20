@@ -1,30 +1,78 @@
 import { useCallback, useState } from 'react';
+import { Modal } from 'antd';
+import { useSelector } from 'react-redux';
 import Control from '../vipInventory/Control';
 import theme from '../../../../resources/styles/theme';
 import VipOrderStatusTable from './VipOrderStatusTable';
 import SumColmn from './SumColumn';
 import DelButton from './buttons/DelButton';
+import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 
 const VipOrderStatus = () => {
     const [showDel, setShowDel] = useState(false);
+    const [selectData, setSelectData] = useState([]);
+    const [controlReload, setControlReload] = useState(0);
+    const userInfo = useSelector(store => store.user.currentAccount);
+
     const delBtnHandler = useCallback(data => {
         if (data.length > 0) {
             setShowDel(true);
+            setSelectData(data);
         } else {
             setShowDel(false);
+            setSelectData([]);
         }
     });
+
+    const delClickHandler = useCallback(() => {
+        if (selectData.length > 0) {
+            Modal.confirm({
+                title: '刪單確認',
+                content: `確認刪除${selectData.length}筆資料嗎？`,
+                onOk: async () => {
+                    let res = await delOrderList(userInfo, selectData, true);
+                    const delSuccess = res.filter(item => {
+                        if (item === 'True') {
+                            return true;
+                        }
+                    });
+                    setControlReload(prev => {
+                        return (prev += 1);
+                    });
+                    Modal.info({
+                        content: `共刪除${selectData.length}筆資料，${delSuccess.length}筆資料刪除成功，${
+                            selectData.length - delSuccess.length
+                        }筆資料刪除失敗`,
+                    });
+                },
+            });
+        }
+    }, [selectData]);
+
+    const reFreshHandler = useCallback(() => {
+        setControlReload(prev => {
+            return (prev += 1);
+        });
+    });
+
     return (
         <div className="vipOrderStatus__container">
             <div className="control__container">
                 <h2 className="title">委託回報</h2>
-                {showDel && <DelButton text="刪單" style={{ marginBottom: '22px', marginTop: '-4px' }} />}
-                <Control text={''} columns={[]} dataSource={[]} />
+                {showDel && (
+                    <DelButton
+                        text="刪單"
+                        style={{ marginBottom: '22px', marginTop: '-4px' }}
+                        onClick={delClickHandler}
+                    />
+                )}
+                <Control text={''} columns={[]} dataSource={[]} onClick={reFreshHandler} />
             </div>
             <div className="sum__container">
                 <SumColmn />
             </div>
-            <VipOrderStatusTable showDelBtn={delBtnHandler} />
+            {/* showDelBtn 有資料顯示刪單按鈕； controlReload 控制table重拉資料 */}
+            <VipOrderStatusTable showDelBtn={delBtnHandler} controlReload={controlReload} />
             <style jsx>
                 {`
                     .sum__container {

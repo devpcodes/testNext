@@ -17,7 +17,7 @@ export const orderStatusQueryFetcher = async function ({
     try {
         let res;
         if (pageIndex != null && pageSize != null) {
-            res = await await getA8Instance('v2', undefined, true).post(url, {
+            res = await await getA8Instance('v2', undefined, false).post(url, {
                 account,
                 action,
                 broker_id,

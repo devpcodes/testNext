@@ -12,16 +12,22 @@ import {
     mappingStatusMsg,
 } from '../../../../services/components/goOrder/dataMapping';
 import ControlBtns from './ControlBtns';
+import { usePlatform } from '../../../../hooks/usePlatform';
+import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 
-const VipOrderStatusTable = ({ showDelBtn }) => {
+const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
-    const userInfo = useSelector(store => store.user.currentAccount);
-    const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(0);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [error, setError] = useState('');
+    const [reload, setReload] = useState(0);
+
+    const userInfo = useSelector(store => store.user.currentAccount);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const platform = usePlatform();
+
     const postData = useMemo(() => {
         if (userInfo.account != null) {
             const account = userInfo.account;
@@ -44,19 +50,22 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
             return {};
         }
     }, [userInfo, currentPage, pageSize]);
-    const { data: fetchData } = useSWR([JSON.stringify(postData)], orderStatusQueryFetcherWithSWR, {
-        onError: (error, key) => {
-            Modal.error({
-                title: '伺服器錯誤',
-            });
-            setError('伺服器錯誤');
+    const { data: fetchData } = useSWR(
+        [JSON.stringify(postData), reload, controlReload],
+        orderStatusQueryFetcherWithSWR,
+        {
+            onError: (error, key) => {
+                Modal.error({
+                    title: '伺服器錯誤',
+                });
+                setError('伺服器錯誤');
+            },
+            errorRetryCount: 3,
+            focusThrottleInterval: 10000,
+            errorRetryInterval: 10000,
         },
-        errorRetryCount: 3,
-        focusThrottleInterval: 10000,
-        errorRetryInterval: 10000,
-    });
+    );
     useEffect(() => {
-        console.log('data', fetchData);
         if (fetchData?.totalCount != null) {
             setTotal(fetchData.totalCount);
         }
@@ -74,11 +83,35 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
             });
             newData = newData.map((item, index) => {
                 item.key = index;
+                item.platform = platform;
                 return item;
             });
+            setSelectedRowKeys([]);
             setData(newData);
         }
     }, [fetchData]);
+
+    const delClickHandler = useCallback(id => {
+        Modal.confirm({
+            title: '刪單確認',
+            content: '確認刪除1筆資料嗎？',
+            onOk: async () => {
+                const delData = data.filter(item => {
+                    if (item.key === id) {
+                        return true;
+                    }
+                });
+                let res = await delOrderList(userInfo, delData);
+                Modal.info({
+                    content: res[0],
+                });
+                setReload(prev => {
+                    return (prev += 1);
+                });
+            },
+        });
+    });
+
     useEffect(() => {
         const newColumns = [
             {
@@ -92,6 +125,8 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                             status_code={record.status_code}
                             price_flag={record.price_flag}
                             order_type1={record.order_type1}
+                            delClickHandler={delClickHandler}
+                            id={record.key}
                         />
                     );
                 },
@@ -101,7 +136,9 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 dataIndex: 'status_code',
                 key: 'status_code',
                 render: (text, record) => {
-                    return mappingStatusMsg(text);
+                    return (
+                        <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{mappingStatusMsg(text)}</span>
+                    );
                 },
             },
             {
@@ -109,7 +146,11 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 dataIndex: 'name_zh',
                 key: 'name_zh',
                 render: (text, record) => {
-                    return <span style={{ fontWeight: 'bold' }}>{record.stock_id + ' ' + (record.name_zh || '')}</span>;
+                    return (
+                        <span style={{ fontWeight: 'bold', opacity: record.status_code == 4 ? 0.45 : 1 }}>
+                            {record.stock_id + ' ' + (record.name_zh || '')}
+                        </span>
+                    );
                 },
             },
             {
@@ -118,7 +159,12 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 key: 'buySell',
                 render: (text, record) => {
                     return (
-                        <span style={{ color: record.ord_bs === 'B' ? '#f45a4c' : '#22a16f' }}>
+                        <span
+                            style={{
+                                color: record.ord_bs === 'B' ? '#f45a4c' : '#22a16f',
+                                opacity: record.status_code == 4 ? 0.45 : 1,
+                            }}
+                        >
                             {mappingCommissionedCodeTradingAcc(
                                 record.ord_bs,
                                 record.ord_type2,
@@ -133,36 +179,54 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 title: '條件',
                 dataIndex: 'time_in_force',
                 key: 'time_in_force',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '委託價',
                 dataIndex: 'price',
                 key: 'price',
                 align: 'right',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '委託量',
                 dataIndex: 'qty',
                 key: 'qty',
                 align: 'right',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '取消量',
                 dataIndex: 'cancel_qty',
                 key: 'cancel_qty',
                 align: 'right',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '成交價',
                 dataIndex: 'match_price',
                 key: 'match_price',
                 align: 'right',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '成交量',
                 dataIndex: 'match_qty',
                 key: 'match_qty',
                 align: 'right',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '剩餘量',
@@ -170,7 +234,11 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 key: 'last_qty',
                 align: 'right',
                 render: (text, record) => {
-                    return <>{record.qty - record.cancel_qty}</>;
+                    return (
+                        <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>
+                            {record.qty - record.cancel_qty}
+                        </span>
+                    );
                 },
             },
             {
@@ -178,12 +246,18 @@ const VipOrderStatusTable = ({ showDelBtn }) => {
                 dataIndex: 'ord_no',
                 key: 'ord_no',
                 align: 'center',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
             {
                 title: '網路單號',
                 dataIndex: 'sord_seq',
                 key: 'sord_seq',
                 align: 'center',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
             },
         ];
         setColumns(newColumns);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { mappingShowChangeBtn, checkPriceUpdate } from '../../../../services/components/goOrder/dataMapping';
-const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1 }) => {
+const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }) => {
     const [showControlBtn, setShowControlBtn] = useState(false);
     useEffect(() => {
         setShowControlBtn(mappingShowChangeBtn(status_code));
@@ -9,7 +9,7 @@ const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1 }) => {
         <div>
             {showControlBtn && (
                 <>
-                    <button className="btn">
+                    <button className="btn" onClick={delClickHandler.bind(null, id)}>
                         <span>刪</span>
                     </button>
                     <button className="btn">
