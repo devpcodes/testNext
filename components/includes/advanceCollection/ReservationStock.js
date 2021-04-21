@@ -66,6 +66,7 @@ const ReservationStock = () => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
+        alert(JSON.stringify(router));
         if (router.query.iswebview === 'true') {
             isWebView.current = true;
         }
