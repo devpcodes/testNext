@@ -1,21 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { mappingShowChangeBtn, checkPriceUpdate } from '../../../../services/components/goOrder/dataMapping';
-const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }) => {
+//{ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }
+const ControlBtns = ({ data, delClickHandler }) => {
     const [showControlBtn, setShowControlBtn] = useState(false);
     useEffect(() => {
-        setShowControlBtn(mappingShowChangeBtn(status_code));
-    }, [ord_bs, status_code, price_flag, order_type1]);
+        setShowControlBtn(mappingShowChangeBtn(data.status_code));
+    }, [data.ord_bs, data.status_code, data.price_flag, data.order_type1]);
+    const qtyUpdateHandler = useCallback(() => {});
     return (
         <div>
             {showControlBtn && (
                 <>
-                    <button className="btn" onClick={delClickHandler.bind(null, id)}>
+                    <button className="btn" onClick={delClickHandler.bind(null, data.key)}>
                         <span>刪</span>
                     </button>
-                    <button className="btn">
+                    <button className="btn" onClick={qtyUpdateHandler}>
                         <span>改</span>
                     </button>
-                    {checkPriceUpdate(price_flag, order_type1) && (
+                    {checkPriceUpdate(data.price_flag, data.order_type1) && (
                         <button className="btn">
                             <span>價</span>
                         </button>
@@ -30,8 +32,8 @@ const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1, delClickHan
                         padding: 0;
                         border: none;
                         outline: none;
-                        background-color: ${ord_bs === 'B' ? '#feefed' : '#e7f7f1'};
-                        color: ${ord_bs === 'B' ? '#f45a4c' : '#22a16f'};
+                        background-color: ${data.ord_bs === 'B' ? '#feefed' : '#e7f7f1'};
+                        color: ${data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'};
                         padding-left: 4px;
                         padding-right: 4px;
                         margin-right: 4px;
@@ -43,7 +45,7 @@ const ControlBtns = ({ ord_bs, status_code, price_flag, order_type1, delClickHan
                         margin-right: 0;
                     }
                     .btn:hover {
-                        background-color: ${ord_bs === 'B' ? '#ffded9' : '#d1f1e5'};
+                        background-color: ${data.ord_bs === 'B' ? '#ffded9' : '#d1f1e5'};
                     }
                 `}
             </style>

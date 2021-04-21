@@ -210,12 +210,13 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 render: (text, record) => {
                     return (
                         <ControlBtns
-                            ord_bs={record.ord_bs}
-                            status_code={record.status_code}
-                            price_flag={record.price_flag}
-                            order_type1={record.order_type1}
+                            // ord_bs={record.ord_bs}
+                            // status_code={record.status_code}
+                            // price_flag={record.price_flag}
+                            // order_type1={record.order_type1}
+                            data={record}
                             delClickHandler={delClickHandler}
-                            id={record.key}
+                            // id={record.key}
                         />
                     );
                 },
