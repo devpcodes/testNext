@@ -13,6 +13,8 @@ const Navigation = () => {
     const doLogin = async () => {
         const getQueryStr = () => {
             let addQueryHeaderObj = {};
+            alert(router.query.nav);
+            alert(router.query.iswebview);
             if (router.query.nav == '0') {
                 addQueryHeaderObj.nav = '0';
             } else if (router.query.iswebview == 'true') {
