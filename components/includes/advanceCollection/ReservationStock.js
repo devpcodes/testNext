@@ -353,6 +353,8 @@ const ReservationStock = () => {
             isWebView.current,
         );
 
+        alert('isWebView.current', isWebView.current);
+
         console.log('newCaContent', caContent);
         if (checkSignCA(caContent)) {
             setLoading(true);

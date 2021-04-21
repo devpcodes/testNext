@@ -100,6 +100,7 @@ export const sign = function (userInfo, isNeedSign = true, token, isWebview) {
             memberNo: memberNo,
             signTxt: userInfo.idno + new Date().getTime().toString(),
         };
+
         if (isWebview) {
             setting.isWebview = true;
         }
@@ -119,6 +120,8 @@ export const sign = function (userInfo, isNeedSign = true, token, isWebview) {
             });
         }
         console.log('setting:', setting);
+
+        alert('setting', JOSN.stringify(setting));
 
         ca.certSign(setting);
         console.log('getSignature:', ca.getSignature());
