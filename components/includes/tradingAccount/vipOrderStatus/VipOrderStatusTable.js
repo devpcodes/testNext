@@ -17,7 +17,7 @@ import { usePlatform } from '../../../../hooks/usePlatform';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 import DropFilterSearch from '../vipInventory/DropFilterSearch';
 
-const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
+const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(10);
@@ -70,6 +70,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
             errorRetryInterval: 10000,
         },
     );
+
     useEffect(() => {
         if (fetchData?.totalCount != null) {
             setTotal(fetchData.totalCount);
@@ -136,6 +137,15 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
         },
         [userInfo],
     );
+
+    useEffect(() => {
+        if (getSearchVal != null) {
+            getSearchVal(searchWords);
+        }
+        if (showDelBtn != null) {
+            showDelBtn([]);
+        }
+    }, [searchWords]);
 
     const searchResetHandler = useCallback(confirm => {
         confirm();
@@ -389,9 +399,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
                 pagination={{
                     total: total,
                     showTotal: (total, range) => {
-                        // if (getPageInfoText != null) {
-                        //     getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
-                        // }
+                        if (getPageInfoText != null) {
+                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
+                        }
 
                         return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
                     },

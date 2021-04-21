@@ -10,6 +10,8 @@ import { delOrderList } from '../../../../services/components/tradingAccount/del
 
 const VipOrderStatus = () => {
     const [showDel, setShowDel] = useState(false);
+    const [showSum, setShowSum] = useState(false);
+    const [controlText, setControlText] = useState('');
     const [selectData, setSelectData] = useState([]);
     const [controlReload, setControlReload] = useState(0);
     const userInfo = useSelector(store => store.user.currentAccount);
@@ -55,6 +57,18 @@ const VipOrderStatus = () => {
         });
     });
 
+    const getSearchVal = useCallback(searchVal => {
+        if (searchVal) {
+            setShowSum(true);
+        } else {
+            setShowSum(false);
+        }
+    });
+
+    const getPageTextHandler = useCallback(text => {
+        setControlText(text);
+    });
+
     return (
         <div className="vipOrderStatus__container">
             <div className="control__container">
@@ -66,13 +80,20 @@ const VipOrderStatus = () => {
                         onClick={delClickHandler}
                     />
                 )}
-                <Control text={''} columns={[]} dataSource={[]} onClick={reFreshHandler} />
+                <Control text={controlText} columns={[]} dataSource={[]} onClick={reFreshHandler} />
             </div>
-            <div className="sum__container">
-                <SumColmn />
-            </div>
+            {showSum && (
+                <div className="sum__container">
+                    <SumColmn />
+                </div>
+            )}
             {/* showDelBtn 有資料顯示刪單按鈕； controlReload 控制table重拉資料 */}
-            <VipOrderStatusTable showDelBtn={delBtnHandler} controlReload={controlReload} />
+            <VipOrderStatusTable
+                showDelBtn={delBtnHandler}
+                controlReload={controlReload}
+                getSearchVal={getSearchVal}
+                getPageInfoText={getPageTextHandler}
+            />
             <style jsx>
                 {`
                     .sum__container {
