@@ -21,6 +21,7 @@ const Navigation = () => {
                 addQueryHeaderObj.iswebview = 'true';
             }
             if (Object.keys(addQueryHeaderObj).length > 0) {
+                alert(objectToQueryHandler(addQueryHeaderObj));
                 return objectToQueryHandler(addQueryHeaderObj);
             } else {
                 return '';
