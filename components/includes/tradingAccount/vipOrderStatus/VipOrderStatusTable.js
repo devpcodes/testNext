@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Modal } from 'antd';
+import Highlighter from 'react-highlight-words';
 import useSWR from 'swr';
 import { useSelector } from 'react-redux';
 import { orderStatusQueryFetcherWithSWR } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
@@ -14,6 +15,7 @@ import {
 import ControlBtns from './ControlBtns';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
+import DropFilterSearch from '../vipInventory/DropFilterSearch';
 
 const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
     const [columns, setColumns] = useState([]);
@@ -22,6 +24,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
     const [total, setTotal] = useState(0);
     const [error, setError] = useState('');
     const [reload, setReload] = useState(0);
+    const [searchColumns, setSearchColumns] = useState([]);
+    const [filterSearchVal, setFilterSearchVal] = useState('');
+    const [searchWords, setSearchWords] = useState('');
 
     const userInfo = useSelector(store => store.user.currentAccount);
     const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +38,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
             const account = userInfo.account;
             const action = 'account';
             const broker_id = userInfo.broker_id;
-            const stock_id = '';
+            const stock_id = searchWords;
             const token = getToken();
             const user_id = userInfo.idno;
             return {
@@ -49,7 +54,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
         } else {
             return {};
         }
-    }, [userInfo, currentPage, pageSize]);
+    }, [userInfo, currentPage, pageSize, searchWords]);
     const { data: fetchData } = useSWR(
         [JSON.stringify(postData), reload, controlReload],
         orderStatusQueryFetcherWithSWR,
@@ -112,6 +117,80 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
         });
     });
 
+    const searchHandler = useCallback(
+        (confirm, val) => {
+            confirm();
+            // getUnRealPrtlos(currentAccount, { stock: val });
+            setSearchColumns(columns => {
+                if (!columns.includes('name_zh')) {
+                    columns.push('name_zh');
+                }
+                return columns;
+            });
+            // 因為送出的資料，和ui顯示不同，所以新增變數儲存
+            setFilterSearchVal(val);
+
+            const submitVal = val.split(' ')[0];
+            setSearchWords(submitVal);
+            setCurrentPage(1);
+        },
+        [userInfo],
+    );
+
+    const searchResetHandler = useCallback(confirm => {
+        confirm();
+        if (searchColumns.indexOf('name_zh') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('name_zh');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchWords('');
+            setFilterSearchVal('');
+        }
+    });
+    const getColumnSearchProps = dataIndex => {
+        if (dataIndex === 'name_zh') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropFilterSearch
+                        onSubmit={searchHandler.bind(null, confirm)}
+                        onReset={searchResetHandler.bind(null, confirm)}
+                        value={filterSearchVal}
+                    />
+                ),
+                render: text =>
+                    searchColumns.includes(dataIndex) ? (
+                        <Highlighter
+                            highlightStyle={{ padding: 0, color: '#daa360', backgroundColor: 'rgba(255,255,255,0)' }}
+                            searchWords={[searchWords]}
+                            autoEscape
+                            textToHighlight={text ? text.toString() : ''}
+                        />
+                    ) : (
+                        text
+                    ),
+            };
+        } else {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <></>
+                    // <DropfilterCheckBox
+                    //     type={''}
+                    //     onSubmit={onFdSubmit.bind(null, confirm)}
+                    //     onReset={onFdReset.bind(null, confirm)}
+                    //     value={searchTtype === 'A' ? [] : searchTtype}
+                    //     data={[
+                    //         { text: '現股', value: '0' },
+                    //         { text: '融資', value: '1' },
+                    //         { text: '融券', value: '2' },
+                    //     ]}
+                    // />
+                ),
+            };
+        }
+    };
+
     useEffect(() => {
         const newColumns = [
             {
@@ -145,6 +224,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
                 title: '商品',
                 dataIndex: 'name_zh',
                 key: 'name_zh',
+                ...getColumnSearchProps('name_zh'),
                 render: (text, record) => {
                     return (
                         <span style={{ fontWeight: 'bold', opacity: record.status_code == 4 ? 0.45 : 1 }}>
@@ -261,7 +341,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
             },
         ];
         setColumns(newColumns);
-    }, [data, currentPage]);
+    }, [data, currentPage, searchColumns, searchWords]);
 
     const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
         console.log(selectedRowKeys, selectedRows);
@@ -289,6 +369,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload }) => {
                 scroll={{ x: 780 }}
                 columns={columns}
                 dataSource={data}
+                filterColumns={searchColumns}
                 loading={{
                     indicator: (
                         <div
