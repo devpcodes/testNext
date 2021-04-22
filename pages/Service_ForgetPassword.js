@@ -119,7 +119,7 @@ function Service_ForgetPassword() {
                                 <h5 className="service__title">
                                     <span className="cbreak">密碼補發</span>
                                     <span className="cdisplay"> - </span>
-                                    <span className="cbreak">永豐金期貨客戶</span>
+                                    <span className="cbreak">永豐期貨客戶</span>
                                 </h5>
                                 <p className="service__desc">
                                     我已經忘記密碼
