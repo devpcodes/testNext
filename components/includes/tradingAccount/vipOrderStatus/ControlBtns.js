@@ -17,6 +17,7 @@ import { getCookie } from '../../../../services/components/layouts/cookieControl
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { postUpdatePrice } from '../../../../services/components/goOrder/postUpdatePrice';
 import { checkSignCA, sign } from '../../../../services/webCa';
+import { usePlatform } from '../../../../hooks/usePlatform';
 //{ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }
 let qtyValue = '';
 const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
@@ -24,6 +25,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState('qty');
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const platform = usePlatform();
 
     useEffect(() => {
         setShowControlBtn(mappingShowChangeBtn(data.status_code));
