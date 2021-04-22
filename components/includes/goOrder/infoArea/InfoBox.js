@@ -3,37 +3,38 @@ import PropTypes from 'prop-types';
 import theme from '../../../../resources/styles/theme';
 
 export const InfoBox = memo(({ code }) => {
+    console.log(code);
     return (
         <>
             <div className="information__items__container">
-                <div className="information__items">
+                <a className="information__items">
                     <div className="information__items__icon">詳</div>
                     <div className="information__items__desc">
                         <div className="information__items__title">詳細報價</div>
                         <div className="information__items__text">理財網完整報價</div>
                     </div>
-                </div>
-                <div className="information__items">
+                </a>
+                <a className="information__items">
                     <div className="information__items__icon">詳</div>
                     <div className="information__items__desc">
                         <div className="information__items__title">詳細報價</div>
                         <div className="information__items__text">理財網完整報價</div>
                     </div>
-                </div>
-                <div className="information__items">
+                </a>
+                <a className="information__items">
                     <div className="information__items__icon">詳</div>
                     <div className="information__items__desc">
                         <div className="information__items__title">詳細報價</div>
                         <div className="information__items__text">理財網完整報價</div>
                     </div>
-                </div>
-                <div className="information__items">
+                </a>
+                <a className="information__items">
                     <div className="information__items__icon">詳</div>
                     <div className="information__items__desc">
                         <div className="information__items__title">詳細報價</div>
                         <div className="information__items__text">理財網完整報價</div>
                     </div>
-                </div>
+                </a>
             </div>
             <style jsx>{`
                 .information__items__container {
