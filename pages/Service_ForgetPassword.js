@@ -67,7 +67,7 @@ function Service_ForgetPassword() {
                             </Popover>
                             <img className="service__img" src={unlock} />
                             <div>
-                                <h5 className="service__title">線上解鎖</h5>
+                                <h5 className="service__title one__line">線上解鎖</h5>
                                 <p className="service__desc">
                                     我記得密碼，我要解鎖
                                     <br />
@@ -84,7 +84,11 @@ function Service_ForgetPassword() {
                         >
                             <img className="service__img" src={sendpwdS} />
                             <div>
-                                <h5 className="service__title">密碼補發 - 證券戶</h5>
+                                <h5 className="service__title">
+                                    <span className="cbreak">密碼補發</span>
+                                    <span className="cdisplay"> - </span>
+                                    <span className="cbreak">永豐金證券客戶</span>
+                                </h5>
                                 <p className="service__desc">
                                     我已經忘記密碼
                                     <br />
@@ -112,7 +116,11 @@ function Service_ForgetPassword() {
                             </Popover>
                             <img className="service__img" src={sendpwdF} />
                             <div>
-                                <h5 className="service__title">密碼補發 - 期貨戶</h5>
+                                <h5 className="service__title">
+                                    <span className="cbreak">密碼補發</span>
+                                    <span className="cdisplay"> - </span>
+                                    <span className="cbreak">永豐金期貨客戶</span>
+                                </h5>
                                 <p className="service__desc">
                                     我已經忘記密碼
                                     <br />
@@ -140,7 +148,7 @@ function Service_ForgetPassword() {
                             </Popover>
                             <img className="service__img" src={sendpwdL} />
                             <div>
-                                <h5 className="service__title">臨櫃補發密碼</h5>
+                                <h5 className="service__title one__line">臨櫃補發密碼</h5>
                                 <p className="service__desc">
                                     需本人持身分證及原留印鑑
                                     <br />
@@ -224,7 +232,6 @@ function Service_ForgetPassword() {
                     position: relative;
                     border: 1px solid #d7e0ef;
                     background: ${theme.colors.lightBg};
-                    height: 320px;
                     width: 23%;
                     min-width: 200px;
                     margin-right: 28px;
@@ -259,14 +266,24 @@ function Service_ForgetPassword() {
                     font-size: 2rem;
                     margin: 24px 0 8px 0;
                     font-weight: bold;
+                    height: 64px;
                     color: ${theme.colors.textNavyBlue};
                 }
+                .service__title.one__line {
+                    line-height: 64px;
+                }
+
                 .service__desc {
                     font-size: 1.6rem;
                     color: #3f5372;
                     line-height: 23px;
                 }
-
+                .cbreak {
+                    display: block;
+                }
+                .cdisplay {
+                    display: none;
+                }
                 @media (max-width: 1113px) {
                     .password__container {
                         padding: 50px 0 50px 0;
@@ -325,6 +342,19 @@ function Service_ForgetPassword() {
                     }
                     .title {
                         font-size: 2rem;
+                    }
+                    .cbreak {
+                        display: inline-block;
+                    }
+                    .cdisplay {
+                        display: inline-block;
+                        margin: 0 5px;
+                    }
+                    .service__title.one__line {
+                        line-height: inherit;
+                    }
+                    .service__title {
+                        height: auto;
                     }
                 }
             `}</style>
