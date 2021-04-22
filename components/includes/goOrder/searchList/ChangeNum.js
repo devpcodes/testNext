@@ -2,7 +2,17 @@ import { Input, Button } from 'antd';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { themeColor } from '../panel/PanelTabs';
 // import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle.svg';
-const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHandler, disabledPlus }) => {
+const ChangeNum = ({
+    title,
+    val,
+    plusClickHandler,
+    minusClickHandler,
+    changeHandler,
+    disabledPlus,
+    inputWidth,
+    color,
+    fontSize,
+}) => {
     const valChangeHandler = e => {
         console.log(e.target.value);
         changeHandler(e.target.value);
@@ -48,7 +58,7 @@ const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHand
                 }
                 .input__box {
                     display: inline-block;
-                    width: calc(100vw - 32px - 100px - 54px - 8px);
+                    width: ${inputWidth == null ? 'calc(100vw - 32px - 100px - 54px - 8px)' : inputWidth};
                     /* width: calc(100vw - 160px); */
                 }
                 .btn__box {
@@ -88,7 +98,7 @@ const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHand
                     display: inline-block;
                     height: 46px;
                     border: none;
-                    background: #254a91;
+                    background: ${color == null ? '#254a91' : color};
                     color: white;
                     width: 46px;
                     font-size: 3.6rem;
@@ -109,7 +119,7 @@ const ChangeNum = ({ title, val, plusClickHandler, minusClickHandler, changeHand
                 }
                 .price_control .ant-input {
                     height: 46px;
-                    font-size: 2.6rem;
+                    font-size: ${fontSize == null ? '2.6rem' : fontSize};
                     color: black;
                 }
                 .price_control .ant-input:hover {

@@ -57,7 +57,7 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     return (
         <>
             <div className="search__container">
-                <div className="input__box">
+                <div className="input__box-search">
                     {/* <Input
                         placeholder="請輸入股號或商品名稱"
                         style={{ height: '38px' }}
@@ -82,7 +82,7 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
                     width: 251px;
                     height: 136px;
                 }
-                .input__box {
+                .input__box-search {
                     padding-left: 16px;
                     padding-right: 16px;
                     padding-top: 20px;
