@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 
-import qrCode from '../../resources/images/components/footer/img_ileaderapp.png';
+import qrCode from '../../resources/images/components/footer/dawho.svg';
 import logo from '../../resources/images/logo/logo.svg';
 import fb from '../../resources/images/components/footer/btn_fb.png';
 import youtube from '../../resources/images/components/footer/btn_youtube.png';
@@ -21,7 +21,7 @@ const footerData = [
                 link: 'https://securities.sinopac.com/currentOperation/20170706160641375000000000000202.html',
             },
             {
-                title: '金融友善服務準則',
+                title: '金融友善服務專區',
                 link: 'https://www.sinotrade.com.tw/ec/Friendly-service/creterion.html',
             },
             {
@@ -37,6 +37,10 @@ const footerData = [
     {
         title: '數位服務',
         children: [
+            {
+                title: '大戶投App下單',
+                link: 'https://dawhotou.page.link/SgVd',
+            },
             {
                 title: '新理財網下單',
                 link: '',
@@ -431,13 +435,13 @@ const Footer = memo(({ showNav }) => {
                     border: none;
 
                     padding: 0 0 0.1rem 0;
-                    color: #c7c7c7;
+                    color: #a9b6cb;
                     transition: border 0.1s linear;
                     border-bottom: 0.1rem solid rgba(0, 0, 0, 0);
                     margin-bottom: 0.7rem;
                 }
                 .middle--card a:hover {
-                    border-bottom: 0.1rem solid #c7c7c7;
+                    border-bottom: 0.1rem solid #a9b6cb;
                 }
                 .card--QR::before {
                     display: block;
