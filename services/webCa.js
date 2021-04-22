@@ -121,8 +121,6 @@ export const sign = function (userInfo, isNeedSign = true, token, isWebview) {
         }
         console.log('setting:', setting);
 
-        alert(JSON.stringify(setting));
-
         ca.certSign(setting);
         console.log('getSignature:', ca.getSignature());
         if (ca.getSignature()) {

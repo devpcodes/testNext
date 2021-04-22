@@ -66,7 +66,6 @@ const ReservationStock = () => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
-        alert(JSON.stringify(router));
         if (router.query.iswebview === 'true') {
             isWebView.current = true;
         }
@@ -353,8 +352,6 @@ const ReservationStock = () => {
             token,
             isWebView.current,
         );
-
-        alert(isWebView.current);
 
         console.log('newCaContent', caContent);
         if (checkSignCA(caContent)) {
