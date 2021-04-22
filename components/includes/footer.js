@@ -103,7 +103,7 @@ const Footer = memo(({ showNav }) => {
                     </li>
                 </ul>
                 <a
-                    href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                    href="https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_footer&strProd=0037&strWeb=0035"
                     target="_blank"
                     className="footer__up--signup"
                 >
