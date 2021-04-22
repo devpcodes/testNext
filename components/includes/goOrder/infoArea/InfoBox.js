@@ -5,7 +5,7 @@ import theme from '../../../../resources/styles/theme';
 export const InfoBox = memo(({ code }) => {
     return (
         <>
-            <div class="information__items__container">
+            <div className="information__items__container">
                 <div className="information__items">
                     <div className="information__items__icon">詳</div>
                     <div className="information__items__desc">
@@ -38,9 +38,12 @@ export const InfoBox = memo(({ code }) => {
             <style jsx>{`
                 .information__items__container {
                     display: flex;
+                    flex-wrap: wrap;
                 }
                 .information__items {
                     display: flex;
+                    width: 50%;
+                    margin-bottom: 18px;
                 }
                 .information__items__icon {
                     height: 44px;
@@ -53,6 +56,15 @@ export const InfoBox = memo(({ code }) => {
 
                     color: #c43826;
                     background: rgba(196, 56, 38, 0.1);
+                }
+                .information__items__title {
+                    font-size: 1.6rem;
+                    font-weight: bold;
+                    color: ${theme.colors.textDark};
+                }
+                .information__items__desc {
+                    color: ${theme.colors.textGray};
+                    margin: 2px 0 2px 8px;
                 }
 
                 .text__box ~ .text__box {
