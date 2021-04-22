@@ -145,7 +145,7 @@ const Footer = memo(({ showNav }) => {
                         </div>
                     ))}
                     <div className="middle--card">
-                        <h3>iLeader App下載</h3>
+                        <h3>大戶投App下載</h3>
                         <div className="card--QR">iOS / Android App</div>
                     </div>
                 </div>
