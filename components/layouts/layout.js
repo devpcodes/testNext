@@ -86,7 +86,6 @@ const Layout = memo(({ children }) => {
             if (!Object.keys(navData).length) {
                 console.log('================= first =================');
                 updateNavData();
-                sessionAddSource();
             }
         }, 10);
 
@@ -112,7 +111,7 @@ const Layout = memo(({ children }) => {
 
     useEffect(() => {
         queryStr.current = router.query;
-
+        sessionAddSource();
         if (router.query.nav != '0') {
             setShowNav(true);
         } else {
@@ -175,11 +174,8 @@ const Layout = memo(({ children }) => {
             line: 'u168',
             cnyes: 'cnyes',
         };
-        console.log('*************************************');
-        const itemkey = router.asPath.split('platform=')[1].toLocaleLowerCase();
-        console.log(itemkey);
-        console.log('*************************************');
-        if (sourceList[itemkey]) {
+        const itemkey = router.query.platform ? router.query.platform.toLocaleLowerCase() : false;
+        if (itemkey && sourceList[itemkey]) {
             sessionStorage.setItem('source', sourceList[itemkey]);
         }
     };
