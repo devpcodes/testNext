@@ -18,6 +18,7 @@ import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { postUpdatePrice } from '../../../../services/components/goOrder/postUpdatePrice';
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { usePlatform } from '../../../../hooks/usePlatform';
+import UpdatePriceModal from './UpdatePriceModal';
 //{ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }
 let qtyValue = '';
 const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
@@ -62,6 +63,10 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
         qtyValue = val;
     });
 
+    const getPriceValueHandler = useCallback(val => {
+        console.log('price', val);
+    });
+
     const getContent = useMemo(() => {
         if (modalContent === 'qty') {
             return (
@@ -78,7 +83,21 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                 />
             );
         } else {
-            return <>123</>;
+            return (
+                <UpdatePriceModal
+                    product={data.name_zh}
+                    label={getLabel}
+                    color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
+                    price={data.price}
+                    qty={getQtyHandler()}
+                    unit={
+                        mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股'
+                    }
+                    value={data.price}
+                    getValue={getPriceValueHandler}
+                    stock_id={data.stock_id}
+                />
+            );
         }
     }, [modalContent, data]);
 
