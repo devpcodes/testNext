@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 
-import qrCode from '../../resources/images/components/footer/dawho.svg';
+import qrCode from '../../resources/images/components/footer/img-qrcode-newweb@2x.jpg';
 import logo from '../../resources/images/logo/logo.svg';
 import fb from '../../resources/images/components/footer/btn_fb.png';
 import youtube from '../../resources/images/components/footer/btn_youtube.png';
@@ -305,7 +305,7 @@ const Footer = memo(({ showNav }) => {
                 }
                 .footer__up li {
                     display: inline-block;
-                    color: #f7f7f7;
+                    color: #e6ebf5;
                     font-size: 2.2rem;
                     line-height: 1.5rem;
                     padding: 0 1rem 0 0;
@@ -410,7 +410,7 @@ const Footer = memo(({ showNav }) => {
                     right: 3.3rem;
                     margin: 0;
                     text-align: center;
-                    color: #c0c0c0;
+                    color: #e6ebf5;
                     font-size: 1.4rem;
                 }
                 @media (max-width: 1024px), print {
@@ -424,7 +424,7 @@ const Footer = memo(({ showNav }) => {
                     margin: 0 0 2rem 0;
                     text-align: left;
                     font-size: 1.8rem;
-                    color: #fff;
+                    color: #e6ebf5;
                     font-weight: bold;
                 }
                 .middle--card a {
@@ -451,6 +451,9 @@ const Footer = memo(({ showNav }) => {
                     content: '';
                     background: url(${qrCode}) no-repeat center center;
                     background-size: 100% auto;
+                }
+                .card--QR {
+                    color: #e6ebf5;
                 }
                 .footer__down {
                     background: #0d1623;
@@ -491,7 +494,7 @@ const Footer = memo(({ showNav }) => {
                         padding: 1.5rem 0;
                     }
                 }
-                .down__box::before {
+                /* .down__box::before {
                     position: absolute;
                     left: 1.5rem;
                     top: 50%;
@@ -503,7 +506,7 @@ const Footer = memo(({ showNav }) => {
                     vertical-align: middle;
                     background: url(${logo}) no-repeat center center;
                     background-size: 100% auto;
-                }
+                } */
                 @media (max-width: 1024px), print {
                     .down__box::before {
                         width: 13rem;
@@ -519,21 +522,23 @@ const Footer = memo(({ showNav }) => {
                     list-style: none;
                     display: block;
                     text-align: left;
-                    margin-left: 18rem;
+                    /* margin-left: 18rem; */
                     margin-bottom: 0.2rem;
-                    width: 65%;
+                    width: 85%;
+                    padding-left: 1.5rem;
                 }
                 @media (max-width: 1100px), print {
                     .down__box ul {
-                        text-align: center;
-                        margin-left: 18rem;
+                        /* text-align: center;
+                        margin-left: 18rem; */
                     }
                 }
                 @media (max-width: 1024px), print {
                     .down__box ul {
-                        width: 66%;
+                        /* width: 66%;
                         margin: 0 auto;
-                        padding: 0;
+                        padding: 0; */
+                        padding-left: 3rem;
                     }
                 }
                 @media (max-width: 800px), print {
@@ -550,7 +555,7 @@ const Footer = memo(({ showNav }) => {
                     padding: 0 1rem 0 0;
                     margin: 0 1rem 0.7rem 0;
                     line-height: 15px;
-                    color: #c0c0c0;
+                    color: #e6ebf5;
                     font-size: 1.4rem;
                 }
                 @media (max-width: 1024px), print {
@@ -561,7 +566,7 @@ const Footer = memo(({ showNav }) => {
                     }
                 }
                 .down__box li a {
-                    color: #c0c0c0;
+                    color: #e6ebf5;
                     font-size: 1.4rem;
                 }
                 .down__box li:last-child {
