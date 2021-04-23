@@ -29,7 +29,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
 
     useEffect(() => {
         setShowControlBtn(mappingShowChangeBtn(data.status_code));
-    }, [data.ord_bs, data.status_code, data.price_flag, data.order_type1]);
+    }, [data.ord_bs, data.status_code, data.price_flag, data.ord_type1]);
 
     const qtyUpdateHandler = useCallback(() => {
         // console.log('ddd===', data);
@@ -165,7 +165,6 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
             }
         }
     }, [data]);
-
     return (
         <div>
             {showControlBtn && (
@@ -176,7 +175,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     <button className="btn" onClick={qtyUpdateHandler}>
                         <span>改</span>
                     </button>
-                    {checkPriceUpdate(data.price_flag, data.order_type1) && (
+                    {checkPriceUpdate(data.price_flag, data.ord_type1) && (
                         <button className="btn" onClick={priceUpdateHandler}>
                             <span>價</span>
                         </button>
