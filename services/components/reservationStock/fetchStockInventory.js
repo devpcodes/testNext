@@ -14,9 +14,10 @@ export const fetchStockInventory = async function (token, branch, account) {
             // return res.data?.result?.unreal_sums?.unreal_sum ?? [];
             return res.data?.result;
         } else {
-            return [];
+            return res.data?.message;
         }
     } catch (error) {
-        return '伺服器錯誤';
+        // return '伺服器錯誤';
+        throw error;
     }
 };
