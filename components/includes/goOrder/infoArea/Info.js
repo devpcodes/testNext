@@ -43,16 +43,7 @@ import { InstallWebCA } from './InstallWebCA';
 
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
-
-// TODO: 暫時寫死，需發 API 查詢相關資料顯示
-const moreItems = [
-    { id: '1', color: 'dark', text: '融' },
-    // { id: '2', color: 'red', text: '詳' },
-    { id: '3', color: 'orange', text: '存' },
-    // { id: '4', color: 'green', text: '借' },
-    { id: '5', color: 'blue', text: '學' },
-    { id: '6', color: 'brown', text: '+ 自選' },
-];
+import { fetchGetRichClubReport } from '../../../../services/components/richclub/getRichClubReport';
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 const solaceDataHandler = (solaceData, lot, checkLot) => {
@@ -110,6 +101,7 @@ export const Info = ({ stockid }) => {
     const [sec, setSec] = useState('');
     const [tradingDate, setTradingDate] = useState('');
     const [reloadLoading, setReloadLoading] = useState(false);
+    const [moreItems, setMoreItems] = useState([]);
 
     const dispatch = useDispatch();
 
@@ -237,6 +229,13 @@ export const Info = ({ stockid }) => {
         }
         getSelect();
     }, [code, isLogin, isSelfSelectVisitable]);
+
+    useEffect(() => {
+        if (!code) {
+            return;
+        }
+        setInfoItems(code);
+    }, [code]);
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -436,7 +435,7 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <InfoBox code={2890} />
+                    <InfoBox code={code} />
                     <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
                         加入自選
                     </button>

@@ -39,7 +39,7 @@ const Chart = function () {
                 );
                 if (chartWatermark) {
                     solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
-                        ? (chartWatermark.text = '盤前試撮')
+                        ? (chartWatermark.text = '試撮')
                         : (chartWatermark.text = '');
                 }
 
@@ -189,7 +189,7 @@ const Chart = function () {
             watermark.text = '';
             if (solaceData && solaceData.length > 0) {
                 solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
-                    ? (watermark.text = '盤前試撮')
+                    ? (watermark.text = '試撮')
                     : (watermark.text = '');
             }
             chart.plotContainer.children.push(watermark);
