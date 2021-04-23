@@ -33,7 +33,9 @@ const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue,
         }
     };
 
-    const priceChangeHandler = val => {};
+    const priceChangeHandler = val => {
+        setPriceVal(val);
+    };
 
     const priceValHandler = useCallback(() => {
         if (getValue != null) {
@@ -49,7 +51,7 @@ const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue,
             </p>
             <p className="item-modal item-modalFirst">
                 <span>委託價格</span>
-                {price}
+                {formatPrice(price)}
             </p>
             <p className="item-modal">
                 <span>委託數量</span>

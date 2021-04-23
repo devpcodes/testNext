@@ -19,14 +19,21 @@ import { postUpdatePrice } from '../../../../services/components/goOrder/postUpd
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import UpdatePriceModal from './UpdatePriceModal';
+import { formatPrice } from '../../../../services/numFormat';
 //{ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }
 let qtyValue = '';
+let priceValue = '';
 const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
     const [showControlBtn, setShowControlBtn] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState('qty');
     const currentAccount = useSelector(store => store.user.currentAccount);
     const platform = usePlatform();
+
+    useEffect(() => {
+        qtyValue = getQtyHandler();
+        priceValue = data.price;
+    }, []);
 
     useEffect(() => {
         setShowControlBtn(mappingShowChangeBtn(data.status_code));
@@ -64,7 +71,8 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
     });
 
     const getPriceValueHandler = useCallback(val => {
-        console.log('price', val);
+        // console.log('price', val);
+        priceValue = val;
     });
 
     const getContent = useMemo(() => {
@@ -74,7 +82,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     product={data.name_zh}
                     label={getLabel}
                     color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
-                    price={data.price}
+                    price={formatPrice(data.price)}
                     unit={
                         mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股'
                     }
@@ -88,12 +96,12 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     product={data.name_zh}
                     label={getLabel}
                     color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
-                    price={data.price}
+                    price={formatPrice(data.price)}
                     qty={getQtyHandler()}
                     unit={
                         mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股'
                     }
-                    value={data.price}
+                    value={formatPrice(data.price)}
                     getValue={getPriceValueHandler}
                     stock_id={data.stock_id}
                 />
@@ -109,10 +117,6 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
             </>
         );
     }, [modalContent]);
-
-    const cancelHandler = useCallback(() => {
-        setIsModalVisible(false);
-    });
 
     const submitHandler = useCallback(async () => {
         setIsModalVisible(false);
@@ -144,7 +148,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
             const ord_bs = data.ord_bs;
             const ord_cond = data.ord_type2;
             const ord_no = data.ord_no;
-            const ord_price = data.price;
+            const ord_price = priceValue;
             const ord_qty = qtyValue;
             const ord_seq = padLeft(data.sord_seq, 6);
             const ord_type = data.ord_type1;
@@ -168,7 +172,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                 token,
                 web_id,
                 ca_content,
-                postName: 'qty',
+                postName: modalContent,
             });
             if (submitSuccess != null) {
                 submitSuccess();
@@ -183,7 +187,12 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                 });
             }
         }
-    }, [data]);
+    }, [data, modalContent]);
+
+    const cancelHandler = useCallback(() => {
+        setIsModalVisible(false);
+    });
+
     return (
         <div>
             {showControlBtn && (

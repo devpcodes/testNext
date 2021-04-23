@@ -16,7 +16,7 @@ import ControlBtns from './ControlBtns';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 import DropFilterSearch from '../vipInventory/DropFilterSearch';
-
+import { formatPrice } from '../../../../services/numFormat';
 const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -282,7 +282,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 key: 'price',
                 align: 'right',
                 render: (text, record) => {
-                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatPrice(text)}</span>;
                 },
             },
             {
