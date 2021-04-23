@@ -161,7 +161,10 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                                         {
                                             stockid: record.stock,
                                             bs: 'B',
-                                            qty: parseInt(record.preqty / 1000),
+                                            qty: parseInt(
+                                                Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
+                                                    1000,
+                                            ),
                                         },
                                         isMobile,
                                         router,
@@ -175,7 +178,10 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                                         {
                                             stockid: record.stock,
                                             bs: 'S',
-                                            qty: parseInt(record.preqty / 1000),
+                                            qty: parseInt(
+                                                Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
+                                                    1000,
+                                            ),
                                         },
                                         isMobile,
                                         router,
