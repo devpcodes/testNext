@@ -37,6 +37,11 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
         setModalContent('qty');
     }, [data]);
 
+    const priceUpdateHandler = useCallback(() => {
+        setIsModalVisible(true);
+        setModalContent('price');
+    }, [data]);
+
     const getLabel = useMemo(() => {
         return mappingCommissionedCodeTradingAcc(data.ord_bs, data.ord_type2, data.market_id, data.ord_type1);
     }, [data]);
@@ -58,20 +63,23 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
     });
 
     const getContent = useMemo(() => {
-        return (
-            <UpdateQtyModal
-                product={data.name_zh}
-                label={getLabel}
-                color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
-                price={data.price}
-                qty={
-                    getQtyHandler() +
-                    (mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股')
-                }
-                value={getQtyHandler()}
-                getValue={getQtyValueHandler}
-            />
-        );
+        if (modalContent === 'qty') {
+            return (
+                <UpdateQtyModal
+                    product={data.name_zh}
+                    label={getLabel}
+                    color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
+                    price={data.price}
+                    unit={
+                        mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股'
+                    }
+                    value={getQtyHandler()}
+                    getValue={getQtyValueHandler}
+                />
+            );
+        } else {
+            return <>123</>;
+        }
     }, [modalContent, data]);
 
     const titleContent = useMemo(() => {
@@ -169,7 +177,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                         <span>改</span>
                     </button>
                     {checkPriceUpdate(data.price_flag, data.order_type1) && (
-                        <button className="btn">
+                        <button className="btn" onClick={priceUpdateHandler}>
                             <span>價</span>
                         </button>
                     )}

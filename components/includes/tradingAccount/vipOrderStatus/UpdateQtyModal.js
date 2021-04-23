@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import ChangeNum from '../../goOrder/searchList/ChangeNum';
 
 const qtyUnit = 1;
-const UpdateQtyModal = ({ product, color, label, price, qty, value, getValue }) => {
+const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue }) => {
     const [qtyVal, setQtyVal] = useState('');
     const initValue = useRef('');
     const [disabledPlus, setDisabledPlus] = useState(true);
@@ -68,7 +68,7 @@ const UpdateQtyModal = ({ product, color, label, price, qty, value, getValue }) 
             </p>
             <p className="item-modal">
                 <span>委託數量</span>
-                {value}
+                {value + unit}
             </p>
             <ChangeNum
                 title="欲減量"
