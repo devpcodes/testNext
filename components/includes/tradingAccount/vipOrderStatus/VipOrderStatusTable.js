@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
 import useSWR from 'swr';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { orderStatusQueryFetcherWithSWR } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import AccountTable from '../vipInventory/AccountTable';
 import { getToken } from '../../../../services/user/accessToken';
@@ -17,6 +17,7 @@ import { usePlatform } from '../../../../hooks/usePlatform';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 import DropFilterSearch from '../vipInventory/DropFilterSearch';
 import { formatPrice } from '../../../../services/numFormat';
+import { setModal } from '../../../../store/components/layouts/action';
 const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -32,7 +33,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const platform = usePlatform();
-
+    const dispatch = useDispatch();
     const postData = useMemo(() => {
         if (userInfo.account != null) {
             const account = userInfo.account;
@@ -98,24 +99,30 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
     }, [fetchData]);
 
     const delClickHandler = useCallback(id => {
-        Modal.confirm({
-            title: '刪單確認',
-            content: '確認刪除1筆資料嗎？',
-            onOk: async () => {
-                const delData = data.filter(item => {
-                    if (item.key === id) {
-                        return true;
-                    }
-                });
-                let res = await delOrderList(userInfo, delData);
-                Modal.info({
-                    content: res[0],
-                });
-                setReload(prev => {
-                    return (prev += 1);
-                });
-            },
-        });
+        dispatch(
+            setModal({
+                visible: true,
+                title: '刪單確認',
+                content: '確認刪除1筆資料嗎？',
+                type: 'confirm',
+                onOk: async () => {
+                    dispatch(setModal({ visible: false }));
+                    const delData = data.filter(item => {
+                        if (item.key === id) {
+                            return true;
+                        }
+                    });
+                    let res = await delOrderList(userInfo, delData);
+                    // Modal.info({
+                    //     content: res[0],
+                    // });
+                    dispatch(setModal({ visible: true, content: res[0], type: 'info', title: '系統訊息' }));
+                    setReload(prev => {
+                        return (prev += 1);
+                    });
+                },
+            }),
+        );
     });
 
     const searchHandler = useCallback(

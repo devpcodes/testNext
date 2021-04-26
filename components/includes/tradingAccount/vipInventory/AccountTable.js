@@ -209,6 +209,10 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 .sino__table .ant-table-tbody > tr.ant-table-row-selected > td {
                     background: #f7f8fb;
                 }
+
+                .sino__table .ant-checkbox-disabled .ant-checkbox-inner {
+                    display: none;
+                }
             `}</style>
         </div>
     );

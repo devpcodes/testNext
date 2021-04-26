@@ -1,14 +1,16 @@
 import { useCallback, useState } from 'react';
 import { Modal } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Control from '../vipInventory/Control';
 import theme from '../../../../resources/styles/theme';
 import VipOrderStatusTable from './VipOrderStatusTable';
 import SumColmn from './SumColumn';
 import DelButton from './buttons/DelButton';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
+import { setModal } from '../../../../store/components/layouts/action';
 
 const VipOrderStatus = () => {
+    const dispatch = useDispatch();
     const [showDel, setShowDel] = useState(false);
     const [showSum, setShowSum] = useState(false);
     const [controlText, setControlText] = useState('');
@@ -28,26 +30,61 @@ const VipOrderStatus = () => {
 
     const delClickHandler = useCallback(() => {
         if (selectData.length > 0) {
-            Modal.confirm({
-                title: '刪單確認',
-                content: `確認刪除${selectData.length}筆資料嗎？`,
-                onOk: async () => {
-                    let res = await delOrderList(userInfo, selectData, true);
-                    const delSuccess = res.filter(item => {
-                        if (item === 'True') {
-                            return true;
-                        }
-                    });
-                    setControlReload(prev => {
-                        return (prev += 1);
-                    });
-                    Modal.info({
-                        content: `共刪除${selectData.length}筆資料，${delSuccess.length}筆資料刪除成功，${
-                            selectData.length - delSuccess.length
-                        }筆資料刪除失敗`,
-                    });
-                },
-            });
+            dispatch(
+                setModal({
+                    title: '刪單確認',
+                    content: `確認刪除${selectData.length}筆資料嗎？`,
+                    visible: true,
+                    type: 'confirm',
+                    onOk: async () => {
+                        dispatch(setModal({ visible: false }));
+                        let res = await delOrderList(userInfo, selectData, true);
+                        const delSuccess = res.filter(item => {
+                            if (item === 'True') {
+                                return true;
+                            }
+                        });
+                        setControlReload(prev => {
+                            return (prev += 1);
+                        });
+                        // Modal.info({
+                        //     content: `共刪除${selectData.length}筆資料，${delSuccess.length}筆資料刪除成功，${
+                        //         selectData.length - delSuccess.length
+                        //     }筆資料刪除失敗`,
+                        // });
+                        dispatch(
+                            setModal({
+                                visible: true,
+                                content: `共刪除${selectData.length}筆資料，${delSuccess.length}筆資料刪除成功，${
+                                    selectData.length - delSuccess.length
+                                }筆資料刪除失敗`,
+                                type: 'info',
+                                title: '系統訊息',
+                            }),
+                        );
+                    },
+                }),
+            );
+            // Modal.confirm({
+            //     title: '刪單確認',
+            //     content: `確認刪除${selectData.length}筆資料嗎？`,
+            //     onOk: async () => {
+            //         let res = await delOrderList(userInfo, selectData, true);
+            //         const delSuccess = res.filter(item => {
+            //             if (item === 'True') {
+            //                 return true;
+            //             }
+            //         });
+            //         setControlReload(prev => {
+            //             return (prev += 1);
+            //         });
+            //         Modal.info({
+            //             content: `共刪除${selectData.length}筆資料，${delSuccess.length}筆資料刪除成功，${
+            //                 selectData.length - delSuccess.length
+            //             }筆資料刪除失敗`,
+            //         });
+            //     },
+            // });
         }
     }, [selectData]);
 
