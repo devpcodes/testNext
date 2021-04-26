@@ -12,10 +12,15 @@ const Navigation = () => {
 
     const doLogin = async () => {
         const getQueryStr = () => {
+            let addQueryHeaderObj = {};
             if (router.query.nav == '0') {
-                return objectToQueryHandler({
-                    nav: '0',
-                });
+                addQueryHeaderObj.nav = '0';
+            }
+            if (router.query.iswebview == 'true') {
+                addQueryHeaderObj.iswebview = 'true';
+            }
+            if (Object.keys(addQueryHeaderObj).length > 0) {
+                return objectToQueryHandler(addQueryHeaderObj);
             } else {
                 return '';
             }
