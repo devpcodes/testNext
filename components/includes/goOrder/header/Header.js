@@ -169,6 +169,7 @@ const Header = () => {
                         fontWeight: 'bold',
                     }}
                     href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
+                    target="_blank"
                 >
                     我的帳務
                 </a>
@@ -181,6 +182,7 @@ const Header = () => {
                         fontWeight: 'bold',
                     }}
                     href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
+                    target="_blank"
                 >
                     我的自選
                 </a>
