@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 
-import qrCode from '../../resources/images/components/footer/img-qrcode-newweb@2x.jpg';
+import qrCode from '../../resources/images/components/footer/img_ileaderapp.png';
 import logo from '../../resources/images/logo/logo.svg';
 import fb from '../../resources/images/components/footer/btn_fb.png';
 import youtube from '../../resources/images/components/footer/btn_youtube.png';
@@ -21,7 +21,7 @@ const footerData = [
                 link: 'https://securities.sinopac.com/currentOperation/20170706160641375000000000000202.html',
             },
             {
-                title: '金融友善服務專區',
+                title: '金融友善服務準則',
                 link: 'https://www.sinotrade.com.tw/ec/Friendly-service/creterion.html',
             },
             {
@@ -37,10 +37,6 @@ const footerData = [
     {
         title: '數位服務',
         children: [
-            {
-                title: '大戶投App下單',
-                link: 'https://dawhotou.page.link/SgVd',
-            },
             {
                 title: '新理財網下單',
                 link: '',
@@ -107,7 +103,7 @@ const Footer = memo(({ showNav }) => {
                     </li>
                 </ul>
                 <a
-                    href="https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_footer&strProd=0037&strWeb=0035"
+                    href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
                     target="_blank"
                     className="footer__up--signup"
                 >
@@ -145,7 +141,7 @@ const Footer = memo(({ showNav }) => {
                         </div>
                     ))}
                     <div className="middle--card">
-                        <h3>大戶投App下載</h3>
+                        <h3>iLeader App下載</h3>
                         <div className="card--QR">iOS / Android App</div>
                     </div>
                 </div>
@@ -305,7 +301,7 @@ const Footer = memo(({ showNav }) => {
                 }
                 .footer__up li {
                     display: inline-block;
-                    color: #e6ebf5;
+                    color: #f7f7f7;
                     font-size: 2.2rem;
                     line-height: 1.5rem;
                     padding: 0 1rem 0 0;
@@ -410,7 +406,7 @@ const Footer = memo(({ showNav }) => {
                     right: 3.3rem;
                     margin: 0;
                     text-align: center;
-                    color: #e6ebf5;
+                    color: #c0c0c0;
                     font-size: 1.4rem;
                 }
                 @media (max-width: 1024px), print {
@@ -424,7 +420,7 @@ const Footer = memo(({ showNav }) => {
                     margin: 0 0 2rem 0;
                     text-align: left;
                     font-size: 1.8rem;
-                    color: #e6ebf5;
+                    color: #fff;
                     font-weight: bold;
                 }
                 .middle--card a {
@@ -435,13 +431,13 @@ const Footer = memo(({ showNav }) => {
                     border: none;
 
                     padding: 0 0 0.1rem 0;
-                    color: #a9b6cb;
+                    color: #c7c7c7;
                     transition: border 0.1s linear;
                     border-bottom: 0.1rem solid rgba(0, 0, 0, 0);
                     margin-bottom: 0.7rem;
                 }
                 .middle--card a:hover {
-                    border-bottom: 0.1rem solid #a9b6cb;
+                    border-bottom: 0.1rem solid #c7c7c7;
                 }
                 .card--QR::before {
                     display: block;
@@ -451,9 +447,6 @@ const Footer = memo(({ showNav }) => {
                     content: '';
                     background: url(${qrCode}) no-repeat center center;
                     background-size: 100% auto;
-                }
-                .card--QR {
-                    color: #e6ebf5;
                 }
                 .footer__down {
                     background: #0d1623;
@@ -494,7 +487,7 @@ const Footer = memo(({ showNav }) => {
                         padding: 1.5rem 0;
                     }
                 }
-                /* .down__box::before {
+                .down__box::before {
                     position: absolute;
                     left: 1.5rem;
                     top: 50%;
@@ -506,7 +499,7 @@ const Footer = memo(({ showNav }) => {
                     vertical-align: middle;
                     background: url(${logo}) no-repeat center center;
                     background-size: 100% auto;
-                } */
+                }
                 @media (max-width: 1024px), print {
                     .down__box::before {
                         width: 13rem;
@@ -522,23 +515,21 @@ const Footer = memo(({ showNav }) => {
                     list-style: none;
                     display: block;
                     text-align: left;
-                    /* margin-left: 18rem; */
+                    margin-left: 18rem;
                     margin-bottom: 0.2rem;
-                    width: 85%;
-                    padding-left: 1.5rem;
+                    width: 65%;
                 }
                 @media (max-width: 1100px), print {
                     .down__box ul {
-                        /* text-align: center;
-                        margin-left: 18rem; */
+                        text-align: center;
+                        margin-left: 18rem;
                     }
                 }
                 @media (max-width: 1024px), print {
                     .down__box ul {
-                        /* width: 66%;
+                        width: 66%;
                         margin: 0 auto;
-                        padding: 0; */
-                        padding-left: 3rem;
+                        padding: 0;
                     }
                 }
                 @media (max-width: 800px), print {
@@ -555,7 +546,7 @@ const Footer = memo(({ showNav }) => {
                     padding: 0 1rem 0 0;
                     margin: 0 1rem 0.7rem 0;
                     line-height: 15px;
-                    color: #e6ebf5;
+                    color: #c0c0c0;
                     font-size: 1.4rem;
                 }
                 @media (max-width: 1024px), print {
@@ -566,7 +557,7 @@ const Footer = memo(({ showNav }) => {
                     }
                 }
                 .down__box li a {
-                    color: #e6ebf5;
+                    color: #c0c0c0;
                     font-size: 1.4rem;
                 }
                 .down__box li:last-child {
