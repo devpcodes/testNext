@@ -308,7 +308,7 @@ const ReservationStock = () => {
     const validateQty = (value, loadQty, stockAmount) => {
         const regex = /^[0-9]{1,20}$/;
         if (!isNaN(value) && regex.test(value)) {
-            if (Number(value) + Number(loadQty) <= Number(stockAmount)) {
+            if (Number(value) <= Number(stockAmount)) {
                 return true;
             } else {
                 Modal.error({
