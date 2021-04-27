@@ -1,4 +1,5 @@
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import MyTransition from '../myTransition';
 
 import { Tabs, Button, Input, Progress, Modal, notification } from 'antd';
@@ -50,8 +51,11 @@ const ReservationStock = () => {
     const stockActiveTabKey = useRef('1');
     const init = useRef(false);
     const selectedAccount = useRef({});
+    const isWebView = useRef(false);
+
     const [defaultValue, setDefaultValue] = useState('');
 
+    const router = useRouter();
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -60,6 +64,12 @@ const ReservationStock = () => {
             });
         }
     }, [state.accountsReducer.disabled]);
+
+    useEffect(() => {
+        if (router.query.iswebview === 'true') {
+            isWebView.current = true;
+        }
+    }, [router.query]);
 
     useEffect(() => {
         selectedAccount.current = state.accountsReducer.selected;
@@ -127,7 +137,7 @@ const ReservationStock = () => {
                 index: 2,
             },
             {
-                title: '昨日庫存(股數)',
+                title: '可圈存股數',
                 dataIndex: 'stock_amount_t1',
                 key: 'stock_amount_t1',
                 index: 3,
@@ -209,20 +219,53 @@ const ReservationStock = () => {
     };
 
     const fetchInventory = async (token, brokerId, account) => {
-        let resData = await fetchStockInventory(token, brokerId, account);
-        if (Array.isArray(resData)) {
-            resData = resData.map((item, index) => {
-                item.key = String(index);
-                item.action = '申請';
-                item.qty = '';
-                return item;
-            });
-            setStockInventory(resData);
-        } else {
+        try {
+            let resData = await fetchStockInventory(token, brokerId, account);
+            if (Array.isArray(resData)) {
+                resData = resData.map((item, index) => {
+                    item.key = String(index);
+                    item.action = '申請';
+                    item.qty = '';
+                    return item;
+                });
+                setStockInventory(resData);
+            } else {
+                if (resData === '尚未簽署保管劃撥契約書') {
+                    Modal.confirm({
+                        content:
+                            '抱歉，您必須簽署「保管劃撥帳戶契約書」後，才能繼續申請，是否前往線上簽署中心進行簽署？',
+                        onOk() {
+                            window.location = `http://servicerd.sinotrade.com.tw/signCenter/sign3382/?TOKEN=${getToken()}`;
+                        },
+                        okText: '確認',
+                        cancelText: '取消',
+                    });
+                } else {
+                    Modal.error({
+                        title: resData,
+                    });
+                }
+                setStockInventory([]);
+            }
+        } catch (error) {
             Modal.error({
                 title: '伺服器錯誤',
             });
         }
+
+        // if (Array.isArray(resData)) {
+        //     resData = resData.map((item, index) => {
+        //         item.key = String(index);
+        //         item.action = '申請';
+        //         item.qty = '';
+        //         return item;
+        //     });
+        //     setStockInventory(resData);
+        // } else {
+        //     Modal.error({
+        //         title: '伺服器錯誤',
+        //     });
+        // }
     };
 
     const fetchStatus = async (token, brokerId, account) => {
@@ -255,7 +298,7 @@ const ReservationStock = () => {
     };
 
     const clickHandler = (text, record) => {
-        if (validateQty(record.qty, record.load_qty, record.stock_amount)) {
+        if (validateQty(record.qty, record.load_qty, record.stock_amount_t1)) {
             console.log(text, record);
             // console.log(jwt_decode(getToken()));
             submitData(record);
@@ -265,7 +308,7 @@ const ReservationStock = () => {
     const validateQty = (value, loadQty, stockAmount) => {
         const regex = /^[0-9]{1,20}$/;
         if (!isNaN(value) && regex.test(value)) {
-            if (Number(value) + Number(loadQty) <= Number(stockAmount)) {
+            if (Number(value) <= Number(stockAmount)) {
                 return true;
             } else {
                 Modal.error({
@@ -299,7 +342,6 @@ const ReservationStock = () => {
         //token, branch, account, symbol, qty, category
         const token = getToken();
         let data = getAccountsDetail(token);
-
         //未驗憑證
         // const resData = await postApplyEarmark(
         //     token,
@@ -340,6 +382,7 @@ const ReservationStock = () => {
             },
             true,
             token,
+            isWebView.current,
         );
 
         console.log('newCaContent', caContent);
@@ -476,15 +519,15 @@ const ReservationStock = () => {
                         list={[
                             { txt: '「注意事項」' },
                             { txt: '1. 預收股票時間為台股交易日8:00~14:30' },
-                            { txt: '2. 必須簽署「保管劃撥帳戶契約書」後，才能申請', color: '#e46262' },
+                            { txt: '2. 必須簽署「保管劃撥帳戶契約書」後，才可顯示庫存與進行申請', color: '#e46262' },
                             {
                                 txt:
                                     '3. 逐筆申請：點選[申請]後，請至[預收股票查詢]點選[查詢]確認已完成此筆股票預收後，再進行下一筆申請',
                                 color: '#e46262',
                             },
-                            { txt: '4. 即時庫存股數：昨日庫存股數+今日匯撥股數+今日成交股數' },
-                            { html: '<p>&nbsp;&nbsp;&nbsp;&nbsp;可圈存股數：昨日庫存股數+今日匯撥股數</p>' },
-                            { txt: '5. 網路申請不提供解圈服務及相關資訊' },
+                            { txt: '4. 可圈存股數：昨日庫存股數 + 今日匯撥股數 - 已圈存股數' },
+                            // { html: '<p>&nbsp;&nbsp;&nbsp;&nbsp;可圈存股數：昨日庫存股數+今日匯撥股數</p>' },
+                            { txt: '5. 網路不提供解圈服務與人工解圈之查詢資訊，請洽所屬分公司辦理及查詢' },
                             {
                                 txt:
                                     '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)',
@@ -529,7 +572,7 @@ const ReservationStock = () => {
                                 color: '#e46262',
                             },
                             { txt: '3. 申請預收股票後，需於集保圈存成功後，方可委託賣出', color: '#e46262' },
-                            { txt: '4. 網路申請不提供解圈服務及相關資訊' },
+                            { txt: '4. 網路不提供解圈服務與人工解圈之查詢資訊，請洽所屬分公司辦理及查詢' },
                             {
                                 txt:
                                     '5. 當日圈存之委託未成交，當日晚上自動將未成交股數解除圈存(依集保公司解除圈存作業時間為主)',
