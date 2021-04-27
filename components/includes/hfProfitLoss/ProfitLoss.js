@@ -161,7 +161,7 @@ export const ProfitLoss = () => {
                     {!isMobile && <p className="text">交易幣別：新台幣</p>}
                 </div>
                 <DataCard
-                    title={'買進成交總金額'}
+                    title={'當日買進淨額'}
                     value={data?.buyAmount}
                     styleType={'buy'}
                     subRender={
@@ -174,7 +174,7 @@ export const ProfitLoss = () => {
                     }
                 />
                 <DataCard
-                    title={'賣出成交總金額'}
+                    title={'當日賣出淨額'}
                     // subTitle={'含手續費及交易稅'}
                     value={data?.sellAmount}
                     styleType={'sell'}
@@ -206,7 +206,7 @@ export const ProfitLoss = () => {
                 <DataCard
                     title={'昨日庫存未賣張數'}
                     subTitle="單位：張"
-                    value={data?.yesterdayQty}
+                    value={data?.yesterdayQty / 1000}
                     valueFormat={false}
                 />
                 {/* {<p className="text__remark">註：金額皆不含手續費或交易稅</p>} */}
