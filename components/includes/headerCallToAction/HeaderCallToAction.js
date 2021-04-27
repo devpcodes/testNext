@@ -52,7 +52,7 @@ export const HeaderCallToAction = () => {
 
     const goSignUp = useCallback(() => {
         return window.open(
-            'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_top&strProd=0037&strWeb=0035',
+            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
         );
     }, []);
 
