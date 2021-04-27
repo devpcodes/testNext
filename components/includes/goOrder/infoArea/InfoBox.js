@@ -29,7 +29,11 @@ export const InfoBox = memo(({ code }) => {
                         <div className="information__items__text">優質個股輕鬆存</div>
                     </div>
                 </a>
-                <a className="information__items">
+                <a
+                    className="information__items"
+                    href={`https://www.sinotrade.com.tw/richclub/stock?code=${code}`}
+                    target="_blank"
+                >
                     <div className="information__items__icon blue">學</div>
                     <div className="information__items__desc">
                         <div className="information__items__title">豐雲學堂</div>
