@@ -26,7 +26,9 @@ export const postApplyEarmark = async function (token, branch, account, symbol, 
                             content:
                                 '抱歉，您必須簽署「保管劃撥帳戶契約書」後，才能繼續申請，是否前往線上簽署中心進行簽署？',
                             onOk() {
-                                window.location = `http://servicerd.sinotrade.com.tw/signCenter/sign3382/?TOKEN=${getToken()}`;
+                                window.location = `${
+                                    process.env.NEXT_PUBLIC_SERVICE_POSITIONS
+                                }/sign3382/?TOKEN=${getToken()}`;
                             },
                             okText: '確認',
                             cancelText: '取消',
