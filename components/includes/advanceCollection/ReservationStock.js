@@ -236,7 +236,7 @@ const ReservationStock = () => {
                             '抱歉，您必須簽署「保管劃撥帳戶契約書」後，才能繼續申請，是否前往線上簽署中心進行簽署？',
                         onOk() {
                             window.location = `${
-                                process.env.NEXT_PUBLIC_SERVICE_POSITIONS
+                                process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN
                             }/sign3382/?TOKEN=${getToken()}`;
                         },
                         okText: '確認',
