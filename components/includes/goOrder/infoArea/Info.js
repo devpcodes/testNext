@@ -365,14 +365,38 @@ export const Info = ({ stockid }) => {
 
         const t30Res = await fetchStockT30(code);
         let moreItems = [
-            { id: '1', color: 'red', text: '詳' },
-            { id: '2', color: 'orange', text: '存' },
-            { id: '3', color: 'blue', text: '學' },
-            { id: '4', color: 'brown', text: '+ 自選' },
+            {
+                id: '1',
+                color: 'red',
+                text: '詳',
+                title: '詳細報價',
+                desc: '理財網完整報價',
+                inInfoBox: true,
+                link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${code}`,
+            },
+            {
+                id: '2',
+                color: 'orange',
+                text: '存',
+                title: '豐存股',
+                desc: '優質個股輕鬆存',
+                inInfoBox: true,
+                link: `https://aiinvest.sinotrade.com.tw/Product/In?id=${code}`,
+            },
+            {
+                id: '3',
+                color: 'blue',
+                text: '學',
+                title: '豐雲學堂',
+                desc: '理財文章指點迷津',
+                inInfoBox: true,
+                link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
+            },
+            { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
         if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
-            moreItems.push({ id: '5', color: 'dark', text: '融' });
+            moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
             setT30Data(t30Res);
         }
 
@@ -461,7 +485,7 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <InfoBox code={code} t30Data={t30Data} />
+                    <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
                     <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
                         加入自選
                     </button>

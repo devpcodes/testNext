@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
-export const InfoBox = memo(({ code, t30Data }) => {
-    console.log(t30Data);
+export const InfoBox = memo(({ code, t30Data, moreItems }) => {
+    console.log(moreItems);
     return (
         <>
             <>
@@ -17,48 +17,20 @@ export const InfoBox = memo(({ code, t30Data }) => {
                     <></>
                 )}
             </>
-
             <div className="information__items__container">
-                <a
-                    className="information__items"
-                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${code}`}
-                    target="_blank"
-                >
-                    <div className="information__items__icon red">詳</div>
-                    <div className="information__items__desc">
-                        <div className="information__items__title">詳細報價</div>
-                        <div className="information__items__text">理財網完整報價</div>
-                    </div>
-                </a>
-                <a
-                    className="information__items"
-                    href={`https://aiinvest.sinotrade.com.tw/Product/In?id=${code}`}
-                    target="_blank"
-                >
-                    <div className="information__items__icon orange">存</div>
-                    <div className="information__items__desc">
-                        <div className="information__items__title">豐存股</div>
-                        <div className="information__items__text">優質個股輕鬆存</div>
-                    </div>
-                </a>
-                <a
-                    className="information__items"
-                    href={`https://www.sinotrade.com.tw/richclub/stock?code=${code}`}
-                    target="_blank"
-                >
-                    <div className="information__items__icon blue">學</div>
-                    <div className="information__items__desc">
-                        <div className="information__items__title">豐雲學堂</div>
-                        <div className="information__items__text">理財文章指點迷津</div>
-                    </div>
-                </a>
-                {/* <a className="information__items">
-                    <div className="information__items__icon">詳</div>
-                    <div className="information__items__desc">
-                        <div className="information__items__title">詳細報價</div>
-                        <div className="information__items__text">理財網完整報價</div>
-                    </div>
-                </a> */}
+                {moreItems.map(item =>
+                    item.inInfoBox ? (
+                        <a className="information__items" href={item.link} target="_blank">
+                            <div className={`information__items__icon ${item.color}`}>{item.text}</div>
+                            <div className="information__items__desc">
+                                <div className="information__items__title">{item.title}</div>
+                                <div className="information__items__text">{item.desc}</div>
+                            </div>
+                        </a>
+                    ) : (
+                        <></>
+                    ),
+                )}
             </div>
             <style jsx>{`
                 .information__items__container {
