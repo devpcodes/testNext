@@ -1,11 +1,23 @@
-import { memo } from 'react';
-import PropTypes from 'prop-types';
+import { memo, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
-
-export const InfoBox = memo(({ code }) => {
-    console.log(code);
+export const InfoBox = memo(({ code, t30Data }) => {
+    console.log(t30Data);
     return (
         <>
+            <>
+                {!!t30Data ? (
+                    <div className="T30Box">
+                        <span className="text__box dark">融</span>
+                        <span className="t30__info">
+                            資{t30Data['資成數']}成({t30Data['資配額']}張) / 券{t30Data['券成數']}成({t30Data['券配額']}
+                            張)
+                        </span>
+                    </div>
+                ) : (
+                    <></>
+                )}
+            </>
+
             <div className="information__items__container">
                 <a
                     className="information__items"
@@ -100,6 +112,32 @@ export const InfoBox = memo(({ code }) => {
                 .information__items__icon.brown {
                     color: #daa360;
                     background-color: rgba(218, 163, 96, 0.12);
+                }
+
+                .T30Box {
+                    margin: 0 0 10px 0;
+                    font-size: 1.5rem;
+                    font-weight: normal;
+                }
+
+                .text__box {
+                    display: inline-block;
+                    height: 22px;
+                    width: 22px;
+                    padding: 1px 3.8px;
+                    border-radius: 2px;
+                    line-height: 20px;
+                }
+                .text__box {
+                    margin-right: 6px;
+                }
+                .text__box.dark {
+                    color: ${theme.colors.darkBg};
+                    background-color: rgba(13, 22, 35, 0.1);
+                }
+                .t30__info {
+                    font-size: 1.6rem;
+                    color: ${theme.colors.textDark};
                 }
             `}</style>
         </>

@@ -40,6 +40,7 @@ import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelec
 import { getToken } from '../../../../services/user/accessToken';
 import { getSocalToken } from '../../../../services/user/accessToken';
 import { InstallWebCA } from './InstallWebCA';
+import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
@@ -101,6 +102,7 @@ export const Info = ({ stockid }) => {
     const [sec, setSec] = useState('');
     const [tradingDate, setTradingDate] = useState('');
     const [reloadLoading, setReloadLoading] = useState(false);
+    const [t30Data, setT30Data] = useState(false);
     const [moreItems, setMoreItems] = useState([]);
 
     const dispatch = useDispatch();
@@ -353,6 +355,30 @@ export const Info = ({ stockid }) => {
         return `總量 ${volSum}`;
     };
 
+    const setInfoItems = async code => {
+        // { id: '1', color: 'dark', text: '融' },
+        // { id: '2', color: 'red', text: '詳' },
+        // { id: '3', color: 'orange', text: '存' },
+        // { id: '4', color: 'green', text: '借' },
+        // { id: '5', color: 'blue', text: '學' },
+        // { id: '6', color: 'brown', text: '+ 自選' },
+
+        const t30Res = await fetchStockT30(code);
+        let moreItems = [
+            { id: '1', color: 'red', text: '詳' },
+            { id: '2', color: 'orange', text: '存' },
+            { id: '3', color: 'blue', text: '學' },
+            { id: '4', color: 'brown', text: '+ 自選' },
+        ];
+
+        if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
+            moreItems.push({ id: '5', color: 'dark', text: '融' });
+            setT30Data(t30Res);
+        }
+
+        setMoreItems(moreItems);
+    };
+
     return (
         <div className="info__container">
             {!isLogin && (
@@ -435,7 +461,7 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <InfoBox code={code} />
+                    <InfoBox code={code} t30Data={t30Data} />
                     <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
                         加入自選
                     </button>
