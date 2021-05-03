@@ -11,6 +11,8 @@ export const orderStatusQueryFetcher = async function ({
     user_id,
     pageIndex,
     pageSize,
+    status,
+    bs,
 }) {
     const url = `/Equity/OrderStatusQuery`;
     if (!account) return;
@@ -26,6 +28,8 @@ export const orderStatusQueryFetcher = async function ({
                 user_id,
                 pageIndex,
                 pageSize,
+                status,
+                bs,
             });
         } else {
             res = await await getA8Instance('v2', undefined, true).post(url, {

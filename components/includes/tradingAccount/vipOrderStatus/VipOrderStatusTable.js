@@ -17,9 +17,11 @@ import ControlBtns from './ControlBtns';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 import DropFilterSearch from '../vipInventory/DropFilterSearch';
+import DropfilterCheckBox from '../vipInventory/DropfilterCheckBox';
 import { formatPrice } from '../../../../services/numFormat';
 import { setModal } from '../../../../store/components/layouts/action';
 import { formatNum } from '../../../../services/formatNum';
+
 const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText, getData, getFilterStock }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -30,10 +32,13 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
     const [searchColumns, setSearchColumns] = useState([]);
     const [filterSearchVal, setFilterSearchVal] = useState('');
     const [searchWords, setSearchWords] = useState('');
+    const [searchStatus, setSearchStatus] = useState([]);
+    const [searchBuySell, setSearchBuySell] = useState('');
 
     const userInfo = useSelector(store => store.user.currentAccount);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
     const platform = usePlatform();
     const dispatch = useDispatch();
     const postData = useMemo(() => {
@@ -44,7 +49,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             const stock_id = searchWords;
             const token = getToken();
             const user_id = userInfo.idno;
-            return {
+            const postData = {
                 account,
                 action,
                 broker_id,
@@ -53,11 +58,17 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 user_id,
                 pageIndex: currentPage,
                 pageSize,
+                status: searchStatus,
+                bs: searchBuySell,
             };
+            if (!searchBuySell) {
+                delete postData.bs;
+            }
+            return postData;
         } else {
             return {};
         }
-    }, [userInfo, currentPage, pageSize, searchWords]);
+    }, [userInfo, currentPage, pageSize, searchWords, searchStatus, searchBuySell]);
     const { data: fetchData } = useSWR(
         [JSON.stringify(postData), reload, controlReload],
         orderStatusQueryFetcherWithSWR,
@@ -174,6 +185,60 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             setFilterSearchVal('');
         }
     });
+
+    const onStatusFilterSubmit = useCallback((confirm, val) => {
+        if (val.length === 0) {
+            onStatusFilterReset(confirm);
+            return;
+        }
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('status_code')) {
+                columns.push('status_code');
+            }
+            return columns;
+        });
+        setSearchStatus(val);
+        setCurrentPage(1);
+    });
+
+    const onStatusFilterReset = useCallback(confirm => {
+        confirm();
+        if (searchColumns.indexOf('status_code') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('status_code');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchStatus([]);
+            setCurrentPage(1);
+        }
+    });
+
+    const onBuySellFilterSubmit = useCallback((confirm, val) => {
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('buySell')) {
+                columns.push('buySell');
+            }
+            return columns;
+        });
+        setSearchBuySell(val[0]);
+        setCurrentPage(1);
+    });
+    const onBuySellFilterReset = useCallback(confirm => {
+        confirm();
+        if (searchColumns.indexOf('buySell') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('buySell');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchBuySell('');
+            setCurrentPage(1);
+        }
+    });
+
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'name_zh') {
             return {
@@ -196,21 +261,35 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                         text
                     ),
             };
-        } else {
+        } else if (dataIndex === 'status_code') {
             return {
                 filterDropdown: ({ confirm }) => (
-                    <></>
-                    // <DropfilterCheckBox
-                    //     type={''}
-                    //     onSubmit={onFdSubmit.bind(null, confirm)}
-                    //     onReset={onFdReset.bind(null, confirm)}
-                    //     value={searchTtype === 'A' ? [] : searchTtype}
-                    //     data={[
-                    //         { text: '現股', value: '0' },
-                    //         { text: '融資', value: '1' },
-                    //         { text: '融券', value: '2' },
-                    //     ]}
-                    // />
+                    <DropfilterCheckBox
+                        type={''}
+                        onSubmit={onStatusFilterSubmit.bind(null, confirm)}
+                        onReset={onStatusFilterReset.bind(null, confirm)}
+                        value={searchStatus}
+                        data={[
+                            { text: '委託成功', value: '0' },
+                            { text: '完全成交', value: '2' },
+                            { text: '部分成交', value: '3' },
+                        ]}
+                    />
+                ),
+            };
+        } else if (dataIndex === 'buySell') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'radio'}
+                        onSubmit={onBuySellFilterSubmit.bind(null, confirm)}
+                        onReset={onBuySellFilterReset.bind(null, confirm)}
+                        value={searchBuySell}
+                        data={[
+                            { text: '買進', value: 'B' },
+                            { text: '賣出', value: 'S' },
+                        ]}
+                    />
                 ),
             };
         }
@@ -228,6 +307,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '動作',
                 dataIndex: 'active',
                 key: 'active',
+                // width: 100,
                 render: (text, record) => {
                     return (
                         <ControlBtns
@@ -242,6 +322,8 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '狀態',
                 dataIndex: 'status_code',
                 key: 'status_code',
+                // width: 100,
+                ...getColumnSearchProps('status_code'),
                 render: (text, record) => {
                     return (
                         <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{mappingStatusMsg(text)}</span>
@@ -252,6 +334,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '商品',
                 dataIndex: 'name_zh',
                 key: 'name_zh',
+                // width: '200px',
                 ...getColumnSearchProps('name_zh'),
                 render: (text, record) => {
                     return (
@@ -265,6 +348,8 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '買賣',
                 dataIndex: 'buySell',
                 key: 'buySell',
+                // width: 100,
+                ...getColumnSearchProps('buySell'),
                 render: (text, record) => {
                     return (
                         <span
@@ -287,6 +372,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '條件',
                 dataIndex: 'time_in_force',
                 key: 'time_in_force',
+                // width: 100,
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
                 },
@@ -296,6 +382,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 dataIndex: 'price',
                 key: 'price',
                 align: 'right',
+                // width: 100,
                 render: (text, record) => {
                     return (
                         <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>
@@ -310,6 +397,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '委託量',
                 dataIndex: 'qty',
                 key: 'qty',
+                // width: 100,
                 align: 'right',
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatNum(text)}</span>;
@@ -319,6 +407,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '取消量',
                 dataIndex: 'cancel_qty',
                 key: 'cancel_qty',
+                // width: 100,
                 align: 'right',
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatNum(text)}</span>;
@@ -328,6 +417,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 title: '成交價',
                 dataIndex: 'match_price',
                 key: 'match_price',
+                width: 100,
                 align: 'right',
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
@@ -335,6 +425,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             },
             {
                 title: '成交量',
+                // width: 100,
                 dataIndex: 'match_qty',
                 key: 'match_qty',
                 align: 'right',
@@ -344,6 +435,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             },
             {
                 title: '剩餘量',
+                // width: 100,
                 dataIndex: 'last_qty',
                 key: 'last_qty',
                 align: 'right',
@@ -357,6 +449,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             },
             {
                 title: '委託書號',
+                // width: 100,
                 dataIndex: 'ord_no',
                 key: 'ord_no',
                 align: 'center',
@@ -366,6 +459,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             },
             {
                 title: '網路單號',
+                // width: 100,
                 dataIndex: 'sord_seq',
                 key: 'sord_seq',
                 align: 'center',
@@ -378,6 +472,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 dataIndex: 'errmsg',
                 key: 'errmsg',
                 align: 'center',
+                // width: 100,
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text.trim()}</span>;
                 },
@@ -405,6 +500,14 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
         },
         [data, currentPage],
     );
+
+    // const getScrollX = data => {
+    //     if (data?.length == 0) {
+    //         return { x: 780 };
+    //     } else {
+    //         return { x: 780, y: 600 };
+    //     }
+    // };
 
     return (
         <>

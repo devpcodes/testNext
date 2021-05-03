@@ -83,7 +83,7 @@ const DropfilterCheckBox = ({ type, onSubmit, onReset, value, data }) => {
                 .checkbox__container {
                     position: relative;
                     width: 148px;
-                    height: 217px;
+                    /* height: 217px; */
                     padding-top: 15px;
                 }
                 .checkbox__container .ant-checkbox-inner {
@@ -103,10 +103,11 @@ const DropfilterCheckBox = ({ type, onSubmit, onReset, value, data }) => {
                     width: 148px;
                     padding-left: 16px;
                     padding-right: 16px;
-                    position: absolute;
+                    /* position: absolute; */
                     border-top: 1px solid #e6ebf5;
                     padding-top: 12px;
-                    bottom: 12px;
+                    /* bottom: 12px; */
+                    margin-bottom: 12px;
                 }
                 .checkbox__container .ant-btn-primary {
                     background-color: #c43826;
