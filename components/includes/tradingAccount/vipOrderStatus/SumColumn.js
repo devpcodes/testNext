@@ -1,13 +1,18 @@
 import SumItem from './SumItem';
 import theme from '../../../../resources/styles/theme';
-const SumColmn = () => {
+import { formatNum } from '../../../../services/formatNum';
+const SumColmn = ({ filterStock, totalOrderQty, totalMatchQty, totalCancelQty }) => {
     return (
         <div>
-            <SumItem title={'篩選商品'} info={'2330 台積電'} className="item-first" />
-            <SumItem title={'合計委託量'} info={'9,175,000'} className="item" />
-            <SumItem title={'合計取消量'} info={'9,175,000'} className="item" />
-            <SumItem title={'合計成交量'} info={'9,175,000'} className="item" />
-            <SumItem title={'合計剩餘量'} info={'9,175,000'} className="item item-last" />
+            <SumItem title={'篩選商品'} info={filterStock} className="item-first" />
+            <SumItem title={'合計委託量'} info={formatNum(totalOrderQty)} className="item" />
+            <SumItem title={'合計取消量'} info={formatNum(totalCancelQty)} className="item" />
+            <SumItem title={'合計成交量'} info={formatNum(totalMatchQty)} className="item" />
+            <SumItem
+                title={'合計剩餘量'}
+                info={formatNum(totalOrderQty - totalCancelQty - totalMatchQty)}
+                className="item item-last"
+            />
 
             <style jsx global>
                 {`

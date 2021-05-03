@@ -211,7 +211,7 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 }
 
                 .sino__table .ant-checkbox-disabled .ant-checkbox-inner {
-                    display: none;
+                    // display: none;
                 }
                 .sino__table .ant-table-tbody > tr > td {
                     padding: 12px;

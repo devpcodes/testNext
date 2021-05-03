@@ -16,6 +16,10 @@ const VipOrderStatus = () => {
     const [controlText, setControlText] = useState('');
     const [selectData, setSelectData] = useState([]);
     const [controlReload, setControlReload] = useState(0);
+    const [totalCancelQty, setTotalCancelQty] = useState(0);
+    const [totalMatchQty, setTotalMatchQty] = useState(0);
+    const [totalOrderQty, setTotalOrderQty] = useState(0);
+    const [filterStock, setFilterStock] = useState('');
     const userInfo = useSelector(store => store.user.currentAccount);
 
     const delBtnHandler = useCallback(data => {
@@ -106,6 +110,17 @@ const VipOrderStatus = () => {
         setControlText(text);
     });
 
+    const getData = useCallback(data => {
+        console.log('data', data);
+        setTotalOrderQty(data.totalOrderQty);
+        setTotalMatchQty(data.totalMatchQty);
+        setTotalCancelQty(data.totalCancelQty);
+    });
+
+    const getFilterStock = useCallback(stock => {
+        setFilterStock(stock);
+    });
+
     return (
         <div className="vipOrderStatus__container">
             <div className="control__container">
@@ -121,7 +136,12 @@ const VipOrderStatus = () => {
             </div>
             {showSum && (
                 <div className="sum__container">
-                    <SumColmn />
+                    <SumColmn
+                        filterStock={filterStock}
+                        totalOrderQty={totalOrderQty}
+                        totalMatchQty={totalMatchQty}
+                        totalCancelQty={totalCancelQty}
+                    />
                 </div>
             )}
             {/* showDelBtn 有資料顯示刪單按鈕； controlReload 控制table重拉資料 */}
@@ -130,6 +150,8 @@ const VipOrderStatus = () => {
                 controlReload={controlReload}
                 getSearchVal={getSearchVal}
                 getPageInfoText={getPageTextHandler}
+                getData={getData}
+                getFilterStock={getFilterStock}
             />
             <style jsx>
                 {`

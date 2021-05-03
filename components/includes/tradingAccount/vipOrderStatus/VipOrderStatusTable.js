@@ -20,7 +20,7 @@ import DropFilterSearch from '../vipInventory/DropFilterSearch';
 import { formatPrice } from '../../../../services/numFormat';
 import { setModal } from '../../../../store/components/layouts/action';
 import { formatNum } from '../../../../services/formatNum';
-const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText }) => {
+const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText, getData, getFilterStock }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(100);
@@ -97,6 +97,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             });
             setSelectedRowKeys([]);
             setData(newData);
+            if (getData != null) {
+                getData(fetchData);
+            }
         }
     }, [fetchData]);
 
@@ -139,6 +142,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             });
             // 因為送出的資料，和ui顯示不同，所以新增變數儲存
             setFilterSearchVal(val);
+            if (getFilterStock != null) {
+                getFilterStock(val);
+            }
 
             const submitVal = val.split(' ')[0];
             setSearchWords(submitVal);
@@ -344,7 +350,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 render: (text, record) => {
                     return (
                         <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>
-                            {formatNum(record.qty - record.cancel_qty)}
+                            {formatNum(record.qty - record.cancel_qty - record.match_qty)}
                         </span>
                     );
                 },
@@ -365,6 +371,15 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 align: 'center',
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
+            },
+            {
+                title: '原因',
+                dataIndex: 'errmsg',
+                key: 'errmsg',
+                align: 'center',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text.trim()}</span>;
                 },
             },
         ];
