@@ -1,4 +1,5 @@
 import { Children, cloneElement, useEffect, useState, useRef, useCallback, memo } from 'react';
+import Head from 'next/head';
 import PropTypes from 'prop-types';
 import { notification, Modal, Button } from 'antd';
 import { useRouter } from 'next/router';
@@ -363,6 +364,10 @@ const Layout = memo(({ children }) => {
 
     return (
         <>
+            <Head>
+                <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"></link>
+            </Head>
             <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} />
             <CaHead />
             {noCloseBtns.includes(platform) || currentPath === '' || currentPath === '/goOrder' ? (
@@ -424,6 +429,10 @@ const Layout = memo(({ children }) => {
                 }
             `}</style>
             <style jsx global>{`
+                * {
+                    font-family: 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei',
+                        sans-serif;
+                }
                 .grecaptcha-badge {
                     display: none !important;
                 }

@@ -20,10 +20,10 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(50);
+    const [pageSize, setPageSize] = useState(100);
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
-    const [searchTtype, setSearchTtype] = useState('A');
+    const [searchTtype, setSearchTtype] = useState([]);
     const [filterSearchVal, setFilterSearchVal] = useState('');
     const [error, setError] = useState('');
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -230,6 +230,8 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
             // setSearchTtype(val[0]);
             setSearchTtype(val);
             setCurrentPage(1);
+        } else {
+            onFdReset(confirm);
         }
     });
 
@@ -241,7 +243,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                 columns.splice(index, 1);
                 return columns;
             });
-            setSearchTtype('A');
+            setSearchTtype([]);
             setCurrentPage(1);
         }
     });
@@ -289,7 +291,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                         type={''}
                         onSubmit={onFdSubmit.bind(null, confirm)}
                         onReset={onFdReset.bind(null, confirm)}
-                        value={searchTtype === 'A' ? [] : searchTtype}
+                        value={searchTtype}
                         data={[
                             { text: '現股', value: '0' },
                             { text: '融資', value: '1' },

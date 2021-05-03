@@ -8,6 +8,7 @@ import AccountTable from '../vipInventory/AccountTable';
 import { getToken } from '../../../../services/user/accessToken';
 import {
     mappingCommissionedCode,
+    mappingPriceMsg,
     mappingCommissionedCodeTradingAcc,
     mappingShowChangeBtn,
     mappingStatusMsg,
@@ -18,6 +19,7 @@ import { delOrderList } from '../../../../services/components/tradingAccount/del
 import DropFilterSearch from '../vipInventory/DropFilterSearch';
 import { formatPrice } from '../../../../services/numFormat';
 import { setModal } from '../../../../store/components/layouts/action';
+import { formatNum } from '../../../../services/formatNum';
 const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -289,7 +291,13 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 key: 'price',
                 align: 'right',
                 render: (text, record) => {
-                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatPrice(text)}</span>;
+                    return (
+                        <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>
+                            {formatPrice(
+                                mappingPriceMsg(record.price, record.price_type, record.price_flag, record.ord_type1),
+                            )}
+                        </span>
+                    );
                 },
             },
             {
@@ -298,7 +306,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 key: 'qty',
                 align: 'right',
                 render: (text, record) => {
-                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatNum(text)}</span>;
                 },
             },
             {
@@ -307,7 +315,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 key: 'cancel_qty',
                 align: 'right',
                 render: (text, record) => {
-                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatNum(text)}</span>;
                 },
             },
             {
@@ -325,7 +333,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 key: 'match_qty',
                 align: 'right',
                 render: (text, record) => {
-                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{formatNum(text)}</span>;
                 },
             },
             {
@@ -336,7 +344,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 render: (text, record) => {
                     return (
                         <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>
-                            {record.qty - record.cancel_qty}
+                            {formatNum(record.qty - record.cancel_qty)}
                         </span>
                     );
                 },
