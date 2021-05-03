@@ -23,7 +23,7 @@ import { formatNum } from '../../../../services/formatNum';
 const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(100);
     const [total, setTotal] = useState(0);
     const [error, setError] = useState('');
     const [reload, setReload] = useState(0);
