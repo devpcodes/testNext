@@ -51,6 +51,7 @@ const VipOrderStatus = () => {
                         setControlReload(prev => {
                             return (prev += 1);
                         });
+                        setShowDel(false);
                         // Modal.info({
                         //     content: `共刪除${selectData.length}筆資料，${delSuccess.length}筆資料刪除成功，${
                         //         selectData.length - delSuccess.length

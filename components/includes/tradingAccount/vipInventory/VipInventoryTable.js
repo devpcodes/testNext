@@ -312,6 +312,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
     };
 
     const pageChangeHandler = (page, pageSize) => {
+        window.scrollTo(0, 0);
         setCurrentPage(page);
     };
     // console.log('ddd', data);

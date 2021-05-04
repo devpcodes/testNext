@@ -501,6 +501,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
     });
 
     const pageChangeHandler = (page, pageSize) => {
+        window.scrollTo(0, 0);
         setCurrentPage(page);
         setSelectedRowKeys([]);
     };
