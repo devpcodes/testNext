@@ -85,6 +85,8 @@ const AccountTable = ({ filterColumns, ...props }) => {
                     padding-bottom: 12px;
                     border-bottom: solid 1px #d7e0ef;
                     white-space: nowrap;
+                    padding-left: 12px;
+                    padding-right: 12px;
                 }
                 .sino__table .ant-table-thead > tr > th:first-child {
                     padding-left: ${props.dataSource?.length > 0 ? '3%' : '1%'};
@@ -103,7 +105,8 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 }
 
                 .sino__table .ant-table-tbody > tr > td:first-child {
-                    padding-left: ${props.dataSource?.length > 0 ? '3%' : 0};
+                    // padding-left: ${props.dataSource?.length > 0 ? '3%' : 0};
+                    padding-left: 28px;
                 }
                 .sino__table .ant-table-tbody > tr > td:last-child {
                     padding-right: ${props.dataSource?.length > 0 ? '3%' : 0};
@@ -151,7 +154,8 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .sino__table .ant-table-thead > tr > th:first-child {
-                        padding-left: ${props.dataSource?.length > 0 ? '3%' : '5px'};
+                        // padding-left: ${props.dataSource?.length > 0 ? '3%' : '5px'};
+                        padding-left: 0;
                     }
                     .sino__table .ant-table table {
                         border: none;
@@ -173,6 +177,19 @@ const AccountTable = ({ filterColumns, ...props }) => {
                         display: block;
                         margin-top: -10px;
                         margin-right: 0;
+                    }
+                    .sino__table .ant-table-thead > tr > th:first-child {
+                        padding-left: 18px !important;
+                    }
+                    .sino__table .ant-table-tbody > tr > td:first-child {
+                        padding-left: 20px !important;
+                    }
+                    .sino__table .ant-table-cell:first-child .ant-table-filter-column-title {
+                        padding-left: 17px !important;
+                    }
+                    .sino__table .ant-table-cell {
+                        padding-left: 12px;
+                        padding-right: 12px;
                     }
                 }
                 .sino__table .normalWhiteSpace {
@@ -218,7 +235,10 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 }
 
                 .sino__table .ant-table-filter-column-title {
-                    padding: 12px 2.3em 12px 12px;
+                    padding: 12px 2.3em 12px 17px;
+                }
+                .sino__table .ant-table-thead > tr > th:first-child {
+                    padding-left: 25px;
                 }
             `}</style>
         </div>
