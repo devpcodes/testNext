@@ -21,6 +21,7 @@ import DropfilterCheckBox from '../vipInventory/DropfilterCheckBox';
 import { formatPrice } from '../../../../services/numFormat';
 import { setModal } from '../../../../store/components/layouts/action';
 import { formatNum } from '../../../../services/formatNum';
+import { timeFormatter } from '../../../../services/timeFormatter';
 
 const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageInfoText, getData, getFilterStock }) => {
     const [columns, setColumns] = useState([]);
@@ -465,6 +466,16 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 align: 'center',
                 render: (text, record) => {
                     return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{text}</span>;
+                },
+            },
+            {
+                title: '委託時間',
+                // width: 100,
+                dataIndex: 'ord_time',
+                key: 'ord_time',
+                align: 'center',
+                render: (text, record) => {
+                    return <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>{timeFormatter(text)}</span>;
                 },
             },
             {
