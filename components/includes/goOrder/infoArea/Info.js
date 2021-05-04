@@ -336,6 +336,23 @@ export const Info = ({ stockid }) => {
         }
     };
 
+    const getCloseInfo = (close, isSimTrade, diffPrice, reference, diffRate) => {
+        if (close === 0) {
+            return '--';
+        }
+        return `${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(close, reference)} ${simTradeHandler(
+            trimMinus(toDecimal(diffPrice)),
+            isSimTrade,
+        )} (${trimMinus(toDecimal(diffRate))}%)`;
+    };
+
+    const getVolume = volSum => {
+        if (volSum === 0) {
+            return '總量 --';
+        }
+        return `總量 ${volSum}`;
+    };
+
     return (
         <div className="info__container">
             {!isLogin && (
@@ -389,14 +406,11 @@ export const Info = ({ stockid }) => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="price__container">{`${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(
-                        close,
-                        reference,
-                    )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(
-                        toDecimal(diffRate),
-                    )}%)`}</div>
+                    <div className="price__container">
+                        {getCloseInfo(close, isSimTrade, diffPrice, reference, diffRate)}
+                    </div>
                     <div className="volume__container">
-                        <div className="volume">{`總量 ${volSum}`}</div>
+                        <div className="volume">{getVolume(volSum)}</div>
                         <div className="unit">{lot === 'Odd' ? '股' : '張'}</div>
                     </div>
                 </div>
