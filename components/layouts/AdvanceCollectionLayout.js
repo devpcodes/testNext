@@ -40,6 +40,9 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
             const tonkenVal = jwt_decode(getToken());
             const groupedAccount = accountGroupByType(tonkenVal.acts_detail);
             if (groupedAccount.S.length > 0) {
+                groupedAccount.S = groupedAccount.S.filter(item => {
+                    if (item.idno === tonkenVal.user_id) return true;
+                });
                 dispatch({ type: ACCOUNTS, payload: groupedAccount.S });
                 return true;
             } else {

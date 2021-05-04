@@ -73,7 +73,7 @@ export const signCert = async function (userInfo, isNeedSign = true, token) {
     }
 };
 
-export const sign = function (userInfo, isNeedSign = true, token) {
+export const sign = function (userInfo, isNeedSign = true, token, isWebview) {
     if (isNeedSign) {
         var signDict = {};
         let DM;
@@ -100,6 +100,10 @@ export const sign = function (userInfo, isNeedSign = true, token) {
             memberNo: memberNo,
             signTxt: userInfo.idno + new Date().getTime().toString(),
         };
+
+        if (isWebview) {
+            setting.isWebview = true;
+        }
 
         if (userInfo.account && userInfo.broker_id) {
             // $.extend(setting, {
