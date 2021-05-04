@@ -463,6 +463,8 @@ const Layout = memo(({ children }) => {
                 }
                 .confirm__container .ant-modal-body {
                     padding-bottom: 36px;
+                    font-size: 1.6rem;
+                    color: #0d1623;
                 }
                 .confirm__container .ant-btn {
                     width: 86px;
