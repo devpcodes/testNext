@@ -17,6 +17,7 @@ const SumItem = ({ title, info, style, className }) => {
                     display: inline-block;
                     border: 1px solid #d7e0ef;
                     border-radius: 2px;
+                    background: white;
                 }
                 .title {
                     background-color: #f2f5fa;

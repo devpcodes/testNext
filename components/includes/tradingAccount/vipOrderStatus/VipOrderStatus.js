@@ -111,7 +111,9 @@ const VipOrderStatus = () => {
     });
 
     const getData = useCallback(data => {
-        console.log('data', data);
+        if (data.data.length === 0) {
+            setControlText('');
+        }
         setTotalOrderQty(data.totalOrderQty);
         setTotalMatchQty(data.totalMatchQty);
         setTotalCancelQty(data.totalCancelQty);

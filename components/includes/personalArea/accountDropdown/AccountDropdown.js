@@ -219,6 +219,7 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
                     .trading__container {
                         position: static;
                         display: inline;
+                        background-color: white;
                     }
                     .account__container--mobile {
                         display: flex;

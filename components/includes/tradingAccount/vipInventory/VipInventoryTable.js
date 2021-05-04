@@ -20,7 +20,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(100);
+    const [pageSize, setPageSize] = useState(50);
     const [searchColumns, setSearchColumns] = useState([]);
     const [searchWords, setSearchWords] = useState('');
     const [searchTtype, setSearchTtype] = useState([]);
@@ -307,7 +307,7 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
         if (data?.length == 0) {
             return { x: 780 };
         } else {
-            return { x: 780, y: 600 };
+            return { x: 780 }; //, y: 600
         }
     };
 

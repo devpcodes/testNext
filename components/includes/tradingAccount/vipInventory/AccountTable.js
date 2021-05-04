@@ -216,6 +216,10 @@ const AccountTable = ({ filterColumns, ...props }) => {
                 .sino__table .ant-table-tbody > tr > td {
                     padding: 12px;
                 }
+
+                .sino__table .ant-table-filter-column-title {
+                    padding: 12px 2.3em 12px 12px;
+                }
             `}</style>
         </div>
     );

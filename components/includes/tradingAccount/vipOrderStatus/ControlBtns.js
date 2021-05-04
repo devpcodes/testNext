@@ -55,15 +55,19 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
     }, [data]);
 
     const getQtyHandler = useCallback(() => {
-        const qty =
-            mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零'
-                ? Number(data.qty) / 1000
-                : Number(data.qty);
-        const cancelQty =
-            mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零'
-                ? Number(data.cancel_qty) / 1000
-                : Number(data.cancel_qty);
-        return qty - cancelQty;
+        let qty;
+        let cancelQty;
+        let match_qty;
+        if (data.ord_type1 === '2' || data.ord_type1 === 'C') {
+            qty = Number(data.qty);
+            cancelQty = Number(data.cancel_qty);
+            match_qty = Number(data.match_qty);
+        } else {
+            qty = Number(data.qty) / 1000;
+            cancelQty = Number(data.cancel_qty) / 1000;
+            match_qty = Number(data.match_qty) / 1000;
+        }
+        return qty - cancelQty - match_qty;
     });
 
     const getQtyValueHandler = useCallback(val => {
@@ -83,9 +87,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     label={getLabel}
                     color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
                     price={formatPrice(data.price)}
-                    unit={
-                        mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股'
-                    }
+                    unit={data.ord_type1 === '2' || data.ord_type1 === 'C' ? '股' : '張'}
                     value={getQtyHandler()}
                     getValue={getQtyValueHandler}
                 />
@@ -98,9 +100,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
                     price={formatPrice(data.price)}
                     qty={getQtyHandler()}
-                    unit={
-                        mappingCommissionedCode(data.ord_type2, data.market_id, data.ord_type1) !== '零' ? '張' : '股'
-                    }
+                    unit={data.ord_type1 === '2' || data.ord_type1 === 'C' ? '股' : '張'}
                     value={formatPrice(data.price)}
                     getValue={getPriceValueHandler}
                     stock_id={data.stock_id}

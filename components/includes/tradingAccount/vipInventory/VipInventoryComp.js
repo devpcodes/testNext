@@ -22,6 +22,9 @@ const VipInventoryComp = () => {
 
     const getData = useCallback(data => {
         var deep = _.cloneDeep(data);
+        if (data.length === 0) {
+            setControlText('');
+        }
         const formatData = deep.map(item => {
             switch (item.ttype) {
                 case '0':
