@@ -32,7 +32,7 @@ const ChangeNum = ({
                     // onFocus={focusHandler}
                 />
             </div>
-            <div className="btn__box">
+            <div className="btn__box-modal">
                 <Button onClick={minusClickHandler}>-</Button>
                 <Button onClick={plusClickHandler} style={{ marginLeft: '8px' }} disabled={disabledPlus}>
                     +
@@ -61,7 +61,7 @@ const ChangeNum = ({
                     width: ${inputWidth == null ? 'calc(100vw - 32px - 100px - 54px - 8px)' : inputWidth};
                     /* width: calc(100vw - 160px); */
                 }
-                .btn__box {
+                .btn__box-modal {
                     width: 100px;
                     text-align: right;
                     vertical-align: top;
@@ -104,10 +104,10 @@ const ChangeNum = ({
                     font-size: 3.6rem;
                     line-height: 0;
                 }
-                .btn__box {
+                .btn__box-modal {
                     display: inline-block;
                 }
-                .btn__box .ant-btn {
+                .btn__box-modal .ant-btn {
                     display: inline-block;
                 }
                 .price_control .ant-btn > span {
