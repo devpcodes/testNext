@@ -14,6 +14,7 @@ import SellButton from './buttons/SellButton';
 import { fetchInventory } from '../../../../services/stock/fetchInventory';
 import { formatNum } from '../../../../services/formatNum';
 import { openGoOrder } from '../../../../services/openGoOrder';
+import { formatPriceByUnit } from '../../../../services/numFormat';
 
 const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => {
     const [columns, setColumns] = useState([]);
@@ -103,9 +104,13 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                 align: 'right',
                 render: (text, record) => {
                     if (!text) {
-                        return <span>{record.reference}</span>;
+                        return <span>{formatPriceByUnit(record.stock, record.reference)}</span>;
                     } else {
-                        return <span style={{ color: text > record.reference ? '#f45a4c' : '#22a16f' }}>{text}</span>;
+                        return (
+                            <span style={{ color: text > record.reference ? '#f45a4c' : '#22a16f' }}>
+                                {formatPriceByUnit(record.stock, text)}
+                            </span>
+                        );
                     }
                 },
             },
