@@ -112,14 +112,14 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
         }
     }, [modalContent, data]);
 
-    const titleContent = useMemo(() => {
+    const titleContent = () => {
         return (
             <>
                 <img src={data.ord_bs === 'B' ? icon : iconSell} />
                 <span>{modalContent === 'qty' ? '改量' : '改價'}</span>
             </>
         );
-    }, [modalContent]);
+    };
 
     const submitHandler = useCallback(async () => {
         setIsModalVisible(false);
@@ -219,7 +219,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                         </button>
                     )}
                     <Modal
-                        title={titleContent}
+                        title={titleContent()}
                         visible={isModalVisible}
                         // className="confirm__container"
                         className={getModalClassName(data.ord_bs)}
