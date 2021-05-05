@@ -232,9 +232,14 @@ const PanelTabs = () => {
                     height: 4px;
                 }
                 .tabs__container .ant-tabs-tab-active {
-                    background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
+                    /* background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
                     background-image: -webkit-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
-                    background-image: -moz-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
+                    background-image: -moz-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient}); */
+
+                    background: linear-gradient(90deg, ${gradient} 0%, #ffffff 74%);
+                    background: -moz-linear-gradient(90deg, ${gradient} 0%, #ffffff 74%);
+                    background: -webkit-linear-gradient(90deg, ${gradient} 0%, #ffffff 74%);
+                    background: -o-linear-gradient(90deg, ${gradient} 0%, #ffffff 74%);
                 }
             `}</style>
         </div>
