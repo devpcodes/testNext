@@ -63,7 +63,8 @@ const PanelTabs = () => {
         }
     }, [bs]);
     useEffect(() => {
-        setTabKey(activeTabKey);
+        // setTabKey(activeTabKey);
+        tabChangeHandler(activeTabKey);
     }, [activeTabKey]);
     const sockeHandler = e => {
         try {
