@@ -63,8 +63,28 @@ const PanelTabs = () => {
         }
     }, [bs]);
     useEffect(() => {
-        // setTabKey(activeTabKey);
-        tabChangeHandler(activeTabKey);
+        switch (activeTabKey) {
+            case '1':
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+            case '2':
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.sellTabColor);
+                setGradient(themeColor.sellGradient);
+                break;
+            case '3':
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.tradingAccColor);
+                setGradient(themeColor.tradingGradient);
+                break;
+            default:
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+        }
     }, [activeTabKey]);
     const sockeHandler = e => {
         try {
