@@ -233,6 +233,8 @@ const PanelTabs = () => {
                 }
                 .tabs__container .ant-tabs-tab-active {
                     background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
+                    background-image: -webkit-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
+                    background-image: -moz-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
                 }
             `}</style>
         </div>
