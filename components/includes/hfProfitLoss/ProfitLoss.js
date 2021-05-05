@@ -193,13 +193,13 @@ export const ProfitLoss = () => {
                 />
                 <DataCard
                     title={'當日已實現損益'}
-                    subTitle="已扣除手續費及交易稅"
+                    subTitle="包含手續費及交易稅"
                     value={data?.realPrtlosSum}
                     numberStyle={true}
                 />
                 <DataCard
                     title={'當日未實現損益'}
-                    subTitle="已扣除手續費"
+                    subTitle="未包含手續費"
                     value={data?.unrealPrtlosSum}
                     numberStyle={true}
                 />
