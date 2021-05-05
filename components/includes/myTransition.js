@@ -108,7 +108,7 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                 }
 
                 .loginMobile2-enter {
-                    transform: translate(-768px, 0);
+                    transform: translate(768px, 0);
                     opacity: 1;
                     transition: all 0ms;
                 }
@@ -121,8 +121,28 @@ const MyTransition = ({ isVisible, children, classNames }) => {
                     opacity: 1;
                 }
                 .loginMobile2-exit-active {
-                    transform: translate(-768px, 0);
+                    transform: translate(768px, 0);
                     transition: all 600ms;
+                }
+
+                .search-enter {
+                    transform: translate(0, 100px);
+                    opacity: 0;
+                    transition: all 0ms;
+                }
+                .search-enter-active {
+                    transform: translate(0, 0);
+                    opacity: 1;
+                    transition: transform 0;
+                }
+                .search-exit {
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+                .search-exit-active {
+                    transform: translate(0, 100px);
+                    opacity: 0;
+                    transition: all 0;
                 }
             `}</style>
         </>

@@ -26,3 +26,4 @@ export const SET_RESET_DATA = 'SET_RESET_DATA';
 export const SET_CHECK_CA = 'SET_CHECK_CA';
 export const SET_CHECK_LOT = 'SET_CHECK_LOT';
 export const SET_WEBSOCKET_EVENT = 'SET_WEBSOCKET_EVENT';
+export const SET_ACTIVE_TAB_KEY = 'SET_ACTIVE_TAB_KEY';

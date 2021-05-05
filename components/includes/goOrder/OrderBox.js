@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Tooltip, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './panel/PanelTabs';
-import { setConfirmBoxOpen, setResetData } from '../../../store/goOrder/action';
+import { setActiveTabKey, setConfirmBoxOpen, setResetData } from '../../../store/goOrder/action';
 import { formatNum } from '../../../services/formatNum';
 import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle2.svg';
 import infoIconSell from '../../../resources/images/components/goOrder/attention-info-circle3.svg';
@@ -142,7 +142,8 @@ const OrderBox = () => {
                     content: '委託成功',
                     onOk: () => {
                         closeHandler();
-                        checkReset();
+                        dispatch(setActiveTabKey('3'));
+                        // checkReset();
                     },
                 });
             } else {

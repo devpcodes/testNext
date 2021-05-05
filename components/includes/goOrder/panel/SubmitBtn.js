@@ -24,6 +24,7 @@ import {
     setOrdCount,
     setPriceType,
     setDefaultOrdPrice,
+    setActiveTabKey,
 } from '../../../../store/goOrder/action';
 import { themeColor } from './PanelTabs';
 
@@ -225,7 +226,8 @@ const SubmitBtn = () => {
                 Modal.success({
                     content: '委託成功',
                     onOk: () => {
-                        checkReset();
+                        dispatch(setActiveTabKey('3'));
+                        // checkReset();
                     },
                 });
             } else {
