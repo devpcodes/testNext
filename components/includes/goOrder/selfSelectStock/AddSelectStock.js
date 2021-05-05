@@ -1,6 +1,6 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Modal, Button, Checkbox } from 'antd';
+import { Modal, Button, Checkbox, message } from 'antd';
 import SortableList from '../sortableList/sortable';
 import { fetchupdateSelectStock } from '../../../../services/selfSelect/updateSelectStock';
 import { fetchUpdateSelectGroup } from '../../../../services/selfSelect/updateSelectGroup';
@@ -57,6 +57,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
         });
         const res = await fetchupdateSelectStock(reqData, isSocalLogin, token);
         handleCancel();
+        if (res.success === true && res.message === 'OK') {
+            message.success('自選編輯成功');
+        }
     };
 
     const handleCancel = () => {
