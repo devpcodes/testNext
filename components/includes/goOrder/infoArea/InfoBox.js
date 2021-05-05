@@ -1,7 +1,6 @@
 import { memo, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
 export const InfoBox = memo(({ code, t30Data, moreItems }) => {
-    console.log(moreItems);
     return (
         <>
             <>
@@ -18,9 +17,9 @@ export const InfoBox = memo(({ code, t30Data, moreItems }) => {
                 )}
             </>
             <div className="information__items__container">
-                {moreItems.map(item =>
+                {moreItems.map((item, index) =>
                     item.inInfoBox ? (
-                        <a className="information__items" href={item.link} target="_blank">
+                        <a key={index} className="information__items" href={item.link} target="_blank">
                             <div className={`information__items__icon ${item.color}`}>{item.text}</div>
                             <div className="information__items__desc">
                                 <div className="information__items__title">{item.title}</div>
@@ -28,7 +27,7 @@ export const InfoBox = memo(({ code, t30Data, moreItems }) => {
                             </div>
                         </a>
                     ) : (
-                        <></>
+                        <a key={index}></a>
                     ),
                 )}
             </div>
