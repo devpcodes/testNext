@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Tabs } from 'antd';
 import { useDispatch } from 'react-redux';
 import TradingContainer from './TradingContainer';
-import { setBs, setWebsocketEvent } from '../../../../store/goOrder/action';
+import { setActiveTabKey, setBs, setWebsocketEvent } from '../../../../store/goOrder/action';
 import SearchList from '../searchList/SearchList';
 import { webSocketLogin } from '../../../../services/components/goOrder/websocketService';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
@@ -23,6 +23,7 @@ let currentTabKey = '1';
 const PanelTabs = () => {
     const bs = useSelector(store => store.goOrder.bs);
     const websocketEvent = useSelector(store => store.goOrder.websocketEvent);
+    const activeTabKey = useSelector(store => store.goOrder.activeTabKey);
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
     const [gradient, setGradient] = useState(themeColor.buyGradient);
     const [tabKey, setTabKey] = useState('1');
@@ -50,15 +51,41 @@ const PanelTabs = () => {
     }, []);
     useEffect(() => {
         if (bs === 'B') {
-            setTabKey('1');
+            // setTabKey('1');
+            dispatch(setActiveTabKey('1'));
             setTabColor(themeColor.buyTabColor);
             setGradient(themeColor.buyGradient);
         } else {
-            setTabKey('2');
+            // setTabKey('2');
+            dispatch(setActiveTabKey('2'));
             setTabColor(themeColor.sellTabColor);
             setGradient(themeColor.sellGradient);
         }
     }, [bs]);
+    useEffect(() => {
+        switch (activeTabKey) {
+            case '1':
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+            case '2':
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.sellTabColor);
+                setGradient(themeColor.sellGradient);
+                break;
+            case '3':
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.tradingAccColor);
+                setGradient(themeColor.tradingGradient);
+                break;
+            default:
+                setTabKey(activeTabKey);
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+        }
+    }, [activeTabKey]);
     const sockeHandler = e => {
         try {
             const socketData = JSON.parse(e.data);
@@ -76,19 +103,22 @@ const PanelTabs = () => {
                 dispatch(setBs('B'));
                 setTabColor(themeColor.buyTabColor);
                 setGradient(themeColor.buyGradient);
-                setTabKey(activeKey);
+                // setTabKey(activeKey);
+                dispatch(setActiveTabKey(activeKey));
                 break;
             case '2':
                 dispatch(setBs('S'));
                 setTabColor(themeColor.sellTabColor);
                 setGradient(themeColor.sellGradient);
-                setTabKey(activeKey);
+                // setTabKey(activeKey);
+                dispatch(setActiveTabKey(activeKey));
                 break;
             case '3':
                 setTabColor(themeColor.tradingAccColor);
                 setGradient(themeColor.tradingGradient);
                 setTabKey(activeKey);
-                dispatch(setWebsocketEvent(false));
+                // dispatch(setWebsocketEvent(false));
+                dispatch(setActiveTabKey(activeKey));
                 break;
             default:
                 setTabColor(themeColor.buyTabColor);
@@ -203,6 +233,8 @@ const PanelTabs = () => {
                 }
                 .tabs__container .ant-tabs-tab-active {
                     background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
+                    background-image: -webkit-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
+                    background-image: -moz-linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, ${gradient});
                 }
             `}</style>
         </div>
