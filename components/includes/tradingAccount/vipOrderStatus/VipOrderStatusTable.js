@@ -18,7 +18,7 @@ import { usePlatform } from '../../../../hooks/usePlatform';
 import { delOrderList } from '../../../../services/components/tradingAccount/delOrderList';
 import DropFilterSearch from '../vipInventory/DropFilterSearch';
 import DropfilterCheckBox from '../vipInventory/DropfilterCheckBox';
-import { formatPrice } from '../../../../services/numFormat';
+import { formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
 import { setModal } from '../../../../store/components/layouts/action';
 import { formatNum } from '../../../../services/formatNum';
 import { timeFormatter } from '../../../../services/timeFormatter';
@@ -387,7 +387,8 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                 render: (text, record) => {
                     return (
                         <span style={{ opacity: record.status_code == 4 ? 0.45 : 1 }}>
-                            {formatPrice(
+                            {formatPriceByUnit(
+                                record.stock_id,
                                 mappingPriceMsg(record.price, record.price_type, record.price_flag, record.ord_type1),
                             )}
                         </span>

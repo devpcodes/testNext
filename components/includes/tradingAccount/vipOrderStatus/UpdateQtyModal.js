@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { mappingPriceMsg } from '../../../../services/components/goOrder/dataMapping';
+import { formatPriceByUnit } from '../../../../services/numFormat';
 import ChangeNum from '../../goOrder/searchList/ChangeNum';
 
 const qtyUnit = 1;
-const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue }) => {
+const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue, data }) => {
     const [qtyVal, setQtyVal] = useState('');
     const initValue = useRef('');
     const [disabledPlus, setDisabledPlus] = useState(true);
@@ -64,7 +66,11 @@ const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue })
             </p>
             <p className="item-modal item-modalFirst">
                 <span>委託價格</span>
-                {price}
+                {/* {price} */}
+                {formatPriceByUnit(
+                    data.stock_id,
+                    mappingPriceMsg(data.price, data.price_type, data.price_flag, data.ord_type1),
+                )}
             </p>
             <p className="item-modal">
                 <span>委託數量</span>
@@ -73,7 +79,7 @@ const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue })
             <ChangeNum
                 title="欲減量"
                 inputWidth="calc(100% - 46px - 46px - 62px - 8px)"
-                color="#f45a4c"
+                color={color}
                 fontSize="1.8rem"
                 plusClickHandler={plusPriceHandler}
                 minusClickHandler={minusPriceHandler}

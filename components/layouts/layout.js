@@ -36,6 +36,8 @@ import { usePlatform } from '../../hooks/usePlatform';
 import { noCloseBtns } from '../../hooks/useLoginClosBtn';
 import modalCloseIcon from '../../resources/images/components/tradingAccount/acc_close.svg';
 import modalTitleConfirmIcon from '../../resources/images/components/tradingAccount/attention-error.svg';
+import modalTitleConfirmIconSell from '../../resources/images/components/tradingAccount/attention-error-sell.svg';
+
 const noVerifyRouters = ['goOrder', 'errPage'];
 
 const Layout = memo(({ children }) => {
@@ -326,9 +328,12 @@ const Layout = memo(({ children }) => {
     };
 
     const getModalIconHandler = useCallback(
-        type => {
+        (type, bs) => {
             switch (type) {
                 case 'confirm':
+                    if (bs === 'S') {
+                        return modalTitleConfirmIconSell;
+                    }
                     return modalTitleConfirmIcon;
                 default:
                     return modalTitleConfirmIcon;
@@ -390,7 +395,7 @@ const Layout = memo(({ children }) => {
                 {...modal}
                 title={
                     <>
-                        <img src={getModalIconHandler(modal.type)} />
+                        <img src={getModalIconHandler(modal.type, modal.bs)} />
                         <span>{modal.title}</span>
                     </>
                 }

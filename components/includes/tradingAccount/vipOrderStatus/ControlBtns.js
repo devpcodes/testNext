@@ -11,6 +11,7 @@ import {
 } from '../../../../services/components/goOrder/dataMapping';
 import UpdateQtyModal from './UpdateQtyModal';
 import icon from '../../../../resources/images/components/tradingAccount/attention-error.svg';
+import iconSell from '../../../../resources/images/components/tradingAccount/attention-error-sell.svg';
 import closeIcon from '../../../../resources/images/components/tradingAccount/acc_close.svg';
 import { getToken } from '../../../../services/user/accessToken';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
@@ -19,7 +20,7 @@ import { postUpdatePrice } from '../../../../services/components/goOrder/postUpd
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import UpdatePriceModal from './UpdatePriceModal';
-import { formatPrice } from '../../../../services/numFormat';
+import { formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
 //{ ord_bs, status_code, price_flag, order_type1, delClickHandler, id }
 let qtyValue = '';
 let priceValue = '';
@@ -86,10 +87,11 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     product={data.name_zh}
                     label={getLabel}
                     color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
-                    price={formatPrice(data.price)}
+                    price={formatPriceByUnit(data.stock_id, data.price)}
                     unit={data.ord_type1 === '2' || data.ord_type1 === 'C' ? '股' : '張'}
                     value={getQtyHandler()}
                     getValue={getQtyValueHandler}
+                    data={data}
                 />
             );
         } else {
@@ -98,12 +100,13 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     product={data.name_zh}
                     label={getLabel}
                     color={data.ord_bs === 'B' ? '#f45a4c' : '#22a16f'}
-                    price={formatPrice(data.price)}
+                    price={formatPriceByUnit(data.stock_id, data.price)}
                     qty={getQtyHandler()}
                     unit={data.ord_type1 === '2' || data.ord_type1 === 'C' ? '股' : '張'}
-                    value={formatPrice(data.price)}
+                    value={formatPriceByUnit(data.stock_id, data.price)}
                     getValue={getPriceValueHandler}
                     stock_id={data.stock_id}
+                    data={data}
                 />
             );
         }
@@ -112,7 +115,7 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
     const titleContent = useMemo(() => {
         return (
             <>
-                <img src={icon} />
+                <img src={data.ord_bs === 'B' ? icon : iconSell} />
                 <span>{modalContent === 'qty' ? '改量' : '改價'}</span>
             </>
         );
@@ -193,6 +196,13 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
         setIsModalVisible(false);
     });
 
+    const getModalClassName = useCallback(bs => {
+        if (bs === 'B') {
+            return 'confirm__container';
+        } else {
+            return 'confirm__container confirm__container-s';
+        }
+    });
     return (
         <div>
             {showControlBtn && (
@@ -211,12 +221,14 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     <Modal
                         title={titleContent}
                         visible={isModalVisible}
-                        className="confirm__container"
+                        // className="confirm__container"
+                        className={getModalClassName(data.ord_bs)}
                         okText="確定"
                         cancelText="取消"
                         onCancel={cancelHandler}
                         closeIcon={<img src={closeIcon} />}
                         onOk={submitHandler}
+                        destroyOnClose={true}
                     >
                         {getContent}
                     </Modal>
@@ -259,6 +271,15 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                 }
                 .confirm__container .ant-btn-primary {
                     background: #f45a4c;
+                    border-radius: 2px;
+                    border: solid 1px rgba(37, 74, 145, 0);
+                    width: 86px;
+                    height: 40px;
+                    color: white !important;
+                    font-size: 1.6rem;
+                }
+                .confirm__container-s .ant-btn-primary {
+                    background: #22a16f;
                     border-radius: 2px;
                     border: solid 1px rgba(37, 74, 145, 0);
                     width: 86px;

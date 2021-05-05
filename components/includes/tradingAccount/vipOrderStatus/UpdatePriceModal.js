@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { formatPrice } from '../../../../services/numFormat';
+import { formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
 import ChangeNum from '../../goOrder/searchList/ChangeNum';
+import { mappingPriceMsg } from '../../../../services/components/goOrder/dataMapping';
 
-const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue, stock_id, qty }) => {
+// data 有全部資料，太麻煩，所以全給了...
+const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue, stock_id, qty, data }) => {
     const [priceVal, setPriceVal] = useState('');
     useEffect(() => {
         setPriceVal(value);
@@ -16,7 +18,8 @@ const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue,
         }
         const type = getStockType(stock_id || '').type;
         const unit = getStockPriceRange(type, priceVal, true);
-        setPriceVal(formatPrice(parseFloat(priceVal) + unit));
+        // console.log('ffffff', parseFloat(priceVal) + unit)
+        setPriceVal(formatPriceByUnit(stock_id, parseFloat(priceVal) + unit));
     };
 
     const minusPriceHandler = () => {
@@ -25,11 +28,11 @@ const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue,
             return;
         }
         const type = getStockType(stock_id || '').type;
-        const unit = getStockPriceRange(type, priceVal, true);
+        const unit = getStockPriceRange(type, priceVal, false);
         if (parseFloat(priceVal) - unit <= unit) {
-            setPriceVal(formatPrice(unit));
+            setPriceVal(formatPriceByUnit(stock_id, unit));
         } else {
-            setPriceVal(formatPrice(parseFloat(priceVal) - unit));
+            setPriceVal(formatPriceByUnit(stock_id, parseFloat(priceVal) - unit));
         }
     };
 
@@ -51,7 +54,11 @@ const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue,
             </p>
             <p className="item-modal item-modalFirst">
                 <span>委託價格</span>
-                {formatPrice(price)}
+                {/* {formatPriceByUnit(stock_id, price)} */}
+                {formatPriceByUnit(
+                    data.stock_id,
+                    mappingPriceMsg(data.price, data.price_type, data.price_flag, data.ord_type1),
+                )}
             </p>
             <p className="item-modal">
                 <span>委託數量</span>
@@ -60,7 +67,7 @@ const UpdatePriceModal = ({ product, color, label, price, unit, value, getValue,
             <ChangeNum
                 title="新價格"
                 inputWidth="calc(100% - 46px - 46px - 62px - 8px)"
-                color="#f45a4c"
+                color={color}
                 fontSize="1.8rem"
                 plusClickHandler={plusPriceHandler}
                 minusClickHandler={minusPriceHandler}
