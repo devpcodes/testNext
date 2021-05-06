@@ -3,7 +3,7 @@ import { AutoComplete } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
-const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
+const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = false }) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
 
@@ -75,7 +75,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
                     options={products}
                     placeholder="請輸入股號或商品名稱"
                     dropdownClassName="searchDropdown"
-                    dropdownMatchSelectWidth={240}
+                    dropdownMatchSelectWidth={width || 240}
                     onChange={changeHandler}
                     value={value}
                     autoFocus={true}
@@ -88,8 +88,11 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
                     height: 136px;
                     overflow-y: auto;
                 } */
+                .autoComplete__container {
+                    width: ${width || 'auto'};
+                }
                 .autoComplete__container .ant-select.ant-select-auto-complete.ant-select-single.ant-select-show-search {
-                    width: 219px;
+                    width: ${width || '219px'};
                     height: 38px;
                 }
                 .autoComplete__container .ant-select-selector {

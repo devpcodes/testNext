@@ -2,6 +2,8 @@ import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import { Tabs, Button, Input, Progress, Modal, notification } from 'antd';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
 import Accounts from './Accounts';
+import SearchAutoComplete from '../tradingAccount/vipInventory/SearchAutoComplete';
+import BuyButton from '../tradingAccount/vipInventory/buttons/BuyButton';
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
     const [state, dispatch] = useContext(ReducerContext);
@@ -14,6 +16,8 @@ const EarmarkReserve = () => {
             init.current = true;
         }
     }, [state.accountsReducer.selected]);
+    const selectHandler = useCallback(() => {});
+    const onSeChangeHandler = useCallback(() => {});
     const changleHandler = useCallback(() => {});
     return (
         <>
@@ -26,6 +30,37 @@ const EarmarkReserve = () => {
                 >
                     <TabPane tab="預收款項申請" key="1">
                         <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
+                        <div className="apply__container">
+                            <div className="item">
+                                <p className="label symbol__label">股號或名稱</p>
+                                <SearchAutoComplete
+                                    selectHandler={selectHandler}
+                                    onChange={onSeChangeHandler}
+                                    width={'100%'}
+                                />
+                            </div>
+                            <div className="item">
+                                <p className="label">委託價</p>
+                                <Input className="earmark__inp" />
+                            </div>
+                            <div className="item">
+                                <p className="label">股數</p>
+                                <Input className="earmark__inp" />
+                            </div>
+                            <div className="item">
+                                <p className="label">預估金額</p>
+                                <Input className="earmark__inp" />
+                            </div>
+                            <div className="btn__box-earmark">
+                                <BuyButton
+                                    text={'申請'}
+                                    width={'100%'}
+                                    height={'40px'}
+                                    fontSize={'16px'}
+                                    color={'rgb(210, 55, 73)'}
+                                />
+                            </div>
+                        </div>
                     </TabPane>
                     <TabPane tab="預收款項查詢" key="2"></TabPane>
                 </Tabs>
@@ -45,6 +80,33 @@ const EarmarkReserve = () => {
                     font-weight: bold;
                     letter-spacing: 6px;
                     margin-bottom: 0;
+                }
+                .apply__container {
+                    padding-left: 2px;
+                    margin-top: 40px;
+                    height: 400px;
+                }
+                .label {
+                    font-size: 16px;
+                    margin-right: 8px;
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                }
+                .item {
+                    display: inline-block;
+                    width: calc((100% - 160px) / 4);
+                    height: 75px;
+                    overflow: hidden;
+                }
+                .item :not(:first-child) {
+                    margin-left: 20px;
+                }
+                .btn__box-earmark {
+                    vertical-align: top;
+                    display: inline-block;
+                    width: 80px;
+                    padding-top: 28px;
+                    margin-left: 20px;
                 }
             `}</style>
             <style global jsx>{`
@@ -84,6 +146,31 @@ const EarmarkReserve = () => {
                 .ant-tabs-tab-remove:active,
                 .ant-tabs-tab-remove:focus {
                     color: #d23749;
+                }
+
+                .autoComplete__container {
+                    display: inline-block;
+                }
+                .autoComplete__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    border: 1px solid #757575;
+                    border-radius: 2px;
+                }
+                .autoComplete__container
+                    .ant-select-single:not(.ant-select-customize-input)
+                    .ant-select-selector
+                    .ant-select-selection-search-input {
+                    /* font-size: 16px; */
+                    height: 38px !important;
+                }
+                .autoComplete__container .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                    /* line-height: 36px; */
+                    line-height: 36px;
+                }
+
+                .earmark__inp.ant-input {
+                    display: inline-block;
+                    height: 38px;
+                    border: 1px solid #757575;
                 }
             `}</style>
         </>

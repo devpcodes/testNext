@@ -35,7 +35,7 @@ const AdvanceCollection = function () {
                     font-size: 16px;
                 }
                 .reserve__container .ant-select-selector {
-                    border: 1px solid #b5b5b5 !important;
+                    border: 1px solid #777777 !important;
                     border-radius: 2px !important;
                 }
             `}</style>
