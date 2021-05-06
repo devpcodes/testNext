@@ -549,10 +549,10 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                     total: total,
                     showTotal: (total, range) => {
                         if (getPageInfoText != null) {
-                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
+                            getPageInfoText(`${range[0]}-${range[1]} 筆委託 (共${total}筆委託)`);
                         }
 
-                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                        return `${range[0]}-${range[1]} 筆委託 (共${total}筆委託)`;
                     },
                     defaultPageSize: pageSize,
                     defaultCurrent: 1,
