@@ -58,6 +58,46 @@ export const mappingCommissionedCode = (ord_type2, market_id, ord_type1, sys_id)
     return word;
 };
 
+export const mappingCommissionedCodeTradingAcc = (ord_bs, ord_type2, market_id, ord_type1, sys_id) => {
+    var ord_char = '';
+    var bs_char = '';
+    var word = '';
+    switch (ord_bs) {
+        case 'B':
+            bs_char = '買';
+            break;
+        case 'S':
+            bs_char = '賣';
+            break;
+    }
+    if (market_id == 'R' || sys_id === '05') {
+        ord_char = '興';
+    } else if (ord_type1 === '2') {
+        ord_char = '盤後零';
+    } else if (ord_type1 === 'C') {
+        ord_char = '盤中零';
+    } else {
+        switch (ord_type2) {
+            case '0':
+                ord_char = '現';
+                break;
+            case '1':
+            case '3':
+                ord_char = '資';
+                break;
+            case '2':
+            case '4':
+                ord_char = '券';
+                break;
+            default:
+                bs_char = '';
+                ord_char = '';
+        }
+    }
+    word = ord_char + bs_char;
+    return word;
+};
+
 export const mappingWebId = webID => {
     const webIDList = {
         0: '現場單',
@@ -157,4 +197,16 @@ export const mappingPriceMsg = function (price, type, flag, ord_type1) {
     } else {
         return price;
     }
+};
+
+export const checkPriceUpdate = function (flag, ord_type1) {
+    // 檢查市價
+    if (flag === '1' || flag == null) {
+        return false;
+    }
+    // 檢查盤後零股 / 盤中零股 / 定盤
+    if (ord_type1 === '2' || ord_type1 === 'C' || ord_type1 === 'P') {
+        return false;
+    }
+    return true;
 };

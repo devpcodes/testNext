@@ -1,6 +1,7 @@
 import { Children, cloneElement, useEffect, useState, useRef, useCallback, memo } from 'react';
+import Head from 'next/head';
 import PropTypes from 'prop-types';
-import { notification } from 'antd';
+import { notification, Modal, Button } from 'antd';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -18,6 +19,7 @@ import {
     setMaskVisible,
     setMenuOpen,
     setRecaptchaReady,
+    setModal,
 } from '../../store/components/layouts/action';
 import { setIsLogin } from '../../store/user/action';
 import { setCurrentPath } from '../../store/general/action';
@@ -32,6 +34,10 @@ import { useCheckMobile } from '../../hooks/useCheckMobile';
 import { useUser } from '../../hooks/useUser';
 import { usePlatform } from '../../hooks/usePlatform';
 import { noCloseBtns } from '../../hooks/useLoginClosBtn';
+import modalCloseIcon from '../../resources/images/components/tradingAccount/acc_close.svg';
+import modalTitleConfirmIcon from '../../resources/images/components/tradingAccount/attention-error.svg';
+import modalTitleConfirmIconSell from '../../resources/images/components/tradingAccount/attention-error-sell.svg';
+
 const noVerifyRouters = ['goOrder', 'errPage'];
 
 const Layout = memo(({ children }) => {
@@ -53,6 +59,7 @@ const Layout = memo(({ children }) => {
     const navData = useSelector(store => store.layout.navData);
     const currentPath = useSelector(store => store.general.currentPath);
     const showMask = useSelector(store => store.layout.showMask);
+    const modal = useSelector(store => store.layout.modal);
 
     const getMenuPath = useRef(false);
     const prevPathname = useRef(false);
@@ -319,8 +326,53 @@ const Layout = memo(({ children }) => {
     const reCaptchaLoadReady = () => {
         dispatch(setRecaptchaReady(true));
     };
+
+    const getModalIconHandler = useCallback(
+        (type, bs) => {
+            switch (type) {
+                case 'confirm':
+                    if (bs === 'S') {
+                        return modalTitleConfirmIconSell;
+                    }
+                    return modalTitleConfirmIcon;
+                default:
+                    return modalTitleConfirmIcon;
+            }
+        },
+        [modal],
+    );
+
+    const getModalFooter = useCallback(
+        (type, text, ok) => {
+            switch (type) {
+                case 'info':
+                    return (
+                        <Button
+                            type={'primary'}
+                            onClick={
+                                ok != null
+                                    ? ok
+                                    : () => {
+                                          dispatch(setModal({ visible: false, footer: null }));
+                                      }
+                            }
+                        >
+                            {text}
+                        </Button>
+                    );
+                default:
+                    break;
+            }
+        },
+        [modal],
+    );
+
     return (
         <>
+            <Head>
+                <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"></link>
+            </Head>
             <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} />
             <CaHead />
             {noCloseBtns.includes(platform) || currentPath === '' || currentPath === '/goOrder' ? (
@@ -339,6 +391,32 @@ const Layout = memo(({ children }) => {
             {isMobile && showMask && <div onClick={maskClickHandler} className="page__mask"></div>}
             <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
             <Footer showNav={showNav} />
+            <Modal
+                {...modal}
+                title={
+                    <>
+                        <img src={getModalIconHandler(modal.type, modal.bs)} />
+                        <span>{modal.title}</span>
+                    </>
+                }
+                className="confirm__container"
+                okText={modal.okText || '確定'}
+                cancelText="取消"
+                closeIcon={<img src={modalCloseIcon} />}
+                onCancel={
+                    modal.onCancel != null
+                        ? modal.onCancel
+                        : () => {
+                              dispatch(setModal({ visible: false }));
+                          }
+                }
+                footer={
+                    modal.footer != null ? modal.footer : getModalFooter(modal.type, modal.okText || '確定', modal.onOk)
+                }
+                destroyOnClose={true}
+            >
+                {modal.content}
+            </Modal>
             <style jsx>{`
                 .page__container {
                     min-height: 500px;
@@ -356,6 +434,10 @@ const Layout = memo(({ children }) => {
                 }
             `}</style>
             <style jsx global>{`
+                * {
+                    font-family: 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei',
+                        sans-serif;
+                }
                 .grecaptcha-badge {
                     display: none !important;
                 }
@@ -364,6 +446,49 @@ const Layout = memo(({ children }) => {
                 }
                 .ant-modal-wrap {
                     z-index: 10000;
+                }
+
+                .confirm__container {
+                    width: 382px !important;
+                }
+                .confirm__container .ant-modal-content {
+                    border-radius: 4px;
+                }
+                .confirm__container .ant-modal-header {
+                    background: #f2f5fa;
+                }
+                .confirm__container .ant-btn-primary {
+                    background: #f45a4c;
+                    border-radius: 2px;
+                    border: solid 1px rgba(37, 74, 145, 0);
+                    width: 86px;
+                    height: 40px;
+                    color: white !important;
+                    font-size: 1.6rem;
+                }
+                .confirm__container .ant-modal-body {
+                    padding-bottom: 36px;
+                    font-size: 1.6rem;
+                    color: #0d1623;
+                }
+                .confirm__container .ant-btn {
+                    width: 86px;
+                    height: 40px;
+                    border-radius: 2px;
+                    border: solid 1px #e6ebf5;
+                    color: #0d1623;
+                    font-size: 1.6rem;
+                }
+                .confirm__container .ant-modal-title {
+                    font-size: 2rem;
+                    font-weight: bold;
+                }
+                .confirm__container .ant-modal-title span {
+                    margin-left: 5px;
+                    vertical-align: middle;
+                }
+                .confirm__container .ant-modal-footer {
+                    padding: 19px 22px;
                 }
             `}</style>
         </>

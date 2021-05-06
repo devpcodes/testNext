@@ -12,8 +12,8 @@ import MyTransition from '../../myTransition';
 import theme from '../../../../resources/styles/theme';
 import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
-export const AccountDropdown = ({ personalAreaVisible }) => {
-    const dropdownWidth = 243;
+export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type }) => {
+    const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
 
     const dispatch = useDispatch();
@@ -63,6 +63,10 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
         }
     };
 
+    const containerCalssName = () => {
+        return tradingLayout ? 'account__container trading__container' : 'account__container';
+    };
+
     if (
         !accounts.length ||
         (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object) ||
@@ -71,8 +75,8 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
         return null;
 
     return (
-        <div className="account__container">
-            {isMobile ? (
+        <div className={containerCalssName()}>
+            {isMobile && tradingLayout !== true ? (
                 <>
                     <div className="account__container--mobile currentAccount__container">
                         <AccountList account={currentAccount} />
@@ -89,29 +93,42 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     <MyTransition isVisible={listVisible} classNames={'accounts'}>
                         <div className="account__container--mobile accountList__container">
                             {groupedAccountTypes.map((accType, index) => {
-                                const accText = getAccountText(accType);
-                                const accountsPerGroup = groupedAccount[accType];
+                                let accText;
+                                let accountsPerGroup = [];
+                                if (type != null && accType === type) {
+                                    accText = getAccountText(accType);
+                                    accountsPerGroup = groupedAccount[accType];
+                                }
+
+                                if (type == null) {
+                                    accText = getAccountText(accType);
+                                    accountsPerGroup = groupedAccount[accType];
+                                }
+                                // const accText = getAccountText(accType);
+                                // const accountsPerGroup = groupedAccount[accType];
                                 return (
                                     !!accountsPerGroup.length && (
                                         <div className="accountList__grouped" key={index}>
                                             <span className="optGroup__accType">{accText}</span>
-                                            {accountsPerGroup.map(account => (
-                                                <div
-                                                    key={`${account.broker_id}-${account.account}`}
-                                                    className="account__card"
-                                                    data-account={`${account.broker_id}-${account.account}`}
-                                                    onClick={currentAccountHandler}
-                                                    onKeyDown={keyPressed}
-                                                    role="menuitem"
-                                                    tabIndex="0"
-                                                >
-                                                    <AccountList account={account} />
-                                                    {`${currentAccount.broker_id}-${currentAccount.account}` ===
-                                                        `${account.broker_id}-${account.account}` && (
-                                                        <img src={checkImg} alt="check"></img>
-                                                    )}
-                                                </div>
-                                            ))}
+                                            {accountsPerGroup.map(account => {
+                                                return (
+                                                    <div
+                                                        key={`${account.broker_id}-${account.account}`}
+                                                        className="account__card"
+                                                        data-account={`${account.broker_id}-${account.account}`}
+                                                        onClick={currentAccountHandler}
+                                                        onKeyDown={keyPressed}
+                                                        role="menuitem"
+                                                        tabIndex="0"
+                                                    >
+                                                        <AccountList account={account} />
+                                                        {`${currentAccount.broker_id}-${currentAccount.account}` ===
+                                                            `${account.broker_id}-${account.account}` && (
+                                                            <img src={checkImg} alt="check"></img>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )
                                 );
@@ -129,24 +146,34 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     getPopupContainer={trigger => trigger.parentElement}
                 >
                     {groupedAccountTypes.map((accType, index) => {
-                        const accText = getAccountText(accType);
-                        const accountsPerGroup = groupedAccount[accType];
+                        let accText;
+                        let accountsPerGroup = [];
+                        if (type != null && accType === type) {
+                            accText = getAccountText(accType);
+                            accountsPerGroup = groupedAccount[accType];
+                        }
 
+                        if (type == null) {
+                            accText = getAccountText(accType);
+                            accountsPerGroup = groupedAccount[accType];
+                        }
                         return (
                             !!accountsPerGroup.length && (
                                 <OptGroup label={<span className="optGroup__accType">{accText}</span>} key={index}>
-                                    {accountsPerGroup.map(account => (
-                                        <Option
-                                            value={`${account.broker_id}-${account.account}`}
-                                            key={`${account.broker_id}-${account.account}`}
-                                        >
-                                            <span className="option__accType">{accText} | </span>
-                                            <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
-                                            <span className="option__username">{`${account.bhname || ''} ${
-                                                account.username
-                                            }`}</span>
-                                        </Option>
-                                    ))}
+                                    {accountsPerGroup.map(account => {
+                                        return (
+                                            <Option
+                                                value={`${account.broker_id}-${account.account}`}
+                                                key={`${account.broker_id}-${account.account}`}
+                                            >
+                                                <span className="option__accType">{accText} | </span>
+                                                <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                                <span className="option__username">{`${account.bhname || ''} ${
+                                                    account.username
+                                                }`}</span>
+                                            </Option>
+                                        );
+                                    })}
                                 </OptGroup>
                             )
                         );
@@ -155,14 +182,18 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
             )}
 
             <style jsx>{`
+                .trading__container {
+                    display: inline-block;
+                    margin-right: 12px;
+                }
                 .account__container {
                     position: relative;
                 }
                 .account__container :global(.ant-select-selector) {
-                    border: 0;
-                    border-bottom: dashed 1px #e6ebf5;
-                    height: 36px;
-                    padding: 0 11px 0 0;
+                    border: ${tradingLayout ? '1px solid #d7e0ef' : 0};
+                    border-bottom: ${tradingLayout ? '1px solid #d7e0ef' : 'dashed 1px #e6ebf5'};
+                    height: ${tradingLayout ? '40px' : '36px'};
+                    padding: ${tradingLayout ? '0 11px 0 12px' : '0 11px 0 0'};
                     font-size: 1.6rem;
                     font-weight: 600;
                 }
@@ -182,8 +213,13 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                         background-color: ${theme.colors.darkBg};
                         height: ${listVisible ? '100%' : 'auto'};
                         position: ${listVisible ? 'absolute' : 'relative'};
-                        width: ${listVisible ? '100%' : 'auto'};
+                        width: ${listVisible ? '100%' : tradingLayout !== true ? 'auto' : 0};
                         z-index: ${listVisible ? '10' : 'auto'};
+                    }
+                    .trading__container {
+                        position: static;
+                        display: inline;
+                        background-color: white;
                     }
                     .account__container--mobile {
                         display: flex;
@@ -255,6 +291,18 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     border-color: #c43826 transparent transparent transparent;
                     pointer-events: none;
                 }
+                .trading__container .account__select:after {
+                    content: '';
+                    position: absolute;
+                    top: 16px;
+                    right: 12px;
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 7px 4.5px 0 4.5px;
+                    border-color: black transparent transparent transparent;
+                    pointer-events: none;
+                }
                 .account__container .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
                     border-color: #e6ebf5;
                 }
@@ -275,6 +323,9 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                 }
                 .account__container .ant-select-selection-item .option__account {
                     display: none;
+                }
+                .trading__container .ant-select-single.ant-select-show-arrow .ant-select-selection-item {
+                    line-height: 40px;
                 }
                 .account__container .ant-select-item.ant-select-item-group .optGroup__accType {
                     color: ${theme.colors.secondary};
@@ -302,6 +353,11 @@ export const AccountDropdown = ({ personalAreaVisible }) => {
                     width: ${dropdownWidth - 28}px !important;
                     min-width: ${dropdownWidth - 28}px !important;
                     top: 0px !important;
+                }
+                .trading__container
+                    .ant-select-focused.ant-select-single:not(.ant-select-customize-input)
+                    .ant-select-selector {
+                    border: 1px solid #d7e0ef;
                 }
             `}</style>
         </div>

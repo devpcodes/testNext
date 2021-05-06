@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import theme from '../../../resources/styles/theme';
 import { formatNum } from '../../../services/formatNum';
 
-export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }) => {
+export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle, subRender }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
 
     const getColor = styleType => {
@@ -46,13 +46,16 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
 
     return (
         <>
-            <article className="data__container">
-                <div className="title__container">
-                    <p className="data__title">{title}</p>
-                    {!isMobile && <p className="data__sub-title">{subTitle}</p>}
-                </div>
-                <div className="data__number">{formatValue(value, numberStyle)}</div>
-            </article>
+            <div>
+                <article className="data__container">
+                    <div className="title__container">
+                        <p className="data__title">{title}</p>
+                        {subTitle ? <p className="data__sub-title">{subTitle}</p> : null}
+                    </div>
+                    <div className="data__number">{formatValue(value, numberStyle)}</div>
+                </article>
+                {subRender}
+            </div>
             <style jsx>{`
                 p {
                     margin: 0;
@@ -64,7 +67,7 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
                     width: 100%;
                     margin: 16px 0;
                     padding: 28px 32px;
-                    border: solid 1px #e6ebf5;
+                    border: solid 1px #d7e0ef;
                     background-color: #f9fbff;
                 }
                 .title__container .data__title {
@@ -107,6 +110,15 @@ export const DataCard = memo(({ title, subTitle, value, styleType, numberStyle }
                         font-weight: 600;
                         text-align: left;
                     }
+                    .title__container .data__sub-title {
+                        font-size: 1.2rem;
+                    }
+                }
+                .data__container {
+                    ${subRender &&
+                    `
+                        margin-bottom: 0;
+                    `}
                 }
             `}</style>
         </>
