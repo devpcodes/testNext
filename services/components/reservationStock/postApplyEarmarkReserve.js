@@ -12,7 +12,7 @@ export const PostApplyEarmarkReserve = async ({
 }) => {
     const url = '/stp/api/applyEarmarkReserve';
     try {
-        const res = await getA8StpInstance(true).post(url, {
+        const res = await getA8StpInstance(false).post(url, {
             account,
             branch,
             symbol,
