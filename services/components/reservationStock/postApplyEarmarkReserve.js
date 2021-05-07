@@ -24,6 +24,12 @@ export const PostApplyEarmarkReserve = async ({
         console.log('res', res);
         if (res?.data?.success === true) {
             return res.data?.result || '';
+        } else {
+            var err = res.data.message || '伺服器錯誤';
+            Modal.error({
+                content: err,
+            });
+            throw err;
         }
     } catch (error) {
         console.log(error.message);
