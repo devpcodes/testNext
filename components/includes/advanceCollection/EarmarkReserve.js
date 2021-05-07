@@ -110,24 +110,28 @@ const EarmarkReserve = () => {
         );
         if (checkSignCA(ca_content)) {
             setShowLoading(true);
-            const resData = await PostApplyEarmarkReserve({
-                account: data.account,
-                branch: data.broker_id,
-                symbol,
-                order_qty: qty,
-                order_price: price,
-                token,
-                ca_content,
-            });
-            setShowLoading(false);
-            if (resData) {
-                Modal.success({
-                    content: 'success',
-                    onOk() {
-                        // dataHandler(1);
-                        // resetDataHandler();
-                    },
+            try {
+                const resData = await PostApplyEarmarkReserve({
+                    account: data.account,
+                    branch: data.broker_id,
+                    symbol,
+                    order_qty: qty,
+                    order_price: price,
+                    token,
+                    ca_content,
                 });
+                setShowLoading(false);
+                if (resData) {
+                    Modal.success({
+                        content: 'success',
+                        onOk() {
+                            // dataHandler(1);
+                            // resetDataHandler();
+                        },
+                    });
+                }
+            } catch (error) {
+                setShowLoading(false);
             }
         }
     };
