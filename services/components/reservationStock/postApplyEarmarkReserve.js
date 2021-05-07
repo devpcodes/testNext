@@ -33,6 +33,10 @@ export const PostApplyEarmarkReserve = async ({
         }
     } catch (error) {
         console.log(error.message);
+        Modal.error({
+            content: '伺服器錯誤',
+            onOk() {},
+        });
         throw error;
     }
 };

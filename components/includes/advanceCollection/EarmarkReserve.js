@@ -106,7 +106,7 @@ const EarmarkReserve = () => {
             },
             true,
             token,
-            // isWebView.current,
+            isWebView.current,
         );
         if (checkSignCA(ca_content)) {
             setShowLoading(true);
@@ -123,9 +123,8 @@ const EarmarkReserve = () => {
                 setShowLoading(false);
                 if (resData) {
                     Modal.success({
-                        content: 'success',
+                        content: resData,
                         onOk() {
-                            // dataHandler(1);
                             // resetDataHandler();
                         },
                     });
