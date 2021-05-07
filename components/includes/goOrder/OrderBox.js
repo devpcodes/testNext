@@ -32,6 +32,7 @@ const OrderBox = () => {
 
     const orderName = useRef('');
     const [submitLoading, setSubmitLoading] = useState(false);
+    const [oddToolTipVisible, setOddToolTipVisible] = useState(false);
     const platform = usePlatform();
     useEffect(() => {
         orderName.current = solaceName;
@@ -157,8 +158,18 @@ const OrderBox = () => {
             }
         }
     };
+    const oddTipVisHandler = e => {
+        if (e && e.stopPropagation) {
+            e.stopPropagation();
+        } else {
+            window.event.cancelBubble = true;
+        }
+        setOddToolTipVisible(prevState => {
+            return !prevState;
+        });
+    };
     return (
-        <>
+        <div onClick={oddTipVisHandler}>
             <div className="trade__info--title">
                 <div className="info__box">
                     <div className="stock__name">{orderName.current}</div>
@@ -194,8 +205,9 @@ const OrderBox = () => {
                             </>
                         }
                         color="white"
+                        visible={oddToolTipVisible}
                     >
-                        <div className="oddDescription">
+                        <div className="oddDescription" onClick={oddTipVisHandler}>
                             <img src={bs === 'B' ? infoIcon : infoIconSell} />
                             零股交易手續費
                         </div>
@@ -351,7 +363,7 @@ const OrderBox = () => {
                     vertical-align: top;
                 }
             `}</style>
-        </>
+        </div>
     );
 };
 
