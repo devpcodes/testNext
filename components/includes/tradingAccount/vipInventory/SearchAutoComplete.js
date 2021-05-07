@@ -50,6 +50,10 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = fals
     };
 
     const changeHandler = val => {
+        const patt = /^[\s-+a-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
+        if (!patt.test(val)) {
+            return;
+        }
         setValue(val);
         if (val === '') {
             setProducts([]);

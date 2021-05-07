@@ -7,6 +7,7 @@ import EarmarkReserve from '../components/includes/advanceCollection/EarmarkRese
 const initState = reducers();
 export const ReducerContext = createContext();
 
+const { Option } = Select;
 // 有獨立全局狀態不是redux
 const AdvanceCollection = function () {
     const [selectOption, setSelectOption] = useState('earmarkReserve');

@@ -1,24 +1,146 @@
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import { Tabs, Button, Input, Progress, Modal, notification } from 'antd';
+import { useRouter } from 'next/router';
+import jwt_decode from 'jwt-decode';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
+import { getToken } from '../../../services/user/accessToken';
 import Accounts from './Accounts';
 import SearchAutoComplete from '../tradingAccount/vipInventory/SearchAutoComplete';
 import BuyButton from '../tradingAccount/vipInventory/buttons/BuyButton';
+import { fetchSnapshot } from '../../../services/stock/fetchSnapshot';
+import { formatPriceByUnit } from '../../../services/numFormat';
+import { sign, checkSignCA, CAHandler, signCert } from '../../../services/webCa';
+import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
+import { PostApplyEarmarkReserve } from '../../../services/components/reservationStock/postApplyEarmarkReserve';
+import LoadingComp from './LoadingComp';
+
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
+    const [priceVal, setPriceVal] = useState('');
+    const [qtyVal, setQtyVal] = useState('');
+    const [amountVal, setAmountVal] = useState('');
+    const [showLoading, setShowLoading] = useState(false);
     const init = useRef(false);
-
+    const selectSymbol = useRef('');
+    const isWebView = useRef(false);
+    const router = useRouter();
+    useEffect(() => {
+        if (state.accountsReducer.disabled) {
+            notification.warning({
+                message: state.accountsReducer.disabled,
+                top: '100px',
+            });
+        }
+    }, [state.accountsReducer.disabled]);
     useEffect(() => {
         if (!init.current) {
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             init.current = true;
         }
     }, [state.accountsReducer.selected]);
-    const selectHandler = useCallback(() => {});
-    const onSeChangeHandler = useCallback(() => {});
+    useEffect(() => {
+        if (router.query.iswebview === 'true') {
+            isWebView.current = true;
+        }
+    }, [router.query]);
+
+    useEffect(() => {
+        if (priceVal && qtyVal) {
+            let amount = priceVal * qtyVal * (1 + 0.001425);
+            setAmountVal(amount.toFixed(0));
+        }
+    }, [priceVal, qtyVal]);
+
+    const selectHandler = useCallback(async val => {
+        const symbol = val.split(' ')[0];
+        try {
+            const res = await fetchSnapshot([symbol]);
+            if (Array.isArray(res) && res.length > 0) {
+                if (res[0].UpLimit == 9999.95) {
+                    setPriceVal(formatPriceByUnit(symbol, res[0].Close * 1.2));
+                } else {
+                    setPriceVal(formatPriceByUnit(symbol, res[0].UpLimit));
+                }
+                selectSymbol.current = symbol;
+            }
+        } catch (error) {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
+    });
+    const onSeChangeHandler = useCallback(val => {});
     const changleHandler = useCallback(() => {});
+    const priceChangeHandler = useCallback(e => {
+        if (validateVal(e.target.value)) {
+            setPriceVal(e.target.value);
+        }
+    });
+    const qtyChangeHandler = useCallback(e => {
+        if (validateVal(e.target.value)) {
+            setQtyVal(e.target.value);
+        }
+    });
+    const amountChangeHandler = useCallback(e => {
+        if (validateVal(e.target.value)) {
+            setAmountVal(e.target.value);
+        }
+    });
+    const validateVal = useCallback(val => {
+        const patt = /^[0-9\.]{0,20}$/;
+        if (!patt.test(val)) {
+            return false;
+        }
+        return true;
+    });
+    const submitHandler = async (symbol, price, qty, amount) => {
+        const token = getToken();
+        let data = getAccountsDetail(token);
+        let ca_content = sign(
+            {
+                idno: data.idno,
+                broker_id: data.broker_id,
+                account: data.account,
+            },
+            true,
+            token,
+            // isWebView.current,
+        );
+        if (checkSignCA(ca_content)) {
+            setShowLoading(true);
+            const resData = await PostApplyEarmarkReserve({
+                account: data.account,
+                branch: data.broker_id,
+                symbol,
+                order_qty: qty,
+                order_price: price,
+                token,
+                ca_content,
+            });
+            setShowLoading(false);
+            if (resData) {
+                Modal.success({
+                    content: 'success',
+                    onOk() {
+                        // dataHandler(1);
+                        // resetDataHandler();
+                    },
+                });
+            }
+        }
+    };
+    const getAccountsDetail = token => {
+        let data = jwt_decode(token);
+        data = data.acts_detail.filter(item => {
+            if (item.account === state.accountsReducer.selected.account) {
+                return true;
+            }
+        });
+        return data[0] || {};
+    };
+
     return (
         <>
             <div className="earmarkReserve__container">
@@ -41,15 +163,30 @@ const EarmarkReserve = () => {
                             </div>
                             <div className="item">
                                 <p className="label">委託價</p>
-                                <Input className="earmark__inp" />
+                                <Input
+                                    onChange={priceChangeHandler}
+                                    placeholder="請輸入數字"
+                                    className="earmark__inp"
+                                    value={priceVal}
+                                />
                             </div>
                             <div className="item">
                                 <p className="label">股數</p>
-                                <Input className="earmark__inp" />
+                                <Input
+                                    placeholder="請輸入數字"
+                                    className="earmark__inp"
+                                    onChange={qtyChangeHandler}
+                                    value={qtyVal}
+                                />
                             </div>
                             <div className="item">
                                 <p className="label">預估金額</p>
-                                <Input className="earmark__inp" />
+                                <Input
+                                    placeholder="請輸入數字"
+                                    className="earmark__inp"
+                                    onChange={amountChangeHandler}
+                                    value={amountVal}
+                                />
                             </div>
                             <div className="btn__box-earmark">
                                 <BuyButton
@@ -58,6 +195,13 @@ const EarmarkReserve = () => {
                                     height={'40px'}
                                     fontSize={'16px'}
                                     color={'rgb(210, 55, 73)'}
+                                    onClick={submitHandler.bind(
+                                        null,
+                                        selectSymbol.current,
+                                        priceVal,
+                                        qtyVal,
+                                        amountVal,
+                                    )}
                                 />
                             </div>
                         </div>
@@ -65,6 +209,7 @@ const EarmarkReserve = () => {
                     <TabPane tab="預收款項查詢" key="2"></TabPane>
                 </Tabs>
             </div>
+            <LoadingComp showLoading={showLoading} />
             <style jsx>{`
                 .earmarkReserve__container {
                     margin: 20px auto 0 auto;
@@ -107,6 +252,28 @@ const EarmarkReserve = () => {
                     width: 80px;
                     padding-top: 28px;
                     margin-left: 20px;
+                }
+                @media (max-width: 768px), print {
+                    .item {
+                        display: block;
+                        width: 100%;
+                        margin-bottom: 10px;
+                    }
+                    .item :not(:first-child) {
+                        margin-left: 0;
+                    }
+                    .apply__container {
+                        margin-top: 20px;
+                    }
+                    .btn__box-earmark {
+                        padding-top: 0;
+                        margin: 0;
+                        margin-top: 20px;
+                        width: 100%;
+                    }
+                    .apply__container {
+                        height: 500px;
+                    }
                 }
             `}</style>
             <style global jsx>{`
@@ -166,11 +333,20 @@ const EarmarkReserve = () => {
                     /* line-height: 36px; */
                     line-height: 36px;
                 }
+                .autoComplete__container
+                    .ant-select-single:not(.ant-select-customize-input)
+                    .ant-select-selector
+                    .ant-select-selection-search-input {
+                    font-size: 1.6rem;
+                    color: #292929;
+                }
 
                 .earmark__inp.ant-input {
                     display: inline-block;
                     height: 38px;
                     border: 1px solid #757575;
+                    font-size: 1.6rem;
+                    color: #292929;
                 }
             `}</style>
         </>
