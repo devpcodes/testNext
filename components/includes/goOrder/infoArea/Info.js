@@ -690,7 +690,7 @@ export const Info = ({ stockid }) => {
                     position: absolute;
                     padding: 0 16px 12px 16px;
                     width: 100%;
-                    z-index: 1001;
+                    z-index: 600;
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
                 .more__info__container .information__box {
@@ -716,7 +716,7 @@ export const Info = ({ stockid }) => {
                     right: 0;
                     bottom: 0;
                     left: 0;
-                    z-index: 1000;
+                    z-index: 500;
                     height: calc(100% - 230px);
                     background-color: rgb(0 0 0 / 30%);
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
