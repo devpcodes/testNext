@@ -13,6 +13,7 @@ import { sign, checkSignCA, CAHandler, signCert } from '../../../services/webCa'
 import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
 import { PostApplyEarmarkReserve } from '../../../services/components/reservationStock/postApplyEarmarkReserve';
 import LoadingComp from './LoadingComp';
+import EarmarkTable from './EarmarkTable';
 
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
@@ -25,6 +26,7 @@ const EarmarkReserve = () => {
     const init = useRef(false);
     const selectSymbol = useRef('');
     const isWebView = useRef(false);
+    const [activeTabKey, setActiveTabKey] = useState('1');
     const router = useRouter();
     useEffect(() => {
         if (state.accountsReducer.disabled) {
@@ -40,6 +42,7 @@ const EarmarkReserve = () => {
             init.current = true;
         }
     }, [state.accountsReducer.selected]);
+
     useEffect(() => {
         if (router.query.iswebview === 'true') {
             isWebView.current = true;
@@ -72,7 +75,12 @@ const EarmarkReserve = () => {
         }
     });
     const onSeChangeHandler = useCallback(val => {});
-    const changleHandler = useCallback(() => {});
+    const changleHandler = useCallback(activeKey => {
+        setActiveTabKey(activeKey);
+        if (state.accountsReducer.selected) {
+            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        }
+    });
     const priceChangeHandler = useCallback(e => {
         if (validateVal(e.target.value)) {
             setPriceVal(e.target.value);
@@ -96,6 +104,12 @@ const EarmarkReserve = () => {
         return true;
     });
     const submitHandler = async (symbol, price, qty, amount) => {
+        if (!symbol || !price || !qty) {
+            Modal.error({
+                content: '資料輸入未完整',
+            });
+            return;
+        }
         const token = getToken();
         let data = getAccountsDetail(token);
         let ca_content = sign(
@@ -209,7 +223,10 @@ const EarmarkReserve = () => {
                             </div>
                         </div>
                     </TabPane>
-                    <TabPane tab="預收款項查詢" key="2"></TabPane>
+                    <TabPane tab="預收款項查詢" key="2">
+                        <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
+                        {activeTabKey === '2' && <EarmarkTable />}
+                    </TabPane>
                 </Tabs>
             </div>
             <LoadingComp showLoading={showLoading} />
