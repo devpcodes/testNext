@@ -246,9 +246,22 @@ export const Info = ({ stockid }) => {
         }
     }, [selectInfo]);
 
+    const updateQueryStringParameter = (uri, key, value) => {
+        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+        var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + '=' + value + '$2');
+        } else {
+            return uri + separator + key + '=' + value;
+        }
+    };
+
     const loginClickHandler = () => {
         const query = router.query;
-        const queryStr = objectToQueryHandler(query);
+        let queryStr = objectToQueryHandler(query);
+        if (code) {
+            queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
+        }
         window.location =
             `${process.env.NEXT_PUBLIC_SUBPATH}` +
             `/SinoTrade_login${queryStr}` +
@@ -520,7 +533,7 @@ export const Info = ({ stockid }) => {
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
                     <button className="btn add__self__select" onClick={isLogin ? showSelfSelect : loginClickHandler}>
-                        {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '登入'}
+                        {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
                     </button>
                 </div>
             </div>
@@ -690,7 +703,7 @@ export const Info = ({ stockid }) => {
                     position: absolute;
                     padding: 0 16px 12px 16px;
                     width: 100%;
-                    z-index: 600;
+                    z-index: 1300;
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
                 .more__info__container .information__box {
@@ -716,7 +729,7 @@ export const Info = ({ stockid }) => {
                     right: 0;
                     bottom: 0;
                     left: 0;
-                    z-index: 500;
+                    z-index: 1200;
                     height: calc(100% - 230px);
                     background-color: rgb(0 0 0 / 30%);
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};

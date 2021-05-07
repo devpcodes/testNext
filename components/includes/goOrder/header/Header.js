@@ -36,7 +36,7 @@ const Header = () => {
     // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
     const { isLogin } = useUser();
     const { socalLogin } = useCheckSocialLogin();
-
+    const code = useSelector(store => store.goOrder.code);
     const hasMounted = useHasMounted();
 
     const dispatch = useDispatch();
@@ -130,9 +130,22 @@ const Header = () => {
         dispatch(setCurrentAccount(account));
     };
 
+    const updateQueryStringParameter = (uri, key, value) => {
+        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+        var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + '=' + value + '$2');
+        } else {
+            return uri + separator + key + '=' + value;
+        }
+    };
+
     const loginClickHandler = () => {
         const query = router.query;
-        const queryStr = objectToQueryHandler(query);
+        let queryStr = objectToQueryHandler(query);
+        if (code) {
+            queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
+        }
         window.location =
             `${process.env.NEXT_PUBLIC_SUBPATH}` +
             `/SinoTrade_login${queryStr}` +
