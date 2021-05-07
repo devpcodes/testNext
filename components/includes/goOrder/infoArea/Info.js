@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
 import { InfoBox } from './InfoBox';
+import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
 import AddSelectStock from '../selfSelectStock/AddSelectStock';
 
 import {
@@ -239,6 +240,35 @@ export const Info = ({ stockid }) => {
         setInfoItems(code);
     }, [code]);
 
+    useEffect(() => {
+        if (selectInfo) {
+            reloadSelfSelectSmallIcon();
+        }
+    }, [selectInfo]);
+
+    const loginClickHandler = () => {
+        const query = router.query;
+        const queryStr = objectToQueryHandler(query);
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
+    };
+
+    const reloadSelfSelectSmallIcon = useCallback(() => {
+        const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
+        const index = cloneMoreItems.findIndex(obj => obj.id === '4');
+        if (cloneMoreItems[index]) {
+            if (selectInfo.isExist) {
+                cloneMoreItems[index].text = '❤ 自選';
+            } else {
+                cloneMoreItems[index].text = '+ 自選';
+            }
+            setMoreItems(cloneMoreItems);
+        }
+    });
+
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
         dispatch(setLot(nextLot));
@@ -364,6 +394,9 @@ export const Info = ({ stockid }) => {
         // { id: '6', color: 'brown', text: '+ 自選' },
 
         const t30Res = await fetchStockT30(code);
+        // const test = await fetchGetRichClubReport(code);
+        // console.log(test)
+
         let moreItems = [
             {
                 id: '1',
@@ -486,8 +519,8 @@ export const Info = ({ stockid }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
-                        加入自選
+                    <button className="btn add__self__select" onClick={isLogin ? showSelfSelect : loginClickHandler}>
+                        {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '登入'}
                     </button>
                 </div>
             </div>
@@ -654,7 +687,6 @@ export const Info = ({ stockid }) => {
                     background: #fff;
                     display: block;
                     left: 0;
-                    margin-top: 12px;
                     position: absolute;
                     padding: 0 16px 12px 16px;
                     width: 100%;

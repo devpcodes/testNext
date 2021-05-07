@@ -58,7 +58,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
         const res = await fetchupdateSelectStock(reqData, isSocalLogin, token);
         handleCancel();
         if (res.success === true && res.message === 'OK') {
-            message.success('自選編輯成功');
+            message.success('成功編輯自選');
         }
     };
 
@@ -244,7 +244,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                 }
                 .ant-checkbox-group-item {
                     display: block;
-                    padding: 4px 0;
+                    padding: 11px 0;
+                    font-size: 1.6rem;
+                    color: #0d1623;
                 }
             `}</style>
         </>

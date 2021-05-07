@@ -60,6 +60,10 @@ export const InfoBox = memo(({ code, t30Data, moreItems }) => {
                     margin: 2px 0 2px 8px;
                 }
 
+                .information__items__text {
+                    font-size: 1.2rem;
+                }
+
                 .information__items__icon.dark {
                     color: ${theme.colors.darkBg};
                     background-color: rgba(13, 22, 35, 0.1);
