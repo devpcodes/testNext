@@ -15,6 +15,7 @@ import { usePlatform } from '../../../hooks/usePlatform';
 const OrderBox = () => {
     const dispatch = useDispatch();
     const solaceName = useSelector(store => store.goOrder.productInfo.solaceName);
+    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const bs = useSelector(store => store.goOrder.bs);
     const lot = useSelector(store => store.goOrder.lot);
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
@@ -90,7 +91,7 @@ const OrderBox = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        const market_id = 'S';
+        const market_id = market === '上市' ? 'S' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
         const ord_price = ordPrice;

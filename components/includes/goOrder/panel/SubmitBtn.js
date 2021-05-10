@@ -56,7 +56,7 @@ const SubmitBtn = () => {
     const stockId = useSelector(store => store.goOrder.code);
     const is_first_sell = useSelector(store => store.goOrder.is_first_sell);
     const resetData = useSelector(store => store.goOrder.resetData);
-
+    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
         let capitalPercent = T30Data['資成數'] == null ? 0 : T30Data['資成數'] / 10;
@@ -173,7 +173,7 @@ const SubmitBtn = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        const market_id = 'S';
+        const market_id = market === '上市' ? 'S' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
         const ord_price = ordPrice;
