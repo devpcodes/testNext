@@ -143,11 +143,12 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
             },
             {
                 title: '今餘',
-                dataIndex: 'tranqty',
-                key: 'tranqty',
+                dataIndex: 'rqty',
+                key: 'rqty',
                 align: 'right',
                 render: (text, record) => {
-                    return formatNum(record.preqty + text + record.bqty - record.sqty, 0);
+                    // return formatNum(record.preqty + text + record.bqty - record.sqty, 0);
+                    return formatNum(text);
                 },
             },
             {
@@ -162,14 +163,24 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                             <BuyButton
                                 text={'買進'}
                                 onClick={() => {
+                                    let qty;
+                                    let marketType = '';
+                                    if (record.rqty % 1000 == 0) {
+                                        qty = record.rqty / 1000;
+                                    } else {
+                                        qty = record.rqty;
+                                        marketType = 'Z';
+                                    }
                                     openGoOrder(
                                         {
                                             stockid: record.stock,
                                             bs: 'B',
-                                            qty: parseInt(
-                                                Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
-                                                    1000,
-                                            ),
+                                            qty: qty,
+                                            marketType,
+                                            // qty: parseInt(
+                                            //     Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
+                                            //         1000,
+                                            // ),
                                         },
                                         isMobile,
                                         router,
@@ -179,14 +190,24 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
                             <SellButton
                                 text={'賣出'}
                                 onClick={() => {
+                                    let qty;
+                                    let marketType = '';
+                                    if (record.rqty % 1000 == 0) {
+                                        qty = record.rqty / 1000;
+                                    } else {
+                                        qty = record.rqty;
+                                        marketType = 'Z';
+                                    }
                                     openGoOrder(
                                         {
                                             stockid: record.stock,
                                             bs: 'S',
-                                            qty: parseInt(
-                                                Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
-                                                    1000,
-                                            ),
+                                            qty: qty,
+                                            marketType,
+                                            // qty: parseInt(
+                                            //     Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
+                                            //         1000,
+                                            // ),
                                         },
                                         isMobile,
                                         router,
