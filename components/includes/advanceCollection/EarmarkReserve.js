@@ -14,7 +14,7 @@ import { postApplyEarmark } from '../../../services/components/reservationStock/
 import { PostApplyEarmarkReserve } from '../../../services/components/reservationStock/postApplyEarmarkReserve';
 import LoadingComp from './LoadingComp';
 import EarmarkTable from './EarmarkTable';
-
+import Msg from './Msg';
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
     const [state, dispatch] = useContext(ReducerContext);
@@ -52,7 +52,8 @@ const EarmarkReserve = () => {
     useEffect(() => {
         if (priceVal && qtyVal) {
             let amount = priceVal * qtyVal * (1 + 0.001425);
-            setAmountVal(amount.toFixed(0));
+            // setAmountVal(amount.toFixed(0));
+            setAmountVal(Math.ceil(amount));
         }
     }, [priceVal, qtyVal]);
 
@@ -220,11 +221,59 @@ const EarmarkReserve = () => {
                                     disabled={state.accountsReducer.disabled}
                                 />
                             </div>
+                            <Msg
+                                style={{ marginTop: '30px' }}
+                                list={[
+                                    { txt: '「注意事項」' },
+                                    { txt: '1. 委託價：預設值由系統帶出，但可自行修改欲委託價格' },
+                                    {
+                                        html:
+                                            '<p style="color: #e46262;">&nbsp;&nbsp;&nbsp;&nbsp;系統帶出：為漲停價。(限上市櫃股票,無漲跌幅股票以平盤參考價20%)</p>',
+                                    },
+                                    { txt: '2. 股數：自行輸入欲委託的股數' },
+                                    {
+                                        txt: '3. 預估金額：委託價×股數×(1+手續費率)，但可自行修改預收金額',
+                                    },
+                                    { html: '<p>&nbsp;&nbsp;&nbsp;&nbsp;手續費率以0.1425%計算</p>' },
+                                    { txt: '4. 預收款項時間為交易日8:00~14:30，當日有效' },
+                                    { txt: '5. 本功能僅限交割銀行為永豐銀行之客戶可使用' },
+                                    {
+                                        txt:
+                                            '6. 逐筆申請：點選[申請]後，請至[預收款項查詢]點選[查詢]確認已完成此筆金額預收後，再進行下一筆申請',
+                                        color: '#e46262',
+                                    },
+                                    {
+                                        txt: '7. 至[預收款項查詢]點選[查詢]確認已完成預收款項申請後，再進行委託下單',
+                                        color: '#e46262',
+                                    },
+                                ]}
+                            />
                         </div>
                     </TabPane>
                     <TabPane tab="預收款項查詢" key="2">
                         <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
                         {activeTabKey === '2' && <EarmarkTable />}
+                        <Msg
+                            style={{ marginTop: '30px' }}
+                            list={[
+                                { txt: '「注意事項」' },
+                                { txt: '1. 預收款項時間台股交易日8:00~14:30，當日有效' },
+                                { txt: '2. 本功能僅限交割銀行為永豐銀行之客戶可使用' },
+                                {
+                                    txt:
+                                        '3. 於[預收款項申請]點選[申請]後，請至[預收款項查詢]點選[查詢]確認已完成此筆金額預收後，再進行下一筆申請',
+                                    color: '#e46262',
+                                },
+                                {
+                                    txt: '4. 於[預收款項查詢]點選[查詢]確認已完成預收款項申請後，再進行委託下單',
+                                    color: '#e46262',
+                                },
+                                { txt: '5. 返還金額於交易日返還' },
+                                {
+                                    txt: '6. 人工預收金額請洽原分公司確認',
+                                },
+                            ]}
+                        />
                     </TabPane>
                 </Tabs>
             </div>
@@ -248,7 +297,7 @@ const EarmarkReserve = () => {
                 .apply__container {
                     padding-left: 2px;
                     margin-top: 40px;
-                    height: 400px;
+                    /* height: 500px; */
                 }
                 .label {
                     font-size: 16px;
@@ -291,7 +340,7 @@ const EarmarkReserve = () => {
                         width: 100%;
                     }
                     .apply__container {
-                        height: 500px;
+                        /* height: 500px; */
                     }
                 }
             `}</style>
