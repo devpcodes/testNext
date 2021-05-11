@@ -37,6 +37,10 @@ const OrderBox = () => {
     const platform = usePlatform();
     useEffect(() => {
         orderName.current = solaceName;
+        document.body.addEventListener('click', oddTipVisHandler);
+        return () => {
+            document.body.removeEventListener('click', oddTipVisHandler);
+        };
     }, []);
 
     const closeHandler = () => {
@@ -160,17 +164,21 @@ const OrderBox = () => {
         }
     };
     const oddTipVisHandler = e => {
-        if (e && e.stopPropagation) {
-            e.stopPropagation();
+        if (e.target.textContent.indexOf('零股交易手續費') >= 0) {
+            if (e && e.stopPropagation) {
+                e.stopPropagation();
+            } else {
+                window.event.cancelBubble = true;
+            }
+            setOddToolTipVisible(prevState => {
+                return !prevState;
+            });
         } else {
-            window.event.cancelBubble = true;
+            setOddToolTipVisible(false);
         }
-        setOddToolTipVisible(prevState => {
-            return !prevState;
-        });
     };
     return (
-        <div onClick={oddTipVisHandler}>
+        <div>
             <div className="trade__info--title">
                 <div className="info__box">
                     <div className="stock__name">{orderName.current}</div>

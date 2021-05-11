@@ -396,7 +396,7 @@ const PriceControl = ({ title }) => {
                 }
                 .price_control .ant-input-focused,
                 .ant-input:focus {
-                    box-shadow: none;
+                    /* box-shadow: none; */
                 }
                 .price_control .ant-input {
                     height: 46px;
