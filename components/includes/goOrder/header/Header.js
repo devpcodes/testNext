@@ -164,7 +164,8 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
+            window.location.reload();
+            // window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
         } catch (error) {
             console.error(`logout error:`, error);
         }
