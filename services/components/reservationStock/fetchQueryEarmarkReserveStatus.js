@@ -5,7 +5,7 @@ export const fetchQueryEarmarkReserveStatus = async ({ account, branch, token })
     try {
         const url = `/stp/api/queryEarmarkReserveStatus`;
         // const baseUrl = 'https://servicerd.sinotrade.com.tw';
-        const res = await getA8StpInstance(true).post(url, {
+        const res = await getA8StpInstance(false).post(url, {
             token,
             branch,
             account,
@@ -15,16 +15,12 @@ export const fetchQueryEarmarkReserveStatus = async ({ account, branch, token })
             // return res.data?.result?.unreal_sums?.unreal_sum ?? [];
             return res.data?.result;
         } else {
-            var err = res.data.message || '伺服器錯誤';
-            Modal.error({
-                content: err,
-            });
-            throw err;
+            // var err = res.data.message || '伺服器錯誤';
+            throw res.data.message || '伺服器錯誤';
         }
     } catch (error) {
-        // return '伺服器錯誤';
         Modal.error({
-            title: '伺服器錯誤',
+            title: error,
         });
         throw error;
     }

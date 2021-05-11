@@ -69,9 +69,7 @@ const EarmarkReserve = () => {
                 selectSymbol.current = symbol;
             }
         } catch (error) {
-            Modal.error({
-                title: '伺服器錯誤',
-            });
+            console.log(error);
         }
     });
     const onSeChangeHandler = useCallback(val => {});
@@ -219,6 +217,7 @@ const EarmarkReserve = () => {
                                         qtyVal,
                                         amountVal,
                                     )}
+                                    disabled={state.accountsReducer.disabled}
                                 />
                             </div>
                         </div>

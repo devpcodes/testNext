@@ -83,7 +83,8 @@ const EarmarkTable = () => {
                 setData(resData);
             }
         } catch (err) {
-            console.log(err);
+            setDataLoading(false);
+            setData([]);
         }
     };
     const getAccountsDetail = token => {
