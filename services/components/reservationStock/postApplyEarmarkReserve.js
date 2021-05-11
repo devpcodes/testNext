@@ -26,16 +26,12 @@ export const PostApplyEarmarkReserve = async ({
             return res.data?.result || '';
         } else {
             var err = res.data.message || '伺服器錯誤';
-            Modal.error({
-                content: err,
-            });
             throw err;
         }
     } catch (error) {
-        console.log(error.message);
+        console.log(error.data);
         Modal.error({
-            content: '伺服器錯誤',
-            onOk() {},
+            title: error || '伺服器錯誤',
         });
         throw error;
     }

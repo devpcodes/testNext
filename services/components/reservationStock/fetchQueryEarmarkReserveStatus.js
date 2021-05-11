@@ -20,7 +20,7 @@ export const fetchQueryEarmarkReserveStatus = async ({ account, branch, token })
         }
     } catch (error) {
         Modal.error({
-            title: error,
+            title: error || '伺服器錯誤',
         });
         throw error;
     }
