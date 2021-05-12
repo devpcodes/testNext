@@ -15,7 +15,7 @@ import {
     priceColor,
     getArrow,
     toDecimal,
-    formatPrice,
+    formatPriceByUnit,
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
@@ -385,10 +385,10 @@ export const Info = ({ stockid }) => {
         if (close === 0) {
             return '--';
         }
-        return `${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(close, reference)} ${simTradeHandler(
-            trimMinus(toDecimal(diffPrice)),
-            isSimTrade,
-        )} (${trimMinus(toDecimal(diffRate))}%)`;
+        return `${simTradeHandler(formatPriceByUnit(code, close), isSimTrade)} ${getArrow(
+            close,
+            reference,
+        )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(toDecimal(diffRate))}%)`;
     };
 
     const getVolume = volSum => {
