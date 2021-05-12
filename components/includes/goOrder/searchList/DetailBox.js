@@ -5,6 +5,7 @@ import {
     mappingWebId,
     mappingPriceMsg,
     mappingStatusMsg,
+    mappingCommissionedCodeTradingAcc,
     mappingShowChangeBtn,
 } from '../../../../services/components/goOrder/dataMapping';
 import { timeFormatter } from '../../../../services/timeFormatter';
@@ -60,8 +61,15 @@ const DetailBox = () => {
                             placement="bottom"
                             title={
                                 <>
-                                    <span>委託時間</span>
-                                    <span className="tooltip__val">{timeFormatter(info.ord_time, false)}</span>
+                                    <span>買賣條件</span>
+                                    <span className="tooltip__val">
+                                        {mappingCommissionedCodeTradingAcc(
+                                            info.ord_bs,
+                                            info.ord_type2,
+                                            info.market_id,
+                                            info.ord_type1,
+                                        )}
+                                    </span>
                                     <br />
                                     <span>委託條件 </span>
                                     <span className="tooltip__val">{info.time_in_force}</span>
@@ -121,6 +129,10 @@ const DetailBox = () => {
                             <span className="item__label">委託時間</span>
                             <span className="item__val">{timeFormatter(info.ord_time, false)}</span>
                         </div>
+                    </div>
+                    <div className="item">
+                        <span className="item__label">失敗原因</span>
+                        <span className="item__val">{info.errmsg.trim()}</span>
                     </div>
                 </div>
                 <div className="btn__container">

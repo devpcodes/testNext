@@ -78,7 +78,11 @@ const ChTradingInfoBox = () => {
                     font-weight: bold;
                 }
                 .trading__container .ant-tabs-tab.ant-tabs-tab-active {
-                    background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, #eaf1ff);
+                    // background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, #eaf1ff);
+                    background: linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
+                    background: -moz-linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
+                    background: -webkit-linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
+                    background: -o-linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
                 }
             `}</style>
         </div>

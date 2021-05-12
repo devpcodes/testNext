@@ -154,16 +154,16 @@ const PriceControl = ({ title }) => {
     };
 
     const priceChangeHandler = e => {
-        var regex;
-        if (title === '張數' || title === '股數') {
-            regex = /^[0-9/]*$/;
-        } else {
-            regex = /^[0-9/.]*$/;
-        }
+        // var regex;
+        // if (title === '張數' || title === '股數') {
+        //     regex = /^[0-9/]*$/;
+        // } else {
+        //     regex = /^[0-9/.]*$/;
+        // }
 
-        if (!regex.test(e.target.value)) {
-            return;
-        }
+        // if (!regex.test(e.target.value)) {
+        //     return;
+        // }
         if (title === '張數' || title === '股數') {
             dispatch(setOrdQty(e.target.value));
         } else {
@@ -288,6 +288,7 @@ const PriceControl = ({ title }) => {
                     value={title === '限價' ? getPriceValHandler() : ordQty}
                     onChange={priceChangeHandler}
                     onFocus={focusHandler}
+                    type="number"
                 />
             </div>
             <div className="btn__box">

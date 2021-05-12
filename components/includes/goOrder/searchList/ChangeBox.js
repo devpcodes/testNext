@@ -7,6 +7,7 @@ import {
     mappingCommissionedCode,
     mappingWebId,
     mappingIspreOrder,
+    mappingCommissionedCodeTradingAcc,
     padLeft,
 } from '../../../../services/components/goOrder/dataMapping';
 import { timeFormatter } from '../../../../services/timeFormatter';
@@ -253,8 +254,15 @@ const ChangeBox = ({ type, tabKey }) => {
                             placement="bottom"
                             title={
                                 <>
-                                    <span>委託時間</span>
-                                    <span className="tooltip__val">{timeFormatter(info.ord_time, false)}</span>
+                                    <span>買賣條件</span>
+                                    <span className="tooltip__val">
+                                        {mappingCommissionedCodeTradingAcc(
+                                            info.ord_bs,
+                                            info.ord_type2,
+                                            info.market_id,
+                                            info.ord_type1,
+                                        )}
+                                    </span>
                                     <br />
                                     <span>委託條件 </span>
                                     <span className="tooltip__val">{info.time_in_force}</span>
