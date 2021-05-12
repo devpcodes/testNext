@@ -76,3 +76,10 @@ export const setRecaptchaReady = bool => {
         payload: true,
     };
 };
+
+export const setModal = options => {
+    return {
+        type: actionType.SET_MODAL,
+        payload: options,
+    };
+};
