@@ -1,4 +1,5 @@
 import { trim } from 'lodash';
+import { getStockPriceRange, getStockType } from './stockTickType';
 
 // 強制小數點n位
 export function toDecimal(x, n = 2, replaceStr = null) {
@@ -84,6 +85,27 @@ export const formatPrice = (price, replace) => {
     } else {
         return num.toString();
     }
+};
+
+export const formatPriceByUnit = (stock_id, price, replace) => {
+    const type = getStockType(stock_id || '').type;
+    const num = Number(price);
+    if (num == 0 && replace != null) {
+        return replace;
+    }
+    if (isNaN(num)) {
+        return price;
+    }
+
+    const unit = getStockPriceRange(type, num, true);
+    const arr = String(unit).split('.');
+    let len = 0;
+    if (arr.length > 1) {
+        len = arr[1].length;
+    } else {
+        len = 0;
+    }
+    return num.toFixed(len);
 };
 
 // 去掉數字的減號
