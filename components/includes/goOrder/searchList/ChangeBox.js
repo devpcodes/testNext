@@ -11,7 +11,7 @@ import {
     padLeft,
 } from '../../../../services/components/goOrder/dataMapping';
 import { timeFormatter } from '../../../../services/timeFormatter';
-import { formatPrice } from '../../../../services/numFormat';
+import { formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
 import infoIcon from '../../../../resources/images/components/goOrder/attention-info-circle.svg';
 import { postUpdatePrice } from '../../../../services/components/goOrder/postUpdatePrice';
@@ -30,6 +30,7 @@ const qtyUnit = 1;
 const ChangeBox = ({ type, tabKey }) => {
     const dispatch = useDispatch();
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
+    const code = useSelector(store => store.goOrder.code);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [priceVal, setPriceVal] = useState('');
     const [qtyVal, setQtyVal] = useState('');
@@ -79,7 +80,7 @@ const ChangeBox = ({ type, tabKey }) => {
         }
         const type = getStockType(info.stock_id || '').type;
         const unit = getStockPriceRange(type, priceVal, true);
-        setPriceVal(formatPrice(parseFloat(priceVal) + unit));
+        setPriceVal(formatPriceByUnit(code, parseFloat(priceVal) + unit));
     };
 
     const minusPriceHandler = () => {
@@ -90,9 +91,9 @@ const ChangeBox = ({ type, tabKey }) => {
         const type = getStockType(info.stock_id || '').type;
         const unit = getStockPriceRange(type, priceVal, true);
         if (parseFloat(priceVal) - unit <= unit) {
-            setPriceVal(formatPrice(unit));
+            setPriceVal(formatPriceByUnit(code, unit));
         } else {
-            setPriceVal(formatPrice(parseFloat(priceVal) - unit));
+            setPriceVal(formatPriceByUnit(code, parseFloat(priceVal) - unit));
         }
     };
 

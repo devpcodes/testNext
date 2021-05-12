@@ -6,7 +6,7 @@ import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { postOrder } from '../../../../services/components/goOrder/postOrder';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { formatNum } from '../../../../services/formatNum';
-import { formatPrice } from '../../../../services/numFormat';
+import { formatPriceByUnit } from '../../../../services/numFormat';
 import { getTransactionCost } from '../../../../services/stock/transactionCost';
 import { getToken } from '../../../../services/user/accessToken';
 import { checkSignCA, sign } from '../../../../services/webCa';
@@ -97,7 +97,7 @@ const SubmitBtn = () => {
             //確認切回整股後取當時現價
             setTimeout(() => {
                 if (solaceData.length > 0 && lot === 'Board') {
-                    dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.Close[0])));
+                    dispatch(setDefaultOrdPrice(formatPriceByUnit(code, solaceData[0].data.Close[0])));
                     // if(lot === 'Board'){
                     //     dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.Close[0])))
                     // }else{

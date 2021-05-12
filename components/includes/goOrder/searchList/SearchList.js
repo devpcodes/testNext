@@ -4,6 +4,7 @@ import { Table, Space, Skeleton, Button, Tooltip, Modal } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import { getToken } from '../../../../services/user/accessToken';
+import { formatPriceByUnit } from '../../../../services/numFormat';
 import {
     mappingCommissionedCode,
     mappingStatusMsg,
@@ -215,7 +216,15 @@ const SearchList = ({ active }) => {
                     return (
                         <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
                             <p className="item">
-                                {mappingPriceMsg(record.price, record.price_type, record.price_flag, record.ord_type1)}
+                                {formatPriceByUnit(
+                                    record.stock_id,
+                                    mappingPriceMsg(
+                                        record.price,
+                                        record.price_type,
+                                        record.price_flag,
+                                        record.ord_type1,
+                                    ),
+                                )}
                             </p>
                             <p className="item--down">{record.qty}</p>
                         </div>
@@ -229,7 +238,7 @@ const SearchList = ({ active }) => {
                 render: (text, record) => {
                     return (
                         <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
-                            <p className="item">{text}</p>
+                            <p className="item">{formatPriceByUnit(record.stock_id, text)}</p>
                             <p className="item--down">{record.match_qty}</p>
                         </div>
                     );

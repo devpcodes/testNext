@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
-import { toDecimal, priceColor, formatPrice, formatAmountSum } from '../../../../services/numFormat';
+import { toDecimal, priceColor, formatPrice, formatPriceByUnit, formatAmountSum } from '../../../../services/numFormat';
 const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) => {
+    const code = useSelector(store => store.goOrder.code);
     const solaceData = useSelector(store => store.solace.solaceData);
     const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
     const checkLot = useSelector(store => store.goOrder.checkLot);
@@ -26,9 +27,9 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getReference = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd' && checkLot) {
-                return formatPrice(solaceData[0]?.data?.OddlotReference, '--') || '--';
+                return formatPriceByUnit(code, solaceData[0]?.data?.OddlotReference, '--') || '--';
             } else {
-                return formatPrice(solaceData[0]?.data?.Reference, '--') || '--';
+                return formatPriceByUnit(code, solaceData[0]?.data?.Reference, '--') || '--';
             }
         } else {
             return '--';
@@ -38,9 +39,9 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getOpen = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd' && checkLot) {
-                return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotOpen, '--')) || '--';
+                return simtradeHandler(formatPriceByUnit(code, solaceData[0]?.data?.OddlotOpen, '--')) || '--';
             } else {
-                return simtradeHandler(formatPrice(solaceData[0]?.data?.Open, '--')) || '--';
+                return simtradeHandler(formatPriceByUnit(code, solaceData[0]?.data?.Open, '--')) || '--';
             }
         } else {
             return '--';
@@ -50,10 +51,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getHigh = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd' && checkLot) {
-                return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotHigh, '--')) || '--';
+                return simtradeHandler(formatPriceByUnit(code, solaceData[0]?.data?.OddlotHigh, '--')) || '--';
             } else {
                 if (solaceData[0]?.data?.High?.length > 0) {
-                    return simtradeHandler(formatPrice(solaceData[0]?.data?.High[0], '--')) || '--';
+                    return simtradeHandler(formatPriceByUnit(code, solaceData[0]?.data?.High[0], '--')) || '--';
                 }
             }
         } else {
@@ -64,10 +65,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getLow = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd' && checkLot) {
-                return simtradeHandler(formatPrice(solaceData[0]?.data?.OddlotLow, '--')) || '--';
+                return simtradeHandler(formatPriceByUnit(code, solaceData[0]?.data?.OddlotLow, '--')) || '--';
             } else {
                 if (solaceData[0]?.data?.Low?.length > 0) {
-                    return simtradeHandler(formatPrice(solaceData[0]?.data?.Low[0], '--')) || '--';
+                    return simtradeHandler(formatPriceByUnit(code, solaceData[0]?.data?.Low[0], '--')) || '--';
                 }
             }
         } else {
@@ -78,10 +79,10 @@ const QuotesDetail = ({ stopRender, show } = { stopRender: false, show: true }) 
     const getAvgPrice = () => {
         if (!checkServer() && !stopRender && solaceData.length > 0) {
             if (lot === 'Odd' && checkLot) {
-                return formatPrice(solaceData[0]?.data?.OddlotAvgPrice, '--') || '--';
+                return formatPriceByUnit(code, solaceData[0]?.data?.OddlotAvgPrice, '--') || '--';
             } else {
                 if (solaceData[0]?.data?.AvgPrice?.length > 0) {
-                    return formatPrice(solaceData[0]?.data?.AvgPrice[0], '--') || '--';
+                    return formatPriceByUnit(code, solaceData[0]?.data?.AvgPrice[0], '--') || '--';
                 }
             }
         } else {
