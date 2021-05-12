@@ -532,7 +532,10 @@ export const Info = ({ stockid }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    <button className="btn add__self__select" onClick={isLogin ? showSelfSelect : loginClickHandler}>
+                    <button
+                        className="btn add__self__select"
+                        onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
+                    >
                         {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
                     </button>
                 </div>
