@@ -154,16 +154,16 @@ const PriceControl = ({ title }) => {
     };
 
     const priceChangeHandler = e => {
-        // var regex;
-        // if (title === '張數' || title === '股數') {
-        //     regex = /^[0-9/]*$/;
-        // } else {
-        //     regex = /^[0-9/.]*$/;
-        // }
+        var regex;
+        if (title === '張數' || title === '股數') {
+            regex = /^[0-9/]*$/;
+        } else {
+            regex = /^[0-9/.]*$/;
+        }
 
-        // if (!regex.test(e.target.value)) {
-        //     return;
-        // }
+        if (!regex.test(e.target.value)) {
+            return;
+        }
         if (title === '張數' || title === '股數') {
             dispatch(setOrdQty(e.target.value));
         } else {
@@ -243,6 +243,14 @@ const PriceControl = ({ title }) => {
         }
     };
 
+    const typeHandler = val => {
+        if (isNaN(Number(val))) {
+            return 'text';
+        } else {
+            return 'number';
+        }
+    };
+
     return (
         <div className="price_control">
             <div className="select__box">
@@ -288,7 +296,7 @@ const PriceControl = ({ title }) => {
                     value={title === '限價' ? getPriceValHandler() : ordQty}
                     onChange={priceChangeHandler}
                     onFocus={focusHandler}
-                    type="number"
+                    type={title === '限價' ? typeHandler(getPriceValHandler()) : typeHandler(ordQty)}
                 />
             </div>
             <div className="btn__box">
