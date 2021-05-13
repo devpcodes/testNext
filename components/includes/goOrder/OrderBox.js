@@ -104,7 +104,7 @@ const OrderBox = () => {
         const stock_id = stockId;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
-        const market_id = market === '上市' ? 'S' : market === '上櫃' ? 'O' : 'R';
+        const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ca_content = sign(
             {
                 idno: currentAccount.idno,

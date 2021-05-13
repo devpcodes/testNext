@@ -173,7 +173,7 @@ const SubmitBtn = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        const market_id = market === '上市' ? 'S' : market === '上櫃' ? 'O' : 'R';
+        const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
         const ord_price = ordPrice;
