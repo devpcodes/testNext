@@ -18,6 +18,12 @@ const StockInfo = () => {
         }
     }, [code]);
 
+    useEffect(() => {
+        if (bs !== 'S' || lot !== 'Board' || ordCound != 0) {
+            dispatch(setIsFirstSell('N'));
+        }
+    }, [bs, ordCound, lot]);
+
     const fetchInfo = async () => {
         const res = await stockInfoFetcher(code);
         dispatch(setT30(res));
