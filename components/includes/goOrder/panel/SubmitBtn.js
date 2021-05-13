@@ -6,7 +6,7 @@ import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { postOrder } from '../../../../services/components/goOrder/postOrder';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { formatNum } from '../../../../services/formatNum';
-import { formatPriceByUnit } from '../../../../services/numFormat';
+import { formatPrice } from '../../../../services/numFormat';
 import { getTransactionCost } from '../../../../services/stock/transactionCost';
 import { getToken } from '../../../../services/user/accessToken';
 import { checkSignCA, sign } from '../../../../services/webCa';
@@ -97,7 +97,7 @@ const SubmitBtn = () => {
             //確認切回整股後取當時現價
             setTimeout(() => {
                 if (solaceData.length > 0 && lot === 'Board') {
-                    dispatch(setDefaultOrdPrice(formatPriceByUnit(code, solaceData[0].data.Close[0])));
+                    dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.Close[0])));
                     // if(lot === 'Board'){
                     //     dispatch(setDefaultOrdPrice(formatPrice(solaceData[0].data.Close[0])))
                     // }else{
@@ -173,7 +173,7 @@ const SubmitBtn = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        let market_id;
+        const market_id = market === '上市' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
         const ord_price = ordPrice;
@@ -183,16 +183,6 @@ const SubmitBtn = () => {
         const stock_id = stockId;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
-        switch (market) {
-            case '上市':
-                market_id = 'S';
-            case '上櫃':
-                market_id = 'O';
-            case '興櫃':
-                market_id = 'R';
-            default:
-                market_id = '';
-        }
         const ca_content = sign(
             {
                 idno: currentAccount.idno,

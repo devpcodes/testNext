@@ -104,17 +104,7 @@ const OrderBox = () => {
         const stock_id = stockId;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
-        let market_id;
-        switch (market) {
-            case '上市':
-                market_id = 'S';
-            case '上櫃':
-                market_id = 'O';
-            case '興櫃':
-                market_id = 'R';
-            default:
-                market_id = '';
-        }
+        const market_id = market === '上市' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ca_content = sign(
             {
                 idno: currentAccount.idno,
