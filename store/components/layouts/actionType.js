@@ -6,3 +6,4 @@ export const SET_CLIENT_NAV_ITEMS = 'SET_CLIENT_NAV_ITEMS';
 export const SHOW_MENU = 'SHOW_MENU';
 export const SHOW_MASK = 'SHOW_MASK';
 export const SET_PERSONAL_AREA_VISIBLE = 'SET_PERSONAL_AREA_VISIBLE';
+export const SET_MODAL = 'SET_MODAL';

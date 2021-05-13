@@ -1,3 +1,7 @@
+// 將數字格式化成小數點precision位，並加上千位符
+// num: String | Number
+// precision: Number
+// separator: String
 export const formatNum = function (num, precision, separator) {
     var parts;
     if (!isNaN(parseFloat(num)) && isFinite(num)) {

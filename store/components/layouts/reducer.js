@@ -9,6 +9,7 @@ const initialState = {
     showMask: false,
     personalAreaVisible: false,
     recaptchaReady: false,
+    modal: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -48,6 +49,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 personalAreaVisible: action.payload,
+            };
+        case actionType.SET_MODAL:
+            return {
+                ...state,
+                modal: action.payload,
             };
         default:
             return state;
