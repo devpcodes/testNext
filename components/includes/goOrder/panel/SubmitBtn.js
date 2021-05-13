@@ -241,8 +241,7 @@ const SubmitBtn = () => {
                     },
                 });
             } else {
-                Modal.error({
-                    title: '委託失敗',
+                Modal.info({
                     content: res.result.msg,
                 });
             }

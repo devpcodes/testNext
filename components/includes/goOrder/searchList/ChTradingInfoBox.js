@@ -43,11 +43,11 @@ const ChTradingInfoBox = () => {
             <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: true }}>
                 {checkPriceBtn() && (
                     <TabPane tab="改價" key="1">
-                        <ChangeBox type="price" tabKey={tabKey} />
+                        {tabKey === '1' && <ChangeBox type="price" tabKey={tabKey} />}
                     </TabPane>
                 )}
                 <TabPane tab="改量" key="2">
-                    <ChangeBox type="qty" tabKey={tabKey} />
+                    {tabKey === '2' && <ChangeBox type="qty" tabKey={tabKey} />}
                 </TabPane>
             </Tabs>
             <style jsx global>{`
