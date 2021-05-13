@@ -27,7 +27,7 @@ import { usePlatform } from '../../../../hooks/usePlatform';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
 
 const qtyUnit = 1;
-const ChangeBox = ({ type, tabKey }) => {
+const ChangeBox = ({ type, tabKey, btnClassName }) => {
     const dispatch = useDispatch();
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
     const code = useSelector(store => store.goOrder.code);
@@ -231,15 +231,29 @@ const ChangeBox = ({ type, tabKey }) => {
         dispatch(setConfirmBoxClickSource(''));
     };
     const getQtyHandler = () => {
-        const qty =
-            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                ? Number(info.qty) / 1000
-                : Number(info.qty);
-        const cancelQty =
-            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                ? Number(info.cancel_qty) / 1000
-                : Number(info.cancel_qty);
-        return qty - cancelQty;
+        let qty;
+        let cancelQty;
+        let match_qty;
+        if (info.ord_type1 === '2' || info.ord_type1 === 'C') {
+            qty = Number(info.qty);
+            cancelQty = Number(info.cancel_qty);
+            match_qty = Number(info.match_qty);
+        } else {
+            qty = Number(info.qty) / 1000;
+            cancelQty = Number(info.cancel_qty) / 1000;
+            match_qty = Number(info.match_qty) / 1000;
+        }
+        return qty - cancelQty - match_qty;
+
+        // const qty =
+        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+        //         ? Number(info.qty) / 1000
+        //         : Number(info.qty);
+        // const cancelQty =
+        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+        //         ? Number(info.cancel_qty) / 1000
+        //         : Number(info.cancel_qty);
+        // return qty - cancelQty;
     };
     return (
         <>
@@ -293,7 +307,8 @@ const ChangeBox = ({ type, tabKey }) => {
                     <span className="qty__label">剩餘數量</span>
                     <span className="qty__val">{getQtyHandler()}</span>
                     <span className="qty__unit">
-                        {mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零' ? '張' : '股'}
+                        {/* {mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零' ? '張' : '股'} */}
+                        {info.ord_type1 === '2' || info.ord_type1 === 'C' ? '股' : '張'}
                     </span>
                 </div>
                 {type === 'price' && (
@@ -311,11 +326,11 @@ const ChangeBox = ({ type, tabKey }) => {
                     <ChangeNum
                         key="1"
                         title="欲減量"
-                        defaultVal={
-                            mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
-                                ? Number(info.qty) / 1000
-                                : Number(info.qty)
-                        }
+                        // defaultVal={
+                        //     mappingCommissionedCode(info.ord_type2, info.market_id, info.ord_type1) !== '零'
+                        //         ? Number(info.qty) / 1000
+                        //         : Number(info.qty)
+                        // }
                         val={qtyVal}
                         plusClickHandler={plusQtyHandler}
                         minusClickHandler={minusQtyHandler}
@@ -323,7 +338,7 @@ const ChangeBox = ({ type, tabKey }) => {
                         disabledPlus={disabledPlus}
                     />
                 )}
-                <div className="btn__container">
+                <div className={btnClassName}>
                     <Button
                         style={{
                             height: '60px',
