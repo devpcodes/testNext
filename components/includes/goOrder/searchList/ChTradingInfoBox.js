@@ -40,7 +40,7 @@ const ChTradingInfoBox = () => {
     };
     return (
         <div className="trading__container">
-            <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: true }}>
+            <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: false }}>
                 {checkPriceBtn() && (
                     <TabPane tab="改價" key="1">
                         {tabKey === '1' && (
