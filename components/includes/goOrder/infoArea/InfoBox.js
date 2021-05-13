@@ -4,7 +4,8 @@ export const InfoBox = memo(({ code, t30Data, moreItems }) => {
     return (
         <>
             <>
-                {!!t30Data ? (
+                {!!t30Data &&
+                ![t30Data['券成數'], t30Data['券配額'], t30Data['資成數'], t30Data['資配額']].some(el => el == null) ? (
                     <div className="T30Box">
                         <span className="text__box dark">融</span>
                         <span className="t30__info">
