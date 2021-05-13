@@ -27,7 +27,7 @@ import { usePlatform } from '../../../../hooks/usePlatform';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
 
 const qtyUnit = 1;
-const ChangeBox = ({ type, tabKey }) => {
+const ChangeBox = ({ type, tabKey, btnClassName }) => {
     const dispatch = useDispatch();
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
     const code = useSelector(store => store.goOrder.code);
@@ -338,7 +338,7 @@ const ChangeBox = ({ type, tabKey }) => {
                         disabledPlus={disabledPlus}
                     />
                 )}
-                <div className="btn__container">
+                <div className={btnClassName}>
                     <Button
                         style={{
                             height: '60px',
