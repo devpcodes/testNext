@@ -78,6 +78,14 @@ const Chart = function () {
                 chart.data = kline.OHCL;
             }
 
+            // 整股零股
+            // let chartAmount = lot === 'Board' ? kline.Amount : kline.OddAmount;
+            // let chartHigh = lot === 'Board' ? kline.High : kline.OddHigh;
+            // let chartLow = lot === 'Board' ? kline.Low : kline.OddLow;
+            // let chartOpen = lot === 'Board' ? kline.Open : kline.OddOpen;
+            // let chartVolume = lot === 'Board' ? kline.Volume : kline.OddVolume;
+            let chartClose = lot === 'Board' ? kline.Close : kline.OddClose;
+
             // 補齊第一根線 (缺零股和數量)
             if (Array.isArray(chart.data) && chart.data.length) {
                 let firstTick = Object.assign({}, chart.data[0]);
@@ -114,12 +122,12 @@ const Chart = function () {
             priceAxis.strictMinMax = true;
             if (kline.DownLimit === 0.01 && kline.UpLimit === 9995) {
                 priceAxis.max =
-                    kline.Close > parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2))
-                        ? kline.Close
+                    chartClose > parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2))
+                        ? chartClose
                         : parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2));
                 priceAxis.min =
-                    kline.Close < parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2))
-                        ? kline.Close
+                    chartClose < parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2))
+                        ? chartClose
                         : parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2));
             } else {
                 priceAxis.min = kline.DownLimit; // 跌停
@@ -177,7 +185,7 @@ const Chart = function () {
             // 線圖設定
             let priceSeries = chart.series.push(new am4charts.LineSeries());
             priceSeries.dataFields.dateX = 'ts';
-            priceSeries.dataFields.valueY = 'Close';
+            lot === 'Board' ? (priceSeries.dataFields.valueY = 'Close') : (priceSeries.dataFields.valueY = 'OddClose');
             priceSeries.tooltipText = '{valueY.value}';
             priceSeries.tooltip.label.fontSize = 12;
             priceSeries.numberFormatter.numberFormat = '#.00';
