@@ -173,7 +173,6 @@ const SubmitBtn = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        let market_id;
         const ord_bs = bs;
         const ord_cond = ordCond;
         const ord_price = ordPrice;
@@ -183,6 +182,10 @@ const SubmitBtn = () => {
         const stock_id = stockId;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
+        let market_id;
+        console.log('================');
+        console.log(market);
+        console.log('================');
         switch (market) {
             case '上市':
                 market_id = 'S';

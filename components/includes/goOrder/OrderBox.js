@@ -105,6 +105,9 @@ const OrderBox = () => {
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
         let market_id;
+        console.log('================');
+        console.log(market_id);
+        console.log('================');
         switch (market) {
             case '上市':
                 market_id = 'S';
