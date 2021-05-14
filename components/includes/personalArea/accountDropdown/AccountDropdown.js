@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ import checkImg from '../../../../resources/images/components/login/ic-check.png
 export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type }) => {
     const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
-
+    const currentAccountList = useRef([]);
     const dispatch = useDispatch();
     const isMobile = useSelector(store => store.layout.isMobile);
     const accounts = useSelector(store => store.user.accounts);
@@ -31,6 +31,10 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
             setListVisible(false);
         }
     }, [personalAreaVisible, isMobile]);
+
+    useEffect(() => {
+        currentAccountList.current.unshift(currentAccount);
+    }, [currentAccount]);
 
     const toggleListVisible = () => {
         setListVisible(!listVisible);
@@ -48,6 +52,17 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
     };
 
     const handleChange = value => {
+        // if(type == null){
+        //     const account = value.split('-')[1];
+        //     console.log('====', account)
+        //     accounts.filter(val => {
+        //         console.log('=====aaa', val)
+        //         if(val.accttype === type){
+        //             console.log('vvv', val);
+        //         }
+        //     })
+        // }
+
         dispatchCurrentAccount(value, accounts);
     };
 
@@ -65,6 +80,24 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
 
     const containerCalssName = () => {
         return tradingLayout ? 'account__container trading__container' : 'account__container';
+    };
+
+    const valueHandler = () => {
+        if (type != null) {
+            if (type !== currentAccount.accttype) {
+                const found = currentAccountList.current.find(item => {
+                    if (item.accttype === 'S') {
+                        return true;
+                    }
+                });
+                if (found.broker_id != null) {
+                    return `${found.broker_id}-${found.account}`;
+                } else {
+                    return '';
+                }
+            }
+        }
+        return `${currentAccount.broker_id}-${currentAccount.account}`;
     };
 
     if (
@@ -140,7 +173,8 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
                 <Select
                     className="account__select"
                     // defaultValue={`${currentAccount.broker_id}-${currentAccount.account}`}
-                    value={`${currentAccount.broker_id}-${currentAccount.account}`}
+                    // value={`${currentAccount.broker_id}-${currentAccount.account}`}
+                    value={valueHandler()}
                     style={{ width: dropdownWidth }}
                     onChange={handleChange}
                     getPopupContainer={trigger => trigger.parentElement}
