@@ -130,10 +130,12 @@ const DetailBox = () => {
                             <span className="item__val">{timeFormatter(info.ord_time, false)}</span>
                         </div>
                     </div>
-                    <div className="item">
-                        <span className="item__label">失敗原因</span>
-                        <span className="item__val">{info.errmsg.trim()}</span>
-                    </div>
+                    {info.errmsg.trim() && (
+                        <div className="item">
+                            <span className="item__label">失敗原因</span>
+                            <span className="item__val">{info.errmsg.trim()}</span>
+                        </div>
+                    )}
                 </div>
                 <div className="btn__container">
                     {showHandler() && (
