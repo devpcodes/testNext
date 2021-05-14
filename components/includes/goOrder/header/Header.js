@@ -203,7 +203,7 @@ const Header = () => {
                 <br />
                 <a
                     style={{
-                        display: 'inline-block',
+                        display: 'block',
                         color: '#0d1623',
                         fontWeight: 'bold',
                     }}
