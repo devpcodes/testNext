@@ -443,9 +443,8 @@ export const Info = ({ stockid }) => {
 
         if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
             moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
-            setT30Data(t30Res);
         }
-
+        setT30Data(t30Res);
         setMoreItems(moreItems);
     };
 
