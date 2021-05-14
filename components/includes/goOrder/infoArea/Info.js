@@ -492,9 +492,9 @@ export const Info = ({ stockid }) => {
                         <div className="product__code">{code || stockid || '2890'}</div>
                     </div>
                     <div className="toolbar__container">
-                        <button className="share" onClick={shareHandler}>
+                        {/* <button className="share" onClick={shareHandler}>
                             <img src={share} alt="share"></img>
-                        </button>
+                        </button> */}
                         <button className="search" onClick={showSearch}>
                             <img src={search} alt="search"></img>
                         </button>
