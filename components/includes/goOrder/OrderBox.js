@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Tooltip, Modal } from 'antd';
+import { Button, Tooltip, Modal, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './panel/PanelTabs';
 import { setActiveTabKey, setConfirmBoxOpen, setResetData } from '../../../store/goOrder/action';
@@ -144,21 +144,30 @@ const OrderBox = () => {
             });
             setSubmitLoading(false);
             if (res.success === 'True') {
-                Modal.success({
+                // Modal.success({
+                //     content: '委託成功',
+                //     onOk: () => {
+                //         closeHandler();
+                //         dispatch(setActiveTabKey('3'));
+                //         // checkReset();
+                //     },
+                // });
+                message.success({
                     content: '委託成功',
-                    onOk: () => {
-                        closeHandler();
-                        dispatch(setActiveTabKey('3'));
-                        // checkReset();
-                    },
                 });
+                closeHandler();
+                dispatch(setActiveTabKey('3'));
             } else {
-                Modal.info({
+                // Modal.info({
+                //     content: res.result.msg,
+                //     onOk: () => {
+                //         closeHandler();
+                //     },
+                // });
+                message.info({
                     content: res.result.msg,
-                    onOk: () => {
-                        closeHandler();
-                    },
                 });
+                closeHandler();
             }
         }
     };

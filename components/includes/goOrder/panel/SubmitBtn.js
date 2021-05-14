@@ -1,4 +1,4 @@
-import { Button, Modal } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
@@ -223,15 +223,22 @@ const SubmitBtn = () => {
             });
             setSubmitLoading(false);
             if (res.success === 'True') {
-                Modal.success({
+                // Modal.success({
+                //     content: '委託成功',
+                //     onOk: () => {
+                //         dispatch(setActiveTabKey('3'));
+                //         // checkReset();
+                //     },
+                // });
+                message.success({
                     content: '委託成功',
-                    onOk: () => {
-                        dispatch(setActiveTabKey('3'));
-                        // checkReset();
-                    },
                 });
+                dispatch(setActiveTabKey('3'));
             } else {
-                Modal.info({
+                // Modal.info({
+                //     content: res.result.msg,
+                // });
+                message.info({
                     content: res.result.msg,
                 });
             }
