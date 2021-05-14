@@ -158,19 +158,20 @@ const SearchList = ({ active }) => {
                 dataIndex: 'ord_time',
                 key: 'ord_time',
                 sorter: (a, b) => {
-                    if (Number(a.view_seq.substring(0, 8)) - Number(b.view_seq.substring(0, 8)) == 0) {
-                        let newA;
-                        let newB;
-                        newA = a.ord_time.substr(0, 6);
-                        newB = b.ord_time.substr(0, 6);
-                        if (newA == newB) {
-                            newA = a.ord_time;
-                            newB = b.ord_time;
-                        }
-                        return Number(newA) - Number(newB);
-                    } else {
-                        return Number(a.view_seq.substring(0, 8)) - Number(b.view_seq.substring(0, 8));
-                    }
+                    // if (Number(a.view_seq.substring(0, 8)) - Number(b.view_seq.substring(0, 8)) == 0) {
+                    //     let newA;
+                    //     let newB;
+                    //     newA = a.ord_time.substr(0, 6);
+                    //     newB = b.ord_time.substr(0, 6);
+                    //     if (newA == newB) {
+                    //         newA = a.ord_time;
+                    //         newB = b.ord_time;
+                    //     }
+                    //     return Number(newA) - Number(newB);
+                    // } else {
+                    //     return Number(a.view_seq.substring(0, 8)) - Number(b.view_seq.substring(0, 8));
+                    // }
+                    return Number(a.view_seq) - Number(b.view_seq);
                 },
                 sortOrder: sortKey === 'ord_time' && sortOrder,
                 render: (text, record) => {
