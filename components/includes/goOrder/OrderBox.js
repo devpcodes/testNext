@@ -185,6 +185,22 @@ const OrderBox = () => {
             setOddToolTipVisible(false);
         }
     };
+    const mappingPriceMsg = (price, priceType) => {
+        switch (priceType) {
+            case ' ':
+                return price;
+            case '4':
+                return '市價';
+            case '2':
+                return '漲停';
+            case '3':
+                return '跌停';
+            case '1':
+                return '平盤';
+            default:
+                return price;
+        }
+    };
     return (
         <div>
             <div className="trade__info--title">
@@ -199,7 +215,8 @@ const OrderBox = () => {
             <div className="trade__info--num">
                 <div className="info__price">
                     <span className="label">價格</span>
-                    <span className="val">{ordPrice}</span>
+                    {/* <span className="val">{ordPrice}</span> */}
+                    <span className="val">{mappingPriceMsg(ordPrice, priceType)}</span>
                 </div>
                 <div className="info__qty">
                     <span className="label">數量</span>
