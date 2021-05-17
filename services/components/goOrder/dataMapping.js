@@ -121,7 +121,6 @@ export const mappingWebId = webID => {
         'e快客(55)': '055',
         'e快客(56)': '056',
         111: 'MORE',
-        146: 'New APP',
         158: '經濟日報',
     };
     return webIDList[webID];
