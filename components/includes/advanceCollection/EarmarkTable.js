@@ -4,11 +4,13 @@ import { fetchQueryEarmarkReserveStatus } from '../../../services/components/res
 import ApplyContent from './ApplyContent';
 import { ReducerContext } from '../../../pages/AdvanceCollection';
 import { getToken } from '../../../services/user/accessToken';
+import { formatNum } from '../../../services/formatNum';
 
 const EarmarkTable = () => {
     const [columnsData, setColumnsData] = useState([]);
     const [state, dispatch] = useContext(ReducerContext);
     const [dataLoading, setDataLoading] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0);
     const [data, setData] = useState([]);
     useEffect(() => {
         fetchData();
@@ -59,7 +61,13 @@ const EarmarkTable = () => {
                 title: '狀態',
                 dataIndex: 'order_status_msg',
                 key: 'order_status_msg',
-                index: 7,
+                index: 8,
+            },
+            {
+                title: '狀態說明',
+                dataIndex: 'order_status_description',
+                key: 'order_status_description',
+                index: 9,
             },
         ];
         setColumnsData(columns);
@@ -74,9 +82,10 @@ const EarmarkTable = () => {
                 branch: data.broker_id,
                 token,
             });
+            setTotalAmount(resData.totalAmount);
             setDataLoading(false);
-            if (Array.isArray(resData)) {
-                resData = resData.map((item, index) => {
+            if (Array.isArray(resData.data)) {
+                resData = resData.data.map((item, index) => {
                     item.key = String(index);
                     return item;
                 });
@@ -120,6 +129,16 @@ const EarmarkTable = () => {
                     spinning: dataLoading,
                 }}
             />
+            <div style={{ marginTop: '20px' }}>
+                <span
+                    style={{
+                        fontSize: '18px',
+                        fontWeight: 'bold',
+                    }}
+                >
+                    已預收總金額: &nbsp;&nbsp;{formatNum(totalAmount)}
+                </span>
+            </div>
         </>
     );
 };
