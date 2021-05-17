@@ -29,6 +29,7 @@ export const TradingQuickView = () => {
     const SBunRealPrtlos = useSelector(store => store.sb.SBUnRealPrtlos);
     const SBdeliveryTrial = useSelector(store => store.sb.SBDeliveryTrial);
     const openProfitLossSum = useSelector(store => store.future.openProfitLossSum);
+    const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
     // const prevAccount = useRef(false);
     const prevDate = useRef('');
     const [updateDate, setUpdateDate] = useState('');
@@ -81,20 +82,22 @@ export const TradingQuickView = () => {
 
     //根據證期權取得對應的帳號資料
     const getDataHandler = function (type) {
-        switch (type) {
-            case 'S':
-                getStockUnReal();
-                getSummarise();
-                break;
-            case 'H':
-                getSBUnrealizedPrtLos();
-                getDeliveryTrial();
-                break;
-            case 'F':
-                dispatchOpenProfitLossSum();
-                break;
-            default:
-                break;
+        if (personalAreaVisible) {
+            switch (type) {
+                case 'S':
+                    getStockUnReal();
+                    getSummarise();
+                    break;
+                case 'H':
+                    getSBUnrealizedPrtLos();
+                    getDeliveryTrial();
+                    break;
+                case 'F':
+                    dispatchOpenProfitLossSum();
+                    break;
+                default:
+                    break;
+            }
         }
     };
 

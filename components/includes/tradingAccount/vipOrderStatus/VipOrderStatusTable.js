@@ -65,6 +65,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             if (!searchBuySell) {
                 delete postData.bs;
             }
+            if (userInfo.accttype !== 'S') {
+                delete postData.account;
+            }
             return postData;
         } else {
             return {};

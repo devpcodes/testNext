@@ -2,6 +2,15 @@ import { getCookie } from '../components/layouts/cookieController';
 import { getA8Instance } from '../myAxios';
 import { getToken } from '../user/accessToken';
 
+export const fetchInventoryWithSWR = async function (
+    currentAccount,
+    searchWords = ' ',
+    searchTtype = '[]',
+    pageIndex = 1,
+    pageSize = 50,
+) {
+    return await fetchInventory(currentAccount, searchWords, JSON.parse(searchTtype), pageIndex, pageSize);
+};
 export const fetchInventory = async (
     currentAccount,
     searchWords = ' ',
@@ -9,6 +18,9 @@ export const fetchInventory = async (
     pageIndex = 1,
     pageSize = 50,
 ) => {
+    if (currentAccount.accttype !== 'S') {
+        return [];
+    }
     if (currentAccount.broker_id != null) {
         try {
             const res = await getA8Instance(undefined, undefined, false).post('/Equity/Inventory', {
