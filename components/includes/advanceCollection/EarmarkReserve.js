@@ -202,6 +202,7 @@ const EarmarkReserve = () => {
                                     className="earmark__inp"
                                     onChange={amountChangeHandler}
                                     value={amountVal}
+                                    disabled={true}
                                 />
                             </div>
                             <div className="btn__box-earmark">
