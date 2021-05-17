@@ -79,7 +79,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
                     onChange={changeHandler}
                     value={value}
                     autoFocus={true}
-                    defaultActiveFirstOption={true}
+                    defaultActiveFirstOption={false}
                     onSelect={onSelect}
                 />
             </div>
