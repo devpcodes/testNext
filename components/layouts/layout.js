@@ -118,7 +118,7 @@ const Layout = memo(({ children }) => {
 
     useEffect(() => {
         queryStr.current = router.query;
-
+        sessionAddSource();
         if (router.query.nav != '0') {
             setShowNav(true);
         } else {
@@ -171,6 +171,20 @@ const Layout = memo(({ children }) => {
             isMobile: prevIsMobile.current,
         };
         dispatch(setNavItems(data));
+    };
+
+    // 為相容舊版本下單盒，舊下單盒移除後可拔除
+    const sessionAddSource = () => {
+        const sourceList = {
+            mma: 'mma',
+            udn: 'udn',
+            line: 'u168',
+            cnyes: 'cnyes',
+        };
+        const itemkey = router.query.platform ? router.query.platform.toLocaleLowerCase() : false;
+        if (itemkey && sourceList[itemkey]) {
+            sessionStorage.setItem('source', sourceList[itemkey]);
+        }
     };
 
     //驗證有沒有瀏覽頁面的權限

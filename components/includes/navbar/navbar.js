@@ -96,6 +96,9 @@ const Navbar = memo(() => {
             case 'mma':
                 url = `/goOrder?platform=MMA&source=mma`;
                 break;
+            case 'cnyes':
+                url = `/goOrder?platform=cnyes&source=cnyes`;
+                break;
             case 'line':
                 url = `/goOrder?platform=Line`;
                 break;

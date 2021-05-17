@@ -110,6 +110,7 @@ export const mappingWebId = webID => {
         11: 'BLOOMBERG 下單',
         110: '語音',
         111: 'ＡＰ下單[人工單]',
+        112: '大戶投(g)',
         115: 'EZTrade',
         119: '雷影管理',
         12: '奇唯JF',
@@ -130,6 +131,7 @@ export const mappingWebId = webID => {
         143: 'iLeader(GPad)',
         144: 'XQ',
         145: 'QTrade',
+        146: '大戶投(i)',
         148: '觸價幫手',
         149: '倚天股票機',
         150: 'eLeader',
@@ -141,6 +143,7 @@ export const mappingWebId = webID => {
         161: '微股力',
         162: 'XQ全球贏家APP',
         163: '股感',
+        164: 'cnYES',
         17: 'ＭＩＮＥ ＢＲＯＫＥＲ --- 人工',
         170: 'BTS',
         18: 'NYSE 下單',
@@ -158,7 +161,6 @@ export const mappingWebId = webID => {
         'e快客(55)': '055',
         'e快客(56)': '056',
         111: 'MORE',
-        146: 'New APP',
         158: '經濟日報',
     };
     return webIDList[webID];
