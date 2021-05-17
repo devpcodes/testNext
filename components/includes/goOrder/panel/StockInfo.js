@@ -77,7 +77,7 @@ const StockInfo = () => {
     return (
         <div className="info__container">
             <div className="info__box">{getInfoTag()}</div>
-            {bs === 'S' && lot === 'Board' && ordCound == 0 && market != '權證' && (
+            {bs === 'S' && lot === 'Board' && ordCound == 0 && market != '權證' && market != '興櫃' && (
                 <div className="firstSell__box">
                     <span>先賣</span>
                     <Switch checked={isFirstSell === 'Y' ? true : false} size="small" onChange={switchChangeHandler} />
