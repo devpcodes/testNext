@@ -176,7 +176,7 @@ const Header = () => {
             <>
                 {socalLoginData._id == null && (
                     <>
-                        <a
+                        {/* <a
                             style={{
                                 marginBottom: '8px',
                                 display: 'inline-block',
@@ -202,7 +202,7 @@ const Header = () => {
                         >
                             我的自選
                         </a>
-                        <br />
+                        <br /> */}
                     </>
                 )}
 
