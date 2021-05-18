@@ -11,14 +11,16 @@ const SelfSelectToolBar = () => {
                 </div>
                 <div className="select__toolbar__right">
                     <span>共 12/50 檔自選股</span>
+
+                    <Button type="primary" loading></Button>
                     <Button type="primary" loading>
-                        reload
-                    </Button>
-                    <Button type="primary" loading>
-                        編輯組合
+                        {' '}
+                        編輯組合{' '}
                     </Button>
                 </div>
             </div>
+
+            {/* icon={<DownloadOutlined />} */}
 
             <style jsx>{`
                 .select__toolbar {

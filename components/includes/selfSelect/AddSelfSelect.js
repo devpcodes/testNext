@@ -10,13 +10,23 @@ const AddSelfSelect = () => {
         <>
             <Space direction="vertical">
                 <Search
-                    placeholder="input search text"
+                    placeholder="輸入個股加入自選"
                     allowClear
-                    enterButton="Search"
+                    enterButton="新增個股"
                     size="large"
                     onSearch={onSearch}
                 />
             </Space>
+
+            <style jsx>{``}</style>
+            <style jsx global>{`
+                .ant-btn-primary,
+                .ant-btn-primary:focus,
+                .ant-btn-primary:hover {
+                    background: #c43826;
+                    border-color: #c43826;
+                }
+            `}</style>
         </>
     );
 };
