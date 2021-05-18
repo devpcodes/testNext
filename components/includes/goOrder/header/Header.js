@@ -53,18 +53,35 @@ const Header = () => {
 
     const router = useRouter();
 
-    const accountElement = (
-        <AccountAvatar
-            style={{
-                width: '26px',
-                height: '26px',
-                lineHeight: '26px',
-                fontSize: '1.2rem',
-            }}
-        >
-            {currentAccount.username && currentAccount.username[0]}
-        </AccountAvatar>
-    );
+    const accountElement = () => {
+        if (currentAccount != null) {
+            return (
+                <AccountAvatar
+                    style={{
+                        width: '26px',
+                        height: '26px',
+                        lineHeight: '26px',
+                        fontSize: '1.2rem',
+                    }}
+                >
+                    {currentAccount.username && currentAccount.username[0]}
+                </AccountAvatar>
+            );
+        } else {
+            return (
+                <AccountAvatar
+                    style={{
+                        width: '26px',
+                        height: '26px',
+                        lineHeight: '26px',
+                        fontSize: '1.2rem',
+                    }}
+                >
+                    {''}
+                </AccountAvatar>
+            );
+        }
+    };
 
     useEffect(() => {
         document.addEventListener('click', bodyClickHandler);
@@ -154,10 +171,12 @@ const Header = () => {
     };
 
     const currentAccountHandler = () => {
-        if (currentAccount.accttype !== type) {
-            return '--';
-        } else {
-            return `${currentAccount.broker_id || ''}-${currentAccount.account || ''}`;
+        if (currentAccount != null) {
+            if (currentAccount.accttype !== type) {
+                return '--';
+            } else {
+                return `${currentAccount.broker_id || ''}-${currentAccount.account || ''}`;
+            }
         }
     };
 
@@ -240,7 +259,7 @@ const Header = () => {
                                 // defaultValue={type}
                                 defaultValue={'S'}
                                 style={{ width: 111 }}
-                                // onChange={handleTypeChange}
+                                onChange={handleTypeChange}
                                 getPopupContainer={trigger => trigger.parentElement}
                                 bordered={false}
                                 suffixIcon={<DropDownArrow />}
@@ -249,7 +268,7 @@ const Header = () => {
                                     <Option key={accType}>{getAccountText(accType)}</Option>
                                 ))} */}
                                 <Option value={'S'}>國內證券</Option>
-                                <Option value={'SB'}>海外證券</Option>
+                                <Option value={'H'}>海外證券</Option>
                             </Select>
                         </div>
                         <div className="dropdown__container">
@@ -262,12 +281,13 @@ const Header = () => {
                                 suffixIcon={<DropDownArrow />}
                                 notFoundContent={<div></div>}
                             >
-                                {accountList.map(account => (
-                                    <Option key={`${account.broker_id}-${account.account}`}>
-                                        <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
-                                        <span className="option__username">{`${account.bhname} ${account.username}`}</span>
-                                    </Option>
-                                ))}
+                                {accountList?.length > 0 &&
+                                    accountList.map(account => (
+                                        <Option key={`${account.broker_id}-${account.account}`}>
+                                            <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                            <span className="option__username">{`${account.bhname} ${account.username}`}</span>
+                                        </Option>
+                                    ))}
                             </Select>
                         </div>
                         <Tooltip
@@ -285,7 +305,7 @@ const Header = () => {
                                     setMenuVisible(true);
                                 }}
                             >
-                                {accountElement}
+                                {accountElement()}
                             </div>
                         </Tooltip>
                     </>

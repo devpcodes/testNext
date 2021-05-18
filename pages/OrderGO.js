@@ -81,7 +81,7 @@ const OrderGO = ({ requestStockId }) => {
             <div className="OrderGO__container" id="container">
                 <CaHead />
                 <PageHead title={'快速下單'} />
-                {checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={currentAccount.idno} />}
+                {checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={currentAccount?.idno} />}
                 {!checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
                 <Header />
                 <StockContainer requestStockId={requestStockId} />
