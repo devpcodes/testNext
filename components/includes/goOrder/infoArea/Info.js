@@ -240,11 +240,12 @@ export const Info = ({ stockid }) => {
         setInfoItems(code);
     }, [code]);
 
-    useEffect(() => {
-        if (selectInfo) {
-            reloadSelfSelectSmallIcon();
-        }
-    }, [selectInfo]);
+    // 暫時移除自選邏輯
+    // useEffect(() => {
+    //     if (selectInfo) {
+    //         reloadSelfSelectSmallIcon();
+    //     }
+    // }, [selectInfo]);
 
     const updateQueryStringParameter = (uri, key, value) => {
         var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
@@ -438,7 +439,7 @@ export const Info = ({ stockid }) => {
                 inInfoBox: true,
                 link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
             },
-            { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+            // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
         if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
@@ -531,12 +532,12 @@ export const Info = ({ stockid }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    <button
+                    {/* <button
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
                         {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="page__mask"></div>
