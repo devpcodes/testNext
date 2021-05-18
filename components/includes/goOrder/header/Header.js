@@ -271,7 +271,7 @@ const Header = () => {
                         </div>
                         <Tooltip
                             placement="topLeft"
-                            title={renderMenu()}
+                            title={renderMenu.bind(null, socalLogin)}
                             color="white"
                             overlayClassName="menu__tooltip"
                             visible={menuVisible}
@@ -293,7 +293,7 @@ const Header = () => {
                         <img className="logo" src={logo} />
                         <Tooltip
                             placement="topLeft"
-                            title={renderMenu()}
+                            title={renderMenu.bind(null, socalLogin)}
                             color="white"
                             overlayClassName="menu__tooltip--2"
                         >
