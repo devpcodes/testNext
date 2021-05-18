@@ -11,7 +11,7 @@ import DropFilterSearch from './DropFilterSearch';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import BuyButton from './buttons/BuyButton';
 import SellButton from './buttons/SellButton';
-import { fetchInventory } from '../../../../services/stock/fetchInventory';
+import { fetchInventory, fetchInventoryWithSWR } from '../../../../services/stock/fetchInventory';
 import { formatNum } from '../../../../services/formatNum';
 import { openGoOrder } from '../../../../services/openGoOrder';
 import { formatPriceByUnit } from '../../../../services/numFormat';
@@ -35,8 +35,8 @@ const VipInventoryTable = ({ getColumns, getData, getPageInfoText, reload }) => 
     }, [searchTtype]);
 
     const { data: fetchData } = useSWR(
-        [currentAccount, searchWords, tType, currentPage, pageSize, reload],
-        fetchInventory,
+        [currentAccount, searchWords, JSON.stringify(tType), currentPage, pageSize, reload],
+        fetchInventoryWithSWR,
         {
             onError: (error, key) => {
                 Modal.error({
