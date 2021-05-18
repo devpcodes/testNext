@@ -33,7 +33,7 @@ const OrderGO = ({ requestStockId }) => {
     const bs = useSelector(store => store.goOrder.bs);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const checkLot = useSelector(store => store.goOrder.checkLot);
-
+    const type = useSelector(store => store.goOrder.type);
     useEffect(() => {
         window.addEventListener('resize', handleResize);
         return () => {
@@ -42,19 +42,21 @@ const OrderGO = ({ requestStockId }) => {
     }, []);
 
     useEffect(() => {
-        if (code === '') {
-            setTopic([]);
-        }
-        if (lot === 'Odd') {
-            if (!checkLot) {
-                return;
-            } else {
-                setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+        if (type === 'S') {
+            if (code === '') {
+                setTopic([]);
             }
-        } else {
-            setTopic([`MKT/*/*/${code}`, `QUT/*/*/${code}`, `SNP/*/*/${code}`]);
+            if (lot === 'Odd') {
+                if (!checkLot) {
+                    return;
+                } else {
+                    setTopic([`MKT/*/*/${code}/ODDLOT`, `QUT/*/*/${code}/ODDLOT`, `SNP/*/*/${code}/ODDLOT`]);
+                }
+            } else {
+                setTopic([`MKT/*/*/${code}`, `QUT/*/*/${code}`, `SNP/*/*/${code}`]);
+            }
         }
-    }, [lot, code, checkLot]);
+    }, [lot, code, checkLot, type]);
 
     useEffect(() => {
         if (bs !== '') {
@@ -81,10 +83,12 @@ const OrderGO = ({ requestStockId }) => {
             <div className="OrderGO__container" id="container">
                 <CaHead />
                 <PageHead title={'快速下單'} />
-                {checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={currentAccount?.idno} />}
-                {!checkLogin() && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
+                {checkLogin() && type === 'S' && (
+                    <SolaceClientComponent subscribeTopic={topic} idno={currentAccount?.idno} />
+                )}
+                {!checkLogin() && type === 'S' && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
                 <Header />
-                <StockContainer requestStockId={requestStockId} />
+                {type === 'S' && <StockContainer requestStockId={requestStockId} />}
             </div>
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
             <style global jsx>{`

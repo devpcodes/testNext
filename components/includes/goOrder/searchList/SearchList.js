@@ -447,6 +447,9 @@ const SearchList = ({ active }) => {
     };
 
     const getOrderStatus = async () => {
+        if (userInfo == null) {
+            return;
+        }
         const account = userInfo.account;
         const action = 'account';
         const broker_id = userInfo.broker_id;

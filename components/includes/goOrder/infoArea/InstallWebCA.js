@@ -26,7 +26,7 @@ export const InstallWebCA = () => {
     };
     useEffect(() => {
         if (reCheckCA || reCheckCA == null) {
-            if (currentAccount.idno) {
+            if (currentAccount != null && currentAccount.idno) {
                 const checkData = checkCert(currentAccount.idno);
                 suggestAction.current = checkData.suggestAction;
 

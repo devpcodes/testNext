@@ -7,7 +7,7 @@ import { Select } from 'antd';
 import { useUser } from '../../../../hooks/useUser';
 import { useHasMounted } from '../../../../hooks/useHasMounted';
 
-import { setType } from '../../../../store/goOrder/action';
+import { setCode, setType } from '../../../../store/goOrder/action';
 import { setCurrentAccount } from '../../../../store/user/action';
 
 import { accountGroupByType } from '../../../../services/user/accountGroupByType';
@@ -138,6 +138,11 @@ const Header = () => {
     }, [socalLoginData]);
 
     const handleTypeChange = value => {
+        if (value !== 'S') {
+            dispatch(setCode(''));
+        } else {
+            dispatch(setCode('2890'));
+        }
         dispatch(setType(value));
         // dispatch(setCurrentAccount(groupedAccount[value][0]));
     };
@@ -271,25 +276,27 @@ const Header = () => {
                                 <Option value={'H'}>海外證券</Option>
                             </Select>
                         </div>
-                        <div className="dropdown__container">
-                            <Select
-                                style={{ width: 136 }}
-                                value={currentAccountHandler()}
-                                onChange={onAccountChange}
-                                getPopupContainer={trigger => trigger.parentElement}
-                                bordered={false}
-                                suffixIcon={<DropDownArrow />}
-                                notFoundContent={<div></div>}
-                            >
-                                {accountList?.length > 0 &&
-                                    accountList.map(account => (
-                                        <Option key={`${account.broker_id}-${account.account}`}>
-                                            <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
-                                            <span className="option__username">{`${account.bhname} ${account.username}`}</span>
-                                        </Option>
-                                    ))}
-                            </Select>
-                        </div>
+                        {accountList?.length > 0 && (
+                            <div className="dropdown__container">
+                                <Select
+                                    style={{ width: 136 }}
+                                    value={currentAccountHandler()}
+                                    onChange={onAccountChange}
+                                    getPopupContainer={trigger => trigger.parentElement}
+                                    bordered={false}
+                                    suffixIcon={<DropDownArrow />}
+                                    notFoundContent={<div></div>}
+                                >
+                                    {accountList?.length > 0 &&
+                                        accountList.map(account => (
+                                            <Option key={`${account.broker_id}-${account.account}`}>
+                                                <span className="option__account">{`${account.broker_id}-${account.account}`}</span>
+                                                <span className="option__username">{`${account.bhname} ${account.username}`}</span>
+                                            </Option>
+                                        ))}
+                                </Select>
+                            </div>
+                        )}
                         <Tooltip
                             placement="topLeft"
                             title={renderMenu.bind(null, socalLogin)}
