@@ -174,33 +174,38 @@ const Header = () => {
     const renderMenu = () => {
         return (
             <>
-                <a
-                    style={{
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        color: '#0d1623',
-                        zIndex: '999',
-                        fontWeight: 'bold',
-                    }}
-                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
-                    target="_blank"
-                >
-                    我的帳務
-                </a>
-                <br />
-                <a
-                    style={{
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        color: '#0d1623',
-                        fontWeight: 'bold',
-                    }}
-                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
-                    target="_blank"
-                >
-                    我的自選
-                </a>
-                <br />
+                {socalLoginData._id == null && (
+                    <>
+                        <a
+                            style={{
+                                marginBottom: '8px',
+                                display: 'inline-block',
+                                color: '#0d1623',
+                                zIndex: '999',
+                                fontWeight: 'bold',
+                            }}
+                            href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
+                            target="_blank"
+                        >
+                            我的帳務
+                        </a>
+                        <br />
+                        <a
+                            style={{
+                                marginBottom: '8px',
+                                display: 'inline-block',
+                                color: '#0d1623',
+                                fontWeight: 'bold',
+                            }}
+                            href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
+                            target="_blank"
+                        >
+                            我的自選
+                        </a>
+                        <br />
+                    </>
+                )}
+
                 <a
                     style={{
                         display: 'block',
