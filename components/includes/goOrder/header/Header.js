@@ -249,6 +249,7 @@ const Header = () => {
                                     <Option key={accType}>{getAccountText(accType)}</Option>
                                 ))} */}
                                 <Option value={'S'}>國內證券</Option>
+                                <Option value={'SB'}>海外證券</Option>
                             </Select>
                         </div>
                         <div className="dropdown__container">
