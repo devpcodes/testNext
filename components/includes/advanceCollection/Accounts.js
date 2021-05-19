@@ -1,4 +1,4 @@
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useEffect } from 'react';
 import icon from '../../../resources/images/reservation/icon.png';
 import mobileIcon from '../../../resources/images/reservation/mobileIcon.png';
 import AccountSelect from './AccountSelect';
@@ -14,7 +14,10 @@ const Accounts = ({ style, value, ...props } = { value: '' }) => {
     // };
 
     const selectHandler = useCallback(val => {
-        dispatch({ type: SELECTED, payload: val });
+        if (val == null) {
+        } else {
+            dispatch({ type: SELECTED, payload: val });
+        }
     }, []);
 
     return (
@@ -24,13 +27,11 @@ const Accounts = ({ style, value, ...props } = { value: '' }) => {
                 <span className="label">申請帳號</span>
             </div>
             <div className="account__select">
-                <AccountSelect
-                    onSelect={selectHandler}
-                    data={state.accountsReducer.accounts}
-                    value={
-                        value || state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account
-                    }
-                />
+                {state.accountsReducer.accounts.length > 0 ? (
+                    <AccountSelect onSelect={selectHandler} data={state.accountsReducer.accounts} value={value || ''} />
+                ) : (
+                    <AccountSelect onSelect={selectHandler} data={state.accountsReducer.accounts} value={''} />
+                )}
             </div>
             <style jsx>{`
                 .account__container {

@@ -18,7 +18,7 @@ const AdvanceCollection = function () {
     return (
         <>
             <ReducerContext.Provider value={reducer}>
-                <AdvanceCollectionLayout startTime={'08:00'} endTime={'14:30'}>
+                <AdvanceCollectionLayout startTime={'08:00'} endTime={'16:30'} type={selectOption}>
                     <div style={{ maxWidth: '1000px', margin: '0 auto', paddingLeft: '20px' }}>
                         <Select defaultValue="earmarkReserve" className={'reserve__container'} onChange={handleChange}>
                             <Option value="earmarkReserve">預收款項</Option>

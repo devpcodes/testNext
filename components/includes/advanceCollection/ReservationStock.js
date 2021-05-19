@@ -73,14 +73,21 @@ const ReservationStock = () => {
 
     useEffect(() => {
         setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
-        dataHandler(stockActiveTabKey.current);
+        // dataHandler(stockActiveTabKey.current);
     }, []);
     useEffect(() => {
-        if (init.current) {
+        if (!state.accountsReducer.selected) {
+            return;
+        } else {
             if (JSON.stringify(selectedAccount.current) !== JSON.stringify(state.accountsReducer.selected)) {
                 dataHandler(stockActiveTabKey.current);
             }
         }
+        // if (init.current) {
+        //     if (JSON.stringify(selectedAccount.current) !== JSON.stringify(state.accountsReducer.selected)) {
+        //         dataHandler(stockActiveTabKey.current);
+        //     }
+        // }
         // if (!init.current) {
         //     setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
         //     // init.current = true;

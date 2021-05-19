@@ -13,7 +13,9 @@ const EarmarkTable = () => {
     const [totalAmount, setTotalAmount] = useState(0);
     const [data, setData] = useState([]);
     useEffect(() => {
-        fetchData();
+        if (state.accountsReducer.selected) {
+            fetchData();
+        }
     }, [state.accountsReducer.selected]);
     useEffect(() => {
         const columns = [

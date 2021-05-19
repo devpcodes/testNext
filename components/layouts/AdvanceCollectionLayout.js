@@ -9,15 +9,16 @@ import { PageHead } from '../includes/PageHead';
 import { getToken } from '../../services/user/accessToken';
 import { ReducerContext } from '../../pages/AdvanceCollection';
 import { ACCOUNTS, DISABLED } from '../../store/advanceCollection/actionType';
-const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
+import { SELECTED } from '../../store/advanceCollection/actionType';
+const AdvanceCollectionLayout = function ({ children, startTime, endTime, type }) {
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [state, dispatch] = useContext(ReducerContext);
 
     useEffect(() => {
-        if (checkTimeHandler() && checkLoginHandler()) {
+        if (checkTimeHandler() && checkLoginHandler(type)) {
             setVerifySuccess(true);
         }
-    }, []);
+    }, [type]);
 
     const checkTimeHandler = () => {
         const formatTime = 'HH:mm:ss';
@@ -35,15 +36,26 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime }) {
         }
     };
 
-    const checkLoginHandler = () => {
+    const checkLoginHandler = type => {
         if (checkLogin()) {
             const tonkenVal = jwt_decode(getToken());
             const groupedAccount = accountGroupByType(tonkenVal.acts_detail);
             if (groupedAccount.S.length > 0) {
                 groupedAccount.S = groupedAccount.S.filter(item => {
+                    if (type === 'earmarkReserve') {
+                        if (item.settle_sp != null && !item.settle_sp) {
+                            console.log('item', item);
+                            return false;
+                        }
+                    }
                     if (item.idno === tonkenVal.user_id) return true;
                 });
-                dispatch({ type: ACCOUNTS, payload: groupedAccount.S });
+                if (groupedAccount.S.length == 0) {
+                    dispatch({ type: ACCOUNTS, payload: [] });
+                } else {
+                    dispatch({ type: ACCOUNTS, payload: groupedAccount.S });
+                    // dispatch({ type: SELECTED, payload: groupedAccount.S[0] });
+                }
                 return true;
             } else {
                 alert('無可交易帳號');

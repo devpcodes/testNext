@@ -16,6 +16,7 @@ import LoadingComp from './LoadingComp';
 import EarmarkTable from './EarmarkTable';
 import Msg from './Msg';
 import BankContainer from './BankContainer';
+import { SELECTED } from '../../../store/advanceCollection/actionType';
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
     const [state, dispatch] = useContext(ReducerContext);
@@ -29,6 +30,7 @@ const EarmarkReserve = () => {
     const isWebView = useRef(false);
     const [activeTabKey, setActiveTabKey] = useState('1');
     const router = useRouter();
+
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -37,12 +39,30 @@ const EarmarkReserve = () => {
             });
         }
     }, [state.accountsReducer.disabled]);
+
     useEffect(() => {
-        if (!init.current) {
-            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
-            init.current = true;
+        // console.log('accounts', state.accountsReducer.accounts, state.accountsReducer.selected)
+        if (state.accountsReducer.accounts.length > 0) {
+            dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+            setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
         }
-    }, [state.accountsReducer.selected]);
+        // if (!init.current) {
+        //     dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        //     setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
+        //     init.current = true;
+        // }
+        // setTimeout(() => {
+        //     if(state.accountsReducer.selected != null && state.accountsReducer.selected.settle_sp != null && !state.accountsReducer.selected.settle_sp){
+        //         if(state.accountsReducer.accounts.length > 0){
+        //             dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        //             setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
+        //         }else{
+        //             dispatch({ type: SELECTED, payload: '' });
+        //             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        //         }
+        //     }
+        // }, 500);
+    }, [state.accountsReducer.accounts]);
 
     useEffect(() => {
         if (router.query.iswebview === 'true') {
@@ -150,6 +170,9 @@ const EarmarkReserve = () => {
     };
     const getAccountsDetail = token => {
         let data = jwt_decode(token);
+        if (state.accountsReducer.selected.account == null) {
+            alert('無可用帳號');
+        }
         data = data.acts_detail.filter(item => {
             if (item.account === state.accountsReducer.selected.account) {
                 return true;
@@ -168,13 +191,12 @@ const EarmarkReserve = () => {
                     onChange={changleHandler}
                 >
                     <TabPane tab="預收款項申請" key="1">
-                        <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
+                        <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} type="eamarkReserve" />
                         {activeTabKey === '1' && (
                             <BankContainer
-                                bhname={state.accountsReducer.selected.bhname}
                                 token={getToken()}
-                                broker_id={state.accountsReducer.selected.broker_id}
-                                account={state.accountsReducer.selected.account}
+                                broker_id={state.accountsReducer.selected?.broker_id}
+                                account={state.accountsReducer.selected?.account}
                             />
                         )}
 
@@ -267,7 +289,6 @@ const EarmarkReserve = () => {
                         {activeTabKey === '2' && (
                             <>
                                 <BankContainer
-                                    bhname={state.accountsReducer.selected.bhname}
                                     token={getToken()}
                                     broker_id={state.accountsReducer.selected.broker_id}
                                     account={state.accountsReducer.selected.account}
