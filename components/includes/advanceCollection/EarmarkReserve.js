@@ -15,6 +15,7 @@ import { PostApplyEarmarkReserve } from '../../../services/components/reservatio
 import LoadingComp from './LoadingComp';
 import EarmarkTable from './EarmarkTable';
 import Msg from './Msg';
+import BankContainer from './BankContainer';
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
     const [state, dispatch] = useContext(ReducerContext);
@@ -168,6 +169,15 @@ const EarmarkReserve = () => {
                 >
                     <TabPane tab="預收款項申請" key="1">
                         <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
+                        {activeTabKey === '1' && (
+                            <BankContainer
+                                bhname={state.accountsReducer.selected.bhname}
+                                token={getToken()}
+                                broker_id={state.accountsReducer.selected.broker_id}
+                                account={state.accountsReducer.selected.account}
+                            />
+                        )}
+
                         <div className="apply__container">
                             <div className="item">
                                 <p className="label symbol__label">股號或名稱</p>
@@ -253,7 +263,18 @@ const EarmarkReserve = () => {
                     </TabPane>
                     <TabPane tab="預收款項查詢" key="2">
                         <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
-                        {activeTabKey === '2' && <EarmarkTable />}
+
+                        {activeTabKey === '2' && (
+                            <>
+                                <BankContainer
+                                    bhname={state.accountsReducer.selected.bhname}
+                                    token={getToken()}
+                                    broker_id={state.accountsReducer.selected.broker_id}
+                                    account={state.accountsReducer.selected.account}
+                                />
+                                <EarmarkTable />
+                            </>
+                        )}
                         <Msg
                             style={{ marginTop: '30px' }}
                             list={[
