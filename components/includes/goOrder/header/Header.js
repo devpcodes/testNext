@@ -190,7 +190,7 @@ const Header = () => {
                             我的帳務
                         </a>
                         <br />
-                        <a
+                        {/* <a
                             style={{
                                 marginBottom: '8px',
                                 display: 'inline-block',
@@ -202,7 +202,7 @@ const Header = () => {
                         >
                             我的自選
                         </a>
-                        <br />
+                        <br /> */}
                     </>
                 )}
 
@@ -275,6 +275,7 @@ const Header = () => {
                             color="white"
                             overlayClassName="menu__tooltip"
                             visible={menuVisible}
+                            style={{ width: '500px' }}
                         >
                             <div
                                 className="accountElement"
@@ -292,7 +293,7 @@ const Header = () => {
                     <>
                         <img className="logo" src={logo} />
                         <Tooltip
-                            placement="topLeft"
+                            placement="topRight"
                             title={renderMenu.bind(null, socalLogin)}
                             color="white"
                             overlayClassName="menu__tooltip--2"
@@ -403,6 +404,7 @@ const Header = () => {
                     line-height: 25px;
                     margin-top: -12px;
                     margin-left: 12px;
+                    width: 110px;
                 }
             `}</style>
         </div>
