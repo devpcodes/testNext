@@ -8,6 +8,7 @@ import SolaceClientComponent from '../components/includes/SolaceClientComponent'
 import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
 import { checkLogin } from '../services/components/layouts/checkLogin';
 import { StockContainer } from '../components/includes/goOrder/StockContainer';
+import SBContainer from '../components/includes/goOrder/SB/SBContainer';
 
 export async function getServerSideProps(context) {
     let requestStockId;
@@ -89,6 +90,7 @@ const OrderGO = ({ requestStockId }) => {
                 {!checkLogin() && type === 'S' && <SolaceClientComponent subscribeTopic={topic} idno={''} />}
                 <Header />
                 {type === 'S' && <StockContainer requestStockId={requestStockId} />}
+                {type === 'H' && <SBContainer requestStockId={requestStockId} />}
             </div>
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
             <style global jsx>{`

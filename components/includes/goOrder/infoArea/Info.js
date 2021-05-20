@@ -46,6 +46,7 @@ import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 import { fetchGetRichClubReport } from '../../../../services/components/richclub/getRichClubReport';
+import MoreInfo from './MoreInfo';
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 const solaceDataHandler = (solaceData, lot, checkLot) => {
@@ -448,7 +449,6 @@ export const Info = ({ stockid }) => {
         setT30Data(t30Res);
         setMoreItems(moreItems);
     };
-
     return (
         <div className="info__container">
             {!isLogin && (
@@ -510,7 +510,7 @@ export const Info = ({ stockid }) => {
                         <div className="unit">{lot === 'Odd' ? '股' : '張'}</div>
                     </div>
                 </div>
-                <div className="row">
+                {/* <div className="row">
                     <div className="market__container">
                         <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
                             <div className="box board">整</div>
@@ -527,27 +527,41 @@ export const Info = ({ stockid }) => {
                             <TextBox key={item.id} color={item.color} text={item.text} />
                         ))}
                     </div>
-                </div>
+                </div> */}
+                <MoreInfo isMoreDetailVisitable={isMoreDetailVisitable}>
+                    <div className="market__container">
+                        <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
+                            <div className="box board">整</div>
+                            {productInfo?.solaceMarket &&
+                                productInfo.solaceMarket !== '興櫃' &&
+                                productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>}
+                        </button>
+                        {productInfo?.solaceMarket != null && (
+                            <div className="market__box">{productInfo.solaceMarket}</div>
+                        )}
+                    </div>
+                </MoreInfo>
             </div>
-            <div className="more__info__container">
+
+            {/* <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    {/* <button
+                    <button
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
                         {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
-                    </button> */}
+                    </button>
                 </div>
             </div>
-            <div className="page__mask"></div>
+            <div className="page__mask"></div> */}
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <AddSelectStock
+            {/* <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
                 reloadSelect={getSelect}
-            />
+            /> */}
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
