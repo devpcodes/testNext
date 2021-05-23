@@ -7,6 +7,7 @@ import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelec
 import AddSelectStock from '../selfSelectStock/AddSelectStock';
 import { setSelectInfo } from '../../../../store/goOrder/action';
 import { getToken } from '../../../../services/user/accessToken';
+
 const MoreInfo = ({ children }) => {
     const code = useSelector(store => store.goOrder.code);
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
@@ -18,6 +19,37 @@ const MoreInfo = ({ children }) => {
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const type = useSelector(store => store.goOrder.type);
     const dispatch = useDispatch();
+
+    let defaultMoreItems = [
+        {
+            id: '1',
+            color: 'red',
+            text: '詳',
+            title: '詳細報價',
+            desc: '理財網完整報價',
+            inInfoBox: true,
+            link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${code}`,
+        },
+        {
+            id: '2',
+            color: 'orange',
+            text: '存',
+            title: '豐存股',
+            desc: '優質個股輕鬆存',
+            inInfoBox: true,
+            link: `https://aiinvest.sinotrade.com.tw/Product/In?id=${code}`,
+        },
+        {
+            id: '3',
+            color: 'blue',
+            text: '學',
+            title: '豐雲學堂',
+            desc: '理財文章指點迷津',
+            inInfoBox: true,
+            link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
+        },
+        // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+    ];
     const showSelfSelect = () => {
         setIsSelfSelectVisitable(true);
     };
@@ -25,10 +57,14 @@ const MoreInfo = ({ children }) => {
         setIsSelfSelectVisitable(false);
     }, []);
     useEffect(() => {
-        if (!code) {
-            return;
+        if (type === 'S') {
+            if (!code) {
+                return;
+            }
+            setInfoItems(code);
+        } else {
+            setMoreItems(defaultMoreItems);
         }
-        setInfoItems(code);
     }, [code]);
     // 暫時移除自選邏輯
     useEffect(() => {
