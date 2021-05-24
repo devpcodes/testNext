@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AutoComplete } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
-const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = false }) => {
+const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = false, selectedHandler }) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
-
+    const selected = useRef(false);
     useEffect(() => {
         setValue(parentValue);
         if (parentValue === '') {
@@ -50,6 +50,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = fals
     };
 
     const changeHandler = val => {
+        selected.current = false;
         const patt = /^[\s-+a-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
         if (!patt.test(val)) {
             return;
@@ -68,7 +69,14 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = fals
 
     const onSelect = value => {
         console.log('select', value);
+        selected.current = true;
         selectHandler(value);
+    };
+
+    const onBlur = () => {
+        if (typeof eval(selectedHandler) == 'function') {
+            selectedHandler(selected.current);
+        }
     };
 
     return (
@@ -85,6 +93,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = fals
                     autoFocus={true}
                     defaultActiveFirstOption={true}
                     onSelect={onSelect}
+                    onBlur={onBlur}
                 />
             </div>
             <style global jsx>{`

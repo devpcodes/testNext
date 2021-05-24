@@ -27,6 +27,7 @@ const EarmarkReserve = () => {
     const [showLoading, setShowLoading] = useState(false);
     const init = useRef(false);
     const selectSymbol = useRef('');
+    const selected = useRef(false);
     const isWebView = useRef(false);
     const [activeTabKey, setActiveTabKey] = useState('1');
     const router = useRouter();
@@ -94,7 +95,12 @@ const EarmarkReserve = () => {
             console.log(error);
         }
     });
-    const onSeChangeHandler = useCallback(val => {});
+    const onSeChangeHandler = useCallback(val => {
+        // selectHandler(val);
+    });
+    const selectedHandler = useCallback(bol => {
+        selected.current = bol;
+    });
     const changleHandler = useCallback(activeKey => {
         setActiveTabKey(activeKey);
         if (state.accountsReducer.selected) {
@@ -124,6 +130,12 @@ const EarmarkReserve = () => {
         return true;
     });
     const submitHandler = async (symbol, price, qty, amount) => {
+        if (!selected.current) {
+            Modal.error({
+                content: '請選擇股號或名稱',
+            });
+            return;
+        }
         if (!symbol || !price || !qty) {
             Modal.error({
                 content: '資料輸入未完整',
@@ -207,6 +219,7 @@ const EarmarkReserve = () => {
                                     selectHandler={selectHandler}
                                     onChange={onSeChangeHandler}
                                     width={'100%'}
+                                    selectedHandler={selectedHandler}
                                 />
                             </div>
                             <div className="item">
@@ -250,6 +263,7 @@ const EarmarkReserve = () => {
                                         priceVal,
                                         qtyVal,
                                         amountVal,
+                                        selected.current,
                                     )}
                                     disabled={state.accountsReducer.disabled}
                                 />
