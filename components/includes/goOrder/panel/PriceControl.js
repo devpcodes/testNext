@@ -211,9 +211,6 @@ const PriceControl = ({ title }) => {
     };
 
     const priceTypeHandler = value => {
-        if (value != ' ') {
-            dispatch(setOrderPrice('0'));
-        }
         dispatch(setPriceType(value));
     };
 
