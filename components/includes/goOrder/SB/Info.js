@@ -1,14 +1,24 @@
+import { useState, useCallback } from 'react';
 import theme from '../../../../resources/styles/theme';
 import { getArrow } from '../../../../services/numFormat';
 import searchIcon from '../../../../resources/images/components/goOrder/edit-search.svg';
 import MoreInfo from '../infoArea/MoreInfo';
+import { Search } from '../search/Search';
 const Info = () => {
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
     const getCloseInfo = (close, isSimTrade, diffPrice, reference, diffRate) => {
         if (close === 0) {
             return '--';
         }
         return `100.11 ${getArrow(100.11, 99)} 1.11 (0.10%)`;
     };
+    const handleCancel = useCallback(() => {
+        setIsSearchVisible(false);
+    }, []);
+    const searchHandler = useCallback(() => {
+        setIsSearchVisible(true);
+    }, []);
+
     return (
         <>
             <div className="info__container">
@@ -29,7 +39,7 @@ const Info = () => {
                             {/* <button className="share" onClick={shareHandler}>
                                 <img src={share} alt="share"></img>
                             </button> */}
-                            <button className="search">
+                            <button className="search" onClick={searchHandler}>
                                 <img src={searchIcon} alt="search"></img>
                             </button>
                         </div>
@@ -49,6 +59,7 @@ const Info = () => {
                     </MoreInfo>
                 </div>
             </div>
+            <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
             <style jsx>{`
                 .row {
                     display: flex;
