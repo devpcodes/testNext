@@ -143,7 +143,7 @@ const SubmitBtn = () => {
             });
             return;
         }
-        if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
+        if (ord_price === '' || offerShare === '' || offerShare == 0) {
             Modal.error({
                 title: '資料格式錯誤',
                 content: '請確認價格或張數(股數)資料填寫正確',
