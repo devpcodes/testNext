@@ -48,6 +48,11 @@ export const HeaderCallToAction = () => {
                 queryString = objectToQueryHandler(lineQuery);
                 break;
             }
+            case 'gugu': {
+                const lineQuery = Object.assign(newQuery, { source: 'gugu' });
+                queryString = objectToQueryHandler(lineQuery);
+                break;
+            }
             default:
                 queryString = objectToQueryHandler(newQuery);
                 break;

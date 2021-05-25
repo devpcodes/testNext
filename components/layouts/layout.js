@@ -180,6 +180,7 @@ const Layout = memo(({ children }) => {
             udn: 'udn',
             line: 'u168',
             cnyes: 'cnyes',
+            gugu: 'gugu',
         };
         const itemkey = router.query.platform ? router.query.platform.toLocaleLowerCase() : false;
         if (itemkey && sourceList[itemkey]) {

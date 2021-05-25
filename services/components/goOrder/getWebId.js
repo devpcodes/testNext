@@ -27,6 +27,12 @@ const chart = [
             stock: '158',
         },
     },
+    {
+        source: {
+            id: 'gugu',
+            recommisiioned: '163',
+        },
+    },
 ];
 const defaultSource = {
     stock: '129',
