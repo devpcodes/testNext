@@ -97,7 +97,7 @@ const OrderBox = () => {
         const broker_id = currentAccount.broker_id;
         const ord_bs = bs;
         const ord_cond = ordCond;
-        const ord_price = ordPrice;
+        const ord_price = ordPrice || '0';
         const ord_qty = ordQty;
         const ord_type = ordType;
         const price_type = priceType;

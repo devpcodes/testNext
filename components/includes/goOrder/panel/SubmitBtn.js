@@ -187,7 +187,7 @@ const SubmitBtn = () => {
         const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
-        const ord_price = ordPrice;
+        const ord_price = ordPrice || '0';
         const ord_qty = ordQty;
         const ord_type = ordType;
         const price_type = priceType;
