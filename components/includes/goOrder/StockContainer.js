@@ -10,9 +10,11 @@ import { setPanelHeight } from '../../../store/goOrder/action';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 
 import arrow from '../../../resources/images/components/goOrder/arrow-chevron-down.png';
+import OrderDrawer from './SB/OrderDrawer';
+
 export const StockContainer = ({ requestStockId }) => {
-    const dispatch = useDispatch();
-    const [drawerVisible, setDrawerVisible] = useState(false);
+    // const dispatch = useDispatch();
+    // const [drawerVisible, setDrawerVisible] = useState(false);
 
     const confirmBox = useSelector(store => store.goOrder.confirmBox);
     const confirmBoxTitle = useSelector(store => store.goOrder.confirmBoxTitle);
@@ -22,14 +24,13 @@ export const StockContainer = ({ requestStockId }) => {
 
     const winSize = useWindowSize();
 
-    useEffect(() => {
-        if (bs !== '') {
-            setTimeout(() => {
-                setDrawerVisible(true);
-            }, 0);
-        }
-    }, [bs]);
-
+    // useEffect(() => {
+    //     if (bs !== '') {
+    //         setTimeout(() => {
+    //             setDrawerVisible(true);
+    //         }, 0);
+    //     }
+    // }, [bs]);
     const openContainerHeight = () => {
         if (bs === '') {
             return 'auto';
@@ -47,7 +48,7 @@ export const StockContainer = ({ requestStockId }) => {
                 <Info stockid={requestStockId} />
                 <QuoteContainer />
             </div>
-            <Drawer
+            {/* <Drawer
                 closable={true}
                 visible={drawerVisible}
                 placement={'bottom'}
@@ -76,7 +77,13 @@ export const StockContainer = ({ requestStockId }) => {
                 <MyTransition isVisible={confirmBox} classNames={'loginMobile2'}>
                     <OrderConfirmBox title={confirmBoxTitle} color={confirmBoxColor} />
                 </MyTransition>
-            </Drawer>
+            </Drawer> */}
+            <OrderDrawer>
+                <PanelTabs />
+                <MyTransition isVisible={confirmBox} classNames={'loginMobile2'}>
+                    <OrderConfirmBox title={confirmBoxTitle} color={confirmBoxColor} />
+                </MyTransition>
+            </OrderDrawer>
             <style jsx>{`
                 .open__container {
                     height: ${openContainerHeight()};

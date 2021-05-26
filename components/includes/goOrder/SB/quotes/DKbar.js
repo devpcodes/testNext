@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import currentIcon from '../../../../../resources/images/components/goOrder/sb/arrow-caret-down.svg';
-const DKbar = ({ high, low, close, open }) => {
+const DKbar = ({ high, low, close, open, text, style }) => {
     const [positionLeft, setPositionLeft] = useState(0);
     const [barWidth, setBarWidth] = useState(0);
     const [closePosition, setClosePosition] = useState(0);
@@ -26,10 +26,10 @@ const DKbar = ({ high, low, close, open }) => {
     }, []);
     return (
         <>
-            <div className="priceBetween__container">
+            <div className="priceBetween__container" style={style}>
                 <div className="price__info">
                     <span className="price__info-item">{low}</span>
-                    <span className="price__info-description">當日價格區間</span>
+                    <span className="price__info-description">{text}</span>
                     <span className="price__info-item">{high}</span>
                 </div>
                 <div className="price__bar" ref={maxWidthElement}>
@@ -42,6 +42,7 @@ const DKbar = ({ high, low, close, open }) => {
                     padding-left: 16px;
                     padding-right: 16px;
                 }
+
                 .price__info {
                     display: flex;
                     justify-content: space-between;
