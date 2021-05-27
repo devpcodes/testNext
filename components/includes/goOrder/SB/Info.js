@@ -4,8 +4,11 @@ import { getArrow } from '../../../../services/numFormat';
 import searchIcon from '../../../../resources/images/components/goOrder/edit-search.svg';
 import MoreInfo from '../infoArea/MoreInfo';
 import { Search } from '../search/Search';
+import { InstallWebCA } from '../infoArea/InstallWebCA';
+import UpdateBar from './UpdateBar';
 const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [checkCA, setCheckCA] = useState(false);
     const getCloseInfo = (close, isSimTrade, diffPrice, reference, diffRate) => {
         if (close === 0) {
             return '--';
@@ -18,9 +21,13 @@ const Info = () => {
     const searchHandler = useCallback(() => {
         setIsSearchVisible(true);
     }, []);
-
+    const getCheckCA = useCallback(boo => {
+        setCheckCA(boo);
+    });
     return (
         <>
+            <InstallWebCA getCheckCA={getCheckCA} />
+            {checkCA && <UpdateBar text={'請手動點擊更新，刷新報價'} />}
             <div className="info__container">
                 <div className="info__box">
                     <div className="row">

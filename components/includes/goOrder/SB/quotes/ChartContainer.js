@@ -1,12 +1,23 @@
-const ChartContainer = () => {
+import { useRef, useEffect } from 'react';
+
+const ChartContainer = ({ getHeight, bottomLineVisible }) => {
+    const chartElement = useRef(null);
+    useEffect(() => {
+        if (chartElement.current != null) {
+            // console.log('hh', chartElement.current.clientHeight)
+            if (getHeight != null) {
+                getHeight(chartElement.current.clientHeight + 5);
+            }
+        }
+    });
     return (
         <>
-            <div className="chart__container">
-                <div className="chart__info">
+            <div className="chart__container" ref={chartElement}>
+                {/* <div className="chart__info">
                     <span className="text">報價時間／美東，幣別／美金</span>
                     <span className="line"></span>
-                </div>
-                <div className="chart"></div>
+                </div> */}
+                <div className="chart">123</div>
                 <div className="bottom__line"></div>
             </div>
             <style jsx>{`
@@ -39,7 +50,7 @@ const ChartContainer = () => {
                 .bottom__line {
                     background-color: #0d1623;
                     width: 100%;
-                    height: 1px;
+                    height: ${bottomLineVisible ? '1px' : 0};
                 }
             `}</style>
         </>

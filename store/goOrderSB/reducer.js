@@ -2,6 +2,7 @@ import * as actionType from './actionType';
 
 const initialState = {
     bs: '',
+    activeTabKey: '1', //2 3
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -9,6 +10,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 bs: action.payload,
+            };
+        case actionType.SET_SB_ACTIVETABKEY:
+            return {
+                ...state,
+                activeTabKey: action.payload,
             };
         default:
             return state;

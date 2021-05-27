@@ -1,29 +1,68 @@
-import { useMemo, useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Tabs } from 'antd';
 import { themeColor } from '../../panel/PanelTabs';
+import { setSBActiveTabKey, setSBBs } from '../../../../../store/goOrderSB/action';
 const { TabPane } = Tabs;
 
 const OrderTab = () => {
-    const [tabKey, setTabKey] = useState('1');
+    // const [tabKey, setTabKey] = useState('1');
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
     const [gradient, setGradient] = useState(themeColor.buyGradient);
-    const tabChangeHandler = useCallback(() => {});
+    const activeTabKey = useSelector(store => store.goOrderSB.activeTabKey);
+    const bs = useSelector(store => store.goOrderSB.bs);
+    const dispatch = useDispatch();
+    const tabChangeHandler = useCallback(activeKey => {
+        switch (activeKey) {
+            case '1':
+                dispatch(setSBBs('B'));
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                dispatch(setSBActiveTabKey(activeKey));
+                break;
+            case '2':
+                dispatch(setSBBs('S'));
+                setTabColor(themeColor.sellTabColor);
+                setGradient(themeColor.sellGradient);
+                dispatch(setSBActiveTabKey(activeKey));
+                break;
+            case '3':
+                setTabColor(themeColor.tradingAccColor);
+                setGradient(themeColor.tradingGradient);
+                dispatch(setSBActiveTabKey(activeKey));
+                break;
+            default:
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+        }
+    }, []);
+    useEffect(() => {
+        if (bs === 'B') {
+            dispatch(setSBActiveTabKey('1'));
+            setTabColor(themeColor.buyTabColor);
+            setGradient(themeColor.buyGradient);
+        } else {
+            dispatch(setSBActiveTabKey('2'));
+            setTabColor(themeColor.sellTabColor);
+            setGradient(themeColor.sellGradient);
+        }
+    }, [bs]);
     const tabChildren = useMemo(() => {
         return (
-            <Tabs activeKey={tabKey} onChange={tabChangeHandler}>
+            <Tabs activeKey={activeTabKey} onChange={tabChangeHandler}>
                 <TabPane tab="買進" key="1">
-                    {tabKey === '1' && '123'}
+                    {activeTabKey === '1' && '123'}
                 </TabPane>
                 <TabPane tab="賣出" key="2">
-                    {tabKey === '2' && '222'}
+                    {activeTabKey === '2' && '222'}
                 </TabPane>
                 <TabPane tab="成委回" key="3">
-                    {tabKey === '3' && '333'}
+                    {activeTabKey === '3' && '333'}
                 </TabPane>
             </Tabs>
         );
-    }, [tabKey]);
+    }, [activeTabKey]);
     return (
         <>
             <div className="tabs__container">{tabChildren}</div>

@@ -5,3 +5,9 @@ export const setSBBs = bs => {
         payload: bs,
     };
 };
+export const setSBActiveTabKey = key => {
+    return {
+        type: actionType.SET_SB_ACTIVETABKEY,
+        payload: key,
+    };
+};
