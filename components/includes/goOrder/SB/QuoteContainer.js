@@ -24,12 +24,15 @@ const QuoteContainer = () => {
         chartHeight.current = h;
     });
     const bottomLineVisible = useCallback(() => {
+        if (bs === '') {
+            return true;
+        }
         if (panelHeight >= 100) {
             return false;
         } else {
             return true;
         }
-    }, [panelHeight]);
+    }, [panelHeight, bs]);
 
     return (
         <div className="quote__container" ref={quoteContainerElement}>
@@ -56,7 +59,7 @@ const QuoteContainer = () => {
                     overflow-x: hidden;
                     /* overflow: hidden; */
                     background-color: white;
-                    height: ${panelHeight > 100 && bs !== '' ? 210 : winSize.height - 300}px;
+                    height: ${panelHeight > 100 && bs !== '' ? 210 : winSize.height - 315}px;
                 }
                 .quote__container--content {
                     transition: all 0.3s;

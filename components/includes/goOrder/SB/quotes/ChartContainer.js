@@ -1,14 +1,16 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Chart from '../Chart';
 
 const ChartContainer = ({ getHeight, bottomLineVisible }) => {
     const chartElement = useRef(null);
-
+    const [chartWidth, setChartWidth] = useState(0);
     useEffect(() => {
         if (chartElement.current != null) {
             // console.log('hh', chartElement.current.clientHeight)
             if (getHeight != null) {
                 getHeight(chartElement.current.clientHeight + 5);
+                setChartWidth(chartElement.current.clientWidth - 30);
+                console.log('wwwwwwww', chartElement.current.clientWidth);
             }
         }
     });
@@ -20,7 +22,8 @@ const ChartContainer = ({ getHeight, bottomLineVisible }) => {
                     <span className="line"></span>
                 </div> */}
                 <div className="chart">
-                    <Chart />
+                    {/* {bottomLineVisible && <Chart width={chartWidth}/>} */}
+                    <Chart width={chartWidth} visible={bottomLineVisible} />
                 </div>
                 <div className="bottom__line"></div>
             </div>
