@@ -1,7 +1,9 @@
 import { useRef, useEffect } from 'react';
+import Chart from '../Chart';
 
 const ChartContainer = ({ getHeight, bottomLineVisible }) => {
     const chartElement = useRef(null);
+
     useEffect(() => {
         if (chartElement.current != null) {
             // console.log('hh', chartElement.current.clientHeight)
@@ -17,7 +19,9 @@ const ChartContainer = ({ getHeight, bottomLineVisible }) => {
                     <span className="text">報價時間／美東，幣別／美金</span>
                     <span className="line"></span>
                 </div> */}
-                <div className="chart">123</div>
+                <div className="chart">
+                    <Chart />
+                </div>
                 <div className="bottom__line"></div>
             </div>
             <style jsx>{`
