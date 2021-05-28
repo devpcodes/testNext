@@ -132,7 +132,7 @@ const EarmarkReserve = () => {
     const submitHandler = async (symbol, price, qty, amount) => {
         if (!selected.current) {
             Modal.error({
-                content: '請選擇股號或名稱',
+                content: '股號或名稱請依下拉式選單選擇',
             });
             return;
         }
