@@ -9,14 +9,17 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
+const noNewwebHeader = true;
 function Self_select_stocks() {
     return (
         <>
-            <Header />
+            {noNewwebHeader ? <Header /> : ''}
             <div className="select__box">
                 <SelfSelectToolBar />
                 <PageHead title={'我的自選'} />
-                <SelfSelectTable />
+                <div className="select__list__box">
+                    <SelfSelectTable />
+                </div>
             </div>
 
             <style jsx>{`
@@ -25,12 +28,28 @@ function Self_select_stocks() {
                     margin: 0 auto;
                     padding: 20px 15px 22px 15px;
                 }
+
+                .select__list__box {
+                    border: solid 1px #e6ebf5;
+                    margin-top: 22px;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-tabs-bottom > .ant-tabs-nav:before,
+                .ant-tabs-bottom > div > .ant-tabs-nav:before,
+                .ant-tabs-top > .ant-tabs-nav:before,
+                .ant-tabs-top > div > .ant-tabs-nav:before {
+                    border-bottom: 0;
+                }
+                .ant-tabs-top > .ant-tabs-nav {
+                    margin: 0;
+                }
             `}</style>
         </>
     );
 }
 
-if (true) {
+if (noNewwebHeader) {
     Self_select_stocks.getLayout = Page => Page;
 }
 export default Self_select_stocks;
