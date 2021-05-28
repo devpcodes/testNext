@@ -12,6 +12,7 @@ import theme from '../../../../resources/styles/theme';
 import searchImg from '../../../../resources/images/components/goOrder/edit-search.svg';
 import closeImg from '../../../../resources/images/components/goOrder/menu-close-big.svg';
 import { useLocalStorage } from '../../../../hooks/useLocalStorage';
+import { marketName } from '../../../../services/components/goOrder/sb/dataMapping';
 
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const type = useSelector(store => store.goOrder.type);
     const code = useSelector(store => store.goOrder.code);
     const textInput = useRef(null);
-
+    const categories = useRef([]);
     const getMarketType = type => {
         switch (type) {
             case 'S':
@@ -138,7 +139,12 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             };
             try {
                 const { result } = await fetchProducts(data);
-                setProducts(result);
+                if (type === 'H') {
+                    let arr = categoriesHandler(result);
+                    setProducts(arr);
+                } else {
+                    setProducts(result);
+                }
             } catch (error) {
                 console.error(`fetchProducts-error:`, error);
             }
@@ -156,6 +162,39 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             textInput.current.focus();
         }
     }, [isVisible]);
+
+    const categoriesHandler = data => {
+        let newArr = [];
+        for (let i of data) {
+            const category = marketName(i.market);
+            newArr.push(category);
+            newArr.push(i);
+        }
+        newArr = _.uniqBy(newArr, 'name');
+        return newArr;
+    };
+
+    const SearchItemHandler = () => {
+        return products.map(item => {
+            if (item.category) {
+                return (
+                    <div key={item.name} className="group__title">
+                        {item.name}
+                    </div>
+                );
+            } else {
+                return (
+                    <SearchItem
+                        key={item.id}
+                        item={item}
+                        keyword={keyword}
+                        selectHandler={selectHandler}
+                        isMatched={true}
+                    />
+                );
+            }
+        });
+    };
 
     return (
         <MyTransition isVisible={isVisible} classNames={'search'}>
@@ -196,15 +235,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         {keyword ? (
                             <article className="dropdown__group">
                                 {/* {<div className="group__title">個股</div>} */}
-                                {products.map(item => (
-                                    <SearchItem
-                                        key={item.id}
-                                        item={item}
-                                        keyword={keyword}
-                                        selectHandler={selectHandler}
-                                        isMatched={true}
-                                    />
-                                ))}
+                                {SearchItemHandler(products)}
                             </article>
                         ) : (
                             <>
@@ -301,6 +332,16 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         color: ${theme.colors.darkBg};
                     }
                     .dropdown__group .group__title {
+                        width: 100%;
+                        height: 24px;
+                        line-height: 24px;
+                        padding: 0 16px;
+                        background-color: ${theme.colors.normalBg};
+                        font-size: 1.2rem;
+                    }
+                `}</style>
+                <style global jsx>{`
+                    .group__title {
                         width: 100%;
                         height: 24px;
                         line-height: 24px;

@@ -7,7 +7,7 @@ import { Select } from 'antd';
 import { useUser } from '../../../../hooks/useUser';
 import { useHasMounted } from '../../../../hooks/useHasMounted';
 
-import { setCode, setType } from '../../../../store/goOrder/action';
+import { setCode, setProductInfo, setType } from '../../../../store/goOrder/action';
 import { setCurrentAccount } from '../../../../store/user/action';
 
 import { accountGroupByType } from '../../../../services/user/accountGroupByType';
@@ -21,6 +21,7 @@ import { useCheckSocialLogin } from '../../../../hooks/useCheckSocialLogin';
 import { AccountAvatar } from '../../AccountAvatar';
 import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
 import { logout } from '../../../../services/user/logoutFetcher';
+import { defaultProductInfo } from '../SB/Info';
 
 const { Option } = Select;
 
@@ -138,11 +139,23 @@ const Header = () => {
     }, [socalLoginData]);
 
     const handleTypeChange = value => {
-        if (value !== 'S') {
-            dispatch(setCode(''));
-        } else {
-            dispatch(setCode('2890'));
+        switch (value) {
+            case 'S':
+                dispatch(setCode('2890'));
+                break;
+            case 'H':
+                dispatch(setCode(defaultProductInfo.symbol));
+                break;
+            default:
+                dispatch(setCode('2890'));
+                break;
         }
+        // if (value !== 'S') {
+        //     dispatch(setCode(''));
+        // } else {
+        //     dispatch(setCode('2890'));
+        // }
+        dispatch(setProductInfo({}));
         dispatch(setType(value));
         // dispatch(setCurrentAccount(groupedAccount[value][0]));
     };

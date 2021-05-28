@@ -5,6 +5,7 @@ import OrderDrawer from './OrderDrawer';
 import OrderTab from './sbPanel/OrderTab';
 import QuoteContainer from './QuoteContainer';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
+// code , type ,  productInfo在redux goOrder裡
 const SBContainer = () => {
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const winSize = useWindowSize();

@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import theme from '../../../../resources/styles/theme';
 import { getArrow } from '../../../../services/numFormat';
 import searchIcon from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -6,8 +7,15 @@ import MoreInfo from '../infoArea/MoreInfo';
 import { Search } from '../search/Search';
 import { InstallWebCA } from '../infoArea/InstallWebCA';
 import UpdateBar from './UpdateBar';
+
+export const defaultProductInfo = {
+    symbol: 'AAPL',
+    name: 'Apple',
+};
 const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
+
     const [checkCA, setCheckCA] = useState(false);
     const getCloseInfo = (close, isSimTrade, diffPrice, reference, diffRate) => {
         if (close === 0) {
@@ -38,9 +46,11 @@ const Info = () => {
                                     fontSize: '2.6rem',
                                 }}
                             >
-                                {'蘋果'}
+                                {productInfo.marketType === 'SB' ? productInfo.symbol : defaultProductInfo.symbol}
                             </div>
-                            <div className="product__code">AAPL</div>
+                            <div className="product__code">
+                                {productInfo.marketType === 'SB' ? productInfo.name : defaultProductInfo.name}
+                            </div>
                         </div>
                         <div className="toolbar__container">
                             {/* <button className="share" onClick={shareHandler}>
@@ -98,7 +108,7 @@ const Info = () => {
                     font-size: 2.6rem;
                 }
                 .product__code {
-                    font-size: 1.8rem;
+                    font-size: 1.4rem;
                     margin-left: 1.2rem;
                 }
                 .toolbar__container {
