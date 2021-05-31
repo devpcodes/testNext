@@ -11,3 +11,9 @@ export const setSBActiveTabKey = key => {
         payload: key,
     };
 };
+export const setQuote = data => {
+    return {
+        type: actionType.SET_QUOTE,
+        payload: data,
+    };
+};

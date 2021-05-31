@@ -3,6 +3,7 @@ import * as actionType from './actionType';
 const initialState = {
     bs: '',
     activeTabKey: '1', //2 3
+    quote: {},
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -15,6 +16,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 activeTabKey: action.payload,
+            };
+        case actionType.SET_QUOTE:
+            return {
+                ...state,
+                quote: action.payload,
             };
         default:
             return state;

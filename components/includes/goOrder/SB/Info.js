@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import theme from '../../../../resources/styles/theme';
 import { getArrow } from '../../../../services/numFormat';
 import searchIcon from '../../../../resources/images/components/goOrder/edit-search.svg';
@@ -7,21 +7,59 @@ import MoreInfo from '../infoArea/MoreInfo';
 import { Search } from '../search/Search';
 import { InstallWebCA } from '../infoArea/InstallWebCA';
 import UpdateBar from './UpdateBar';
+import { getToken } from '../../../../services/user/accessToken';
+import { fetchGetQuote } from '../../../../services/components/goOrder/sb/fetchGetQuote';
+import { setProductInfo } from '../../../../store/goOrder/action';
+import { getCodeType } from '../../../../services/components/goOrder/sb/dataMapping';
+import { setQuote } from '../../../../store/goOrderSB/action';
 
 export const defaultProductInfo = {
     symbol: 'AAPL',
     name: 'Apple',
+    market: 'US',
+    marketType: 'SB',
 };
 const Info = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const productInfo = useSelector(store => store.goOrder.productInfo);
-
+    const code = useSelector(store => store.goOrder.code);
+    const type = useSelector(store => store.goOrder.type);
+    const quote = useSelector(store => store.goOrderSB.quote);
+    const dispatch = useDispatch();
     const [checkCA, setCheckCA] = useState(false);
-    const getCloseInfo = (close, isSimTrade, diffPrice, reference, diffRate) => {
-        if (close === 0) {
-            return '--';
+
+    useEffect(() => {
+        dispatch(setProductInfo(defaultProductInfo));
+    }, [type]);
+
+    useEffect(() => {
+        if (productInfo.market) {
+            const codeType = getCodeType(productInfo.market);
+            getData(code + '.' + codeType);
         }
-        return `100.11 ${getArrow(100.11, 99)} 1.11 (0.10%)`;
+    }, [code, productInfo]);
+
+    const getData = useCallback(async code => {
+        const token = getToken();
+        try {
+            const res = await fetchGetQuote(code, token);
+            console.log('res', res);
+            dispatch(setQuote(res));
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    const getCloseInfo = () => {
+        let nc = '';
+        let pc = '';
+        if (quote.nc != null) {
+            nc = Math.abs(Number(quote.nc));
+        }
+        if (quote.pc != null) {
+            pc = Math.abs(Number(quote.pc));
+        }
+        return `${quote?.ls || '--'} ${getArrow(quote?.ls, quote?.refprice)} ${nc} (${pc}%)`;
     };
     const handleCancel = useCallback(() => {
         setIsSearchVisible(false);

@@ -1,12 +1,14 @@
 import { useEffect, useState, memo } from 'react';
+import { useSelector } from 'react-redux';
 import { fetchRenderTa } from '../../../../services/components/goOrder/sb/fetchRenderTa';
 const Chart = memo(({ width, visible }) => {
     const [imgSrc, setImgSrc] = useState('');
+    const type = useSelector(store => store.goOrder.type);
     useEffect(() => {
         if (width) {
             getUUID(width);
         }
-    }, [width]);
+    }, [width, type]);
     const getUUID = async w => {
         try {
             const res = await fetchRenderTa({ width: w, height: 200 });

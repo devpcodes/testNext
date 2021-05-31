@@ -14,3 +14,14 @@ export const marketName = market => {
     });
     return found;
 };
+
+export const getCodeType = market => {
+    switch (market) {
+        case 'US':
+            return 'NB';
+        case 'SEHK':
+            return 'HK';
+        default:
+            return '';
+    }
+};
