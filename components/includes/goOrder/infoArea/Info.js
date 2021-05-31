@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
-import AddSelectStock from '../selfSelectStock/AddSelectStock';
+import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
 
 import {
     priceColor,

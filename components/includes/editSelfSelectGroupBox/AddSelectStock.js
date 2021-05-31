@@ -1,11 +1,11 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox } from 'antd';
-import SortableList from '../sortableList/sortable';
-import { fetchupdateSelectStock } from '../../../../services/selfSelect/updateSelectStock';
-import { fetchUpdateSelectGroup } from '../../../../services/selfSelect/updateSelectGroup';
-import { getToken } from '../../../../services/user/accessToken';
-import { getSocalToken } from '../../../../services/user/accessToken';
+import SortableList from './sortable';
+import { fetchupdateSelectStock } from '../../../services/selfSelect/updateSelectStock';
+import { fetchUpdateSelectGroup } from '../../../services/selfSelect/updateSelectGroup';
+import { getToken } from '../../../services/user/accessToken';
+import { getSocalToken } from '../../../services/user/accessToken';
 
 const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) => {
     const code = useSelector(store => store.goOrder.code);

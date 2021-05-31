@@ -1,9 +1,41 @@
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { Button } from 'antd';
-import AddSelfSelect from '../selfSelect/AddSelfSelect';
+import AddSelfSelect from './AddSelfSelect';
 import refresh from '../../../resources/images/pages/Self_select/basic-refresh-02.png';
 import pen from '../../../resources/images/pages/Self_select/edit-edit.svg';
+import AddSelectStock from '../editSelfSelectGroupBox/AddSelectStock';
+import { fetchCheckSelfSelect } from '../../../services/selfSelect/checkSelectStatus';
+
+// 換
+import { setSelectInfo } from '../../../store/goOrder/action';
 
 const SelfSelectToolBar = () => {
+    const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
+    const closeSelfSelect = useCallback(() => {
+        setIsSelfSelectVisitable(false);
+    }, []);
+    const getSelect = useCallback(async () => {
+        let exchange;
+        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+        switch (type) {
+            case 'S':
+                exchange = 'TAI';
+                break;
+            default:
+                break;
+        }
+        const reqData = {
+            symbol: code,
+            exchange: exchange,
+            market: type,
+            isShowDetail: true,
+            isSocalLogin: isSocalLogin,
+            token: isSocalLogin ? getSocalToken() : getToken(),
+        };
+        const res = await fetchCheckSelfSelect(reqData);
+        dispatch(setSelectInfo(res));
+    });
+
     return (
         <>
             <div className="select__toolbar">
@@ -23,6 +55,13 @@ const SelfSelectToolBar = () => {
                     </Button>
                 </div>
             </div>
+
+            <AddSelectStock
+                isVisible={isSelfSelectVisitable}
+                handleClose={closeSelfSelect}
+                isEdit={false}
+                reloadSelect={getSelect}
+            />
 
             <style jsx>{`
                 .select__toolbar {
@@ -66,6 +105,11 @@ const SelfSelectToolBar = () => {
                 }
                 .edit__group__btn > img {
                     margin-right: 7px;
+                }
+                .ant-btn:hover {
+                    background-color: #f3f6fe;
+                    border: solid 1px #d7e0ef;
+                    color: rgba(0, 0, 0, 0.65);
                 }
             `}</style>
         </>

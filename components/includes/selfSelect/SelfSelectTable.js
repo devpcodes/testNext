@@ -52,6 +52,13 @@ const SelfSelectTable = () => {
                 .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
                     height: 4px;
                 }
+                .ant-tabs-nav-list {
+                    color: #0d1623;
+                }
+                .ant-table-wrapper .ant-table-thead > tr > th {
+                    background-color: #f2f5fa;
+                    color: #3f5372;
+                }
             `}</style>
         </>
     );
