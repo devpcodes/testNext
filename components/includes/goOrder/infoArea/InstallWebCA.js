@@ -15,7 +15,15 @@ export const InstallWebCA = () => {
     const [checkCA, setCheckCA] = useState(false);
     const [reCheckCA, setReCheckCA] = useState(null);
     const suggestAction = useRef('');
-
+    useEffect(() => {
+        window.addEventListener('focus', focusWindowHandler);
+        return () => {
+            window.removeEventListener('focus', focusWindowHandler);
+        };
+    }, []);
+    const focusWindowHandler = () => {
+        setReCheckCA(true);
+    };
     useEffect(() => {
         if (reCheckCA || reCheckCA == null) {
             if (currentAccount.idno) {

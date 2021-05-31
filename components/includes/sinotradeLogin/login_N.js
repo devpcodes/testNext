@@ -1,16 +1,13 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Checkbox, Modal } from 'antd';
+import { Form, Input, Button, Checkbox } from 'antd';
 import logo from '../../../resources/images/logo/logo-icon.svg';
 import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
 import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-close.png';
-import udnCloseIcon from '../../../resources/images/pages/SinoTrade_login/menu-close-big.svg';
-import fbIcon from '../../../resources/images/pages/SinoTrade_login/img-fb.svg';
-import googleIcon from '../../../resources/images/pages/SinoTrade_login/img-google.svg';
-
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
 import { useLoginClosBtn } from '../../../hooks/useLoginClosBtn';
@@ -199,21 +196,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
-    const redirectHandler = (redirect = true) => {
+    const redirectHandler = () => {
         if (router.query.redirectUrl != null) {
             const query = router.query;
             const redirectUrl = query.redirectUrl;
             delete query.redirectUrl;
             const queryStr = objectToQueryHandler(query);
-            if (redirect) {
-                window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
-            } else {
-                return `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
-            }
-        } else {
-            if (!redirect) {
-                return `${process.env.NEXT_PUBLIC_SUBPATH}` + '/';
-            }
+            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/' + `${redirectUrl + queryStr}`;
         }
     };
 
@@ -285,8 +274,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (isIframe) {
             iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/Service_ForgetPassword');
         } else {
-            onClose();
-            router.push(`/Service_ForgetPassword`);
+            // onClose();
+            // router.push(`/Service_ForgetPassword`);
+            location.href = location.origin + process.env.NEXT_PUBLIC_SUBPATH + '/Service_ForgetPassword';
         }
     };
 
@@ -374,10 +364,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
         if (platform === 'udn' && !isPC) {
             return (
-                <></>
-                // <div className="udn__container">
-                //     <img className="logo__dark" src={logoDark} alt="永豐金證券" />
-                // </div>
+                <div className="udn__container">
+                    <img className="logo__dark" src={logoDark} alt="永豐金證券" />
+                </div>
             );
         } else {
             if (isPC) {
@@ -412,308 +401,194 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         }
     };
 
-    const getHeightHandler = () => {
-        if (platform === 'udn') {
-            return '100vh';
-        }
-        if (isPC) {
-            return '548px';
-        } else {
-            return '100vh';
-        }
-    };
-
     return (
         <div className="login__container">
             {/* <ReCaptchaComponent onLoadReady={reCaptchaLoadReady} /> */}
             <div className="login__box" style={overflowHandler()}>
-                <div className="login__container--2">
-                    <div className="login__box2">
-                        {!isPC && !isIframe && !noCloseBtn ? (
-                            <div
-                                className="close__box"
-                                onKeyDown={event => {
-                                    if (event.key === 'Enter') {
-                                        onClose();
-                                    }
-                                }}
-                                role="button"
-                                tabIndex="0"
-                            >
-                                {platform === 'udn' && <img className="logo__dark" src={logoDark} alt="永豐金證券" />}
-                                <img
-                                    alt="關閉"
-                                    className="close__icon"
-                                    src={platform === 'udn' ? udnCloseIcon : closeMobile}
-                                    onClick={() => {
-                                        redirectHandler();
-                                        onClose();
-                                    }}
-                                />
-                                {platform === 'udn' && <div className="line"></div>}
-                                {platform === 'udn' && (
-                                    <div className="socal__box">
-                                        <p className="socal__title">使用社群帳戶登入</p>
-                                        <div>
-                                            <Button
-                                                style={{
-                                                    backgroundColor: '#e6ebf5',
-                                                    width: '48%',
-                                                    height: '52px',
-                                                    border: 'none',
-                                                    cloer: 'black',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '1.6rem',
-                                                    display: 'inline-block',
-                                                    lineHeight: '44px',
-                                                }}
-                                                icon={<img style={{ marginTop: '-3px' }} src={googleIcon} />}
-                                                onClick={() => {
-                                                    let redirectUrl =
-                                                        location.protocol +
-                                                        '//' +
-                                                        location.hostname +
-                                                        redirectHandler(false);
-                                                    window.location =
-                                                        location.protocol +
-                                                        '//' +
-                                                        location.hostname +
-                                                        '/social/oauth/google?source=newweb&redirect=' +
-                                                        redirectUrl;
-                                                }}
-                                            >
-                                                Google
-                                            </Button>
-                                            <Button
-                                                style={{
-                                                    width: '48%',
-                                                    height: '52px',
-                                                    marginLeft: '4%',
-                                                    border: 'none',
-                                                    display: 'inline-block',
-                                                    backgroundColor: '#254a91',
-                                                    color: 'white',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '1.6rem',
-                                                    lineHeight: '44px',
-                                                }}
-                                                icon={
-                                                    <img
-                                                        style={{ marginRight: '2px', marginTop: '-3px' }}
-                                                        src={fbIcon}
-                                                    />
-                                                }
-                                                onClick={() => {
-                                                    let redirectUrl =
-                                                        location.protocol +
-                                                        '//' +
-                                                        location.hostname +
-                                                        redirectHandler(false);
-                                                    window.location =
-                                                        location.protocol +
-                                                        '//' +
-                                                        location.hostname +
-                                                        '/social/oauth/facebook?source=newweb&redirect=' +
-                                                        redirectUrl;
-                                                }}
-                                            >
-                                                Facebook
-                                            </Button>
-                                        </div>
-                                        <div className="segment__box">
-                                            <span className="segment__line"></span>
-                                            <span className="segment__or">或</span>
-                                            <span className="segment__line"></span>
-                                        </div>
-                                        <div className="sinopac__login--title">使用「永豐金證券」帳戶登入</div>
-                                    </div>
-                                )}
-                            </div>
-                        ) : null}
-                        {popup && !noCloseBtn ? (
-                            <div
-                                className="close"
-                                onClick={onClose}
-                                onKeyDown={event => {
-                                    if (event.key === 'Enter') {
-                                        onClose();
-                                    }
-                                }}
-                                role="button"
-                                tabIndex="0"
-                            >
-                                <span className="close__img"></span>
-                            </div>
-                        ) : null}
-                        {logoHandler()}
-                        {/* {isPC ? null : !isIframe && <div className="login__logo"></div>} */}
-                        {/* {!isIframe && <p className="login__title">歡迎來到永豐金證券</p>} */}
-                        {isPC ? (
-                            <div className="loginService__box">
-                                <span className="service__title">登入後享受更多服務</span>
-                                <div className="service__infoBox">
-                                    <span className="service__item">下單交易</span>
-                                    <span className="service__item">帳務損益</span>
-                                    <span className="service__item">更多個人化服務</span>
-                                </div>
-                            </div>
-                        ) : null}
-                        <Form
-                            form={form}
-                            name="complex-form"
-                            onFieldsChange={fieldsChange}
-                            onFinish={finishHandler}
-                            initialValues={{ remember: false }}
-                            style={{ marginTop: isIframe ? '12px' : 0 }}
-                        >
-                            <div className="account__box">
-                                <Form.Item
-                                    hasFeedback
-                                    name="account"
-                                    label=""
-                                    validateFirst
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: '請輸入身份證字號',
-                                        },
-                                        {
-                                            max: 10,
-                                            message: '超過限定字數',
-                                        },
-                                        {
-                                            validator: (rule, value) => {
-                                                const patt = /^[a-zA-Z0-9]{0,}$/;
-                                                if (patt.test(value)) {
-                                                    return Promise.resolve();
-                                                } else {
-                                                    return Promise.reject('含錯誤字元');
-                                                }
-                                            },
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        style={{
-                                            transition: 'none',
-                                            width: '100%',
-                                            height: isIframe ? '34px' : '54px',
-                                            border: 'solid 1px #e6ebf5',
-                                            fontSize: accountFontSize,
-                                        }}
-                                        placeholder="請輸入身份證字號"
-                                        onBlur={blurHandler}
-                                        ref={accountInput}
-                                    />
-                                </Form.Item>
-                                <span
-                                    role="presentation"
-                                    style={{
-                                        display: encryptAccount ? 'block' : 'none',
-                                        color: '#737373',
-                                        width: '100%',
-                                    }}
-                                    onClick={accClickHandler}
-                                >
-                                    {encryptAccount}
-                                </span>
-                            </div>
-
-                            <Form.Item
-                                hasFeedback
-                                name="password"
-                                label=""
-                                validateFirst
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: '必填欄位',
-                                    },
-                                    {
-                                        validator: (rule, value) => {
-                                            if (value.length >= 1 && value.length <= 12) {
-                                                return Promise.resolve();
-                                            } else {
-                                                return Promise.reject('輸入字數錯誤');
-                                            }
-                                        },
-                                    },
-                                ]}
-                            >
-                                <Input.Password
-                                    placeholder="密碼(7-12位元)"
-                                    style={{
-                                        width: '100%',
-                                        height: isIframe ? '34px' : '54px',
-                                        border: 'solid 1px #e6ebf5',
-                                        fontSize: '1.8rem',
-                                    }}
-                                />
-                            </Form.Item>
-                            <div className="remember__box">
-                                <Form.Item name="remember" rules={[]} noStyle valuePropName="checked">
-                                    <Checkbox style={{ fontSize: '1.8rem', color: '#0d1623' }}>
-                                        記住我的身份證字號
-                                    </Checkbox>
-                                </Form.Item>
-                                <a onClick={forgetPassword} className="a__link forgetPassword">
-                                    忘記密碼
-                                </a>
-                            </div>
-
-                            <Form.Item label="">
-                                <Button
-                                    loading={isLoading}
-                                    type="primary"
-                                    htmlType="submit"
-                                    style={{ marginTop: isIframe ? '10px' : '20px' }}
-                                >
-                                    登入
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                        <p className="a__box" style={{ marginBottom: '0.5rem', marginTop: '-19px' }}>
-                            {!isIframe ? (
-                                <a
-                                    target="_blank"
-                                    href={getSignUpUrl()}
-                                    // href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
-                                    className="a__link"
-                                >
-                                    還不是永豐金證券客戶
-                                </a>
-                            ) : (
-                                <a
-                                    target="_blank"
-                                    href="https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035"
-                                    className="a__link"
-                                    onClick={signUpHandler}
-                                >
-                                    還不是永豐金證券客戶
-                                </a>
-                            )}
-                        </p>
-                        <div
-                            style={{
-                                textAlign: 'center',
-                                color: '#a9b6cb',
-                                fontSize: '1.2rem',
-                                letterSpacing: '0.3px',
-                            }}
-                        >
-                            此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
-                            <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
-                                {' '}
-                                《隱私權聲明》{' '}
-                            </a>{' '}
-                            與
-                            <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
-                                {' '}
-                                《服務條款》{' '}
-                            </a>{' '}
-                            。
+                {!isPC && !isIframe && !noCloseBtn ? (
+                    <div
+                        className="close__box"
+                        onClick={onClose}
+                        onKeyDown={event => {
+                            if (event.key === 'Enter') {
+                                onClose();
+                            }
+                        }}
+                        role="button"
+                        tabIndex="0"
+                    >
+                        <img alt="關閉" src={closeMobile} />
+                    </div>
+                ) : null}
+                {popup && !noCloseBtn ? (
+                    <div
+                        className="close"
+                        onClick={onClose}
+                        onKeyDown={event => {
+                            if (event.key === 'Enter') {
+                                onClose();
+                            }
+                        }}
+                        role="button"
+                        tabIndex="0"
+                    >
+                        <span className="close__img"></span>
+                    </div>
+                ) : null}
+                {logoHandler()}
+                {/* {isPC ? null : !isIframe && <div className="login__logo"></div>} */}
+                {/* {!isIframe && <p className="login__title">歡迎來到永豐金證券</p>} */}
+                {isPC ? (
+                    <div className="loginService__box">
+                        <span className="service__title">登入後享受更多服務</span>
+                        <div className="service__infoBox">
+                            <span className="service__item">下單交易</span>
+                            <span className="service__item">帳務損益</span>
+                            <span className="service__item">更多個人化服務</span>
                         </div>
                     </div>
+                ) : null}
+                <Form
+                    form={form}
+                    name="complex-form"
+                    onFieldsChange={fieldsChange}
+                    onFinish={finishHandler}
+                    initialValues={{ remember: false }}
+                    style={{ marginTop: isIframe ? '12px' : 0 }}
+                >
+                    <div className="account__box">
+                        <Form.Item
+                            hasFeedback
+                            name="account"
+                            label=""
+                            validateFirst
+                            rules={[
+                                {
+                                    required: true,
+                                    message: '請輸入身份證字號',
+                                },
+                                {
+                                    max: 10,
+                                    message: '超過限定字數',
+                                },
+                                {
+                                    validator: (rule, value) => {
+                                        const patt = /^[a-zA-Z0-9]{0,}$/;
+                                        if (patt.test(value)) {
+                                            return Promise.resolve();
+                                        } else {
+                                            return Promise.reject('含錯誤字元');
+                                        }
+                                    },
+                                },
+                            ]}
+                        >
+                            <Input
+                                style={{
+                                    transition: 'none',
+                                    width: '100%',
+                                    height: isIframe ? '34px' : '54px',
+                                    border: 'solid 1px #e6ebf5',
+                                    fontSize: accountFontSize,
+                                }}
+                                placeholder="請輸入身份證字號"
+                                onBlur={blurHandler}
+                                ref={accountInput}
+                            />
+                        </Form.Item>
+                        <span
+                            role="presentation"
+                            style={{ display: encryptAccount ? 'block' : 'none', color: '#737373', width: '100%' }}
+                            onClick={accClickHandler}
+                        >
+                            {encryptAccount}
+                        </span>
+                    </div>
+
+                    <Form.Item
+                        hasFeedback
+                        name="password"
+                        label=""
+                        validateFirst
+                        rules={[
+                            {
+                                required: true,
+                                message: '必填欄位',
+                            },
+                            {
+                                validator: (rule, value) => {
+                                    if (value.length >= 1 && value.length <= 12) {
+                                        return Promise.resolve();
+                                    } else {
+                                        return Promise.reject('輸入字數錯誤');
+                                    }
+                                },
+                            },
+                        ]}
+                    >
+                        <Input.Password
+                            placeholder="密碼(7-12位元)"
+                            style={{
+                                width: '100%',
+                                height: isIframe ? '34px' : '54px',
+                                border: 'solid 1px #e6ebf5',
+                                fontSize: '1.8rem',
+                            }}
+                        />
+                    </Form.Item>
+                    <div className="remember__box">
+                        <Form.Item name="remember" rules={[]} noStyle valuePropName="checked">
+                            <Checkbox style={{ fontSize: '1.8rem', color: '#0d1623' }}>記住我的身份證字號</Checkbox>
+                        </Form.Item>
+                        <a onClick={forgetPassword} className="a__link forgetPassword">
+                            忘記密碼
+                        </a>
+                    </div>
+
+                    <Form.Item label="">
+                        <Button
+                            loading={isLoading}
+                            type="primary"
+                            htmlType="submit"
+                            style={{ marginTop: isIframe ? '10px' : '20px' }}
+                        >
+                            登入
+                        </Button>
+                    </Form.Item>
+                </Form>
+                <p className="a__box" style={{ marginBottom: '0.5rem', marginTop: '-19px' }}>
+                    {!isIframe ? (
+                        <a
+                            target="_blank"
+                            href={getSignUpUrl()}
+                            // href="https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕"
+                            className="a__link"
+                        >
+                            還不是永豐金證券客戶
+                        </a>
+                    ) : (
+                        <a
+                            target="_blank"
+                            href="https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035"
+                            className="a__link"
+                            onClick={signUpHandler}
+                        >
+                            還不是永豐金證券客戶
+                        </a>
+                    )}
+                </p>
+                <div style={{ textAlign: 'center', color: '#a9b6cb', fontSize: '1.2rem', letterSpacing: '0.3px' }}>
+                    此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
+                    <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
+                        {' '}
+                        《隱私權聲明》{' '}
+                    </a>{' '}
+                    與
+                    <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
+                        {' '}
+                        《服務條款》{' '}
+                    </a>{' '}
+                    。
                 </div>
             </div>
             {popup ? (
@@ -736,31 +611,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     display: ${popup ? 'block' : isPC ? 'inline-block' : 'block'};
                     z-index: 9999;
                 }
-                .segment__box {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 10px;
-                    margin-top: 5px;
-                }
-                .segment__line {
-                    height: 1px;
-                    background: #e6ebf5;
-                    width: 46%;
-                    display: inline-block;
-                    margin-top: 20px;
-                    flex-direction: row;
-                }
-                .segment__or {
-                    padding-top: 8px;
-                    flex-direction: row;
-                    font-size: 1.6rem;
-                }
-                .sinopac__login--title {
-                    color: #0d1623;
-                    font-size: 1.6rem;
-                    font-weight: bold;
-                    margin-bottom: 13px;
-                }
                 .close {
                     width: 52px;
                     height: 52px;
@@ -771,8 +621,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     cursor: pointer;
                 }
                 .close__box {
-                    text-align: ${platform === 'udn' ? 'left' : 'right'};
-                    padding-top: ${platform === 'udn' ? '17px' : '10px'};
+                    text-align: right;
+                    padding-top: 10px;
                 }
                 .close__img {
                     background: url(${close}) no-repeat center center;
@@ -887,28 +737,19 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
             `}</style>
             <style global jsx>{`
-                .login__box2 {
-                    height: ${platform === 'udn' ? '600px' : 'auto'};
-                }
-                .login__container--2 {
-                    height: ${platform === 'udn' ? 'calc( 100vh - 118px)' : 'auto'};
-                    overflow: ${platform === 'udn' ? 'auto' : 'hidden'};
-                    padding: ${platform === 'udn' ? '0 16px' : '0'};
-                }
                 .login__box {
-                    /* isPC ? '548px' : '100vh' */
                     position: ${popup ? 'fixed' : 'static'};
                     width: ${isPC ? '512px' : '101%'};
-                    height: ${getHeightHandler()};
+                    height: ${isPC ? '548px' : '100vh'};
                     z-index: 9999;
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
                     transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};
-                    padding: ${isPC ? '0 41px' : platform === 'udn' ? '12px 0 0 0' : '0 20px'};
+                    padding: ${isPC ? '0 41px' : platform === 'udn' ? '7%' : '0 20px'};
                     padding-top: ${popup ? '0' : '1px'};
                     background-color: ${isPC ? '#f9fbff' : 'white'};
                     border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
-                    overflow-y: ${isIframe ? 'hidden' : platform === 'udn' ? 'hidden' : 'auto'};
+                    overflow-y: ${isIframe ? 'hidden' : 'auto'};
                 }
                 @media (max-width: 330px), print {
                     .login__box {
@@ -935,29 +776,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     }
                 }
                 .logo__dark {
-                    width: 142px;
-                    margin-top: -6px;
-                    /* width: 223px; */
+                    width: 223px;
                     /* height: 53px; */
-                }
-                .close__icon {
-                    float: ${platform === 'udn' ? 'right' : 'none'};
-                }
-                .line {
-                    height: 1px;
-                    clear: both;
-                    margin-bottom: 10px;
-                    background: #e6ebf5;
-                    margin-top: 12px;
-                }
-
-                .socal__title {
-                    font-weight: bold !important;
-                    background-color: #ffffff;
-                    font-size: 1.6rem !important;
-                    text-align: left !important;
-                    margin-top: 15px !important;
-                    margin-bottom: 15px !important;
                 }
 
                 .login__logo {

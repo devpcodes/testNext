@@ -4,6 +4,7 @@ import { Table, Space, Skeleton, Button, Tooltip, Modal } from 'antd';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { orderStatusQueryFetcher } from '../../../../services/components/goOrder/orderStatusQueryFetcher';
 import { getToken } from '../../../../services/user/accessToken';
+import { formatPriceByUnit } from '../../../../services/numFormat';
 import {
     mappingCommissionedCode,
     mappingStatusMsg,
@@ -157,15 +158,20 @@ const SearchList = ({ active }) => {
                 dataIndex: 'ord_time',
                 key: 'ord_time',
                 sorter: (a, b) => {
-                    let newA;
-                    let newB;
-                    newA = a.ord_time.substr(0, 6);
-                    newB = b.ord_time.substr(0, 6);
-                    if (newA == newB) {
-                        newA = a.ord_time;
-                        newB = b.ord_time;
-                    }
-                    return Number(newA) - Number(newB);
+                    // if (Number(a.view_seq.substring(0, 8)) - Number(b.view_seq.substring(0, 8)) == 0) {
+                    //     let newA;
+                    //     let newB;
+                    //     newA = a.ord_time.substr(0, 6);
+                    //     newB = b.ord_time.substr(0, 6);
+                    //     if (newA == newB) {
+                    //         newA = a.ord_time;
+                    //         newB = b.ord_time;
+                    //     }
+                    //     return Number(newA) - Number(newB);
+                    // } else {
+                    //     return Number(a.view_seq.substring(0, 8)) - Number(b.view_seq.substring(0, 8));
+                    // }
+                    return Number(a.view_seq) - Number(b.view_seq);
                 },
                 sortOrder: sortKey === 'ord_time' && sortOrder,
                 render: (text, record) => {
@@ -215,9 +221,17 @@ const SearchList = ({ active }) => {
                     return (
                         <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
                             <p className="item">
-                                {mappingPriceMsg(record.price, record.price_type, record.price_flag, record.ord_type1)}
+                                {formatPriceByUnit(
+                                    record.stock_id,
+                                    mappingPriceMsg(
+                                        record.price,
+                                        record.price_type,
+                                        record.price_flag,
+                                        record.ord_type1,
+                                    ),
+                                )}
                             </p>
-                            <p className="item--down">{record.qty}</p>
+                            <p className="item--down">{record.qty - record.cancel_qty - record.match_qty}</p>
                         </div>
                     );
                 },
@@ -229,7 +243,7 @@ const SearchList = ({ active }) => {
                 render: (text, record) => {
                     return (
                         <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
-                            <p className="item">{text}</p>
+                            <p className="item">{formatPriceByUnit(record.stock_id, text)}</p>
                             <p className="item--down">{record.match_qty}</p>
                         </div>
                     );
