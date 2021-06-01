@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import theme from '../../../../resources/styles/theme';
-import { getArrow } from '../../../../services/numFormat';
+import { getArrow, priceColor } from '../../../../services/numFormat';
 import searchIcon from '../../../../resources/images/components/goOrder/edit-search.svg';
 import MoreInfo from '../infoArea/MoreInfo';
 import { Search } from '../search/Search';
@@ -11,7 +11,9 @@ import { getToken } from '../../../../services/user/accessToken';
 import { fetchGetQuote } from '../../../../services/components/goOrder/sb/fetchGetQuote';
 import { setProductInfo } from '../../../../store/goOrder/action';
 import { getCodeType } from '../../../../services/components/goOrder/sb/dataMapping';
-import { setQuote } from '../../../../store/goOrderSB/action';
+import { setQuote, setRic } from '../../../../store/goOrderSB/action';
+import { insert } from '../../../../services/stringFormat';
+import { fetchPs } from '../../../../services/components/goOrder/sb/fetchPs';
 
 export const defaultProductInfo = {
     symbol: 'AAPL',
@@ -33,15 +35,30 @@ const Info = () => {
     }, [type]);
 
     useEffect(() => {
-        if (productInfo.market) {
-            const codeType = getCodeType(productInfo.market);
-            getData(code + '.' + codeType);
+        // if (productInfo.market) {
+        //     const codeType = getCodeType(productInfo.market);
+        //     getData(code + '.' + codeType);
+        // }
+        getRic(code);
+    }, [code, type]);
+
+    const getRic = useCallback(async code => {
+        try {
+            const res = await fetchPs(code);
+            if (res.ric != null) {
+                dispatch(setRic(res.ric));
+                getData(res.ric);
+            }
+        } catch (error) {
+            console.log('error...');
+            dispatch(setRic('error'));
         }
-    }, [code, productInfo]);
+    });
 
     const getData = useCallback(async code => {
         const token = getToken();
         try {
+            dispatch(setQuote({}));
             const res = await fetchGetQuote(code, token);
             console.log('res', res);
             dispatch(setQuote(res));
@@ -53,14 +70,31 @@ const Info = () => {
     const getCloseInfo = () => {
         let nc = '';
         let pc = '';
-        if (quote.nc != null) {
+        if (quote?.nc != null) {
             nc = Math.abs(Number(quote.nc));
         }
-        if (quote.pc != null) {
+        if (quote?.pc != null) {
             pc = Math.abs(Number(quote.pc));
         }
-        return `${quote?.ls || '--'} ${getArrow(quote?.ls, quote?.refprice)} ${nc} (${pc}%)`;
+        if (quote?.ls == null) {
+            return '--';
+        }
+        if (isNaN(nc) || isNaN(pc)) {
+            return `${quote?.ls}`;
+        } else {
+            return `${quote?.ls} ${getArrow(quote?.ls, quote?.refprice)} ${nc} (${pc}%)`;
+        }
     };
+
+    const getVolume = useCallback(() => {
+        if (quote?.vo == null || quote.vo === '-') {
+            return '--';
+        } else {
+            quote.vo = quote.vo.split(',').join('');
+            return Math.round(Number(quote.vo) / 10000);
+        }
+    }, [quote]);
+
     const handleCancel = useCallback(() => {
         setIsSearchVisible(false);
     }, []);
@@ -70,6 +104,22 @@ const Info = () => {
     const getCheckCA = useCallback(boo => {
         setCheckCA(boo);
     });
+    const getTime = () => {
+        if (quote?.td != null) {
+            let td = '';
+            let tm = '';
+            if (quote.td) {
+                td = quote.td.substr(4);
+                td = insert(td, 2, '.');
+            }
+            if (quote.tm) {
+                tm = insert(quote.tm, 2, ':');
+            }
+            return td + ' ' + tm + ' ' + '收盤價';
+        } else {
+            return '';
+        }
+    };
     return (
         <>
             <InstallWebCA getCheckCA={getCheckCA} />
@@ -102,14 +152,14 @@ const Info = () => {
                     <div className="row">
                         <div className="price__container">{getCloseInfo()}</div>
                         <div className="volume__container">
-                            <div className="volume">總量 100</div>
+                            <div className="volume">總量 {getVolume()}</div>
                             <div className="unit">萬股</div>
                         </div>
                     </div>
                     <MoreInfo>
                         <div className="market__container">
                             <span className="market">美股</span>
-                            <span className="close__info">03.19 16:00 收盤價</span>
+                            <span className="close__info">{getTime()}</span>
                         </div>
                     </MoreInfo>
                 </div>
@@ -168,7 +218,9 @@ const Info = () => {
                     align-items: flex-end;
                     max-width: calc((8 / 12) * 100%);
 
-                    color: rgb(196, 56, 38);
+                    /* color: rgb(196, 56, 38);
+                     */
+                    color: ${priceColor(quote?.ls, quote?.refprice)};
                     font-size: 2rem;
                 }
                 @media (max-width: 340px) {

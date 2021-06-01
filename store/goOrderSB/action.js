@@ -17,3 +17,10 @@ export const setQuote = data => {
         payload: data,
     };
 };
+
+export const setRic = ric => {
+    return {
+        type: actionType.SET_RIC,
+        payload: ric,
+    };
+};

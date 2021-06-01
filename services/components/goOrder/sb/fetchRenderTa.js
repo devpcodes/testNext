@@ -1,7 +1,7 @@
 import { objectToQueryHandler } from '../../../objectToQueryHandler';
 import axios from '../../../myAxios';
 export const fetchRenderTa = async function ({ width, height, code = 'AAPL.NB' }) {
-    console.log('render', width);
+    console.log('render', width, code);
     const reqUrl = '/lykan/api/v1/labci/sinopacwidget/sschart/render_ta';
     const ts = new Date().getTime();
     const obj = {

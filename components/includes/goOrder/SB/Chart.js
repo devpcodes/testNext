@@ -3,15 +3,24 @@ import { useSelector } from 'react-redux';
 import { fetchRenderTa } from '../../../../services/components/goOrder/sb/fetchRenderTa';
 const Chart = memo(({ width, visible }) => {
     const [imgSrc, setImgSrc] = useState('');
-    const type = useSelector(store => store.goOrder.type);
+    const ric = useSelector(store => store.goOrderSB.ric);
+
+    // useEffect(() => {
+    //     if (productInfo.market) {
+    //         const codeType = getCodeType(productInfo.market);
+    //         chartCode.current = code + '.' + codeType;
+    //     }
+    // }, [code, productInfo]);
+
     useEffect(() => {
-        if (width) {
-            getUUID(width);
+        if (width && ric) {
+            getUUID(width, ric);
         }
-    }, [width, type]);
-    const getUUID = async w => {
+    }, [width, ric]);
+
+    const getUUID = async (w, code) => {
         try {
-            const res = await fetchRenderTa({ width: w, height: 200 });
+            const res = await fetchRenderTa({ width: w, height: 200, code });
             if (res) {
                 let reqUrl;
                 if (process.env.NODE_ENV !== 'production') {

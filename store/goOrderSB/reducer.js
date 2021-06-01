@@ -4,6 +4,7 @@ const initialState = {
     bs: '',
     activeTabKey: '1', //2 3
     quote: {},
+    ric: '',
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -21,6 +22,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 quote: action.payload,
+            };
+        case actionType.SET_RIC:
+            return {
+                ...state,
+                ric: action.payload,
             };
         default:
             return state;
