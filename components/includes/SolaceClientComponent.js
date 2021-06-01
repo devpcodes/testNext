@@ -95,6 +95,10 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
 
     const updateSNPData = xhr => {
         if (xhr.topic.indexOf('SNP') >= 0 && xhr.topic.indexOf('ODDLOT') >= 0) {
+            // 配合solace的錯誤資料修正
+            if (xhr.data?.Jck1 == 0) {
+                delete xhr.data.Jck1;
+            }
             //TODO 因為solace沒資料，先從零股拿
             if (xhr.data.OddlotReference == 0) {
                 xhr.data.OddlotReference = OddlotReference;
@@ -144,7 +148,6 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
         const nextData = realTimeData.data;
         if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') >= 0) {
             Object.assign(prevData, nextData);
-
             // 刪simtrade
             if (nextData.OddlotSimtrade == null) {
                 delete prevData['OddlotSimtrade'];

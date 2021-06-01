@@ -70,6 +70,7 @@ export const StockContainer = ({ requestStockId }) => {
                         src={arrow}
                     />
                 }
+                className="OrderGO__drawer"
             >
                 <PanelTabs />
                 <MyTransition isVisible={confirmBox} classNames={'loginMobile2'}>

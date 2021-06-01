@@ -105,12 +105,12 @@ const QuoteContainer = () => {
             >
                 <div>
                     <QuotesDetail stopRender={stopRenderNum === 0 ? true : false} show={true} />
-                    <FiveLatestOffer stopRender={stopRenderNum === 0 ? true : false} />
+                    <FiveLatestOffer code={code} stopRender={stopRenderNum === 0 ? true : false} />
                 </div>
                 {checkLot && (
                     <div>
                         <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} show={true} />
-                        <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
+                        <FiveLatestOffer code={code} stopRender={stopRenderNum === 1 ? true : false} />
                     </div>
                 )}
             </Carousel>

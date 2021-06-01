@@ -36,7 +36,7 @@ const Header = () => {
     // 客戶登入/登出的帳號及個人化設定處理，回傳 { isLogin, accounts, userSettings }
     const { isLogin } = useUser();
     const { socalLogin } = useCheckSocialLogin();
-
+    const code = useSelector(store => store.goOrder.code);
     const hasMounted = useHasMounted();
 
     const dispatch = useDispatch();
@@ -130,9 +130,22 @@ const Header = () => {
         dispatch(setCurrentAccount(account));
     };
 
+    const updateQueryStringParameter = (uri, key, value) => {
+        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+        var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + '=' + value + '$2');
+        } else {
+            return uri + separator + key + '=' + value;
+        }
+    };
+
     const loginClickHandler = () => {
         const query = router.query;
-        const queryStr = objectToQueryHandler(query);
+        let queryStr = objectToQueryHandler(query);
+        if (code) {
+            queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
+        }
         window.location =
             `${process.env.NEXT_PUBLIC_SUBPATH}` +
             `/SinoTrade_login${queryStr}` +
@@ -151,7 +164,8 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
+            window.location.reload();
+            // window.location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
         } catch (error) {
             console.error(`logout error:`, error);
         }
@@ -160,34 +174,41 @@ const Header = () => {
     const renderMenu = () => {
         return (
             <>
+                {socalLoginData._id == null && (
+                    <>
+                        <a
+                            style={{
+                                marginBottom: '8px',
+                                display: 'inline-block',
+                                color: '#0d1623',
+                                zIndex: '999',
+                                fontWeight: 'bold',
+                            }}
+                            href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
+                            target="_blank"
+                        >
+                            我的帳務
+                        </a>
+                        <br />
+                        {/* <a
+                            style={{
+                                marginBottom: '8px',
+                                display: 'inline-block',
+                                color: '#0d1623',
+                                fontWeight: 'bold',
+                            }}
+                            href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
+                            target="_blank"
+                        >
+                            我的自選
+                        </a>
+                        <br /> */}
+                    </>
+                )}
+
                 <a
                     style={{
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        color: '#0d1623',
-                        zIndex: '999',
-                        fontWeight: 'bold',
-                    }}
-                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount'}
-                >
-                    我的帳務
-                </a>
-                <br />
-                <a
-                    style={{
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        color: '#0d1623',
-                        fontWeight: 'bold',
-                    }}
-                    href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
-                >
-                    我的自選
-                </a>
-                <br />
-                <a
-                    style={{
-                        display: 'inline-block',
+                        display: 'block',
                         color: '#0d1623',
                         fontWeight: 'bold',
                     }}
@@ -250,10 +271,11 @@ const Header = () => {
                         </div>
                         <Tooltip
                             placement="topLeft"
-                            title={renderMenu()}
+                            title={renderMenu.bind(null, socalLogin)}
                             color="white"
                             overlayClassName="menu__tooltip"
                             visible={menuVisible}
+                            style={{ width: '500px' }}
                         >
                             <div
                                 className="accountElement"
@@ -271,8 +293,8 @@ const Header = () => {
                     <>
                         <img className="logo" src={logo} />
                         <Tooltip
-                            placement="topLeft"
-                            title={renderMenu()}
+                            placement="topRight"
+                            title={renderMenu.bind(null, socalLogin)}
                             color="white"
                             overlayClassName="menu__tooltip--2"
                         >
@@ -382,6 +404,7 @@ const Header = () => {
                     line-height: 25px;
                     margin-top: -12px;
                     margin-left: 12px;
+                    width: 110px;
                 }
             `}</style>
         </div>

@@ -34,8 +34,8 @@ export const HeaderCallToAction = () => {
                 break;
             }
             case 'cnyes': {
-                const mmaQuery = Object.assign(currentQuery, newQuery, { platform: 'cnyes', source: 'cnyes' });
-                queryString = objectToQueryHandler(mmaQuery);
+                const cnyesQuery = Object.assign(currentQuery, newQuery, { platform: 'cnyes', source: 'cnyes' });
+                queryString = objectToQueryHandler(cnyesQuery);
                 break;
             }
             case 'line': {
@@ -44,8 +44,13 @@ export const HeaderCallToAction = () => {
                 break;
             }
             case 'udn': {
-                const lineQuery = Object.assign(newQuery, { platform: 'udn', source: 'udn' });
-                queryString = objectToQueryHandler(lineQuery);
+                const udnQuery = Object.assign(newQuery, { platform: 'udn', source: 'udn' });
+                queryString = objectToQueryHandler(udnQuery);
+                break;
+            }
+            case 'gugu': {
+                const guguQuery = Object.assign(newQuery, { source: 'gugu' });
+                queryString = objectToQueryHandler(guguQuery);
                 break;
             }
             default:
