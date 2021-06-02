@@ -201,7 +201,10 @@ const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) 
             setOddToolTipVisible(false);
         }
     };
-    const mappingPriceMsg = (price, priceType) => {
+    const mappingPriceMsg = (price, priceType, ordType) => {
+        if (ordType === 'P') {
+            return '定盤';
+        }
         switch (priceType) {
             case ' ':
                 return price;
@@ -233,7 +236,7 @@ const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) 
                     <span className="label">價格</span>
                     {/* <span className="val">{ordPrice}</span> */}
                     {/* <span className="val">{mappingPriceMsg(ordPrice, priceType)}</span> */}
-                    <span className="val">{mappingPriceMsg(currOrdPrice.current, priceType)}</span>
+                    <span className="val">{mappingPriceMsg(currOrdPrice.current, priceType, currOrdType.current)}</span>
                 </div>
                 <div className="info__qty">
                     <span className="label">數量</span>

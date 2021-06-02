@@ -152,22 +152,23 @@ const SubmitBtn = () => {
                 });
                 return;
             }
-        }
-        if (price_type === ' ') {
-            if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
-                Modal.error({
-                    title: '資料格式錯誤',
-                    content: '請確認價格或張數(股數)資料填寫正確',
-                });
-                return;
-            }
         } else {
-            if (offerShare === '' || offerShare == 0) {
-                Modal.error({
-                    title: '資料格式錯誤',
-                    content: '請確認價格或張數(股數)資料填寫正確',
-                });
-                return;
+            if (price_type === ' ') {
+                if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
+                    Modal.error({
+                        title: '資料格式錯誤',
+                        content: '請確認價格或張數(股數)資料填寫正確',
+                    });
+                    return;
+                }
+            } else {
+                if (offerShare === '' || offerShare == 0) {
+                    Modal.error({
+                        title: '資料格式錯誤',
+                        content: '請確認價格或張數(股數)資料填寫正確',
+                    });
+                    return;
+                }
             }
         }
 
