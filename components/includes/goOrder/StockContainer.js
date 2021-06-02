@@ -22,6 +22,8 @@ export const StockContainer = ({ requestStockId }) => {
 
     const winSize = useWindowSize();
 
+    const checkCA = useSelector(store => store.goOrder.checkCA);
+    const isLogin = useSelector(store => store.user.isLogin);
     useEffect(() => {
         if (bs !== '') {
             setTimeout(() => {
@@ -34,9 +36,14 @@ export const StockContainer = ({ requestStockId }) => {
         if (bs === '') {
             return 'auto';
         }
-
+        console.log('height', winSize.height);
         if (panelHeight == 360) {
-            return winSize.height - 360 - 44 + 'px';
+            // if (isLogin && checkCA) {
+            //     return '288px';
+            // }else{
+            //     return '288px';
+            // }
+            return winSize.height - 360 - 44 + 'px'; // 345px
         } else {
             return 'auto';
         }
