@@ -81,7 +81,7 @@ const QuoteContainer = () => {
         if (panelHeight < 100) {
             return <Chart />;
         } else {
-            return <div style={{ height: '230px', display: 'none' }}></div>;
+            return <div style={{ height: '230px' }}></div>;
         }
     }, [panelHeight, bs]);
 
@@ -121,7 +121,7 @@ const QuoteContainer = () => {
         if (panelHeight >= 100 && bs !== '') {
             quoteContainerElement.current.scrollTop = 0;
             return {
-                // transform: 'translateY(-290px)', //-60
+                transform: 'translateY(-290px)', //-60
             };
         }
     };
@@ -171,7 +171,7 @@ const QuoteContainer = () => {
             <style jsx>{`
                 .quote__container {
                     overflow: ${bs === '' || panelHeight == 80 ? 'auto' : 'hidden'};
-                    height: ${panelHeight > 100 && bs !== '' ? 230 : winSize.height - otherHeightHandler()}px;
+                    height: ${panelHeight > 100 && bs !== '' ? 180 : winSize.height - otherHeightHandler()}px;
                 }
                 .quote__container--content {
                     transition: all 0.3s;

@@ -44,7 +44,7 @@ export const StockContainer = ({ requestStockId }) => {
             //     return '288px';
             // }
 
-            return winSize.height - 360 - 54 + 'px'; // 345px
+            return winSize.height - 360 - 44 + 'px'; // 345px
         } else {
             return 'auto';
         }
