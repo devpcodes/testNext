@@ -125,6 +125,7 @@ export const StockContainer = ({ requestStockId }) => {
                 .open__container {
                     height: ${openContainerHeight()};
                     overflow: auto;
+                    -webkit-overflow-scrolling: touch;
                 }
             `}</style>
             <style global jsx>{`
