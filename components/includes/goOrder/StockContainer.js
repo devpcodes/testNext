@@ -39,30 +39,30 @@ export const StockContainer = ({ requestStockId }) => {
         }
         if (panelHeight == 360) {
             // if (isLogin && checkCA) {
-            //     return '348px';
+            //     return '288px';
             // } else {
-            //     return '348px';
+            //     return '288px';
             // }
 
-            return winSize.height - 360 - 44 + 'px'; // 345px
+            return winSize.height - 360 - 54 + 'px'; // 345px
         } else {
             return 'auto';
         }
     };
-    useEffect(() => {
-        if (bs === '') {
-            return setHeightStyle({ height: 'auto' });
-        }
-        if (panelHeight == 360) {
-            setTimeout(() => {
-                setHeightStyle({ height: `${winSize.height - 360 - 44}` + 'px' });
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setHeightStyle({ height: 'auto' });
-            }, 100);
-        }
-    }, [panelHeight, bs, winSize]);
+    // useEffect(() => {
+    //     if (bs === '') {
+    //         return setHeightStyle({ height: 'auto' });
+    //     }
+    //     if (panelHeight == 360) {
+    //         setTimeout(() => {
+    //             setHeightStyle({ height: `${winSize.height - 360 - 44}` + 'px' });
+    //         }, 100);
+    //     } else {
+    //         setTimeout(() => {
+    //             setHeightStyle({ height: 'auto' });
+    //         }, 100);
+    //     }
+    // }, [panelHeight, bs, winSize]);
     // const setHeightStyle = () => {
     //     if (bs === '') {
     //         return setHeightStyle({height: 'auto'});
@@ -87,7 +87,7 @@ export const StockContainer = ({ requestStockId }) => {
     // }
     return (
         <>
-            <div className="open__container" style={heightStyle}>
+            <div className="open__container">
                 <Info stockid={requestStockId} />
                 <QuoteContainer />
             </div>
@@ -123,7 +123,7 @@ export const StockContainer = ({ requestStockId }) => {
             </Drawer>
             <style jsx>{`
                 .open__container {
-                    /* height: ${openContainerHeight()}; */
+                    height: ${openContainerHeight()};
                     overflow: auto;
                 }
             `}</style>
