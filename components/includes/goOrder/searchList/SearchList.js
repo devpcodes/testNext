@@ -231,7 +231,7 @@ const SearchList = ({ active }) => {
                                     ),
                                 )}
                             </p>
-                            <p className="item--down">{record.qty}</p>
+                            <p className="item--down">{record.qty - record.cancel_qty}</p>
                         </div>
                     );
                 },
