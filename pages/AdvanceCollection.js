@@ -30,14 +30,25 @@ const AdvanceCollection = function () {
             </ReducerContext.Provider>
             <style global jsx>{`
                 .reserve__container {
-                    width: 220px;
-                    height: 32px;
+                    width: 287px;
+                    height: 38px;
                     margin-top: 20px;
-                    font-size: 16px;
+                    font-size: 18px;
+                    font-weight: bold;
                 }
                 .reserve__container .ant-select-selector {
                     border: 1px solid #777777 !important;
                     border-radius: 2px !important;
+                }
+
+                .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    height: 38px;
+                }
+                .reserve__container .ant-select-arrow {
+                    color: black;
+                }
+                .reserve__container .ant-select-selection-item {
+                    line-height: 40px !important;
                 }
             `}</style>
         </>
