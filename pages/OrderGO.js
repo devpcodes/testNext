@@ -92,9 +92,9 @@ const OrderGO = ({ requestStockId }) => {
                     font-family: 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei',
                         sans-serif;
                 }
-                * {
+                /* * {
                     -webkit-overflow-scrolling: auto !important;
-                }
+                } */
             `}</style>
         </>
     );

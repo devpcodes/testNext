@@ -38,12 +38,13 @@ export const StockContainer = ({ requestStockId }) => {
         }
         console.log('height', winSize.height);
         if (panelHeight == 360) {
-            // if (isLogin && checkCA) {
-            //     return '288px';
-            // }else{
-            //     return '288px';
-            // }
-            return winSize.height - 360 - 44 + 'px'; // 345px
+            if (isLogin && checkCA) {
+                return '288px';
+            } else {
+                return '288px';
+            }
+
+            //return winSize.height - 360 - 44 + 'px'; // 345px
         } else {
             return 'auto';
         }
