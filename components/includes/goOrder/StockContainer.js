@@ -13,6 +13,7 @@ import arrow from '../../../resources/images/components/goOrder/arrow-chevron-do
 export const StockContainer = ({ requestStockId }) => {
     const dispatch = useDispatch();
     const [drawerVisible, setDrawerVisible] = useState(false);
+    const [heightStyle, setHeightStyle] = useState({ height: 'auto' });
 
     const confirmBox = useSelector(store => store.goOrder.confirmBox);
     const confirmBoxTitle = useSelector(store => store.goOrder.confirmBoxTitle);
@@ -36,22 +37,57 @@ export const StockContainer = ({ requestStockId }) => {
         if (bs === '') {
             return 'auto';
         }
-        console.log('height', winSize.height);
         if (panelHeight == 360) {
-            if (isLogin && checkCA) {
-                return '288px';
-            } else {
-                return '288px';
-            }
+            // if (isLogin && checkCA) {
+            //     return '348px';
+            // } else {
+            //     return '348px';
+            // }
 
-            //return winSize.height - 360 - 44 + 'px'; // 345px
+            return winSize.height - 360 - 44 + 'px'; // 345px
         } else {
             return 'auto';
         }
     };
+    useEffect(() => {
+        if (bs === '') {
+            return setHeightStyle({ height: 'auto' });
+        }
+        if (panelHeight == 360) {
+            setTimeout(() => {
+                setHeightStyle({ height: `${winSize.height - 360 - 44}` + 'px' });
+            }, 100);
+        } else {
+            setTimeout(() => {
+                setHeightStyle({ height: 'auto' });
+            }, 100);
+        }
+    }, [panelHeight, bs, winSize]);
+    // const setHeightStyle = () => {
+    //     if (bs === '') {
+    //         return setHeightStyle({height: 'auto'});
+    //     }
+    //     if (panelHeight == 360) {
+    //         // if (isLogin && checkCA) {
+    //         //     return '348px';
+    //         // } else {
+    //         //     return '348px';
+    //         // }
+    //         setTimeout(() => {
+    //             setHeightStyle({height: `${winSize.height - 360 - 44}` + 'px'})
+    //             // return {height: `${winSize.height - 360 - 44}` + 'px'} // 345px
+    //         }, 100);
+
+    //     } else {
+    //         setTimeout(() => {
+    //             setHeightStyle({height: 'auto'})
+    //         }, 100);
+
+    //     }
+    // }
     return (
         <>
-            <div className="open__container">
+            <div className="open__container" style={heightStyle}>
                 <Info stockid={requestStockId} />
                 <QuoteContainer />
             </div>
@@ -87,7 +123,7 @@ export const StockContainer = ({ requestStockId }) => {
             </Drawer>
             <style jsx>{`
                 .open__container {
-                    height: ${openContainerHeight()};
+                    /* height: ${openContainerHeight()}; */
                     overflow: auto;
                 }
             `}</style>
