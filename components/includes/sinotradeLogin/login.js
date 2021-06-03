@@ -712,7 +712,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 color: '#a9b6cb',
                                 fontSize: '1.2rem',
                                 letterSpacing: '0.3px',
-                                marrginTop: isIframe ? '-10px' : 0,
+                                marginTop: isIframe ? '-10px' : 0,
                             }}
                         >
                             此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
