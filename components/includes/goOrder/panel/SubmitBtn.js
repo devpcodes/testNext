@@ -1,4 +1,4 @@
-import { Button, Modal } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
@@ -24,6 +24,7 @@ import {
     setOrdCount,
     setPriceType,
     setDefaultOrdPrice,
+    setActiveTabKey,
 } from '../../../../store/goOrder/action';
 import { themeColor } from './PanelTabs';
 
@@ -55,7 +56,7 @@ const SubmitBtn = () => {
     const stockId = useSelector(store => store.goOrder.code);
     const is_first_sell = useSelector(store => store.goOrder.is_first_sell);
     const resetData = useSelector(store => store.goOrder.resetData);
-
+    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
         let capitalPercent = T30Data['資成數'] == null ? 0 : T30Data['資成數'] / 10;
@@ -142,13 +143,24 @@ const SubmitBtn = () => {
             });
             return;
         }
-        if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
-            Modal.error({
-                title: '資料格式錯誤',
-                content: '請確認價格或張數(股數)資料填寫正確',
-            });
-            return;
+        if (price_type === ' ') {
+            if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
+                Modal.error({
+                    title: '資料格式錯誤',
+                    content: '請確認價格或張數(股數)資料填寫正確',
+                });
+                return;
+            }
+        } else {
+            if (offerShare === '' || offerShare == 0) {
+                Modal.error({
+                    title: '資料格式錯誤',
+                    content: '請確認價格或張數(股數)資料填寫正確',
+                });
+                return;
+            }
         }
+
         if (userSettings.confirmAfterStockOrdered != null && userSettings.confirmAfterStockOrdered) {
             dispatch(setConfirmBoxOpen(true));
             dispatch(setConfirmBoxTitle('委託確認'));
@@ -172,10 +184,10 @@ const SubmitBtn = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        const market_id = 'S';
+        const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
-        const ord_price = ordPrice;
+        const ord_price = ordPrice || '0';
         const ord_qty = ordQty;
         const ord_type = ordType;
         const price_type = priceType;
@@ -222,15 +234,22 @@ const SubmitBtn = () => {
             });
             setSubmitLoading(false);
             if (res.success === 'True') {
-                Modal.success({
+                // Modal.success({
+                //     content: '委託成功',
+                //     onOk: () => {
+                //         dispatch(setActiveTabKey('3'));
+                //         // checkReset();
+                //     },
+                // });
+                message.success({
                     content: '委託成功',
-                    onOk: () => {
-                        checkReset();
-                    },
                 });
+                dispatch(setActiveTabKey('3'));
             } else {
-                Modal.error({
-                    title: '委託失敗',
+                // Modal.info({
+                //     content: res.result.msg,
+                // });
+                message.info({
                     content: res.result.msg,
                 });
             }

@@ -40,14 +40,18 @@ const ChTradingInfoBox = () => {
     };
     return (
         <div className="trading__container">
-            <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: true }}>
+            <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: false }}>
                 {checkPriceBtn() && (
                     <TabPane tab="改價" key="1">
-                        <ChangeBox type="price" tabKey={tabKey} />
+                        {tabKey === '1' && (
+                            <ChangeBox type="price" tabKey={tabKey} btnClassName="btn__container btn__container-00" />
+                        )}
                     </TabPane>
                 )}
                 <TabPane tab="改量" key="2">
-                    <ChangeBox type="qty" tabKey={tabKey} />
+                    {tabKey === '2' && (
+                        <ChangeBox type="qty" tabKey={tabKey} btnClassName="btn__container btn__container-01" />
+                    )}
                 </TabPane>
             </Tabs>
             <style jsx global>{`
@@ -78,7 +82,11 @@ const ChTradingInfoBox = () => {
                     font-weight: bold;
                 }
                 .trading__container .ant-tabs-tab.ant-tabs-tab-active {
-                    background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, #eaf1ff);
+                    // background-image: linear-gradient(to bottom, rgba(244, 90, 76, 0) 5%, #eaf1ff);
+                    background: linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
+                    background: -moz-linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
+                    background: -webkit-linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
+                    background: -o-linear-gradient(90deg, #eaf1ff 0%, #ffffff 74%);
                 }
             `}</style>
         </div>

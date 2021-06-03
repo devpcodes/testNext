@@ -161,7 +161,7 @@ const DealInfoBox = () => {
                     //     };
                     // }}
                 />
-                <p className="item__info">一 已經到底了 一</p>
+                {/* <p className="item__info">一 已經到底了 一</p> */}
             </div>
             <style jsx>{`
                 .info__icon {

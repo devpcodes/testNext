@@ -29,6 +29,7 @@ const initialState = {
     checkCA: false,
     checkLot: true,
     websocketEvent: false,
+    activeTabKey: '1',
 };
 
 const reducer = (state = initialState, action) => {
@@ -174,6 +175,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 websocketEvent: action.payload,
+            };
+        case actionType.SET_ACTIVE_TAB_KEY:
+            return {
+                ...state,
+                activeTabKey: action.payload,
             };
         default:
             return state;

@@ -185,3 +185,9 @@ export const setWebsocketEvent = boo => {
         payload: boo,
     };
 };
+export const setActiveTabKey = key => {
+    return {
+        type: actionType.SET_ACTIVE_TAB_KEY,
+        payload: key,
+    };
+};

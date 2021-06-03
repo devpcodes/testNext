@@ -71,7 +71,7 @@ function Service_ForgetPassword() {
                                 <p className="service__desc">
                                     我記得密碼，我要解鎖
                                     <br />
-                                    每日解鎖上線 2 次
+                                    每日解鎖上限 2 次
                                 </p>
                             </div>
                         </a>

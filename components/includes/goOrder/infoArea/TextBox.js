@@ -6,7 +6,7 @@ import theme from '../../../../resources/styles/theme';
 export const TextBox = memo(({ color, text }) => {
     return (
         <>
-            <div className={`text__box ${color}`}>{text}</div>
+            <div className={`text__box ${color} `}>{text}</div>
             <style jsx>{`
                 .text__box {
                     height: 22px;

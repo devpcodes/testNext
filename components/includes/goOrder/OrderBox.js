@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Tooltip, Modal } from 'antd';
+import { Button, Tooltip, Modal, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './panel/PanelTabs';
-import { setConfirmBoxOpen, setResetData } from '../../../store/goOrder/action';
+import { setActiveTabKey, setConfirmBoxOpen, setResetData } from '../../../store/goOrder/action';
 import { formatNum } from '../../../services/formatNum';
 import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle2.svg';
 import infoIconSell from '../../../resources/images/components/goOrder/attention-info-circle3.svg';
@@ -15,6 +15,7 @@ import { usePlatform } from '../../../hooks/usePlatform';
 const OrderBox = () => {
     const dispatch = useDispatch();
     const solaceName = useSelector(store => store.goOrder.productInfo.solaceName);
+    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const bs = useSelector(store => store.goOrder.bs);
     const lot = useSelector(store => store.goOrder.lot);
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
@@ -32,9 +33,14 @@ const OrderBox = () => {
 
     const orderName = useRef('');
     const [submitLoading, setSubmitLoading] = useState(false);
+    const [oddToolTipVisible, setOddToolTipVisible] = useState(false);
     const platform = usePlatform();
     useEffect(() => {
         orderName.current = solaceName;
+        document.body.addEventListener('click', oddTipVisHandler);
+        return () => {
+            document.body.removeEventListener('click', oddTipVisHandler);
+        };
     }, []);
 
     const closeHandler = () => {
@@ -89,16 +95,16 @@ const OrderBox = () => {
         const IP = getCookie('client_ip');
         const account = currentAccount.account;
         const broker_id = currentAccount.broker_id;
-        const market_id = 'S';
         const ord_bs = bs;
         const ord_cond = ordCond;
-        const ord_price = ordPrice;
+        const ord_price = ordPrice || '0';
         const ord_qty = ordQty;
         const ord_type = ordType;
         const price_type = priceType;
         const stock_id = stockId;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
+        const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ca_content = sign(
             {
                 idno: currentAccount.idno,
@@ -138,26 +144,65 @@ const OrderBox = () => {
             });
             setSubmitLoading(false);
             if (res.success === 'True') {
-                Modal.success({
+                // Modal.success({
+                //     content: '委託成功',
+                //     onOk: () => {
+                //         closeHandler();
+                //         dispatch(setActiveTabKey('3'));
+                //         // checkReset();
+                //     },
+                // });
+                message.success({
                     content: '委託成功',
-                    onOk: () => {
-                        closeHandler();
-                        checkReset();
-                    },
                 });
+                closeHandler();
+                dispatch(setActiveTabKey('3'));
             } else {
-                Modal.error({
-                    title: '委託失敗',
+                // Modal.info({
+                //     content: res.result.msg,
+                //     onOk: () => {
+                //         closeHandler();
+                //     },
+                // });
+                message.info({
                     content: res.result.msg,
-                    onOk: () => {
-                        closeHandler();
-                    },
                 });
+                closeHandler();
             }
         }
     };
+    const oddTipVisHandler = e => {
+        if (e.target.textContent.indexOf('零股交易手續費') >= 0) {
+            if (e && e.stopPropagation) {
+                e.stopPropagation();
+            } else {
+                window.event.cancelBubble = true;
+            }
+            setOddToolTipVisible(prevState => {
+                return !prevState;
+            });
+        } else {
+            setOddToolTipVisible(false);
+        }
+    };
+    const mappingPriceMsg = (price, priceType) => {
+        switch (priceType) {
+            case ' ':
+                return price;
+            case '4':
+                return '市價';
+            case '2':
+                return '漲停';
+            case '3':
+                return '跌停';
+            case '1':
+                return '平盤';
+            default:
+                return price;
+        }
+    };
     return (
-        <>
+        <div>
             <div className="trade__info--title">
                 <div className="info__box">
                     <div className="stock__name">{orderName.current}</div>
@@ -170,7 +215,8 @@ const OrderBox = () => {
             <div className="trade__info--num">
                 <div className="info__price">
                     <span className="label">價格</span>
-                    <span className="val">{ordPrice}</span>
+                    {/* <span className="val">{ordPrice}</span> */}
+                    <span className="val">{mappingPriceMsg(ordPrice, priceType)}</span>
                 </div>
                 <div className="info__qty">
                     <span className="label">數量</span>
@@ -193,8 +239,9 @@ const OrderBox = () => {
                             </>
                         }
                         color="white"
+                        visible={oddToolTipVisible}
                     >
-                        <div className="oddDescription">
+                        <div className="oddDescription" onClick={oddTipVisHandler}>
                             <img src={bs === 'B' ? infoIcon : infoIconSell} />
                             零股交易手續費
                         </div>
@@ -350,7 +397,7 @@ const OrderBox = () => {
                     vertical-align: top;
                 }
             `}</style>
-        </>
+        </div>
     );
 };
 

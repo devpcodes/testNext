@@ -15,7 +15,7 @@ export const orderStatusQueryFetcher = async function ({
     bs,
 }) {
     const url = `/Equity/OrderStatusQuery`;
-    if (!account) return;
+    if (!account || account == null) return [];
     try {
         let res;
         if (pageIndex != null && pageSize != null) {
