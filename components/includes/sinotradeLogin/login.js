@@ -690,7 +690,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 </Button>
                             </Form.Item>
                         </Form>
-                        <p className="a__box" style={{ marginBottom: '0.5rem', marginTop: '-19px' }}>
+                        <p
+                            className="a__box"
+                            style={{ marginBottom: '0.5rem', marginTop: isIframe ? '-28px' : '-19px' }}
+                        >
                             {!isIframe ? (
                                 <a
                                     target="_blank"
@@ -713,6 +716,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 fontSize: '1.2rem',
                                 letterSpacing: '0.3px',
                                 marginTop: isIframe ? '-10px' : 0,
+                                lineHeight: isIframe ? '14px' : '18px',
                             }}
                         >
                             此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解

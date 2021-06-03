@@ -24,7 +24,7 @@ const StockInfo = () => {
         if (bs !== 'S' || lot !== 'Board' || ordCound != 0 || market == '權證' || market == '興櫃' || ordType === 'P') {
             dispatch(setIsFirstSell('N'));
         }
-    }, [bs, ordCound, lot, market]);
+    }, [bs, ordCound, lot, market, ordType]);
 
     const fetchInfo = async () => {
         const res = await stockInfoFetcher(code);
