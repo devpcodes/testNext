@@ -700,7 +700,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             ) : (
                                 <a
                                     target="_blank"
-                                    href="https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035"
+                                    href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135"
                                     className="a__link"
                                     onClick={signUpHandler}
                                 >
@@ -714,6 +714,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 color: '#a9b6cb',
                                 fontSize: '1.2rem',
                                 letterSpacing: '0.3px',
+                                marrginTop: isIframe ? '-5px' : 0,
                             }}
                         >
                             此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
@@ -842,7 +843,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     float: right;
                 }
                 .a__link {
-                    font-size: 1.8rem;
+                    font-size: ${isIframe ? '1.2rem' : '1.8rem'};
                     color: #c43826;
                 }
                 p {
@@ -886,7 +887,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     margin-bottom: 10px;
                 }
                 .a__box {
-                    margin-top: -10px;
+                    /* margin-top: -10px; */
+                    margin-top: ${isIframe ? '-25px' : '-10px'};
                 }
                 .account__box {
                     position: relative;
@@ -927,7 +929,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 }
                 @media (max-width: 330px), print {
                     .login__box {
-                        padding: ${isPC ? '0 41px' : '0 0px'};
+                        padding: ${isPC ? '0 41px' : '0 20px'};
                     }
                 }
                 .ad_container {
