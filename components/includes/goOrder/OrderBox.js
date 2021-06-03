@@ -15,7 +15,7 @@ import { usePlatform } from '../../../hooks/usePlatform';
 const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) => {
     const dispatch = useDispatch();
     const solaceName = useSelector(store => store.goOrder.productInfo.solaceName);
-    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
+    // const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const bs = useSelector(store => store.goOrder.bs);
     // const lot = useSelector(store => store.goOrder.lot);
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
@@ -42,6 +42,7 @@ const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) 
     const currTransactionCost = useRef('');
     const currOrdQty = useRef('');
     const currStockId = useRef('');
+    const currMarket = useRef('');
     useEffect(() => {
         orderName.current = solaceName;
         document.body.addEventListener('click', oddTipVisHandler);
@@ -120,7 +121,13 @@ const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) 
         const stock_id = currStockId.current;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
-        const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
+        // const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
+        const market_id =
+            currMarket.current === '上市' || currMarket.current === '權證'
+                ? 'S'
+                : currMarket.current === '上櫃'
+                ? 'O'
+                : 'R';
         const ca_content = sign(
             {
                 idno: currentAccount.idno,

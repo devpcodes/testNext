@@ -15,6 +15,7 @@ const OrderConfirmBox = ({ title, color }) => {
     const ordQty = useSelector(store => store.goOrder.ord_qty);
     const transactionCost = useSelector(store => store.goOrder.transactionCost);
     const stockId = useSelector(store => store.goOrder.code);
+    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const closeHandler = () => {
         if (clickSource === 'detail') {
             dispatch(setConfirmBoxTitle('委託明細'));
@@ -39,6 +40,7 @@ const OrderConfirmBox = ({ title, color }) => {
                     ordType={ordType}
                     transactionCost={transactionCost}
                     ordQty={ordQty}
+                    market={market}
                 />
             )}
             {title === '刪改委託單' && <ChTradingInfoBox />}
