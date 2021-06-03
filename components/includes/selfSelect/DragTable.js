@@ -5,97 +5,51 @@ import { useCallback, useState, useEffect } from 'react';
 import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
-const DragTable = () => {
-    const [data1, setData1] = useState([
-        {
-            key: 1,
-            商品: '00881 國泰台灣1G+',
-            成交價: { text: 613, class: 'upper' },
-            漲跌: { text: 9.99, class: 'upper upper__icon' },
-            漲跌幅: { text: 0.35, class: 'upper upper__icon' },
-            成交量: { text: '36895' },
-            昨收: { text: 611 },
-        },
-        {
-            key: 2,
-            商品: '00881 國泰台灣2G+',
-            成交價: { text: 613, class: 'lower' },
-            漲跌: { text: 9.99, class: 'lower lower__icon' },
-            漲跌幅: { text: 0.35, class: 'lower lower__icon' },
-            成交量: { text: '36895' },
-            昨收: { text: 611 },
-        },
-        {
-            key: 3,
-            商品: '00881 國泰台灣3G+',
-            成交價: { text: 613, class: '' },
-            漲跌: { text: '--', class: '' },
-            漲跌幅: { text: '--', class: '' },
-            成交量: { text: '36895' },
-            昨收: { text: 611 },
-        },
-        {
-            key: 4,
-            商品: '00881 國泰台灣4G+',
-            成交價: { text: 613, class: 'lower' },
-            漲跌: { text: 9.99, class: 'lower lower__icon' },
-            漲跌幅: { text: 0.35, class: 'lower lower__icon' },
-            成交量: { text: '36895' },
-            昨收: { text: 611 },
-        },
-        {
-            key: 5,
-            商品: '00881 國泰台灣5G+',
-            成交價: { text: 613, class: 'upper' },
-            漲跌: { text: 9.99, class: 'upper upper__icon' },
-            漲跌幅: { text: 0.35, class: 'upper upper__icon' },
-            成交量: { text: '36895' },
-            昨收: { text: 611 },
-        },
-        {
-            key: 6,
-            商品: '00881 國泰台灣6G+',
-            成交價: { text: 613, class: 'upper' },
-            漲跌: { text: 9.99, class: 'upper upper__icon' },
-            漲跌幅: { text: 0.35, class: 'upper upper__icon' },
-            成交量: { text: 36895 },
-            昨收: { text: 611 },
-        },
-    ]);
+const DragTable = ({ tableData }) => {
+    console.log(tableData);
+    const [selfSelectList, setSelfSelectList] = useState([]);
+
+    useEffect(() => {
+        if (tableData && tableData.length > 0) {
+            setSelfSelectList(tableData);
+        } else {
+            setSelfSelectList([]);
+        }
+    }, [tableData]);
 
     const columns = [
         {
             title: '商品',
-            dataIndex: '商品',
+            dataIndex: 'name',
         },
         {
             title: '成交價',
-            dataIndex: '成交價',
-            render: text => <span className={text.class}>{text.text}</span>,
+            dataIndex: 'close',
+            render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '漲跌',
-            dataIndex: '漲跌',
-            render: text => <span className={text.class}>{text.text}</span>,
+            dataIndex: 'changePrice',
+            render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '漲跌幅',
-            dataIndex: '漲跌幅',
-            render: text => <span className={text.class}>{text.text}</span>,
+            dataIndex: 'changeRate',
+            render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '成交量',
-            dataIndex: '成交量',
-            render: text => <span className={text.class}>{text.text}</span>,
+            dataIndex: 'totalVolume',
+            render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '昨收',
-            dataIndex: '昨收',
-            render: text => <span className={text.class}>{text.text}</span>,
+            dataIndex: 'reference',
+            render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '交易',
-            dataIndex: '交易',
+            dataIndex: 'action',
             render: (text, record, index) => (
                 <>
                     <button className="btn buy">買進</button>
@@ -125,10 +79,10 @@ const DragTable = () => {
 
     const dragProps = {
         onDragEnd(fromIndex, toIndex) {
-            const data = JSON.parse(JSON.stringify(data1));
+            const data = JSON.parse(JSON.stringify(selfSelectList));
             const item = data.splice(fromIndex, 1)[0];
             data.splice(toIndex, 0, item);
-            setData1(data);
+            setSelfSelectList(data);
         },
         handleSelector: '.drag',
     };
@@ -136,7 +90,7 @@ const DragTable = () => {
     return (
         <>
             <ReactDragListView {...dragProps}>
-                <Table className="drag__Table" columns={columns} pagination={false} dataSource={data1} />
+                <Table className="drag__Table" columns={columns} pagination={false} dataSource={selfSelectList} />
             </ReactDragListView>
 
             <style jsx>{``}</style>

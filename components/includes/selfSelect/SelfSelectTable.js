@@ -1,29 +1,182 @@
-import { Tabs } from 'antd';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Tabs, Modal } from 'antd';
 import DragTable from './DragTable';
+import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
+import { fetchQuerySelectInventoryStock } from '../../../services/selfSelect/querySelectInventoryStock';
+import { fetchQuerySelectStock } from '../../../services/selfSelect/querySelectStock';
+import { fetchSnapshot } from '../../../services/stock/snapshot';
+import { getSocalToken } from '../../../services/user/accessToken';
+import { getToken } from '../../../services/user/accessToken';
+import useSWR from 'swr';
 
 const { TabPane } = Tabs;
 
 const SelfSelectTable = () => {
+    const currentAccount = useSelector(store => store.user.currentAccount);
+    const socalLoginData = useSelector(store => store.user.socalLogin);
+
+    const [selectGroupID, setSelectGroupID] = useState('0');
+    const [snapshotInput, setSnapshotInput] = useState([]);
+    // const [snapshotReload, setSnapshotReload] = useState(false);
+    const [tableData, setTableData] = useState({});
+    const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+    const token = isSocalLogin ? getSocalToken() : getToken();
+
+    // console.log(currentAccount)
+
+    // 查詢自選選單
+    const { data: fetchSelectGroupData } = useSWR([isSocalLogin, token], fetchQuerySelectGroup, {
+        onError: (error, key) => {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        },
+    });
+
+    // 查詢庫存股票
+    const { data: inventoryStockData } = useSWR(
+        selectGroupID === '0' ? [token, currentAccount, selectGroupID] : null,
+        fetchQuerySelectInventoryStock,
+        {
+            onError: (error, key) => {
+                Modal.error({
+                    title: '伺服器錯誤',
+                });
+            },
+        },
+    );
+
+    // 查詢自選個股
+    const { data: selectStocks } = useSWR(
+        selectGroupID !== '0' ? [isSocalLogin, token, selectGroupID] : null,
+        fetchQuerySelectStock,
+        {
+            onError: (error, key) => {
+                Modal.error({
+                    title: '伺服器錯誤',
+                });
+            },
+        },
+    );
+
+    // 查詢個股報價
+    const { data: snapshot } = useSWR(snapshotInput.length > 0 ? [snapshotInput] : null, fetchSnapshot, {
+        onError: (error, key) => {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        },
+    });
+
+    const changeSelectGroup = key => {
+        setSelectGroupID(key);
+    };
+
+    useEffect(async () => {
+        // console.log("=============   inventoryStockData   ================")
+        // console.log(inventoryStockData)
+        // console.log("=============   selectStocks   ================")
+        // console.log (selectStocks)
+        const snapshotInputArray = [];
+        if (inventoryStockData) {
+            inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`].map((stock, index) => {
+                if (['O', 'F', 'S'].includes(stock.market)) {
+                    snapshotInputArray.push(stock.symbol);
+                }
+            });
+            console.log(selectGroupID);
+            console.log(snapshotInputArray);
+            // 非同步問題
+            setSnapshotInput(snapshotInputArray);
+            // setTableData(snapshot)
+        } else if (selectStocks) {
+            selectStocks.map((stock, index) => {
+                if (['O', 'F', 'S'].includes(stock.market)) {
+                    snapshotInputArray.push(stock.symbol);
+                }
+            });
+            console.log(selectGroupID);
+            console.log(snapshotInputArray);
+            // 非同步問題
+            setSnapshotInput(snapshotInputArray);
+            // setTableData(snapshot)
+        }
+        // console.log("=============   tableData   ================")
+        // console.log(tableData)
+    }, [inventoryStockData, selectStocks]);
+
+    useEffect(() => {
+        console.log(snapshotInput);
+        const tableRowData = [];
+        if (snapshotInput) {
+            snapshotInput.map((stockCode, index) => {
+                let stockData = {};
+                if (snapshot) {
+                    snapshot.map((snapshotData, snapshotIndex) => {
+                        const isupper =
+                            parseFloat(snapshotData.ChangePrice) == 0
+                                ? ''
+                                : parseFloat(snapshotData.ChangePrice) > 0
+                                ? true
+                                : false;
+                        if (stockCode == snapshotData.Code) {
+                            stockData.key = index;
+                            stockData.name = snapshotData.Name;
+                            stockData.close = {
+                                text: snapshotData.Close.toFixed(2),
+                                class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
+                            };
+                            stockData.changePrice = {
+                                text: Math.abs(snapshotData.ChangePrice).toFixed(2),
+                                class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
+                            };
+                            stockData.changeRate = {
+                                text: Math.abs(snapshotData.ChangeRate).toFixed(2),
+                                class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
+                            };
+                            stockData.totalVolume = { text: snapshotData.TotalVolume };
+                            stockData.reference = { text: snapshotData.Reference.toFixed(2) };
+                            tableRowData.push(stockData);
+                        }
+                    });
+                }
+            });
+        }
+        console.log(tableRowData);
+        setTableData(tableRowData);
+    }, [snapshot]);
+
+    // useEffect(() => {
+    //     console.log(fetchSelectGroupData)
+    // },[fetchSelectGroupData])
+
+    // 取得庫存檔案 ( 只有證券帳戶 )
+    useEffect(() => {
+        if (!!inventoryStockData && Object.keys(inventoryStockData).length > 0) {
+            const InventoryStocks = inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`];
+            // console.log(InventoryStocks)
+        }
+    }, [inventoryStockData]);
+
     return (
         <>
+            {/* {console.log(selectStocks)} */}
             <div className="select__group__tab">
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="庫存" key="1" />
-                    <TabPane tab="自選股 1" key="2" />
-                    <TabPane tab="自選股 2" key="3" />
-                    <TabPane tab="自選股 3" key="4" />
-                    <TabPane tab="自選股 4" key="5" />
-                    <TabPane tab="自選股 5" key="6" />
-                    <TabPane tab="自選股 6" key="7" />
-                    <TabPane tab="自選股 7" key="8" />
-                    <TabPane tab="自選股 8" key="9" />
-                    <TabPane tab="自選股 9" key="10" />
-                    <TabPane tab="自選股 10" key="11" />
+                <Tabs defaultActiveKey="0" onChange={changeSelectGroup}>
+                    <TabPane tab="庫存" key="0" />
+                    {!!fetchSelectGroupData &&
+                        fetchSelectGroupData.map((val, key) => {
+                            return (
+                                <>
+                                    <TabPane tab={val.selectName} key={val.selectId} />
+                                </>
+                            );
+                        })}
                 </Tabs>
             </div>
-
             <div className="select__stock__table">
-                <DragTable />
+                <DragTable tableData={tableData} />
             </div>
 
             <style jsx>{`
