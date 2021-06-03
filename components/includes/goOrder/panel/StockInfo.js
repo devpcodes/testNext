@@ -78,22 +78,12 @@ const StockInfo = () => {
     return (
         <div className="info__container">
             <div className="info__box">{getInfoTag()}</div>
-            {bs === 'S' &&
-                lot === 'Board' &&
-                ordCound == 0 &&
-                market != '權證' &&
-                market != '興櫃' &&
-                ordType !==
-                    'P'(
-                        <div className="firstSell__box">
-                            <span>先賣</span>
-                            <Switch
-                                checked={isFirstSell === 'Y' ? true : false}
-                                size="small"
-                                onChange={switchChangeHandler}
-                            />
-                        </div>,
-                    )}
+            {bs === 'S' && lot === 'Board' && ordCound == 0 && market != '權證' && market != '興櫃' && ordType !== 'P' && (
+                <div className="firstSell__box">
+                    <span>先賣</span>
+                    <Switch checked={isFirstSell === 'Y' ? true : false} size="small" onChange={switchChangeHandler} />
+                </div>
+            )}
             <style jsx>{`
                 .info__container {
                     margin-top: 11px;
