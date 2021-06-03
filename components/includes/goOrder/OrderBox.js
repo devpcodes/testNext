@@ -12,7 +12,7 @@ import { getCookie } from '../../../services/components/layouts/cookieController
 import { checkSignCA, sign } from '../../../services/webCa';
 import { getWebId } from '../../../services/components/goOrder/getWebId';
 import { usePlatform } from '../../../hooks/usePlatform';
-const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) => {
+const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId, market }) => {
     const dispatch = useDispatch();
     const solaceName = useSelector(store => store.goOrder.productInfo.solaceName);
     // const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
@@ -53,6 +53,7 @@ const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId }) 
         currOrdQty.current = ordQty;
         currTransactionCost.current = transactionCost;
         currStockId.current = stockId;
+        currMarket.current = market;
         return () => {
             document.body.removeEventListener('click', oddTipVisHandler);
         };
