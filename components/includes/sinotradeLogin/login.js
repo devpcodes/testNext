@@ -361,7 +361,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // };
     const getSignUpUrl = () => {
         if (platform === 'udn') {
-            return 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+            return 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
         } else {
             return 'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
         }
