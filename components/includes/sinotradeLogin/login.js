@@ -704,7 +704,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                     還不是永豐金證券客戶
                                 </a>
                             ) : (
-                                <a target="_blank" className="a__link" onClick={signUpHandler()}>
+                                <a target="_blank" className="a__link" onClick={signUpHandler}>
                                     還不是永豐金證券客戶
                                 </a>
                             )}
