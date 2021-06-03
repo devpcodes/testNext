@@ -20,6 +20,10 @@ import MD5 from 'crypto-js/md5';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
+let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
+let defaultOpenact =
+    'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
+
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
     const [form] = Form.useForm();
@@ -328,9 +332,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const signUpHandler = function (e) {
         e.preventDefault();
-        iframeHandler(
-            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
-        );
+        iframeHandler(defaultOpenact);
     };
 
     const overflowHandler = () => {
@@ -361,9 +363,9 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // };
     const getSignUpUrl = () => {
         if (platform === 'udn') {
-            return 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
+            return udnOpenact;
         } else {
-            return 'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
+            return defaultOpenact;
         }
     };
 
@@ -404,7 +406,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 <div className="ad_container">
                     <a
                         target="_blank"
-                        href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login"
+                        href={udnOpenact}
+                        // href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login"
                     >
                         <img className="ad__img" src={udnAD} />
                     </a>
@@ -698,12 +701,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                     還不是永豐金證券客戶
                                 </a>
                             ) : (
-                                <a
-                                    target="_blank"
-                                    href="https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135"
-                                    className="a__link"
-                                    onClick={signUpHandler}
-                                >
+                                <a target="_blank" href={defaultOpenact} className="a__link" onClick={signUpHandler}>
                                     還不是永豐金證券客戶
                                 </a>
                             )}

@@ -13,6 +13,7 @@ const StockInfo = () => {
     const ordCound = useSelector(store => store.goOrder.ord_cond);
     const isFirstSell = useSelector(store => store.goOrder.is_first_sell);
     const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
+    const ordType = useSelector(store => store.goOrder.ord_type);
     useEffect(() => {
         if (code !== '') {
             fetchInfo();
@@ -20,7 +21,7 @@ const StockInfo = () => {
     }, [code]);
 
     useEffect(() => {
-        if (bs !== 'S' || lot !== 'Board' || ordCound != 0 || market == '權證') {
+        if (bs !== 'S' || lot !== 'Board' || ordCound != 0 || market == '權證' || market == '興櫃' || ordType === 'P') {
             dispatch(setIsFirstSell('N'));
         }
     }, [bs, ordCound, lot, market]);
@@ -77,12 +78,22 @@ const StockInfo = () => {
     return (
         <div className="info__container">
             <div className="info__box">{getInfoTag()}</div>
-            {bs === 'S' && lot === 'Board' && ordCound == 0 && market != '權證' && market != '興櫃' && (
-                <div className="firstSell__box">
-                    <span>先賣</span>
-                    <Switch checked={isFirstSell === 'Y' ? true : false} size="small" onChange={switchChangeHandler} />
-                </div>
-            )}
+            {bs === 'S' &&
+                lot === 'Board' &&
+                ordCound == 0 &&
+                market != '權證' &&
+                market != '興櫃' &&
+                ordType !==
+                    'P'(
+                        <div className="firstSell__box">
+                            <span>先賣</span>
+                            <Switch
+                                checked={isFirstSell === 'Y' ? true : false}
+                                size="small"
+                                onChange={switchChangeHandler}
+                            />
+                        </div>,
+                    )}
             <style jsx>{`
                 .info__container {
                     margin-top: 11px;
