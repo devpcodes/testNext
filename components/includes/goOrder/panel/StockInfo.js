@@ -12,7 +12,7 @@ const StockInfo = () => {
     const lot = useSelector(store => store.goOrder.lot);
     const ordCound = useSelector(store => store.goOrder.ord_cond);
     const isFirstSell = useSelector(store => store.goOrder.is_first_sell);
-    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
+    const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     useEffect(() => {
         if (code !== '') {
             fetchInfo();

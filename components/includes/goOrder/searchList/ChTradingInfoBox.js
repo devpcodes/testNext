@@ -7,6 +7,7 @@ const { TabPane } = Tabs;
 const ChTradingInfoBox = () => {
     const [tabKey, setTabKey] = useState('1');
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
+    const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     useEffect(() => {
         if (checkPriceBtn()) {
             setTabKey('1');
@@ -48,11 +49,13 @@ const ChTradingInfoBox = () => {
                         )}
                     </TabPane>
                 )}
-                <TabPane tab="改量" key="2">
-                    {tabKey === '2' && (
-                        <ChangeBox type="qty" tabKey={tabKey} btnClassName="btn__container btn__container-01" />
-                    )}
-                </TabPane>
+                {market !== '興櫃' && (
+                    <TabPane tab="改量" key="2">
+                        {tabKey === '2' && (
+                            <ChangeBox type="qty" tabKey={tabKey} btnClassName="btn__container btn__container-01" />
+                        )}
+                    </TabPane>
+                )}
             </Tabs>
             <style jsx global>{`
                 .trading__container .ant-tabs {
