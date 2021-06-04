@@ -1,4 +1,5 @@
 import { Table } from 'antd';
+import AccountTable from '../../includes/tradingAccount/vipInventory/AccountTable';
 import ReactDragListView from 'react-drag-listview';
 import { useCallback, useState, useEffect } from 'react';
 
@@ -90,7 +91,12 @@ const DragTable = ({ tableData }) => {
     return (
         <>
             <ReactDragListView {...dragProps}>
-                <Table className="drag__Table" columns={columns} pagination={false} dataSource={selfSelectList} />
+                <AccountTable
+                    className="drag__Table"
+                    columns={columns}
+                    pagination={false}
+                    dataSource={selfSelectList}
+                />
             </ReactDragListView>
 
             <style jsx>{``}</style>

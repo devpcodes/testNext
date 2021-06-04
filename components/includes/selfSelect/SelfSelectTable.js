@@ -68,8 +68,8 @@ const SelfSelectTable = ({ reloadCount }) => {
         },
     });
 
-    // 查詢複委託報價
-    const { data: sbQuote } = useSWR(sbInput.length > 0 ? [sbInput] : null, fetchQuerySubBrokerageQuote, {
+    // 查詢複委託報價 ( 檔第三方登入 )
+    const { data: sbQuote } = useSWR(sbInput.length > 0 ? [sbInput, token] : null, fetchQuerySubBrokerageQuote, {
         onError: (error, key) => {
             Modal.error({
                 title: '伺服器錯誤',
@@ -81,71 +81,124 @@ const SelfSelectTable = ({ reloadCount }) => {
         setSelectGroupID(key);
     };
 
-    useEffect(async () => {
+    const setRequestData = data => {
         const snapshotInputArray = [];
+        const sbInputArray = [];
+        data.map((stock, index) => {
+            if (['O', 'F', 'S'].includes(stock.market)) {
+                snapshotInputArray.push(stock.symbol);
+            } else if (['SB'].includes(stock.market)) {
+                let exchange = '';
+                switch (stock.exchange) {
+                    case 'NASDAQ':
+                        exchange = 'US';
+                        break;
+                    case 'HKG':
+                        if (stock.symbol.search(/^[8]{1}[0-9]{4}$/) === 0) {
+                            exchange = 'HKR';
+                        } else {
+                            exchange = 'SEHK';
+                        }
+                        break;
+                    default:
+                        exchange = stock.exchange;
+                        break;
+                }
+                sbInputArray.push({ symbol: stock.symbol, exchange: exchange });
+            }
+        });
+        setSnapshotInput(snapshotInputArray);
+        setSBInput(sbInputArray);
+    };
+
+    useEffect(async () => {
         if (inventoryStockData) {
-            inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`].map((stock, index) => {
-                if (['O', 'F', 'S'].includes(stock.market)) {
-                    snapshotInputArray.push(stock.symbol);
-                }
-            });
-            console.log(selectGroupID);
-            console.log(snapshotInputArray);
-            setSnapshotInput(snapshotInputArray);
+            setRequestData(inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]);
         } else if (selectStocks) {
-            selectStocks.map((stock, index) => {
-                if (['O', 'F', 'S'].includes(stock.market)) {
-                    snapshotInputArray.push(stock.symbol);
-                }
-            });
-            console.log(selectGroupID);
-            console.log(snapshotInputArray);
-            setSnapshotInput(snapshotInputArray);
+            setRequestData(selectStocks);
         }
     }, [inventoryStockData, selectStocks]);
 
     useEffect(() => {
-        console.log(snapshotInput);
-        const tableRowData = [];
-        if (snapshotInput) {
-            snapshotInput.some((stockCode, index) => {
-                let stockData = {};
-                if (snapshot) {
-                    snapshot.some((snapshotData, snapshotIndex) => {
-                        const isupper =
-                            parseFloat(snapshotData.ChangePrice) == 0
-                                ? ''
-                                : parseFloat(snapshotData.ChangePrice) > 0
-                                ? true
-                                : false;
-                        if (stockCode == snapshotData.Code) {
-                            stockData.key = index;
-                            stockData.name = snapshotData.Name === '' ? snapshotData.Code : snapshotData.Name;
-                            stockData.close = {
-                                text: snapshotData.Close.toFixed(2),
-                                class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
-                            };
-                            stockData.changePrice = {
-                                text: Math.abs(snapshotData.ChangePrice).toFixed(2),
-                                class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
-                            };
-                            stockData.changeRate = {
-                                text: Math.abs(snapshotData.ChangeRate).toFixed(2),
-                                class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
-                            };
-                            stockData.totalVolume = { text: snapshotData.TotalVolume };
-                            stockData.reference = { text: snapshotData.Reference.toFixed(2) };
-                            tableRowData.push(stockData);
-                            return true;
-                        }
-                    });
-                }
-            });
+        console.log(selectGroupID);
+        if (inventoryStockData || selectStocks) {
+            const tableData =
+                selectGroupID === '0'
+                    ? inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]
+                    : selectStocks;
+            const tableRowData = [];
+            console.log(tableData);
+            if (tableData && tableData.length > 0) {
+                tableData.some((stock, index) => {
+                    let stockData = {};
+                    if (snapshot && ['O', 'F', 'S'].includes(stock.market)) {
+                        snapshot.some((snapshotData, snapshotIndex) => {
+                            const isupper =
+                                parseFloat(snapshotData.ChangePrice) == 0
+                                    ? ''
+                                    : parseFloat(snapshotData.ChangePrice) > 0
+                                    ? true
+                                    : false;
+                            if (stock.symbol == snapshotData.Code) {
+                                stockData.key = index;
+                                stockData.name = snapshotData.Name === '' ? snapshotData.Code : snapshotData.Name;
+                                stockData.close = {
+                                    text: snapshotData.Close ? snapshotData.Close.toFixed(2) : '--',
+                                    class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
+                                };
+                                stockData.changePrice = {
+                                    text: snapshotData.ChangePrice
+                                        ? Math.abs(snapshotData.ChangePrice).toFixed(2)
+                                        : '--',
+                                    class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
+                                };
+                                stockData.changeRate = {
+                                    text: snapshotData.ChangeRate ? Math.abs(snapshotData.ChangeRate).toFixed(2) : '--',
+                                    class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
+                                };
+                                stockData.totalVolume = {
+                                    text: snapshotData.TotalVolume ? snapshotData.TotalVolume : '--',
+                                };
+                                stockData.reference = {
+                                    text: snapshotData.Reference ? snapshotData.Reference.toFixed(2) : '--',
+                                };
+                                tableRowData.push(stockData);
+                                return true;
+                            }
+                        });
+                    } else if (sbQuote && ['SB'].includes(stock.market)) {
+                        const mk = stock.exchange === 'NASDAQ' ? 'US' : stock.exchange;
+                        const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
+                        stockData.key = index;
+                        stockData.name = `${stock.symbol}.${mk}`;
+                        stockData.close = {
+                            text:
+                                sbQuoteData && sbQuoteData.refPrice
+                                    ? parseFloat(sbQuoteData.refPrice).toFixed(2)
+                                    : '--',
+                        };
+                        stockData.changePrice = {
+                            text: '--',
+                        };
+                        stockData.changeRate = {
+                            text: '--',
+                        };
+                        stockData.totalVolume = { text: '--' };
+                        stockData.reference = {
+                            text:
+                                sbQuoteData && sbQuoteData.preClose
+                                    ? parseFloat(sbQuoteData.preClose).toFixed(2)
+                                    : '--',
+                        };
+                        tableRowData.push(stockData);
+                    }
+                });
+            }
+
+            setTableData(tableRowData);
+            reloadCount(tableRowData.length);
         }
-        console.log(tableRowData);
-        setTableData(tableRowData);
-        reloadCount(tableRowData.length);
-    }, [snapshot]);
+    }, [snapshot, sbQuote]);
 
     // useEffect(() => {
     //     console.log(fetchSelectGroupData)
@@ -182,7 +235,7 @@ const SelfSelectTable = ({ reloadCount }) => {
             <style jsx>{`
                 .select__group__tab {
                     padding: 0 30px;
-                    border-bottom: solid 1px #e6ebf5;
+                    border: solid 1px #e6ebf5;
                 }
             `}</style>
             <style jsx global>{`

@@ -37,7 +37,6 @@ function Self_select_stocks() {
                 }
 
                 .select__list__box {
-                    border: solid 1px #e6ebf5;
                     margin-top: 22px;
                 }
             `}</style>
