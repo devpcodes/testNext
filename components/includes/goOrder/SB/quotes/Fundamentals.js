@@ -47,7 +47,7 @@ const Fundamentals = () => {
                 }
                 .item {
                     width: 32%;
-                    font-size: 1.6rem;
+                    font-size: 1.4rem;
                     display: inline-block;
                     position: relative;
                     margin-right: 9px;

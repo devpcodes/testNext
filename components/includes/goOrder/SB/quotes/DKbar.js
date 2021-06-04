@@ -6,6 +6,7 @@ const DKbar = ({ high, low, close, open, text, style }) => {
     const [closePosition, setClosePosition] = useState(0);
     const maxWidthElement = useRef(null);
     useEffect(() => {
+        console.log(open, high, low, close);
         if (maxWidthElement.current) {
             console.log('w', maxWidthElement.current.offsetWidth);
             let tick = maxWidthElement.current.offsetWidth / (high - low);
@@ -23,7 +24,7 @@ const DKbar = ({ high, low, close, open, text, style }) => {
                 setClosePosition(Number((tick * (close - low)).toFixed(2)));
             }
         }
-    }, []);
+    }, [open, high, low, close]);
     return (
         <>
             <div className="priceBetween__container" style={style}>
@@ -71,7 +72,7 @@ const DKbar = ({ high, low, close, open, text, style }) => {
                 }
                 .closeIcon {
                     position: absolute;
-                    left: ${closePosition - 5}px;
+                    left: ${open == '-' || close == '-' ? 0 : closePosition - 5}px;
                     top: 8px;
                 }
             `}</style>

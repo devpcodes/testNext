@@ -10,7 +10,7 @@ import UpdateBar from './UpdateBar';
 import { getToken } from '../../../../services/user/accessToken';
 import { fetchGetQuote } from '../../../../services/components/goOrder/sb/fetchGetQuote';
 import { setProductInfo } from '../../../../store/goOrder/action';
-import { getCodeType } from '../../../../services/components/goOrder/sb/dataMapping';
+import { getCodeType, marketName } from '../../../../services/components/goOrder/sb/dataMapping';
 import { setQuote, setRic } from '../../../../store/goOrderSB/action';
 import { insert } from '../../../../services/stringFormat';
 import { fetchPs } from '../../../../services/components/goOrder/sb/fetchPs';
@@ -27,20 +27,33 @@ const Info = () => {
     const code = useSelector(store => store.goOrder.code);
     const type = useSelector(store => store.goOrder.type);
     const quote = useSelector(store => store.goOrderSB.quote);
+    const ric = useSelector(store => store.goOrderSB.ric);
     const dispatch = useDispatch();
     const [checkCA, setCheckCA] = useState(false);
+    const [label, setLabel] = useState('');
 
     useEffect(() => {
         dispatch(setProductInfo(defaultProductInfo));
     }, [type]);
 
     useEffect(() => {
-        // if (productInfo.market) {
-        //     const codeType = getCodeType(productInfo.market);
-        //     getData(code + '.' + codeType);
-        // }
+        dispatch(setQuote({}));
         getRic(code);
     }, [code, type]);
+
+    useEffect(() => {
+        if (ric === 'error') {
+            dispatch(setQuote({}));
+        }
+    }, [ric]);
+
+    useEffect(() => {
+        if (productInfo.market != null) {
+            if (marketName(productInfo.market).label != null) {
+                setLabel(marketName(productInfo.market).label);
+            }
+        }
+    }, [productInfo]);
 
     const getRic = useCallback(async code => {
         try {
@@ -58,7 +71,6 @@ const Info = () => {
     const getData = useCallback(async code => {
         const token = getToken();
         try {
-            dispatch(setQuote({}));
             const res = await fetchGetQuote(code, token);
             console.log('res', res);
             dispatch(setQuote(res));
@@ -158,7 +170,7 @@ const Info = () => {
                     </div>
                     <MoreInfo>
                         <div className="market__container">
-                            <span className="market">美股</span>
+                            <span className="market">{label ? label : ''}</span>
                             <span className="close__info">{getTime()}</span>
                         </div>
                     </MoreInfo>

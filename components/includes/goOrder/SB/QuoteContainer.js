@@ -4,12 +4,27 @@ import ChartContainer from './quotes/ChartContainer';
 import Fundamentals from './quotes/Fundamentals';
 import DKbar from './quotes/DKbar';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
+import NoData from './NoData';
+
+// import noDataIcon from '../../../../resources/images/components/goOrder/sb/img-default.svg';
 const QuoteContainer = () => {
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const bs = useSelector(store => store.goOrderSB.bs);
+    const quote = useSelector(store => store.goOrderSB.quote);
+    const ric = useSelector(store => store.goOrderSB.ric);
     const chartHeight = useRef(0);
     const quoteContainerElement = useRef(null);
+
+    const [noData, setNoData] = useState(false);
     const winSize = useWindowSize();
+
+    useEffect(() => {
+        if (ric === 'error') {
+            setNoData(true);
+        } else {
+            setNoData(false);
+        }
+    }, [ric]);
 
     const quoteContainerStyleHandler = () => {
         if (panelHeight >= 100 && bs !== '' && quoteContainerElement.current != null) {
@@ -20,9 +35,11 @@ const QuoteContainer = () => {
             };
         }
     };
+
     const getChartHeightHandler = useCallback(h => {
         chartHeight.current = h;
     });
+
     const bottomLineVisible = useCallback(() => {
         if (bs === '') {
             return true;
@@ -40,19 +57,24 @@ const QuoteContainer = () => {
                 <span className="text">報價時間／美東，幣別／美金</span>
                 <span className="line"></span>
             </div>
-            <div className="quote__container--content" style={quoteContainerStyleHandler()}>
-                <ChartContainer getHeight={getChartHeightHandler} bottomLineVisible={bottomLineVisible()} />
-                <Fundamentals />
-                <DKbar
-                    close={78.99}
-                    open={98.99}
-                    low={58.99}
-                    high={103.83}
-                    text={'當日價格區間'}
-                    style={{ marginBottom: '18px' }}
-                />
-                <DKbar close={78.99} open={98.99} low={53.15} high={145.09} text={'52週區間'} />
-            </div>
+            {noData ? (
+                <NoData text="目前暫無即時報價" />
+            ) : (
+                <div className="quote__container--content" style={quoteContainerStyleHandler()}>
+                    <ChartContainer getHeight={getChartHeightHandler} bottomLineVisible={bottomLineVisible()} />
+                    <Fundamentals />
+                    <DKbar
+                        close={quote.ls}
+                        open={quote.op}
+                        low={quote.lo}
+                        high={quote.hi}
+                        text={'當日價格區間'}
+                        style={{ marginBottom: '18px' }}
+                    />
+                    <DKbar close={quote.ls} open={quote.op} low={quote.yl} high={quote.yh} text={'52週區間'} />
+                </div>
+            )}
+
             <style jsx>{`
                 .quote__container {
                     overflow-y: ${bs === '' || panelHeight == 80 ? 'auto' : 'hidden'};
