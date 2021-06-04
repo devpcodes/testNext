@@ -4,7 +4,14 @@ import selectIcon from '../../../../resources/images/components/goOrder/arrow-se
 
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './PanelTabs';
-import { setOrdType, setLot, setTradeTime, setTimeInForce, setOrdCount } from '../../../../store/goOrder/action';
+import {
+    setOrdType,
+    setLot,
+    setTradeTime,
+    setTimeInForce,
+    setOrdCount,
+    setPriceType,
+} from '../../../../store/goOrder/action';
 
 const { Option } = Select;
 const TradingSelect = () => {
@@ -71,6 +78,7 @@ const TradingSelect = () => {
                 }
                 if (lot === 'Board' && tradeTime === 'after') {
                     dispatch(setOrdType('P'));
+                    dispatch(setPriceType(' '));
                 }
                 if (lot === 'Odd' && tradeTime === 'ing') {
                     dispatch(setOrdType('C'));
@@ -85,6 +93,7 @@ const TradingSelect = () => {
             }
             if (lot === 'Board' && tradeTime === 'after') {
                 dispatch(setOrdType('P'));
+                dispatch(setPriceType(' '));
             }
             if (lot === 'Odd' && tradeTime === 'ing') {
                 dispatch(setOrdType('C'));
