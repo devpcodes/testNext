@@ -1,3 +1,4 @@
+import React, { useState, memo, useEffect, useCallback } from 'react';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { PageHead } from '../components/includes/PageHead';
@@ -11,14 +12,20 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 
 const noNewwebHeader = true;
 function Self_select_stocks() {
+    const [count, setCount] = useState('--');
+
+    const reloadCount = useCallback(listCount => {
+        setCount(listCount);
+    });
+
     return (
         <>
             {noNewwebHeader ? <Header /> : ''}
             <div className="select__box">
-                <SelfSelectToolBar />
+                <SelfSelectToolBar count={count} />
                 <PageHead title={'我的自選'} />
                 <div className="select__list__box">
-                    <SelfSelectTable />
+                    <SelfSelectTable reloadCount={reloadCount} />
                 </div>
             </div>
 

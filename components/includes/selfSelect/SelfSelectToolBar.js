@@ -9,7 +9,7 @@ import { fetchCheckSelfSelect } from '../../../services/selfSelect/checkSelectSt
 // 換
 import { setSelectInfo } from '../../../store/goOrder/action';
 
-const SelfSelectToolBar = () => {
+const SelfSelectToolBar = ({ count }) => {
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
     const closeSelfSelect = useCallback(() => {
         setIsSelfSelectVisitable(false);
@@ -44,7 +44,7 @@ const SelfSelectToolBar = () => {
                     <AddSelfSelect />
                 </div>
                 <div className="select__toolbar__right">
-                    <span>共 12/50 檔自選股</span>
+                    <span>共 {count}/50 檔自選股</span>
 
                     <Button className="refresh__btn">
                         <img src={refresh} />

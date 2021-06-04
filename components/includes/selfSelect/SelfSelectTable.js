@@ -5,6 +5,7 @@ import DragTable from './DragTable';
 import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
 import { fetchQuerySelectInventoryStock } from '../../../services/selfSelect/querySelectInventoryStock';
 import { fetchQuerySelectStock } from '../../../services/selfSelect/querySelectStock';
+import { fetchQuerySubBrokerageQuote } from '../../../services/sb/querySubBrokerageQuote';
 import { fetchSnapshot } from '../../../services/stock/snapshot';
 import { getSocalToken } from '../../../services/user/accessToken';
 import { getToken } from '../../../services/user/accessToken';
@@ -12,18 +13,16 @@ import useSWR from 'swr';
 
 const { TabPane } = Tabs;
 
-const SelfSelectTable = () => {
+const SelfSelectTable = ({ reloadCount }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLoginData = useSelector(store => store.user.socalLogin);
 
     const [selectGroupID, setSelectGroupID] = useState('0');
     const [snapshotInput, setSnapshotInput] = useState([]);
-    // const [snapshotReload, setSnapshotReload] = useState(false);
+    const [sbInput, setSBInput] = useState([]); // { "symbol": "AAPL",  "exchange": "US"  }
     const [tableData, setTableData] = useState({});
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
-
-    // console.log(currentAccount)
 
     // 查詢自選選單
     const { data: fetchSelectGroupData } = useSWR([isSocalLogin, token], fetchQuerySelectGroup, {
@@ -69,15 +68,20 @@ const SelfSelectTable = () => {
         },
     });
 
+    // 查詢複委託報價
+    const { data: sbQuote } = useSWR(sbInput.length > 0 ? [sbInput] : null, fetchQuerySubBrokerageQuote, {
+        onError: (error, key) => {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        },
+    });
+
     const changeSelectGroup = key => {
         setSelectGroupID(key);
     };
 
     useEffect(async () => {
-        // console.log("=============   inventoryStockData   ================")
-        // console.log(inventoryStockData)
-        // console.log("=============   selectStocks   ================")
-        // console.log (selectStocks)
         const snapshotInputArray = [];
         if (inventoryStockData) {
             inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`].map((stock, index) => {
@@ -87,9 +91,7 @@ const SelfSelectTable = () => {
             });
             console.log(selectGroupID);
             console.log(snapshotInputArray);
-            // 非同步問題
             setSnapshotInput(snapshotInputArray);
-            // setTableData(snapshot)
         } else if (selectStocks) {
             selectStocks.map((stock, index) => {
                 if (['O', 'F', 'S'].includes(stock.market)) {
@@ -98,22 +100,18 @@ const SelfSelectTable = () => {
             });
             console.log(selectGroupID);
             console.log(snapshotInputArray);
-            // 非同步問題
             setSnapshotInput(snapshotInputArray);
-            // setTableData(snapshot)
         }
-        // console.log("=============   tableData   ================")
-        // console.log(tableData)
     }, [inventoryStockData, selectStocks]);
 
     useEffect(() => {
         console.log(snapshotInput);
         const tableRowData = [];
         if (snapshotInput) {
-            snapshotInput.map((stockCode, index) => {
+            snapshotInput.some((stockCode, index) => {
                 let stockData = {};
                 if (snapshot) {
-                    snapshot.map((snapshotData, snapshotIndex) => {
+                    snapshot.some((snapshotData, snapshotIndex) => {
                         const isupper =
                             parseFloat(snapshotData.ChangePrice) == 0
                                 ? ''
@@ -122,7 +120,7 @@ const SelfSelectTable = () => {
                                 : false;
                         if (stockCode == snapshotData.Code) {
                             stockData.key = index;
-                            stockData.name = snapshotData.Name;
+                            stockData.name = snapshotData.Name === '' ? snapshotData.Code : snapshotData.Name;
                             stockData.close = {
                                 text: snapshotData.Close.toFixed(2),
                                 class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
@@ -138,6 +136,7 @@ const SelfSelectTable = () => {
                             stockData.totalVolume = { text: snapshotData.TotalVolume };
                             stockData.reference = { text: snapshotData.Reference.toFixed(2) };
                             tableRowData.push(stockData);
+                            return true;
                         }
                     });
                 }
@@ -145,6 +144,7 @@ const SelfSelectTable = () => {
         }
         console.log(tableRowData);
         setTableData(tableRowData);
+        reloadCount(tableRowData.length);
     }, [snapshot]);
 
     // useEffect(() => {
