@@ -8,7 +8,14 @@ import DealInfoBox from './searchList/DealInfoBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
     const dispatch = useDispatch();
+    const ordPrice = useSelector(store => store.goOrder.ord_price);
+    const lot = useSelector(store => store.goOrder.lot);
+    const ordType = useSelector(store => store.goOrder.ord_type);
     const clickSource = useSelector(store => store.goOrder.confirmBoxClickSource);
+    const ordQty = useSelector(store => store.goOrder.ord_qty);
+    const transactionCost = useSelector(store => store.goOrder.transactionCost);
+    const stockId = useSelector(store => store.goOrder.code);
+    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const closeHandler = () => {
         if (clickSource === 'detail') {
             dispatch(setConfirmBoxTitle('委託明細'));
@@ -25,7 +32,17 @@ const OrderConfirmBox = ({ title, color }) => {
                 <img onClick={closeHandler} className="back__icon" src={arrow} />
             </div>
             <div className="line"></div>
-            {title === '委託確認' && <OrderBox />}
+            {title === '委託確認' && (
+                <OrderBox
+                    stockId={stockId}
+                    ordPrice={ordPrice}
+                    lot={lot}
+                    ordType={ordType}
+                    transactionCost={transactionCost}
+                    ordQty={ordQty}
+                    market={market}
+                />
+            )}
             {title === '刪改委託單' && <ChTradingInfoBox />}
             {title === '委託明細' && <DetailBox />}
             {title === '成交明細' && <DealInfoBox />}

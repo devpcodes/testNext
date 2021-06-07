@@ -12,22 +12,22 @@ import { getCookie } from '../../../services/components/layouts/cookieController
 import { checkSignCA, sign } from '../../../services/webCa';
 import { getWebId } from '../../../services/components/goOrder/getWebId';
 import { usePlatform } from '../../../hooks/usePlatform';
-const OrderBox = () => {
+const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId, market }) => {
     const dispatch = useDispatch();
     const solaceName = useSelector(store => store.goOrder.productInfo.solaceName);
-    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
+    // const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const bs = useSelector(store => store.goOrder.bs);
-    const lot = useSelector(store => store.goOrder.lot);
+    // const lot = useSelector(store => store.goOrder.lot);
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
     const is_first_sell = useSelector(store => store.goOrder.is_first_sell);
     const ordCond = useSelector(store => store.goOrder.ord_cond);
     const timeInForce = useSelector(store => store.goOrder.time_in_force);
-    const ordPrice = useSelector(store => store.goOrder.ord_price);
-    const ordQty = useSelector(store => store.goOrder.ord_qty);
-    const ordType = useSelector(store => store.goOrder.ord_type);
+    // const ordPrice = useSelector(store => store.goOrder.ord_price);
+    // const ordQty = useSelector(store => store.goOrder.ord_qty);
+    // const ordType = useSelector(store => store.goOrder.ord_type);
     const priceType = useSelector(store => store.goOrder.price_type);
-    const stockId = useSelector(store => store.goOrder.code);
-    const transactionCost = useSelector(store => store.goOrder.transactionCost);
+    // const stockId = useSelector(store => store.goOrder.code);
+    // const transactionCost = useSelector(store => store.goOrder.transactionCost);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const userSettings = useSelector(store => store.user.userSettings);
 
@@ -35,9 +35,25 @@ const OrderBox = () => {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [oddToolTipVisible, setOddToolTipVisible] = useState(false);
     const platform = usePlatform();
+
+    const currOrdPrice = useRef('');
+    const currLot = useRef('');
+    const currOrdType = useRef('');
+    const currTransactionCost = useRef('');
+    const currOrdQty = useRef('');
+    const currStockId = useRef('');
+    const currMarket = useRef('');
     useEffect(() => {
         orderName.current = solaceName;
         document.body.addEventListener('click', oddTipVisHandler);
+
+        currOrdPrice.current = ordPrice;
+        currLot.current = lot;
+        currOrdType.current = ordType;
+        currOrdQty.current = ordQty;
+        currTransactionCost.current = transactionCost;
+        currStockId.current = stockId;
+        currMarket.current = market;
         return () => {
             document.body.removeEventListener('click', oddTipVisHandler);
         };
@@ -47,7 +63,7 @@ const OrderBox = () => {
         dispatch(setConfirmBoxOpen(false));
     };
     const getLot = () => {
-        if (lot === 'Board') {
+        if (currLot.current === 'Board') {
             return '整股';
         } else {
             return '零股';
@@ -97,14 +113,22 @@ const OrderBox = () => {
         const broker_id = currentAccount.broker_id;
         const ord_bs = bs;
         const ord_cond = ordCond;
-        const ord_price = ordPrice || '0';
-        const ord_qty = ordQty;
-        const ord_type = ordType;
+        // const ord_price = ordPrice || '0';
+        const ord_price = currOrdPrice.current || '0';
+        const ord_qty = currOrdQty.current;
+        // const ord_type = ordType;
+        const ord_type = currOrdType.current;
         const price_type = priceType;
-        const stock_id = stockId;
+        const stock_id = currStockId.current;
         const time_in_force = timeInForce;
         const web_id = getWebId(platform, 'stock');
-        const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
+        // const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
+        const market_id =
+            currMarket.current === '上市' || currMarket.current === '權證'
+                ? 'S'
+                : currMarket.current === '上櫃'
+                ? 'O'
+                : 'R';
         const ca_content = sign(
             {
                 idno: currentAccount.idno,
@@ -185,7 +209,10 @@ const OrderBox = () => {
             setOddToolTipVisible(false);
         }
     };
-    const mappingPriceMsg = (price, priceType) => {
+    const mappingPriceMsg = (price, priceType, ordType) => {
+        if (ordType === 'P') {
+            return '定盤';
+        }
         switch (priceType) {
             case ' ':
                 return price;
@@ -216,17 +243,18 @@ const OrderBox = () => {
                 <div className="info__price">
                     <span className="label">價格</span>
                     {/* <span className="val">{ordPrice}</span> */}
-                    <span className="val">{mappingPriceMsg(ordPrice, priceType)}</span>
+                    {/* <span className="val">{mappingPriceMsg(ordPrice, priceType)}</span> */}
+                    <span className="val">{mappingPriceMsg(currOrdPrice.current, priceType, currOrdType.current)}</span>
                 </div>
                 <div className="info__qty">
                     <span className="label">數量</span>
-                    <span className="val">{ordQty}</span>
+                    <span className="val">{currOrdQty.current}</span>
                 </div>
                 <div className="info__amount">
                     <span className="label">預估金額</span>
-                    <span className="val">{formatNum(transactionCost)}元(台幣)</span>
+                    <span className="val">{formatNum(currTransactionCost.current)}元(台幣)</span>
                 </div>
-                {lot !== 'Board' && (
+                {currLot.current !== 'Board' && (
                     <Tooltip
                         placement="topLeft"
                         title={
@@ -364,7 +392,7 @@ const OrderBox = () => {
                     width: 100%;
                     height: 84px;
                     text-align: left;
-                    margin-top: ${lot !== 'Board' ? '14px' : '54px'};
+                    margin-top: ${currLot.current !== 'Board' ? '14px' : '54px'};
                     padding-bottom: 16px;
                     padding-left: 16px;
                     padding-right: 16px;

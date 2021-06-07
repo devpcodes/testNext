@@ -31,6 +31,7 @@ import { checkSignCA, sign } from '../../../../services/webCa';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { usePlatform } from '../../../../hooks/usePlatform';
+import { checkPriceBtn } from './ChTradingInfoBox';
 
 const waitSeconds = 5;
 const SearchList = ({ active }) => {
@@ -231,7 +232,7 @@ const SearchList = ({ active }) => {
                                     ),
                                 )}
                             </p>
-                            <p className="item--down">{record.qty - record.cancel_qty - record.match_qty}</p>
+                            <p className="item--down">{record.qty - record.cancel_qty}</p>
                         </div>
                     );
                 },
@@ -313,26 +314,29 @@ const SearchList = ({ active }) => {
                                             >
                                                 刪單
                                             </Button>
-                                            <Button
-                                                style={{
-                                                    width: '102px',
-                                                    height: '44px',
-                                                    margin: '12px 16px 0 4px',
-                                                    padding: '12px 9px',
-                                                    borderRadius: '2px',
-                                                    backgroundColor: '#254a91',
-                                                    fontSize: '1.6rem',
-                                                    margin: '0 auto',
-                                                    marginTop: '12px',
-                                                    color: 'white',
-                                                    border: 'none',
-                                                }}
-                                                onClick={() => {
-                                                    changeClickHandler(text, record);
-                                                }}
-                                            >
-                                                改單
-                                            </Button>
+                                            {/* 興櫃又不需要改價的改單功能隱藏，否則顯示 */}
+                                            {!checkPriceBtn(record) && record.market_id === 'R' ? null : (
+                                                <Button
+                                                    style={{
+                                                        width: '102px',
+                                                        height: '44px',
+                                                        margin: '12px 16px 0 4px',
+                                                        padding: '12px 9px',
+                                                        borderRadius: '2px',
+                                                        backgroundColor: '#254a91',
+                                                        fontSize: '1.6rem',
+                                                        margin: '0 auto',
+                                                        marginTop: '12px',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                    }}
+                                                    onClick={() => {
+                                                        changeClickHandler(text, record);
+                                                    }}
+                                                >
+                                                    改單
+                                                </Button>
+                                            )}
                                         </>
                                     }
                                     color="white"
