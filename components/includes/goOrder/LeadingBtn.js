@@ -43,13 +43,17 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const socalClickHandler = () => {
         switch (platform) {
             case 'udn':
-                window.location =
-                    'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+                window.open('https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135');
+                // window.location =
+                //     'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
                 break;
 
             default:
-                window.location =
-                    'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+                window.open(
+                    'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
+                );
+                // window.location =
+                //     'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
                 break;
         }
     };
