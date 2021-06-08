@@ -110,7 +110,7 @@ export const mappingWebId = webID => {
         11: 'BLOOMBERG 下單',
         110: '語音',
         111: 'ＡＰ下單[人工單]',
-        112: '大戶投(g)',
+        113: '大戶投(g)',
         115: 'EZTrade',
         119: '雷影管理',
         12: '奇唯JF',
