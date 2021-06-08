@@ -33,7 +33,7 @@ function TradingCenter_TWStocks_SubBrokerage() {
         );
     };
     const signSBRealtime = () => {
-        console.log('signSBRealtime');
+        window.open(`${NEXT_PUBLIC_SIGNCENTER_DOMAIN}/SubscriberAgreement?TOKEN=${getToken()}`);
     };
     const getHeightByTab = tab => {
         switch (tab) {
