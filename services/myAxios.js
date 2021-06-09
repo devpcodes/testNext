@@ -7,6 +7,7 @@ import { getCurrentPath } from './getCurrentPath';
 const lykanDefaultVersion = 'v1';
 const divoDefaultVersion = 'v1';
 const a8DefaultVersion = 'v1';
+const signDefaultVersion = 'v1';
 const a8Auth = {
     username: 'nweb',
     password: 'Nweb123',
@@ -157,6 +158,30 @@ export const getDivoInstance = (version = divoDefaultVersion, modal = true) => {
     );
 
     return DivoIns;
+};
+
+// Sign instance：設置 call sign server 的最低配置
+const createSignInstance = (version = signDefaultVersion) =>
+    axios.create({
+        baseURL: `${process.env.NEXT_PUBLIC_SIGN}/${version}/`,
+        timeout: 7000,
+        withCredentials: true,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getSignInstance = (version = signDefaultVersion, modal = true) => {
+    const SignIns = createSignInstance(version);
+
+    SignIns.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
+
+    return SignIns;
 };
 
 export default axios;
