@@ -1,26 +1,98 @@
-import { Button } from 'antd';
+import { Modal, Button } from 'antd';
+import { useEffect, useContext, useRef, useState, useCallback } from 'react';
+import { getOAuthList,cancelOAuth } from '../../services/components/oauth/getOAuthList';
+import { getToken } from '../../services/user/accessToken';
+import { useDispatch, useSelector } from 'react-redux';
+import { setModal } from '../../store/components/layouts/action';
 const OAuthCancelMain = () => {
-    return (
+
+const [dataSource, ds_getData] = useState([]); 
+const dispatch = useDispatch();
+useEffect(() => {
+    getData()
+}, []);
+
+const getData = async () => {
+    try{
+  const ds = await getOAuthList(getToken())
+  console.log(ds) 
+  ds_getData(ds)     
+    } catch(err) {
+        Modal.error({
+            title: '伺服器錯誤',
+        });
+    }
+}
+
+const cancel = async(id,e) =>{
+e.preventDefault();
+dispatch(
+    setModal({
+        visible: true,
+        content: '你確定要解除在「大戶 DAWHO」應用程式的授權? ',
+        type: 'confirm',
+        title: '解除授權',
+        onOk: async() => {
+            dispatch(setModal({ visible: false }));
+            let res_ = await cancelOAuth(getToken(),id)
+            .then( res => {
+            if(res){
+                console.log('[確認]',res)
+                dispatch(setModal({ visible: true, content: `${id}授權已解除`, type: 'info', title: '系統訊息' }));
+                getData()
+            }else{
+                dispatch(setModal({ visible: true, content: `伺服器錯誤`, type: 'info', title: '系統訊息' }));
+            }
+            })
+        }
+    }),
+
+);
+
+}
+
+const testfunc = (e) =>{
+    e.preventDefault();
+    dispatch(
+        setModal({
+            visible: true,
+            content: '你確定要解除在「大戶 DAWHO」應用程式的授權? ',
+            type: 'confirm',
+            title: '解除授權',
+        }),
+    );
+}
+
+
+       return (
         <>
             <div className="content_box">
             <div className="oac_title">第三方授權設定</div>
                 <div className="sub_text">這些是你使用永豐金證券帳號登入過的應用程式或網站，你可以自由地解除與他們之間的授權。</div>
-            <ul className="item_list">
-                <li>
-<div className="list_img"></div>
-<div className="text_area">
-    <div className="t1">大戶 DAWHO </div>
-    <div className="t2">2022年4月5日新增</div>
-</div>
-<div className="btn_box"><a className="btn_r">解除<span>授權</span></a></div>
-                </li>
-
-            </ul>
+            
+                 {    
+                 dataSource.length>0 ?(
+                    <ul className="item_list"> 
+                    {dataSource.map( (x, i) => ( 
+                       <li key={x.clientId}>
+                        <div className="list_img"><img src={x.clientImage}></img></div> 
+                        <div className="text_area">
+                            <div className="t1">{x.clientName}</div>
+                            <div className="t2">{x.createdAt}</div>
+                        </div>
+                        <div className="btn_box"><a className="btn_r" onClick={(e) => cancel(x.clientId, e)}>解除<span>授權</span></a></div>
+                      </li>)
+                   )}
+                   </ul>
+                   ):null
+                   }
+            
             </div>
             <style jsx>{`
             .content_box{max-width:776px;margin: 0px auto; padding-top:100px;}
             .list_img{width:68px;height:68px;flex-shrink: 0;margin:0 20px 0 0;  border-radius: 2px; 
-                border: solid 1px #d7e0ef;}
+                border: solid 1px #d7e0ef;overflow:hidden;}
+            .list_img img{width:100%;}   
             .text_area{  width: 100%;display: flex;  flex-wrap: wrap;  align-items: center;}
             .btn_box{margin:0 0 0 20px;flex-shrink: 0;display: flex; align-items: center;}
             .t1{width: 100%;
