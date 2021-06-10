@@ -19,7 +19,7 @@ function TradingCenter_TWStocks_SubBrokerage() {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [queryStr, setQueryStr] = useState('');
     const [height, setHeight] = useState(1450);
-    const [tab, setTab] = useState('2');
+    const [tab, setTab] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [hasSBAccount, setHasSBAccount] = useState(false);
     const userAccounts = useSelector(store => store.user.accounts);
@@ -83,19 +83,22 @@ function TradingCenter_TWStocks_SubBrokerage() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const qStr = objectToQueryHandler(router.query);
-    //     console.log(qStr)
-    //     if (qStr) {
-    //         setQueryStr(qStr);
-    //         router.query?.tab && setTab(router.query.tab);
-    //     }
-    // }, [router.query]);
-
     useEffect(() => {
-        setQueryStr('?tab=2');
-        setTab('2');
-    });
+        const qStr = objectToQueryHandler(router.query);
+        console.log(qStr);
+        if (qStr) {
+            setQueryStr(qStr);
+            router.query?.tab && setTab(router.query.tab);
+        } else {
+            setQueryStr('?tab=2');
+            setTab('2');
+        }
+    }, [router.query]);
+
+    // useEffect(() => {
+    //     setQueryStr('?tab=2');
+    //     setTab('2');
+    // });
 
     return (
         <>
