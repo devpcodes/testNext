@@ -226,12 +226,12 @@ export const Info = ({ stockid }) => {
         }
     }, [code, lot, isLogin]);
 
-    useEffect(async () => {
-        if (!isLogin && Object.keys(socalLoginData).length === 0) {
-            return;
-        }
-        getSelect();
-    }, [code, isLogin, isSelfSelectVisitable]);
+    // useEffect(async () => {
+    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
+    //         return;
+    //     }
+    //     getSelect();
+    // }, [code, isLogin, isSelfSelectVisitable]);
 
     useEffect(() => {
         if (!code) {
@@ -542,12 +542,12 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <AddSelectStock
+            {/* <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
                 reloadSelect={getSelect}
-            />
+            /> */}
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
