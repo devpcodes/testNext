@@ -1,16 +1,25 @@
-import { Modal, Button } from 'antd';
+import { Modal, Button, Tooltip } from 'antd';
 import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import { getOAuthList,cancelOAuth } from '../../services/components/oauth/getOAuthList';
 import { getToken } from '../../services/user/accessToken';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../store/components/layouts/action';
-const OAuthCancelMain = () => {
+import infoIcon from '../../resources/images/components/goOrder/attention-info-circle.svg';
 
+const OAuthCancelMain = () => {
+const [showTooltip, setShowTooltip] = useState(false);
 const [dataSource, ds_getData] = useState([]); 
 const dispatch = useDispatch();
 useEffect(() => {
     getData()
 }, []);
+
+const tooltipClickHandler = e => {
+    e.stopPropagation();
+    if (!showTooltip) {
+        setShowTooltip(true);
+    }
+};
 
 const getData = async () => {
     try{
@@ -24,21 +33,21 @@ const getData = async () => {
     }
 }
 
-const cancel = async(id,e) =>{
+const cancel = async(data,e) =>{
 e.preventDefault();
 dispatch(
     setModal({
         visible: true,
-        content: '你確定要解除在「大戶 DAWHO」應用程式的授權? ',
+        content: `你確定要解除在 ${data.name} 應用程式的授權?`,
         type: 'confirm',
         title: '解除授權',
         onOk: async() => {
             dispatch(setModal({ visible: false }));
-            let res_ = await cancelOAuth(getToken(),id)
+            let res_ = cancelOAuth(getToken(),data.id)
             .then( res => {
             if(res){
                 console.log('[確認]',res)
-                dispatch(setModal({ visible: true, content: `${id}授權已解除`, type: 'info', title: '系統訊息' }));
+                dispatch(setModal({ visible: true, content: `${data.name}授權已解除`, type: 'info', title: '系統訊息' }));
                 getData()
             }else{
                 dispatch(setModal({ visible: true, content: `伺服器錯誤`, type: 'info', title: '系統訊息' }));
@@ -67,8 +76,28 @@ const testfunc = (e) =>{
        return (
         <>
             <div className="content_box">
-            <div className="oac_title">第三方授權設定</div>
-                <div className="sub_text">這些是你使用永豐金證券帳號登入過的應用程式或網站，你可以自由地解除與他們之間的授權。</div>
+            <div className="oac_title">第三方授權設定
+            <Tooltip
+                    color = "white"
+                    arrowPointAtCenter={true}
+                    placement="topRight"
+                    title = "這些是你使用永豐金證券帳號登入過的應用程式或網站，你可以自由地解除與他們之間的授權。"
+                    visible={showTooltip}
+                >
+                    <img
+                        style={{
+                            filter: 'opacity(0.6)',
+                            position: 'absolute',
+                            top: '50%',
+                            right: '16px',
+                            transform: 'translateY(-50%)'
+                        }}
+                        src={infoIcon} className="for_m"
+                        onClick={tooltipClickHandler}
+                    />
+                </Tooltip>
+            </div>
+                <div className="sub_text for_pc">這些是你使用永豐金證券帳號登入過的應用程式或網站，你可以自由地解除與他們之間的授權。</div>
             
                  {    
                  dataSource.length>0 ?(
@@ -80,7 +109,7 @@ const testfunc = (e) =>{
                             <div className="t1">{x.clientName}</div>
                             <div className="t2">{x.createdAt}</div>
                         </div>
-                        <div className="btn_box"><a className="btn_r" onClick={(e) => cancel(x.clientId, e)}>解除<span>授權</span></a></div>
+                        <div className="btn_box"><a className="btn_r" onClick={(e) => cancel({id:x.clientId, name:x.clientName}, e)}>解除<span>授權</span></a></div>
                       </li>)
                    )}
                    </ul>
@@ -89,8 +118,9 @@ const testfunc = (e) =>{
             
             </div>
             <style jsx>{`
+
             .content_box{max-width:776px;margin: 0px auto; padding-top:100px;}
-            .list_img{width:68px;height:68px;flex-shrink: 0;margin:0 20px 0 0;  border-radius: 2px; 
+            .list_img{width:68px;height:68px;flex-shrink: 0;padding:5px; margin:0 20px 0 0;  border-radius: 2px; 
                 border: solid 1px #d7e0ef;overflow:hidden;}
             .list_img img{width:100%;}   
             .text_area{  width: 100%;display: flex;  flex-wrap: wrap;  align-items: center;}
@@ -107,7 +137,7 @@ const testfunc = (e) =>{
                 border-radius: 2px;border: solid 1px rgba(37, 74, 145, 0);
                 background-color: #c43826;
               }
-            .oac_title{ margin: 0 578px 12px 1px;
+            .oac_title{ position:relative; margin: 0 578px 12px 1px;
                 font-family: PingFang TC; font-size: 28px;
                 font-weight: 700; color: #0d1623;}
             .sub_text{ width: 774px;  height: 22px;
@@ -124,6 +154,7 @@ const testfunc = (e) =>{
                 padding: 20px; border-bottom: solid 1px #d7e0ef; display:flex
             }
             .item_list li:last-child{ border-bottom: none; }
+            .for_m{display:none;}
             @media(max-width:768px){
                 .content_box{width:100%;padding:0}
                 .content_box{}
@@ -131,14 +162,16 @@ const testfunc = (e) =>{
                 .text_area{ width: calc(100% - 105px);}
                 .btn_box{margin-left:16px;}
                 .oac_title{font-size:20px; margin: 0;padding: 20px 16px;}
-                .sub_text{display:none}
                 .item_list {width:100%;margin:0;border-width:1px 0;border-radius:0;}
                 .item_list li{padding:16px}
                 .btn_r span{display:none}
+                .for_pc{display:none;}
+                .for_m{display:inherit;}
             }
             `}</style>
               <style jsx global>{`
-                body{background-color: #f9fbff;}
+              body{background-color: #f9fbff;}
+             .ant-tooltip-inner { color: #000;}
             `}</style>
         </>
     );
