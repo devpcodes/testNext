@@ -4,11 +4,19 @@ import selectIcon from '../../../../resources/images/components/goOrder/arrow-se
 
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from './PanelTabs';
-import { setOrdType, setLot, setTradeTime, setTimeInForce, setOrdCount } from '../../../../store/goOrder/action';
+import {
+    setOrdType,
+    setLot,
+    setTradeTime,
+    setTimeInForce,
+    setOrdCount,
+    setPriceType,
+} from '../../../../store/goOrder/action';
 
 const { Option } = Select;
 const TradingSelect = () => {
     const dispatch = useDispatch();
+    // const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     const bs = useSelector(store => store.goOrder.bs);
     const lot = useSelector(store => store.goOrder.lot);
     const tradeTime = useSelector(store => store.goOrder.tradeTime);
@@ -61,17 +69,38 @@ const TradingSelect = () => {
     }, [lot, productInfo]);
 
     useEffect(() => {
-        if (lot === 'Board' && tradeTime === 'ing') {
-            dispatch(setOrdType('0'));
-        }
-        if (lot === 'Board' && tradeTime === 'after') {
-            dispatch(setOrdType('P'));
-        }
-        if (lot === 'Odd' && tradeTime === 'ing') {
-            dispatch(setOrdType('C'));
-        }
-        if (lot === 'Odd' && tradeTime === 'after') {
-            dispatch(setOrdType('2'));
+        if (productInfo != null && productInfo.solaceMarket != null) {
+            if (productInfo?.solaceMarket === '興櫃' && lot === 'Odd') {
+                dispatch(setOrdType('2'));
+            } else {
+                if (lot === 'Board' && tradeTime === 'ing') {
+                    dispatch(setOrdType('0'));
+                }
+                if (lot === 'Board' && tradeTime === 'after') {
+                    dispatch(setOrdType('P'));
+                    dispatch(setPriceType(' '));
+                }
+                if (lot === 'Odd' && tradeTime === 'ing') {
+                    dispatch(setOrdType('C'));
+                }
+                if (lot === 'Odd' && tradeTime === 'after') {
+                    dispatch(setOrdType('2'));
+                }
+            }
+        } else {
+            if (lot === 'Board' && tradeTime === 'ing') {
+                dispatch(setOrdType('0'));
+            }
+            if (lot === 'Board' && tradeTime === 'after') {
+                dispatch(setOrdType('P'));
+                dispatch(setPriceType(' '));
+            }
+            if (lot === 'Odd' && tradeTime === 'ing') {
+                dispatch(setOrdType('C'));
+            }
+            if (lot === 'Odd' && tradeTime === 'after') {
+                dispatch(setOrdType('2'));
+            }
         }
         timeInForceOptionHandler(lot, tradeTime, productInfo);
         updateOrdCound(lot, productInfo);

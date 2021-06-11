@@ -33,14 +33,24 @@ export const HeaderCallToAction = () => {
                 queryString = objectToQueryHandler(mmaQuery);
                 break;
             }
+            case 'cnyes': {
+                const cnyesQuery = Object.assign(currentQuery, newQuery, { platform: 'cnyes', source: 'cnyes' });
+                queryString = objectToQueryHandler(cnyesQuery);
+                break;
+            }
             case 'line': {
                 const lineQuery = Object.assign(newQuery, { platform: 'Line' });
                 queryString = objectToQueryHandler(lineQuery);
                 break;
             }
             case 'udn': {
-                const lineQuery = Object.assign(newQuery, { platform: 'udn', source: 'udn' });
-                queryString = objectToQueryHandler(lineQuery);
+                const udnQuery = Object.assign(newQuery, { platform: 'udn', source: 'udn' });
+                queryString = objectToQueryHandler(udnQuery);
+                break;
+            }
+            case 'gugu': {
+                const guguQuery = Object.assign(newQuery, { source: 'gugu' });
+                queryString = objectToQueryHandler(guguQuery);
                 break;
             }
             default:

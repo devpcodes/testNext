@@ -56,7 +56,7 @@ const SubmitBtn = () => {
     const stockId = useSelector(store => store.goOrder.code);
     const is_first_sell = useSelector(store => store.goOrder.is_first_sell);
     const resetData = useSelector(store => store.goOrder.resetData);
-    const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
+    const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
         let capitalPercent = T30Data['資成數'] == null ? 0 : T30Data['資成數'] / 10;
@@ -143,13 +143,35 @@ const SubmitBtn = () => {
             });
             return;
         }
-        if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
-            Modal.error({
-                title: '資料格式錯誤',
-                content: '請確認價格或張數(股數)資料填寫正確',
-            });
-            return;
+
+        if (ord_type === 'P') {
+            if (offerShare === '' || offerShare == 0) {
+                Modal.error({
+                    title: '資料格式錯誤',
+                    content: '請確認價格或張數(股數)資料填寫正確',
+                });
+                return;
+            }
+        } else {
+            if (price_type === ' ') {
+                if (ord_price === '' || ord_price == 0 || offerShare === '' || offerShare == 0) {
+                    Modal.error({
+                        title: '資料格式錯誤',
+                        content: '請確認價格或張數(股數)資料填寫正確',
+                    });
+                    return;
+                }
+            } else {
+                if (offerShare === '' || offerShare == 0) {
+                    Modal.error({
+                        title: '資料格式錯誤',
+                        content: '請確認價格或張數(股數)資料填寫正確',
+                    });
+                    return;
+                }
+            }
         }
+
         if (userSettings.confirmAfterStockOrdered != null && userSettings.confirmAfterStockOrdered) {
             dispatch(setConfirmBoxOpen(true));
             dispatch(setConfirmBoxTitle('委託確認'));
@@ -176,7 +198,7 @@ const SubmitBtn = () => {
         const market_id = market === '上市' || market === '權證' ? 'S' : market === '上櫃' ? 'O' : 'R';
         const ord_bs = bs;
         const ord_cond = ordCond;
-        const ord_price = ordPrice;
+        const ord_price = ordPrice || '0';
         const ord_qty = ordQty;
         const ord_type = ordType;
         const price_type = priceType;

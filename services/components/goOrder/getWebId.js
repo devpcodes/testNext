@@ -6,6 +6,12 @@ const chart = [
             futuresOptions: 'k',
             recommisiioned: '124',
         },
+        source: {
+            id: 'cnyes',
+            stock: '164',
+            futuresOptions: '8',
+            recommisiioned: '164',
+        },
     },
     {
         source: {
@@ -19,6 +25,12 @@ const chart = [
         source: {
             id: 'udn',
             stock: '158',
+        },
+    },
+    {
+        source: {
+            id: 'gugu',
+            recommisiioned: '163',
         },
     },
 ];
