@@ -7,19 +7,12 @@ import { setModal } from '../../store/components/layouts/action';
 import infoIcon from '../../resources/images/components/goOrder/attention-info-circle.svg';
 
 const OAuthCancelMain = () => {
-const [showTooltip, setShowTooltip] = useState(false);
 const [dataSource, ds_getData] = useState([]); 
 const dispatch = useDispatch();
 useEffect(() => {
     getData()
 }, []);
 
-const tooltipClickHandler = e => {
-    e.stopPropagation();
-    if (!showTooltip) {
-        setShowTooltip(true);
-    }
-};
 
 const getData = async () => {
     try{
@@ -82,7 +75,6 @@ const testfunc = (e) =>{
                     arrowPointAtCenter={true}
                     placement="topRight"
                     title = "這些是你使用永豐金證券帳號登入過的應用程式或網站，你可以自由地解除與他們之間的授權。"
-                    visible={showTooltip}
                 >
                     <img
                         style={{
@@ -93,7 +85,7 @@ const testfunc = (e) =>{
                             transform: 'translateY(-50%)'
                         }}
                         src={infoIcon} className="for_m"
-                        onClick={tooltipClickHandler}
+                        
                     />
                 </Tooltip>
             </div>
