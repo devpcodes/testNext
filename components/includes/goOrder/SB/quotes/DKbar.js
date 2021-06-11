@@ -25,6 +25,7 @@ const DKbar = ({ high, low, close, open, text, style }) => {
             }
         }
     }, [open, high, low, close]);
+    console.log('======', open, high, low, close);
     return (
         <>
             <div className="priceBetween__container" style={style}>
