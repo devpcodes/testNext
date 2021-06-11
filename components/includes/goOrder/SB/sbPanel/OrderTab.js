@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Tabs } from 'antd';
 import { themeColor } from '../../panel/PanelTabs';
 import { setSBActiveTabKey, setSBBs } from '../../../../../store/goOrderSB/action';
+import TradingContainer from './TradingContainer';
 const { TabPane } = Tabs;
 
 const OrderTab = () => {
@@ -52,10 +53,10 @@ const OrderTab = () => {
         return (
             <Tabs activeKey={activeTabKey} onChange={tabChangeHandler}>
                 <TabPane tab="買進" key="1">
-                    {activeTabKey === '1' && '123'}
+                    {activeTabKey === '1' && <TradingContainer />}
                 </TabPane>
                 <TabPane tab="賣出" key="2">
-                    {activeTabKey === '2' && '222'}
+                    {activeTabKey === '2' && <TradingContainer />}
                 </TabPane>
                 <TabPane tab="成委回" key="3">
                     {activeTabKey === '3' && '333'}
