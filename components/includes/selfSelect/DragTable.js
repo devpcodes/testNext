@@ -2,13 +2,48 @@ import { Table } from 'antd';
 import AccountTable from '../../includes/tradingAccount/vipInventory/AccountTable';
 import ReactDragListView from 'react-drag-listview';
 import { useCallback, useState, useEffect } from 'react';
-
+import { openGoOrder } from '../../../services/openGoOrder';
+import { useCheckMobile } from '../../../hooks/useCheckMobile';
+import { useRouter } from 'next/router';
+import { fetchDeletSelectStock } from '../../../services/selfSelect/deletSelectStock';
 import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
-const DragTable = ({ tableData }) => {
-    console.log(tableData);
+const DragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
     const [selfSelectList, setSelfSelectList] = useState([]);
+    const isMobile = useCheckMobile();
+    const router = useRouter();
+
+    const goOrder = (stockData, bs) => {
+        openGoOrder(
+            {
+                stockid: stockData.code,
+                bs: bs,
+                marketType: stockData.market === 'SB' ? 'H' : stockData.market,
+            },
+            isMobile,
+            router,
+        );
+    };
+
+    const deleteStock = async record => {
+        let requestData = {};
+        requestData.market = record.market;
+        requestData.selectId = tabKey;
+        if (['S', 'SB', 'H'].includes(requestData.market)) {
+            requestData.symbol = record.code;
+            requestData.exchange = record.exchange;
+        } else if (['O', 'F'].includes(requestData.market)) {
+            // test
+            requestData.optionType = 'TX2';
+            requestData.expMon = '201909W2';
+        }
+        requestData.token = token;
+        const res = await fetchDeletSelectStock(requestData, isSocalLogin);
+        console.log(res);
+        // console.log(record)
+        // console.log(requestData)
+    };
 
     useEffect(() => {
         if (tableData && tableData.length > 0) {
@@ -53,28 +88,48 @@ const DragTable = ({ tableData }) => {
             dataIndex: 'action',
             render: (text, record, index) => (
                 <>
-                    <button className="btn buy">買進</button>
-                    <button className="btn sell">賣出</button>
+                    <button
+                        className="btn buy"
+                        onClick={() => {
+                            goOrder(record, 'B');
+                        }}
+                    >
+                        買進
+                    </button>
+                    <button
+                        className="btn sell"
+                        onClick={() => {
+                            goOrder(record, 'S');
+                        }}
+                    >
+                        賣出
+                    </button>
                 </>
             ),
         },
         {
             title: '刪除',
             dataIndex: '刪除',
-            render: (text, record, index) => (
-                <span className="cancel">
-                    <img src={cancel} />
-                </span>
-            ),
+            render: (text, record, index) =>
+                tabKey === '0' ? (
+                    <></>
+                ) : (
+                    <span className="cancel" onClick={() => deleteStock(record)}>
+                        <img src={cancel} />
+                    </span>
+                ),
         },
         {
             title: '移動',
             key: '移動',
-            render: (text, record, index) => (
-                <span className="drag">
-                    <img src={drag} />
-                </span>
-            ),
+            render: (text, record, index) =>
+                tabKey === '0' ? (
+                    <></>
+                ) : (
+                    <span className="drag">
+                        <img src={drag} />
+                    </span>
+                ),
         },
     ];
 

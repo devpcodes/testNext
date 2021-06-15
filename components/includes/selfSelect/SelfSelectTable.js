@@ -141,6 +141,9 @@ const SelfSelectTable = ({ reloadCount }) => {
                                     : false;
                             if (stock.symbol == snapshotData.Code) {
                                 stockData.key = index;
+                                stockData.code = snapshotData.Code;
+                                stockData.market = stock.market;
+                                stockData.exchange = stock.exchange;
                                 stockData.name = snapshotData.Name === '' ? snapshotData.Code : snapshotData.Name;
                                 stockData.close = {
                                     text: snapshotData.Close ? snapshotData.Close.toFixed(2) : '--',
@@ -170,6 +173,9 @@ const SelfSelectTable = ({ reloadCount }) => {
                         const mk = stock.exchange === 'NASDAQ' ? 'US' : stock.exchange;
                         const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
                         stockData.key = index;
+                        stockData.code = stock.symbol;
+                        stockData.market = stock.market;
+                        stockData.exchange = stock.exchange;
                         stockData.name = `${stock.symbol}.${mk}`;
                         stockData.close = {
                             text:
@@ -229,7 +235,7 @@ const SelfSelectTable = ({ reloadCount }) => {
                 </Tabs>
             </div>
             <div className="select__stock__table">
-                <DragTable tableData={tableData} />
+                <DragTable tableData={tableData} tabKey={selectGroupID} token={token} isSocalLogin={isSocalLogin} />
             </div>
 
             <style jsx>{`
