@@ -6,7 +6,7 @@ export const fetchDeletSelectStock = async function (data, isSocalLogin) {
         const reqUrl = isSocalLogin ? '/social/deleteSelectStock' : '/select/deleteSelectStock';
         const res = await getLykanInstance().post(reqUrl, data);
         if (res.data.success != null && res.data.success === true) {
-            return res.data.result;
+            return res.data;
         } else {
             return {};
         }

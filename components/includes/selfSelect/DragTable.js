@@ -26,7 +26,8 @@ const DragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
         );
     };
 
-    const deleteStock = async record => {
+    // TODO : 補上期貨刪除
+    const deleteStock = async (record, index) => {
         let requestData = {};
         requestData.market = record.market;
         requestData.selectId = tabKey;
@@ -40,9 +41,13 @@ const DragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
         }
         requestData.token = token;
         const res = await fetchDeletSelectStock(requestData, isSocalLogin);
-        console.log(res);
-        // console.log(record)
-        // console.log(requestData)
+        if (res.success != null && res.success === true && res.result === 'OK') {
+            const data = JSON.parse(JSON.stringify(selfSelectList));
+            data.splice(index, 1);
+            setSelfSelectList(data);
+        } else {
+            alert('刪除失敗');
+        }
     };
 
     useEffect(() => {
@@ -114,7 +119,7 @@ const DragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
                 tabKey === '0' ? (
                     <></>
                 ) : (
-                    <span className="cancel" onClick={() => deleteStock(record)}>
+                    <span className="cancel" onClick={() => deleteStock(record, index)}>
                         <img src={cancel} />
                     </span>
                 ),
