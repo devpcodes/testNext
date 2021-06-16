@@ -12,6 +12,8 @@ const ChangeNum = ({
     inputWidth,
     color,
     fontSize,
+    conditionText,
+    textAlign,
 }) => {
     const valChangeHandler = e => {
         console.log(e.target.value);
@@ -31,6 +33,7 @@ const ChangeNum = ({
                     onChange={valChangeHandler}
                     // onFocus={focusHandler}
                 />
+                {conditionText && <span className="condition__text">{conditionText}</span>}
             </div>
             <div className="btn__box-modal">
                 <Button onClick={minusClickHandler}>-</Button>
@@ -59,7 +62,15 @@ const ChangeNum = ({
                 .input__box {
                     display: inline-block;
                     width: ${inputWidth == null ? 'calc(100vw - 32px - 100px - 54px - 8px)' : inputWidth};
+                    position: relative;
                     /* width: calc(100vw - 160px); */
+                }
+                .condition__text {
+                    position: absolute;
+                    left: 7px;
+                    font-size: 21px;
+                    font-weight: bold;
+                    top: 6px;
                 }
                 .btn__box-modal {
                     width: 100px;
@@ -121,6 +132,7 @@ const ChangeNum = ({
                     height: 46px;
                     font-size: ${fontSize == null ? '2.6rem' : fontSize};
                     color: black;
+                    text-align: ${textAlign || 'left'};
                 }
                 .price_control .ant-input:hover {
                     border-color: #dedede;

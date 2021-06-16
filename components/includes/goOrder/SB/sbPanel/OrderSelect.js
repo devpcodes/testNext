@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import selectIcon from '../../../../../resources/images/components/goOrder/arrow-selectdown.png';
 const { Option } = Select;
-const OrderSelect = ({ data, width, height, color, style, ...props }) => {
+const OrderSelect = ({ data, width, height, color, style, arrowLeft, ...props }) => {
     return (
         <>
             <div className="select__container" style={style}>
@@ -49,6 +49,9 @@ const OrderSelect = ({ data, width, height, color, style, ...props }) => {
                     .ant-select.ant-select-single.ant-select-show-arrow.ant-select-disabled
                     .ant-select-selector {
                     background: #d2d2d2;
+                }
+                .select__container .ant-select-arrow img {
+                    margin-left: ${arrowLeft || 0};
                 }
             `}</style>
         </>
