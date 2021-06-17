@@ -78,12 +78,24 @@ const TradingSelect = () => {
 
     const TIBHandler = (lot, tradeTime, productInfo) => {
         if (productInfo.TIB != null && (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)) {
-            if (lot === 'Board') {
-                setTradeTimeOption([{ txt: '盤中', val: 'ing' }]);
-                dispatch(setTradeTime('ing'));
+            if (productInfo.TIB.indexOf('創新') >= 0) {
+                if (lot === 'Board') {
+                    setTradeTimeOption([
+                        { txt: '盤中', val: 'ing' },
+                        { txt: '盤後', val: 'after' },
+                    ]);
+                } else {
+                    setTradeTimeOption([{ txt: '盤後', val: 'after' }]);
+                    dispatch(setTradeTime('after'));
+                }
             } else {
-                setTradeTimeOption([{ txt: '盤後', val: 'after' }]);
-                dispatch(setTradeTime('after'));
+                if (lot === 'Board') {
+                    setTradeTimeOption([{ txt: '盤中', val: 'ing' }]);
+                    dispatch(setTradeTime('ing'));
+                } else {
+                    setTradeTimeOption([{ txt: '盤後', val: 'after' }]);
+                    dispatch(setTradeTime('after'));
+                }
             }
         }
     };
