@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import OrderSelect from './OrderSelect';
 import { useSelector } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
@@ -5,12 +6,13 @@ import ChangeNum from '../../searchList/ChangeNum';
 import SubmitBtn from './SubmitBtn';
 import SwitchBox from './SwitchBox';
 import DateSelectBox from './DateSelectBox';
+
 const TradingSelect = () => {
     const bs = useSelector(store => store.goOrderSB.bs);
 
     return (
         <div className="tradingSelect__container">
-            {/* <DateSelectBox/> */}
+            <DateSelectBox />
             <div className="trading__box">
                 <OrderSelect
                     style={{ display: 'inline-block', marginRight: '4px', textAlign: 'center' }}
