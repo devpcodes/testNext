@@ -13,29 +13,39 @@ import useSWR from 'swr';
 
 const { TabPane } = Tabs;
 
-const SelfSelectTable = ({ reloadCount }) => {
+const SelfSelectTable = ({
+    reloadCount,
+    reloadTabkey,
+    selectReloadTime,
+    inventoryReloadTime,
+    setSelectGroupReloadTime,
+}) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLoginData = useSelector(store => store.user.socalLogin);
 
     const [selectGroupID, setSelectGroupID] = useState('0');
     const [snapshotInput, setSnapshotInput] = useState([]);
-    const [sbInput, setSBInput] = useState([]); // { "symbol": "AAPL",  "exchange": "US"  }
+    const [sbInput, setSBInput] = useState([]);
     const [tableData, setTableData] = useState({});
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
 
     // 查詢自選選單
-    const { data: fetchSelectGroupData } = useSWR([isSocalLogin, token], fetchQuerySelectGroup, {
-        onError: (error, key) => {
-            Modal.error({
-                title: '伺服器錯誤',
-            });
+    const { data: fetchSelectGroupData } = useSWR(
+        [isSocalLogin, token, setSelectGroupReloadTime],
+        fetchQuerySelectGroup,
+        {
+            onError: (error, key) => {
+                Modal.error({
+                    title: '伺服器錯誤',
+                });
+            },
         },
-    });
+    );
 
     // 查詢庫存股票
     const { data: inventoryStockData } = useSWR(
-        selectGroupID === '0' ? [token, currentAccount, selectGroupID] : null,
+        selectGroupID === '0' ? [token, currentAccount, selectGroupID, inventoryReloadTime] : null,
         fetchQuerySelectInventoryStock,
         {
             onError: (error, key) => {
@@ -48,7 +58,7 @@ const SelfSelectTable = ({ reloadCount }) => {
 
     // 查詢自選個股
     const { data: selectStocks } = useSWR(
-        selectGroupID !== '0' ? [isSocalLogin, token, selectGroupID] : null,
+        selectGroupID !== '0' ? [isSocalLogin, token, selectGroupID, selectReloadTime] : null,
         fetchQuerySelectStock,
         {
             onError: (error, key) => {
@@ -205,6 +215,10 @@ const SelfSelectTable = ({ reloadCount }) => {
             reloadCount(tableRowData.length);
         }
     }, [snapshot, sbQuote]);
+
+    useEffect(() => {
+        reloadTabkey(selectGroupID);
+    }, [selectGroupID]);
 
     // useEffect(() => {
     //     console.log(fetchSelectGroupData)

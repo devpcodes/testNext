@@ -2,7 +2,7 @@ import React, { useState, memo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox, message } from 'antd';
 import SortableList from './sortable';
-import { fetchupdateSelectStock } from '../../../services/selfSelect/updateSelectStock';
+import { fetchUpdateMultipleSelectStock } from '../../../services/selfSelect/updateMultipleSelectStock';
 import { fetchUpdateSelectGroup } from '../../../services/selfSelect/updateSelectGroup';
 import { getToken } from '../../../services/user/accessToken';
 import { getSocalToken } from '../../../services/user/accessToken';
@@ -55,7 +55,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
             };
             reqData.push(select);
         });
-        const res = await fetchupdateSelectStock(reqData, isSocalLogin, token);
+        const res = await fetchUpdateMultipleSelectStock(reqData, isSocalLogin, token);
         handleCancel();
         if (res.success === true && res.message === 'OK') {
             message.success('成功編輯自選');

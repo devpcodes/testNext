@@ -3,7 +3,7 @@ import { AutoComplete } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
-const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
+const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType = ['S'] }) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
 
@@ -18,7 +18,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
     const fetchData = async value => {
         const data = {
             query: value,
-            marketType: ['S'],
+            marketType: marketType,
             limit: 15,
             isOrder: false,
         };
@@ -37,6 +37,8 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
     const renderItem = (item, value) => {
         return {
             value: item.symbol + ' ' + item.name_zh,
+            // 補上完整資訊，以後查詢相關資料方便
+            item: item,
             label: (
                 <div className="item__container">
                     <Highlighter
@@ -64,9 +66,10 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange }) => {
         }
     };
 
-    const onSelect = value => {
+    const onSelect = (value, options) => {
         console.log('select', value);
-        selectHandler(value);
+        console.log('options', options);
+        selectHandler(value, options);
     };
 
     return (

@@ -13,19 +13,47 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 const noNewwebHeader = true;
 function Self_select_stocks() {
     const [count, setCount] = useState('--');
-
+    const [tabkey, setTabkey] = useState(null);
+    const [selectReloadTime, setSelectReloadTime] = useState(null);
+    const [inventoryReloadTime, setInventoryReloadTime] = useState(null);
+    const [selectGroupReloadTime, setSelectGroupReloadTime] = useState(null);
     const reloadCount = useCallback(listCount => {
         setCount(listCount);
+    });
+
+    const reloadTabkey = useCallback(tabkey => {
+        setTabkey(tabkey);
+    });
+
+    const reload = useCallback(time => {
+        setSelectReloadTime(time);
+        setInventoryReloadTime(time);
+        setSelectGroupReloadTime(time);
+    });
+
+    const reloadSelectReloadTime = useCallback(time => {
+        setSelectReloadTime(time);
     });
 
     return (
         <>
             {noNewwebHeader ? <Header /> : ''}
             <div className="select__box">
-                <SelfSelectToolBar count={count} />
+                <SelfSelectToolBar
+                    count={count}
+                    tabkey={tabkey}
+                    reload={reload}
+                    reloadSelectReloadTime={reloadSelectReloadTime}
+                />
                 <PageHead title={'我的自選'} />
                 <div className="select__list__box">
-                    <SelfSelectTable reloadCount={reloadCount} />
+                    <SelfSelectTable
+                        reloadCount={reloadCount}
+                        reloadTabkey={reloadTabkey}
+                        selectReloadTime={selectReloadTime}
+                        inventoryReloadTime={inventoryReloadTime}
+                        setSelectGroupReloadTime={selectGroupReloadTime}
+                    />
                 </div>
             </div>
 
