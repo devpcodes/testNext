@@ -157,6 +157,7 @@ const TradingSelect = () => {
                 ]);
             }
             if (tradeTime === 'after') {
+                dispatch(setTimeInForce('0'));
                 setTimeInForceOption([{ txt: 'ROD', val: '0' }]);
             }
         }
