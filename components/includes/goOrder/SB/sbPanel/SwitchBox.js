@@ -1,12 +1,32 @@
+import { useState } from 'react';
 import { Switch } from 'antd';
-const SwitchBox = () => {
-    const switchChangeHandler = () => {};
+import DateSelectBox from './DateSelectBox';
+const SwitchBox = ({ color }) => {
+    const [checked, setChecked] = useState(false);
+    const switchChangeHandler = val => {
+        setChecked(val);
+    };
     return (
         <div className="firstSell__box">
             <span className="text">長效單</span>
-            <Switch checked={false} size="small" onChange={switchChangeHandler} />
+            <Switch checked={checked} size="small" onChange={switchChangeHandler} />
             <span className="info"> 當金額≥119.99時以120.35委託買進</span>
+            {checked && (
+                <div className="date__box">
+                    <span className="text date__text">長效單截止日</span>
+                    <DateSelectBox
+                        style={{ display: 'inline-block' }}
+                        width={'calc(100vw - 140px)'}
+                        popperPlacement="top-end"
+                    />
+                </div>
+            )}
             <style jsx>{`
+                .date__box {
+                    margin-top: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                }
                 .firstSell__box {
                     margin-top: 18px;
                     margin-bottom: 26px;
@@ -20,10 +40,13 @@ const SwitchBox = () => {
                     width: 140px;
                     font-size: 1.2rem;
                     position: absolute;
-                    right: 8px;
+                    right: 0;
                     top: 0;
                     text-align: right;
                     color: #6c7b94;
+                }
+                .date__text {
+                    line-height: 40px;
                 }
             `}</style>
             <style global jsx>{`
@@ -59,7 +82,7 @@ const SwitchBox = () => {
                     background-color: #fff;
                 }
                 .firstSell__box .ant-switch-checked {
-                    background-color: #22a16f;
+                    background-color: ${color};
                 }
             `}</style>
         </div>
