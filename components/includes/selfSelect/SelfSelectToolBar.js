@@ -1,40 +1,20 @@
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { Button } from 'antd';
+import EditSelectGroup from './EditSelectGroup';
 import AddSelfSelect from './AddSelfSelect';
 import refresh from '../../../resources/images/pages/Self_select/basic-refresh-02.png';
 import pen from '../../../resources/images/pages/Self_select/edit-edit.svg';
-import AddSelectStock from '../editSelfSelectGroupBox/AddSelectStock';
-import { fetchCheckSelfSelect } from '../../../services/selfSelect/checkSelectStatus';
-
-// 換
-import { setSelectInfo } from '../../../store/goOrder/action';
 
 const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) => {
-    const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
-    const closeSelfSelect = useCallback(() => {
-        setIsSelfSelectVisitable(false);
+    const [isEditSelectGroupVisitable, setEditSelectGroupVisitable] = useState(false);
+
+    const closeEditSelfGroup = useCallback(() => {
+        setEditSelectGroupVisitable(false);
     }, []);
-    const getSelect = useCallback(async () => {
-        let exchange;
-        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-        switch (type) {
-            case 'S':
-                exchange = 'TAI';
-                break;
-            default:
-                break;
-        }
-        const reqData = {
-            symbol: code,
-            exchange: exchange,
-            market: type,
-            isShowDetail: true,
-            isSocalLogin: isSocalLogin,
-            token: isSocalLogin ? getSocalToken() : getToken(),
-        };
-        const res = await fetchCheckSelfSelect(reqData);
-        dispatch(setSelectInfo(res));
-    });
+
+    const openEditSelfGroup = useCallback(() => {
+        setEditSelectGroupVisitable(true);
+    }, []);
 
     return (
         <>
@@ -49,20 +29,14 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
                     <Button className="refresh__btn">
                         <img src={refresh} onClick={reload} />
                     </Button>
-                    <Button className="edit__group__btn">
+                    <Button className="edit__group__btn" onClick={openEditSelfGroup}>
                         <img src={pen} />
                         <span>編輯組合</span>
                     </Button>
                 </div>
             </div>
 
-            <AddSelectStock
-                isVisible={isSelfSelectVisitable}
-                handleClose={closeSelfSelect}
-                isEdit={false}
-                reloadSelect={getSelect}
-            />
-
+            <EditSelectGroup isEditSelectGroupVisitable={isEditSelectGroupVisitable} handleClose={closeEditSelfGroup} />
             <style jsx>{`
                 .select__toolbar {
                     display: flex;

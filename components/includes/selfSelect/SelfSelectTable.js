@@ -7,8 +7,7 @@ import { fetchQuerySelectInventoryStock } from '../../../services/selfSelect/que
 import { fetchQuerySelectStock } from '../../../services/selfSelect/querySelectStock';
 import { fetchQuerySubBrokerageQuote } from '../../../services/sb/querySubBrokerageQuote';
 import { fetchSnapshot } from '../../../services/stock/snapshot';
-import { getSocalToken } from '../../../services/user/accessToken';
-import { getToken } from '../../../services/user/accessToken';
+import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import useSWR from 'swr';
 
 const { TabPane } = Tabs;
