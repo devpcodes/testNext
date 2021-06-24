@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 import { themeColor } from '../../panel/PanelTabs';
 import { setSBActiveTabKey, setSBBs } from '../../../../../store/goOrderSB/action';
 import TradingContainer from './TradingContainer';
+import SearchList from '../searchList/SearchList';
 const { TabPane } = Tabs;
 
 const OrderTab = () => {
@@ -59,7 +60,7 @@ const OrderTab = () => {
                     {activeTabKey === '2' && <TradingContainer />}
                 </TabPane>
                 <TabPane tab="成委回" key="3">
-                    {activeTabKey === '3' && '333'}
+                    {activeTabKey === '3' && <SearchList />}
                 </TabPane>
             </Tabs>
         );
