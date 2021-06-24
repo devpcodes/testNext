@@ -1,10 +1,8 @@
 import React, { useState, memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
 import { Modal, Button } from 'antd';
-import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
-
+import SelectGroupList from './SelectGroupList';
 const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
@@ -22,18 +20,6 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
         // callback
         console.log('afterModalClose');
     };
-
-    const { data: fetchSelectGroupData } = useSWR(
-        isEditSelectGroupVisitable === true ? [isSocalLogin, token, isEditSelectGroupVisitable] : null,
-        fetchQuerySelectGroup,
-        {
-            onError: (error, key) => {
-                Modal.error({
-                    title: '伺服器錯誤',
-                });
-            },
-        },
-    );
 
     return (
         <>
@@ -60,7 +46,9 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
                         確認
                     </Button>,
                 ]}
-            ></Modal>
+            >
+                <SelectGroupList />
+            </Modal>
             <style jsx>{`
                 .self__select__list {
                     padding: 0;

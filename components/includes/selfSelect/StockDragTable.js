@@ -1,5 +1,5 @@
 import { Table } from 'antd';
-import AccountTable from '../../includes/tradingAccount/vipInventory/AccountTable';
+import AccountTable from '../tradingAccount/vipInventory/AccountTable';
 import ReactDragListView from 'react-drag-listview';
 import { useCallback, useState, useEffect } from 'react';
 import { openGoOrder } from '../../../services/openGoOrder';
@@ -10,7 +10,7 @@ import { fetchUpdateSelectStock } from '../../../services/selfSelect/updateSelec
 import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
-const DragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
+const StockDragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
     const [selfSelectList, setSelfSelectList] = useState([]);
     const isMobile = useCheckMobile();
     const router = useRouter();
@@ -228,4 +228,4 @@ const DragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
     );
 };
 
-export default DragTable;
+export default StockDragTable;

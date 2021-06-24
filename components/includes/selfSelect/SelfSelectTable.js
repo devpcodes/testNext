@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tabs, Modal } from 'antd';
-import DragTable from './DragTable';
+import StockDragTable from './StockDragTable';
 import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
 import { fetchQuerySelectInventoryStock } from '../../../services/selfSelect/querySelectInventoryStock';
 import { fetchQuerySelectStock } from '../../../services/selfSelect/querySelectStock';
@@ -248,7 +248,12 @@ const SelfSelectTable = ({
                 </Tabs>
             </div>
             <div className="select__stock__table">
-                <DragTable tableData={tableData} tabKey={selectGroupID} token={token} isSocalLogin={isSocalLogin} />
+                <StockDragTable
+                    tableData={tableData}
+                    tabKey={selectGroupID}
+                    token={token}
+                    isSocalLogin={isSocalLogin}
+                />
             </div>
 
             <style jsx>{`
