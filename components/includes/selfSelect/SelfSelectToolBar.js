@@ -36,7 +36,11 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
                 </div>
             </div>
 
-            <EditSelectGroup isEditSelectGroupVisitable={isEditSelectGroupVisitable} handleClose={closeEditSelfGroup} />
+            <EditSelectGroup
+                isEditSelectGroupVisitable={isEditSelectGroupVisitable}
+                handleClose={closeEditSelfGroup}
+                callBack={reload}
+            />
             <style jsx>{`
                 .select__toolbar {
                     display: flex;

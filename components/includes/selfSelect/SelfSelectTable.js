@@ -18,11 +18,12 @@ const SelfSelectTable = ({
     selectReloadTime,
     inventoryReloadTime,
     setSelectGroupReloadTime,
+    tabkey,
 }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLoginData = useSelector(store => store.user.socalLogin);
 
-    const [selectGroupID, setSelectGroupID] = useState('0');
+    const [selectGroupID, setSelectGroupID] = useState(tabkey);
     const [snapshotInput, setSnapshotInput] = useState([]);
     const [sbInput, setSBInput] = useState([]);
     const [tableData, setTableData] = useState({});
@@ -93,29 +94,31 @@ const SelfSelectTable = ({
     const setRequestData = data => {
         const snapshotInputArray = [];
         const sbInputArray = [];
-        data.map((stock, index) => {
-            if (['O', 'F', 'S'].includes(stock.market)) {
-                snapshotInputArray.push(stock.symbol);
-            } else if (['SB'].includes(stock.market)) {
-                let exchange = '';
-                switch (stock.exchange) {
-                    case 'NASDAQ':
-                        exchange = 'US';
-                        break;
-                    case 'HKG':
-                        if (stock.symbol.search(/^[8]{1}[0-9]{4}$/) === 0) {
-                            exchange = 'HKR';
-                        } else {
-                            exchange = 'SEHK';
-                        }
-                        break;
-                    default:
-                        exchange = stock.exchange;
-                        break;
+        if (data && Array.isArray(data) && data.length > 0) {
+            data.map((stock, index) => {
+                if (['O', 'F', 'S'].includes(stock.market)) {
+                    snapshotInputArray.push(stock.symbol);
+                } else if (['SB'].includes(stock.market)) {
+                    let exchange = '';
+                    switch (stock.exchange) {
+                        case 'NASDAQ':
+                            exchange = 'US';
+                            break;
+                        case 'HKG':
+                            if (stock.symbol.search(/^[8]{1}[0-9]{4}$/) === 0) {
+                                exchange = 'HKR';
+                            } else {
+                                exchange = 'SEHK';
+                            }
+                            break;
+                        default:
+                            exchange = stock.exchange;
+                            break;
+                    }
+                    sbInputArray.push({ symbol: stock.symbol, exchange: exchange });
                 }
-                sbInputArray.push({ symbol: stock.symbol, exchange: exchange });
-            }
-        });
+            });
+        }
         setSnapshotInput(snapshotInputArray);
         setSBInput(sbInputArray);
     };
@@ -137,7 +140,7 @@ const SelfSelectTable = ({
                     : selectStocks;
             const tableRowData = [];
             console.log(tableData);
-            if (tableData && tableData.length > 0) {
+            if (tableData && Array.isArray(tableData) && tableData.length > 0) {
                 tableData.some((stock, index) => {
                     let stockData = {};
                     if (snapshot && ['O', 'F', 'S'].includes(stock.market)) {
@@ -219,6 +222,9 @@ const SelfSelectTable = ({
         reloadTabkey(selectGroupID);
     }, [selectGroupID]);
 
+    useEffect(async () => {
+        setSelectGroupID(tabkey);
+    }, [tabkey]);
     // useEffect(() => {
     //     console.log(fetchSelectGroupData)
     // },[fetchSelectGroupData])

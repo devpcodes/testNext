@@ -31,7 +31,7 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
             token: isSocalLogin ? getSocalToken() : getToken(),
         };
         const res = await fetchAddSelectStock(addReqData, isSocalLogin);
-        reloadSelectReloadTime(new Date().getTime());
+        reloadSelectReloadTime();
     };
 
     return (

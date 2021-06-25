@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Modal, Button } from 'antd';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import SelectGroupList from './SelectGroupList';
-const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
+const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBack }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
@@ -17,7 +17,6 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
     };
 
     const afterModalClose = () => {
-        // callback
         console.log('afterModalClose');
     };
 
@@ -37,7 +36,7 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
                 onCancel={handleCancel}
                 bodyStyle={{ maxHeight: 300, overflow: 'auto' }}
                 cancelButtonProps={{ style: { display: 'none' } }}
-                zIndex="14998"
+                zIndex="999"
                 maskClosable={false}
                 afterClose={afterModalClose}
                 destroyOnClose={true}
@@ -47,7 +46,7 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose }) => {
                     </Button>,
                 ]}
             >
-                <SelectGroupList />
+                <SelectGroupList callBack={callBack} />
             </Modal>
             <style jsx>{`
                 .self__select__list {

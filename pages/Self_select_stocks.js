@@ -13,7 +13,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 const noNewwebHeader = true;
 function Self_select_stocks() {
     const [count, setCount] = useState('--');
-    const [tabkey, setTabkey] = useState(null);
+    const [tabkey, setTabkey] = useState('0');
     const [selectReloadTime, setSelectReloadTime] = useState(null);
     const [inventoryReloadTime, setInventoryReloadTime] = useState(null);
     const [selectGroupReloadTime, setSelectGroupReloadTime] = useState(null);
@@ -25,13 +25,16 @@ function Self_select_stocks() {
         setTabkey(tabkey);
     });
 
-    const reload = useCallback(time => {
+    const reload = useCallback(() => {
+        const time = new Date().getTime();
+        setTabkey('0');
         setSelectReloadTime(time);
         setInventoryReloadTime(time);
         setSelectGroupReloadTime(time);
     });
 
-    const reloadSelectReloadTime = useCallback(time => {
+    const reloadSelectReloadTime = useCallback(() => {
+        const time = new Date().getTime();
         setSelectReloadTime(time);
     });
 
@@ -53,6 +56,7 @@ function Self_select_stocks() {
                         selectReloadTime={selectReloadTime}
                         inventoryReloadTime={inventoryReloadTime}
                         setSelectGroupReloadTime={selectGroupReloadTime}
+                        tabkey={tabkey}
                     />
                 </div>
             </div>
