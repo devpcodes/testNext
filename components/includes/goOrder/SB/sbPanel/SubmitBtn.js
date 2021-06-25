@@ -15,7 +15,7 @@ const SubmitBtn = ({ text, ...props }) => {
             <style global jsx>{`
                 .submit__container {
                     position: absolute;
-                    top: 276px;
+                    top: 320px;
                     left: 0;
                     width: 100%;
                     height: 80px;

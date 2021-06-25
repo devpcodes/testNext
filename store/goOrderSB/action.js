@@ -24,3 +24,17 @@ export const setRic = ric => {
         payload: ric,
     };
 };
+
+export const setTouch = num => {
+    return {
+        type: actionType.SET_TOUCH,
+        payload: num,
+    };
+};
+
+export const setPanelHeight = height => {
+    return {
+        type: actionType.SET_PANEL_HEIGHT,
+        payload: height,
+    };
+};

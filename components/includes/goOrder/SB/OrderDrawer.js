@@ -7,7 +7,7 @@ import arrow from '../../../../resources/images/components/goOrder/arrow-chevron
 const OrderDrawer = ({ children }) => {
     const dispatch = useDispatch();
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const panelHeight = useSelector(store => store.goOrder.panelHeight);
+    const panelHeight = useSelector(store => store.goOrderSB.panelHeight);
     const bs = useSelector(store => store.goOrder.bs);
     useEffect(() => {
         if (bs !== '') {
@@ -25,7 +25,7 @@ const OrderDrawer = ({ children }) => {
                 mask={false}
                 onClose={() => {
                     if (panelHeight == 80) {
-                        dispatch(setPanelHeight(360));
+                        dispatch(setPanelHeight(400));
                     } else {
                         dispatch(setPanelHeight(80));
                     }
@@ -35,7 +35,7 @@ const OrderDrawer = ({ children }) => {
                     <img
                         style={{
                             marginTop: '-4px',
-                            transform: panelHeight == 360 ? 'rotate(180deg)' : 'rotate(0)',
+                            transform: panelHeight == 400 ? 'rotate(180deg)' : 'rotate(0)',
                             marginRight: '-3px',
                         }}
                         src={arrow}

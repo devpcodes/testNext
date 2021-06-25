@@ -14,13 +14,14 @@ const ChangeNum = ({
     fontSize,
     conditionText,
     textAlign,
+    style,
 }) => {
     const valChangeHandler = e => {
         console.log(e.target.value);
         changeHandler(e.target.value);
     };
     return (
-        <div className="price_control">
+        <div className="price_control" style={style}>
             <div className="select__box">
                 <div className="select__label">
                     {title}

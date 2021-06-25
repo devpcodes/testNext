@@ -5,7 +5,10 @@ const initialState = {
     activeTabKey: '1', //2 3
     quote: {},
     ric: '',
+    touch: 0, //0 1
+    panelHeight: 400,
 };
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionType.SET_SB_BS:
@@ -27,6 +30,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 ric: action.payload,
+            };
+        case actionType.SET_TOUCH:
+            return {
+                ...state,
+                touch: action.payload,
+            };
+        case actionType.SET_PANEL_HEIGHT:
+            return {
+                ...state,
+                panelHeight: action.payload,
             };
         default:
             return state;

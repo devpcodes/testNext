@@ -16,7 +16,7 @@ const SBContainer = () => {
         }
         if (panelHeight > 100) {
             // return '504px';
-            return winSize.height - 360 - 44 + 'px';
+            return winSize.height - 400 - 44 + 'px';
         } else {
             return 'auto';
         }
