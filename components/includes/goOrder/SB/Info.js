@@ -11,9 +11,11 @@ import { getToken } from '../../../../services/user/accessToken';
 import { fetchGetQuote } from '../../../../services/components/goOrder/sb/fetchGetQuote';
 import { setProductInfo } from '../../../../store/goOrder/action';
 import { getCodeType, marketName } from '../../../../services/components/goOrder/sb/dataMapping';
-import { setQuote, setRic } from '../../../../store/goOrderSB/action';
+import { setQuote, setRic, setStockInfo } from '../../../../store/goOrderSB/action';
 import { insert } from '../../../../services/stringFormat';
 import { fetchPs } from '../../../../services/components/goOrder/sb/fetchPs';
+import { postStockInfo } from '../../../../services/components/goOrder/sb/postStockInfo';
+import { checkRealtimeMarket } from '../../../../services/components/goOrder/sb/checkRealtimeMarket';
 
 export const defaultProductInfo = {
     symbol: 'AAPL',
@@ -28,6 +30,8 @@ const Info = () => {
     const type = useSelector(store => store.goOrder.type);
     const quote = useSelector(store => store.goOrderSB.quote);
     const ric = useSelector(store => store.goOrderSB.ric);
+    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
     const [checkCA, setCheckCA] = useState(false);
     const [label, setLabel] = useState('');
@@ -38,7 +42,9 @@ const Info = () => {
 
     useEffect(() => {
         dispatch(setQuote({}));
-        getRic(code);
+        dispatch(setStockInfo({}));
+        dispatch(setRic(''));
+        // getRic(code);
     }, [code, type]);
 
     useEffect(() => {
@@ -52,8 +58,12 @@ const Info = () => {
             if (marketName(productInfo.market).label != null) {
                 setLabel(marketName(productInfo.market).label);
             }
+            if (checkRealtimeMarket(productInfo.market)) {
+                getRic(code);
+            }
+            getStockInfo(currentAccount, productInfo.market);
         }
-    }, [productInfo]);
+    }, [productInfo, currentAccount]);
 
     const getRic = useCallback(async code => {
         try {
@@ -65,6 +75,20 @@ const Info = () => {
         } catch (error) {
             console.log('error...');
             dispatch(setRic('error'));
+        }
+    });
+
+    const getStockInfo = useCallback(async (currentAccount, market) => {
+        if (getToken()) {
+            let AID = null;
+            if (currentAccount.broker_id != null) {
+                AID = currentAccount.broker_id + currentAccount.account;
+            }
+            const Exchid = market;
+            const stockID = code;
+            const token = getToken();
+            const stockInfoData = await postStockInfo({ AID, Exchid, stockID, token });
+            dispatch(setStockInfo(stockInfoData));
         }
     });
 
@@ -80,21 +104,38 @@ const Info = () => {
     });
 
     const getCloseInfo = () => {
-        let nc = '';
-        let pc = '';
-        if (quote?.nc != null) {
-            nc = Math.abs(Number(quote.nc));
-        }
-        if (quote?.pc != null) {
-            pc = Math.abs(Number(quote.pc));
-        }
-        if (quote?.ls == null) {
-            return '--';
-        }
-        if (isNaN(nc) || isNaN(pc)) {
-            return `${quote?.ls}`;
+        if (productInfo.market != null && checkRealtimeMarket(productInfo.market)) {
+            let nc = '';
+            let pc = '';
+            if (quote?.nc != null) {
+                nc = Math.abs(Number(quote.nc));
+            }
+            if (quote?.pc != null) {
+                pc = Math.abs(Number(quote.pc));
+            }
+            if (quote?.ls == null) {
+                return '--';
+            }
+            if (isNaN(nc) || isNaN(pc)) {
+                return `${quote?.ls}`;
+            } else {
+                return `${quote?.ls} ${getArrow(quote?.ls, quote?.refprice)} ${nc} (${pc}%)`;
+            }
         } else {
-            return `${quote?.ls} ${getArrow(quote?.ls, quote?.refprice)} ${nc} (${pc}%)`;
+            return (
+                <>
+                    <span
+                        style={{
+                            color: '#8e8e8e',
+                            fontWeight: 500,
+                            marginTop: '-5px',
+                        }}
+                    >
+                        收盤參考價&nbsp;&nbsp;
+                    </span>
+                    <span>{stockInfo['@refPrice'] || '--'}</span>
+                </>
+            );
         }
     };
 
@@ -117,19 +158,28 @@ const Info = () => {
         setCheckCA(boo);
     });
     const getTime = () => {
-        if (quote?.td != null) {
+        if (productInfo.market != null && checkRealtimeMarket(productInfo.market)) {
+            if (quote?.td != null) {
+                let td = '';
+                let tm = '';
+                if (quote.td) {
+                    td = quote.td.substr(4);
+                    td = insert(td, 2, '.');
+                }
+                if (quote.tm) {
+                    tm = insert(quote.tm, 2, ':');
+                }
+                return td + ' ' + tm + ' ' + '收盤價';
+            } else {
+                return '';
+            }
+        } else {
             let td = '';
-            let tm = '';
-            if (quote.td) {
-                td = quote.td.substr(4);
+            if (stockInfo['@preTDate']) {
+                td = stockInfo['@preTDate'].substr(4);
                 td = insert(td, 2, '.');
             }
-            if (quote.tm) {
-                tm = insert(quote.tm, 2, ':');
-            }
-            return td + ' ' + tm + ' ' + '收盤價';
-        } else {
-            return '';
+            return td;
         }
     };
     return (

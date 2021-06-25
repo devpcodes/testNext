@@ -7,6 +7,7 @@ const initialState = {
     ric: '',
     touch: 0, //0 1
     panelHeight: 400,
+    stockInfo: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -40,6 +41,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 panelHeight: action.payload,
+            };
+        case actionType.SET_STOCKINFO:
+            return {
+                ...state,
+                stockInfo: action.payload,
             };
         default:
             return state;

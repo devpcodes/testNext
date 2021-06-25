@@ -5,6 +5,7 @@ import Fundamentals from './quotes/Fundamentals';
 import DKbar from './quotes/DKbar';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 import NoData from './NoData';
+import { checkRealtimeMarket } from '../../../../services/components/goOrder/sb/checkRealtimeMarket';
 
 // import noDataIcon from '../../../../resources/images/components/goOrder/sb/img-default.svg';
 const QuoteContainer = () => {
@@ -12,6 +13,7 @@ const QuoteContainer = () => {
     const bs = useSelector(store => store.goOrderSB.bs);
     const quote = useSelector(store => store.goOrderSB.quote);
     const ric = useSelector(store => store.goOrderSB.ric);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
     const chartHeight = useRef(0);
     const quoteContainerElement = useRef(null);
 
@@ -19,12 +21,12 @@ const QuoteContainer = () => {
     const winSize = useWindowSize();
 
     useEffect(() => {
-        if (ric === 'error') {
+        if (ric === 'error' || !checkRealtimeMarket(productInfo.market)) {
             setNoData(true);
         } else {
             setNoData(false);
         }
-    }, [ric]);
+    }, [ric, productInfo]);
 
     const quoteContainerStyleHandler = () => {
         if (panelHeight >= 100 && bs !== '' && quoteContainerElement.current != null) {

@@ -38,3 +38,10 @@ export const setPanelHeight = height => {
         payload: height,
     };
 };
+
+export const setStockInfo = data => {
+    return {
+        type: actionType.SET_STOCKINFO,
+        payload: data,
+    };
+};
