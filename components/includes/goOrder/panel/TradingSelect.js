@@ -69,6 +69,37 @@ const TradingSelect = () => {
     }, [lot, productInfo]);
 
     useEffect(() => {
+        TIBHandler(lot, tradeTime, productInfo);
+        solaceMarketHandler(lot, tradeTime, productInfo);
+
+        timeInForceOptionHandler(lot, tradeTime, productInfo);
+        updateOrdCound(lot, productInfo);
+    }, [lot, tradeTime, productInfo]);
+
+    const TIBHandler = (lot, tradeTime, productInfo) => {
+        if (productInfo.TIB != null && (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)) {
+            if (productInfo.TIB.indexOf('創新') >= 0) {
+                if (lot === 'Board') {
+                    setTradeTimeOption([
+                        { txt: '盤中', val: 'ing' },
+                        { txt: '盤後', val: 'after' },
+                    ]);
+                } else {
+                    setTradeTimeOption([{ txt: '盤後', val: 'after' }]);
+                    dispatch(setTradeTime('after'));
+                }
+            } else {
+                if (lot === 'Board') {
+                    setTradeTimeOption([{ txt: '盤中', val: 'ing' }]);
+                    dispatch(setTradeTime('ing'));
+                } else {
+                    setTradeTimeOption([{ txt: '盤後', val: 'after' }]);
+                    dispatch(setTradeTime('after'));
+                }
+            }
+        }
+    };
+    const solaceMarketHandler = (lot, tradeTime, productInfo) => {
         if (productInfo != null && productInfo.solaceMarket != null) {
             if (productInfo?.solaceMarket === '興櫃' && lot === 'Odd') {
                 dispatch(setOrdType('2'));
@@ -102,9 +133,7 @@ const TradingSelect = () => {
                 dispatch(setOrdType('2'));
             }
         }
-        timeInForceOptionHandler(lot, tradeTime, productInfo);
-        updateOrdCound(lot, productInfo);
-    }, [lot, tradeTime, productInfo]);
+    };
 
     // ROD IOC FOK 設定
     const timeInForceOptionHandler = (lot, tradeTime, productInfo) => {
@@ -128,6 +157,7 @@ const TradingSelect = () => {
                 ]);
             }
             if (tradeTime === 'after') {
+                dispatch(setTimeInForce('0'));
                 setTimeInForceOption([{ txt: 'ROD', val: '0' }]);
             }
         }
@@ -146,6 +176,11 @@ const TradingSelect = () => {
         dispatch(setOrdCount(value));
     };
     const updateOrdCound = (lot, productInfo) => {
+        if (productInfo.TIB != null && (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)) {
+            setOrdCoundOption([{ txt: '現股', val: '0' }]);
+            dispatch(setOrdCount('0'));
+            return;
+        }
         if (productInfo?.solaceMarket != null) {
             if (productInfo.solaceMarket === '興櫃') {
                 setOrdCoundOption([{ txt: '現股', val: '0' }]);
