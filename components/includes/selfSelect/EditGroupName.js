@@ -4,33 +4,29 @@ import { Modal, Button, Input } from 'antd';
 import { fetchUpdateSelectGroupName } from '../../../services/selfSelect/updateSelectGroupName';
 import { getToken, getSocalToken } from '../../../services/user/accessToken';
 
-const EditGroupName = memo(({ isVisible }) => {
+const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHandler }) => {
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
 
+    // useEffect(()=>{
+    //     console.log(selectGroupName, selectGroupID)
+    // }, [selectGroupName, selectGroupID])
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
     const socalLogin = useSelector(store => store.user.socalLogin);
     const textInput = useRef(null);
 
     const handleClose = () => {
-        // handler(false);
+        closeHandler();
     };
 
     const handleConfirm = async () => {
-        // const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
-        // const token = isSocalLogin ? getSocalToken() : getToken();
-        // const res = await fetchUpdateSelectGroupName(
-        //     editData.selectId,
-        //     textInput.current.state.value,
-        //     isSocalLogin,
-        //     token,
-        // );
-        // if (res.success && res.message === 'OK') {
-        //     editData.selectName = textInput.current.state.value;
-        //     reloadSelect(editData);
-        //     handler(false);
-        // }
+        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
+        const token = isSocalLogin ? getSocalToken() : getToken();
+        const res = await fetchUpdateSelectGroupName(selectGroupID, textInput.current.state.value, isSocalLogin, token);
+        if (res.success && res.message === 'OK') {
+            closeHandler(false);
+        }
     };
 
     return (
