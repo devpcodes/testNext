@@ -7,15 +7,19 @@ import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectG
 import { fetchDeletSelectGroup } from '../../../services/selfSelect/deleteSelectGroup';
 import ReactDragListView from 'react-drag-listview';
 
+import EditGroupName from './EditGroupName';
+
 import pen from '../../../resources/images/components/goOrder/edit-edit.svg';
 import hamburger from '../../../resources/images/components/goOrder/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
+
 const SelectGroupList = ({ callBack }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
 
-    const [selfSelectGroup, setselfSelectGroup] = useState([]);
+    const [selfSelectGroup, setSelfSelectGroup] = useState([]);
+    const [isVisibleEditGroupName, setIsVisibleEditGroupName] = useState(true);
 
     const { data: fetchSelectGroupData } = useSWR([isSocalLogin, token], fetchQuerySelectGroup, {
         onError: (error, key) => {
@@ -26,7 +30,7 @@ const SelectGroupList = ({ callBack }) => {
     });
 
     useEffect(() => {
-        setselfSelectGroup(fetchSelectGroupData);
+        setSelfSelectGroup(fetchSelectGroupData);
     }, [fetchSelectGroupData]);
 
     const dragProps = {
@@ -35,7 +39,7 @@ const SelectGroupList = ({ callBack }) => {
             const item = data.splice(fromIndex, 1)[0];
             data.splice(toIndex, 0, item);
             console.log(data);
-            setselfSelectGroup(data);
+            setSelfSelectGroup(data);
         },
         nodeSelector: '.group_list_item',
         handleSelector: '.sort__icon',
@@ -52,7 +56,7 @@ const SelectGroupList = ({ callBack }) => {
                 data.map(async (val, idx) => {
                     if (selectId === val.selectId) {
                         data.splice(idx, 1);
-                        setselfSelectGroup(data);
+                        setSelfSelectGroup(data);
 
                         const res = await fetchDeletSelectGroup(val.selectId, getToken());
                         console.log(res);
@@ -65,6 +69,8 @@ const SelectGroupList = ({ callBack }) => {
         });
     };
 
+    const openEditGroupName = () => {};
+
     return (
         <>
             <ul className="group_ul">
@@ -73,7 +79,10 @@ const SelectGroupList = ({ callBack }) => {
                         selfSelectGroup.map((val, key) => {
                             return (
                                 <li className="group_list_item" key={key}>
-                                    <span className="edit__icon">
+                                    <span
+                                        className="edit__icon"
+                                        onClick={() => openEditGroupName(val.selectId, val.selectName)}
+                                    >
                                         <img src={pen} alt="編輯名稱"></img>
                                     </span>
                                     <span className="group__name">{val.selectName}</span>
@@ -89,7 +98,7 @@ const SelectGroupList = ({ callBack }) => {
                         })}
                 </ReactDragListView>
             </ul>
-
+            <EditGroupName isVisible={isVisibleEditGroupName} />
             <style jsx>{`
                 .group_ul {
                     padding: 12px 0;
