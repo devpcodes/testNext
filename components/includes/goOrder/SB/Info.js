@@ -131,7 +131,7 @@ const Info = () => {
                             marginTop: '-5px',
                         }}
                     >
-                        收盤參考價&nbsp;&nbsp;
+                        昨收&nbsp;&nbsp;
                     </span>
                     <span>{stockInfo['@refPrice'] || '--'}</span>
                 </>
@@ -179,7 +179,7 @@ const Info = () => {
                 td = stockInfo['@preTDate'].substr(4);
                 td = insert(td, 2, '.');
             }
-            return td;
+            return td ? td + ' 收盤參考價' : '';
         }
     };
     return (

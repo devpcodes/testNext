@@ -6,6 +6,7 @@ import ChangeNum from '../../searchList/ChangeNum';
 import SubmitBtn from './SubmitBtn';
 import SwitchBox from './SwitchBox';
 import { setTouch } from '../../../../../store/goOrderSB/action';
+import PriceBox from './PriceBox';
 
 const TradingSelect = () => {
     const dispatch = useDispatch();
@@ -108,14 +109,14 @@ const TradingSelect = () => {
                         style={{ width: '100vw' }}
                     />
                 )}
-
-                <ChangeNum
+                <PriceBox />
+                {/* <ChangeNum
                     title={touch ? '委託價' : '價格'}
                     color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
                     textAlign={'center'}
                     inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
                     style={{ width: '100vw' }}
-                />
+                /> */}
                 <ChangeNum
                     title={'股數'}
                     color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}

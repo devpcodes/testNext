@@ -32,7 +32,7 @@ export const setTouch = num => {
     };
 };
 
-export const setPanelHeight = height => {
+export const setPanelHeightSB = height => {
     return {
         type: actionType.SET_PANEL_HEIGHT,
         payload: height,

@@ -4,11 +4,25 @@ import { Drawer } from 'antd';
 import { setPanelHeight } from '../../../../store/goOrder/action';
 
 import arrow from '../../../../resources/images/components/goOrder/arrow-chevron-down.png';
+import { setPanelHeightSB } from '../../../../store/goOrderSB/action';
 const OrderDrawer = ({ children }) => {
     const dispatch = useDispatch();
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const panelHeight = useSelector(store => store.goOrderSB.panelHeight);
+    const [pHeight, setPHeight] = useState(0);
+    const [openHeight, setOpenHeight] = useState(360);
+    const panelHeightSB = useSelector(store => store.goOrderSB.panelHeight);
+    const panelHeight = useSelector(store => store.goOrder.panelHeight);
+    const type = useSelector(store => store.goOrder.type);
     const bs = useSelector(store => store.goOrder.bs);
+    useEffect(() => {
+        if (type === 'S') {
+            setPHeight(panelHeight);
+            setOpenHeight(360);
+        } else {
+            setPHeight(panelHeightSB);
+            setOpenHeight(400);
+        }
+    }, [type, panelHeight, panelHeightSB]);
     useEffect(() => {
         if (bs !== '') {
             setTimeout(() => {
@@ -16,26 +30,51 @@ const OrderDrawer = ({ children }) => {
             }, 0);
         }
     }, [bs]);
+
+    const drawerHeightHandler = (h, type) => {
+        if (type === 'S') {
+            if (h === 80) {
+                return 80;
+            } else {
+                return openHeight;
+            }
+        } else {
+            if (h === 80) {
+                return 80;
+            } else {
+                return openHeight;
+            }
+        }
+    };
     return (
         <>
             <Drawer
+                style={{ height: drawerHeightHandler(pHeight, type) }}
                 closable={true}
                 visible={drawerVisible}
                 placement={'bottom'}
                 mask={false}
                 onClose={() => {
-                    if (panelHeight == 80) {
-                        dispatch(setPanelHeight(400));
+                    if (pHeight == 80) {
+                        if (type === 'S') {
+                            dispatch(setPanelHeight(openHeight));
+                        } else {
+                            dispatch(setPanelHeightSB(openHeight));
+                        }
                     } else {
-                        dispatch(setPanelHeight(80));
+                        if (type === 'S') {
+                            dispatch(setPanelHeight(80));
+                        } else {
+                            dispatch(setPanelHeightSB(80));
+                        }
                     }
                 }}
-                height={panelHeight}
+                height={pHeight}
                 closeIcon={
                     <img
                         style={{
                             marginTop: '-4px',
-                            transform: panelHeight == 400 ? 'rotate(180deg)' : 'rotate(0)',
+                            transform: pHeight == openHeight ? 'rotate(180deg)' : 'rotate(0)',
                             marginRight: '-3px',
                         }}
                         src={arrow}
