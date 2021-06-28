@@ -1,16 +1,27 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Switch } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
 import DateSelectBox from './DateSelectBox';
 const SwitchBox = ({ color }) => {
     const [checked, setChecked] = useState(false);
+    const touch = useSelector(store => store.goOrderSB.touch);
+    const bs = useSelector(store => store.goOrderSB.bs);
+    const price = useSelector(store => store.goOrderSB.price);
     const switchChangeHandler = val => {
         setChecked(val);
     };
+    const infoHandler = useCallback((touch, bs, price) => {
+        if (touch) {
+            return `當金額${bs === 'B' ? '≥' : '≤'}119.99時以${price}委託${bs === 'B' ? '買進' : '賣出'}`;
+        } else {
+            return '';
+        }
+    });
     return (
         <div className="firstSell__box">
             <span className="text">長效單</span>
             <Switch checked={checked} size="small" onChange={switchChangeHandler} />
-            <span className="info"> 當金額≥119.99時以120.35委託買進</span>
+            <span className="info"> {infoHandler(touch, bs, price)}</span>
             {checked && (
                 <div className="date__box">
                     <span className="text date__text">長效單截止日</span>

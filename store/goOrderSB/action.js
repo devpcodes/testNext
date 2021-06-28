@@ -45,3 +45,24 @@ export const setStockInfo = data => {
         payload: data,
     };
 };
+
+export const setPrice = price => {
+    return {
+        type: actionType.SET_PRICE,
+        payload: price,
+    };
+};
+
+export const setQty = qty => {
+    return {
+        type: actionType.SET_QTY,
+        payload: qty,
+    };
+};
+
+export const setTouchedPrice = price => {
+    return {
+        type: actionType.SET_TOUCHED_PRICE,
+        payload: price,
+    };
+};

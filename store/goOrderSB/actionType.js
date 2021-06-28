@@ -5,3 +5,6 @@ export const SET_RIC = 'SET_RIC';
 export const SET_TOUCH = 'SET_TOUCH';
 export const SET_PANEL_HEIGHT = 'SET_PANEL_HEIGHT';
 export const SET_STOCKINFO = 'SET_STOCKINFO';
+export const SET_PRICE = 'SET_PRICE';
+export const SET_QTY = 'SET_QTY';
+export const SET_TOUCHED_PRICE = 'SET_TOUCHED_PRICE';

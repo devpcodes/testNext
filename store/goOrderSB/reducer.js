@@ -8,6 +8,9 @@ const initialState = {
     touch: 0, //0 1
     panelHeight: 400,
     stockInfo: {},
+    price: '',
+    qty: '',
+    TouchedPrice: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -46,6 +49,21 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 stockInfo: action.payload,
+            };
+        case actionType.SET_PRICE:
+            return {
+                ...state,
+                price: action.payload,
+            };
+        case actionType.SET_QTY:
+            return {
+                ...state,
+                qty: action.payload,
+            };
+        case actionType.SET_TOUCHED_PRICE:
+            return {
+                ...state,
+                TouchedPrice: action.payload,
             };
         default:
             return state;

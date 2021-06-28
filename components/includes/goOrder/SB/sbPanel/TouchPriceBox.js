@@ -1,30 +1,15 @@
-import { useCallback, useState, useEffect } from 'react';
-import ChangeNum from '../../searchList/ChangeNum';
+import { useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
-import { checkRealtimeMarket } from '../../../../../services/components/goOrder/sb/checkRealtimeMarket';
+import ChangeNum from '../../searchList/ChangeNum';
 import { getPriceJumpPoint } from '../../../../../services/components/goOrder/sb/getPriceJumpPoint';
-import { setPrice } from '../../../../../store/goOrderSB/action';
-const PriceBox = () => {
-    const touch = useSelector(store => store.goOrderSB.touch);
+const TouchPriceBox = () => {
     const bs = useSelector(store => store.goOrderSB.bs);
-    const quote = useSelector(store => store.goOrderSB.quote);
-    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const [val, setVal] = useState('');
-    const dispatch = useDispatch();
-    useEffect(() => {
-        if (productInfo.market != null && checkRealtimeMarket(productInfo.market)) {
-            setVal(quote.ls);
-        } else {
-            setVal(stockInfo['@refPrice']);
-        }
-    }, [quote, stockInfo, productInfo]);
-
-    useEffect(() => {
-        dispatch(setPrice(val));
-    }, [val]);
-
+    const changeHandler = useCallback(value => {
+        setVal(value);
+    });
     const plusHandler = useCallback((val, productInfo) => {
         if (isNaN(parseFloat(val))) {
             return;
@@ -50,23 +35,20 @@ const PriceBox = () => {
             }
         }
     });
-
-    const changeHandler = useCallback(value => {
-        setVal(value);
-    });
     return (
         <ChangeNum
-            title={touch ? '委託價' : '價格'}
+            title={'觸發價'}
             color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
+            conditionText={bs === 'B' ? '≥' : '≤'}
             textAlign={'center'}
             inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
             style={{ width: '100vw' }}
             val={val}
+            changeHandler={changeHandler}
             plusClickHandler={plusHandler.bind(null, val, productInfo)}
             minusClickHandler={minusHandler.bind(null, val, productInfo)}
-            changeHandler={changeHandler}
         />
     );
 };
 
-export default PriceBox;
+export default TouchPriceBox;

@@ -7,6 +7,8 @@ import SubmitBtn from './SubmitBtn';
 import SwitchBox from './SwitchBox';
 import { setTouch } from '../../../../../store/goOrderSB/action';
 import PriceBox from './PriceBox';
+import QtyBox from './QtyBox';
+import TouchPriceBox from './TouchPriceBox';
 
 const TradingSelect = () => {
     const dispatch = useDispatch();
@@ -72,6 +74,14 @@ const TradingSelect = () => {
             setShowGTCDate(false);
         }
     };
+
+    const textHandler = useCallback((touch, bs) => {
+        if (touch) {
+            return `追價${bs === 'B' ? '買進' : '賣出'}`;
+        } else {
+            return `委託${bs === 'B' ? '買進' : '賣出'}`;
+        }
+    });
     return (
         <div className="tradingSelect__container">
             <div className="trading__box">
@@ -100,34 +110,22 @@ const TradingSelect = () => {
                     />
                 </div>
                 {showTouchPriceInput && (
-                    <ChangeNum
-                        title={'觸發價'}
-                        color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
-                        conditionText={bs === 'B' ? '≥' : '≤'}
-                        textAlign={'center'}
-                        inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
-                        style={{ width: '100vw' }}
-                    />
+                    <TouchPriceBox />
+                    // <ChangeNum
+                    //     title={'觸發價'}
+                    //     color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
+                    //     conditionText={bs === 'B' ? '≥' : '≤'}
+                    //     textAlign={'center'}
+                    //     inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
+                    //     style={{ width: '100vw' }}
+                    // />
                 )}
                 <PriceBox />
-                {/* <ChangeNum
-                    title={touch ? '委託價' : '價格'}
-                    color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
-                    textAlign={'center'}
-                    inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
-                    style={{ width: '100vw' }}
-                /> */}
-                <ChangeNum
-                    title={'股數'}
-                    color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
-                    textAlign={'center'}
-                    inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
-                    style={{ width: '100vw' }}
-                />
+                <QtyBox />
                 {showGTCDate && <SwitchBox color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor} />}
             </div>
 
-            <SubmitBtn text={'追價買進'} />
+            <SubmitBtn text={textHandler(touch, bs)} />
 
             <style jsx>{`
                 .selector__container {
