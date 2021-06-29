@@ -2,11 +2,14 @@ import { useCallback, useState, useEffect, useRef } from 'react';
 import { Button } from 'antd';
 import EditSelectGroup from './EditSelectGroup';
 import AddSelfSelect from './AddSelfSelect';
+import AddSelectGroup from './AddSelectGroup';
 import refresh from '../../../resources/images/pages/Self_select/basic-refresh-02.png';
 import pen from '../../../resources/images/pages/Self_select/edit-edit.svg';
+import add from '../../../resources/images/pages/Self_select/edit-plus.svg';
 
 const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) => {
     const [isEditSelectGroupVisitable, setEditSelectGroupVisitable] = useState(false);
+    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(true);
 
     const closeEditSelfGroup = useCallback(() => {
         setEditSelectGroupVisitable(false);
@@ -14,6 +17,14 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
 
     const openEditSelfGroup = useCallback(() => {
         setEditSelectGroupVisitable(true);
+    }, []);
+
+    const closeAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(false);
+    }, []);
+
+    const openAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(true);
     }, []);
 
     return (
@@ -29,6 +40,10 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
                     <Button className="refresh__btn">
                         <img src={refresh} onClick={reload} />
                     </Button>
+                    <Button className="add__group__btn" onClick={openAddSelfGroup}>
+                        <img src={add} />
+                        <span>新增組合</span>
+                    </Button>
                     <Button className="edit__group__btn" onClick={openEditSelfGroup}>
                         <img src={pen} />
                         <span>編輯組合</span>
@@ -39,6 +54,12 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
             <EditSelectGroup
                 isEditSelectGroupVisitable={isEditSelectGroupVisitable}
                 handleClose={closeEditSelfGroup}
+                callBack={reload}
+            />
+
+            <AddSelectGroup
+                isAddSelectGroupVisitable={isAddSelectGroupVisitable}
+                handleClose={closeAddSelfGroup}
                 callBack={reload}
             />
             <style jsx>{`
@@ -72,17 +93,23 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
                     margin-right: 12px;
                 }
 
-                .select__toolbar__right .edit__group__btn {
+                .select__toolbar__right .edit__group__btn,
+                .select__toolbar__right .add__group__btn {
                     padding: 0px 0px;
                     width: 120px;
                     height: 40px;
                     font-size: 1.6rem;
                 }
-                .edit__group__btn > span {
+                .edit__group__btn > span,
+                .add__group__btn > span {
                     vertical-align: middle;
                 }
-                .edit__group__btn > img {
+                .edit__group__btn > img,
+                .add__group__btn > img {
                     margin-right: 7px;
+                }
+                .add__group__btn {
+                    margin-right: 10px;
                 }
                 .ant-btn:hover {
                     background-color: #f3f6fe;

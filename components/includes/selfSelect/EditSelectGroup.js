@@ -16,9 +16,9 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
         handleClose();
     };
 
-    const afterModalClose = () => {
-        console.log('afterModalClose');
-    };
+    // const afterModalClose = () => {
+    //     callBack();
+    // };
 
     return (
         <>
@@ -38,7 +38,7 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
                 cancelButtonProps={{ style: { display: 'none' } }}
                 zIndex="999"
                 maskClosable={false}
-                afterClose={afterModalClose}
+                // afterClose={afterModalClose}
                 destroyOnClose={true}
                 footer={[
                     <Button key="confirm" type="primary" className="confirm" danger onClick={handleOk}>

@@ -5,6 +5,8 @@ import useSWR from 'swr';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
 import { fetchDeletSelectGroup } from '../../../services/selfSelect/deleteSelectGroup';
+import { fetchUpdateSelectGroup } from '../../../services/selfSelect/updateSelectGroup';
+
 import ReactDragListView from 'react-drag-listview';
 
 import EditGroupName from './EditGroupName';
@@ -41,8 +43,13 @@ const SelectGroupList = ({ callBack }) => {
             const data = JSON.parse(JSON.stringify(selfSelectGroup));
             const item = data.splice(fromIndex, 1)[0];
             data.splice(toIndex, 0, item);
-            console.log(data);
-            setSelfSelectGroup(data);
+            const res = await fetchUpdateSelectGroup(data, isSocalLogin, token);
+            if (res.success === true && res.message === 'OK') {
+                setSelfSelectGroup(data);
+                if (typeof callBack === 'function') {
+                    callBack();
+                }
+            }
         },
         nodeSelector: '.group_list_item',
         handleSelector: '.sort__icon',
