@@ -17,7 +17,7 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
     };
 
     // const afterModalClose = () => {
-    //     callBack();
+    //     console.log('afterModalClose');
     // };
 
     return (

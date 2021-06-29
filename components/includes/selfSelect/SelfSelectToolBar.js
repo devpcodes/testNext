@@ -9,7 +9,7 @@ import add from '../../../resources/images/pages/Self_select/edit-plus.svg';
 
 const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) => {
     const [isEditSelectGroupVisitable, setEditSelectGroupVisitable] = useState(false);
-    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(true);
+    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
 
     const closeEditSelfGroup = useCallback(() => {
         setEditSelectGroupVisitable(false);
