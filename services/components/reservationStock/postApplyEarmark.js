@@ -3,7 +3,7 @@ import { getA8StpInstance } from '../../myAxios';
 
 export const postApplyEarmark = async function (token, branch, account, symbol, qty, category, ca_content) {
     try {
-        const url = '/stp/api/applyEarmark';
+        const url = '/stp/api/applyStockReserve';
         // const baseUrl = 'https://servicerd.sinotrade.com.tw';
         const res = await getA8StpInstance(true).post(url, {
             token,
