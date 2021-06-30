@@ -11,6 +11,7 @@ const initialState = {
     price: '',
     qty: '',
     TouchedPrice: '',
+    transactionCost: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -64,6 +65,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 TouchedPrice: action.payload,
+            };
+        case actionType.SET_TRANSACTION_COST:
+            return {
+                ...state,
+                transactionCost: action.payload,
             };
         default:
             return state;

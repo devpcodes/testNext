@@ -7,12 +7,13 @@ const SwitchBox = ({ color }) => {
     const touch = useSelector(store => store.goOrderSB.touch);
     const bs = useSelector(store => store.goOrderSB.bs);
     const price = useSelector(store => store.goOrderSB.price);
+    const TouchedPrice = useSelector(store => store.goOrderSB.TouchedPrice);
     const switchChangeHandler = val => {
         setChecked(val);
     };
-    const infoHandler = useCallback((touch, bs, price) => {
-        if (touch) {
-            return `當金額${bs === 'B' ? '≥' : '≤'}119.99時以${price}委託${bs === 'B' ? '買進' : '賣出'}`;
+    const infoHandler = useCallback((touch, bs, price, TouchedPrice) => {
+        if (touch && TouchedPrice) {
+            return `當金額${bs === 'B' ? '≥' : '≤'}${TouchedPrice}時以${price}委託${bs === 'B' ? '買進' : '賣出'}`;
         } else {
             return '';
         }
@@ -21,7 +22,7 @@ const SwitchBox = ({ color }) => {
         <div className="firstSell__box">
             <span className="text">長效單</span>
             <Switch checked={checked} size="small" onChange={switchChangeHandler} />
-            <span className="info"> {infoHandler(touch, bs, price)}</span>
+            <span className="info"> {infoHandler(touch, bs, price, TouchedPrice)}</span>
             {checked && (
                 <div className="date__box">
                     <span className="text date__text">長效單截止日</span>

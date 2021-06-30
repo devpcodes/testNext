@@ -8,3 +8,4 @@ export const SET_STOCKINFO = 'SET_STOCKINFO';
 export const SET_PRICE = 'SET_PRICE';
 export const SET_QTY = 'SET_QTY';
 export const SET_TOUCHED_PRICE = 'SET_TOUCHED_PRICE';
+export const SET_TRANSACTION_COST = 'SET_TRANSACTION_COST';

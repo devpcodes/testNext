@@ -1,15 +1,23 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
 import ChangeNum from '../../searchList/ChangeNum';
 import { getPriceJumpPoint } from '../../../../../services/components/goOrder/sb/getPriceJumpPoint';
+import { setTouchedPrice } from '../../../../../store/goOrderSB/action';
 const TouchPriceBox = () => {
     const bs = useSelector(store => store.goOrderSB.bs);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const [val, setVal] = useState('');
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setTouchedPrice(val));
+    }, [val]);
+
     const changeHandler = useCallback(value => {
         setVal(value);
     });
+
     const plusHandler = useCallback((val, productInfo) => {
         if (isNaN(parseFloat(val))) {
             return;

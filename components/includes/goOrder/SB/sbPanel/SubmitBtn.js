@@ -1,8 +1,18 @@
+import { useEffect } from 'react';
 import { Button } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
+import { formatNum } from '../../../../../services/formatNum';
 const SubmitBtn = ({ text, ...props }) => {
     const bs = useSelector(store => store.goOrderSB.bs);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
+    const qty = useSelector(store => store.goOrderSB.qty);
+    const price = useSelector(store => store.goOrderSB.price);
+    const transitionCost = useSelector(store => store.goOrderSB.transitionCost);
+    const dispatch = useDispatch();
+
+    useEffect(() => {}, [bs, productInfo, qty, price]);
+
     return (
         <div className="submit__container">
             <Button
@@ -12,6 +22,9 @@ const SubmitBtn = ({ text, ...props }) => {
             >
                 {text}
             </Button>
+            <div className="estimatedAmount">
+                預估金額 {formatNum(1000) || '--'}${'美'}元
+            </div>
             <style global jsx>{`
                 .submit__container {
                     position: absolute;

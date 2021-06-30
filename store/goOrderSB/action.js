@@ -66,3 +66,10 @@ export const setTouchedPrice = price => {
         payload: price,
     };
 };
+
+export const setTransactionCost = cost => {
+    return {
+        type: actionType.SET_TRANSACTION_COST,
+        payload: cost,
+    };
+};
