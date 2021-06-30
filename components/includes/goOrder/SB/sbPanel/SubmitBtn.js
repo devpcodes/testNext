@@ -3,16 +3,25 @@ import { Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
 import { formatNum } from '../../../../../services/formatNum';
+import { getTransactionCost } from '../../../../../services/components/goOrder/sb/getTransitionCost';
+import { setTransactionCost } from '../../../../../store/goOrderSB/action';
 const SubmitBtn = ({ text, ...props }) => {
     const bs = useSelector(store => store.goOrderSB.bs);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const qty = useSelector(store => store.goOrderSB.qty);
     const price = useSelector(store => store.goOrderSB.price);
-    const transitionCost = useSelector(store => store.goOrderSB.transitionCost);
+    const transactionCost = useSelector(store => store.goOrderSB.transactionCost);
     const dispatch = useDispatch();
 
-    useEffect(() => {}, [bs, productInfo, qty, price]);
-
+    useEffect(() => {
+        let cost = '';
+        if (productInfo.market != null) {
+            cost = getTransactionCost(qty, price, bs, productInfo.market);
+        }
+        console.log('cccc', cost);
+        dispatch(setTransactionCost(cost));
+    }, [bs, productInfo, qty, price]);
+    console.log('transition', transactionCost);
     return (
         <div className="submit__container">
             <Button
@@ -23,7 +32,8 @@ const SubmitBtn = ({ text, ...props }) => {
                 {text}
             </Button>
             <div className="estimatedAmount">
-                預估金額 {formatNum(1000) || '--'}${'美'}元
+                預估金額 {formatNum(transactionCost)}
+                {'美'}元
             </div>
             <style global jsx>{`
                 .submit__container {
