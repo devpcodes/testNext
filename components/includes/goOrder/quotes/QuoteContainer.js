@@ -63,6 +63,12 @@ const QuoteContainer = () => {
 
     useEffect(() => {
         if (productInfo != null) {
+            if (productInfo.TIB != null) {
+                if (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0) {
+                    dispatch(setCheckLot(false));
+                    return;
+                }
+            }
             if (
                 productInfo.solaceMarket != null &&
                 (productInfo.solaceMarket == '興櫃' || productInfo.solaceMarket == '權證')

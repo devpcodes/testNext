@@ -8,7 +8,6 @@ const FiveLatestOffer = ({ code, stopRender, solaceData, lot, checkLot } = { sto
     // const solaceData = useSelector(store => store.solace.solaceData);
     // const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
     // const checkLot = useSelector(store => store.goOrder.checkLot);
-
     const dispatch = useDispatch();
     const getVolumeSum = keyName => {
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
