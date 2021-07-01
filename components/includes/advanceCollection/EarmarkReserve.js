@@ -17,6 +17,7 @@ import EarmarkTable from './EarmarkTable';
 import Msg from './Msg';
 import BankContainer from './BankContainer';
 import { SELECTED } from '../../../store/advanceCollection/actionType';
+import { BigNumber } from 'bignumber.js';
 const { TabPane } = Tabs;
 const EarmarkReserve = () => {
     const [state, dispatch] = useContext(ReducerContext);
@@ -73,9 +74,12 @@ const EarmarkReserve = () => {
 
     useEffect(() => {
         if (priceVal && qtyVal) {
-            let amount = priceVal * qtyVal * (1 + 0.001425);
+            let fee = BigNumber(qtyVal).times(priceVal).times(0.001425).toFixed(0, BigNumber.ROUND_DOWN);
+            const amount = BigNumber(qtyVal).times(priceVal).toFixed(0, BigNumber.ROUND_DOWN);
+            fee = BigNumber(fee).isLessThan(20) ? 20 : fee;
+            // let amount = priceVal * qtyVal * (1 + 0.001425);
             // setAmountVal(amount.toFixed(0));
-            setAmountVal(Math.ceil(amount));
+            setAmountVal(BigNumber(amount).plus(fee).toString());
         }
     }, [priceVal, qtyVal]);
 
@@ -282,7 +286,8 @@ const EarmarkReserve = () => {
                                     },
                                     { txt: '2. 股數：自行輸入欲委託的股數' },
                                     {
-                                        txt: '3. 預估金額：委託價×股數×(1+手續費率)',
+                                        txt:
+                                            '3. 預估金額：委託價×股數×(1+手續費率)，每筆最低手續費20元，不足20元以20元計',
                                     },
                                     { html: '<p>&nbsp;&nbsp;&nbsp;&nbsp;手續費率以0.1425%計算</p>' },
                                     { txt: '4. 預收款項時間為交易日8:00~14:30，當日有效' },
