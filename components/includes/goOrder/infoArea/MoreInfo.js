@@ -5,7 +5,7 @@ import { InfoBox } from './InfoBox';
 import { TextBox } from './TextBox';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import AddSelectStock from '../selfSelectStock/AddSelectStock';
-import { setSelectInfo } from '../../../../store/goOrder/action';
+import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
 import { getToken } from '../../../../services/user/accessToken';
 
 const MoreInfo = ({ children }) => {
@@ -120,6 +120,7 @@ const MoreInfo = ({ children }) => {
         // { id: '6', color: 'brown', text: '+ 自選' },
 
         const t30Res = await fetchStockT30(code);
+        dispatch(setT30(t30Res));
         // const test = await fetchGetRichClubReport(code);
         // console.log(test)
 
