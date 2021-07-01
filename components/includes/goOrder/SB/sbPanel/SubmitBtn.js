@@ -5,9 +5,11 @@ import { themeColor } from '../../panel/PanelTabs';
 import { formatNum } from '../../../../../services/formatNum';
 import { getTransactionCost } from '../../../../../services/components/goOrder/sb/getTransitionCost';
 import { setTransactionCost } from '../../../../../store/goOrderSB/action';
+import { getCurrency } from '../../../../../services/components/goOrder/sb/dataMapping';
 const SubmitBtn = ({ text, ...props }) => {
     const bs = useSelector(store => store.goOrderSB.bs);
-    const productInfo = useSelector(store => store.goOrder.productInfo);
+    // const productInfo = useSelector(store => store.goOrder.productInfo);
+    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const qty = useSelector(store => store.goOrderSB.qty);
     const price = useSelector(store => store.goOrderSB.price);
     const transactionCost = useSelector(store => store.goOrderSB.transactionCost);
@@ -15,12 +17,12 @@ const SubmitBtn = ({ text, ...props }) => {
 
     useEffect(() => {
         let cost = '';
-        if (productInfo.market != null) {
-            cost = getTransactionCost(qty, price, bs, productInfo.market);
+        if (stockInfo['@Currency'] != null) {
+            cost = getTransactionCost(qty, price, bs, stockInfo['@Currency']);
         }
         console.log('cccc', cost);
         dispatch(setTransactionCost(cost));
-    }, [bs, productInfo, qty, price]);
+    }, [bs, stockInfo, qty, price]);
     console.log('transition', transactionCost);
     return (
         <div className="submit__container">
@@ -32,8 +34,8 @@ const SubmitBtn = ({ text, ...props }) => {
                 {text}
             </Button>
             <div className="estimatedAmount">
-                預估金額 {formatNum(transactionCost)}
-                {'美'}元
+                預估金額 {formatNum(transactionCost)}&nbsp;
+                {getCurrency(stockInfo['@Currency'])}
             </div>
             <style global jsx>{`
                 .submit__container {

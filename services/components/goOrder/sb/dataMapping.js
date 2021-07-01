@@ -25,3 +25,18 @@ export const getCodeType = market => {
             return '';
     }
 };
+
+export const getCurrency = currency => {
+    switch (currency) {
+        case 'USD':
+            return '美元';
+        case 'CNY':
+            return '人民幣';
+        case 'HKD':
+            return '港幣';
+        case 'JPY':
+            return '日元';
+        default:
+            return '--';
+    }
+};
