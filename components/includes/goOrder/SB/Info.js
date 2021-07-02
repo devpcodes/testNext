@@ -11,7 +11,14 @@ import { getToken } from '../../../../services/user/accessToken';
 import { fetchGetQuote } from '../../../../services/components/goOrder/sb/fetchGetQuote';
 import { setProductInfo } from '../../../../store/goOrder/action';
 import { getCodeType, marketName } from '../../../../services/components/goOrder/sb/dataMapping';
-import { setQuote, setRic, setStockInfo } from '../../../../store/goOrderSB/action';
+import {
+    setConfirmBoxOpen,
+    setGtc,
+    setGtcDate,
+    setQuote,
+    setRic,
+    setStockInfo,
+} from '../../../../store/goOrderSB/action';
 import { insert } from '../../../../services/stringFormat';
 import { fetchPs } from '../../../../services/components/goOrder/sb/fetchPs';
 import { postStockInfo } from '../../../../services/components/goOrder/sb/postStockInfo';
@@ -38,12 +45,15 @@ const Info = () => {
 
     useEffect(() => {
         dispatch(setProductInfo(defaultProductInfo));
+        dispatch(setConfirmBoxOpen(false));
     }, [type]);
 
     useEffect(() => {
         dispatch(setQuote({}));
         dispatch(setStockInfo({}));
         dispatch(setRic(''));
+        dispatch(setGtc(false));
+        dispatch(setGtcDate(''));
         // getRic(code);
     }, [code, type]);
 

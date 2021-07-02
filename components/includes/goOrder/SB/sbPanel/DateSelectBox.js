@@ -6,15 +6,24 @@ import tw from 'date-fns/locale/zh-TW';
 import dIcon from '../../../../../resources/images/components/goOrder/sb/calendar-calendar-calendar.svg';
 import moment from 'moment';
 registerLocale('tw', tw);
-const DateSelectBox = ({ style, width, ...props }) => {
+const DateSelectBox = ({ style, width, selected, onChange, ...props }) => {
     const [startDate, setStartDate] = useState('');
     useEffect(() => {
-        const newDate = moment().add(6, 'months').format('YYYY/MM/DD');
-        let selectDate = new Date(newDate);
-        setStartDate(selectDate);
-    }, []);
+        if (selected == null || selected === '') {
+            const newDate = moment().add(6, 'months').format('YYYY/MM/DD');
+            let selectDate = new Date(newDate);
+            setStartDate(selectDate);
+            const da = moment(selectDate).format('YYYY/MM/DD');
+            onChange(da);
+        } else {
+            let selectDate = new Date(selected);
+            setStartDate(selectDate);
+        }
+    }, [selected]);
     const onChangeHandler = date => {
-        setStartDate(date);
+        // setStartDate(date);
+        const da = moment(date).format('YYYY/MM/DD');
+        onChange(da);
     };
     return (
         <div className="date__container" style={style}>

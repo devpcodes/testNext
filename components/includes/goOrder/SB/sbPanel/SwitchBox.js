@@ -1,15 +1,26 @@
-import { useState, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Switch } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import DateSelectBox from './DateSelectBox';
+import { setGtc, setGtcDate } from '../../../../../store/goOrderSB/action';
 const SwitchBox = ({ color }) => {
-    const [checked, setChecked] = useState(false);
+    // const [checked, setChecked] = useState(false);
+    const gtc = useSelector(store => store.goOrderSB.gtc);
+    const gtcDate = useSelector(store => store.goOrderSB.gtcDate);
     const touch = useSelector(store => store.goOrderSB.touch);
     const bs = useSelector(store => store.goOrderSB.bs);
     const price = useSelector(store => store.goOrderSB.price);
     const TouchedPrice = useSelector(store => store.goOrderSB.TouchedPrice);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!gtc) {
+            dispatch(setGtcDate(''));
+        }
+    }, [gtc]);
+
     const switchChangeHandler = val => {
-        setChecked(val);
+        dispatch(setGtc(val));
     };
     const infoHandler = useCallback((touch, bs, price, TouchedPrice) => {
         if (touch && TouchedPrice) {
@@ -18,17 +29,22 @@ const SwitchBox = ({ color }) => {
             return '';
         }
     });
+    const dateChangeHandler = useCallback(date => {
+        dispatch(setGtcDate(date));
+    });
     return (
         <div className="firstSell__box">
             <span className="text">長效單</span>
-            <Switch checked={checked} size="small" onChange={switchChangeHandler} />
+            <Switch checked={gtc} size="small" onChange={switchChangeHandler} />
             <span className="info"> {infoHandler(touch, bs, price, TouchedPrice)}</span>
-            {checked && (
+            {gtc && (
                 <div className="date__box">
                     <span className="text date__text">長效單截止日</span>
                     <DateSelectBox
                         style={{ display: 'inline-block' }}
                         width={'calc(100vw - 140px)'}
+                        selected={gtcDate}
+                        onChange={dateChangeHandler}
                         popperPlacement="top-end"
                     />
                 </div>

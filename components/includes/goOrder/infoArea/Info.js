@@ -30,6 +30,7 @@ import {
     setTradeTime,
     setT30,
     setCheckLot,
+    setConfirmBoxOpen,
 } from '../../../../store/goOrder/action';
 
 // import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
@@ -194,6 +195,10 @@ export const Info = ({ stockid }) => {
             }
         }
     }, [solaceData]);
+
+    useEffect(() => {
+        dispatch(setConfirmBoxOpen(false));
+    }, [type]);
 
     useEffect(() => {
         if (goCheckLot.current) {

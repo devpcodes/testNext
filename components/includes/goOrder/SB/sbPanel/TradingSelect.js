@@ -5,7 +5,7 @@ import { themeColor } from '../../panel/PanelTabs';
 import ChangeNum from '../../searchList/ChangeNum';
 import SubmitBtn from './SubmitBtn';
 import SwitchBox from './SwitchBox';
-import { setTouch } from '../../../../../store/goOrderSB/action';
+import { setAon, setTouch, setTouchedPrice } from '../../../../../store/goOrderSB/action';
 import PriceBox from './PriceBox';
 import QtyBox from './QtyBox';
 import TouchPriceBox from './TouchPriceBox';
@@ -15,6 +15,7 @@ const TradingSelect = () => {
     const bs = useSelector(store => store.goOrderSB.bs);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const touch = useSelector(store => store.goOrderSB.touch);
+    const aon = useSelector(store => store.goOrderSB.aon);
     const [priceTypeDisabled, setPriceTypeDisabled] = useState(false);
     const [showTouchPriceInput, setShowTouchPriceInput] = useState(false);
     const [showGTCDate, setShowGTCDate] = useState(true);
@@ -40,11 +41,16 @@ const TradingSelect = () => {
             setShowTouchPriceInput(true);
         } else {
             setShowTouchPriceInput(false);
+            dispatch(setTouchedPrice(''));
         }
     }, [touch]);
 
     const changeTouchPrice = useCallback(val => {
         dispatch(setTouch(val));
+    });
+
+    const changePriceType = useCallback(val => {
+        dispatch(setAon(val));
     });
 
     const optHandler = market => {
@@ -102,11 +108,12 @@ const TradingSelect = () => {
                         style={{ display: 'inline-block', marginLeft: '4px', textAlign: 'center' }}
                         width="calc((100vw - 7px - 32px) / 2)"
                         height="44px"
-                        value="ANY"
+                        value={aon}
                         color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
                         data={priceTypeOpt}
                         arrowLeft="-9px"
                         disabled={priceTypeDisabled}
+                        onChange={changePriceType}
                     />
                 </div>
                 {showTouchPriceInput && (

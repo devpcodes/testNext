@@ -73,3 +73,43 @@ export const setTransactionCost = cost => {
         payload: cost,
     };
 };
+
+export const setConfirmBoxOpen = boo => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_OPEN,
+        payload: boo,
+    };
+};
+export const setConfirmBoxTitle = title => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_TITLE,
+        payload: title,
+    };
+};
+export const setConfirmBoxColor = color => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_COLOR,
+        payload: color,
+    };
+};
+
+export const setAon = type => {
+    return {
+        type: actionType.SET_AON,
+        payload: type,
+    };
+};
+
+export const setGtc = boo => {
+    return {
+        type: actionType.SET_GTC,
+        payload: boo,
+    };
+};
+
+export const setGtcDate = date => {
+    return {
+        type: actionType.SET_GTC_DATE,
+        payload: date,
+    };
+};

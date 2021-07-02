@@ -12,6 +12,12 @@ const initialState = {
     qty: '',
     TouchedPrice: '',
     transactionCost: '',
+    confirmBox: false,
+    confirmBoxTitle: '委託確認',
+    confirmBoxColor: '',
+    aon: 'ANY', //ANY, AON
+    gtc: false,
+    gtcDate: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -70,6 +76,36 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 transactionCost: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_OPEN:
+            return {
+                ...state,
+                confirmBox: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_TITLE:
+            return {
+                ...state,
+                confirmBoxTitle: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_COLOR:
+            return {
+                ...state,
+                confirmBoxColor: action.payload,
+            };
+        case actionType.SET_AON:
+            return {
+                ...state,
+                aon: action.payload,
+            };
+        case actionType.SET_GTC:
+            return {
+                ...state,
+                gtc: action.payload,
+            };
+        case actionType.SET_GTC_DATE:
+            return {
+                ...state,
+                gtcDate: action.payload,
             };
         default:
             return state;

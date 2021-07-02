@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
 import { formatNum } from '../../../../../services/formatNum';
 import { getTransactionCost } from '../../../../../services/components/goOrder/sb/getTransitionCost';
-import { setTransactionCost } from '../../../../../store/goOrderSB/action';
+import { setConfirmBoxColor, setConfirmBoxOpen, setTransactionCost } from '../../../../../store/goOrderSB/action';
 import { getCurrency } from '../../../../../services/components/goOrder/sb/dataMapping';
 const SubmitBtn = ({ text, ...props }) => {
     const bs = useSelector(store => store.goOrderSB.bs);
@@ -13,6 +13,8 @@ const SubmitBtn = ({ text, ...props }) => {
     const qty = useSelector(store => store.goOrderSB.qty);
     const price = useSelector(store => store.goOrderSB.price);
     const transactionCost = useSelector(store => store.goOrderSB.transactionCost);
+    const TouchedPrice = useSelector(store => store.goOrderSB.TouchedPrice);
+    const touch = useSelector(store => store.goOrderSB.touch);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -20,15 +22,43 @@ const SubmitBtn = ({ text, ...props }) => {
         if (stockInfo['@Currency'] != null) {
             cost = getTransactionCost(qty, price, bs, stockInfo['@Currency']);
         }
-        console.log('cccc', cost);
         dispatch(setTransactionCost(cost));
     }, [bs, stockInfo, qty, price]);
-    console.log('transition', transactionCost);
+
+    const submitHandler = (bs, price, qty, touch, TouchedPrice) => {
+        if (validateHandler(price, qty, touch, TouchedPrice)) {
+            dispatch(setConfirmBoxOpen(true));
+            if (bs === 'B') {
+                dispatch(setConfirmBoxColor(themeColor.buyTabColor));
+            } else {
+                dispatch(setConfirmBoxColor(themeColor.sellTabColor));
+            }
+        }
+    };
+
+    const validateHandler = (price, qty, touch, TouchedPrice) => {
+        if (price === '' || qty === '' || price == 0 || qty == 0) {
+            Modal.error({
+                title: '資料格式錯誤',
+                content: '請確認價格或股數資料填寫正確',
+            });
+            return false;
+        }
+        if (touch && TouchedPrice === '') {
+            Modal.error({
+                title: '資料格式錯誤',
+                content: '請輸入觸發價格',
+            });
+            return false;
+        }
+        return true;
+    };
     return (
         <div className="submit__container">
             <Button
                 style={{ background: bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor }}
                 type="primary"
+                onClick={submitHandler.bind(null, bs, price, qty, touch, TouchedPrice)}
                 {...props}
             >
                 {text}
