@@ -1,4 +1,5 @@
 import {getA8StpInstance} from '../../myAxios';
+import moment from 'moment';
 
 export const getOAuthList = async function (token) {
     try{
@@ -6,7 +7,13 @@ export const getOAuthList = async function (token) {
         const res = await getA8StpInstance(true).post(url,{token})
         console.log(res.data.result)
         if (res.data?.success === true) {
-            return res.data?.result || [];
+            let dataSource = res.data.result.map( x => ({
+                clientId:x.clientId,
+                clientImage:x.clientImage,
+                clientName:x.clientName,
+                createdAt:moment(x.createdAt).format('YYYY年M月D日') 
+            }))
+            return dataSource || [];
         } else {
             return [];
         }
