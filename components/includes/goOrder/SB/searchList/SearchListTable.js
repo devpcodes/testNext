@@ -1,17 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import { Table, Space, Skeleton, Button, Tooltip, Modal } from 'antd';
 import arrow from '../../../../../resources/images/components/goOrder/searchList-arrow-caret-up.svg';
-const SearchListTable = ({ data, columns, sortKeys }) => {
-    const [sortKey, setSortKey] = useState('ord_time');
+const SearchListTable = ({ data, columns, sortKeys, sortKeyHandler, rowClickHandler, left }) => {
+    const [sortKey, setSortKey] = useState(sortKeys[0]);
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
     const [myData, setMyData] = useState([]);
     const [myColumns, setMyColumns] = useState([]);
 
-    useEffect(() => {
-        setMyData(data);
-        setMyColumns(columns);
-    }, [data, columns, sortKeys]);
+    // useEffect(() => {
+    //     console.log('ddd', data);
+    //     setMyData(data);
+    //     setMyColumns(columns);
+    // }, [data, columns, sortKeys]);
 
     const maskClickHandler = () => {
         if (data.length > 0) {
@@ -24,6 +25,7 @@ const SearchListTable = ({ data, columns, sortKeys }) => {
         }
     };
     const sortTimeHandler = key => {
+        sortKeyHandler(key);
         if (sortKey === key) {
             if (sortOrder === 'ascend') {
                 setSortOrder('descend');
@@ -46,49 +48,67 @@ const SearchListTable = ({ data, columns, sortKeys }) => {
     };
     return (
         <div className="searchList__container">
-            <img
+            {sortKeys.map((item, index) => {
+                return (
+                    <img
+                        key={index}
+                        className="icon__arrow--1"
+                        onClick={sortTimeHandler.bind(null, item)}
+                        src={arrow}
+                        style={{
+                            position: 'absolute',
+                            top: '61px',
+                            left: left[index],
+                            zIndex: 1,
+                            transform: `rotate(${sortIconHandler(item)}deg)`,
+                            opacity: sortKey === item ? 1 : 0.3,
+                        }}
+                    />
+                );
+            })}
+            {/* <img
                 className="icon__arrow--1"
-                onClick={sortTimeHandler.bind(null, 'ord_time')}
+                onClick={sortTimeHandler.bind(null, 'CreateTime')}
                 src={arrow}
                 style={{
                     position: 'absolute',
                     top: '61px',
                     // left: '12%',
                     zIndex: 1,
-                    transform: `rotate(${sortIconHandler('ord_time')}deg)`,
-                    opacity: sortKey === 'ord_time' ? 1 : 0.3,
+                    transform: `rotate(${sortIconHandler('CreateTime')}deg)`,
+                    opacity: sortKey === 'CreateTime' ? 1 : 0.3,
                 }}
             />
             <img
                 className="icon__arrow--2"
-                onClick={sortTimeHandler.bind(null, 'name_zh')}
+                onClick={sortTimeHandler.bind(null, 'StockID')}
                 src={arrow}
                 style={{
                     position: 'absolute',
                     top: '61px',
                     left: '27%',
                     zIndex: 1,
-                    transform: `rotate(${sortIconHandler('name_zh')}deg)`,
-                    opacity: sortKey === 'name_zh' ? 1 : 0.3,
+                    transform: `rotate(${sortIconHandler('StockID')}deg)`,
+                    opacity: sortKey === 'StockID' ? 1 : 0.3,
                 }}
             />
             <img
-                onClick={sortTimeHandler.bind(null, 'status_code')}
+                onClick={sortTimeHandler.bind(null, 'StateMsg')}
                 src={arrow}
                 style={{
                     position: 'absolute',
                     top: '61px',
                     left: '92%',
                     zIndex: 1,
-                    transform: `rotate(${sortIconHandler('status_code')}deg)`,
-                    opacity: sortKey === 'status_code' ? 1 : 0.3,
+                    transform: `rotate(${sortIconHandler('StateMsg')}deg)`,
+                    opacity: sortKey === 'StateMsg' ? 1 : 0.3,
                 }}
-            />
+            /> */}
             <Table
-                columns={myColumns}
-                dataSource={myData}
+                columns={columns}
+                dataSource={data}
                 pagination={false}
-                scroll={{ y: 240 }}
+                scroll={{ y: 300 }}
                 showSorterTooltip={false}
                 onRow={record => {
                     return {

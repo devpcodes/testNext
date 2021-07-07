@@ -55,7 +55,7 @@ export const submitService = async ({
     }
     if (TouchedPrice) {
         orderData.TouchedPrice = TouchedPrice;
-        orderData.priceType(GTCDate, aon, TouchedPrice);
+        orderData.PriceType = priceType(GTCDate, aon, TouchedPrice);
     }
     console.log(orderData);
     return await postOrder(orderData);

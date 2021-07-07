@@ -91,7 +91,7 @@ const Info = () => {
     const getStockInfo = useCallback(async (currentAccount, market) => {
         if (getToken()) {
             let AID = null;
-            if (currentAccount.broker_id != null) {
+            if (currentAccount != null && currentAccount.broker_id != null && currentAccount.accttype === 'H') {
                 AID = currentAccount.broker_id + currentAccount.account;
             }
             const Exchid = market;

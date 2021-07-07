@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import arrow from '../../../../resources/images/components/goOrder/arrow-chevron-down.png';
 import { getCurrency } from '../../../../services/components/goOrder/sb/dataMapping';
-import { setConfirmBoxOpen } from '../../../../store/goOrderSB/action';
+import { setConfirmBoxOpen, setConfirmBoxTitle } from '../../../../store/goOrderSB/action';
 import OrderBox from './OrderBox';
-
+import DetailBox from './searchList/DetailBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
     const dispatch = useDispatch();
@@ -23,6 +23,7 @@ const OrderConfirmBox = ({ title, color }) => {
     // const market = useSelector(store => store.goOrder.productInfo.solaceMarket);
     const closeHandler = () => {
         dispatch(setConfirmBoxOpen(false));
+        // dispatch(setConfirmBoxTitle(''));
     };
     return (
         <div className="confirm__container">
@@ -46,6 +47,7 @@ const OrderConfirmBox = ({ title, color }) => {
                     currency={getCurrency(stockInfo['@Currency'])}
                 />
             )}
+            {title === '委託明細' && <DetailBox />}
             {/* {title === '刪改委託單' && <ChTradingInfoBox />}
             {title === '委託明細' && <DetailBox />}
             {title === '成交明細' && <DealInfoBox />} */}

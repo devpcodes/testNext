@@ -113,3 +113,10 @@ export const setGtcDate = date => {
         payload: date,
     };
 };
+
+export const setConfirmBoxChanValInfo = info => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_CHANGEVALINFO,
+        payload: info,
+    };
+};

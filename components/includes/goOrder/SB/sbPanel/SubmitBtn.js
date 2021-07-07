@@ -4,7 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
 import { formatNum } from '../../../../../services/formatNum';
 import { getTransactionCost } from '../../../../../services/components/goOrder/sb/getTransitionCost';
-import { setConfirmBoxColor, setConfirmBoxOpen, setTransactionCost } from '../../../../../store/goOrderSB/action';
+import {
+    setConfirmBoxColor,
+    setConfirmBoxOpen,
+    setTransactionCost,
+    setConfirmBoxTitle,
+} from '../../../../../store/goOrderSB/action';
 import { getCurrency } from '../../../../../services/components/goOrder/sb/dataMapping';
 const SubmitBtn = ({ text, ...props }) => {
     const bs = useSelector(store => store.goOrderSB.bs);
@@ -15,6 +20,7 @@ const SubmitBtn = ({ text, ...props }) => {
     const transactionCost = useSelector(store => store.goOrderSB.transactionCost);
     const TouchedPrice = useSelector(store => store.goOrderSB.TouchedPrice);
     const touch = useSelector(store => store.goOrderSB.touch);
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -25,9 +31,10 @@ const SubmitBtn = ({ text, ...props }) => {
         dispatch(setTransactionCost(cost));
     }, [bs, stockInfo, qty, price]);
 
-    const submitHandler = (bs, price, qty, touch, TouchedPrice) => {
-        if (validateHandler(price, qty, touch, TouchedPrice)) {
+    const submitHandler = (bs, price, qty, touch, TouchedPrice, currentAccount) => {
+        if (validateHandler(price, qty, touch, TouchedPrice, currentAccount)) {
             dispatch(setConfirmBoxOpen(true));
+            dispatch(setConfirmBoxTitle('委託確認'));
             if (bs === 'B') {
                 dispatch(setConfirmBoxColor(themeColor.buyTabColor));
             } else {
@@ -36,7 +43,21 @@ const SubmitBtn = ({ text, ...props }) => {
         }
     };
 
-    const validateHandler = (price, qty, touch, TouchedPrice) => {
+    const validateHandler = (price, qty, touch, TouchedPrice, currentAccount) => {
+        if (currentAccount != null && currentAccount.accttype != null) {
+            if (currentAccount.accttype != 'H') {
+                Modal.error({
+                    title: '無可用帳號',
+                });
+                return false;
+            }
+        } else {
+            Modal.error({
+                title: '無可用帳號',
+            });
+            return false;
+        }
+
         if (price === '' || qty === '' || price == 0 || qty == 0) {
             Modal.error({
                 title: '資料格式錯誤',
@@ -58,7 +79,7 @@ const SubmitBtn = ({ text, ...props }) => {
             <Button
                 style={{ background: bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor }}
                 type="primary"
-                onClick={submitHandler.bind(null, bs, price, qty, touch, TouchedPrice)}
+                onClick={submitHandler.bind(null, bs, price, qty, touch, TouchedPrice, currentAccount)}
                 {...props}
             >
                 {text}

@@ -18,6 +18,7 @@ const initialState = {
     aon: 'ANY', //ANY, AON
     gtc: false,
     gtcDate: '',
+    confirmBoxChanValInfo: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -106,6 +107,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 gtcDate: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_CHANGEVALINFO:
+            return {
+                ...state,
+                confirmBoxChanValInfo: action.payload,
             };
         default:
             return state;

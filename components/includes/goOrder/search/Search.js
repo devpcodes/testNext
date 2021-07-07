@@ -248,13 +248,15 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                             <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
                                         ))}
                                 </article>
-                                <article className="dropdown__group">
-                                    <div className="group__title">本日熱門搜尋</div>
-                                    {type === 'S' &&
-                                        popularItems.map(item => (
-                                            <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
-                                        ))}
-                                </article>
+                                {type === 'S' && (
+                                    <article className="dropdown__group">
+                                        <div className="group__title">本日熱門搜尋</div>
+                                        {type === 'S' &&
+                                            popularItems.map(item => (
+                                                <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
+                                            ))}
+                                    </article>
+                                )}
                             </>
                         )}
                     </section>

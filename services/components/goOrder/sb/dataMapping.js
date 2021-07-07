@@ -40,3 +40,52 @@ export const getCurrency = currency => {
             return '--';
     }
 };
+
+export const getPriceType = code => {
+    switch (code) {
+        case '0':
+            return '限&ANY';
+        case '5':
+            return 'GTC';
+        case '6':
+            return '限&AON';
+        case '10':
+            return 'GTC&ANY';
+        case '16':
+            return 'GTC&AON';
+        case '60':
+            return '觸價單&ANY';
+        case '66':
+            return '觸價單&AON';
+        default:
+            break;
+    }
+};
+
+//整合getPriceType(源自舊的)
+export const goOrderMapping = (str, gtcDate) => {
+    let arr = str.split('&');
+    let narr = [];
+    for (let index = 0; index < arr.length; index++) {
+        const element = arr[index];
+        if (element === 'GTC') {
+            element = '長';
+        }
+        if (element === '觸價單') {
+            element = '觸';
+        }
+        narr.push(element);
+    }
+
+    if (gtcDate != null && gtcDate) {
+        let filterArr = narr.filter(item => {
+            if (item === '長') {
+                return item;
+            }
+        });
+        if (filterArr.length == 0) {
+            narr.unshift('長');
+        }
+    }
+    return narr;
+};

@@ -73,6 +73,9 @@ const OrderBox = ({
                 token: getToken(),
                 currentAccount,
             });
+            message.success({
+                content: '委託成功',
+            });
         } catch (error) {
             message.info({
                 content: error,
