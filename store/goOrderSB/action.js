@@ -120,3 +120,17 @@ export const setConfirmBoxChanValInfo = info => {
         payload: info,
     };
 };
+
+export const setQueryPrice = price => {
+    return {
+        type: actionType.SET_QUERYPRICE,
+        payload: price,
+    };
+};
+
+export const setQueryQty = qty => {
+    return {
+        type: actionType.SET_QUERYQTY,
+        payload: qty,
+    };
+};

@@ -19,6 +19,8 @@ const initialState = {
     gtc: false,
     gtcDate: '',
     confirmBoxChanValInfo: {},
+    queryPrice: '',
+    queryQty: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -112,6 +114,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 confirmBoxChanValInfo: action.payload,
+            };
+        case actionType.SET_QUERYPRICE:
+            return {
+                ...state,
+                queryPrice: action.payload,
+            };
+        case actionType.SET_QUERYQTY:
+            return {
+                ...state,
+                queryQty: action.payload,
             };
         default:
             return state;

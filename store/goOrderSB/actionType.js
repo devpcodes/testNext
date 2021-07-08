@@ -16,3 +16,5 @@ export const SET_AON = 'SET_AON';
 export const SET_GTC = 'SET_GTC';
 export const SET_GTC_DATE = 'SET_GTC_DATE';
 export const SET_CONFIRM_BOX_CHANGEVALINFO = 'SET_CONFIRM_BOX_CHANGEVALINFO';
+export const SET_QUERYPRICE = 'SET_QUERYPRICE';
+export const SET_QUERYQTY = 'SET_QUERYQTY';

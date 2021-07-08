@@ -191,3 +191,16 @@ export const setActiveTabKey = key => {
         payload: key,
     };
 };
+export const setSolaceInit = boo => {
+    return {
+        type: actionType.SET_SOLACEINIT,
+        payload: boo,
+    };
+};
+
+export const setCheckQuery = boo => {
+    return {
+        type: actionType.SET_CHECKQUERY,
+        payload: boo,
+    };
+};

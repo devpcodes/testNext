@@ -7,7 +7,7 @@ import { Select } from 'antd';
 import { useUser } from '../../../../hooks/useUser';
 import { useHasMounted } from '../../../../hooks/useHasMounted';
 
-import { setCode, setProductInfo, setType } from '../../../../store/goOrder/action';
+import { setCheckQuery, setCode, setProductInfo, setType } from '../../../../store/goOrder/action';
 import { setCurrentAccount } from '../../../../store/user/action';
 
 import { accountGroupByType } from '../../../../services/user/accountGroupByType';
@@ -46,6 +46,7 @@ const Header = () => {
     const type = useSelector(store => store.goOrder.type);
     const userSettings = useSelector(store => store.user.userSettings);
     const socalLoginData = useSelector(store => store.user.socalLogin);
+    const solaceInit = useSelector(store => store.goOrder.solaceInit);
 
     const [menuVisible, setMenuVisible] = useState(false);
 
@@ -139,6 +140,9 @@ const Header = () => {
     }, [socalLoginData]);
 
     const handleTypeChange = value => {
+        dispatch(setProductInfo({}));
+        dispatch(setType(value));
+        dispatch(setCheckQuery(false));
         switch (value) {
             case 'S':
                 dispatch(setCode('2890'));
@@ -155,8 +159,7 @@ const Header = () => {
         // } else {
         //     dispatch(setCode('2890'));
         // }
-        dispatch(setProductInfo({}));
-        dispatch(setType(value));
+
         // dispatch(setCurrentAccount(groupedAccount[value][0]));
     };
 
@@ -275,7 +278,8 @@ const Header = () => {
                         <div className="dropdown__container">
                             <Select
                                 // defaultValue={type}
-                                defaultValue={'S'}
+                                // defaultValue={'S'}
+                                value={type}
                                 style={{ width: 111 }}
                                 onChange={handleTypeChange}
                                 getPopupContainer={trigger => trigger.parentElement}
@@ -286,7 +290,7 @@ const Header = () => {
                                     <Option key={accType}>{getAccountText(accType)}</Option>
                                 ))} */}
                                 <Option value={'S'}>國內證券</Option>
-                                <Option value={'H'}>海外證券</Option>
+                                {solaceInit && <Option value={'H'}>海外證券</Option>}
                             </Select>
                         </div>
                         {accountList?.length > 0 && (

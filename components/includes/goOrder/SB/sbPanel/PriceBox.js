@@ -4,22 +4,27 @@ import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
 import { checkRealtimeMarket } from '../../../../../services/components/goOrder/sb/checkRealtimeMarket';
 import { getPriceJumpPoint } from '../../../../../services/components/goOrder/sb/getPriceJumpPoint';
-import { setPrice } from '../../../../../store/goOrderSB/action';
+import { setPrice, setQueryPrice } from '../../../../../store/goOrderSB/action';
 const PriceBox = () => {
     const touch = useSelector(store => store.goOrderSB.touch);
     const bs = useSelector(store => store.goOrderSB.bs);
     const quote = useSelector(store => store.goOrderSB.quote);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const productInfo = useSelector(store => store.goOrder.productInfo);
+    const queryPrice = useSelector(store => store.goOrderSB.queryPrice);
     const [val, setVal] = useState('');
     const dispatch = useDispatch();
     useEffect(() => {
-        if (productInfo.market != null && checkRealtimeMarket(productInfo.market)) {
+        if (queryPrice) {
+            setVal(queryPrice);
+            return;
+        }
+        if (productInfo.market != null && checkRealtimeMarket(productInfo.market) && !queryPrice) {
             setVal(quote.ls);
         } else {
             setVal(stockInfo['@refPrice']);
         }
-    }, [quote, stockInfo, productInfo]);
+    }, [quote, stockInfo, productInfo, queryPrice]);
 
     useEffect(() => {
         dispatch(setPrice(val));

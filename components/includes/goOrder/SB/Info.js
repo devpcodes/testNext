@@ -1,28 +1,33 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import theme from '../../../../resources/styles/theme';
 import { getArrow, priceColor } from '../../../../services/numFormat';
 import searchIcon from '../../../../resources/images/components/goOrder/edit-search.svg';
 import MoreInfo from '../infoArea/MoreInfo';
-import { Search } from '../search/Search';
+import { getMarketType, Search } from '../search/Search';
 import { InstallWebCA } from '../infoArea/InstallWebCA';
 import UpdateBar from './UpdateBar';
 import { getToken } from '../../../../services/user/accessToken';
 import { fetchGetQuote } from '../../../../services/components/goOrder/sb/fetchGetQuote';
-import { setProductInfo } from '../../../../store/goOrder/action';
+import { setBs, setCode, setProductInfo } from '../../../../store/goOrder/action';
 import { getCodeType, marketName } from '../../../../services/components/goOrder/sb/dataMapping';
 import {
     setConfirmBoxOpen,
     setGtc,
     setGtcDate,
+    setQueryPrice,
+    setQueryQty,
     setQuote,
     setRic,
+    setSBBs,
     setStockInfo,
 } from '../../../../store/goOrderSB/action';
 import { insert } from '../../../../services/stringFormat';
 import { fetchPs } from '../../../../services/components/goOrder/sb/fetchPs';
 import { postStockInfo } from '../../../../services/components/goOrder/sb/postStockInfo';
 import { checkRealtimeMarket } from '../../../../services/components/goOrder/sb/checkRealtimeMarket';
+import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
 export const defaultProductInfo = {
     symbol: 'AAPL',
@@ -30,7 +35,7 @@ export const defaultProductInfo = {
     market: 'US',
     marketType: 'SB',
 };
-const Info = () => {
+const Info = ({ stockid }) => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const code = useSelector(store => store.goOrder.code);
@@ -42,6 +47,29 @@ const Info = () => {
     const dispatch = useDispatch();
     const [checkCA, setCheckCA] = useState(false);
     const [label, setLabel] = useState('');
+    const router = useRouter();
+    const init = useRef(false);
+
+    useEffect(() => {
+        if (!init.current) {
+            if (router?.query?.price && router?.query?.type === 'H') {
+                dispatch(setQueryPrice(router.query.price));
+            }
+            if (router?.query?.qty && router?.query?.type === 'H') {
+                dispatch(setQueryQty(router.query.qty));
+            }
+            if (router?.query?.bs && router?.query?.type === 'H') {
+                dispatch(setSBBs(router?.query?.bs));
+                dispatch(setBs(router?.query?.bs));
+            }
+        }
+    }, [router.query]);
+
+    useEffect(() => {
+        if (type === 'H' && stockid) {
+            getProductData(stockid, type);
+        }
+    }, [stockid, type]);
 
     useEffect(() => {
         dispatch(setProductInfo(defaultProductInfo));
@@ -64,6 +92,9 @@ const Info = () => {
     }, [ric]);
 
     useEffect(() => {
+        if (code != productInfo?.symbol) {
+            return;
+        }
         if (productInfo.market != null) {
             if (marketName(productInfo.market).label != null) {
                 setLabel(marketName(productInfo.market).label);
@@ -73,9 +104,29 @@ const Info = () => {
             }
             getStockInfo(currentAccount, productInfo.market);
         }
-    }, [productInfo, currentAccount]);
+    }, [productInfo, currentAccount, code]);
 
-    const getRic = useCallback(async code => {
+    const getProductData = async (stockid, type) => {
+        const data = {
+            query: stockid,
+            marketType: [getMarketType(type)],
+            limit: 1,
+            isOrder: true,
+        };
+        try {
+            const { result } = await fetchProducts(data);
+            if (result[0].symbol === stockid) {
+                dispatch(setProductInfo(result[0]));
+                dispatch(setCode(stockid));
+            } else {
+                dispatch(setProductInfo(defaultProductInfo));
+            }
+        } catch (error) {
+            console.error(`fetchProducts-error:`, error);
+        }
+    };
+
+    const getRic = async code => {
         try {
             const res = await fetchPs(code);
             if (res.ric != null) {
@@ -86,9 +137,9 @@ const Info = () => {
             console.log('error...');
             dispatch(setRic('error'));
         }
-    });
+    };
 
-    const getStockInfo = useCallback(async (currentAccount, market) => {
+    const getStockInfo = async (currentAccount, market) => {
         if (getToken()) {
             let AID = null;
             if (currentAccount != null && currentAccount.broker_id != null && currentAccount.accttype === 'H') {
@@ -100,7 +151,7 @@ const Info = () => {
             const stockInfoData = await postStockInfo({ AID, Exchid, stockID, token });
             dispatch(setStockInfo(stockInfoData));
         }
-    });
+    };
 
     const getData = useCallback(async code => {
         const token = getToken();

@@ -8,7 +8,7 @@ import { useWindowSize } from '../../../../hooks/useWindowSize';
 import OrderConfirmBox from './OrderConfirmBox';
 import MyTransition from '../../myTransition';
 // code , type ,  productInfo在redux goOrder裡
-const SBContainer = () => {
+const SBContainer = ({ requestStockId }) => {
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
     const winSize = useWindowSize();
     const bs = useSelector(store => store.goOrderSB.bs);
@@ -32,7 +32,7 @@ const SBContainer = () => {
                 {/* <InstallWebCA getCheckCA={getCheckCA} />
                 {checkCA && <UpdateBar text={'請手動點擊更新，刷新報價'} />} */}
                 <div className="open__container">
-                    <Info />
+                    <Info stockid={requestStockId} />
                     <QuoteContainer />
                 </div>
                 <OrderDrawer>

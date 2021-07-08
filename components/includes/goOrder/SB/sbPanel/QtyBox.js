@@ -6,13 +6,18 @@ import { setQty } from '../../../../../store/goOrderSB/action';
 const QtyBox = () => {
     const bs = useSelector(store => store.goOrderSB.bs);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
+    const queryQty = useSelector(store => store.goOrderSB.queryQty);
     const [val, setVal] = useState('');
     const dispatch = useDispatch();
     useEffect(() => {
-        if (stockInfo['@LotSize'] != null) {
+        if (queryQty) {
+            setVal(queryQty);
+            return;
+        }
+        if (stockInfo['@LotSize'] != null && !queryQty) {
             setVal(stockInfo['@LotSize']);
         }
-    }, [stockInfo]);
+    }, [stockInfo, queryQty]);
 
     useEffect(() => {
         dispatch(setQty(val));

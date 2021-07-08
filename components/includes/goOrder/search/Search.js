@@ -13,7 +13,22 @@ import searchImg from '../../../../resources/images/components/goOrder/edit-sear
 import closeImg from '../../../../resources/images/components/goOrder/menu-close-big.svg';
 import { useLocalStorage } from '../../../../hooks/useLocalStorage';
 import { marketName } from '../../../../services/components/goOrder/sb/dataMapping';
+import { setQueryPrice, setQueryQty } from '../../../../store/goOrderSB/action';
 
+export const getMarketType = type => {
+    switch (type) {
+        case 'S':
+            return 'S';
+        case 'H':
+            return 'SB';
+        case 'F':
+            return 'F';
+        case 'O':
+            return 'O';
+        default:
+            return 'S';
+    }
+};
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('');
@@ -25,20 +40,20 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const code = useSelector(store => store.goOrder.code);
     const textInput = useRef(null);
     const categories = useRef([]);
-    const getMarketType = type => {
-        switch (type) {
-            case 'S':
-                return 'S';
-            case 'H':
-                return 'SB';
-            case 'F':
-                return 'F';
-            case 'O':
-                return 'O';
-            default:
-                return 'S';
-        }
-    };
+    // const getMarketType = type => {
+    //     switch (type) {
+    //         case 'S':
+    //             return 'S';
+    //         case 'H':
+    //             return 'SB';
+    //         case 'F':
+    //             return 'F';
+    //         case 'O':
+    //             return 'O';
+    //         default:
+    //             return 'S';
+    //     }
+    // };
 
     const getTypeByMarketType = marketType => {
         switch (marketType) {
@@ -85,6 +100,8 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             dispatch(setLot('Board'));
             dispatch(setCheckLot(false));
             dispatch(setProductInfo(item));
+            dispatch(setQueryPrice(''));
+            dispatch(setQueryQty(''));
             cancelHandler();
         }
     };
