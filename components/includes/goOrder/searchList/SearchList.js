@@ -281,6 +281,7 @@ const SearchList = ({ active }) => {
                         <>
                             {showBtn === true ? (
                                 <Tooltip
+                                    style={{ zIndex: 1000 }}
                                     arrowPointAtCenter={true}
                                     placement="bottomRight"
                                     visible={record.showControlBtn}

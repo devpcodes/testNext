@@ -3,7 +3,7 @@ import ChangeNum from '../../searchList/ChangeNum';
 import { themeColor } from '../../panel/PanelTabs';
 import { useSelector, useDispatch } from 'react-redux';
 import { setQty } from '../../../../../store/goOrderSB/action';
-const QtyBox = () => {
+const QtyBox = ({ label, color }) => {
     const bs = useSelector(store => store.goOrderSB.bs);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const queryQty = useSelector(store => store.goOrderSB.queryQty);
@@ -40,8 +40,8 @@ const QtyBox = () => {
     });
     return (
         <ChangeNum
-            title={'股數'}
-            color={bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
+            title={label || '股數'}
+            color={color == null ? (bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor) : color}
             textAlign={'center'}
             inputWidth={'calc(100vw - 32px - 100px - 54px - 8px)'}
             style={{ width: '100vw' }}

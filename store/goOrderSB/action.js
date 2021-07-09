@@ -134,3 +134,10 @@ export const setQueryQty = qty => {
         payload: qty,
     };
 };
+
+export const setRefreshCode = code => {
+    return {
+        type: actionType.SET_REFRESH_CODE,
+        payload: code,
+    };
+};

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Tooltip, Modal, Tabs } from 'antd';
 import moment from 'moment';
@@ -6,11 +7,17 @@ import { themeColor } from '../../panel/PanelTabs';
 // import { setConfirmBoxTitle, setConfirmBoxClickSource } from '../../../../store/goOrder/action';
 import infoIcon from '../../../../../resources/images/components/goOrder/attention-info-circle.svg';
 import { timeFormatter } from '../../../../../services/timeFormatter';
+import { getPriceType, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
+import TitleBox from './TitleBox';
 
 const DetailBox = () => {
     const dispatch = useDispatch();
     const info = useSelector(store => store.goOrderSB.confirmBoxChanValInfo);
-
+    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
+    const [icons, setIcons] = useState([]);
+    useEffect(() => {
+        getIcon(info);
+    }, [info]);
     const clickHandler = status_code => {
         if (showInfoHandler(status_code)) {
             dispatch(setConfirmBoxTitle('成交明細'));
@@ -49,40 +56,48 @@ const DetailBox = () => {
         return d + ' ' + timeStr;
     };
 
+    const getCancel = () => {
+        if (info.hasOwnProperty('Qcurrent') && info['Qmatched'] != null && !isNaN(info['Qmatched'])) {
+            info.cancel = parseFloat((info.Qoriginal - parseFloat(info['Qnext'])).toPrecision(12));
+            return parseFloat((info.Qoriginal - parseFloat(info['Qnext'])).toPrecision(12));
+        }
+    };
+
+    const getCanCancelQty = () => {
+        return parseFloat(info?.Qoriginal) - parseFloat(info?.cancel) - parseFloat(info?.Qmatched);
+    };
+
+    const getIcon = info => {
+        const priceType = getPriceType(info.PriceType);
+        let arr = goOrderMapping(priceType, info.GTCDate);
+        arr = arr.filter(item => {
+            if (item !== 'ANY' && item !== 'AON') {
+                return item;
+            }
+        });
+        console.log('icons...', arr);
+        setIcons(arr);
+    };
+
+    const getTouchPrice = info => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        if (info.hasOwnProperty('TouchedPrice')) {
+            if (info.hasOwnProperty('PriceType') && marketID == 'US') {
+                if (info['PriceType'] == '60' || info['PriceType'] == '66') {
+                    if (info['BS'] === 'B') {
+                        return '≥' + parseFloat(info['TouchedPrice']);
+                    } else if (info['BS'] === 'S') {
+                        return '≤' + parseFloat(info['TouchedPrice']);
+                    }
+                }
+            }
+        }
+    };
+
     return (
         <>
             <div className="detail__container">
-                <div className="title__box">
-                    <span className="ord__char">{123}</span>
-                    <div className="name__zh">
-                        <span className="bs">{info.BS === 'B' ? '買進' : '賣出'}</span>
-                        {info.StockID.substring(0, info.StockID.lastIndexOf('.'))}
-                        <Tooltip
-                            placement="bottom"
-                            title={
-                                <>
-                                    <span>買賣條件</span>
-                                    <span className="tooltip__val"></span>
-                                    <br />
-                                    <span>委託條件 </span>
-                                    <span className="tooltip__val">{123}</span>
-                                    <br />
-                                    <span>委託書號 </span>
-                                    <span className="tooltip__val">{123}</span>
-                                    <br />
-                                    <span>網路單號 </span>
-                                    <span className="tooltip__val">{123}</span>
-                                    <br />
-                                    <span>下單來源</span>
-                                    <span className="tooltip__val">{123}</span>
-                                </>
-                            }
-                            color="white"
-                        >
-                            <img className="info__icon" src={infoIcon} />
-                        </Tooltip>
-                    </div>
-                </div>
+                <TitleBox info={info} />
                 <div className="info__box">
                     <div className="info__box--left">
                         <div className="item">
@@ -91,7 +106,7 @@ const DetailBox = () => {
                         </div>
                         <div className="item">
                             <span className="item__label">取消數量</span>
-                            <span className="item__val">{info?.Qcancel}</span>
+                            <span className="item__val">{getCancel()}</span>
                         </div>
                         <div className="item" onClick={clickHandler.bind(null, info.status_code)}>
                             <span className="item__label">成交均價</span>
@@ -110,12 +125,18 @@ const DetailBox = () => {
                         </div>
                         <div className="item">
                             <span className="item__label">剩餘數量</span>
-                            <span className="item__val">{''}</span>
+                            <span className="item__val">{getCanCancelQty()}</span>
                         </div>
                         <div className="item">
                             <span className="item__label">成交數量</span>
                             <span className="item__val">{parseFloat(info?.Qmatched) || '--'}</span>
                         </div>
+                        {parseFloat(info?.TouchedPrice) != 0 && (
+                            <div className="item">
+                                <span className="item__label">觸發價格</span>
+                                <span className="item__val">{getTouchPrice(info)}</span>
+                            </div>
+                        )}
                     </div>
                     <div className="item">
                         <span className="item__label">委託時間</span>

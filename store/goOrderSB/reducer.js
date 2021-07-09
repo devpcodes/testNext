@@ -21,6 +21,7 @@ const initialState = {
     confirmBoxChanValInfo: {},
     queryPrice: '',
     queryQty: '',
+    refreshCode: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -124,6 +125,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 queryQty: action.payload,
+            };
+        case actionType.SET_REFRESH_CODE:
+            return {
+                ...state,
+                refreshCode: action.payload,
             };
         default:
             return state;

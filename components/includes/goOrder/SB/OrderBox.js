@@ -7,6 +7,7 @@ import { submitService } from '../../../../services/components/goOrder/sb/submit
 import { usePlatform } from '../../../../hooks/usePlatform';
 import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { getToken } from '../../../../services/user/accessToken';
+import { setSBActiveTabKey } from '../../../../store/goOrderSB/action';
 
 const OrderBox = ({
     StockId,
@@ -33,6 +34,7 @@ const OrderBox = ({
     const currencyC = useRef('');
     const currentAccount = useSelector(store => store.user.currentAccount);
     const platform = usePlatform();
+    const dispatch = useDispatch();
     useEffect(() => {
         StockIdC.current = StockId;
         PriceC.current = Price;
@@ -76,6 +78,8 @@ const OrderBox = ({
             message.success({
                 content: '委託成功',
             });
+            closeHandler();
+            dispatch(setSBActiveTabKey('3'));
         } catch (error) {
             message.info({
                 content: error,

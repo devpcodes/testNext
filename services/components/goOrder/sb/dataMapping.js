@@ -89,3 +89,13 @@ export const goOrderMapping = (str, gtcDate) => {
     }
     return narr;
 };
+
+export const getTT = MarketID => {
+    let tt = '';
+    if (MarketID == 'SEHK' || MarketID == 'HKR') tt = '0';
+    else if (MarketID == 'JP') tt = '1';
+    else if (MarketID == 'US') tt = '2';
+    else if (MarketID == 'SHSE') tt = '8';
+    else if (MarketID == 'SZSE') tt = '9';
+    return tt;
+};

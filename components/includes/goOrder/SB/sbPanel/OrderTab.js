@@ -5,6 +5,8 @@ import { themeColor } from '../../panel/PanelTabs';
 import { setSBActiveTabKey, setSBBs } from '../../../../../store/goOrderSB/action';
 import TradingContainer from './TradingContainer';
 import SearchList from '../searchList/SearchList';
+import { webSocketLogin } from '../../../../../services/components/goOrder/websocketService';
+import { getCookie } from '../../../../../services/components/layouts/cookieController';
 const { TabPane } = Tabs;
 
 const OrderTab = () => {
@@ -14,6 +16,55 @@ const OrderTab = () => {
     const activeTabKey = useSelector(store => store.goOrderSB.activeTabKey);
     const bs = useSelector(store => store.goOrderSB.bs);
     const dispatch = useDispatch();
+    useEffect(() => {
+        //TODO cookie accounts 之後會廢掉
+        if (getCookie('accounts')) {
+            const myWebsocket = webSocketLogin(getCookie('accounts'));
+            myWebsocket.onmessage = sockeHandler;
+        }
+        //TODO test
+        return () => {
+            try {
+                if (myWebsocket != null) {
+                    myWebsocket.close();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        // console.log('mock', JSON.parse('{"TRACE_ID":"000147","TRACE_CHANNEL":"dev","CH_FG":"N","FORMAT":"ITOLOT","SYS_ID":"30","TRADE_TYPE":"02","MSG_TYPE":"01","MSG_STIME":"132835","ORD_STATUS":"00","BROKER_ID":"9A95","PVC_ID":"@@","ORD_NO":"WA058","ACCOUNT":"0475599","ACCOUNT_TYPE":"I","STOCK_ID":"2330","PRICE":307,"QTY":1,"BS":"S","ORD_TYPE1":"0","ORD_TYPE2":"0","ORD_DATE":"20210322","ORD_TIME":"132909955","ORD_QTY_O":0,"ORD_QTY_N":1,"PRICE_TYPE":"2","ORD_TYPE":"0","MARKET_ID":"S","AGENT_ID":"297","ORD_SEQ1":"049232","ORD_SEQ2":"049232","RTN_FORM":"1","TIMEOUT":" ","ERR_MSG":"","WEB_ID":"129","ORD_SEQ_UD":"000000","MSG_ID":"       ","MSG_FG1":"","MSG_FG2":"","TRF_FLD":"","ORD_SEQ_O":"      ","WEB_ID_N":"   ","WEB_ID_O":"","QTY_O":1,"EXH_MARK":" ","PRICE_FLAG":"1","SUBCOL":"","ADD_DATE":"20210322","ADD_TIME":"132835","ADD_USER":"HCSLSO","PROCESS_FG":" ","topic":"R/N/TFT/O/9A95/0475599"}'))
+    }, []);
+    const sockeHandler = e => {
+        try {
+            const socketData = JSON.parse(e.data);
+            console.log('socketEvent', socketData);
+            if (socketData.topic.indexOf('TFT') >= 0) {
+                dispatch(setWebsocketEvent(true));
+            }
+        } catch (err) {
+            console.log('websocket data error:', err);
+        }
+    };
+    useEffect(() => {
+        switch (activeTabKey) {
+            case '1':
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+            case '2':
+                setTabColor(themeColor.sellTabColor);
+                setGradient(themeColor.sellGradient);
+                break;
+            case '3':
+                setTabColor(themeColor.tradingAccColor);
+                setGradient(themeColor.tradingGradient);
+                break;
+            default:
+                setTabColor(themeColor.buyTabColor);
+                setGradient(themeColor.buyGradient);
+                break;
+        }
+    }, [activeTabKey]);
     const tabChangeHandler = useCallback(activeKey => {
         switch (activeKey) {
             case '1':

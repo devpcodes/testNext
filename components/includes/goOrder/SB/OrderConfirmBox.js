@@ -4,6 +4,7 @@ import { getCurrency } from '../../../../services/components/goOrder/sb/dataMapp
 import { setConfirmBoxOpen, setConfirmBoxTitle } from '../../../../store/goOrderSB/action';
 import OrderBox from './OrderBox';
 import DetailBox from './searchList/DetailBox';
+import ChTradingInfoBox from './searchList/ChTradingInfoBox';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
     const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const OrderConfirmBox = ({ title, color }) => {
                 />
             )}
             {title === '委託明細' && <DetailBox />}
+            {title === '刪改委託單' && <ChTradingInfoBox />}
             {/* {title === '刪改委託單' && <ChTradingInfoBox />}
             {title === '委託明細' && <DetailBox />}
             {title === '成交明細' && <DealInfoBox />} */}

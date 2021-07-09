@@ -19,6 +19,7 @@ import {
     setQueryPrice,
     setQueryQty,
     setQuote,
+    setRefreshCode,
     setRic,
     setSBBs,
     setStockInfo,
@@ -44,6 +45,8 @@ const Info = ({ stockid }) => {
     const ric = useSelector(store => store.goOrderSB.ric);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const refresh = useSelector(store => store.goOrderSB.refresh);
+    const refreshCode = useSelector(store => store.goOrderSB.refreshCode);
     const dispatch = useDispatch();
     const [checkCA, setCheckCA] = useState(false);
     const [label, setLabel] = useState('');
@@ -70,6 +73,12 @@ const Info = ({ stockid }) => {
             getProductData(stockid, type);
         }
     }, [stockid, type]);
+
+    useEffect(() => {
+        if (refreshCode != '') {
+            getProductData(refreshCode, 'H');
+        }
+    }, [refreshCode]);
 
     useEffect(() => {
         dispatch(setProductInfo(defaultProductInfo));
@@ -115,6 +124,7 @@ const Info = ({ stockid }) => {
         };
         try {
             const { result } = await fetchProducts(data);
+            console.log('res', result);
             if (result[0].symbol === stockid) {
                 dispatch(setProductInfo(result[0]));
                 dispatch(setCode(stockid));
@@ -124,6 +134,7 @@ const Info = ({ stockid }) => {
         } catch (error) {
             console.error(`fetchProducts-error:`, error);
         }
+        dispatch(setRefreshCode(''));
     };
 
     const getRic = async code => {

@@ -100,6 +100,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             dispatch(setLot('Board'));
             dispatch(setCheckLot(false));
             dispatch(setProductInfo(item));
+            //清除複海外的querystring
             dispatch(setQueryPrice(''));
             dispatch(setQueryQty(''));
             cancelHandler();

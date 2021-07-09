@@ -1,27 +1,34 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal } from 'antd';
+import { Modal, Tooltip, Button } from 'antd';
 import moment from 'moment';
 import { postQuickSearch } from '../../../../../services/components/goOrder/sb/postQuickSearch';
 import { timeFormatter } from '../../../../../services/timeFormatter';
 import { getToken } from '../../../../../services/user/accessToken';
 import SearchListTable from './SearchListTable';
-import { getPriceType, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
+import { getPriceType, getTT, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
 import { themeColor } from '../../panel/PanelTabs';
 import {
     setConfirmBoxChanValInfo,
     setConfirmBoxColor,
     setConfirmBoxOpen,
     setConfirmBoxTitle,
+    setRefresh,
+    setRefreshCode,
 } from '../../../../../store/goOrderSB/action';
-
+import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
+import { getWebId } from '../../../../../services/components/goOrder/getWebId';
+import { usePlatform } from '../../../../../hooks/usePlatform';
 const SearchList = () => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [sortKey, setSortKey] = useState('CreateTime');
     const [sortOrder, setSortOrder] = useState('descend');
+    const [showMask, setShowMask] = useState(false);
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const platform = usePlatform();
     const dispatch = useDispatch();
+
     useEffect(() => {
         const newColumns = [
             {
@@ -52,7 +59,7 @@ const SearchList = () => {
                     const timeStr = timeFormatter(timeArr[1], false);
                     const t = timeStr.substring(0, timeStr.lastIndexOf(':'));
                     return (
-                        <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
+                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             <p className="item">{d}</p>
                             <p className="item time__str--down">{t}</p>
                         </div>
@@ -76,7 +83,7 @@ const SearchList = () => {
 
                     return (
                         <>
-                            <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
+                            <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                                 <p className="item" style={{ wordBreak: 'break-word' }}>
                                     {symbol}
                                 </p>
@@ -125,7 +132,7 @@ const SearchList = () => {
                 key: 'Price',
                 render: (text, record) => {
                     return (
-                        <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
+                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             <p className="item" style={{ whiteSpace: 'nowrap' }}>
                                 {!isNaN(text) ? parseFloat(text) : 0}
                             </p>
@@ -140,7 +147,7 @@ const SearchList = () => {
                 key: 'AvgPrice',
                 render: (text, record) => {
                     return (
-                        <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
+                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             <p className="item" style={{ whiteSpace: 'nowrap' }}>
                                 {parseFloat(text) == 0 ? '--' : parseFloat(text)}
                             </p>
@@ -162,23 +169,156 @@ const SearchList = () => {
                 },
                 sortOrder: sortKey === 'StateMsg' && sortOrder,
                 render: (text, record) => {
+                    let showBtn = false;
+                    if (record.CanCancel !== 'N' || record.CanModify !== 'N') {
+                        showBtn = true;
+                    }
                     return (
-                        <div style={{ opacity: record.status_code === '4' ? 0.45 : 1 }}>
-                            <p className="item" style={{ wordBreak: 'break-all' }}>
-                                {text}
-                            </p>
-                        </div>
+                        <>
+                            {showBtn ? (
+                                <Tooltip
+                                    arrowPointAtCenter={true}
+                                    placement="bottomRight"
+                                    visible={record.showControlBtn}
+                                    title={
+                                        <>
+                                            <Button
+                                                style={{
+                                                    width: '102px',
+                                                    height: '44px',
+                                                    margin: '0 16px 12px 4px',
+                                                    padding: '12px 10px 12px 8px',
+                                                    borderRadius: '2px',
+                                                    backgroundColor: '#c43826',
+                                                    fontSize: '1.6rem',
+                                                    margin: '0 auto',
+                                                    color: 'white',
+                                                    display: 'block',
+                                                    border: 'none',
+                                                }}
+                                                onClick={() => {
+                                                    maskClickHandler();
+                                                    Modal.confirm({
+                                                        content: '確認刪除此筆資料嗎？',
+                                                        onOk: () => {
+                                                            cancelSubmitHandler(record, currentAccount);
+                                                        },
+                                                        okText: '確認',
+                                                        cancelText: '取消',
+                                                    });
+                                                }}
+                                            >
+                                                刪單
+                                            </Button>
+                                            {record.CanCancel !== 'N' ? null : (
+                                                <Button
+                                                    style={{
+                                                        width: '102px',
+                                                        height: '44px',
+                                                        margin: '12px 16px 0 4px',
+                                                        padding: '12px 9px',
+                                                        borderRadius: '2px',
+                                                        backgroundColor: '#254a91',
+                                                        fontSize: '1.6rem',
+                                                        margin: '0 auto',
+                                                        marginTop: '12px',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                    }}
+                                                    onClick={() => {
+                                                        changeClickHandler(text, record);
+                                                    }}
+                                                >
+                                                    改單
+                                                </Button>
+                                            )}
+                                        </>
+                                    }
+                                    color="white"
+                                >
+                                    <Button
+                                        style={{
+                                            width: '50px',
+                                            height: '28px',
+                                            textAlign: 'center',
+                                            padding: 0,
+                                            verticalAlign: 'middle',
+                                            backgroundColor: 'rgba(37, 74, 145, 0.16)',
+                                            color: '#254a91',
+                                            letterSpacing: '-2px',
+                                            border: 'none',
+                                            fontWeight: 'bold',
+                                            fontSize: '1.5rem',
+                                        }}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            record.showControlBtn = true;
+                                            setShowMask(true);
+                                        }}
+                                    >
+                                        刪改
+                                    </Button>
+                                </Tooltip>
+                            ) : (
+                                <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                                    <p className="item" style={{ wordBreak: 'break-all' }}>
+                                        {text}
+                                    </p>
+                                </div>
+                            )}
+                        </>
                     );
                 },
             },
         ];
 
         setColumns(newColumns);
-    }, [sortKey, sortOrder]);
+    }, [sortKey, sortOrder, data, currentAccount]);
 
     useEffect(() => {
         getData(currentAccount);
     }, [currentAccount]);
+
+    const maskClickHandler = () => {
+        if (data.length > 0) {
+            const newData = data.map((item, index) => {
+                item.showControlBtn = false;
+                return item;
+            });
+            setShowMask(false);
+            setData(newData);
+        }
+    };
+
+    const changeClickHandler = (text, record) => {
+        maskClickHandler();
+        const symbol = record.StockID.substring(0, record.StockID.lastIndexOf('.'));
+        dispatch(setRefreshCode(symbol));
+        dispatch(setConfirmBoxChanValInfo(record));
+
+        dispatch(setConfirmBoxOpen(true));
+        dispatch(setConfirmBoxTitle('刪改委託單'));
+        dispatch(setConfirmBoxColor('#254a91'));
+    };
+
+    const cancelSubmitHandler = async (record, currentAccount) => {
+        const marketID = record.StockID.split('.').slice(-1).pop();
+        const resVal = await postCancel({
+            currentAccount,
+            BS: record.BS,
+            CID: getWebId(platform, 'recommisiioned'),
+            Creator: currentAccount.idno,
+            DJCrypt_pwd: record.DJCrypt_pwd != null ? record.DJCrypt_pwd : '',
+            Exchid: marketID,
+            OID: record.OID,
+            OT: '0',
+            StockID: record.StockID,
+            TT: getTT(marketID),
+        });
+        Modal.info({
+            content: resVal,
+        });
+    };
 
     const getData = async currentAccount => {
         if (currentAccount != null && currentAccount.accttype != null) {
@@ -227,7 +367,12 @@ const SearchList = () => {
     });
 
     const rowClickHandler = useCallback((e, record) => {
+        if (e.target.innerHTML.indexOf('刪') >= 0 || e.target.innerHTML.indexOf('改') >= 0) {
+            return;
+        }
         console.log('record', record);
+        const symbol = record.StockID.substring(0, record.StockID.lastIndexOf('.'));
+        dispatch(setRefreshCode(symbol));
         dispatch(setConfirmBoxChanValInfo(record));
         dispatch(setConfirmBoxOpen(true));
         dispatch(setConfirmBoxTitle('委託明細'));
@@ -262,6 +407,19 @@ const SearchList = () => {
                 sortKeyHandler={sortKeyHandler}
                 rowClickHandler={rowClickHandler}
             />
+            <div
+                style={{
+                    width: '100%',
+                    height: '100vh',
+                    position: 'fixed',
+                    top: '-340px',
+                    background: 'white',
+                    opacity: 0,
+                    display: showMask ? 'block' : 'none',
+                    zIndex: 999,
+                }}
+                onClick={maskClickHandler}
+            ></div>
             <style global jsx>{`
                 .item--down2 {
                     font-weight: normal;
