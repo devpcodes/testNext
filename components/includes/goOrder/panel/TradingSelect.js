@@ -77,7 +77,10 @@ const TradingSelect = () => {
     }, [lot, tradeTime, productInfo]);
 
     const TIBHandler = (lot, tradeTime, productInfo) => {
-        if (productInfo.TIB != null && (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)) {
+        if (
+            productInfo?.TIB != null &&
+            (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)
+        ) {
             if (productInfo.TIB.indexOf('創新') >= 0) {
                 if (lot === 'Board') {
                     setTradeTimeOption([
@@ -176,7 +179,10 @@ const TradingSelect = () => {
         dispatch(setOrdCount(value));
     };
     const updateOrdCound = (lot, productInfo) => {
-        if (productInfo.TIB != null && (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)) {
+        if (
+            productInfo?.TIB != null &&
+            (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0)
+        ) {
             setOrdCoundOption([{ txt: '現股', val: '0' }]);
             dispatch(setOrdCount('0'));
             return;
