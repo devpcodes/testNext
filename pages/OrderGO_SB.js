@@ -3,12 +3,12 @@ import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import CaHead from '../components/includes/CaHead';
 import { PageHead } from '../components/includes/PageHead';
-import Header from '../components/includes/goOrder/header/Header';
+import Header from '../components/includes/goOrder_SB/header/Header';
 import SolaceClientComponent from '../components/includes/SolaceClientComponent';
-import LeadingBtn from '../components/includes/goOrder/LeadingBtn';
+import LeadingBtn from '../components/includes/goOrder_SB/LeadingBtn';
 import { checkLogin } from '../services/components/layouts/checkLogin';
-import { StockContainer } from '../components/includes/goOrder/StockContainer';
-import SBContainer from '../components/includes/goOrder/SB/SBContainer';
+import { StockContainer } from '../components/includes/goOrder_SB/StockContainer';
+import SBContainer from '../components/includes/goOrder_SB/SB/SBContainer';
 import { setProductInfo, setType } from '../store/goOrder/action';
 export async function getServerSideProps(context) {
     let requestStockId;
