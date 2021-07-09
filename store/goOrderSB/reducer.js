@@ -135,7 +135,7 @@ const reducer = (state = initialState, action) => {
         case actionType.SET_SEARCHLIST_SUBMITSUCCESS:
             return {
                 ...state,
-                searchListSubmitSuccess: action.paypayload,
+                searchListSubmitSuccess: action.payload,
             };
         default:
             return state;
