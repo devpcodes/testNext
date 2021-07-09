@@ -1,7 +1,10 @@
+import { memo, useState, useEffect } from 'react';
 import { Table } from 'antd';
 import AccountTable from '../tradingAccount/vipInventory/AccountTable';
+import MultipleSolaceClientComponent from '../MultipleSolaceClientComponent';
+import { useSelector } from 'react-redux';
+import { checkLogin } from '../../../services/components/layouts/checkLogin';
 import ReactDragListView from 'react-drag-listview';
-import { useCallback, useState, useEffect } from 'react';
 import { openGoOrder } from '../../../services/openGoOrder';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
@@ -10,10 +13,13 @@ import { fetchUpdateSelectStock } from '../../../services/selfSelect/updateSelec
 import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
-const StockDragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
+const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
     const [selfSelectList, setSelfSelectList] = useState([]);
+    const [topic, setTopic] = useState([]);
     const isMobile = useCheckMobile();
     const router = useRouter();
+    const solaceData = useSelector(store => store.solace.solaceData);
+
     const columns = [
         {
             title: '商品',
@@ -136,11 +142,57 @@ const StockDragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
 
     useEffect(() => {
         if (tableData && tableData.length > 0) {
+            let topicList = [];
+            tableData.forEach(stock => {
+                // ['TIC/v1/STK/*/*/2330', 'TIC/v1/STK/*/*/2890', 'TIC/v1/STK/*/*/9999'];
+                if (stock.market === 'S') {
+                    topicList.push(`TIC/v1/STK/*/*/${stock.code}`);
+                }
+            });
+
+            setTopic(topicList);
             setSelfSelectList(tableData);
+
+            console.log(topicList);
         } else {
+            setTopic([]);
             setSelfSelectList([]);
         }
+
+        console.log(tableData);
     }, [tableData]);
+
+    useEffect(() => {
+        let data = JSON.parse(JSON.stringify(selfSelectList));
+        console.log(selfSelectList);
+        console.log(solaceData);
+        selfSelectList.forEach((selectData, index) => {
+            if (selectData.code === solaceData.Code) {
+                selectData.totalVolume.text = solaceData.VolSum;
+                selectData.close.text = solaceData.Close;
+                selectData.changeRate.text = solaceData.DiffRate;
+                selectData.changeRate.text = solaceData.DiffRate;
+                selectData.changePrice.text =
+                    parseFloat(solaceData.DiffPrice) === 0 ? '--' : parseFloat(solaceData.DiffPrice).toFixed(2);
+                selectData.changePrice.class =
+                    parseFloat(solaceData.DiffPrice) < 0
+                        ? 'lower lower__icon'
+                        : parseFloat(solaceData.DiffPrice) > 0
+                        ? 'upper upper__icon'
+                        : '';
+                selectData.changeRate.text =
+                    parseFloat(solaceData.DiffRate) === 0 ? '--' : parseFloat(solaceData.DiffRate / 100).toFixed(2);
+                selectData.changeRate.class =
+                    parseFloat(solaceData.DiffRate) < 0
+                        ? 'lower lower__icon'
+                        : parseFloat(solaceData.DiffRate) > 0
+                        ? 'upper upper__icon'
+                        : '';
+                return true;
+            }
+        });
+        setSelfSelectList(selfSelectList);
+    }, [solaceData]);
 
     const tableDataToReqDataForUpdate = tableData => {
         let reqDataSelectList = [];
@@ -184,7 +236,9 @@ const StockDragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
                     dataSource={selfSelectList}
                 />
             </ReactDragListView>
-
+            {/* <MultipleSolaceClientComponent /> */}
+            {checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={'MCCAFIGAGI'} />}
+            {!checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={''} />}
             <style jsx>{``}</style>
             <style jsx global>{`
                 .drag__Table .upper {
@@ -226,6 +280,6 @@ const StockDragTable = ({ tableData, tabKey, token, isSocalLogin }) => {
             `}</style>
         </>
     );
-};
+});
 
 export default StockDragTable;

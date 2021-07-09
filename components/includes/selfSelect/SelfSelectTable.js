@@ -8,6 +8,7 @@ import { fetchQuerySelectStock } from '../../../services/selfSelect/querySelectS
 import { fetchQuerySubBrokerageQuote } from '../../../services/sb/querySubBrokerageQuote';
 import { fetchSnapshot } from '../../../services/stock/snapshot';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
+import Test from '../Test';
 import useSWR from 'swr';
 
 const { TabPane } = Tabs;
@@ -132,14 +133,14 @@ const SelfSelectTable = ({
     }, [inventoryStockData, selectStocks]);
 
     useEffect(() => {
-        console.log(selectGroupID);
+        // console.log(selectGroupID);
         if (inventoryStockData || selectStocks) {
             const tableData =
                 selectGroupID === '0'
                     ? inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]
                     : selectStocks;
             const tableRowData = [];
-            console.log(tableData);
+            // console.log(tableData);
             if (tableData && Array.isArray(tableData) && tableData.length > 0) {
                 tableData.some((stock, index) => {
                     let stockData = {};
@@ -262,6 +263,7 @@ const SelfSelectTable = ({
                 />
             </div>
 
+            {/* <Test /> */}
             <style jsx>{`
                 .select__group__tab {
                     padding: 0 30px;
