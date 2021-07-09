@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal, Tooltip, Button } from 'antd';
+import { Modal, Tooltip, Button, message } from 'antd';
 import moment from 'moment';
 import { postQuickSearch } from '../../../../../services/components/goOrder/sb/postQuickSearch';
 import { timeFormatter } from '../../../../../services/timeFormatter';
@@ -15,6 +15,7 @@ import {
     setConfirmBoxTitle,
     setRefresh,
     setRefreshCode,
+    setSearchListSubmitSuccess,
 } from '../../../../../store/goOrderSB/action';
 import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
 import { getWebId } from '../../../../../services/components/goOrder/getWebId';
@@ -26,6 +27,7 @@ const SearchList = () => {
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const submitSuccess = useSelector(store => store.goOrderSB.searchListSubmitSuccess);
     const platform = usePlatform();
     const dispatch = useDispatch();
 
@@ -279,6 +281,12 @@ const SearchList = () => {
         getData(currentAccount);
     }, [currentAccount]);
 
+    useEffect(() => {
+        if (submitSuccess) {
+            getData(currentAccount);
+        }
+    }, [submitSuccess, currentAccount]);
+
     const maskClickHandler = () => {
         if (data.length > 0) {
             const newData = data.map((item, index) => {
@@ -303,21 +311,28 @@ const SearchList = () => {
 
     const cancelSubmitHandler = async (record, currentAccount) => {
         const marketID = record.StockID.split('.').slice(-1).pop();
-        const resVal = await postCancel({
-            currentAccount,
-            BS: record.BS,
-            CID: getWebId(platform, 'recommisiioned'),
-            Creator: currentAccount.idno,
-            DJCrypt_pwd: record.DJCrypt_pwd != null ? record.DJCrypt_pwd : '',
-            Exchid: marketID,
-            OID: record.OID,
-            OT: '0',
-            StockID: record.StockID,
-            TT: getTT(marketID),
-        });
-        Modal.info({
-            content: resVal,
-        });
+        try {
+            const resVal = await postCancel({
+                currentAccount,
+                BS: record.BS,
+                CID: getWebId(platform, 'recommisiioned'),
+                Creator: currentAccount.idno,
+                DJCrypt_pwd: record.DJCrypt_pwd != null ? record.DJCrypt_pwd : '',
+                Exchid: marketID,
+                OID: record.OID,
+                OT: '0',
+                StockID: record.StockID,
+                TT: getTT(marketID),
+            });
+            dispatch(setSearchListSubmitSuccess(true));
+            Modal.info({
+                content: resVal,
+            });
+        } catch (error) {
+            message.info({
+                content: error,
+            });
+        }
     };
 
     const getData = async currentAccount => {
@@ -351,6 +366,7 @@ const SearchList = () => {
         } catch (error) {
             console.log(error);
         }
+        dispatch(setSearchListSubmitSuccess(false));
     };
 
     const sortKeyHandler = useCallback(key => {

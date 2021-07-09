@@ -22,6 +22,7 @@ const initialState = {
     queryPrice: '',
     queryQty: '',
     refreshCode: '',
+    searchListSubmitSuccess: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -130,6 +131,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 refreshCode: action.payload,
+            };
+        case actionType.SET_SEARCHLIST_SUBMITSUCCESS:
+            return {
+                ...state,
+                searchListSubmitSuccess: action.paypayload,
             };
         default:
             return state;

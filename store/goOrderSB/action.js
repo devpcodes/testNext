@@ -141,3 +141,10 @@ export const setRefreshCode = code => {
         payload: code,
     };
 };
+
+export const setSearchListSubmitSuccess = boo => {
+    return {
+        type: actionType.SET_SEARCHLIST_SUBMITSUCCESS,
+        payload: boo,
+    };
+};
