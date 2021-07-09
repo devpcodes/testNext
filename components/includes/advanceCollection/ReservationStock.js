@@ -34,7 +34,7 @@ const dataSource2 = [
         time: '08:00',
     },
 ];
-
+const init = false;
 const ReservationStock = () => {
     const [state, dispatch] = useContext(ReducerContext);
     const [columnsData, setColumnsData] = useState([]);
@@ -72,12 +72,33 @@ const ReservationStock = () => {
     }, [router.query]);
 
     useEffect(() => {
-        selectedAccount.current = state.accountsReducer.selected;
-        dataHandler(stockActiveTabKey.current);
-        if (!init.current) {
-            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
-            init.current = true;
+        setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        // dataHandler(stockActiveTabKey.current);
+    }, []);
+    useEffect(() => {
+        if (!state.accountsReducer.selected) {
+            return;
+        } else {
+            if (JSON.stringify(selectedAccount.current) !== JSON.stringify(state.accountsReducer.selected)) {
+                dataHandler(stockActiveTabKey.current);
+            }
         }
+        // if (init.current) {
+        //     if (JSON.stringify(selectedAccount.current) !== JSON.stringify(state.accountsReducer.selected)) {
+        //         dataHandler(stockActiveTabKey.current);
+        //     }
+        // }
+        // if (!init.current) {
+        //     setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        //     // init.current = true;
+        //     // dataHandler(stockActiveTabKey.current);
+        // }else{
+        //     console.log('init', selectedAccount.current);
+        //     if(JSON.stringify(selectedAccount.current) !== JSON.stringify(state.accountsReducer.selected)){
+        //         dataHandler(stockActiveTabKey.current);
+        //     }
+        // }
+        selectedAccount.current = state.accountsReducer.selected;
         return () => {
             if (timer.current != null) {
                 window.clearInterval(timer.current);
@@ -254,7 +275,7 @@ const ReservationStock = () => {
                 title: '伺服器錯誤',
             });
         }
-
+        init.current = true;
         // if (Array.isArray(resData)) {
         //     resData = resData.map((item, index) => {
         //         item.key = String(index);
@@ -440,7 +461,7 @@ const ReservationStock = () => {
     const getAccountsDetail = token => {
         let data = jwt_decode(token);
         data = data.acts_detail.filter(item => {
-            if (item.account === selectedAccount.current.account) {
+            if (item.account === state.accountsReducer.selected.account) {
                 return true;
             }
         });
