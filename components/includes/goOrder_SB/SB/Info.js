@@ -29,6 +29,7 @@ import { fetchPs } from '../../../../services/components/goOrder/sb/fetchPs';
 import { postStockInfo } from '../../../../services/components/goOrder/sb/postStockInfo';
 import { checkRealtimeMarket } from '../../../../services/components/goOrder/sb/checkRealtimeMarket';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
+import { clearComma } from '../../../../services/components/goOrder/sb/clearComma';
 
 export const defaultProductInfo = {
     symbol: 'AAPL',
@@ -168,6 +169,7 @@ const Info = ({ stockid }) => {
         const token = getToken();
         try {
             const res = await fetchGetQuote(code, token);
+            clearComma(res);
             console.log('res', res);
             dispatch(setQuote(res));
         } catch (error) {
