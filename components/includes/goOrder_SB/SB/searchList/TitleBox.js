@@ -5,7 +5,7 @@ import { getCurrency, getPriceType, goOrderMapping } from '../../../../../servic
 import { themeColor } from '../../panel/PanelTabs';
 import moment from 'moment';
 
-const TitleBox = ({ info }) => {
+const TitleBox = ({ info, stockInfo }) => {
     const [icons, setIcons] = useState([]);
     useEffect(() => {
         getIcon(info);
@@ -55,7 +55,7 @@ const TitleBox = ({ info }) => {
                             <span className="tooltip__val">{getType()}</span>
                             <br />
                             <span>幣別</span>
-                            <span className="tooltip__val">{getCurrency(info.Currency)}</span>
+                            <span className="tooltip__val">{stockInfo['@CHCurrency']}</span>
                             <br />
                             <span>長效單</span>
                             <span className="tooltip__val">

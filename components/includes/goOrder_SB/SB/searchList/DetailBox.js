@@ -97,7 +97,7 @@ const DetailBox = () => {
     return (
         <>
             <div className="detail__container">
-                <TitleBox info={info} />
+                <TitleBox info={info} stockInfo={stockInfo} />
                 <div className="info__box">
                     <div className="info__box--left">
                         <div className="item">

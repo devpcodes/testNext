@@ -396,7 +396,7 @@ const Info = ({ stockid }) => {
                     padding: 0 6px 1px;
                     border-radius: 2px;
                     background-color: #e6ebf5;
-                    width: 42px;
+                    /* width: 42px; */
                     height: 22px;
                 }
                 .close__info {

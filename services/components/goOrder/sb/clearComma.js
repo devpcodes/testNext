@@ -1,3 +1,4 @@
+//清物件資料內的千分位
 export const clearComma = obj => {
     for (let key of Object.keys(obj)) {
         if (typeof obj[key] === 'string') {

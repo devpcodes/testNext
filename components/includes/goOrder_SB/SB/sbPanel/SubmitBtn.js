@@ -86,7 +86,7 @@ const SubmitBtn = ({ text, ...props }) => {
             </Button>
             <div className="estimatedAmount">
                 預估金額 {formatNum(transactionCost)}&nbsp;
-                {getCurrency(stockInfo['@Currency'])}
+                {stockInfo['@CHCurrency']}
             </div>
             <style global jsx>{`
                 .submit__container {
