@@ -1044,8 +1044,9 @@ LabCI.SSDL = {
                     }
                     removeStorage();
                     const newHref = location.protocol + '//' + location.host + '/newweb/'+'/SinoTrade_login?currentPath='+path+queryStr;
-                    alert('帳號逾時，請重新登入')
+                    
                     $.post("/lykan/api/v1/auth/logout", function (res) {
+                        alert('帳號逾時，請重新登入')
                         window.parent.window.parent.location.href = newHref;
                     })
                     
