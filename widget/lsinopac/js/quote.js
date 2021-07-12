@@ -55,6 +55,7 @@
         currentsection: "summary",
         mode: "desktop",
         breakpoint: null,
+        streamingTimer: null,
         initImpl: function () {
             // Get ready
             var that = this;
@@ -101,25 +102,25 @@
                     that._loadFinancialWidget();
                 }
             });
-            
+
             this.$pageobj.find(".buybutton2").on("click", function () {
                 if (that.currentSymbol != null && that.currentExchange != null) {
                     LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'B');
                 }
-            });            
-/*
-            this.$pageobj.find(".buybutton").on("click", function () {
-                if (that.currentSymbol != null && that.currentExchange != null) {
-                    LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'B');
-                }
             });
-
-            this.$pageobj.find(".sellbutton").on("click", function () {
-                if (that.currentSymbol != null && that.currentExchange != null) {
-                    LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'S');
-                }
-            });
-*/
+            /*
+             this.$pageobj.find(".buybutton").on("click", function () {
+             if (that.currentSymbol != null && that.currentExchange != null) {
+             LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'B');
+             }
+             });
+             
+             this.$pageobj.find(".sellbutton").on("click", function () {
+             if (that.currentSymbol != null && that.currentExchange != null) {
+             LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'S');
+             }
+             });
+             */
             this.$pageobj.find(".watchlistbutton").on("click", function () {
                 if (that.currentSymbol != null && that.currentExchange != null) {
                     LabCI.WP.AppUtils.addFavourIntegration(that.currentSymbol, that.currentExchange);
@@ -278,7 +279,10 @@
         changeRic: function (ric) {
             var that = this;
 
-
+            if (that.streamingTimer && that.streamingTimer !== null) {
+                clearInterval(that.streamingTimer);
+                that.streamingTimer = null;
+            }
             this._loadQuoteData(ric);
 
             /*    if (this.currentsection == "summary") {
@@ -289,6 +293,241 @@
              this._loadSRPlusWidget();
              }
              */
+        },
+        _resetQuoteDate: function () {
+            var that = this;
+            that.$stockinfopanel.find(".name").html("-");
+            that.$stockinfopanel.find(".price").html("-");
+            that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").html("-");
+            that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").html("-");
+            that.$stockinfopanel.find(".note1").html("-");
+            that.$stockinfopanel.find(".note2").html("-");
+
+            that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").html("-");
+            that.$quotedetail.find(".epsdata").html("-");
+            that.$quotedetail.find(".perdata").html("-");
+            that.$quotedetail.find(".pbrdata").html("-");
+            that.$quotedetail.find(".dividenddata").html("-");
+            that.$quotedetail.find(".yielddata").html("-");
+            that.$quotedetail.find(".dividendexdatedata").html("-");
+            that.$quotedetail.find(".dividendpaydatedata").html("-");
+            that.$quotedetail.find(".marketcapdata").html("-");
+            that.$quotedetail.find(".volumedata").html("-");
+            that.$quotedetail.find(".turnoverdata").html("-");
+            that.$quotedetail.find(".lotsizedata").html("-");
+        },
+        _fillIndividualQuoteDate: function (obj, data, isStreaming) {
+            if (obj) {
+                if (obj.html() !== data) {
+                    if (isStreaming) {
+                        obj.stop().animate({backgroundColor: '#fadadd'}, 1000).animate({backgroundColor: 'none'}, 1000);
+                    }
+                    obj.html(data);
+                }
+            }
+        },
+        _fillQuoteDate: function (result, isStreaming) {
+            var that = this;
+            var updownclass = getUpDownClass(result.data.datalist[0].nc);
+            that.$stockinfopanel.find(".name").html(result.data.datalist[0].nm + " (" + result.data.datalist[0].symbol + ")");
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".price"), result.data.datalist[0].ls, isStreaming);
+            //    that.$stockinfopanel.find(".price").html(result.data.datalist[0].ls);
+
+            var netChange = setValue(result.data.datalist[0].nc, null, false, "-", result.data.datalist[0].ls);
+            that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".netchange"), netChange, isStreaming);
+            //    that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].nc, null, false, "-", result.data.datalist[0].ls);
+
+            var pctChange = setValue(result.data.datalist[0].pc, "%", false, "-", result.data.datalist[0].ls);
+            that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".pctchange"), pctChange, isStreaming);
+
+
+            //    that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].pc, "%", false, "-", result.data.datalist[0].ls);
+            var quoteNote1 = that.pageobj_rb.lbl[result.data.datalist[0].exchsect] + " " + that.pageobj_rb.lbl[result.data.datalist[0].dc] + "." + that.pageobj_rb.lbl["ccy"] + that.pageobj_rb.lbl["ccy_" + result.data.datalist[0].ccy] + "  ";
+            var quoteNote2 = formatShortTime(result.data.datalist[0].tm) + " " + formatShortDate(result.data.datalist[0].td);
+
+            that.$stockinfopanel.find(".note1").html(quoteNote1);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".note2"), quoteNote2, isStreaming);
+
+            that.currentSymbol = result.data.datalist[0].symbol;
+            that.currentExchange = result.data.datalist[0].exchsect;
+            that.currentPrice = result.data.datalist[0].ls;
+
+            //    if (that.$quotedetail.is(":visible")) {
+            var ricData = result.data.datalist[0];
+            var updownclass = "";
+
+            updownclass = that._getRefUpDownClass(ricData.op, ricData.refprice);
+            //    that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.op);
+            that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".opdata"), ricData.op, isStreaming);
+
+            updownclass = that._getRefUpDownClass(ricData.hi, ricData.refprice);
+            //    that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hi);
+            that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".hidata"), ricData.hi, isStreaming);
+
+            updownclass = that._getRefUpDownClass(ricData.lo, ricData.refprice);
+            //    that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.lo);
+            that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".lodata"), ricData.lo, isStreaming);
+
+            updownclass = that._getRefUpDownClass(ricData.vwap, ricData.refprice);
+            //    that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.vwap);
+            that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".vwapdata"), ricData.vwap, isStreaming);
+
+            updownclass = that._getRefUpDownClass(ricData.yh, ricData.refprice);
+            //    that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yh);
+            that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".wk52highdata"), ricData.yh, isStreaming);
+
+            updownclass = that._getRefUpDownClass(ricData.yl, ricData.refprice);
+            //    that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yl);
+            that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".wk52lowdata"), ricData.yl, isStreaming);
+
+            if (ricData.bd && ricData.bd != "-") {
+                updownclass = that._getRefUpDownClass(ricData.bd, ricData.refprice);
+                //   that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.bd + " x " + ricData.bdsize);
+                that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".biddata"), ricData.bd + " x " + ricData.bdsize, isStreaming);
+            } else {
+                //    that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
+                that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".biddata"), "-", isStreaming);
+            }
+
+            if (ricData.as && ricData.as != "-") {
+                updownclass = that._getRefUpDownClass(ricData.as, ricData.refprice);
+                //    that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.as + " x " + ricData.assize);
+                that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".askdata"), ricData.as + " x " + ricData.assize, isStreaming);
+            } else {
+                //    that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
+                that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".askdata"), "-", isStreaming);
+            }
+
+            updownclass = that._getRefUpDownClass(ricData.hc, ricData.refprice);
+            //    that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hc);
+            that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").addClass(updownclass);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".hcdata"), ricData.hc, isStreaming);
+
+            if (ricData.eps != null) {
+                //    that.$quotedetail.find(".epsdata").html(ricData.eps);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".epsdata"), ricData.eps, isStreaming);
+            }
+            if (ricData.per != null) {
+                //    that.$quotedetail.find(".perdata").html(ricData.per);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".perdata"), ricData.per, isStreaming);
+            }
+
+            if (ricData.cc == "USA") {
+                that.$quotedetail.find(".vwaprow").hide();
+                that.$quotedetail.find(".yrhighrow").hide();
+                that.$quotedetail.find(".yrlowrow").hide();
+                that.$quotedetail.find(".epsrow").hide();
+                that.$quotedetail.find(".perrow").hide();
+                that.$quotedetail.find(".pbrrow").hide();
+                that.$quotedetail.find(".dividendrow").hide();
+                that.$quotedetail.find(".yieldrow").hide();
+                that.$quotedetail.find(".exdaterow").hide();
+                that.$quotedetail.find(".paydaterow").hide();
+                that.$quotedetail.find(".turnoverrow").hide();
+            } else {
+                that.$quotedetail.find(".vwaprow").show();
+                that.$quotedetail.find(".yrhighrow").show();
+                that.$quotedetail.find(".yrlowrow").show();
+                that.$quotedetail.find(".epsrow").show();
+                that.$quotedetail.find(".perrow").show();
+                that.$quotedetail.find(".pbrrow").show();
+                that.$quotedetail.find(".dividendrow").show();
+                that.$quotedetail.find(".yieldrow").show();
+                that.$quotedetail.find(".exdaterow").show();
+                that.$quotedetail.find(".paydaterow").show();
+                that.$quotedetail.find(".turnoverrow").show();
+                //    that.$quotedetail.find(".pbrdata").html(ricData.pbr);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".pbrdata"), ricData.pbr, isStreaming);
+            }
+
+            if (ricData.div) {
+                //   that.$quotedetail.find(".dividenddata").html(ricData.div + " " + ricData.currency);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividenddata"), ricData.div + " " + ricData.currency, isStreaming);
+            } else {
+                //     that.$quotedetail.find(".dividenddata").html("-");
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividenddata"), "-", isStreaming);
+            }
+
+            if (ricData.yield) {
+                //    that.$quotedetail.find(".yielddata").html(ricData.yield + '%');
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".yielddata"), ricData.yield + '%', isStreaming);
+            } else {
+                //    that.$quotedetail.find(".yielddata").html("-");
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".yielddata"), "-", isStreaming);
+            }
+
+            if (ricData.exdate != null && ricData.exdate != undefined && ricData.exdate != "-") {
+                //        that.$quotedetail.find(".dividendexdatedata").html(formatLongDate(ricData.exdate));
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendexdatedata"), formatLongDate(ricData.exdate), isStreaming);
+            } else {
+                //        that.$quotedetail.find(".dividendexdatedata").html("-");
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendexdatedata"), "-", isStreaming);
+            }
+
+            if (ricData.paydate != null && ricData.paydate != undefined && ricData.paydate != "-") {
+                //        that.$quotedetail.find(".dividendpaydatedata").html(formatLongDate(ricData.paydate));
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendpaydatedata"), formatLongDate(ricData.paydate), isStreaming);
+            } else {
+                //        that.$quotedetail.find(".dividendpaydatedata").html("-");
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendpaydatedata"), "-", isStreaming);
+            }
+
+
+            if (ricData.cc == "USA") {
+                that.$quotedetail.find(".marketcaprow").hide();
+            } else {
+                that.$quotedetail.find(".marketcaprow").show();
+                if (ricData.mktvalue && ricData.mktvalue != "-") {
+                    //        that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
+                    that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), ricData.mktvalue + " " + ricData.currency, isStreaming);
+                } else {
+                    //        that.$quotedetail.find(".marketcapdata").html("-");
+                    that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), "-", isStreaming);
+                }
+            }
+            /*         if (ricData.mktvalue && ricData.mktvalue != "-") {
+             //        that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
+             that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), ricData.mktvalue + " " + ricData.currency, isStreaming);
+             } else {
+             //        that.$quotedetail.find(".marketcapdata").html("-");
+             that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), "-", isStreaming);
+             }
+             */
+            //    that.$quotedetail.find(".volumedata").html(ricData.vo);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".volumedata"), ricData.vo, isStreaming);
+            if (ricData.am && ricData.am != "-") {
+                //        that.$quotedetail.find(".turnoverdata").html(ricData.am + " " + ricData.currency);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".turnoverdata"), ricData.am + " " + ricData.currency, isStreaming);
+            } else {
+                //        that.$quotedetail.find(".turnoverdata").html("-");
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".turnoverdata"), "-", isStreaming);
+            }
+            if (ricData.cc == "USA") {
+                that.$quotedetail.find(".lotsizerow").hide();
+            } else {
+                that.$quotedetail.find(".lotsizerow").show();
+                that.$quotedetail.find(".lotsizedata").html(ricData.lot);
+            }
         },
         _loadQuoteData: function (ric) {
             var that = this;
@@ -302,35 +541,10 @@
                     },
                     function (result) {
 
-                        if (result && result.data && result.data.responseCode !== "F" && result.data.datalist[0].status == 0) {
+                        if (result && result.data && result.data.responseCode !== "F" && result.data.datalist && result.data.datalist[0] && result.data.datalist[0].status == 0) {
 
                             //reset
-                            that.$stockinfopanel.find(".name").html("-");
-                            that.$stockinfopanel.find(".price").html("-");
-                            that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").html("-");
-                            that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").html("-");
-                            that.$stockinfopanel.find(".note").html("-");
-
-                            that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").html("-");
-                            that.$quotedetail.find(".epsdata").html("-");
-                            that.$quotedetail.find(".perdata").html("-");
-                            that.$quotedetail.find(".pbrdata").html("-");
-                            that.$quotedetail.find(".dividenddata").html("-");
-                            that.$quotedetail.find(".yielddata").html("-");
-                            that.$quotedetail.find(".dividendexdatedata").html("-");
-                            that.$quotedetail.find(".dividendpaydatedata").html("-");
-                            that.$quotedetail.find(".marketcapdata").html("-");
-                            that.$quotedetail.find(".volumedata").html("-");
-                            that.$quotedetail.find(".turnoverdata").html("-");
-                            that.$quotedetail.find(".lotsizedata").html("-");
+                            that._resetQuoteDate();
 
                             that.$pageobj.find(".chartbox").hide();
 
@@ -342,7 +556,7 @@
                             if (result.data.datalist && result.data.datalist.length > 0) {
 
                                 if (that.currentsection == "summary") {
-                                    that._loadSummaryWidget();                              
+                                    that._loadSummaryWidget();
                                 } else if (that.currentsection == "chart") {
                                     that._loadChartWidget();
                                 } else if (that.currentsection == "srplus") {
@@ -358,156 +572,21 @@
                                 $("#lsinopac-quote-srplus").addClass("changed");
                                 $("#lsinopac-quote-financial").addClass("changed");
 
-                                var updownclass = getUpDownClass(result.data.datalist[0].nc);
+                                that._fillQuoteDate(result);
 
-                                that.$stockinfopanel.find(".name").html(result.data.datalist[0].nm + " (" + result.data.datalist[0].symbol + ")");
-                                that.$stockinfopanel.find(".price").html(result.data.datalist[0].ls);
-                                that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].nc, null, false, "-", result.data.datalist[0].ls);
-                                that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].pc, "%", false, "-", result.data.datalist[0].ls);
-                                var quoteNote = that.pageobj_rb.lbl[result.data.datalist[0].exchsect] + " " + that.pageobj_rb.lbl[result.data.datalist[0].dc] + ".";
-                                quoteNote += that.pageobj_rb.lbl["ccy"] + that.pageobj_rb.lbl["ccy_" + result.data.datalist[0].ccy] + "  " + formatShortTime(result.data.datalist[0].tm) + " " + formatShortDate(result.data.datalist[0].td)
+                                //    }
 
-                                that.$stockinfopanel.find(".note").html(quoteNote);
+                                that.$pageobj.find(".chartbox").show();
 
-                                that.currentSymbol = result.data.datalist[0].symbol;
-                                that.currentExchange = result.data.datalist[0].exchsect;
-                                that.currentPrice = result.data.datalist[0].ls;
-
-                            }
-
-                            //    if (that.$quotedetail.is(":visible")) {
-                            var ricData = result.data.datalist[0];
-                            var refdiff = 0;
-                            var updownclass = "";
-
-                            updownclass = that._getRefUpDownClass(ricData.op, ricData.refprice);
-                            that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.op);
-
-                            updownclass = that._getRefUpDownClass(ricData.hi, ricData.refprice);
-                            that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hi);
-
-                            updownclass = that._getRefUpDownClass(ricData.lo, ricData.refprice);
-                            that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.lo);
-
-                            updownclass = that._getRefUpDownClass(ricData.vwap, ricData.refprice);
-                            that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.vwap);
-
-                            updownclass = that._getRefUpDownClass(ricData.yh, ricData.refprice);
-                            that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yh);
-
-                            updownclass = that._getRefUpDownClass(ricData.yl, ricData.refprice);
-                            that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yl);
-
-                            if (ricData.bd && ricData.bd != "-") {
-                                updownclass = that._getRefUpDownClass(ricData.bd, ricData.refprice);
-                                that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.bd + " x " + ricData.bdsize);
-                            } else {
-                                that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
-                            }
-
-                            if (ricData.as && ricData.as != "-") {
-                                updownclass = that._getRefUpDownClass(ricData.as, ricData.refprice);
-                                that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.as + " x " + ricData.assize);
-                            } else {
-                                that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
-                            }
-
-                            updownclass = that._getRefUpDownClass(ricData.hc, ricData.refprice);
-                            that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hc);
-                            if (ricData.eps != null) {
-                                that.$quotedetail.find(".epsdata").html(ricData.eps);
-                            }
-                            if (ricData.per != null) {
-                                that.$quotedetail.find(".perdata").html(ricData.per);
-                            }
-
-                            if (ricData.cc == "USA") {
-                                that.$quotedetail.find(".vwaprow").hide();
-                                that.$quotedetail.find(".yrhighrow").hide();
-                                that.$quotedetail.find(".yrlowrow").hide();
-                                that.$quotedetail.find(".epsrow").hide();
-                                that.$quotedetail.find(".perrow").hide();                                
-                                that.$quotedetail.find(".pbrrow").hide();
-                                that.$quotedetail.find(".dividendrow").hide();
-                                that.$quotedetail.find(".yieldrow").hide();
-                                that.$quotedetail.find(".exdaterow").hide();
-                                that.$quotedetail.find(".paydaterow").hide();
-                                that.$quotedetail.find(".turnoverrow").hide();
-                            } else {
-                                that.$quotedetail.find(".vwaprow").show();
-                                that.$quotedetail.find(".yrhighrow").show();
-                                that.$quotedetail.find(".yrlowrow").show();
-                                that.$quotedetail.find(".epsrow").show();
-                                that.$quotedetail.find(".perrow").show();                                
-                                that.$quotedetail.find(".pbrrow").show();
-                                that.$quotedetail.find(".dividendrow").show();
-                                that.$quotedetail.find(".yieldrow").show();
-                                that.$quotedetail.find(".exdaterow").show();
-                                that.$quotedetail.find(".paydaterow").show();
-                                that.$quotedetail.find(".turnoverrow").show();                                
-                                that.$quotedetail.find(".pbrdata").html(ricData.pbr);
-                            }
-
-                            if (ricData.div) {
-                                that.$quotedetail.find(".dividenddata").html(ricData.div + " " + ricData.currency);
-                            } else {
-                                that.$quotedetail.find(".dividenddata").html("-");
-                            }
-
-                            if (ricData.yield) {
-                                that.$quotedetail.find(".yielddata").html(ricData.yield + '%');
-                            } else {
-                                that.$quotedetail.find(".yielddata").html("-");
-                            }
-
-                            if (ricData.exdate != null && ricData.exdate != undefined && ricData.exdate != "-") {
-                                that.$quotedetail.find(".dividendexdatedata").html(formatLongDate(ricData.exdate));
-                            } else {
-                                that.$quotedetail.find(".dividendexdatedata").html("-");
-                            }
-
-                            if (ricData.paydate != null && ricData.paydate != undefined && ricData.paydate != "-") {
-                                that.$quotedetail.find(".dividendpaydatedata").html(formatLongDate(ricData.paydate));
-                            } else {
-                                that.$quotedetail.find(".dividendpaydatedata").html("-");
-                            }
-
-
-                            if (ricData.cc == "USA") {
-                                that.$quotedetail.find(".marketcaprow").hide();
-                            } else {
-                                that.$quotedetail.find(".marketcaprow").show();
-                                if (ricData.mktvalue && ricData.mktvalue != "-") {
-                                    that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
-                                } else {
-                                    that.$quotedetail.find(".marketcapdata").html("-");
+                                that._loadRelatedStockData(1);
+                                if (result.data.datalist[0].dc === 'realStream') {
+                                    that.streamingTimer = setInterval(function () {
+                                        that._loadStreamData(ric)
+                                    }, 3000);
                                 }
-                            }
-                            if (ricData.mktvalue && ricData.mktvalue != "-") {
-                                that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
-                            } else {
-                                that.$quotedetail.find(".marketcapdata").html("-");
-                            }
-                            that.$quotedetail.find(".volumedata").html(ricData.vo);
-                            if (ricData.am && ricData.am != "-") {
-                                that.$quotedetail.find(".turnoverdata").html(ricData.am + " " + ricData.currency);
-                            } else {
-                                that.$quotedetail.find(".turnoverdata").html("-");
-                            }
-                            if (ricData.cc == "USA") {
-                                that.$quotedetail.find(".lotsizerow").hide();
-                            } else {
-                                that.$quotedetail.find(".lotsizerow").show();
-                                that.$quotedetail.find(".lotsizedata").html(ricData.lot);
-                            }
 
-                            //    }
-
-                            that.$pageobj.find(".chartbox").show();
-
-                            that._loadRelatedStockData(1);
-
-                        } else if (result.data.datalist[0].status == 3) {
+                            }
+                        } else if (result.data.datalist && result.data.datalist[0] && result.data.datalist[0].status == 3) {
 
                             //make as data changed
                             //    $("#lsinopac-quote-summary-chart").addClass("changed");
@@ -535,21 +614,47 @@
                     });
 
         },
+        _loadStreamData: function (ric) {
+            var that = this;
+
+            this.$pageobj.loaddata("quotedata", "/data/getquote",
+                    {
+                        ric: ric,
+                        token: encodeURIComponent(LabCI.getToken()),
+                        lang: this.lang
+                    },
+                    function (result) {
+                        if (result && result.data && result.data.responseCode !== "F" && result.data.datalist[0].status == 0) {
+                            //            that._resetQuoteDate();
+                            that._fillQuoteDate(result, true);
+
+                            //add or update tick in 
+                            if (window["lsinopac_quote-chart"]) {
+                                window["lsinopac_quote-chart"].pollData();
+                            }
+                        }
+                    },
+                    0,
+                    {
+                        datatype: "jsonp"
+                    });
+
+        },
         _getRefUpDownClass: function (price, refPrice) {
             if (price && refPrice) {
-                var priceval = Number(price.replace(",",""));
-                var refpriceval = Number(refPrice.replace(",",""));
+                var priceval = Number(price.replace(",", ""));
+                var refpriceval = Number(refPrice.replace(",", ""));
 
                 // Check if 0
                 if (priceval == 0 || refpriceval == 0) {
                     return "";
                 }
                 // If -nnn ?
-                else if (priceval < refpriceval) {                   
+                else if (priceval < refpriceval) {
                     return "downval";
                 }
                 // If +nnn ?
-                else if (priceval > refpriceval) {                  
+                else if (priceval > refpriceval) {
                     return "upval";
                 }
             }
@@ -590,8 +695,8 @@
 
                                     for (var key in result.data.datalist) {
                                         var updownclass = getUpDownClass(result.data.datalist[key].nc);
-                                        
-                                        var addedRow = $("<tr class='relatedstock' style='cursor:pointer'; ric='" + result.data.datalist[key].ric + "' symbol='"+result.data.datalist[key].symbol+"' exchange='"+LabCI.WP.AppUtils.INTEGRATION_EXCHANGE_MAPPING[result.data.datalist[key].exchange_code]+"'><td>" + result.data.datalist[key].symbol + "</td>" +
+
+                                        var addedRow = $("<tr class='relatedstock' style='cursor:pointer'; ric='" + result.data.datalist[key].ric + "' symbol='" + result.data.datalist[key].symbol + "' exchange='" + LabCI.WP.AppUtils.INTEGRATION_EXCHANGE_MAPPING[result.data.datalist[key].exchange_code] + "'><td>" + result.data.datalist[key].symbol + "</td>" +
                                                 "<td>" + result.data.datalist[key].name + "</td>" +
                                                 "<td>" + result.data.datalist[key].trbc_name + "</td>" +
                                                 "<td class='text-right'>" + result.data.datalist[key].ls + "</td>" +
@@ -604,9 +709,9 @@
 
                                         $(addedRow).on(_CLICK_EVENT, function () {
                                             var that2 = this;
-                                        //    $("html, body").animate({scrollTop: 0}, 400, function () {
-                                        //        that.changeRic($(that2).attr('ric'));
-                                        //    });
+                                            //    $("html, body").animate({scrollTop: 0}, 400, function () {
+                                            //        that.changeRic($(that2).attr('ric'));
+                                            //    });
                                             LabCI.WP.AppUtils.openQuotePage($(that2).attr('symbol'), $(that2).attr('exchange'));
                                         });
                                     }
@@ -636,7 +741,7 @@
 
                                     pagination.find(".page-no").remove();
                                     pagination.find("li").removeClass("disabled").removeClass("active");
-                                    
+
                                     pagination.find(".page-dropdown > option").remove();
 
                                     if (pageno == 1) {
@@ -658,14 +763,14 @@
                                     } else {
                                         pagination.find("li[item='next'] span").attr("pn", pageno + 1);
                                     }
-                                                                     
-                                    for(var i = 0 ; i < maxPage; ++i){
+
+                                    for (var i = 0; i < maxPage; ++i) {
                                         //drop down...
-                                        if(pageno == i+1){
-                                            pagination.find(".page-dropdown").append('<option selected value="'+(i+1)+'">'+(i+1)+'</option>'); 
-                                        }else{
-                                            pagination.find(".page-dropdown").append('<option value="'+(i+1)+'">'+(i+1)+'</option>');                                             
-                                        }                                       
+                                        if (pageno == i + 1) {
+                                            pagination.find(".page-dropdown").append('<option selected value="' + (i + 1) + '">' + (i + 1) + '</option>');
+                                        } else {
+                                            pagination.find(".page-dropdown").append('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+                                        }
                                     }
 
                                 } else {
@@ -717,24 +822,24 @@
                 window["lsinopac_quote-chart"].show({ric: ric});
             } else {
                 $("#lsinopac-quote-chart").loadwidget("quote-chart.html?_=" + (new Date()).getTime(), function () {
-                    window["lsinopac_quote-chart"] = LabCI.WP["createquotechartpageobj"].call(that).init(lang).show({ric: ric});                 
+                    window["lsinopac_quote-chart"] = LabCI.WP["createquotechartpageobj"].call(that).init(lang).show({ric: ric});
                 });
             }
         },
         _preloadChartWidget: function () {
-        //    this._hideAllSubWidget();
+            //    this._hideAllSubWidget();
             var ric = this.currentquoteric;
             var lang = this.lang;
-        //    this.$quotedetail.show();
+            //    this.$quotedetail.show();
 
             if (LabCI.WP["createquotechartpageobj"]) {
-             //   window["lsinopac_quote-chart"].show({ric: ric});
+                //   window["lsinopac_quote-chart"].show({ric: ric});
             } else {
                 $("#lsinopac-quote-chart").loadwidget("quote-chart.html?_=" + (new Date()).getTime(), function () {
-                    window["lsinopac_quote-chart"] = LabCI.WP["createquotechartpageobj"].call(that).init(lang).show({ric: ric, preload: "1"});                 
+                    window["lsinopac_quote-chart"] = LabCI.WP["createquotechartpageobj"].call(that).init(lang).show({ric: ric, preload: "1"});
                 });
             }
-        },        
+        },
         _loadSummaryWidget: function () {
             var that = this;
             this._hideAllSubWidget();
@@ -752,16 +857,16 @@
                 $("#lsinopac-quote-summary-chart").loadwidget("quote-summary.html?_=" + (new Date()).getTime(), function () {
                     window["lsinopac-quote-summary-chart"] = LabCI.WP["createquotesummarypageobj"].call(that).init(lang).show({ric: ric});
                     //            that._loadRelatedStockData(1);
-                    
-            if(LabCI.WP.AppUtils.getMobileOrDesktop() == "DESKTOP"){
-            //    that.$pageobj.find(".preloadchartframe").attr("src", APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + this.currentquoteric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang);
-                //APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + ric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang               
-            //    that._loadChartWidget();
-            that._preloadChartWidget();
-            }                     
-                    
+
+                    if (LabCI.WP.AppUtils.getMobileOrDesktop() == "DESKTOP") {
+                        //    that.$pageobj.find(".preloadchartframe").attr("src", APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + this.currentquoteric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang);
+                        //APP_CONFIG.DataAPIPath + "/c5/ui/c5?ric=" + ric + "&token=" + encodeURIComponent(LabCI.getToken()) + "&lang=" + this.lang               
+                        //    that._loadChartWidget();
+                        that._preloadChartWidget();
+                    }
+
                 });
-            }         
+            }
         },
         _loadFinancialWidget: function () {
             var that = this;
@@ -769,7 +874,7 @@
             var ric = this.currentquoteric;
             var lang = this.lang;
             this.$quotedetail.hide();
-            
+
             try {
                 if (LabCI.WP["createquotefinancialpageobj"]) {
                     window["lsinopac_quote-financial"].show({ric: ric});
@@ -810,23 +915,23 @@
             this._loadRelatedStockData(this.pageno);
         },
         _loadRelatedStocksPageFromSelect: function (obj) {
-            
+
             this.pageno = $(obj).val();
             this._loadRelatedStockData(this.pageno);
-        },        
+        },
         resizeImpl: function () {
             var that = this;
             var param = "code:" + this.currentquoteric;
-    /*        if(that.breakpoint == null){
-                //init
-                that.breakpoint = LabCI.WP.AppUtils.getMobileOrDesktop();
-            }else if(that.breakpoint != LabCI.WP.AppUtils.getMobileOrDesktop()){
-                alert('in');
-                that.breakpoint = LabCI.WP.AppUtils.getMobileOrDesktop();
-                that.showImpl();
-            }         
-        //    alert(LabCI.WP.AppUtils.getMobileOrDesktop());
-*/
+            /*        if(that.breakpoint == null){
+             //init
+             that.breakpoint = LabCI.WP.AppUtils.getMobileOrDesktop();
+             }else if(that.breakpoint != LabCI.WP.AppUtils.getMobileOrDesktop()){
+             alert('in');
+             that.breakpoint = LabCI.WP.AppUtils.getMobileOrDesktop();
+             that.showImpl();
+             }         
+             //    alert(LabCI.WP.AppUtils.getMobileOrDesktop());
+             */
             /*        var currentMode;
              
              if ($(window).width() < 750) {
@@ -906,15 +1011,15 @@
                     this.changeRic(this.currentquoteric);
                 }
             }
-            
+
             if (this.currentsection == "summary") {
                 //default...
-            //    this._loadSummaryWidget();
+                //    this._loadSummaryWidget();
             } else if (this.currentsection == "chart") {
                 this._loadChartWidget();
             }
-            
-            
+
+
             //        that._loaddata();
             //    if (that.mode == "desktop") {
             //        that.$quotedetail.appendTo(that.$mapQuoteBox);

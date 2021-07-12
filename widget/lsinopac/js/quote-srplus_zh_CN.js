@@ -3,7 +3,7 @@
 LabCI.WP.QuoteSRPlusPageObj.PAGEOBJ_RESOURCEBUNDLE.zh_CN = {
 
     lbl: {
-        avgscore: "路孚特平均得分",
+        avgscore: "平均得分",
                 avgscoretrend: "平均得分走势 (4周移动平均)",
                 positive: "正面",
                 neutral: "中性",

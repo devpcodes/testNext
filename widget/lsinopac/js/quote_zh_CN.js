@@ -30,6 +30,7 @@ LabCI.WP.QuotePageObj.PAGEOBJ_RESOURCEBUNDLE.zh_CN = {
                 "SHZ": "中国 SZSE",
                 "delay": "延迟报价",
                 "real": "实时报价",
+                "realStream": "实时报价",
                 "ccy": " ",
                 "ccy_CNY": "人民币",
                 "ccy_EUR": "欧元",
