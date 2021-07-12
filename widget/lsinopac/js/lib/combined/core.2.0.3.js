@@ -1033,6 +1033,7 @@ LabCI.SSDL = {
                     sessionStorage.removeItem('newweb_platform');
                     sessionStorage.removeItem('source'); // 舊站下架後可移除這行
                     sessionStorage.removeItem('platform'); // 舊站下架後可移除這行
+                    sessionStorage.removeItem('newweb_modal');
                 }
                 if (jqXHR.status === 401){
                     let path = encodeURIComponent('/TradingCenter_TWStocks_SubBrokerage/')
@@ -1046,7 +1047,7 @@ LabCI.SSDL = {
                     const newHref = location.protocol + '//' + location.host + '/newweb/'+'/SinoTrade_login?currentPath='+path+queryStr;
                     
                     $.post("/lykan/api/v1/auth/logout", function (res) {
-                        alert('帳號逾時，請重新登入')
+                        sessionStorage.setItem('newweb_modal', '帳號逾時，請重新登入');
                         window.parent.window.parent.location.href = newHref;
                     })
                     
