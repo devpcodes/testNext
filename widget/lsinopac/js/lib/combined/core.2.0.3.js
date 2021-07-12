@@ -1027,35 +1027,56 @@ LabCI.SSDL = {
             .fail(function(jqXHR, textStatus) {
                 // When this is what we are waiting for...
                 // if status 401, login again
+                function removeStorage(){
+                    localStorage.removeItem('newweb_token');
+                    // 清除 sessionStorage 裡與來源別相關的值
+                    sessionStorage.removeItem('newweb_platform');
+                    sessionStorage.removeItem('source'); // 舊站下架後可移除這行
+                    sessionStorage.removeItem('platform'); // 舊站下架後可移除這行
+                }
                 if (jqXHR.status === 401){
-                    if (typeof (parent.$.alert) === 'function') {
-                        parent.$.alert({
-                            content: '帳號逾時，請重新登入',
-                            buttons: {
-                                '確定': {
-                                    action: function () {
-                                        parent.cookieController.setCookie("doLoginPage", parent.location.href);
-                                        $.get("/SinoTrade-Service/sino/logout", function (res) {
-                                            if (res.status_code === "S101") {
-                                                parent.location.href = parent.Utility.subPath + "#doLogin";
-                                            }
-                                        })
-                                    }
-                                }
-                            }
-                        })
+                    let path = encodeURIComponent('/TradingCenter_TWStocks_SubBrokerage/')
+                    console.log('path', path)
+                    let queryStr = '';
+                    let queryIndex = window.parent.window.parent.location.href.indexOf('?');
+                    if(queryIndex >= 0){
+                        queryStr = '?'+window.parent.window.parent.location.href.split('?').slice(-1).pop();
                     }
-                    else {
-                        //native alert
-                        alert('帳號逾時，請重新登入')
-                        parent.cookieController.setCookie("doLoginPage", parent.location.href);
-                        $.get("/SinoTrade-Service/sino/logout", function (res) {
-                            if (res.status_code === "S101") {
-                                parent.location.href = parent.Utility.subPath + "#doLogin";
-                            }
-                        })
-                    }
-                    parent.removeCookieForLogout();
+                    removeStorage();
+                    const newHref = location.protocol + '//' + location.host + '/newweb/'+'/SinoTrade_login?currentPath='+path+queryStr;
+                    alert('帳號逾時，請重新登入')
+                    $.post("/lykan/api/v1/auth/logout", function (res) {
+                        window.parent.window.parent.location.href = newHref;
+                    })
+                    
+                    // if (typeof (parent.$.alert) === 'function') {
+                    //     parent.$.alert({
+                    //         content: '帳號逾時，請重新登入',
+                    //         buttons: {
+                    //             '確定': {
+                    //                 action: function () {
+                    //                     parent.cookieController.setCookie("doLoginPage", parent.location.href);
+                    //                     $.get("/SinoTrade-Service/sino/logout", function (res) {
+                    //                         if (res.status_code === "S101") {
+                    //                             parent.location.href = parent.Utility.subPath + "#doLogin";
+                    //                         }
+                    //                     })
+                    //                 }
+                    //             }
+                    //         }
+                    //     })
+                    // }
+                    // else {
+                    //     //native alert
+                    //     alert('帳號逾時，請重新登入')
+                    //     parent.cookieController.setCookie("doLoginPage", parent.location.href);
+                    //     $.get("/SinoTrade-Service/sino/logout", function (res) {
+                    //         if (res.status_code === "S101") {
+                    //             parent.location.href = parent.Utility.subPath + "#doLogin";
+                    //         }
+                    //     })
+                    // }
+                    // parent.removeCookieForLogout();
                 } else {
                     var data = $refobj.data(datarefid);
                     if (data && _thisqid == data.qid) {
