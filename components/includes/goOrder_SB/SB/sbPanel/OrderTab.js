@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tabs } from 'antd';
 import { themeColor } from '../../panel/PanelTabs';
-import { setSBActiveTabKey, setSBBs } from '../../../../../store/goOrderSB/action';
+import { setSBActiveTabKey, setSBBs, setWebsocketEvent } from '../../../../../store/goOrderSB/action';
 import TradingContainer from './TradingContainer';
 import SearchList from '../searchList/SearchList';
 import { webSocketLogin } from '../../../../../services/components/goOrder/websocketService';
@@ -11,6 +11,7 @@ const { TabPane } = Tabs;
 
 const OrderTab = () => {
     // const [tabKey, setTabKey] = useState('1');
+    const websocketEvent = useSelector(store => store.goOrderSB.websocketEvent);
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
     const [gradient, setGradient] = useState(themeColor.buyGradient);
     const activeTabKey = useSelector(store => store.goOrderSB.activeTabKey);
@@ -38,7 +39,7 @@ const OrderTab = () => {
         try {
             const socketData = JSON.parse(e.data);
             console.log('socketEvent', socketData);
-            if (socketData.topic.indexOf('TFT') >= 0) {
+            if (socketData.topic.indexOf('R/F/S') >= 0) {
                 dispatch(setWebsocketEvent(true));
             }
         } catch (err) {
@@ -111,14 +112,28 @@ const OrderTab = () => {
                     {activeTabKey === '2' && <TradingContainer />}
                 </TabPane>
                 <TabPane tab="成委回" key="3">
-                    {activeTabKey === '3' && <SearchList />}
+                    {activeTabKey === '3' && <SearchList active={activeTabKey === '3' ? true : false} />}
                 </TabPane>
             </Tabs>
         );
     }, [activeTabKey]);
     return (
         <>
-            <div className="tabs__container">{tabChildren}</div>
+            <div className="tabs__container">
+                {websocketEvent && activeTabKey !== '3' && <span className="socket__icon"></span>}
+                {tabChildren}
+            </div>
+            <style jsx>{`
+                .socket__icon {
+                    border-radius: 50%;
+                    background: #de1c1c;
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    position: absolute;
+                    right: 17%;
+                }
+            `}</style>
             <style global jsx>{`
                 .tabs__container .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
                     font-weight: bold;

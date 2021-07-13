@@ -14,6 +14,7 @@ const QuoteContainer = () => {
     const quote = useSelector(store => store.goOrderSB.quote);
     const ric = useSelector(store => store.goOrderSB.ric);
     const productInfo = useSelector(store => store.goOrder.productInfo);
+    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const chartHeight = useRef(0);
     const quoteContainerElement = useRef(null);
 
@@ -53,10 +54,26 @@ const QuoteContainer = () => {
         }
     }, [panelHeight, bs]);
 
+    const low52Handler = (yl, ls, op) => {
+        if (!isNaN(Number(yl)) && !isNaN(Number(ls)) && !isNaN(Number(op))) {
+            return Math.min(Number(yl), Number(ls), Number(op));
+        } else {
+            return yl || '-';
+        }
+    };
+    const high52Handler = (yh, ls, op) => {
+        // return Math.max(yh, ls, op);
+        if (!isNaN(Number(yh)) && !isNaN(Number(ls)) && !isNaN(Number(op))) {
+            return Math.min(Number(yh), Number(ls), Number(op));
+        } else {
+            return yh || '-';
+        }
+    };
+
     return (
         <div className="quote__container" ref={quoteContainerElement}>
             <div className="chart__info">
-                <span className="text">報價時間／美東，幣別／美金</span>
+                <span className="text">報價時間／美東，幣別／{stockInfo['@CHCurrency'] || '--'}</span>
                 <span className="line"></span>
             </div>
             {noData ? (
@@ -73,7 +90,13 @@ const QuoteContainer = () => {
                         text={'當日價格區間'}
                         style={{ marginBottom: '18px' }}
                     />
-                    <DKbar close={quote.ls} open={quote.op} low={quote.yl} high={quote.yh} text={'52週區間'} />
+                    <DKbar
+                        close={quote.ls}
+                        open={quote.op}
+                        low={low52Handler(quote.yl, quote.ls, quote.op)}
+                        high={high52Handler(quote.yh, quote.ls, quote.op)}
+                        text={'52週區間'}
+                    />
                 </div>
             )}
 

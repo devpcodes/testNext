@@ -148,3 +148,10 @@ export const setSearchListSubmitSuccess = boo => {
         payload: boo,
     };
 };
+
+export const setWebsocketEvent = boo => {
+    return {
+        type: actionType.SET_WEBSOCKET_EVENT,
+        payload: boo,
+    };
+};

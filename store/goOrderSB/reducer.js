@@ -23,6 +23,7 @@ const initialState = {
     queryQty: '',
     refreshCode: '',
     searchListSubmitSuccess: false,
+    websocketEvent: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -136,6 +137,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 searchListSubmitSuccess: action.payload,
+            };
+        case actionType.SET_WEBSOCKET_EVENT:
+            return {
+                ...state,
+                websocketEvent: action.payload,
             };
         default:
             return state;

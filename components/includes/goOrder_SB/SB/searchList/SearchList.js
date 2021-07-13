@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal, Tooltip, Button, message } from 'antd';
 import moment from 'moment';
@@ -16,20 +16,53 @@ import {
     setRefresh,
     setRefreshCode,
     setSearchListSubmitSuccess,
+    setWebsocketEvent,
 } from '../../../../../store/goOrderSB/action';
 import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
 import { getWebId } from '../../../../../services/components/goOrder/getWebId';
 import { usePlatform } from '../../../../../hooks/usePlatform';
-const SearchList = () => {
+
+const waitSeconds = 5;
+const SearchList = ({ active }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [sortKey, setSortKey] = useState('CreateTime');
     const [sortOrder, setSortOrder] = useState('descend');
     const [showMask, setShowMask] = useState(false);
+    const [reFetch, setReFetch] = useState(false);
+
     const currentAccount = useSelector(store => store.user.currentAccount);
     const submitSuccess = useSelector(store => store.goOrderSB.searchListSubmitSuccess);
+    const websocketEvent = useSelector(store => store.goOrder.websocketEvent);
+    const confirmBox = useSelector(store => store.goOrderSB.confirmBox);
     const platform = usePlatform();
     const dispatch = useDispatch();
+
+    const currentSeconds = useRef(0);
+    const timer = useRef(null);
+
+    useEffect(() => {
+        if (websocketEvent && !confirmBox && active) {
+            if (currentSeconds.current === 0) {
+                timer.current = window.setInterval(() => {
+                    currentSeconds.current += 1;
+                    timerHandler();
+                }, 1000);
+
+                dispatch(setWebsocketEvent(false));
+                getData(currentAccount);
+                setReFetch(false);
+            }
+        }
+    }, [websocketEvent, reFetch, confirmBox, active]);
+
+    const timerHandler = () => {
+        if (currentSeconds.current >= waitSeconds) {
+            window.clearInterval(timer.current);
+            currentSeconds.current = 0;
+            setReFetch(true);
+        }
+    };
 
     useEffect(() => {
         const newColumns = [
@@ -278,8 +311,14 @@ const SearchList = () => {
     }, [sortKey, sortOrder, data, currentAccount]);
 
     useEffect(() => {
-        getData(currentAccount);
-    }, [currentAccount]);
+        if (active) {
+            getData(currentAccount);
+        } else {
+            if (timer.current) {
+                window.clearInterval(timer.current);
+            }
+        }
+    }, [currentAccount, active]);
 
     useEffect(() => {
         if (submitSuccess) {
