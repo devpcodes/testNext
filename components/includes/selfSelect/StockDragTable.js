@@ -28,26 +28,31 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         {
             title: '成交價',
             dataIndex: 'close',
+            align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '漲跌',
             dataIndex: 'changePrice',
+            align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '漲跌幅',
             dataIndex: 'changeRate',
+            align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '成交量',
             dataIndex: 'totalVolume',
+            align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '昨收',
             dataIndex: 'reference',
+            align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
@@ -112,18 +117,12 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         );
     };
 
-    // TODO : 補上期貨刪除
     const rowDataToReqDataForDel = rowData => {
         let reqData = {};
         reqData.market = rowData.market;
         reqData.selectId = tabKey;
-        if (['S', 'SB', 'H'].includes(reqData.market)) {
-            reqData.symbol = rowData.code;
-            reqData.exchange = rowData.exchange;
-        } else if (['O', 'F'].includes(reqData.market)) {
-            reqData.optionType = 'TX2';
-            reqData.expMon = '201909W2';
-        }
+        reqData.symbol = rowData.code;
+        reqData.exchange = rowData.exchange;
         reqData.token = token;
         return reqData;
     };
@@ -144,28 +143,28 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         if (tableData && tableData.length > 0) {
             let topicList = [];
             tableData.forEach(stock => {
-                // ['TIC/v1/STK/*/*/2330', 'TIC/v1/STK/*/*/2890', 'TIC/v1/STK/*/*/9999'];
-                if (stock.market === 'S') {
-                    topicList.push(`TIC/v1/STK/*/*/${stock.code}`);
+                switch (stock.market) {
+                    case 'S':
+                        topicList.push(`TIC/v1/STK/*/*/${stock.code}`);
+                        break;
+                    case 'O':
+                    case 'F':
+                        topicList.push(`TIC/v1/FOP/*/*/${stock.code}`);
+                        break;
                 }
             });
 
             setTopic(topicList);
             setSelfSelectList(tableData);
-
-            console.log(topicList);
         } else {
             setTopic([]);
             setSelfSelectList([]);
         }
-
-        console.log(tableData);
     }, [tableData]);
 
     useEffect(() => {
-        let data = JSON.parse(JSON.stringify(selfSelectList));
-        console.log(selfSelectList);
-        console.log(solaceData);
+        // let data = JSON.parse(JSON.stringify(selfSelectList));
+
         selfSelectList.forEach((selectData, index) => {
             if (selectData.code === solaceData.Code) {
                 selectData.totalVolume.text = solaceData.VolSum;
@@ -181,7 +180,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                         ? 'upper upper__icon'
                         : '';
                 selectData.changeRate.text =
-                    parseFloat(solaceData.DiffRate) === 0 ? '--' : parseFloat(solaceData.DiffRate / 100).toFixed(2);
+                    parseFloat(solaceData.DiffRate) === 0
+                        ? '--'
+                        : `${parseFloat(solaceData.DiffRate / 100).toFixed(2)} %`;
                 selectData.changeRate.class =
                     parseFloat(solaceData.DiffRate) < 0
                         ? 'lower lower__icon'
@@ -199,15 +200,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
 
         tableData.some((rowData, index) => {
             let rowReqData = {};
-            if (['S', 'SB', 'H'].includes(rowData.market)) {
-                rowReqData.symbol = rowData.code;
-                rowReqData.exchange = rowData.exchange;
-                rowReqData.market = rowData.market;
-            } else if (['O', 'F'].includes(rowData.market)) {
-                rowReqData.optionType = 'TX2';
-                rowReqData.expMon = '201909W2';
-                rowReqData.market = rowData.market;
-            }
+            rowReqData.symbol = rowData.code;
+            rowReqData.exchange = rowData.exchange;
+            rowReqData.market = rowData.market;
             reqDataSelectList.push(rowReqData);
         });
         return reqDataSelectList;
@@ -220,7 +215,6 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             data.splice(toIndex, 0, item);
             const reqData = tableDataToReqDataForUpdate(data);
             const res = await fetchUpdateSelectStock(reqData, isSocalLogin, token, tabKey);
-            console.log(res);
             setSelfSelectList(data);
         },
         handleSelector: '.drag',

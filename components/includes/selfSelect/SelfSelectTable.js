@@ -31,6 +31,10 @@ const SelfSelectTable = ({
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
 
+    console.log('==========-----------------==============');
+    console.log(isSocalLogin);
+    console.log('==========-----------------==============');
+
     // 查詢自選選單
     const { data: fetchSelectGroupData } = useSWR(
         [isSocalLogin, token, setSelectGroupReloadTime],
@@ -157,7 +161,11 @@ const SelfSelectTable = ({
                                 stockData.code = snapshotData.Code;
                                 stockData.market = stock.market;
                                 stockData.exchange = stock.exchange;
-                                stockData.name = snapshotData.Name === '' ? snapshotData.Code : snapshotData.Name;
+                                stockData.name = ['O', 'F'].includes(stock.market)
+                                    ? `${snapshotData.Code} ${snapshotData.Name}`
+                                    : snapshotData.Name === ''
+                                    ? snapshotData.Code
+                                    : snapshotData.Name;
                                 stockData.close = {
                                     text: snapshotData.Close ? snapshotData.Close.toFixed(2) : '--',
                                     class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
@@ -169,7 +177,9 @@ const SelfSelectTable = ({
                                     class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
                                 };
                                 stockData.changeRate = {
-                                    text: snapshotData.ChangeRate ? Math.abs(snapshotData.ChangeRate).toFixed(2) : '--',
+                                    text: snapshotData.ChangeRate
+                                        ? `${Math.abs(snapshotData.ChangeRate).toFixed(2)} %`
+                                        : '--',
                                     class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
                                 };
                                 stockData.totalVolume = {
@@ -185,6 +195,7 @@ const SelfSelectTable = ({
                     } else if (sbQuote && ['SB'].includes(stock.market)) {
                         const mk = stock.exchange === 'NASDAQ' ? 'US' : stock.exchange;
                         const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
+                        console.log(sbQuote);
                         stockData.key = index;
                         stockData.code = stock.symbol;
                         stockData.market = stock.market;
@@ -226,9 +237,6 @@ const SelfSelectTable = ({
     useEffect(async () => {
         setSelectGroupID(tabkey);
     }, [tabkey]);
-    // useEffect(() => {
-    //     console.log(fetchSelectGroupData)
-    // },[fetchSelectGroupData])
 
     // 取得庫存檔案 ( 只有證券帳戶 )
     useEffect(() => {
@@ -242,7 +250,7 @@ const SelfSelectTable = ({
         <>
             {/* {console.log(selectStocks)} */}
             <div className="select__group__tab">
-                <Tabs defaultActiveKey="0" onChange={changeSelectGroup}>
+                <Tabs defaultActiveKey="0" onChange={changeSelectGroup} activeKey={selectGroupID}>
                     <TabPane tab="庫存" key="0" />
                     {!!fetchSelectGroupData &&
                         fetchSelectGroupData.map((val, key) => {

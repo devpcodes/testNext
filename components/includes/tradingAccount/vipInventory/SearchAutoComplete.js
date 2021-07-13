@@ -35,8 +35,9 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
     };
 
     const renderItem = (item, value) => {
+        console.log(item);
         return {
-            value: item.symbol + ' ' + item.name_zh,
+            value: item.symbol + ' ' + (item.name_zh || item.name),
             // 補上完整資訊，以後查詢相關資料方便
             item: item,
             label: (
@@ -45,7 +46,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
                         highlightStyle={{ padding: 0, color: '#daa360', backgroundColor: 'rgba(255,255,255,0)' }}
                         searchWords={[value]}
                         autoEscape
-                        textToHighlight={item.symbol + ' ' + item.name_zh}
+                        textToHighlight={item.symbol + ' ' + (item.name_zh || item.name)}
                     />
                 </div>
             ),

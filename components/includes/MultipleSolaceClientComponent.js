@@ -58,7 +58,6 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
                 mptpIndex.forEach((data, index) => {
                     solaceMptpData[mptpIndex[index]] = xhr.data[index];
                     if (data === 'Code') {
-                        console.log(data);
                         code = xhr.data[index];
                     }
                 });
@@ -67,7 +66,6 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
             }
             // solaceData.current[code] = solaceMptpData;   // 全部資料
             solaceData.current = solaceMptpData;
-            console.log(solaceData.current);
             dispatch(setSolaceData(solaceData.current));
         }
     };
@@ -76,9 +74,7 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
         if (JSON.stringify(subscribeTopic) != JSON.stringify(topic.current)) {
             unsubscribeHandler();
             if (subscribeTopic.length > 0) {
-                console.log(subscribeTopic);
                 subscribeTopic.forEach(topic => {
-                    console.log(solace.current);
                     setTimeout(() => {
                         solace.current.subscribe(topic);
                     }, 500);
@@ -111,11 +107,6 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
     //     });
     // };
     return <></>;
-
-    // debug Code
-    setTimeout(() => {
-        console.log(topic.current);
-    }, 10000);
 };
 
 export default memo(MultipleSolaceClientComponent);

@@ -27,7 +27,7 @@ function Self_select_stocks() {
 
     const reload = useCallback(() => {
         const time = new Date().getTime();
-        setTabkey('0');
+        // setTabkey('0');
         setSelectReloadTime(time);
         setInventoryReloadTime(time);
         setSelectGroupReloadTime(time);
