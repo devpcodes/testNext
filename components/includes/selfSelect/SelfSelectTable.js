@@ -33,6 +33,10 @@ const SelfSelectTable = ({
 
     console.log('==========-----------------==============');
     console.log(isSocalLogin);
+    console.log(token);
+    console.log(currentAccount);
+    console.log(selectGroupID);
+    console.log(inventoryReloadTime);
     console.log('==========-----------------==============');
 
     // 查詢自選選單
@@ -50,7 +54,7 @@ const SelfSelectTable = ({
 
     // 查詢庫存股票
     const { data: inventoryStockData } = useSWR(
-        selectGroupID === '0' ? [token, currentAccount, selectGroupID, inventoryReloadTime] : null,
+        !isSocalLogin && selectGroupID === '0' ? [token, inventoryReloadTime] : null,
         fetchQuerySelectInventoryStock,
         {
             onError: (error, key) => {
@@ -250,8 +254,8 @@ const SelfSelectTable = ({
         <>
             {/* {console.log(selectStocks)} */}
             <div className="select__group__tab">
-                <Tabs defaultActiveKey="0" onChange={changeSelectGroup} activeKey={selectGroupID}>
-                    <TabPane tab="庫存" key="0" />
+                <Tabs onChange={changeSelectGroup} activeKey={selectGroupID}>
+                    {!isSocalLogin && <TabPane tab="庫存" key="0" />}
                     {!!fetchSelectGroupData &&
                         fetchSelectGroupData.map((val, key) => {
                             return (
