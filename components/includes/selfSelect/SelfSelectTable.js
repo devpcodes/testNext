@@ -54,7 +54,7 @@ const SelfSelectTable = ({
 
     // 查詢庫存股票
     const { data: inventoryStockData } = useSWR(
-        !isSocalLogin && selectGroupID === '0' ? [token, inventoryReloadTime] : null,
+        !isSocalLogin && selectGroupID === '0' && token ? [token, inventoryReloadTime] : null,
         fetchQuerySelectInventoryStock,
         {
             onError: (error, key) => {
