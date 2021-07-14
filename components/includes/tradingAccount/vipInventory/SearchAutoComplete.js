@@ -1,12 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AutoComplete } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 
-const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType = ['S'] }) => {
+const SearchAutoComplete = ({
+    selectHandler,
+    parentValue,
+    onChange,
+    width = false,
+    selectedHandler,
+    marketType = ['S'],
+}) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
-
+    const selected = useRef(false);
     useEffect(() => {
         console.log('val', parentValue);
         setValue(parentValue);
@@ -54,6 +61,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
     };
 
     const changeHandler = val => {
+        selected.current = false;
         console.log('change', val);
         setValue(val);
         if (val === '') {
@@ -69,7 +77,14 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
 
     const onSelect = (value, options) => {
         console.log('select', value);
+        selected.current = true;
         selectHandler(value, options);
+    };
+
+    const onBlur = () => {
+        if (typeof eval(selectedHandler) == 'function') {
+            selectedHandler(selected.current);
+        }
     };
 
     return (
@@ -80,12 +95,13 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
                     options={products}
                     placeholder="請輸入股號或商品名稱"
                     dropdownClassName="searchDropdown"
-                    dropdownMatchSelectWidth={240}
+                    dropdownMatchSelectWidth={width || 240}
                     onChange={changeHandler}
                     value={value}
                     autoFocus={true}
                     defaultActiveFirstOption={false}
                     onSelect={onSelect}
+                    onBlur={onBlur}
                 />
             </div>
             <style global jsx>{`
@@ -93,8 +109,11 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
                     height: 136px;
                     overflow-y: auto;
                 } */
+                .autoComplete__container {
+                    width: ${width || 'auto'};
+                }
                 .autoComplete__container .ant-select.ant-select-auto-complete.ant-select-single.ant-select-show-search {
-                    width: 219px;
+                    width: ${width || '219px'};
                     height: 38px;
                 }
                 .autoComplete__container .ant-select-selector {
