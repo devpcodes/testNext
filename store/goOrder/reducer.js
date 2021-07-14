@@ -30,6 +30,8 @@ const initialState = {
     checkLot: true,
     websocketEvent: false,
     activeTabKey: '1',
+    solaceInit: false,
+    checkQuery: true,
 };
 
 const reducer = (state = initialState, action) => {
@@ -180,6 +182,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 activeTabKey: action.payload,
+            };
+        case actionType.SET_SOLACEINIT:
+            return {
+                ...state,
+                solaceInit: action.payload,
+            };
+        case actionType.SET_CHECKQUERY:
+            return {
+                ...state,
+                checkQuery: action.payload,
             };
         default:
             return state;

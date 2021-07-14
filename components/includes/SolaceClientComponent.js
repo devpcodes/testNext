@@ -6,6 +6,7 @@ import { getCookie } from '../../services/components/layouts/cookieController';
 import { setSolaceData } from '../../store/solace/action';
 import { loadScriptByURL } from '../../services/loadScriptByURL';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
+import { setSolaceInit } from '../../store/goOrder/action';
 
 var OddlotUnit = 0;
 var OddlotReference = 0;
@@ -19,6 +20,7 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
     const [SNPLoaded, setSNPLoaded] = useState(false);
 
     useEffect(() => {
+        dispatch(setSolaceInit(false));
         loadScriptByURL('solace', `${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`, solaceLoadedHandler);
         return () => {
             if (solace.current != null) {
@@ -326,6 +328,9 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
                         }
                         solace.current.createCacheSession(topic, function () {
                             console.log('createCacheSession success');
+                            setTimeout(() => {
+                                dispatch(setSolaceInit(true));
+                            }, 300);
                         });
                     }, 100);
                 }
