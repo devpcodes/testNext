@@ -41,7 +41,7 @@ const SelfSelectTable = ({
 
     // 查詢自選選單
     const { data: fetchSelectGroupData } = useSWR(
-        [isSocalLogin, token, setSelectGroupReloadTime],
+        token ? [isSocalLogin, token, setSelectGroupReloadTime] : null,
         fetchQuerySelectGroup,
         {
             onError: (error, key) => {
@@ -67,7 +67,7 @@ const SelfSelectTable = ({
 
     // 查詢自選個股
     const { data: selectStocks } = useSWR(
-        selectGroupID !== '0' ? [isSocalLogin, token, selectGroupID, selectReloadTime] : null,
+        selectGroupID !== '0' && token ? [isSocalLogin, token, selectGroupID, selectReloadTime] : null,
         fetchQuerySelectStock,
         {
             onError: (error, key) => {

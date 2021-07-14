@@ -6,6 +6,8 @@ import Header from '../components/includes/goOrder/header/Header';
 import SelfSelectToolBar from '../components/includes/selfSelect/SelfSelectToolBar';
 import SelfSelectTable from '../components/includes/selfSelect/SelfSelectTable';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
@@ -17,6 +19,7 @@ function Self_select_stocks() {
     const [selectReloadTime, setSelectReloadTime] = useState(null);
     const [inventoryReloadTime, setInventoryReloadTime] = useState(null);
     const [selectGroupReloadTime, setSelectGroupReloadTime] = useState(null);
+
     const reloadCount = useCallback(listCount => {
         setCount(listCount);
     });
