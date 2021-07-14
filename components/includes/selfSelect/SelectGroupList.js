@@ -108,10 +108,14 @@ const SelectGroupList = ({ callBack }) => {
                                         <img src={pen} alt="編輯名稱"></img>
                                     </span>
                                     <span className="group__name">{val.selectName}</span>
-                                    <span className="del__icon" onClick={() => delGroup(val.selectId, val.selectName)}>
-                                        <img src={cancel} alt="刪除"></img>
-                                    </span>
-
+                                    {!isSocalLogin && (
+                                        <span
+                                            className="del__icon"
+                                            onClick={() => delGroup(val.selectId, val.selectName)}
+                                        >
+                                            <img src={cancel} alt="刪除"></img>
+                                        </span>
+                                    )}
                                     <span className="sort__icon">
                                         <img src={hamburger} alt="排序"></img>
                                     </span>

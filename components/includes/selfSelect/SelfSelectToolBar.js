@@ -7,7 +7,7 @@ import refresh from '../../../resources/images/pages/Self_select/basic-refresh-0
 import pen from '../../../resources/images/pages/Self_select/edit-edit.svg';
 import add from '../../../resources/images/pages/Self_select/edit-plus.svg';
 
-const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) => {
+const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectReloadTime }) => {
     const [isEditSelectGroupVisitable, setEditSelectGroupVisitable] = useState(false);
     const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
 
@@ -40,10 +40,12 @@ const SelfSelectToolBar = ({ count, tabkey, reload, reloadSelectReloadTime }) =>
                     <Button className="refresh__btn">
                         <img src={refresh} onClick={reload} />
                     </Button>
-                    <Button className="add__group__btn" onClick={openAddSelfGroup}>
-                        <img src={add} />
-                        <span className="add__group__btn__text">新增組合</span>
-                    </Button>
+                    {!isSocalLogin && (
+                        <Button className="add__group__btn" onClick={openAddSelfGroup}>
+                            <img src={add} />
+                            <span className="add__group__btn__text">新增組合</span>
+                        </Button>
+                    )}
                     <Button className="edit__group__btn" onClick={openEditSelfGroup}>
                         <img src={pen} />
                         <span className="edit__group__btn__text">編輯組合</span>

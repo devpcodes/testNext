@@ -1,4 +1,5 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { wrapper } from '../store/store';
 import { setNavItems } from '../store/components/layouts/action';
 import { PageHead } from '../components/includes/PageHead';
@@ -6,14 +7,14 @@ import Header from '../components/includes/goOrder/header/Header';
 import SelfSelectToolBar from '../components/includes/selfSelect/SelfSelectToolBar';
 import SelfSelectTable from '../components/includes/selfSelect/SelfSelectTable';
 
-import { useDispatch, useSelector } from 'react-redux';
-
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
 const noNewwebHeader = true;
 function Self_select_stocks() {
+    const socalLogin = useSelector(store => store.user.socalLogin);
+    const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
     const [count, setCount] = useState('--');
     const [tabkey, setTabkey] = useState('0');
     const [selectReloadTime, setSelectReloadTime] = useState(null);
@@ -48,6 +49,7 @@ function Self_select_stocks() {
                 <SelfSelectToolBar
                     count={count}
                     tabkey={tabkey}
+                    isSocalLogin={isSocalLogin}
                     reload={reload}
                     reloadSelectReloadTime={reloadSelectReloadTime}
                 />

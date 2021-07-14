@@ -1,13 +1,7 @@
-import React, { useState, memo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { memo } from 'react';
 import { Modal, Button } from 'antd';
-import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import SelectGroupList from './SelectGroupList';
 const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBack }) => {
-    const socalLoginData = useSelector(store => store.user.socalLogin);
-    const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-    const token = isSocalLogin ? getSocalToken() : getToken();
-
     const handleCancel = () => {
         handleClose();
     };
