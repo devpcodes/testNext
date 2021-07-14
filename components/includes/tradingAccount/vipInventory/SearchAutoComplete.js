@@ -69,7 +69,6 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, marketType =
 
     const onSelect = (value, options) => {
         console.log('select', value);
-        console.log('options', options);
         selectHandler(value, options);
     };
 
