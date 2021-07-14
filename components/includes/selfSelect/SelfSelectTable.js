@@ -28,16 +28,17 @@ const SelfSelectTable = ({
     const [snapshotInput, setSnapshotInput] = useState([]);
     const [sbInput, setSBInput] = useState([]);
     const [tableData, setTableData] = useState({});
+    const [isfirstTimeLoaded, setIsfirstTimeLoaded] = useState(true);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
 
-    console.log('==========-----------------==============');
-    console.log(isSocalLogin);
-    console.log(token);
-    console.log(currentAccount);
-    console.log(selectGroupID);
-    console.log(inventoryReloadTime);
-    console.log('==========-----------------==============');
+    // console.log('==========-----------------==============');
+    // console.log(isSocalLogin);
+    // console.log(token);
+    // console.log(currentAccount);
+    // console.log(selectGroupID);
+    // console.log(inventoryReloadTime);
+    // console.log('==========-----------------==============');
 
     // 查詢自選選單
     const { data: fetchSelectGroupData } = useSWR(
@@ -139,6 +140,14 @@ const SelfSelectTable = ({
             setRequestData(selectStocks);
         }
     }, [inventoryStockData, selectStocks]);
+
+    // 第三方登入鎖定第一個選單
+    useEffect(() => {
+        if (isSocalLogin && isfirstTimeLoaded) {
+            selectGroupID(fetchSelectGroupData[0].selectId);
+            setIsfirstTimeLoaded(false);
+        }
+    }, [fetchSelectGroupData]);
 
     useEffect(() => {
         // console.log(selectGroupID);
