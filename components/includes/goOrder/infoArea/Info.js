@@ -29,6 +29,8 @@ import {
     setDefaultOrdPrice,
     setOrdQty,
     setTradeTime,
+    setT30,
+    setCheckLot,
 } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
@@ -119,6 +121,8 @@ export const Info = ({ stockid }) => {
     const checkLot = useSelector(store => store.goOrder.checkLot);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const userSettings = useSelector(store => store.user.userSettings);
+    const T30 = useSelector(store => store.goOrder.T30Data);
+
     const { close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot, checkLot);
 
     const router = useRouter();
@@ -218,6 +222,22 @@ export const Info = ({ stockid }) => {
         }
     }, [solaceData]);
 
+    useEffect(() => {
+        let tib = '';
+        if (T30?.EXCHANGE === 'OTC' && T30?.STK_CTGCD === '3') {
+            tib = '戰略新板';
+            let oldProductInfo = { ...productInfo };
+            oldProductInfo.TIB = tib;
+            dispatch(setProductInfo(oldProductInfo));
+        }
+        if (T30?.EXCHANGE === 'TSE' && T30?.STK_CTGCD === '3') {
+            tib = '創新板';
+            let oldProductInfo = { ...productInfo };
+            oldProductInfo.TIB = tib;
+            dispatch(setProductInfo(oldProductInfo));
+        }
+    }, [T30]);
+
     useEffect(async () => {
         if (code === '') {
             return;
@@ -227,12 +247,12 @@ export const Info = ({ stockid }) => {
         }
     }, [code, lot, isLogin]);
 
-    useEffect(async () => {
-        if (!isLogin && Object.keys(socalLoginData).length === 0) {
-            return;
-        }
-        getSelect();
-    }, [code, isLogin, isSelfSelectVisitable]);
+    // useEffect(async () => {
+    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
+    //         return;
+    //     }
+    //     getSelect();
+    // }, [code, isLogin, isSelfSelectVisitable]);
 
     useEffect(() => {
         if (!code) {
@@ -298,7 +318,12 @@ export const Info = ({ stockid }) => {
     }, []);
 
     const lotWidthHandler = () => {
-        if (productInfo?.solaceMarket && productInfo.solaceMarket !== '興櫃' && productInfo.solaceMarket !== '權證') {
+        // if (productInfo?.solaceMarket && productInfo.solaceMarket !== '興櫃' && productInfo.solaceMarket !== '權證') {
+        //     return { width: '44px' };
+        // } else {
+        //     return { width: '22px' };
+        // }
+        if (checkLot) {
             return { width: '44px' };
         } else {
             return { width: '22px' };
@@ -409,6 +434,7 @@ export const Info = ({ stockid }) => {
         // { id: '6', color: 'brown', text: '+ 自選' },
 
         const t30Res = await fetchStockT30(code);
+        dispatch(setT30(t30Res));
         // const test = await fetchGetRichClubReport(code);
         // console.log(test)
 
@@ -515,13 +541,15 @@ export const Info = ({ stockid }) => {
                     <div className="market__container">
                         <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
                             <div className="box board">整</div>
-                            {productInfo?.solaceMarket &&
+                            {/* {productInfo?.solaceMarket &&
                                 productInfo.solaceMarket !== '興櫃' &&
-                                productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>}
+                                productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>} */}
+                            {checkLot && <div className="box odd">零</div>}
                         </button>
-                        {productInfo?.solaceMarket != null && (
-                            <div className="market__box">{productInfo.solaceMarket}</div>
-                        )}
+                        {/* {productInfo?.solaceMarket != null && (
+                            <div className="market__box">{productInfo.TIB || productInfo.solaceMarket}</div>
+                        )} */}
+                        <div className="market__box">{productInfo?.TIB || productInfo?.solaceMarket}</div>
                     </div>
                     <div className="more__container" onClick={setMoreDetailIsVisitable}>
                         {moreItems.map(item => (
@@ -543,12 +571,12 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <AddSelectStock
+            {/* <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
                 reloadSelect={getSelect}
-            />
+            /> */}
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
@@ -682,7 +710,7 @@ export const Info = ({ stockid }) => {
                     color: ${lot === 'Odd' && checkLot ? theme.colors.text : '#a9b6cb'};
                 }
                 .market__box {
-                    width: 42px;
+                    /* width: 42px; */
                     height: 22px;
                     margin-left: 4px;
                     padding: 1px 6px;

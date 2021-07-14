@@ -9,6 +9,7 @@ import {
     mappingIspreOrder,
     mappingCommissionedCodeTradingAcc,
     padLeft,
+    mappingPriceMsg,
 } from '../../../../services/components/goOrder/dataMapping';
 import { timeFormatter } from '../../../../services/timeFormatter';
 import { formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
@@ -301,7 +302,12 @@ const ChangeBox = ({ type, tabKey, btnClassName }) => {
 
                 <div className="price__box">
                     <span className="price__label">委託價格</span>
-                    <span className="price__val">{info.price}</span>
+                    <span className="price__val">
+                        {formatPriceByUnit(
+                            info.stock_id,
+                            mappingPriceMsg(info.price, info.price_type, info.price_flag, info.ord_type1),
+                        )}
+                    </span>
                 </div>
                 <div className="qty__box">
                     <span className="qty__label">剩餘數量</span>

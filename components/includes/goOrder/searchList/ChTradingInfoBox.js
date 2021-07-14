@@ -4,11 +4,23 @@ import { Button, Tooltip, Modal, Tabs } from 'antd';
 import ChangeBox from './ChangeBox';
 
 const { TabPane } = Tabs;
+export const checkPriceBtn = info => {
+    // 檢查市價
+    if (info.price_flag === '1' || info.price_flag == null) {
+        return false;
+    }
+    // 檢查盤後零股 / 盤中零股 / 定盤
+    if (info.ord_type1 === '2' || info.ord_type1 === 'C' || info.ord_type1 === 'P') {
+        return false;
+    }
+    return true;
+};
 const ChTradingInfoBox = () => {
     const [tabKey, setTabKey] = useState('1');
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
+    const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     useEffect(() => {
-        if (checkPriceBtn()) {
+        if (checkPriceBtn(info)) {
             setTabKey('1');
         } else {
             setTabKey('2');
@@ -27,32 +39,34 @@ const ChTradingInfoBox = () => {
                 break;
         }
     };
-    const checkPriceBtn = () => {
-        // 檢查市價
-        if (info.price_flag === '1' || info.price_flag == null) {
-            return false;
-        }
-        // 檢查盤後零股 / 盤中零股 / 定盤
-        if (info.ord_type1 === '2' || info.ord_type1 === 'C' || info.ord_type1 === 'P') {
-            return false;
-        }
-        return true;
-    };
+    // const checkPriceBtn = () => {
+    //     // 檢查市價
+    //     if (info.price_flag === '1' || info.price_flag == null) {
+    //         return false;
+    //     }
+    //     // 檢查盤後零股 / 盤中零股 / 定盤
+    //     if (info.ord_type1 === '2' || info.ord_type1 === 'C' || info.ord_type1 === 'P') {
+    //         return false;
+    //     }
+    //     return true;
+    // };
     return (
         <div className="trading__container">
             <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: false }}>
-                {checkPriceBtn() && (
+                {checkPriceBtn(info) && (
                     <TabPane tab="改價" key="1">
                         {tabKey === '1' && (
                             <ChangeBox type="price" tabKey={tabKey} btnClassName="btn__container btn__container-00" />
                         )}
                     </TabPane>
                 )}
-                <TabPane tab="改量" key="2">
-                    {tabKey === '2' && (
-                        <ChangeBox type="qty" tabKey={tabKey} btnClassName="btn__container btn__container-01" />
-                    )}
-                </TabPane>
+                {market !== '興櫃' && (
+                    <TabPane tab="改量" key="2">
+                        {tabKey === '2' && (
+                            <ChangeBox type="qty" tabKey={tabKey} btnClassName="btn__container btn__container-01" />
+                        )}
+                    </TabPane>
+                )}
             </Tabs>
             <style jsx global>{`
                 .trading__container .ant-tabs {

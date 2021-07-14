@@ -119,7 +119,9 @@ const DetailBox = () => {
                         </div>
                         <div className="item">
                             <span className="item__label">剩餘數量</span>
-                            <span className="item__val">{Number(info.qty) - Number(info.cancel_qty)}</span>
+                            <span className="item__val">
+                                {Number(info.qty) - Number(info.cancel_qty) - Number(info.match_qty)}
+                            </span>
                         </div>
                         <div className="item">
                             <span className="item__label">成交數量</span>
