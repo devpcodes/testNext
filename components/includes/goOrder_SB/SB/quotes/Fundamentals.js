@@ -68,22 +68,23 @@ const Fundamentals = () => {
                     font-weight: bold;
                 }
                 .mktVal {
-                    width: 70px;
+                    width: 75px;
                     font-size: 1.4rem;
-                    margin-top: 2px;
+                    margin-top: 1px;
                 }
                 @media (max-width: 370px) {
                     .item {
-                        font-size: 1.4rem;
+                        font-size: 1.2rem;
                     }
                     .mktVal {
-                        margin-top: 0;
+                        font-size: 1.2rem;
+                        margin-top: 0px;
                     }
                 }
                 @media (max-width: 340px) {
                     .mktVal {
-                        font-size: 1.2rem;
-                        margin-top: 2px;
+                        font-size: 1rem;
+                        margin-top: 1px;
                     }
                 }
             `}</style>

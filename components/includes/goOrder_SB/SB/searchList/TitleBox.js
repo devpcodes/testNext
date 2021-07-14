@@ -46,7 +46,7 @@ const TitleBox = ({ info, stockInfo }) => {
 
             <div className="name__zh">
                 <span className="bs">{info.BS === 'B' ? '買進' : '賣出'}</span>
-                {info.StockID.substring(0, info.StockID.lastIndexOf('.'))}
+                <span>{info.name}</span>
                 <Tooltip
                     placement="bottom"
                     title={
@@ -99,6 +99,11 @@ const TitleBox = ({ info, stockInfo }) => {
                     margin-top: 3px;
                     font-weight: bold;
                     color: black;
+                }
+                @media (max-width: 340px) {
+                    .name__zh {
+                        font-size: 20px;
+                    }
                 }
                 .bs {
                     color: ${info.BS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};

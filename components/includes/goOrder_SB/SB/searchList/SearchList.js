@@ -19,6 +19,7 @@ import {
     setWebsocketEvent,
 } from '../../../../../store/goOrderSB/action';
 import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
+import { postSbcoCode } from '../../../../../services/components/goOrder/sb/postSbcoCode';
 import { getWebId } from '../../../../../services/components/goOrder/getWebId';
 import { usePlatform } from '../../../../../hooks/usePlatform';
 
@@ -106,7 +107,7 @@ const SearchList = ({ active }) => {
                 dataIndex: 'StockID',
                 key: 'StockID',
                 sorter: (a, b) => {
-                    return sortString(a.StockID, b.StockID);
+                    return sortString(a.name, b.name);
                 },
                 sortOrder: sortKey === 'StockID' && sortOrder,
                 render: (text, record) => {
@@ -120,7 +121,7 @@ const SearchList = ({ active }) => {
                         <>
                             <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                                 <p className="item" style={{ wordBreak: 'break-word' }}>
-                                    {symbol}
+                                    {record.name}
                                 </p>
                                 {marketID === 'US' && (
                                     <>
@@ -396,16 +397,45 @@ const SearchList = ({ active }) => {
                 stockID: '',
                 token: getToken(),
             });
+            const symbolList = [];
             res = res.map((item, index) => {
                 item.key = index;
+                const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
+                const marketID = item.StockID.split('.').slice(-1).pop();
+                if (marketID !== 'US') {
+                    symbolList.push({ exchange: marketID, code: symbol });
+                }
                 return item;
             });
-            console.log(res);
+            getSymbolName(symbolList, res);
+            console.log(res, symbolList);
             setData(res);
         } catch (error) {
             console.log(error);
         }
         dispatch(setSearchListSubmitSuccess(false));
+    };
+
+    const getSymbolName = async (symbolList, data) => {
+        if (symbolList.length > 0) {
+            try {
+                const res = await postSbcoCode(symbolList);
+
+                let newData = data.map(item => {
+                    const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
+                    item.name = symbol;
+                    for (let index = 0; index < res.length; index++) {
+                        const element = res[index];
+                        if (element.code === symbol) {
+                            item.name = element.name;
+                            break;
+                        }
+                    }
+                    return item;
+                });
+                setData(newData);
+            } catch (error) {}
+        }
     };
 
     const sortKeyHandler = useCallback(key => {

@@ -54,17 +54,17 @@ const QuoteContainer = () => {
         }
     }, [panelHeight, bs]);
 
-    const low52Handler = (yl, ls, op) => {
-        if (!isNaN(Number(yl)) && !isNaN(Number(ls)) && !isNaN(Number(op))) {
-            return Math.min(Number(yl), Number(ls), Number(op));
+    const low52Handler = (yl, ls, op, lo) => {
+        if (!isNaN(Number(yl)) && !isNaN(Number(ls)) && !isNaN(Number(op)) && !isNaN(Number(lo))) {
+            return Math.min(Number(yl), Number(ls), Number(op), Number(lo));
         } else {
             return yl || '-';
         }
     };
-    const high52Handler = (yh, ls, op) => {
+    const high52Handler = (yh, ls, op, hi) => {
         // return Math.max(yh, ls, op);
-        if (!isNaN(Number(yh)) && !isNaN(Number(ls)) && !isNaN(Number(op))) {
-            return Math.min(Number(yh), Number(ls), Number(op));
+        if (!isNaN(Number(yh)) && !isNaN(Number(ls)) && !isNaN(Number(op)) && !isNaN(Number(hi))) {
+            return Math.max(Number(yh), Number(ls), Number(op), Number(hi));
         } else {
             return yh || '-';
         }
@@ -93,8 +93,8 @@ const QuoteContainer = () => {
                     <DKbar
                         close={quote.ls}
                         open={quote.op}
-                        low={low52Handler(quote.yl, quote.ls, quote.op)}
-                        high={high52Handler(quote.yh, quote.ls, quote.op)}
+                        low={low52Handler(quote.yl, quote.ls, quote.op, quote.lo)}
+                        high={high52Handler(quote.yh, quote.ls, quote.op, quote.hi)}
                         text={'52週區間'}
                     />
                 </div>
