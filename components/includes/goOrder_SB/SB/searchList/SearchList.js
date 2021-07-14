@@ -427,12 +427,13 @@ const SearchList = ({ active }) => {
                     for (let index = 0; index < res.length; index++) {
                         const element = res[index];
                         if (element.code === symbol) {
-                            item.name = element.name;
+                            item.name = element.name || symbol;
                             break;
                         }
                     }
                     return item;
                 });
+                // console.log('data', newData);
                 setData(newData);
             } catch (error) {}
         }
