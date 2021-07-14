@@ -144,7 +144,7 @@ const SelfSelectTable = ({
     // 第三方登入鎖定第一個選單
     useEffect(() => {
         if (isSocalLogin && isfirstTimeLoaded) {
-            selectGroupID(fetchSelectGroupData[0].selectId);
+            setSelectGroupID(fetchSelectGroupData[0].selectId);
             setIsfirstTimeLoaded(false);
         }
     }, [fetchSelectGroupData]);
