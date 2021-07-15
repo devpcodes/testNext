@@ -290,6 +290,12 @@ const SelfSelectTable = ({
                     padding: 0 30px;
                     border: solid 1px #e6ebf5;
                 }
+                .select__stock__table {
+                    overflow: auto;
+                }
+                .select__list__box {
+                    border: solid 1px #e6ebf5;
+                }
             `}</style>
             <style jsx global>{`
                 .ant-tabs-tab-btn {
@@ -317,6 +323,10 @@ const SelfSelectTable = ({
                 .ant-table-wrapper .ant-table-thead > tr > th {
                     background-color: #f2f5fa;
                     color: #3f5372;
+                }
+
+                .select__stock__table .sino__table {
+                    margin-bottom: 0px;
                 }
             `}</style>
         </>

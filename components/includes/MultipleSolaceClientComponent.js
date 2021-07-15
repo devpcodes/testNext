@@ -30,7 +30,7 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
         subscribeHandler();
     }, [solaceLoaded, subscribeTopic]);
 
-    // 寫死測試
+    // 測試 Topic
     // const subscribeTopic = ['MKT/*/*/6770', 'QUT/*/*/2330', 'MKT/*/*/6555', 'QUT/*/*/1234', 'MKT/*/*/1260', 'QUT/*/*/2890'];
     // mapck 版本
     // const subscribeTopic = ["'TIC/v1/STK/*/*/6770", "'TIC/v1/STK/*/*/2330", "'TIC/v1/STK/*/*/6555", "'TIC/v1/STK/*/*/1234", "'TIC/v1/STK/*/*/1260", "'TIC/v1/STK/*/*/2890"]; // 'TIC/v1/FOP/*/*/TXFG1',
@@ -63,9 +63,10 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
                 });
             } else {
                 // 欄位錯誤 ( 停止訂閱 )
+                console.log('資料長度跟 mptp長度不符。');
             }
-            // solaceData.current[code] = solaceMptpData;   // 全部資料
-            solaceData.current = solaceMptpData;
+            // solaceData.current[code] = solaceMptpData;   // 全部資料放進 solaceData
+            solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
             dispatch(setSolaceData(solaceData.current));
         }
     };
@@ -77,7 +78,7 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
                 subscribeTopic.forEach(topic => {
                     setTimeout(() => {
                         solace.current.subscribe(topic);
-                    }, 500);
+                    }, 100);
                 });
 
                 // 記住目前 TOPIC
@@ -99,13 +100,6 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
             });
         }
     };
-
-    // 未完成
-    // const checkTopic = item => {
-    //     return currentSubscribe.current.some(topic => {
-    //         return true;
-    //     });
-    // };
     return <></>;
 };
 

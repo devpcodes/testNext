@@ -14,8 +14,12 @@ import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
 const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
+    const currentAccount = useSelector(store => store.user.currentAccount);
+    const socalLogin = useSelector(store => store.user.socalLogin);
+
     const [selfSelectList, setSelfSelectList] = useState([]);
     const [topic, setTopic] = useState([]);
+
     const isMobile = useCheckMobile();
     const router = useRouter();
     const solaceData = useSelector(store => store.solace.solaceData);
@@ -245,9 +249,8 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     dataSource={selfSelectList}
                 />
             </ReactDragListView>
-            {/* <MultipleSolaceClientComponent /> */}
-            {checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={'MCCAFIGAGI'} />}
-            {!checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={''} />}
+            {checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={currentAccount?.idno} />}
+            {!checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={socalLogin?._id} />}
             <style jsx>{``}</style>
             <style jsx global>{`
                 .drag__Table .upper {
