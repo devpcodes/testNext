@@ -81,7 +81,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '刪除',
-            dataIndex: '刪除',
+            dataIndex: 'del',
             render: (text, record, index) =>
                 tabKey === '0' ? (
                     <></>
@@ -93,7 +93,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '移動',
-            key: '移動',
+            dataIndex: 'move',
             render: (text, record, index) =>
                 tabKey === '0' ? (
                     <></>
@@ -104,6 +104,15 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                 ),
         },
     ];
+
+    columns.forEach((val, index) => {
+        if (tabKey + '' === '0' && (val.dataIndex === 'del' || val.dataIndex === 'move')) {
+            delete columns[index];
+        }
+        if (isSocalLogin === true && val.dataIndex === 'action') {
+            delete columns[index];
+        }
+    });
 
     const goOrder = (stockData, bs) => {
         openGoOrder(
@@ -169,6 +178,12 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             if (selectData.code === solaceData.Code) {
                 selectData.totalVolume.text = solaceData.VolSum;
                 selectData.close.text = solaceData.Close;
+                selectData.close.class =
+                    parseFloat(solaceData.DiffPrice) < 0
+                        ? 'lower'
+                        : parseFloat(solaceData.DiffPrice) > 0
+                        ? 'upper'
+                        : '';
                 selectData.changeRate.text = solaceData.DiffRate;
                 selectData.changeRate.text = solaceData.DiffRate;
                 selectData.changePrice.text =
