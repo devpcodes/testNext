@@ -194,7 +194,7 @@ const Info = ({ stockid }) => {
         try {
             const res = await fetchGetQuote(code, token);
             clearComma(res);
-            if (res?.dc === 'delay') {
+            if (res?.dc === 'realStream') {
                 //realStream
                 dispatch(setRealTimeUser(true));
             }

@@ -398,7 +398,6 @@ const SearchList = ({ active }) => {
                 token: getToken(),
             });
             const symbolList = [];
-            console.log('-----', res, symbolList);
             res = res.map((item, index) => {
                 item.key = index;
                 const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
@@ -410,7 +409,6 @@ const SearchList = ({ active }) => {
                 return item;
             });
             getSymbolName(symbolList, res);
-            console.log('-----', res, symbolList);
             setData(res);
         } catch (error) {
             console.log(error);

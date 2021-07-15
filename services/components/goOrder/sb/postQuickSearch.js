@@ -20,6 +20,8 @@ export const postQuickSearch = async ({ AID, orderID, sort, stockID, token }) =>
                 } else {
                     return keyHandler(res.data.result?.Data?.Row);
                 }
+            } else {
+                return [];
             }
         } else {
             throw 'error';
