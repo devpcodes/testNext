@@ -2492,7 +2492,7 @@
                 });
             }
             this._loadSavedStrategy();
-            
+
         },
         _setAdvancedCriteria: function (index, name, period, min, max) {
             var that = this;
