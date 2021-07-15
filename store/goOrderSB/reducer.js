@@ -24,6 +24,7 @@ const initialState = {
     refreshCode: '',
     searchListSubmitSuccess: false,
     websocketEvent: false,
+    realTimeUser: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -142,6 +143,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 websocketEvent: action.payload,
+            };
+        case actionType.SET_REALTIME_USER:
+            return {
+                ...state,
+                realTimeUser: action.payload,
             };
         default:
             return state;

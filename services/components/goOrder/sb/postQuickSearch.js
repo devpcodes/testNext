@@ -11,7 +11,16 @@ export const postQuickSearch = async ({ AID, orderID, sort, stockID, token }) =>
             token,
         });
         if (res.data.success === 'True') {
-            return keyHandler(res.data.result?.Data?.Row);
+            //此API，只有一筆它給obj，2筆以上變陣列...
+            const arr = [];
+            if (res.data.result?.Data?.Row) {
+                if (!Array.isArray(res.data.result?.Data?.Row)) {
+                    arr.push(res.data.result?.Data?.Row);
+                    return keyHandler(arr);
+                } else {
+                    return keyHandler(res.data.result?.Data?.Row);
+                }
+            }
         } else {
             throw 'error';
         }
@@ -67,5 +76,6 @@ const keyHandler = data => {
         };
         output.push(rtnData);
     }
+    console.log('output......................', output);
     return output;
 };

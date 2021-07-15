@@ -155,3 +155,10 @@ export const setWebsocketEvent = boo => {
         payload: boo,
     };
 };
+
+export const setRealTimeUser = boo => {
+    return {
+        type: actionType.SET_REALTIME_USER,
+        payload: boo,
+    };
+};

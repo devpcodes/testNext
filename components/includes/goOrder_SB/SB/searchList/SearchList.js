@@ -398,17 +398,19 @@ const SearchList = ({ active }) => {
                 token: getToken(),
             });
             const symbolList = [];
+            console.log('-----', res, symbolList);
             res = res.map((item, index) => {
                 item.key = index;
                 const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
                 const marketID = item.StockID.split('.').slice(-1).pop();
+                item.name = symbol;
                 if (marketID !== 'US') {
                     symbolList.push({ exchange: marketID, code: symbol });
                 }
                 return item;
             });
             getSymbolName(symbolList, res);
-            console.log(res, symbolList);
+            console.log('-----', res, symbolList);
             setData(res);
         } catch (error) {
             console.log(error);
@@ -433,7 +435,7 @@ const SearchList = ({ active }) => {
                     }
                     return item;
                 });
-                // console.log('data', newData);
+                console.log('data', newData);
                 setData(newData);
             } catch (error) {}
         }

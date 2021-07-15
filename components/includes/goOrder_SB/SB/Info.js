@@ -19,6 +19,7 @@ import {
     setQueryPrice,
     setQueryQty,
     setQuote,
+    setRealTimeUser,
     setRefreshCode,
     setRic,
     setSBBs,
@@ -48,12 +49,20 @@ const Info = ({ stockid }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const refresh = useSelector(store => store.goOrderSB.refresh);
     const refreshCode = useSelector(store => store.goOrderSB.refreshCode);
+    const realTimeUser = useSelector(store => store.goOrderSB.realTimeUser);
     const dispatch = useDispatch();
     const [checkCA, setCheckCA] = useState(false);
     const [label, setLabel] = useState('');
     const router = useRouter();
     const init = useRef(false);
-
+    const timer = useRef(null);
+    useEffect(() => {
+        return () => {
+            if (timer?.current) {
+                window.clearInterval(timer.current);
+            }
+        };
+    }, []);
     useEffect(() => {
         if (!init.current) {
             if (router?.query?.price && router?.query?.type === 'H') {
@@ -92,6 +101,9 @@ const Info = ({ stockid }) => {
         dispatch(setRic(''));
         dispatch(setGtc(false));
         dispatch(setGtcDate(''));
+        if (timer?.current) {
+            window.clearInterval(timer.current);
+        }
         // getRic(code);
     }, [code, type]);
 
@@ -115,6 +127,18 @@ const Info = ({ stockid }) => {
             getStockInfo(currentAccount, productInfo.market);
         }
     }, [productInfo, currentAccount, code]);
+
+    useEffect(() => {
+        if (checkRealtimeMarket(productInfo.market) && realTimeUser) {
+            if (timer?.current) {
+                window.clearInterval(timer.current);
+            }
+            timer.current = window.setInterval(() => {
+                getData(ric);
+                // dispatch(setRefreshCode(productInfo?.symbol));
+            }, 3000);
+        }
+    }, [productInfo, realTimeUser, ric]);
 
     const getProductData = async (stockid, type) => {
         const data = {
@@ -170,6 +194,10 @@ const Info = ({ stockid }) => {
         try {
             const res = await fetchGetQuote(code, token);
             clearComma(res);
+            if (res?.dc === 'delay') {
+                //realStream
+                dispatch(setRealTimeUser(true));
+            }
             console.log('res', res);
             dispatch(setQuote(res));
         } catch (error) {
@@ -260,6 +288,7 @@ const Info = ({ stockid }) => {
         <>
             <InstallWebCA getCheckCA={getCheckCA} />
             {checkCA && <UpdateBar text={'請手動點擊更新，刷新報價'} />}
+            {/* <UpdateBar text={'請手動點擊更新，刷新報價'} /> */}
             <div className="info__container">
                 <div className="info__box">
                     <div className="row">
