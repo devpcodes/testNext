@@ -206,7 +206,7 @@ const SearchList = ({ active }) => {
                 sortOrder: sortKey === 'StateMsg' && sortOrder,
                 render: (text, record) => {
                     let showBtn = false;
-                    if (record.CanCancel !== 'N' || record.CanModify !== 'N') {
+                    if (record.CanCancel === 'Y' || record.CanModify === 'Y') {
                         showBtn = true;
                     }
                     return (
@@ -246,7 +246,7 @@ const SearchList = ({ active }) => {
                                             >
                                                 刪單
                                             </Button>
-                                            {record.CanCancel !== 'N' ? null : (
+                                            {record.CanModify === 'Y' && (
                                                 <Button
                                                     style={{
                                                         width: '102px',
