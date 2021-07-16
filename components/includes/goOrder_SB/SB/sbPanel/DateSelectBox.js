@@ -93,6 +93,10 @@ const DateSelectBox = ({ style, width, selected, onChange, ...props }) => {
                 .date__container .react-datepicker__month-container {
                     font-size: 1.1rem;
                 }
+                .react-datepicker-popper[data-placement='bottom-end'] .react-datepicker__triangle,
+                .react-datepicker-popper[data-placement='top-end'] .react-datepicker__triangle {
+                    left: 11px !important;
+                }
             `}</style>
         </div>
     );
