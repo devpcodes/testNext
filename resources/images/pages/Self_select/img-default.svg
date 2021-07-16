@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140">
+    <defs>
+        <linearGradient id="y0hjzes6oa" x1="77.316%" x2="77.316%" y1="147.065%" y2="22.057%">
+            <stop offset="0%" stop-color="#E6EBF5"/>
+            <stop offset="38.132%" stop-color="#D4DCE7"/>
+            <stop offset="100%" stop-color="#A9B6CB" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="24p11yljmb" x1="77.316%" x2="77.316%" y1="147.065%" y2="22.057%">
+            <stop offset="0%" stop-color="#E6EBF5"/>
+            <stop offset="38.132%" stop-color="#D4DCE7"/>
+            <stop offset="100%" stop-color="#A9B6CB" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-730.000000, -352.000000) translate(730.000000, 352.000000) translate(8.555556, 21.000000)">
+                    <path fill="url(#y0hjzes6oa)" d="M34.451 56L0 0 122.5 0 89.216 56z" opacity=".2"/>
+                    <path fill="url(#24p11yljmb)" d="M50.784 56L16.333 0 108.534 0 75.25 56z" opacity=".2"/>
+                    <path fill="#E6EBF5" d="M33.955 56h55.637v49.7c0 1.546-1.254 2.8-2.8 2.8H36.755c-1.547 0-2.8-1.254-2.8-2.8V56z"/>
+                    <path stroke="#A9B6CB" stroke-linecap="square" stroke-width="1.4" d="M43.75 107.917L79.917 107.917"/>
+                    <path fill="#FFF" d="M43.167 96.833H80.5V99.166H43.167zM43.167 89.833H80.5V92.166H43.167zM43.167 82.833H80.5V85.166H43.167z"/>
+                    <circle cx="54.25" cy="25.083" r="1.75" fill="#FFF"/>
+                    <circle cx="86.917" cy="32.083" r="1.75" fill="#FFF"/>
+                    <circle cx="40.833" cy="11.667" r="1.167" fill="#FFF"/>
+                    <circle cx="41.417" cy="37.917" r="4.083" fill="#FFF"/>
+                    <circle cx="66.5" cy="36.167" r="2.333" fill="#FFF"/>
+                    <circle cx="81.667" cy="17.5" r="4.667" fill="#FFF"/>
+                </g>
+                <path d="M0 0H140V140H0z" transform="translate(-730.000000, -352.000000) translate(730.000000, 352.000000)"/>
+            </g>
+        </g>
+    </g>
+</svg>

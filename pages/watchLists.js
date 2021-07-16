@@ -11,7 +11,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
-const noNewwebHeader = true;
+const noNewwebHeader = false;
 function Self_select_stocks() {
     const socalLogin = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;

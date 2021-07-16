@@ -107,6 +107,7 @@ const SelectGroupList = ({ callBack }) => {
                                     >
                                         <img src={pen} alt="編輯名稱"></img>
                                     </span>
+                                    {/* 缺檔數 */}
                                     <span className="group__name">{val.selectName}</span>
                                     {!isSocalLogin && (
                                         <span

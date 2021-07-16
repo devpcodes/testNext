@@ -157,11 +157,13 @@ const SelfSelectTable = ({
                     ? inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]
                     : selectStocks;
             const tableRowData = [];
-            // console.log(tableData);
+
             if (tableData && Array.isArray(tableData) && tableData.length > 0) {
                 tableData.some((stock, index) => {
                     let stockData = {};
+
                     if (snapshot && ['O', 'F', 'S'].includes(stock.market)) {
+                        // 證期權
                         snapshot.some((snapshotData, snapshotIndex) => {
                             const isupper =
                                 parseFloat(snapshotData.ChangePrice) == 0
@@ -174,11 +176,20 @@ const SelfSelectTable = ({
                                 stockData.code = snapshotData.Code;
                                 stockData.market = stock.market;
                                 stockData.exchange = stock.exchange;
-                                stockData.name = ['O', 'F'].includes(stock.market)
-                                    ? `${snapshotData.Code} ${snapshotData.Name}`
-                                    : snapshotData.Name === ''
-                                    ? snapshotData.Code
-                                    : snapshotData.Name;
+                                stockData.name = {
+                                    text: ['O', 'F'].includes(stock.market)
+                                        ? `${snapshotData.Code} ${snapshotData.Name}`
+                                        : snapshotData.Name === ''
+                                        ? snapshotData.Code
+                                        : snapshotData.Name,
+                                    link: ['S'].includes(stock.market)
+                                        ? `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?mode=0&code=${snapshotData.Code}`
+                                        : ['F'].includes(stock.market)
+                                        ? `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Futures/`
+                                        : ['O'].includes(stock.market)
+                                        ? `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Option/`
+                                        : 'javascript:;',
+                                };
                                 stockData.close = {
                                     text: snapshotData.Close ? snapshotData.Close.toFixed(2) : '--',
                                     class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
@@ -206,14 +217,17 @@ const SelfSelectTable = ({
                             }
                         });
                     } else if (sbQuote && ['SB'].includes(stock.market)) {
+                        // 複委託
                         const mk = stock.exchange === 'NASDAQ' ? 'US' : stock.exchange;
                         const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
-                        console.log(sbQuote);
                         stockData.key = index;
                         stockData.code = stock.symbol;
                         stockData.market = stock.market;
                         stockData.exchange = stock.exchange;
-                        stockData.name = `${stock.symbol}.${mk}`;
+                        stockData.name = {
+                            text: `${stock.symbol}.${mk}`,
+                            link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_SubBrokerage/?tab=2&symbol=${stock.symbol}&exch=${stock.exchange}`,
+                        };
                         stockData.close = {
                             text:
                                 sbQuoteData && sbQuoteData.refPrice

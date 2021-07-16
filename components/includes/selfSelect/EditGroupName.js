@@ -38,6 +38,8 @@ const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHa
                 closable={false}
                 maskClosable={false}
                 destroyOnClose={true}
+                width={320}
+                className="edit__select__group__name"
                 footer={[
                     <Button
                         key="group__cancel"
@@ -73,18 +75,23 @@ const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHa
                     font-size: 1.6 rem;
                     font-weight: bold;
                 }
-                .group__btn {
-                    width: 48%;
-                    height: 50px;
-                    font-size: 1.6 rem;
-                    font-weight: bold;
+                .group__btn,
+                .group__btn:focus,
+                .group__btn:focus {
+                    background-color: #c43826;
+                    border: solid 1px rgba(37, 74, 145, 0);
+                    width: 86px;
+                    height: 40px;
                 }
                 .group__cancel,
                 .group__cancel:focus,
                 .group__cancel:hover {
-                    background-color: #e6ebf5;
-                    border: #e6ebf5;
+                    background-color: #fff;
+                    border: solid 1px #e6ebf5;
                     color: #333;
+                }
+                .edit__select__group__name .ant-modal-body {
+                    padding: 24px;
                 }
             `}</style>
         </>

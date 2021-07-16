@@ -31,12 +31,13 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
                 bodyStyle={{ maxHeight: 300, overflow: 'auto' }}
                 cancelButtonProps={{ style: { display: 'none' } }}
                 zIndex="999"
+                width={380}
                 maskClosable={false}
                 // afterClose={afterModalClose}
                 destroyOnClose={true}
                 footer={[
                     <Button key="confirm" type="primary" className="confirm" danger onClick={handleOk}>
-                        確認
+                        完成
                     </Button>,
                 ]}
             >
@@ -53,7 +54,7 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
                     font-size: 1.6rem;
                     font-weight: bold;
                 }
-                .title__box {
+                p.title__box {
                     margin: 0;
                 }
                 .header__tool__btn {
@@ -89,13 +90,16 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
                     left: 0;
                 }
                 .add__select__self .ant-modal-footer {
-                    text-align: center;
+                    text-align: right;
+                    padding: 20px;
                 }
-                .confirm {
-                    width: 98%;
-                    height: 50px;
-                    font-size: 1.6rem;
-                    font-weight: bold;
+                .ant-modal-footer .confirm,
+                .ant-modal-footer .confirm:focus,
+                .ant-modal-footer .confirm:hover {
+                    background-color: #c43826;
+                    border: solid 1px rgba(37, 74, 145, 0);
+                    width: 86px;
+                    height: 40px;
                 }
                 .ant-checkbox-group-item {
                     display: block;

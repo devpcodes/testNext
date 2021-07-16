@@ -35,7 +35,7 @@ const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectRe
                     <AddSelfSelect tabkey={tabkey} reloadSelectReloadTime={reloadSelectReloadTime} />
                 </div>
                 <div className="select__toolbar__right">
-                    <span>共 {count}/50 檔自選股</span>
+                    <span className="count">共 {count}/50 檔自選股</span>
 
                     <Button className="refresh__btn">
                         <img src={refresh} onClick={reload} />
@@ -80,7 +80,6 @@ const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectRe
                     margin: 0 28px 0 0;
                     padding: 0;
                 }
-
                 .select__toolbar__right > span {
                     font-size: 1.4rem;
                     color: #3f5372;
@@ -134,6 +133,9 @@ const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectRe
                     background-color: #f3f6fe;
                     border: solid 1px #d7e0ef;
                     color: rgba(0, 0, 0, 0.65);
+                }
+                .select__toolbar__left .add__stock__btn {
+                    font-size: 1.4rem;
                 }
 
                 @media (max-width: 475px) {

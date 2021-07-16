@@ -25,6 +25,7 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack 
             <Modal
                 visible={isAddSelectGroupVisitable}
                 zIndex="1060"
+                width={320}
                 title="新增自選組合"
                 closable={false}
                 maskClosable={false}
@@ -46,12 +47,12 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack 
                         danger
                         onClick={handleConfirm}
                     >
-                        確認
+                        確定
                     </Button>,
                 ]}
             >
                 <div className="edit__block">
-                    <Input placeholder="新增自選組合" ref={textInput} />
+                    <Input placeholder="新增自選組合" ref={textInput} value="我的自選" />
                 </div>
             </Modal>
             <style jsx>{``}</style>
@@ -62,16 +63,22 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack 
                     font-weight: bold;
                 }
                 .group__btn {
-                    width: 48%;
-                    height: 50px;
+                    width: 86px;
+                    height: 40px;
                     font-size: 1.6 rem;
                     font-weight: bold;
+                }
+                .ant-modal-footer .group__confirm,
+                .ant-modal-footer .group__confirm:focus,
+                .ant-modal-footer .group__confirm:hover {
+                    background-color: #c43826;
+                    border: solid 1px rgba(37, 74, 145, 0);
                 }
                 .group__cancel,
                 .group__cancel:focus,
                 .group__cancel:hover {
-                    background-color: #e6ebf5;
-                    border: #e6ebf5;
+                    background-color: #fff;
+                    border: solid 1px #e6ebf5;
                     color: #333;
                 }
             `}</style>
