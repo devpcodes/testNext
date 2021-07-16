@@ -24,8 +24,8 @@ const TradingSelect = () => {
         { txt: '觸價單', val: 1 },
     ]);
     const [priceTypeOpt, setPriceTypeOpt] = useState([
-        { txt: '可部份成交', val: 'ANY' },
-        { txt: '限完全成交', val: 'AON' },
+        { txt: 'ANY', val: 'ANY' },
+        { txt: 'AON', val: 'AON' },
     ]);
 
     useEffect(() => {
