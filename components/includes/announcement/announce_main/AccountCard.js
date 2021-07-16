@@ -1,33 +1,33 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Table } from 'antd';
+import { Table, Pagination } from 'antd';
 import theme from '../../../../resources/styles/theme';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
 
-const AccountTable = ({ filterColumns, ...props }) => {
+const AccountTable = ({ filterColumns,getData, ...props }) => {
 const [columns, setColumns] = useState([]);
-    useEffect(() => {
-        let newColumns = [];
-        if (props.columns.length > 0) {
-            newColumns = props.columns.map(item => {
-                if (item.filterDropdown != null) {
-                    const checkActive = checkActiveHandler(item.dataIndex, filterColumns);
-                    item.filterIcon = (
-                        <img
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                            }}
-                            src={checkActive ? filterIconActive : filterIcon}
-                        />
-                    );
-                }
-                return item;
-            });
-        }
-    setColumns(newColumns);
+useEffect(() => {
+    //     let newColumns = [];
+    //     if (props.columns.length > 0) {
+    //         newColumns = props.columns.map(item => {
+    //             if (item.filterDropdown != null) {
+    //                 const checkActive = checkActiveHandler(item.dataIndex, filterColumns);
+    //                 item.filterIcon = (
+    //                     <img
+    //                         style={{
+    //                             position: 'absolute',
+    //                             top: '50%',
+    //                             left: '50%',
+    //                             transform: 'translate(-50%, -50%)',
+    //                         }}
+    //                         src={checkActive ? filterIconActive : filterIcon}
+    //                     />
+    //                 );
+    //             }
+    //             return item;
+    //         });
+    //     }
+    // setColumns(newColumns);
 }, [props.columns, filterColumns]);
 
     const checkActiveHandler = (dataIndex, filterColumns) => {
@@ -44,9 +44,39 @@ const [columns, setColumns] = useState([]);
     return (
         <div>
             <div className="sino__table">
-                <Table columns={columns} {...props} />
+                {console.log(props.dataSource)}
+                <ul className="list_card">
+                {
+                    props.dataSource.map( data => {
+                       return (
+                       <li>
+                            <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnoucementPage?GUID=${data.articleGUID}`}><div className="title_box">{data.title}</div></a>
+                            <div className="sub_box">
+                                <div>{data.postTime.replace(/[/]/g,'.')}</div>
+                                <div>{data.category1}</div>
+                                <div>{data.category2}</div>
+                            </div>
+                        </li>
+                        )
+                    })
+                }  
+                </ul>
+                <div className="pagination">
+                    <Pagination defaultCurrent={1} defaultPageSize={15} total={props.pagination.total} onChange={props.pagination.onChange}/>
+                </div>
+                
             </div>
-
+            <style jsx>{`
+                .list_card {list-style: none;padding: 0;margin: 0;background-color: #FFF;margin-bottom:16px;}
+                .list_card li {padding: 12px 16px;}
+                .list_card li {border-bottom:1px solid #e6ebf5;}
+                .list_card li .title_box{width:100%;font: 16px PingFangTC;color: #0d1623;text-align:justify;font-weight:700;
+                   overflow:hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;}
+                .list_card li .sub_box{display: flex;align-items:flex-end;margin-top:1em;}
+                .list_card li .sub_box>div{font-size: 14px;color: #3f5372;margin-left:0.8em;}
+                .list_card li .sub_box>div:first-child{min-width: 5em;margin-left:0;}
+                .pagination{text-align:center;padding:0 16px;}
+            `}</style>
             <style jsx global>{`
                 .filterBtn {
                     cursor: pointer;

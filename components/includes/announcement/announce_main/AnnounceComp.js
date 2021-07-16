@@ -1,26 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Modal } from 'antd';
-import theme from '../../../../resources/styles/theme';
-import Control from './Control';
 import AnnounceTable from './AnnounceTable';
-
-import { Input, Space  } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined, AudioOutlined } from '@ant-design/icons';
 import { CategoryList, GetAllListData } from '../../../../services/components/announcement/announceList';
 import _ from 'lodash';
 
-const { Search } = Input;
-const onSearch = value => console.log(value);
 const AnnounceComp = () => {
-
 const [data, setData] = useState({}); 
 const [controlText, setControlText] = useState(''); 
 const [reload, setReload] = useState(1);
 
-
-const getData = async (idx, size, type, sc1, sc2) => {
+const getData = async (idx, size, type, sc1, sc2, kw) => {
     try{
-        const result = await GetAllListData(idx, size, type, sc1, sc2)
+        const result = await GetAllListData(idx, size, type, sc1, sc2, kw)
+        console.log('HERE',result)
         return result
     } catch(err) {
         console.log('[ERROR]',err)
@@ -29,18 +21,6 @@ const getData = async (idx, size, type, sc1, sc2) => {
         });
     }
 }
-
-// const getType = async () => {
-//     let value = ''
-//     menuList.map( x=>{
-//         if (state!=='all'&&state===x.key){
-//             value = x.title
-//         }
-//     })
-//     return value
-// }
-
-
 
 const getList = async () => {
     try{
@@ -72,8 +52,6 @@ const listMap = (l) => {
  return list 
 }
 
-
-
 const getPageTextHandler = useCallback(text => {
     setControlText(text);
 });
@@ -82,26 +60,26 @@ const reFreshHandler = () => {
         return (count += 1);
     });
 };
+const getKeyWord = () => {
+    try{
+        let kw = keyWord.slice()
+            dispatch({
+                type: "CLEAN_ITEM",
+            }); 
+        return kw        
+    } catch (error) {
+        console.log('無關鍵字')
+    }
+
+};
 
     return (
         <div className="vipInventory__container">
             <div className="control__container">
-                <h2 className="title">最新公告
-                <div className="search_box">
-                    <Space direction="vertical">
-                    <Search 
-                    placeholder="輸入關鍵字"  
-                    allowClear  
-                    enterButton="搜尋" 
-                    size="large"
-                    onSearch={onSearch}
-                    />
-                    </Space></div>
-                </h2>
+                <h2 className="title">最新公告</h2>
             </div>
               <AnnounceTable
                  listData={getList().then(res=>{return res})}
-                 //getType = {getType}
                  getList={getList}
                  getData={getData}
                  getPageInfoText={getPageTextHandler}
@@ -111,22 +89,21 @@ const reFreshHandler = () => {
                 {`
                 
                 h2.title{position:relative;}
-                .search_box {position:absolute;right:0;display:inline-block;}
+                
                     .vipInventory__container {
-                        padding-left: 10%;
-                        padding-right: 10%;
+                        position:relative;
+                        width:80%;
+                        margin:0 auto;
                         padding-top: 50px;
                     }
                     @media (max-width: 1250px) {
                         .vipInventory__container {
-                            padding-left: 5%;
-                            padding-right: 5%;
+                            width:90%;
                         }
                     }
                     @media (max-width: 1111px) {
                         .vipInventory__container {
-                            padding-left: 20px;
-                            padding-right: 20px;
+                            width:calc(100%-40px)
                         }
                     }
 
@@ -140,7 +117,9 @@ const reFreshHandler = () => {
                         position: relative;
                     }
                     @media (max-width: 768px) {
+                        h2.title{font-size:20px;margin-bottom:5px;}
                         .vipInventory__container {
+                            width:100%;
                             padding-left: 0;
                             padding-right: 0;
                         }

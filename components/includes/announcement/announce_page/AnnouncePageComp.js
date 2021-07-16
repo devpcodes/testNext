@@ -1,23 +1,60 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback ,useMemo} from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import Link from 'next/link';
 import { Modal } from 'antd';
 import { Input, Space  } from 'antd';
+import { GetArticleData } from '../../../../services/components/announcement/announceList';
+import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
+import icArrowLeft from '../../../../resources/images/components/announcement/ic-arrow-left.svg';
 
 const { Search } = Input;
 const onSearch = value => console.log(value);
+
 const AnnouncePageComp = () => {
 const [data, setData] = useState({}); 
+const [tag, setTag] = useState([]); 
+const [refRows, setRefRows] = useState([]); 
+const [refresh, setRefresh] = useState(''); 
+const keyWord  = useSelector(state => state.keyWord);
+const dispatch = useDispatch();
 
-// const getData = async (idx, size, type, sc1, sc2) => {
-//     try{
-//         const result = await GetAllListData(idx, size, type, sc1, sc2)
-//         return result 
-//     } catch(err) {
-//         console.log('[ERROR]',err)
-//         Modal.error({
-//             title: '伺服器錯誤',
-//         });
-//     }
-// }
+useEffect(() =>{ 
+    const GetNewData = async()=>{
+        try {
+            let id = getParamFromQueryString('GUID'); //GUID
+            let count =  '3'; //相關公告筆數
+            getData(id, count)
+            .then(res=>{
+                setData(res)  
+                setTag(res.keyWord)
+                setRefRows(res.refRows)
+            })
+            } catch(error) {
+            console.log('[error]',error)
+            }
+        }  
+    GetNewData()  
+},[refresh])
+
+const getData = async (id, count) => {
+    try{
+        const result = await GetArticleData(id, count)
+        return result 
+    } catch(err) {
+        console.log('[ERROR]',err)
+        Modal.error({
+            title: '伺服器錯誤',
+        });
+    }
+}
+const addKw = (e,x) => {
+    //e.preventDefault();
+    console.log('CHANGE_ITEM')
+    dispatch({
+        type: "CHANGE_ITEM",
+        payload: {itemNew:x}
+    }); 
+}
 
     return (
         <div className="announce__container">
@@ -25,24 +62,12 @@ const [data, setData] = useState({});
                 <div className="content_box">
                 <div className="title">
                 <h2><span>最新公告</span></h2>
-                <button href="#" className="btn_back">返回列表</button>
+                <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Annoucement`} className="btn_back for_pc">返回列表</a>
                 </div>
-                <div className="content_box_inside">
-                    <div className="content_title">本公司各分公司營運正常，但自5月17日起，暫時關閉營業大廳電視牆之看盤服務</div>
-                    <div className="content_class">
-                        <div className="class_tag">發布日期<span>2021.05.24</span></div>
-                        <div className="class_tag">商品類別<span className="orange">國內商品 台股</span></div>
-                        <div className="class_tag">公告類別<span className="orange">全部</span></div>
-                    </div>
-                    <div className="content_detail">為因應疫情擴大，遵守中央指揮中心防疫升級政策減少人員群聚，及保護投資人的身體健康，
-                    本公司各分公司營運正常，但自5月17日起，暫時關閉營業大廳電視牆之看盤服務。<br></br><br></br>
-                    建議您可使用電子交易平台，進行股市行情查詢、下單交易、申請開戶及文件簽署等。如確有需要至分公司現場辦理，敬請配合本公
-                    司實聯制及人流管制措施。<br></br><br></br>
-                    再次提醒您防疫期間，需戴口罩勤洗手保持社交距離。</div>                    
-                </div>
-                </div>
-                <div className="link_box">
-                <div className="search_box">
+                <div className="search_box for_m">
+                    <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Annoucement`} className="btn_back for_m">
+                        <img src={icArrowLeft}></img>
+                    </a>
                     <Space direction="vertical">
                     <Search 
                     placeholder="輸入關鍵字"  
@@ -51,25 +76,58 @@ const [data, setData] = useState({});
                     size="large" 
                     onSearch={onSearch}
                     />
-                    </Space></div>                        
+                    </Space>
+                    </div> 
+                <div className="content_box_inside">
+                    <div className="content_title">{data.title}</div>
+                    <div className="content_class">
+                        <div className="class_tag">發布日期<span>2021.05.24</span></div>
+                        <div className="class_tag">商品類別<span className="orange">{data.category1+' '+data.category2}</span></div>
+                        <div className="class_tag">公告類別<span className="orange">{data.type}</span></div>
+                    </div>
+                    <div className="content_detail" dangerouslySetInnerHTML={{__html:data.contents}}></div>                    
+                </div>
+                </div>
+                <div className="link_box">
+                <div className="search_box for_pc">
+                    <Space direction="vertical">
+                    <Search 
+                    placeholder="輸入關鍵字"  
+                    allowClear  
+                    enterButton="搜尋"
+                    size="large" 
+                    onSearch={onSearch}
+                    />
+                    </Space>
+                    </div>                        
                     <div className="link_tag">相關公告</div>
                     <div className="link_list">
-                        <div>本公司各分公司營運正常，但自5月17日起，暫時關閉電視牆之看盤服務
-                            <div className="announce_date">2021.05.24</div>
-                        </div>
-                        <div>本公司各分公司營運正常，但自5月17日起，暫時關閉電視牆之看盤服務
-                            <div className="announce_date">2021.05.24</div>
-                        </div>
-                        <div>本公司各分公司營運正常，但自5月17日起，暫時關閉電視牆之看盤服務
-                            <div className="announce_date">2021.05.24</div>
-                        </div>
+                        {
+                            refRows.length>0 ? (
+                                refRows.map(x => {
+                                    let pt = x.postTime.replace(/[/]/g,'.')
+                                    return (
+                                        <div><a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnoucementPage?GUID=${x.articleGUID}`}>{x.title}</a>
+                                        <div className="announce_date">{pt}</div>
+                                        </div>
+                                        )
+                                })
+                            ):(
+                            <div className="noData">無相關公告</div> 
+                            )
+                        }
                     </div>
-                    <div className="ad_box">你被葉配了B-)</div>
+                    <div className="ad_box for_pc">你被葉配了B-)</div>
                     <div className="link_tag">相關標籤</div>
                     <div className="tag_box">
-                        <a href="#">美股</a>
-                        <a href="#">台股</a>
+                        {
+                            tag.map(x => {
+                                return <Link href="/Annoucement"><a onClick={e=>addKw(e,x)}>{x}</a></Link>
+                            })
+
+                        }
                     </div>
+                    <div className="ad_box for_m">你被葉配了B-)</div>
                 </div>
             </div>
             <style jsx>
@@ -85,7 +143,7 @@ const [data, setData] = useState({});
                     }
                     .title { display: flex; justify-content: space-between;align-items: center;margin-bottom:20px; }
                     .title h2{ font-size: 2.8rem;color: #0d1623; margin-bottom: 0px; }
-                    .btn_back{padding:0px 18px;border: solid 1px #e6ebf5;background-color:#FFF;font:16px PingFangTC;height:40px;}
+                    .btn_back{padding:0px 18px;border: solid 1px #e6ebf5;background-color:#FFF;font:16px PingFangTC;height:40px;line-height:40px;}
                     .control__container { position: relative;}
                     .content_area { display: flex;margin-bottom:50px;}
                     .content_area .content_box{width: 100%;margin-right: 47px;}
@@ -98,8 +156,8 @@ const [data, setData] = useState({});
                     .content_area .content_box .content_class .class_tag span{margin-left: 0.8em;}
                     .orange{color:#daa360}
                     .content_area .content_box .content_detail{color: #0d1623;line-height: 1.6;letter-spacing: -0.2px;font:16px PingFangTC;
-                        padding-top: 1em; border-top: solid 1px #e6ebf5;}
-                    .content_area .link_box{min-width: 346px;}
+                        padding-top: 1em; border-top: solid 1px #e6ebf5;overflow:hidden;}
+                    .content_area .link_box{min-width: 346px;width:346px;}
                     .content_area .link_box .ad_box{min-height:108px;line-height:108px;text-align:center;background-color:#CCC;margin-bottom:32px;}
                     .content_area .link_box .link_tag{font:20px PingFangTC;border-left: 4px solid #daa360; padding-left: 12px;line-height: 1;
                         font-weight:600}
@@ -112,10 +170,33 @@ const [data, setData] = useState({});
                     .content_area .link_box .tag_box > a:not(:first-child) {margin-left:15px;}
                     .content_area .link_box .tag_box > a{padding:0.6em 1.5em;border: solid 1px #e6ebf5;background-color:#FFF;
                         font:16px PingFangTC;letter-spacing:0.4px;}
+                    .noData{text-align:center;color:#a9b6cb;}
                     @media (max-width: 768px) {
-                        .announce__container { padding-left: 0; padding-right: 0;}
+                        .title {margin-bottom:0px;}
+                        .title h2{font-size:20px;margin-bottom:0px;font-weight:900;padding:16px;text-align:justify;}
+                        .announce__container { padding: 0;over-flow:hidden;}
                         .control__container {padding-left: 20px;padding-right: 20px; }
-                        .title { font-size: 2rem; font-weight: bold; margin-top: -36px; margin-bottom: 10px; }
+                        .search_box .btn_back{width:40px; height:40px;margin-right:16px; position:relative;}
+                        .search_box .btn_back > img{position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+                        .search_box.for_m{display:flex;padding:0 16px 16px;margin-bottom:0;}
+                        .content_area{flex-wrap:wrap;margin-bottom:0;}
+                        .content_area .content_box{flex-wrap:wrap;margin:0 auto 10px;}
+                        .content_area .content_box .content_class{flex-wrap:wrap;padding:10px 0;}
+                        .content_area .content_box .content_class .class_tag:first-child{width:100%}
+                        .content_area .content_box .content_class .class_tag{width:fit-content;margin-right:1em;line-height:1.7;}
+                        .content_area .content_box .content_box_inside{border-width:1px 0 1px 0;border-radius:0;padding:16px;min-height:0;}
+                        .content_area .content_box .content_box_inside .content_title{text-align:justify;font-size:20px;}
+                        .content_area .link_box{width:100%;margin:0 auto;padding:16px 0;min-width:0;}
+                        .content_area .link_box .tag_box,
+                        .content_area .link_box .ad_box,
+                        .content_area .link_box .link_tag{margin 0 auto;width:calc(100% - 32px);}
+                        .content_area .link_box .tag_box,
+                        .content_area .link_box .ad_box{margin:20px auto 0;width:calc(100% - 32px);}
+                    }
+                    .for_m{display:none;}
+                    @media (max-width: 768px) {
+                    .for_pc{display:none;}
+                    .for_m{display:block;}
                     }
                 `}
             </style>

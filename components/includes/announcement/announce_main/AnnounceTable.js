@@ -1,42 +1,55 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { Modal } from 'antd';
-import { useSelector } from 'react-redux';
+import { Modal, Input, Space,Checkbox  } from 'antd';
+import { useSelector, useDispatch } from "react-redux";
 import AccountTable from './AccountTable';
+import AccountCard from './AccountCard';
 import DropfilterCheckBox from './DropfilterCheckBox';
-import DropFilterSearch from './DropFilterSearch';
+import DropFilterSearch from './DropFilterCheckBoxM';
 import { fetchInventory, fetchInventoryWithSWR } from '../../../../services/components/announcement/fetchPageInfo';
 import useSWR from 'swr';
 import TopTagBar  from './TopTagBar';
-const AnnounceTable = ({ listData,getList,topBarTag, getType, getColumns, getData, getPageInfoText, reload }) => {
+import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
+import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
+import { GetAllListData } from '../../../../services/components/announcement/announceList';
+const AnnounceTable = ({ listData, getList, getColumns, getData, getPageInfoText, reload  }) => {
+    const keyWord  = useSelector(state => state.keyWord);
+    const dispatch = useDispatch();
+    const [mobileType, setMobileType] = useState(false);
     const [columns, setColumns] = useState([]);
     const [State, setState] = useState('');
     const [list, setList] = useState(listData);
     const [list_main, setListMain] = useState([]);
     const [list_sub, setListSub] = useState([]);
-    const [list_tag, setListTag] = useState();
     const [rows, setRows] = useState([]);
-    const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(15);
     const [dataType, setDataType] = useState('');
     const [searchColumn, setSearchColumn] = useState([]);
     const [searchColumn2, setSearchColumn2] = useState([]);
-    const [searchWords, setSearchWords] = useState(''); 
-    const [pageInfo, setPageInfo] = useState([]);
+    const [searchWords, setSearchWords] = useState(keyWord);
     const [current, setCurrent] = useState(''); 
-useEffect(() => {  //選單初始值
-    getList().then(res=>{ 
-        setList(res) 
-        setListMain(res.category1List)
-        setListSub(res.category2List)
-        newColumsUpdate(res.category1List,res.category2List)
-    })
-},[State])
+    const [filterColumns, setFilterColumns] = useState([]); 
+    
 
-useEffect(() => { 
-    console.log(dataType)
- },[dataType])
+    const [dimensions, setDimensions] = React.useState({ 
+        height: window.innerHeight,
+        width: window.innerWidth
+      })
+    const { Search } = Input;
+    const onSearch = value => {
+        setSearchWords([value]);
+        setCurrentPage(1);
+    };
+
+useEffect(() => {  //選單初始值
+        getList().then(res=>{ 
+                setList(res) 
+                setListMain(res.category1List)
+                setListSub(res.category2List)
+                newColumsUpdate(res.category1List,res.category2List)
+            })  
+},[State])
  
 useEffect(() => { //子選單變更
     if(searchColumn.length>0){
@@ -64,11 +77,7 @@ useEffect(() => {
 useEffect(() => {  
         const GetNewData = async()=>{
             try {
-                // getType()
-                // .then(res=>{
-                //     setDataType(res)
-                // })
-                getData(currentPage, pageSize, dataType , searchColumn, searchColumn2)
+                getData(currentPage, pageSize, dataType , searchColumn, searchColumn2, searchWords)
                 .then(res=>{
                     console.log('[RES]',res)
                     setRows(res.rows)  
@@ -81,50 +90,79 @@ useEffect(() => {
                 }
             }  
         GetNewData()  
-    },[currentPage,searchColumn,searchColumn2,dataType]) 
-    const t_filterColumns = [];
-    const newColumsUpdate = (d1, d2)=>{
-        const newColumns = [
-            {
-                title: '項目',
-                dataIndex: 'seq',
-                key: 'seq',
-            },
-            {
-                title: '商品類別',
-                dataIndex: 'category1',
-                key: 'category1',
-                ...getColumnSearchProps(d1,1)
-            },
-            {
-                title: '子類別',
-                dataIndex: 'category2',
-                key: 'category2',
-                ...getColumnSearchProps(d2,2)
-            },
-            {
-                title: '標題',
-                dataIndex: 'title',
-                key: 'title',
-            },
-            {
-                title: '公告類別',
-                dataIndex: 'type',
-                key: 'type',
-            },
-            {
-                title: '發布日期',
-                dataIndex: 'postTime',
-                key: 'postTime',
-            },
-            ];  
-        setColumns(newColumns); 
+},[currentPage,searchColumn,searchColumn2,dataType,searchWords]) 
+
+useEffect(() => { 
+    function handleResize() {
+        setDimensions({
+          height: window.innerHeight,
+          width: window.innerWidth
+        })
+      
+  }
+  window.addEventListener('resize', handleResize)
+})
+useEffect(() => {  //filter icon color
+    if(searchColumn.length>0 && searchColumn2.length>0 ){
+        setFilterColumns(['category1','category2'])
+    }else if(searchColumn.length>0){
+        setFilterColumns(['category1'])
+    }else if(searchColumn2.length>0){
+        setFilterColumns(['category2'])
+    }else{
+        setFilterColumns([])
     }
+  },[searchColumn,searchColumn2]) 
+
+
+
+
+
+const newColumsUpdate = (d1, d2)=>{
+    const newColumns = [
+        {
+            title: '項目',
+            dataIndex: 'seq',
+            key: 'seq',
+        },
+        {
+            title: '商品類別',
+            dataIndex: 'category1',
+            key: 'category1',
+            ...getColumnSearchProps(d1,1)
+        },
+        {
+            title: '子類別',
+            dataIndex: 'category2',
+            key: 'category2',
+            ...getColumnSearchProps(d2,2)
+        },
+        {
+            title: '標題',
+            dataIndex: 'title',
+            key: 'title',
+            render: (x,i) => 
+            <a className="title_a" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnoucementPage?GUID='+i.articleGUID}>{x}</a>
+        
+        },
+        {
+            title: '公告類別',
+            dataIndex: 'type',
+            key: 'type',
+        },
+        {
+            title: '發布日期',
+            dataIndex: 'postTime',
+            key: 'postTime',
+        },
+        ];  
+    setColumns(newColumns); 
+}
 
     const onFdSubmit = useCallback((confirm, val) => { //主類別過濾
         confirm();
         setSearchColumn(val)
-        onFdReset2(confirm)
+        setCurrentPage(1);
     });
 
     const onFdSubmit2 = useCallback((confirm, val) => { //子類別過濾
@@ -145,16 +183,19 @@ useEffect(() => {
             setCurrentPage(1);
     });
 
-    const searchResetHandler = useCallback(confirm => {
-        confirm();
-    });
+    const filterChangeM = (v) =>{
+        setSearchColumn(v)
+    }
+
     const pageChangeHandler = (page, pageSize) => {
         window.scrollTo(0, 0);
         setCurrentPage(page);
     };
     const TopBarChange = (value) =>{
         setDataType(value)
+        setCurrentPage(1);
     }
+
 
 const getColumnSearchProps = (data,idx) => {
         if(idx===1){
@@ -186,31 +227,78 @@ const getColumnSearchProps = (data,idx) => {
     };
     return (
         <>
+           <div className="search_box">
+                    <Space direction="vertical">
+                    <Search 
+                    placeholder="輸入關鍵字"  
+                    allowClear  
+                    enterButton="搜尋" 
+                    size="large"
+                    onSearch={onSearch}
+                    />
+                    </Space>
+                    <DropFilterCheckBoxM 
+                    filterChangeM={filterChangeM}
+                    list_main={list_main}
+                    />
+
+            </div>
             <TopTagBar
                  current = { current }
                  onClick = {TopBarChange}
               />
-            <AccountTable
-            dataSource = {rows}
-            columns = {columns}
-            filterColumns = {t_filterColumns}
-            pagination={{
-                total: total,
-                showTotal: (total, range) => {
-                    if (getPageInfoText != null) {
-                        getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
-                    }
-                    return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
-                },
-                defaultPageSize: pageSize,
-                defaultCurrent: 1,
-                showSizeChanger: false,
-                onChange: pageChangeHandler,
-                responsive: true,
-                current: currentPage,
-                pageSize: pageSize,
-            }}
-            />
+            
+            { 
+            dimensions.width>=768?(
+                <AccountTable
+                dataSource = {rows}
+                columns = {columns}
+                filterColumns = {filterColumns}
+                pagination={{
+                    total: total,
+                    showTotal: (total, range) => {
+                        if (getPageInfoText != null) {
+                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
+                        }
+                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                    },
+                    defaultPageSize: pageSize,
+                    defaultCurrent: 1,
+                    showSizeChanger: false,
+                    onChange: pageChangeHandler,
+                    responsive: true,
+                    current: currentPage,
+                    pageSize: pageSize,
+                }} 
+                />  
+            ):(
+                <AccountCard
+                dataSource = {rows}
+                columns = {columns}
+                filterColumns = {filterColumns}
+                pagination={{
+                    total: total,
+                    showTotal: (total, range) => {
+                        if (getPageInfoText != null) {
+                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
+                        }
+                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                    },
+                    onChange: pageChangeHandler,
+                    current: currentPage,
+                    pageSize: pageSize,
+                }} 
+                />  
+            )
+            }
+            
+            <style jsx>{`
+            .search_box {position:absolute;right:0;top:20px;display:inline-block;}
+
+            @media (max-width: 768px) {
+                .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
+            }
+            `}</style>
             <style global jsx>{`
             .ant-table-filter-trigger{margin:0}
                 .page__container {
@@ -222,10 +310,13 @@ const getColumnSearchProps = (data,idx) => {
                 .vipInventoryStock {
                     font-weight: bold;
                 }
+                .for_m{display:none;}
                 @media (max-width: 768px) {
                     .vipInventoryStock {
                         white-space: normal !important;
                     }
+                    .for_pc{display:none;}
+                    .for_m{display:block;}
                 }
                 /* .ant-table-filter-dropdown {
                     width: 148px;
