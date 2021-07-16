@@ -303,6 +303,7 @@ const SelfSelectTable = ({
                 .select__group__tab {
                     padding: 0 30px;
                     border: solid 1px #e6ebf5;
+                    background: #fff;
                 }
                 .select__stock__table {
                     overflow: auto;

@@ -76,6 +76,9 @@ function Self_select_stocks() {
                 .select__list__box {
                     margin-top: 22px;
                 }
+                .select__box {
+                    background-color: rgb(249, 251, 255);
+                }
             `}</style>
             <style jsx global>{`
                 .ant-tabs-bottom > .ant-tabs-nav:before,
