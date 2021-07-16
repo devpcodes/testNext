@@ -235,7 +235,7 @@ const Info = ({ stockid }) => {
                     >
                         昨收&nbsp;&nbsp;
                     </span>
-                    <span>{stockInfo['@refPrice'] || '--'}</span>
+                    <span>{stockInfo['@refPrice'] || stockInfo['@PreClose'] || '--'}</span>
                 </>
             );
         }
@@ -286,9 +286,9 @@ const Info = ({ stockid }) => {
     };
     return (
         <>
-            {/* <InstallWebCA getCheckCA={getCheckCA} />
-            {checkCA && <UpdateBar text={'請手動點擊更新，刷新報價'} />} */}
-            <UpdateBar text={'請手動點擊更新，刷新報價'} />
+            <InstallWebCA getCheckCA={getCheckCA} />
+            {checkCA && <UpdateBar text={'請手動點擊更新，刷新報價'} />}
+            {/* <UpdateBar text={'請手動點擊更新，刷新報價'} /> */}
             <div className="info__container">
                 <div className="info__box">
                     <div className="row">
