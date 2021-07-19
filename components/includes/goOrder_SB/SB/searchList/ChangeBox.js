@@ -39,32 +39,55 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
         const marketID = info.StockID.split('.').slice(-1).pop();
         console.log('marketID', marketID);
         let newQty = getCanCancelQty(info) - qty;
-        try {
-            setSubmitLoading(true);
-            const resVal = await postUpdate({
-                currentAccount,
-                BS: info.BS,
-                CID: getWebId(platform, 'recommisiioned'),
-                Creator: currentAccount.idno,
-                DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
-                Exchid: marketID,
-                OID: info.OID,
-                OT: '0',
-                StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
-                TT: getTT(marketID),
-                NewQty: newQty,
-            });
-            setSubmitLoading(false);
-            dispatch(setSearchListSubmitSuccess(true));
-            Modal.success({
-                content: resVal,
-            });
-            closeHandler();
-        } catch (error) {
-            setSubmitLoading(false);
-            message.info({
-                content: error,
-            });
+        if (newQty == 0) {
+            try {
+                const resVal = await postCancel({
+                    currentAccount,
+                    BS: info.BS,
+                    CID: getWebId(platform, 'recommisiioned'),
+                    Creator: currentAccount.idno,
+                    DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                    Exchid: marketID,
+                    OID: info.OID,
+                    OT: '0',
+                    StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                    TT: getTT(marketID),
+                });
+                dispatch(setSearchListSubmitSuccess(true));
+                Modal.info({
+                    content: resVal,
+                });
+            } catch (error) {
+                message.info({
+                    content: error,
+                });
+            }
+        } else {
+            try {
+                const resVal = await postUpdate({
+                    currentAccount,
+                    BS: info.BS,
+                    CID: getWebId(platform, 'recommisiioned'),
+                    Creator: currentAccount.idno,
+                    DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                    Exchid: marketID,
+                    OID: info.OID,
+                    OT: '0',
+                    StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                    TT: getTT(marketID),
+                    NewQty: newQty,
+                });
+                setSubmitLoading(false);
+                dispatch(setSearchListSubmitSuccess(true));
+                Modal.success({
+                    content: resVal,
+                });
+                closeHandler();
+            } catch (error) {
+                message.info({
+                    content: error,
+                });
+            }
         }
     };
     return (
@@ -81,7 +104,7 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
                     <span className="qty__val">{getCanCancelQty(info)}</span>
                     <span className="qty__unit">股</span>
                 </div>
-                <QtyBox label="改量" color="#254a91" parentVal={getCanCancelQty(info)} />
+                <QtyBox label="欲減量" color="#254a91" parentVal={getCanCancelQty(info)} />
 
                 <div
                     className={btnClassName}
