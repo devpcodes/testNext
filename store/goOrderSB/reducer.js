@@ -25,6 +25,7 @@ const initialState = {
     searchListSubmitSuccess: false,
     websocketEvent: false,
     realTimeUser: false,
+    confirmBoxClickSource: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -148,6 +149,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 realTimeUser: action.payload,
+            };
+        case actionType.SET_CONFIRM_BOX_CLICK_SOURCE:
+            return {
+                ...state,
+                confirmBoxClickSource: action.payload,
             };
         default:
             return state;

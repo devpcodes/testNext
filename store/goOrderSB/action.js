@@ -162,3 +162,10 @@ export const setRealTimeUser = boo => {
         payload: boo,
     };
 };
+
+export const setConfirmBoxClickSource = str => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_CLICK_SOURCE,
+        payload: str,
+    };
+};
