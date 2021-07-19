@@ -38,6 +38,9 @@ export const submitService = async ({
     //     type: 'web',
     // };
     // console.log('ccccc', checkSignCA(ca_content));
+    if (Exchid !== 'US') {
+        aon = '';
+    }
     if (checkSignCA(ca_content)) {
         let orderData = {
             token,
