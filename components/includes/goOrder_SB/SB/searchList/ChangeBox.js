@@ -42,6 +42,7 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
         let newQty = getCanCancelQty(info) - qty;
         if (newQty == 0) {
             try {
+                setSubmitLoading(true);
                 const resVal = await postCancel({
                     currentAccount,
                     BS: info.BS,
@@ -67,6 +68,7 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
             }
         } else {
             try {
+                setSubmitLoading(true);
                 const resVal = await postUpdate({
                     currentAccount,
                     BS: info.BS,
