@@ -39,7 +39,7 @@ const TitleBox = ({ info, stockInfo }) => {
     return (
         <div className="title__box">
             {icons.map((icon, i) => (
-                <span key={i} className="ord__char">
+                <span key={i} className="ord__char" style={{ backgroundColor: icon === '長' && '#6c7b94' }}>
                     {icon}
                 </span>
             ))}

@@ -134,7 +134,9 @@ const SearchList = ({ active }) => {
                                                         display: 'inline-block',
                                                         fontSize: '1rem',
                                                         background:
-                                                            record.BS === 'B'
+                                                            icon === '長'
+                                                                ? '#6c7b94'
+                                                                : record.BS === 'B'
                                                                 ? themeColor.buyTabColor
                                                                 : themeColor.sellTabColor,
                                                         color: 'white',

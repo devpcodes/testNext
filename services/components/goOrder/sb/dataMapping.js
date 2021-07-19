@@ -50,9 +50,9 @@ export const getPriceType = code => {
         case '6':
             return '限&AON';
         case '10':
-            return 'GTC&ANY';
+            return '限&GTC&ANY';
         case '16':
-            return 'GTC&AON';
+            return '限&GTC&AON';
         case '60':
             return '觸價單&ANY';
         case '66':
@@ -83,8 +83,13 @@ export const goOrderMapping = (str, gtcDate) => {
                 return item;
             }
         });
+        const found = narr.find(element => element === '觸');
         if (filterArr.length == 0) {
-            narr.unshift('長');
+            if (found) {
+                narr.splice(1, 0, '長');
+            } else {
+                narr.unshift('長');
+            }
         }
     }
     return narr;
