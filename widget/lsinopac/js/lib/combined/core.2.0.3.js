@@ -1036,25 +1036,31 @@ LabCI.SSDL = {
                     sessionStorage.removeItem('newweb_modal');
                 }
                 if (jqXHR.status != 200){
-                    let path = encodeURIComponent('/TradingCenter_TWStocks_SubBrokerage/')
-                    console.log('path', path)
-                    let queryStr = '';
-                    let queryIndex = window.parent.window.parent.location.href.indexOf('?');
-                    if(queryIndex >= 0){
-                        queryStr = '?'+window.parent.window.parent.location.href.split('?').slice(-1).pop();
-                    }
-                    removeStorage();
-                    const newHref = location.protocol + '//' + location.host + '/newweb/'+'/SinoTrade_login?currentPath='+path+queryStr;
-                    
-                    $.post("/lykan/api/v1/auth/logout", function (res) {
-                        if(jqXHR.status == 403){
-                            sessionStorage.setItem('newweb_modal', '您在其他裝置上進行登入，已強制登出');
-                        }else{
-                            sessionStorage.setItem('newweb_modal', '帳號逾時，請重新登入');
+
+                    if(jqXHR.status == 401 || jqXHR.status == 403){
+                        let path = encodeURIComponent('/TradingCenter_TWStocks_SubBrokerage/')
+                        console.log('path', path)
+                        let queryStr = '';
+                        let queryIndex = window.parent.window.parent.location.href.indexOf('?');
+                        if(queryIndex >= 0){
+                            queryStr = '?'+window.parent.window.parent.location.href.split('?').slice(-1).pop();
                         }
+                        removeStorage();
+                        const newHref = location.protocol + '//' + location.host + '/newweb/'+'/SinoTrade_login?currentPath='+path+queryStr;
                         
-                        window.parent.window.parent.location.href = newHref;
-                    })
+                        $.post("/lykan/api/v1/auth/logout", function (res) {
+                            if(jqXHR.status == 403){
+                                sessionStorage.setItem('newweb_modal', '您在其他裝置上進行登入，已強制登出');
+                            }else{
+                                sessionStorage.setItem('newweb_modal', '帳號逾時，請重新登入');
+                            }
+                            
+                            window.parent.window.parent.location.href = newHref;
+                        })
+                    }else{
+                        //alert('伺服器錯誤')
+                    }
+
                     
                     // if (typeof (parent.$.alert) === 'function') {
                     //     parent.$.alert({
