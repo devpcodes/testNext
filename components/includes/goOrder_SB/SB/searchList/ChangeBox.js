@@ -9,6 +9,7 @@ import { usePlatform } from '../../../../../hooks/usePlatform';
 import { getTT } from '../../../../../services/components/goOrder/sb/dataMapping';
 import { getWebId } from '../../../../../services/components/goOrder/getWebId';
 import { postUpdate } from '../../../../../services/components/goOrder/sb/postUpdate';
+import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
 
 const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
     const dispatch = useDispatch();
