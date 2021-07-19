@@ -37,6 +37,8 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
 
     const submitData = async (info, currentAccount) => {
         const marketID = info.StockID.split('.').slice(-1).pop();
+        console.log('marketID', marketID);
+        let newQty = getCanCancelQty(info) - qty;
         try {
             setSubmitLoading(true);
             const resVal = await postUpdate({
@@ -48,9 +50,9 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
                 Exchid: marketID,
                 OID: info.OID,
                 OT: '0',
-                StockID: info.StockID,
+                StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
                 TT: getTT(marketID),
-                NewQty: qty,
+                NewQty: newQty,
             });
             setSubmitLoading(false);
             dispatch(setSearchListSubmitSuccess(true));
