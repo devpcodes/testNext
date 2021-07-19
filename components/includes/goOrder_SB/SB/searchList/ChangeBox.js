@@ -54,10 +54,12 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
                     StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
                     TT: getTT(marketID),
                 });
+                setSubmitLoading(false);
                 dispatch(setSearchListSubmitSuccess(true));
                 Modal.info({
                     content: resVal,
                 });
+                closeHandler();
             } catch (error) {
                 message.info({
                     content: error,
