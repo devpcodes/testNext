@@ -1,5 +1,6 @@
 import { checkSignCA, sign } from '../../../webCa';
 import { getCookie } from '../../layouts/cookieController';
+import { getTT } from './dataMapping';
 import { postOrder } from './postOrder';
 
 export const submitService = async ({
@@ -51,6 +52,8 @@ export const submitService = async ({
             Exchid,
             ClientIP: getCookie('client_ip'),
             ca_content,
+            TT: getTT(Exchid),
+            OT: '0',
         };
         if (GTCDate) {
             orderData.GTCDate = gtcDate.join('');
@@ -85,4 +88,5 @@ const priceType = (GTCDate, aon, TouchedPrice) => {
     if (aon === 'ANY') {
         return '0';
     }
+    return '0';
 };

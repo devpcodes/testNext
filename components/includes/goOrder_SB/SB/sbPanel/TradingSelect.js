@@ -70,6 +70,7 @@ const TradingSelect = () => {
             setPriceTypeDisabled(false);
         } else {
             setPriceTypeDisabled(true);
+            dispatch(setAon(''));
         }
     };
 
