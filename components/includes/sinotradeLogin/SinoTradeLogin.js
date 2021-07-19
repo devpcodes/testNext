@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-// import { notification } from 'antd';
+import { Modal } from 'antd';
 import PropTypes from 'prop-types';
 import Login from './login';
 import loginImg from '../../../resources/images/pages/SinoTrade_login/img-login.jpg';
@@ -15,6 +15,11 @@ const SinoTradeLogin = function ({ onClose, successHandler }) {
     const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
         window.addEventListener('resize', resizeHandler);
+        if (sessionStorage.getItem('newweb_modal')) {
+            Modal.error({
+                content: sessionStorage.getItem('newweb_modal'),
+            });
+        }
         resizeHandler();
         if (checkIframe()) {
             setIsIframe(true);

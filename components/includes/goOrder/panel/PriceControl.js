@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import selectIcon from '../../../../resources/images/components/goOrder/arrow-chevron-down_black.png';
 import { themeColor } from './PanelTabs';
 import { checkServer } from '../../../../services/checkServer';
-import { formatPrice } from '../../../../services/numFormat';
+import { formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
 import { getStockPriceRange, getStockType } from '../../../../services/stockTickType';
 import { setPriceType, setOrdQty, setOrderPrice, setDefaultOrdPrice } from '../../../../store/goOrder/action';
 import infoIcon from '../../../../resources/images/components/goOrder/attention-info-circle.svg';
@@ -131,7 +131,7 @@ const PriceControl = ({ title }) => {
                         if (Number(solaceData[0].data.OddlotClose) == 0) {
                             dispatch(setOrderPrice(''));
                         } else {
-                            dispatch(setOrderPrice(formatPrice(solaceData[0].data.OddlotClose)));
+                            dispatch(setOrderPrice(formatPriceByUnit(code, solaceData[0].data.OddlotClose)));
                             setPrice = true;
                         }
                     }
@@ -144,7 +144,7 @@ const PriceControl = ({ title }) => {
                         if (Number(solaceData[0].data.Close[0]) == 0) {
                             dispatch(setOrderPrice(''));
                         } else {
-                            dispatch(setOrderPrice(formatPrice(solaceData[0].data.Close[0])));
+                            dispatch(setOrderPrice(formatPriceByUnit(code, solaceData[0].data.Close[0])));
                             setPrice = true;
                         }
                     }
@@ -183,7 +183,7 @@ const PriceControl = ({ title }) => {
                     return;
                 }
                 unit = getStockPriceRange(type, ordPrice, true);
-                dispatch(setOrderPrice(formatPrice(parseFloat(ordPrice) + unit)));
+                dispatch(setOrderPrice(formatPriceByUnit(code, parseFloat(ordPrice) + unit)));
             } else {
                 if (isNaN(Number(ordPrice))) {
                     dispatch(setOrderPrice(''));
@@ -191,9 +191,9 @@ const PriceControl = ({ title }) => {
                 }
                 unit = getStockPriceRange(type, ordPrice, true);
                 if (parseFloat(ordPrice) - unit <= unit) {
-                    dispatch(setOrderPrice(formatPrice(unit)));
+                    dispatch(setOrderPrice(formatPriceByUnit(code, unit)));
                 } else {
-                    dispatch(setOrderPrice(formatPrice(parseFloat(ordPrice) - unit)));
+                    dispatch(setOrderPrice(formatPriceByUnit(code, parseFloat(ordPrice) - unit)));
                 }
             }
         } else {
@@ -243,6 +243,14 @@ const PriceControl = ({ title }) => {
         }
     };
 
+    const typeHandler = val => {
+        if (isNaN(Number(val))) {
+            return 'text';
+        } else {
+            return 'number';
+        }
+    };
+
     return (
         <div className="price_control">
             <div className="select__box">
@@ -288,6 +296,7 @@ const PriceControl = ({ title }) => {
                     value={title === '限價' ? getPriceValHandler() : ordQty}
                     onChange={priceChangeHandler}
                     onFocus={focusHandler}
+                    type={title === '限價' ? typeHandler(getPriceValHandler()) : typeHandler(ordQty)}
                 />
             </div>
             <div className="btn__box">
@@ -396,7 +405,7 @@ const PriceControl = ({ title }) => {
                 }
                 .price_control .ant-input-focused,
                 .ant-input:focus {
-                    box-shadow: none;
+                    /* box-shadow: none; */
                 }
                 .price_control .ant-input {
                     height: 46px;

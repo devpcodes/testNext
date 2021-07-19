@@ -1,14 +1,13 @@
 import { useCallback, memo } from 'react';
 import { useSelector, useDispatch, connect } from 'react-redux';
 import { checkServer } from '../../../../services/checkServer';
-import { toDecimal, priceColor, formatPrice } from '../../../../services/numFormat';
+import { toDecimal, priceColor, formatPrice, formatPriceByUnit } from '../../../../services/numFormat';
 import { setOrderPrice } from '../../../../store/goOrder/action';
 
-const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRender: false }) => {
+const FiveLatestOffer = ({ code, stopRender, solaceData, lot, checkLot } = { stopRender: false }) => {
     // const solaceData = useSelector(store => store.solace.solaceData);
     // const lot = useSelector(store => store.goOrder.lot); //useSelector(store => store.goOrder.lot)
     // const checkLot = useSelector(store => store.goOrder.checkLot);
-
     const dispatch = useDispatch();
     const getVolumeSum = keyName => {
         if (!checkServer() && !stopRender && solaceData.length > 0 && solaceData[0].topic != null) {
@@ -65,10 +64,10 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
     };
 
     const getWidthHandler = item => {
-        if (formatPrice(item).length <= 2) {
+        if (formatPriceByUnit(code, item).length <= 2) {
             return '40px';
         }
-        return formatPrice(item).length * 8 + 'px';
+        return formatPriceByUnit(code, item).length * 8 + 'px';
     };
 
     const renderBidPrice = useCallback(
@@ -118,10 +117,10 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
                                                 }}
                                                 onClick={priceClickHandler.bind(
                                                     null,
-                                                    simtradeHandler(formatPrice(item, '--')),
+                                                    simtradeHandler(formatPriceByUnit(code, item, '--')),
                                                 )}
                                             >
-                                                {simtradeHandler(formatPrice(item, '--'))}
+                                                {simtradeHandler(formatPriceByUnit(code, item, '--'))}
                                             </span>
                                             <div
                                                 className="box"
@@ -129,7 +128,7 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
                                                     data[0].data[volumeKey][index],
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'buy',
-                                                    formatPrice(item, '--').length,
+                                                    formatPriceByUnit(code, item, '--').length,
                                                     item,
                                                 )}
                                                 // style={{
@@ -184,10 +183,10 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
                                                 }}
                                                 onClick={priceClickHandler.bind(
                                                     null,
-                                                    simtradeHandler(formatPrice(item, '--')),
+                                                    simtradeHandler(formatPriceByUnit(code, item, '--')),
                                                 )}
                                             >
-                                                {simtradeHandler(formatPrice(item, '--'))}
+                                                {simtradeHandler(formatPriceByUnit(code, item, '--'))}
                                             </span>
                                             <div
                                                 className="box"
@@ -195,7 +194,7 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
                                                     data[0].data[volumeKey][index],
                                                     !!data[0].data.OddlotSimtrade || !!data[0].data.Simtrade,
                                                     'sell',
-                                                    formatPrice(item, '--').length,
+                                                    formatPriceByUnit(code, item, '--').length,
                                                     item,
                                                 )}
                                             >
@@ -251,7 +250,7 @@ const FiveLatestOffer = ({ stopRender, solaceData, lot, checkLot } = { stopRende
         let w;
         if (String(amount).length + priceLength >= 10) {
             w = '108px';
-        } else if (String(amount).length + priceLength >= 8) {
+        } else if (String(amount).length + priceLength >= 7) {
             w = '100px';
         } else {
             w = '90px';

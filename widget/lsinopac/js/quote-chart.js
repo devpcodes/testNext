@@ -54,7 +54,7 @@
         $taoptbtn: null,
         $taparamOverlay: null,
         $taparam: null,
-
+        datefr: null,
         currentquoteric: null,
         mode: "desktop",
         initImpl: function () {
@@ -1001,7 +1001,6 @@
             },
                     function (result) {
                         // Prep the data
-
                         //    var si = LabCI.WP.SUPPORTED_FX[_dataopts.fx];
                         var dp = 2;
 
@@ -1012,11 +1011,109 @@
                         that.chart.mainchartobj.setGridType(_dataopts._gridtype);
 
                         that._chart_changeperiod();
+
+                        var tmparr = result.split("\n");
+                        for (var i = tmparr.length - 1; i >= 0; i--) {
+                            if (tmparr[i].length > 20) {
+                                if (_dataopts._datatype === chartFactory.HTS_DATA) {
+                                    // HTS data
+                                    that.datefr = tmparr[i].substring(0, 8);
+                                } else {
+                                    // MTS data
+                                    that.datefr = tmparr[i].substring(0, 12);
+                                }
+                                break;
+                            }
+                        }
                     },
                     0,
                     {
                         datatype: "text"
                     });
+        },
+        pollData: function () {
+            var that = this;
+            if (this.mode == "mobile" && this.chart.mainchartobj.series && (this.chart.curperiod == '1D' || this.chart.curperiod == '1W')) {
+                console.log('Add data calls');
+                var int = "1";
+                if (this.chart.curperiod == '1W') {
+                    int = "60";
+                }
+                this.chart.$this.loaddata("loadchartdata_pol", "/data/mts", {
+                    ric: this.currentquoteric,
+                    i: int,
+                    fr: this.datefr,
+                    pid: "chartpane",
+                    lang: this.lang,
+                    token: encodeURIComponent(LabCI.getToken())
+                },
+                        function (result) {
+                            var series = that.chart.mainchartobj.series;
+                            var arr = series._parserawdata(result);
+
+                            for (var entry of arr) {
+                                var lastPoint = series.points[series.points.length - 1];
+                                if (lastPoint.date.getTime() === entry.date.getTime()) {
+                                    //update
+                                    that.chart.mainchartobj.series.update(entry);
+                                } else {
+                                    //append
+                                    that.chart.mainchartobj.series.append(entry);
+                                    that.chart.mainchartobj.draw(chartFactory.REASON_DATA_UPDATE);
+                                }
+                            }
+
+                            var tmparr = result.split("\n");
+                            for (var i = tmparr.length - 1; i >= 0; i--) {
+                                if (tmparr[i].length > 20) {
+                                    // MTS data
+                                    that.datefr = tmparr[i].substring(0, 12);
+                                    break;
+                                }
+                            }
+
+
+
+                        },
+                        0,
+                        {
+                            datatype: "text"
+                        });
+
+
+                /*    var addData = '';
+                 if(result && result.date && result.data.datalist && result.data.datalist[0]){
+                 var data = result.data.datalist[0];
+                 if(this.chart.curperiod == '1D' || this.chart.curperiod == '1W'){
+                 //mts
+                 addData += data.td + data.tm + ',';
+                 }else{
+                 //hts
+                 addData += data.td + ',';
+                 }
+                 
+                 addData += data.op.replace(',','') + ',' + data.hi.replace(',','') + ',' + data.lo.replace(',','') + ',' + data.ls.replace(',','');
+                 if(data.vo && data.vo != '-'){
+                 addData += ',' + data.vo;
+                 }
+                 }      
+                 
+                 var series = this.chart.mainchartobj.series;        
+                 let arr = series._parserawdata(addData);
+                 for (var entry of arr) {
+                 var lastPoint = series.points[series.points.length-1];
+                 if(lastPoint.date.getTime() === entry.date.getTime()){
+                 //update
+                 this.chart.mainchartobj.series.update(entry);                     
+                 }else{
+                 //append
+                 this.chart.mainchartobj.series.append(entry);   
+                 this.chart.mainchartobj.draw(chartFactory.REASON_DATA_UPDATE);
+                 }               
+                 } 
+                 */
+            }
+
         },
 
         hideImpl: function () {

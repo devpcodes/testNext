@@ -1,6 +1,6 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Modal, Button, Checkbox } from 'antd';
+import { Modal, Button, Checkbox, message } from 'antd';
 import SortableList from '../sortableList/sortable';
 import { fetchupdateSelectStock } from '../../../../services/selfSelect/updateSelectStock';
 import { fetchUpdateSelectGroup } from '../../../../services/selfSelect/updateSelectGroup';
@@ -57,6 +57,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
         });
         const res = await fetchupdateSelectStock(reqData, isSocalLogin, token);
         handleCancel();
+        if (res.success === true && res.message === 'OK') {
+            message.success('成功編輯自選');
+        }
     };
 
     const handleCancel = () => {
@@ -241,7 +244,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                 }
                 .ant-checkbox-group-item {
                     display: block;
-                    padding: 4px 0;
+                    padding: 11px 0;
+                    font-size: 1.6rem;
+                    color: #0d1623;
                 }
             `}</style>
         </>

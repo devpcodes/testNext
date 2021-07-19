@@ -65,6 +65,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
             if (!searchBuySell) {
                 delete postData.bs;
             }
+            if (userInfo.accttype !== 'S') {
+                delete postData.account;
+            }
             return postData;
         } else {
             return {};
@@ -93,15 +96,16 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
         let newData = [];
         if (Array.isArray(fetchData?.data)) {
             setError('');
-            newData = fetchData.data.sort((a, b) => {
-                if (a.ord_time.length <= 6) {
-                    a.ord_time += '000';
-                }
-                if (b.ord_time.length <= 6) {
-                    b.ord_time += '000';
-                }
-                return Number(b.ord_time) - Number(a.ord_time);
-            });
+            // newData = fetchData.data.sort((a, b) => {
+            //     if (a.ord_time.length <= 6) {
+            //         a.ord_time += '000';
+            //     }
+            //     if (b.ord_time.length <= 6) {
+            //         b.ord_time += '000';
+            //     }
+            //     return Number(b.ord_time) - Number(a.ord_time);
+            // });
+            newData = fetchData.data;
             newData = newData.map((item, index) => {
                 item.key = index;
                 item.platform = platform;

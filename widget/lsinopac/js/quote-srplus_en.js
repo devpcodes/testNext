@@ -3,7 +3,7 @@
 LabCI.WP.QuoteSRPlusPageObj.PAGEOBJ_RESOURCEBUNDLE.en = {
 
     lbl: {
-        avgscore: "Thomson Reuters Average Score",
+        avgscore: "Average Score",
         avgscoretrend: "Average Score Trend (4 WK Moving Avg.)",
         positive: "Positive",
         neutral: "Neutral",

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 import { useSelector } from 'react-redux';
 import CaHead from '../components/includes/CaHead';
 import { PageHead } from '../components/includes/PageHead';
@@ -73,6 +74,10 @@ const OrderGO = ({ requestStockId }) => {
 
     return (
         <>
+            <Head>
+                <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"></link>
+            </Head>
             <div className="OrderGO__container" id="container">
                 <CaHead />
                 <PageHead title={'快速下單'} />
@@ -82,6 +87,19 @@ const OrderGO = ({ requestStockId }) => {
                 <StockContainer requestStockId={requestStockId} />
             </div>
             <LeadingBtn containerHeight={containerHeight} show={leadingBtnShow} />
+            <style global jsx>{`
+                * {
+                    font-family: 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei',
+                        sans-serif;
+                }
+                body {
+                    overflow: hidden;
+                    position: fixed;
+                }
+                /* * {
+                    -webkit-overflow-scrolling: auto !important;
+                } */
+            `}</style>
         </>
     );
 };

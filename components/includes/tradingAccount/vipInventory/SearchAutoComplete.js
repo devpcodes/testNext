@@ -8,6 +8,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = fals
     const [products, setProducts] = useState([]);
     const selected = useRef(false);
     useEffect(() => {
+        console.log('val', parentValue);
         setValue(parentValue);
         if (parentValue === '') {
             setProducts([]);
@@ -88,7 +89,7 @@ const SearchAutoComplete = ({ selectHandler, parentValue, onChange, width = fals
                     onChange={changeHandler}
                     value={value}
                     autoFocus={true}
-                    defaultActiveFirstOption={true}
+                    defaultActiveFirstOption={false}
                     onSelect={onSelect}
                     onBlur={onBlur}
                 />

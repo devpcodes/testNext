@@ -63,6 +63,12 @@ const QuoteContainer = () => {
 
     useEffect(() => {
         if (productInfo != null) {
+            if (productInfo.TIB != null) {
+                if (productInfo.TIB.indexOf('創新') >= 0 || productInfo.TIB.indexOf('戰略') >= 0) {
+                    dispatch(setCheckLot(false));
+                    return;
+                }
+            }
             if (
                 productInfo.solaceMarket != null &&
                 (productInfo.solaceMarket == '興櫃' || productInfo.solaceMarket == '權證')
@@ -105,12 +111,12 @@ const QuoteContainer = () => {
             >
                 <div>
                     <QuotesDetail stopRender={stopRenderNum === 0 ? true : false} show={true} />
-                    <FiveLatestOffer stopRender={stopRenderNum === 0 ? true : false} />
+                    <FiveLatestOffer code={code} stopRender={stopRenderNum === 0 ? true : false} />
                 </div>
                 {checkLot && (
                     <div>
                         <QuotesDetail stopRender={stopRenderNum === 1 ? true : false} show={true} />
-                        <FiveLatestOffer stopRender={stopRenderNum === 1 ? true : false} />
+                        <FiveLatestOffer code={code} stopRender={stopRenderNum === 1 ? true : false} />
                     </div>
                 )}
             </Carousel>

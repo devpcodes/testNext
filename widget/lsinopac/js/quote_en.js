@@ -30,6 +30,7 @@ LabCI.WP.QuotePageObj.PAGEOBJ_RESOURCEBUNDLE.en = {
         "SHZ": "China SZSE",
         "delay": "Delayed. ",
         "real": "Realtime. ",
+        "realStream": "Realtime. ",
         "ccy": "Currency in ",
         "ccy_CNY": "CNY",
         "ccy_EUR": "EUR",

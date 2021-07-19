@@ -5,7 +5,6 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { fetchStockMinuteKline } from '../../../../services/stock/stockMinuteKlineFetcher';
 
-am4core.useTheme(am4themes_animated);
 am4core.addLicense(process.env.NEXT_PUBLIC_AMCHART_LICENSE);
 let watermark;
 
@@ -39,7 +38,7 @@ const Chart = function () {
                 );
                 if (chartWatermark) {
                     solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
-                        ? (chartWatermark.text = '盤前試撮')
+                        ? (chartWatermark.text = '試撮')
                         : (chartWatermark.text = '');
                 }
 
@@ -70,6 +69,7 @@ const Chart = function () {
     const drawChart = () => {
         if (!_.isEmpty(kline)) {
             let chart = am4core.create('chartdiv', am4charts.XYChart);
+
             if (kline.OHCL.length > 0) {
                 kline.OHCL.map(function (a, b) {
                     a.ts = a.ts.replace(new RegExp(/-/gm), '/');
@@ -77,6 +77,14 @@ const Chart = function () {
                 });
                 chart.data = kline.OHCL;
             }
+
+            // 整股零股
+            // let chartAmount = lot === 'Board' ? kline.Amount : kline.OddAmount;
+            // let chartHigh = lot === 'Board' ? kline.High : kline.OddHigh;
+            // let chartLow = lot === 'Board' ? kline.Low : kline.OddLow;
+            // let chartOpen = lot === 'Board' ? kline.Open : kline.OddOpen;
+            // let chartVolume = lot === 'Board' ? kline.Volume : kline.OddVolume;
+            let chartClose = lot === 'Board' ? kline.Close : kline.OddClose;
 
             // 補齊第一根線 (缺零股和數量)
             if (Array.isArray(chart.data) && chart.data.length) {
@@ -89,6 +97,7 @@ const Chart = function () {
             // 時間軸設定 (resizable)
             let timeAxis = chart.xAxes.push(new am4charts.DateAxis());
             timeAxis.dataFields.category = 'time';
+            timeAxis.interactionsEnabled = false;
             timeAxis.fontSize = 12;
             timeAxis.tooltip.label.fontSize = 10;
             timeAxis.baseInterval = { timeUnit: 'second', count: 1 };
@@ -106,30 +115,30 @@ const Chart = function () {
                 { timeUnit: 'second', count: 1 },
             ]);
 
-            timeAxis.dateFormats.setKey('hour', 'HH');
+            timeAxis.dateFormats.setKey('hour', 'HH:mm');
 
             // 價格軸設定
             let priceAxis = chart.yAxes.push(new am4charts.ValueAxis());
             priceAxis.strictMinMax = true;
             if (kline.DownLimit === 0.01 && kline.UpLimit === 9995) {
                 priceAxis.max =
-                    kline.Close > parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2))
-                        ? kline.Close
+                    chartClose > parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2))
+                        ? chartClose
                         : parseFloat((kline.Reference + kline.Reference * 0.2).toFixed(2));
                 priceAxis.min =
-                    kline.Close < parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2))
-                        ? kline.Close
+                    chartClose < parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2))
+                        ? chartClose
                         : parseFloat((kline.Reference - kline.Reference * 0.2).toFixed(2));
             } else {
                 priceAxis.min = kline.DownLimit; // 跌停
                 priceAxis.max = kline.UpLimit; // 漲停
 
-                let label = chart.createChild(am4core.Label);
-                label.text = kline.Reference;
-                label.fontSize = 12;
-                label.isMeasured = false;
-                label.x = '0';
-                label.y = '77';
+                // let label = chart.createChild(am4core.Label);
+                // label.text = kline.Reference;
+                // label.fontSize = 12;
+                // label.isMeasured = false;
+                // label.x = '0';
+                // label.y = '77';
             }
 
             priceAxis.strictMinMax = true;
@@ -151,10 +160,32 @@ const Chart = function () {
                 }
             });
 
+            let upLimitLine = chart.series.push(new am4charts.LineSeries());
+            upLimitLine.dataFields.dateX = 'ts';
+            upLimitLine.dataFields.valueY = 'UpLimit';
+            upLimitLine.strokeWidth = 2;
+            upLimitLine.stroke = am4core.color('#0d1623');
+            let upLimitData = [
+                { ts: new Date().setHours(8, 0, 0, 0), UpLimit: kline.UpLimit },
+                { ts: new Date().setHours(13, 30, 0, 0), UpLimit: kline.UpLimit },
+            ];
+            upLimitLine.data = upLimitData;
+
+            let downLimitLine = chart.series.push(new am4charts.LineSeries());
+            downLimitLine.dataFields.dateX = 'ts';
+            downLimitLine.dataFields.valueY = 'DownLimit';
+            downLimitLine.strokeWidth = 2;
+            downLimitLine.stroke = am4core.color('#0d1623');
+            let downLimitData = [
+                { ts: new Date().setHours(8, 0, 0, 0), DownLimit: kline.DownLimit },
+                { ts: new Date().setHours(13, 30, 0, 0), DownLimit: kline.DownLimit },
+            ];
+            downLimitLine.data = downLimitData;
+
             // 線圖設定
             let priceSeries = chart.series.push(new am4charts.LineSeries());
             priceSeries.dataFields.dateX = 'ts';
-            priceSeries.dataFields.valueY = 'Close';
+            lot === 'Board' ? (priceSeries.dataFields.valueY = 'Close') : (priceSeries.dataFields.valueY = 'OddClose');
             priceSeries.tooltipText = '{valueY.value}';
             priceSeries.tooltip.label.fontSize = 12;
             priceSeries.numberFormatter.numberFormat = '#.00';
@@ -175,7 +206,9 @@ const Chart = function () {
             // volumeSeries.columns.template.fillOpacity = 0.5;
             // volumeSeries.columns.template.strokeOpacity = 0;
 
+            // 取消縮放功能
             chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = 'none';
 
             // waterMark
             watermark = new am4core.Label();
@@ -189,7 +222,7 @@ const Chart = function () {
             watermark.text = '';
             if (solaceData && solaceData.length > 0) {
                 solaceData[0].data.OddlotSimtrade === 1 || solaceData[0].data.Simtrade === 1
-                    ? (watermark.text = '盤前試撮')
+                    ? (watermark.text = '試撮')
                     : (watermark.text = '');
             }
             chart.plotContainer.children.push(watermark);

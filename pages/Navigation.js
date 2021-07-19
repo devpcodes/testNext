@@ -35,7 +35,13 @@ const Navigation = () => {
                     // 為保持與舊站的相容，trust login 進站時，也要設定 sessionStorage `platform`，直到舊站下架才移除下面這行
                     sessionStorage.setItem('platform', router.query.platform);
                 }
-                router.push(`/${router.query.page || ''}${getQueryStr()}`);
+
+                // http:// || https:// 開頭 全部直接幫忙轉到外部網址
+                if (/(^http(s?)):\/\//i.test(router.query.page)) {
+                    location.href = router.query.page;
+                } else {
+                    router.push(`/${router.query.page || ''}${getQueryStr()}`);
+                }
             }
         } catch (e) {
             router.push(`/errPage`);

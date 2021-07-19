@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import { setBs } from '../../../store/goOrder/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { checkLogin } from '../../../services/components/layouts/checkLogin';
+import { usePlatform } from '../../../hooks/usePlatform';
 
 const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const dispatch = useDispatch();
@@ -12,7 +13,8 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const [shadow, setShadow] = useState('0px -7px 6px -3px #C7C7C7');
 
     const socalLoginData = useSelector(store => store.user.socalLogin);
-    const platform = useSelector(store => store.general.platform);
+    // const platform = useSelector(store => store.general.platform);
+    const platform = usePlatform();
 
     const winSize = useWindowSize();
 
@@ -40,19 +42,41 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
             'redirectUrl=OrderGO';
     };
 
-    const socalClickHandler = () => {
+    // const socalClickHandler = () => {
+    //     switch (platform) {
+    //         case 'udn':
+    //             window.open('https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135');
+    //             // window.location =
+    //             //     'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+    //             break;
+
+    //         default:
+    //             window.open(
+    //                 'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
+    //             );
+    //             // window.location =
+    //             //     'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+    //             break;
+    //     }
+    // };
+
+    const socalClickHandler = useCallback(() => {
         switch (platform) {
             case 'udn':
-                window.location =
-                    'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+                window.open('https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135');
+                // window.location =
+                //     'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
                 break;
 
             default:
-                window.location =
-                    'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+                window.open(
+                    'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
+                );
+                // window.location =
+                //     'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
                 break;
         }
-    };
+    }, [platform]);
 
     return (
         <div className="container" style={{ display: show ? 'block' : 'none' }}>

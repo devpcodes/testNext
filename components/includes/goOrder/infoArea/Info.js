@@ -7,13 +7,15 @@ import { useRouter } from 'next/router';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
+import { InfoBox } from './InfoBox';
+import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
 import AddSelectStock from '../selfSelectStock/AddSelectStock';
 
 import {
     priceColor,
     getArrow,
     toDecimal,
-    formatPrice,
+    formatPriceByUnit,
     trimMinus,
     simTradeHandler,
 } from '../../../../services/numFormat';
@@ -26,6 +28,8 @@ import {
     setDefaultOrdPrice,
     setOrdQty,
     setTradeTime,
+    setT30,
+    setCheckLot,
 } from '../../../../store/goOrder/action';
 
 import share from '../../../../resources/images/components/goOrder/basic-share-outline.svg';
@@ -39,19 +43,11 @@ import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelec
 import { getToken } from '../../../../services/user/accessToken';
 import { getSocalToken } from '../../../../services/user/accessToken';
 import { InstallWebCA } from './InstallWebCA';
+import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
-
-// TODO: 暫時寫死，需發 API 查詢相關資料顯示
-const moreItems = [
-    { id: '1', color: 'dark', text: '融' },
-    // { id: '2', color: 'red', text: '詳' },
-    { id: '3', color: 'orange', text: '存' },
-    // { id: '4', color: 'green', text: '借' },
-    { id: '5', color: 'blue', text: '學' },
-    { id: '6', color: 'brown', text: '+ 自選' },
-];
+import { fetchGetRichClubReport } from '../../../../services/components/richclub/getRichClubReport';
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 const solaceDataHandler = (solaceData, lot, checkLot) => {
@@ -109,6 +105,8 @@ export const Info = ({ stockid }) => {
     const [sec, setSec] = useState('');
     const [tradingDate, setTradingDate] = useState('');
     const [reloadLoading, setReloadLoading] = useState(false);
+    const [t30Data, setT30Data] = useState(false);
+    const [moreItems, setMoreItems] = useState([]);
 
     const dispatch = useDispatch();
 
@@ -122,6 +120,8 @@ export const Info = ({ stockid }) => {
     const checkLot = useSelector(store => store.goOrder.checkLot);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const userSettings = useSelector(store => store.user.userSettings);
+    const T30 = useSelector(store => store.goOrder.T30Data);
+
     const { close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot, checkLot);
 
     const router = useRouter();
@@ -221,6 +221,22 @@ export const Info = ({ stockid }) => {
         }
     }, [solaceData]);
 
+    useEffect(() => {
+        let tib = '';
+        if (T30?.EXCHANGE === 'OTC' && T30?.STK_CTGCD === '3') {
+            tib = '戰略新板';
+            let oldProductInfo = { ...productInfo };
+            oldProductInfo.TIB = tib;
+            dispatch(setProductInfo(oldProductInfo));
+        }
+        if (T30?.EXCHANGE === 'TSE' && T30?.STK_CTGCD === '3') {
+            tib = '創新板';
+            let oldProductInfo = { ...productInfo };
+            oldProductInfo.TIB = tib;
+            dispatch(setProductInfo(oldProductInfo));
+        }
+    }, [T30]);
+
     useEffect(async () => {
         if (code === '') {
             return;
@@ -230,12 +246,62 @@ export const Info = ({ stockid }) => {
         }
     }, [code, lot, isLogin]);
 
-    useEffect(async () => {
-        if (!isLogin && Object.keys(socalLoginData).length === 0) {
+    // useEffect(async () => {
+    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
+    //         return;
+    //     }
+    //     getSelect();
+    // }, [code, isLogin, isSelfSelectVisitable]);
+
+    useEffect(() => {
+        if (!code) {
             return;
         }
-        getSelect();
-    }, [code, isLogin, isSelfSelectVisitable]);
+        setInfoItems(code);
+    }, [code]);
+
+    // 暫時移除自選邏輯
+    // useEffect(() => {
+    //     if (selectInfo) {
+    //         reloadSelfSelectSmallIcon();
+    //     }
+    // }, [selectInfo]);
+
+    const updateQueryStringParameter = (uri, key, value) => {
+        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+        var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + '=' + value + '$2');
+        } else {
+            return uri + separator + key + '=' + value;
+        }
+    };
+
+    const loginClickHandler = () => {
+        const query = router.query;
+        let queryStr = objectToQueryHandler(query);
+        if (code) {
+            queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
+        }
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
+    };
+
+    const reloadSelfSelectSmallIcon = useCallback(() => {
+        const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
+        const index = cloneMoreItems.findIndex(obj => obj.id === '4');
+        if (cloneMoreItems[index]) {
+            if (selectInfo.isExist) {
+                cloneMoreItems[index].text = '❤ 自選';
+            } else {
+                cloneMoreItems[index].text = '+ 自選';
+            }
+            setMoreItems(cloneMoreItems);
+        }
+    });
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -251,7 +317,12 @@ export const Info = ({ stockid }) => {
     }, []);
 
     const lotWidthHandler = () => {
-        if (productInfo?.solaceMarket && productInfo.solaceMarket !== '興櫃' && productInfo.solaceMarket !== '權證') {
+        // if (productInfo?.solaceMarket && productInfo.solaceMarket !== '興櫃' && productInfo.solaceMarket !== '權證') {
+        //     return { width: '44px' };
+        // } else {
+        //     return { width: '22px' };
+        // }
+        if (checkLot) {
             return { width: '44px' };
         } else {
             return { width: '22px' };
@@ -336,6 +407,74 @@ export const Info = ({ stockid }) => {
         }
     };
 
+    const getCloseInfo = (close, isSimTrade, diffPrice, reference, diffRate) => {
+        if (close === 0) {
+            return '--';
+        }
+        return `${simTradeHandler(formatPriceByUnit(code, close), isSimTrade)} ${getArrow(
+            close,
+            reference,
+        )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(toDecimal(diffRate))}%)`;
+    };
+
+    const getVolume = volSum => {
+        if (volSum === 0) {
+            return '總量 --';
+        }
+        return `總量 ${volSum}`;
+    };
+
+    const setInfoItems = async code => {
+        // { id: '1', color: 'dark', text: '融' },
+        // { id: '2', color: 'red', text: '詳' },
+        // { id: '3', color: 'orange', text: '存' },
+        // { id: '4', color: 'green', text: '借' },
+        // { id: '5', color: 'blue', text: '學' },
+        // { id: '6', color: 'brown', text: '+ 自選' },
+
+        const t30Res = await fetchStockT30(code);
+        dispatch(setT30(t30Res));
+        // const test = await fetchGetRichClubReport(code);
+        // console.log(test)
+
+        let moreItems = [
+            {
+                id: '1',
+                color: 'red',
+                text: '詳',
+                title: '詳細報價',
+                desc: '理財網完整報價',
+                inInfoBox: true,
+                link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${code}`,
+            },
+            {
+                id: '2',
+                color: 'orange',
+                text: '存',
+                title: '豐存股',
+                desc: '優質個股輕鬆存',
+                inInfoBox: true,
+                link: `https://aiinvest.sinotrade.com.tw/Product/In?id=${code}`,
+            },
+            {
+                id: '3',
+                color: 'blue',
+                text: '學',
+                title: '豐雲學堂',
+                desc: '理財文章指點迷津',
+                inInfoBox: true,
+                link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
+            },
+            // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+        ];
+
+        if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
+            moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
+        }
+        setT30Data(t30Res);
+        setMoreItems(moreItems);
+    };
+
     return (
         <div className="info__container">
             {!isLogin && (
@@ -380,23 +519,20 @@ export const Info = ({ stockid }) => {
                         <div className="product__code">{code || stockid || '2890'}</div>
                     </div>
                     <div className="toolbar__container">
-                        <button className="share" onClick={shareHandler}>
+                        {/* <button className="share" onClick={shareHandler}>
                             <img src={share} alt="share"></img>
-                        </button>
+                        </button> */}
                         <button className="search" onClick={showSearch}>
                             <img src={search} alt="search"></img>
                         </button>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="price__container">{`${simTradeHandler(formatPrice(close), isSimTrade)} ${getArrow(
-                        close,
-                        reference,
-                    )} ${simTradeHandler(trimMinus(toDecimal(diffPrice)), isSimTrade)} (${trimMinus(
-                        toDecimal(diffRate),
-                    )}%)`}</div>
+                    <div className="price__container">
+                        {getCloseInfo(close, isSimTrade, diffPrice, reference, diffRate)}
+                    </div>
                     <div className="volume__container">
-                        <div className="volume">{`總量 ${volSum}`}</div>
+                        <div className="volume">{getVolume(volSum)}</div>
                         <div className="unit">{lot === 'Odd' ? '股' : '張'}</div>
                     </div>
                 </div>
@@ -404,13 +540,15 @@ export const Info = ({ stockid }) => {
                     <div className="market__container">
                         <button className="lot__box" onClick={lotHandler} style={lotWidthHandler()}>
                             <div className="box board">整</div>
-                            {productInfo?.solaceMarket &&
+                            {/* {productInfo?.solaceMarket &&
                                 productInfo.solaceMarket !== '興櫃' &&
-                                productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>}
+                                productInfo.solaceMarket !== '權證' && <div className="box odd">零</div>} */}
+                            {checkLot && <div className="box odd">零</div>}
                         </button>
-                        {productInfo?.solaceMarket != null && (
-                            <div className="market__box">{productInfo.solaceMarket}</div>
-                        )}
+                        {/* {productInfo?.solaceMarket != null && (
+                            <div className="market__box">{productInfo.TIB || productInfo.solaceMarket}</div>
+                        )} */}
+                        <div className="market__box">{productInfo?.TIB || productInfo?.solaceMarket}</div>
                     </div>
                     <div className="more__container" onClick={setMoreDetailIsVisitable}>
                         {moreItems.map(item => (
@@ -421,19 +559,23 @@ export const Info = ({ stockid }) => {
             </div>
             <div className="more__info__container">
                 <div className="information__box">
-                    <button className="btn add__self__select" onClick={showSelfSelect} disabled={!selectInfo}>
-                        加入自選
-                    </button>
+                    <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
+                    {/* <button
+                        className="btn add__self__select"
+                        onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
+                    >
+                        {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
+                    </button> */}
                 </div>
             </div>
             <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            <AddSelectStock
+            {/* <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
                 reloadSelect={getSelect}
-            />
+            /> */}
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
@@ -567,7 +709,7 @@ export const Info = ({ stockid }) => {
                     color: ${lot === 'Odd' && checkLot ? theme.colors.text : '#a9b6cb'};
                 }
                 .market__box {
-                    width: 42px;
+                    /* width: 42px; */
                     height: 22px;
                     margin-left: 4px;
                     padding: 1px 6px;
@@ -589,11 +731,10 @@ export const Info = ({ stockid }) => {
                     background: #fff;
                     display: block;
                     left: 0;
-                    margin-top: 12px;
                     position: absolute;
                     padding: 0 16px 12px 16px;
                     width: 100%;
-                    z-index: 1001;
+                    z-index: 1300;
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
                 .more__info__container .information__box {
@@ -619,7 +760,7 @@ export const Info = ({ stockid }) => {
                     right: 0;
                     bottom: 0;
                     left: 0;
-                    z-index: 1000;
+                    z-index: 1200;
                     height: calc(100% - 230px);
                     background-color: rgb(0 0 0 / 30%);
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};

@@ -12,11 +12,28 @@ const StockInfo = () => {
     const lot = useSelector(store => store.goOrder.lot);
     const ordCound = useSelector(store => store.goOrder.ord_cond);
     const isFirstSell = useSelector(store => store.goOrder.is_first_sell);
+    const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
+    const TIB = useSelector(store => store.goOrder.productInfo?.TIB);
+    const ordType = useSelector(store => store.goOrder.ord_type);
     useEffect(() => {
         if (code !== '') {
             fetchInfo();
         }
     }, [code]);
+
+    useEffect(() => {
+        if (
+            bs !== 'S' ||
+            lot !== 'Board' ||
+            ordCound != 0 ||
+            market == '權證' ||
+            market == '興櫃' ||
+            ordType === 'P' ||
+            TIB != null
+        ) {
+            dispatch(setIsFirstSell('N'));
+        }
+    }, [bs, ordCound, lot, market, ordType, TIB]);
 
     const fetchInfo = async () => {
         const res = await stockInfoFetcher(code);
@@ -70,12 +87,22 @@ const StockInfo = () => {
     return (
         <div className="info__container">
             <div className="info__box">{getInfoTag()}</div>
-            {bs === 'S' && lot === 'Board' && ordCound == 0 && (
-                <div className="firstSell__box">
-                    <span>先賣</span>
-                    <Switch checked={isFirstSell === 'Y' ? true : false} size="small" onChange={switchChangeHandler} />
-                </div>
-            )}
+            {TIB == null &&
+                bs === 'S' &&
+                lot === 'Board' &&
+                ordCound == 0 &&
+                market != '權證' &&
+                market != '興櫃' &&
+                ordType !== 'P' && (
+                    <div className="firstSell__box">
+                        <span>先賣</span>
+                        <Switch
+                            checked={isFirstSell === 'Y' ? true : false}
+                            size="small"
+                            onChange={switchChangeHandler}
+                        />
+                    </div>
+                )}
             <style jsx>{`
                 .info__container {
                     margin-top: 11px;
