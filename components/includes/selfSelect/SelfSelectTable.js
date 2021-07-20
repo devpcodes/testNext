@@ -220,12 +220,16 @@ const SelfSelectTable = ({
                         // 複委託
                         const mk = stock.exchange === 'NASDAQ' ? 'US' : stock.exchange;
                         const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
+                        console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+                        console.log(sbQuoteData);
+                        console.log(sbQuote[`${stock.symbol}.${mk}`]);
+                        console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
                         stockData.key = index;
                         stockData.code = stock.symbol;
                         stockData.market = stock.market;
                         stockData.exchange = stock.exchange;
                         stockData.name = {
-                            text: `${stock.symbol}.${mk}`,
+                            text: sbQuoteData.stockName,
                             link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_SubBrokerage/?tab=2&symbol=${stock.symbol}&exch=${stock.exchange}`,
                         };
                         stockData.close = {
