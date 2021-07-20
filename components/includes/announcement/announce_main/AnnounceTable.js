@@ -282,35 +282,19 @@ const getColumnSearchProps = (data,idx) => {
             }
             
             <style jsx>{`
-            .search_box {position:absolute;right:0;top:20px;display:inline-block;}
+                .search_box {position:absolute;right:0;top:20px;display:inline-block;}
             @media (max-width: 768px) {
                 .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
             }
             `}</style>
             <style global jsx>{`
-            .ant-table-filter-trigger{margin:0}
-                .page__container {
-                    background-color: #f9fbff;
-                }
-                .ant-input {
-                    border: 1px solid #e6ebf5;
-                }
-                .vipInventoryStock {
-                    font-weight: bold;
-                }
+                .announce__container .ant-table-filter-trigger{margin:0}
+                .announce__container .ant-input {  border: 1px solid #e6ebf5; }
                 .for_m{display:none;}
                 @media (max-width: 768px) {
-                    .vipInventoryStock {
-                        white-space: normal !important;
-                    }
                     .for_pc{display:none;}
                     .for_m{display:block;}
                 }
-                /* .ant-table-filter-dropdown {
-                    width: 148px;
-                    height: 217px;
-                    padding-top: 15px;
-                } */
             `}</style>
         </>
     );

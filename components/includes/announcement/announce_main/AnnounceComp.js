@@ -69,7 +69,7 @@ const getKeyWord = () => {
 };
 
     return (
-        <div className="vipInventory__container">
+        <div className="announce__container">
             <div className="control__container">
                 <h2 className="title">最新公告</h2>
             </div>
@@ -80,22 +80,21 @@ const getKeyWord = () => {
             />
             <style jsx>
                 {`
-                
                 h2.title{position:relative;}
                 
-                    .vipInventory__container {
+                    .announce__container {
                         position:relative;
                         width:80%;
                         margin:0 auto;
                         padding-top: 50px;
                     }
                     @media (max-width: 1250px) {
-                        .vipInventory__container {
+                        .announce__container {
                             width:90%;
                         }
                     }
                     @media (max-width: 1111px) {
-                        .vipInventory__container {
+                        .announce__container {
                             width:calc(100%-40px)
                         }
                     }
@@ -111,7 +110,7 @@ const getKeyWord = () => {
                     }
                     @media (max-width: 768px) {
                         h2.title{font-size:20px;margin-bottom:5px;}
-                        .vipInventory__container {
+                        .announce__container {
                             width:100%;
                             padding-left: 0;
                             padding-right: 0;

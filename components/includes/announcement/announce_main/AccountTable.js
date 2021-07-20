@@ -44,7 +44,7 @@ const [columns, setColumns] = useState([]);
     return (
         
         <div>
-            <div className="sino__table">
+            <div className="sino__table sino__table_ann">
                 <Table columns={columns} {...props} />
             </div>
 
@@ -55,8 +55,8 @@ const [columns, setColumns] = useState([]);
                 .sino__table {
                     margin-bottom: 20px;
                 }
-                .sino__table .ant-table table {
-                    // border: solid 1px #d7e0ef;
+                .sino__table.sino__table_ann{
+                   border-radius:0;
                 }
                 .sino__table .ant-table-container {
                     border: solid 1px #d7e0ef;

@@ -7,9 +7,12 @@ function AnnouncementPage() {
         <>
         <Provider store={itemStore}>
             <PageHead title={'最新公告'} />
-            <div>
+            <div className="bg_f9fbff">
                 <AnnouncePageComp/>
             </div>
+            <style jsx>{`
+                .bg_f9fbff{background-color: #f9fbff;}
+            `}</style>
         </Provider>
         </>
     );
