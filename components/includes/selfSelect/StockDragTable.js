@@ -132,6 +132,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
 
         columns.forEach((val, index) => {
             if (tabKey + '' === '0' && (val.dataIndex === 'del' || val.dataIndex === 'move')) {
+                console.log('tabKey', tabKey);
                 delete columns[index];
             }
             if (isSocalLogin === true && val.dataIndex === 'action') {
@@ -139,7 +140,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             }
         });
         setDataColumns(columns);
-    }, []);
+    }, [tabKey]);
 
     useEffect(() => {
         console.log(isMobile);
