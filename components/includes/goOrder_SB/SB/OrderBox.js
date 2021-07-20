@@ -76,7 +76,7 @@ const OrderBox = ({
                 currentAccount,
             });
             message.success({
-                content: '委託成功',
+                content: '委託已送出',
             });
             closeHandler();
             dispatch(setSBActiveTabKey('3'));

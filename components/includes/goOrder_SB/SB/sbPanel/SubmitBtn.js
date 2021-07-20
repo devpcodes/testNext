@@ -23,6 +23,7 @@ const SubmitBtn = ({ text, ...props }) => {
     const touch = useSelector(store => store.goOrderSB.touch);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const quote = useSelector(store => store.goOrderSB.quote);
+    const aon = useSelector(store => store.goOrderSB.aon);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -33,8 +34,8 @@ const SubmitBtn = ({ text, ...props }) => {
         dispatch(setTransactionCost(cost));
     }, [bs, stockInfo, qty, price]);
 
-    const submitHandler = (bs, price, qty, touch, TouchedPrice, currentAccount, quote) => {
-        if (validateHandler(price, qty, touch, TouchedPrice, currentAccount, quote, bs)) {
+    const submitHandler = (bs, price, qty, touch, TouchedPrice, currentAccount, quote, aon) => {
+        if (validateHandler(price, qty, touch, TouchedPrice, currentAccount, quote, bs, aon)) {
             dispatch(setConfirmBoxOpen(true));
             dispatch(setConfirmBoxTitle('委託確認'));
             if (bs === 'B') {
@@ -56,6 +57,14 @@ const SubmitBtn = ({ text, ...props }) => {
         } else {
             Modal.error({
                 title: '無可用帳號',
+            });
+            return false;
+        }
+
+        if (aon === 'AON' && qty < 100) {
+            Modal.error({
+                title: '資料格式錯誤',
+                content: 'AON 委託不得低於 100 股',
             });
             return false;
         }
@@ -91,7 +100,7 @@ const SubmitBtn = ({ text, ...props }) => {
             <Button
                 style={{ background: bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor }}
                 type="primary"
-                onClick={submitHandler.bind(null, bs, price, qty, touch, TouchedPrice, currentAccount, quote)}
+                onClick={submitHandler.bind(null, bs, price, qty, touch, TouchedPrice, currentAccount, quote, aon)}
                 {...props}
             >
                 {text}

@@ -5,6 +5,7 @@ import { setConfirmBoxOpen, setConfirmBoxTitle } from '../../../../store/goOrder
 import OrderBox from './OrderBox';
 import DetailBox from './searchList/DetailBox';
 import ChTradingInfoBox from './searchList/ChTradingInfoBox';
+import { wordingService } from '../../../../services/components/goOrder/sb/wordingService';
 //style={{display: show ? 'block' : 'none'}}
 const OrderConfirmBox = ({ title, color }) => {
     const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const OrderConfirmBox = ({ title, color }) => {
             <div className="line"></div>
             {title === '委託確認' && (
                 <OrderBox
-                    StockId={stockId}
+                    StockId={productInfo?.market === 'US' ? stockId : wordingService(stockInfo['@StockName'], 18)}
                     Price={price}
                     transactionCost={transactionCost}
                     Qty={qty}
