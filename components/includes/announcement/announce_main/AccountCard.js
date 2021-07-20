@@ -25,7 +25,7 @@ const [columns, setColumns] = useState([]);
                     props.dataSource.map( data => {
                        return (
                        <li key={data.articleGUID}>
-                            <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnoucementPage?GUID=${data.articleGUID}`}><div className="title_box">{data.title}</div></a>
+                            <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${data.articleGUID}`}><div className="title_box">{data.title}</div></a>
                             <div className="sub_box">
                                 <div>{data.postTime.replace(/[/]/g,'.')}</div>
                                 <div>{data.category1}</div>

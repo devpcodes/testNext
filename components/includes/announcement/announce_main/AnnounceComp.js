@@ -5,8 +5,8 @@ import { CategoryList, GetAllListData } from '../../../../services/components/an
 import _ from 'lodash';
 
 const AnnounceComp = () => {
-const [data, setData] = useState({}); 
-const [reload, setReload] = useState(1);
+// const [data, setData] = useState({}); 
+// const [reload, setReload] = useState(1);
 
 const getData = async (idx, size, type, sc1, sc2, kw) => {
     try{
@@ -50,11 +50,11 @@ const listMap = (l) => {
  return list 
 }
 
-const reFreshHandler = () => {
-    setReload(count => {
-        return (count += 1);
-    });
-};
+// const reFreshHandler = () => {
+//     setReload(count => {
+//         return (count += 1);
+//     });
+// };
 const getKeyWord = () => {
     try{
         let kw = keyWord.slice()

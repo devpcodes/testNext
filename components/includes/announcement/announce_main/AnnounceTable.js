@@ -137,7 +137,7 @@ const newColumsUpdate = (d1, d2)=>{
             dataIndex: 'title',
             key: 'title',
             render: (x,i) => 
-            <a className="title_a" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnoucementPage?GUID='+i.articleGUID}>{x}</a>
+            <a className="title_a" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{x}</a>
         
         },
         {
@@ -252,7 +252,7 @@ const getColumnSearchProps = (data,idx) => {
                 pagination={{
                     total: total,
                     showTotal: (total, range) => {
-                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                        return `${range[0]}-${range[1]} 則公告 (共${total}則公告)`;
                     },
                     defaultPageSize: pageSize,
                     defaultCurrent: 1,
@@ -271,7 +271,7 @@ const getColumnSearchProps = (data,idx) => {
                 pagination={{
                     total: total,
                     showTotal: (total, range) => {
-                        return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
+                        return `${range[0]}-${range[1]} 則公告 (共${total}則公告)`;
                     },
                     onChange: pageChangeHandler,
                     current: currentPage,

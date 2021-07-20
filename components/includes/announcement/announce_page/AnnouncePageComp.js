@@ -61,10 +61,10 @@ const addKw = (e,x) => {
                 <div className="content_box">
                 <div className="title">
                 <h2><span>最新公告</span></h2>
-                <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Annoucement`} className="btn_back for_pc">返回列表</a>
+                <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Announcement`} className="btn_back for_pc">返回列表</a>
                 </div>
                 <div className="search_box for_m">
-                    <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Annoucement`} className="btn_back for_m">
+                    <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Announcement`} className="btn_back for_m">
                         <img src={icArrowLeft}></img>
                     </a>
                     <Space direction="vertical">
@@ -106,7 +106,7 @@ const addKw = (e,x) => {
                                 refRows.map(x => {
                                     let pt = x.postTime.replace(/[/]/g,'.')
                                     return (
-                                        <div><a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnoucementPage?GUID=${x.articleGUID}`}>{x.title}</a>
+                                        <div key={x.articleGUID}><a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${x.articleGUID}`}>{x.title}</a>
                                         <div className="announce_date">{pt}</div>
                                         </div>
                                         )
@@ -121,7 +121,7 @@ const addKw = (e,x) => {
                     <div className="tag_box">
                         {
                             tag.map(x => {
-                                return <Link href="/Annoucement"><a onClick={e=>addKw(e,x)}>{x}</a></Link>
+                                return <Link href="/Announcement" key={x}><a onClick={e=>addKw(e,x)}>{x}</a></Link>
                             })
 
                         }
