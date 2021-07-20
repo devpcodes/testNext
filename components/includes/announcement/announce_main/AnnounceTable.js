@@ -1,20 +1,15 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { Modal, Input, Space,Checkbox  } from 'antd';
+import { useEffect, useState, useCallback } from 'react';
+import { Input, Space  } from 'antd';
 import { useSelector, useDispatch } from "react-redux";
 import AccountTable from './AccountTable';
 import AccountCard from './AccountCard';
 import DropfilterCheckBox from './DropfilterCheckBox';
-import DropFilterSearch from './DropFilterCheckBoxM';
-import { fetchInventory, fetchInventoryWithSWR } from '../../../../services/components/announcement/fetchPageInfo';
-import useSWR from 'swr';
 import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
-import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
-import { GetAllListData } from '../../../../services/components/announcement/announceList';
-const AnnounceTable = ({ listData, getList, getColumns, getData, getPageInfoText, reload  }) => {
+
+const AnnounceTable = ({ listData, getList, getData }) => {
     const keyWord  = useSelector(state => state.keyWord);
     const dispatch = useDispatch();
-    const [mobileType, setMobileType] = useState(false);
     const [columns, setColumns] = useState([]);
     const [State, setState] = useState('');
     const [list, setList] = useState(listData);
@@ -30,7 +25,6 @@ const AnnounceTable = ({ listData, getList, getColumns, getData, getPageInfoText
     const [searchWords, setSearchWords] = useState(keyWord);
     const [current, setCurrent] = useState(''); 
     const [filterColumns, setFilterColumns] = useState([]); 
-    
 
     const [dimensions, setDimensions] = React.useState({ 
         height: window.innerHeight,
@@ -79,8 +73,12 @@ useEffect(() => {
             try {
                 getData(currentPage, pageSize, dataType , searchColumn, searchColumn2, searchWords)
                 .then(res=>{
-                    console.log('[RES]',res)
-                    setRows(res.rows)  
+                    // console.log('[RES]',res)
+                    let keyMatch = res.rows.map(x=>{
+                        x.key=x.articleGUID
+                        return x
+                    })
+                    setRows(keyMatch)  
                     setTotal(res.dataCount) 
                     setCurrentPage(res.pageIdx) 
                     setPageSize(res.pageSize) 
@@ -102,6 +100,7 @@ useEffect(() => {
   }
   window.addEventListener('resize', handleResize)
 })
+
 useEffect(() => {  //filter icon color
     if(searchColumn.length>0 && searchColumn2.length>0 ){
         setFilterColumns(['category1','category2'])
@@ -113,10 +112,6 @@ useEffect(() => {  //filter icon color
         setFilterColumns([])
     }
   },[searchColumn,searchColumn2]) 
-
-
-
-
 
 const newColumsUpdate = (d1, d2)=>{
     const newColumns = [
@@ -157,7 +152,7 @@ const newColumsUpdate = (d1, d2)=>{
         },
         ];  
     setColumns(newColumns); 
-}
+    }
 
     const onFdSubmit = useCallback((confirm, val) => { //主類別過濾
         confirm();
@@ -191,6 +186,7 @@ const newColumsUpdate = (d1, d2)=>{
         window.scrollTo(0, 0);
         setCurrentPage(page);
     };
+
     const TopBarChange = (value) =>{
         setDataType(value)
         setCurrentPage(1);
@@ -200,15 +196,15 @@ const newColumsUpdate = (d1, d2)=>{
 const getColumnSearchProps = (data,idx) => {
         if(idx===1){
         return {
-        filterDropdown: ({ confirm }) => (
-            <DropfilterCheckBox
-                type={''}
-                onSubmit={onFdSubmit.bind(null, confirm)}
-                onReset={onFdReset.bind(null, confirm)}
-                value = ''
-                data={data}
-            />
-        ),
+            filterDropdown: ({ confirm }) => (
+                <DropfilterCheckBox
+                    type={''}
+                    onSubmit={onFdSubmit.bind(null, confirm)}
+                    onReset={onFdReset.bind(null, confirm)}
+                    value = ''
+                    data={data}
+                />
+            ),
             }
         }else{
         return {
@@ -225,6 +221,7 @@ const getColumnSearchProps = (data,idx) => {
         }
 
     };
+
     return (
         <>
            <div className="search_box">
@@ -241,13 +238,11 @@ const getColumnSearchProps = (data,idx) => {
                     filterChangeM={filterChangeM}
                     list_main={list_main}
                     />
-
             </div>
             <TopTagBar
                  current = { current }
                  onClick = {TopBarChange}
               />
-            
             { 
             dimensions.width>=768?(
                 <AccountTable
@@ -257,9 +252,6 @@ const getColumnSearchProps = (data,idx) => {
                 pagination={{
                     total: total,
                     showTotal: (total, range) => {
-                        if (getPageInfoText != null) {
-                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
-                        }
                         return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
                     },
                     defaultPageSize: pageSize,
@@ -279,9 +271,6 @@ const getColumnSearchProps = (data,idx) => {
                 pagination={{
                     total: total,
                     showTotal: (total, range) => {
-                        if (getPageInfoText != null) {
-                            getPageInfoText(`${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`);
-                        }
                         return `${range[0]}-${range[1]} 檔個股 (共${total}檔個股)`;
                     },
                     onChange: pageChangeHandler,
@@ -294,7 +283,6 @@ const getColumnSearchProps = (data,idx) => {
             
             <style jsx>{`
             .search_box {position:absolute;right:0;top:20px;display:inline-block;}
-
             @media (max-width: 768px) {
                 .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
             }

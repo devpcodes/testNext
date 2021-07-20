@@ -8,9 +8,7 @@ const DropFilterCheckBoxM = ({filterChangeM, ...props }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [checkValue, setCheckValue] = useState([]);
     const [isCheckedN, setIsCheckedN] = useState(0);
-    useEffect(() => { 
-        console.log(props)
-    })
+
     const onChange = (checkedValues) =>{
         setCheckValue(checkedValues) 
     }
@@ -29,7 +27,7 @@ const DropFilterCheckBoxM = ({filterChangeM, ...props }) => {
       };
 
     return (
-<>{console.log(isCheckedN)}
+    <>
         <div className={`filter_btn for_m ${isCheckedN>0?"filter_num":""}`} onClick={showModal}>
             <img src={icFilter}></img>
             </div>

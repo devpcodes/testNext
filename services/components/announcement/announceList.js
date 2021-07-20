@@ -29,7 +29,6 @@ export const GetAllListData = async function (idx, size, type, sc1, sc2, kw) {
             "pageSize": size
           }
         const res = await getA8StpInstance(true).post(url,data)
-        console.log('[REQ]',data, res.data)
         if (res.data?.success === true) {
             return res.data.result;
         } else {
@@ -74,7 +73,6 @@ export const GetArticleData = async function (id, count) {
             "refCount": count
           }
         const res = await getA8StpInstance(true).post(url,data)
-        console.log('[REQ]',data, res.data)
         if (res.data?.success === true) {
             return res.data.result;
         } else {

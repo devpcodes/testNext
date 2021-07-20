@@ -49,7 +49,6 @@ const getData = async (id, count) => {
 }
 const addKw = (e,x) => {
     //e.preventDefault();
-    console.log('CHANGE_ITEM')
     dispatch({
         type: "CHANGE_ITEM",
         payload: {itemNew:x}

@@ -1,12 +1,14 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import theme from '../../../../resources/styles/theme';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
 
 const AccountTable = ({ filterColumns, ...props }) => {
+    
 const [columns, setColumns] = useState([]);
     useEffect(() => {
+        console.log('props',props)
         let newColumns = [];
         if (props.columns.length > 0) {
             newColumns = props.columns.map(item => {
@@ -40,8 +42,8 @@ const [columns, setColumns] = useState([]);
         return active;
     };
   
-
     return (
+        
         <div>
             <div className="sino__table">
                 <Table columns={columns} {...props} />

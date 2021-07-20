@@ -6,29 +6,6 @@ import filterIconActive from '../../../../resources/images/components/tradingAcc
 
 const AccountTable = ({ filterColumns,getData, ...props }) => {
 const [columns, setColumns] = useState([]);
-useEffect(() => {
-    //     let newColumns = [];
-    //     if (props.columns.length > 0) {
-    //         newColumns = props.columns.map(item => {
-    //             if (item.filterDropdown != null) {
-    //                 const checkActive = checkActiveHandler(item.dataIndex, filterColumns);
-    //                 item.filterIcon = (
-    //                     <img
-    //                         style={{
-    //                             position: 'absolute',
-    //                             top: '50%',
-    //                             left: '50%',
-    //                             transform: 'translate(-50%, -50%)',
-    //                         }}
-    //                         src={checkActive ? filterIconActive : filterIcon}
-    //                     />
-    //                 );
-    //             }
-    //             return item;
-    //         });
-    //     }
-    // setColumns(newColumns);
-}, [props.columns, filterColumns]);
 
     const checkActiveHandler = (dataIndex, filterColumns) => {
         let active = false;
@@ -40,16 +17,14 @@ useEffect(() => {
         return active;
     };
   
-
     return (
         <div>
             <div className="sino__table">
-                {console.log(props.dataSource)}
                 <ul className="list_card">
                 {
                     props.dataSource.map( data => {
                        return (
-                       <li>
+                       <li key={data.articleGUID}>
                             <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnoucementPage?GUID=${data.articleGUID}`}><div className="title_box">{data.title}</div></a>
                             <div className="sub_box">
                                 <div>{data.postTime.replace(/[/]/g,'.')}</div>
@@ -62,7 +37,7 @@ useEffect(() => {
                 }  
                 </ul>
                 <div className="pagination">
-                    <Pagination defaultCurrent={1} defaultPageSize={15} total={props.pagination.total} onChange={props.pagination.onChange}/>
+                    <Pagination {...props.pagination}/>
                 </div>
                 
             </div>

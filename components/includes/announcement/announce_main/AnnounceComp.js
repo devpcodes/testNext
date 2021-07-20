@@ -6,13 +6,11 @@ import _ from 'lodash';
 
 const AnnounceComp = () => {
 const [data, setData] = useState({}); 
-const [controlText, setControlText] = useState(''); 
 const [reload, setReload] = useState(1);
 
 const getData = async (idx, size, type, sc1, sc2, kw) => {
     try{
         const result = await GetAllListData(idx, size, type, sc1, sc2, kw)
-        console.log('HERE',result)
         return result
     } catch(err) {
         console.log('[ERROR]',err)
@@ -52,9 +50,6 @@ const listMap = (l) => {
  return list 
 }
 
-const getPageTextHandler = useCallback(text => {
-    setControlText(text);
-});
 const reFreshHandler = () => {
     setReload(count => {
         return (count += 1);
@@ -82,8 +77,6 @@ const getKeyWord = () => {
                  listData={getList().then(res=>{return res})}
                  getList={getList}
                  getData={getData}
-                 getPageInfoText={getPageTextHandler}
-                 reload={reload}
             />
             <style jsx>
                 {`
