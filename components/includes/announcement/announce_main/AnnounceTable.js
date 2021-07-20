@@ -283,11 +283,12 @@ const getColumnSearchProps = (data,idx) => {
             
             <style jsx>{`
                 .search_box {position:absolute;right:0;top:20px;display:inline-block;}
-            @media (max-width: 768px) {
-                .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
-            }
+                @media (max-width: 768px) {
+                    .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
+                }
             `}</style>
             <style global jsx>{`
+                .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
                 .announce__container .ant-table-filter-trigger{margin:0}
                 .announce__container .ant-input {  border: 1px solid #e6ebf5; }
                 .for_m{display:none;}

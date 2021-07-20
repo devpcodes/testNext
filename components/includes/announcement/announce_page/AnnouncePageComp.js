@@ -193,16 +193,16 @@ const addKw = (e,x) => {
                     }
                     .for_m{display:none;}
                     @media (max-width: 768px) {
-                    .for_pc{display:none;}
-                    .for_m{display:block;}
+                        .for_pc{display:none;}
+                        .for_m{display:block;}
                     }
                 `}
             </style>
             <style jsx global>
                 {`
-                    .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
-                    .announce__container .search_box .ant-space-vertical { width:100%; }
-                    `}
+                .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
+                .announce__container .search_box .ant-space-vertical { width:100%; }
+                `}
             </style>
 
         </div>

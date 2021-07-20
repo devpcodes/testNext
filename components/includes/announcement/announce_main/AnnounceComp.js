@@ -80,52 +80,22 @@ const getKeyWord = () => {
             />
             <style jsx>
                 {`
-                h2.title{position:relative;}
-                
-                    .announce__container {
-                        position:relative;
-                        width:80%;
-                        margin:0 auto;
-                        padding-top: 50px;
-                    }
-                    @media (max-width: 1250px) {
-                        .announce__container {
-                            width:90%;
-                        }
-                    }
-                    @media (max-width: 1111px) {
-                        .announce__container {
-                            width:calc(100%-40px)
-                        }
-                    }
-
-                    .title {
-                        font-size: 2.8rem;
-                        color: #0d1623;
-                        margin-top: -30px;
-                        margin-bottom: 20px;
-                    }
-                    .control__container {
-                        position: relative;
-                    }
-                    @media (max-width: 768px) {
-                        h2.title{font-size:20px;margin-bottom:5px;}
-                        .announce__container {
-                            width:100%;
-                            padding-left: 0;
-                            padding-right: 0;
-                        }
-                        .control__container {
-                            padding-left: 20px;
-                            padding-right: 20px;
-                        }
-                        .title {
-                            font-size: 2rem;
-                            font-weight: bold;
-                            margin-top: -36px;
-                            margin-bottom: 10px;
-                        }
-                    }
+               .announce__container  h2.title{position:relative;}
+               .announce__container{position:relative;width:80%;margin:0 auto;padding-top:50px;}
+               @media (max-width:1250px){
+                 .announce__container{width:90%;}
+               }
+               @media (max-width:1111px){
+                 .announce__container{width:calc(100%-40px)}
+               }
+               .announce__container .title{font-size:2.8rem;color:#0d1623;margin-top:-30px;margin-bottom:20px;}
+               .announce__container .control__container{position:relative;}
+                @media (max-width: 768px) {
+                 .announce__container h2.title{font-size:20px;margin-bottom:5px;}
+                 .announce__container{width:100%;padding-left:0;padding-right:0;}
+                 .announce__container .control__container{padding-left:20px;padding-right:20px;}
+                 .announce__container .title{font-size:2rem;font-weight:bold;margin-top:-36px;margin-bottom:10px;}
+                }
                 `}
             </style>
 

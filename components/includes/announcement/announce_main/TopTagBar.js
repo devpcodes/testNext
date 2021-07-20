@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 
 // type: String；radio: 單選； checkbox: 多選
 const TopTagBar = ({current , onClick}) => {
-    const [state, setState] = useState('all');
+    const [state, setState] = useState({current: 'all'});
 
     const menuList = [
         {   title:'全部', key:'all'},
@@ -13,7 +13,7 @@ const TopTagBar = ({current , onClick}) => {
         {   title:'平台', key:'platform'},]
 
     const handleClick = e => {
-        setState(e.key);
+        setState({current:e.key});
             if(e.key=='all'){
                 onClick('')
             }else{
@@ -27,7 +27,7 @@ const TopTagBar = ({current , onClick}) => {
     return (
         <>
         <div className="menu_box announce_menu">
-        <Menu onClick={handleClick} selectedKeys={state} mode="horizontal">
+        <Menu onClick={handleClick} selectedKeys={[state.current]} mode="horizontal">
             {
                 menuList.map(x=>{
                     return(
