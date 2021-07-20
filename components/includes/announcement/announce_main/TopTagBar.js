@@ -1,11 +1,11 @@
-import { Menu  } from 'antd';
+import { Menu } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 
 // type: String；radio: 單選； checkbox: 多選
 const TopTagBar = ({current , onClick}) => {
-    const [state, setState] = useState({current: current,value:''});
+    const [state, setState] = useState({current: current,value:'all'});
     const menuList = [
-        {   title:'全部', key:''},
+        {   title:'全部', key:'all'},
         {   title:'活動', key:'active'},
         {   title:'重大', key:'important'},
         {   title:'訊息', key:'messege'},
@@ -13,8 +13,7 @@ const TopTagBar = ({current , onClick}) => {
 
     const handleClick = e => {
         setState({current: e.key});
-        console.log(e.key)
-            if(e.key==''){
+            if(e.key=='all'){
                 onClick('')
             }else{
         menuList.map(x=>{
@@ -27,7 +26,7 @@ const TopTagBar = ({current , onClick}) => {
 
     return (
         <>
-        <div className="menu_box">
+        <div className="menu_box announce_menu">
         <Menu onClick={handleClick} selectedKeys={[state.current]} mode="horizontal">
             {
                 menuList.map(x=>{
@@ -42,16 +41,22 @@ const TopTagBar = ({current , onClick}) => {
         </div>
         <style jsx global>
                 {`
-                .menu_box{border-width:1px 1px 0 1px;border-color:#e6ebf5; border-style:solid;}
-                .ant-input-search-button{background-color:#c43826; border:#c43826;}
-                .ant-input-search-button:hover{background-color:#c43826; border:#c43826;filter: brightness(1.2);}
-                .ant-menu-horizontal>.ant-menu-item{line-height:60px;font-size:16px;}
-                .ant-menu-horizontal>.ant-menu-item:hover:after,
-                .ant-menu-horizontal>.ant-menu-item-selected:after{border-bottom:4px solid #daa360 !important;}
-                .ant-menu-horizontal>.ant-menu-item:hover,.ant-menu-horizontal>.ant-menu-item-selected{color:#daa360 !important;}
-                .ant-menu-horizontal>.ant-menu-item:not(.ant-menu-item-selected):hover:after{ display:none; }
+                .announce_menu .menu_box{border-width:1px 1px 0 1px;border-color:#e6ebf5; border-style:solid;}
+                .announce_menu .ant-input-search-button{background-color:#c43826; border:#c43826;}
+                .announce_menu .ant-input-search-button:hover{background-color:#c43826; border:#c43826;filter: brightness(1.2);}
+                .announce_menu .ant-menu-horizontal>.ant-menu-item{line-height:60px;font-size:16px;}
+                .announce_menu .ant-menu-horizontal>.ant-menu-item:hover:after,
+                .announce_menu .ant-menu-horizontal>.ant-menu-item-selected:after{border-bottom:4px solid #daa360 !important;}
+                .announce_menu .ant-menu-horizontal>.ant-menu-item:hover,.ant-menu-horizontal>.ant-menu-item-selected{color:#daa360 !important;}
+                .announce_menu .ant-menu-horizontal>.ant-menu-item:not(.ant-menu-item-selected):hover:after{ display:none; }
+                .announce_menu .ant-menu-horizontal>.ant-menu-item:after, .announce_menu .ant-menu-horizontal>.ant-menu-submenu:after {
+                    position: absolute; right: 20px; bottom: 0; left: 20px; border-bottom: none; -webkit-transition: none; transition: none; content: ""; }
+                    .announce_menu .ant-menu-horizontal>.ant-menu-item-active, .announce_menu .ant-menu-horizontal>.ant-menu-item-open,
+                    .announce_menu .ant-menu-horizontal>.ant-menu-item-selected, .announce_menu .ant-menu-horizontal>.ant-menu-item:hover,
+                    .announce_menu .ant-menu-horizontal>.ant-menu-submenu-active, .announce_menu .ant-menu-horizontal>.ant-menu-submenu-open,
+                    .announce_menu .ant-menu-horizontal>.ant-menu-submenu-selected, .announce_menu .ant-menu-horizontal>.ant-menu-submenu:hover {  border-bottom: none;}
                 `}
-            </style>
+        </style>
         </>
     );
 };
