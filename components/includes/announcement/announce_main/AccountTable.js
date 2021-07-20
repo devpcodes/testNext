@@ -8,7 +8,6 @@ const AccountTable = ({ filterColumns, ...props }) => {
     
 const [columns, setColumns] = useState([]);
     useEffect(() => {
-        console.log('props',props)
         let newColumns = [];
         if (props.columns.length > 0) {
             newColumns = props.columns.map(item => {
