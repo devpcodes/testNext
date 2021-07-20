@@ -55,7 +55,9 @@ const ApplyTable = ({ ...props }) => {
         <div className="applyTable__container">
             {width <= 580 || width == null ? (
                 <>
-                    {props.dataSource.length > 0 ? (
+                    {props?.loading?.spinning ? (
+                        '資料讀取中...'
+                    ) : props.dataSource.length > 0 ? (
                         props.dataSource.map((item, key) => {
                             return (
                                 <div className="item__box" key={key}>
@@ -74,7 +76,9 @@ const ApplyTable = ({ ...props }) => {
                             );
                         })
                     ) : (
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>查無資料</div>
+                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                            {props?.loading?.spinning ? '資料讀取中...' : '查無資料'}
+                        </div>
                     )}
                 </>
             ) : (
