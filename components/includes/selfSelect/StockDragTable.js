@@ -18,14 +18,104 @@ import noData from '../../../resources/images/pages/Self_select/img-default.svg'
 const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLogin = useSelector(store => store.user.socalLogin);
-    const isMobile = useSelector(store => store.layout.isMobile);
 
     const [selfSelectList, setSelfSelectList] = useState([]);
     const [topic, setTopic] = useState([]);
-    const [dataColumns, setDataColumns] = useState([]);
 
+    const isMobile = useCheckMobile();
     const router = useRouter();
     const solaceData = useSelector(store => store.solace.solaceData);
+
+    const columns = [
+        {
+            title: '商品',
+            dataIndex: 'name',
+            render: data => (
+                <a href={data.link} className="stock__name" target="_blank">
+                    {data.text}
+                </a>
+            ),
+        },
+        {
+            title: '成交價',
+            dataIndex: 'close',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
+            title: '漲跌',
+            dataIndex: 'changePrice',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
+            title: '漲跌幅',
+            dataIndex: 'changeRate',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
+            title: '成交量',
+            dataIndex: 'totalVolume',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
+            title: '昨收',
+            dataIndex: 'reference',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
+            title: '交易',
+            dataIndex: 'action',
+            render: (text, record, index) => (
+                <>
+                    <button
+                        className="btn buy"
+                        onClick={() => {
+                            goOrder(record, 'B');
+                        }}
+                    >
+                        買進
+                    </button>
+                    <button
+                        className="btn sell"
+                        onClick={() => {
+                            goOrder(record, 'S');
+                        }}
+                    >
+                        賣出
+                    </button>
+                </>
+            ),
+        },
+        {
+            title: '刪除',
+            dataIndex: 'del',
+            render: (text, record, index) =>
+                tabKey === '0' ? (
+                    <></>
+                ) : (
+                    <span className="cancel" onClick={() => deleteStock(record, index)}>
+                        <img src={cancel} />
+                    </span>
+                ),
+        },
+        {
+            title: '移動',
+            dataIndex: 'move',
+            render: (text, record, index) =>
+                tabKey === '0' ? (
+                    <></>
+                ) : (
+                    <span className="drag">
+                        <img src={drag} />
+                    </span>
+                ),
+        },
+    ];
+
     const locale = {
         emptyText: (
             <span>
@@ -39,119 +129,21 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         ),
     };
 
-    useEffect(() => {
-        const columns = [
-            {
-                title: '商品',
-                dataIndex: 'name',
-                render: data => (
-                    <a href={data.link} className="stock__name" target="_blank">
-                        {data.text}
-                    </a>
-                ),
-            },
-            {
-                title: '成交價',
-                dataIndex: 'close',
-                align: 'right',
-                render: data => <span className={data.class}>{data.text}</span>,
-            },
-            {
-                title: '漲跌',
-                dataIndex: 'changePrice',
-                align: 'right',
-                render: data => <span className={data.class}>{data.text}</span>,
-            },
-            {
-                title: '漲跌幅',
-                dataIndex: 'changeRate',
-                align: 'right',
-                render: data => <span className={data.class}>{data.text}</span>,
-            },
-            {
-                title: '成交量',
-                dataIndex: 'totalVolume',
-                align: 'right',
-                render: data => <span className={data.class}>{data.text}</span>,
-            },
-            {
-                title: '昨收',
-                dataIndex: 'reference',
-                align: 'right',
-                render: data => <span className={data.class}>{data.text}</span>,
-            },
-            {
-                title: '交易',
-                dataIndex: 'action',
-                render: (text, record, index) => (
-                    <>
-                        <button
-                            className="btn buy"
-                            onClick={() => {
-                                goOrder(record, 'B');
-                            }}
-                        >
-                            買進
-                        </button>
-                        <button
-                            className="btn sell"
-                            onClick={() => {
-                                goOrder(record, 'S');
-                            }}
-                        >
-                            賣出
-                        </button>
-                    </>
-                ),
-            },
-            {
-                title: '刪除',
-                dataIndex: 'del',
-                render: (text, record, index) =>
-                    tabKey === '0' ? (
-                        <></>
-                    ) : (
-                        <span className="cancel" onClick={() => deleteStock(record, index)}>
-                            <img src={cancel} />
-                        </span>
-                    ),
-            },
-            {
-                title: '移動',
-                dataIndex: 'move',
-                render: (text, record, index) =>
-                    tabKey === '0' ? (
-                        <></>
-                    ) : (
-                        <span className="drag">
-                            <img src={drag} />
-                        </span>
-                    ),
-            },
-        ];
-
-        columns.forEach((val, index) => {
-            if (tabKey + '' === '0' && (val.dataIndex === 'del' || val.dataIndex === 'move')) {
-                console.log('tabKey', tabKey);
-                delete columns[index];
-            }
-            if (isSocalLogin === true && val.dataIndex === 'action') {
-                delete columns[index];
-            }
-        });
-        setDataColumns(columns);
-    }, [tabKey]);
-
-    useEffect(() => {
-        console.log(isMobile);
-    }, [isMobile]);
+    columns.forEach((val, index) => {
+        if (tabKey + '' === '0' && (val.dataIndex === 'del' || val.dataIndex === 'move')) {
+            delete columns[index];
+        }
+        if (isSocalLogin === true && val.dataIndex === 'action') {
+            delete columns[index];
+        }
+    });
 
     const goOrder = (stockData, bs) => {
         openGoOrder(
             {
                 stockid: stockData.code,
                 bs: bs,
-                type: stockData.market === 'SB' ? 'H' : stockData.market,
+                marketType: stockData.market === 'SB' ? 'H' : stockData.market,
             },
             isMobile,
             router,
@@ -272,7 +264,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             <ReactDragListView {...dragProps}>
                 <AccountTable
                     className="drag__Table"
-                    columns={dataColumns}
+                    columns={columns}
                     pagination={false}
                     dataSource={selfSelectList}
                     locale={locale}

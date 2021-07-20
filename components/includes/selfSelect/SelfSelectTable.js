@@ -177,11 +177,7 @@ const SelfSelectTable = ({
                                 stockData.market = stock.market;
                                 stockData.exchange = stock.exchange;
                                 stockData.name = {
-                                    text: ['O', 'F'].includes(stock.market)
-                                        ? `${snapshotData.Code} ${snapshotData.Name}`
-                                        : snapshotData.Name === ''
-                                        ? snapshotData.Code
-                                        : snapshotData.Name,
+                                    text: `${snapshotData.Code} ${snapshotData.Name}`,
                                     link: ['S'].includes(stock.market)
                                         ? `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?mode=0&code=${snapshotData.Code}`
                                         : ['F'].includes(stock.market)

@@ -13,9 +13,9 @@ const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHa
     //     console.log(selectGroupName, selectGroupID)
     // }, [selectGroupName, selectGroupID])
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
+    const [inputValue, setInputValue] = useState(selectGroupName);
     const socalLogin = useSelector(store => store.user.socalLogin);
     const textInput = useRef(null);
-
     const handleClose = () => {
         closeHandler();
     };
@@ -27,6 +27,10 @@ const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHa
         if (res.success && res.message === 'OK') {
             closeHandler(false);
         }
+    };
+
+    const groupOnchangeHandler = e => {
+        setInputValue(e.target.value);
     };
 
     return (
@@ -61,7 +65,13 @@ const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHa
                 ]}
             >
                 <div className="edit__block">
-                    <Input placeholder="編輯自選名稱" ref={textInput} />
+                    <Input
+                        placeholder="編輯自選名稱"
+                        ref={textInput}
+                        value={inputValue}
+                        onChange={groupOnchangeHandler}
+                        maxLength="6"
+                    />
                 </div>
             </Modal>
             <style jsx>{`

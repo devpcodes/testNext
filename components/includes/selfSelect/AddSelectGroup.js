@@ -6,7 +6,10 @@ import { getToken } from '../../../services/user/accessToken';
 
 const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack }) => {
     const textInput = useRef(null);
-
+    const [inputValue, setInputValue] = useState('我的自選');
+    useEffect(() => {
+        setInputValue('我的自選');
+    }, []);
     const handleCancel = () => {
         handleClose();
     };
@@ -18,6 +21,10 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack 
 
     const afterModalClose = () => {
         callBack();
+    };
+
+    const groupOnchangeHandler = e => {
+        setInputValue(e.target.value);
     };
 
     return (
@@ -52,7 +59,13 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack 
                 ]}
             >
                 <div className="edit__block">
-                    <Input placeholder="新增自選組合" ref={textInput} value="我的自選" />
+                    <Input
+                        placeholder="新增自選組合"
+                        ref={textInput}
+                        value={inputValue}
+                        onChange={groupOnchangeHandler}
+                        maxLength="6"
+                    />
                 </div>
             </Modal>
             <style jsx>{``}</style>

@@ -35,7 +35,9 @@ const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectRe
                     <AddSelfSelect tabkey={tabkey} reloadSelectReloadTime={reloadSelectReloadTime} />
                 </div>
                 <div className="select__toolbar__right">
-                    <span className="count">共 {count}/50 檔自選股</span>
+                    <span className="count">
+                        共 {count}/50 檔{tabkey === '0' ? '庫存股' : '自選股'}
+                    </span>
 
                     <Button className="refresh__btn">
                         <img src={refresh} onClick={reload} />
