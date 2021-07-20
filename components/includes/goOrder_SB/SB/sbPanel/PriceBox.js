@@ -20,9 +20,9 @@ const PriceBox = () => {
             return;
         }
         if (productInfo.market != null && checkRealtimeMarket(productInfo.market) && !queryPrice) {
-            setVal(quote.ls);
+            setVal(isNaN(parseFloat(quote.ls)) ? '' : parseFloat(quote.ls));
         } else {
-            setVal(stockInfo['@refPrice']);
+            setVal(parseFloat(stockInfo['@refPrice']) || parseFloat(stockInfo['@PreClose']) || '');
         }
     }, [quote, stockInfo, productInfo, queryPrice]);
 

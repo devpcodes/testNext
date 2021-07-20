@@ -219,9 +219,12 @@ const Info = ({ stockid }) => {
                 return '--';
             }
             if (isNaN(nc) || isNaN(pc)) {
-                return `${quote?.ls}`;
+                return `${isNaN(parseFloat(quote.ls)) ? '' : parseFloat(quote.ls)}`;
             } else {
-                return `${quote?.ls} ${getArrow(quote?.ls, quote?.refprice)} ${nc} (${pc}%)`;
+                return `${isNaN(parseFloat(quote.ls)) ? '' : parseFloat(quote.ls)} ${getArrow(
+                    quote?.ls,
+                    quote?.refprice,
+                )} ${nc} (${pc}%)`;
             }
         } else {
             return (
@@ -235,7 +238,7 @@ const Info = ({ stockid }) => {
                     >
                         昨收&nbsp;&nbsp;
                     </span>
-                    <span>{stockInfo['@refPrice'] || stockInfo['@PreClose'] || '--'}</span>
+                    <span>{parseFloat(stockInfo['@refPrice']) || parseFloat(stockInfo['@PreClose']) || '--'}</span>
                 </>
             );
         }
