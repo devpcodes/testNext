@@ -50,7 +50,7 @@ const [columns, setColumns] = useState([]);
 
             <style jsx global>{`
                 .filterBtn {cursor:pointer;}
-                .sino__table.announce {margin-bottom:20px;}
+                .sino__table.announce {padding-bottom:20px;}
                 .sino__table.announce .ant-table-container{border:solid 1px #d7e0ef;border-radius:0;}
                 .sino__table.announce .ant-tooltip-inner{color:white;box-shadow:0 2px 15px 0 rgba(169,182,203,0.7);padding:16px;line-height:25px;margin-right:-4px;margin-top:-3px;z-index:3;}
                 .sino__table.announce .ant-tooltip-arrow{width:25px;height:25px;margin-top:-10px;}
