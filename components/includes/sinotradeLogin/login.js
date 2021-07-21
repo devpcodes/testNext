@@ -207,7 +207,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             } else {
                                 //沒帳號處理
                                 checkOpenAccount(res.data.result);
-                                setIsLoading(false);
                             }
                         } catch (error) {
                             setIsLoading(false);
