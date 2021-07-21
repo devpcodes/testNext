@@ -1,10 +1,12 @@
 import { Menu, Tabs } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
-
+import theme from '../../../../resources/styles/theme';
 // type: String；radio: 單選； checkbox: 多選
-const TopTagBar = ({ current, onClick }) => {
+const TopTagBar = ({ current, onClick ,windowWidth }) => {
     const [state, setState] = useState({ current: 'all' });
+    const [mobile, setMobile] = useState(false);
     const { TabPane } = Tabs;
+
     const menuList = [
         { title: '全部', key: 'all' },
         { title: '活動', key: 'active' },
@@ -33,7 +35,7 @@ const TopTagBar = ({ current, onClick }) => {
                 <Tabs 
                 defaultActiveKey="all" 
                 onChange={handleClick}
-                tabBarGutter={44}
+                tabBarGutter={windowWidth >= 768 ?44:30}
                 >
                     {menuList.map(x => {
                         return (
@@ -54,6 +56,7 @@ const TopTagBar = ({ current, onClick }) => {
                     }
                     
                     .announce_menu.menu_box .ant-tabs-tab{font-size:16px;}
+                    .announce_menu.menu_box .ant-tabs-tab:hover > div{color:rgb(218, 163, 96)}
                     .announce_menu.menu_box .ant-tabs-nav:before{display:none;}
                     .announce_menu.menu_box .ant-tabs-ink-bar {background:rgb(218, 163, 96);height:4px;}
                     .announce_menu.menu_box .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{
@@ -73,6 +76,9 @@ const TopTagBar = ({ current, onClick }) => {
                     .ant-tabs-top>.ant-tabs-nav, 
                     .ant-tabs-top>div>.ant-tabs-nav{
                         margin:0;
+                    }
+                    @media (max-width: ${theme.mobileBreakPoint}px) {
+                    .announce_menu.menu_box {padding-left:16px;border-width:1px 0 1px 0;}
                     }
                 `}
             </style>
