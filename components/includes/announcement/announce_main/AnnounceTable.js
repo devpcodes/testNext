@@ -26,7 +26,7 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [current, setCurrent] = useState(''); 
     const [filterColumns, setFilterColumns] = useState([]); 
 
-    const [dimensions, setDimensions] = React.useState({ 
+    const [dimensions, setDimensions] = useState({ 
         height: window.innerHeight,
         width: window.innerWidth
       })
@@ -96,7 +96,6 @@ useEffect(() => {
           height: window.innerHeight,
           width: window.innerWidth
         })
-      
   }
   window.addEventListener('resize', handleResize)
 })
@@ -242,6 +241,7 @@ const getColumnSearchProps = (data,idx) => {
             <TopTagBar
                  current = { current }
                  onClick = {TopBarChange}
+                 mobleType = {dimensions.width>=768?false:true}
               />
             { 
             dimensions.width>=768?(

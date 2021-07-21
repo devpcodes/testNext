@@ -2,9 +2,8 @@ import { Menu, Tabs } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
 // type: String；radio: 單選； checkbox: 多選
-const TopTagBar = ({ current, onClick ,windowWidth }) => {
+const TopTagBar = ({ current, onClick ,mobleType }) => {
     const [state, setState] = useState({ current: 'all' });
-    const [mobile, setMobile] = useState(false);
     const { TabPane } = Tabs;
 
     const menuList = [
@@ -35,7 +34,7 @@ const TopTagBar = ({ current, onClick ,windowWidth }) => {
                 <Tabs 
                 defaultActiveKey="all" 
                 onChange={handleClick}
-                tabBarGutter={windowWidth >= 768 ?44:30}
+                tabBarGutter={mobleType ? 30:44}
                 >
                     {menuList.map(x => {
                         return (
