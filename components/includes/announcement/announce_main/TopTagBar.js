@@ -1,10 +1,10 @@
-import { Menu } from 'antd';
+import { Menu, Tabs } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 
 // type: String；radio: 單選； checkbox: 多選
 const TopTagBar = ({ current, onClick }) => {
     const [state, setState] = useState({ current: 'all' });
-
+    const { TabPane } = Tabs;
     const menuList = [
         { title: '全部', key: 'all' },
         { title: '活動', key: 'active' },
@@ -13,13 +13,14 @@ const TopTagBar = ({ current, onClick }) => {
         { title: '平台', key: 'platform' },
     ];
 
-    const handleClick = e => {
-        setState({ current: e.key });
-        if (e.key == 'all') {
+    const handleClick = (key) => {
+        setState({ current: key });
+        console.log(key)
+        if (key == 'all') {
             onClick('');
         } else {
             menuList.map(x => {
-                if (x.key === e.key) {
+                if (x.key === key) {
                     onClick(x.title);
                 }
             });
@@ -29,15 +30,18 @@ const TopTagBar = ({ current, onClick }) => {
     return (
         <>
             <div className="menu_box announce_menu">
-                <Menu onClick={handleClick} selectedKeys={[state.current]} mode="horizontal">
+                <Tabs 
+                defaultActiveKey="all" 
+                onChange={handleClick}
+                tabBarGutter={44}
+                >
                     {menuList.map(x => {
                         return (
-                            <Menu.Item key={x.key} value={x.title}>
-                                {x.title}
-                            </Menu.Item>
+                            <TabPane tab={x.title} key={x.key}>
+                            </TabPane>
                         );
                     })}
-                </Menu>
+                </Tabs>
             </div>
             <style jsx global>
                 {`
@@ -45,10 +49,16 @@ const TopTagBar = ({ current, onClick }) => {
                         border-width: 1px 1px 0 1px;
                         border-color: #e6ebf5;
                         border-style: solid;
+                        padding-left:45px;
+                        background:#FFF;
                     }
-                    .announce_menu .ant-menu-horizontal {
-                        border-bottom: none;
-                    }
+                    
+                    .announce_menu.menu_box .ant-tabs-tab{font-size:16px;}
+                    .announce_menu.menu_box .ant-tabs-nav:before{display:none;}
+                    .announce_menu.menu_box .ant-tabs-ink-bar {background:rgb(218, 163, 96);height:4px;}
+                    .announce_menu.menu_box .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{
+                        color:rgb(218, 163, 96);}
+
                     .announce_menu .ant-input-search-button {
                         background-color: #c43826;
                         border: #c43826;
@@ -58,52 +68,11 @@ const TopTagBar = ({ current, onClick }) => {
                         border: #c43826;
                         filter: brightness(1.2);
                     }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item {
-                        line-height: 60px;
-                        font-size: 16px;
-                    }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item:hover:after,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-selected:after {
-                        border-bottom: 4px solid #daa360 !important;
-                    }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item:hover,
-                    .ant-menu-horizontal > .ant-menu-item-selected {
-                        color: #daa360 !important;
-                    }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item:not(.ant-menu-item-selected):hover:after {
-                        display: none;
-                    }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item:after,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu:after {
-                        position: absolute;
-                        right: 20px;
-                        bottom: 0;
-                        left: 20px;
-                        border-bottom: none;
-                        -webkit-transition: none;
-                        transition: none;
-                        content: '';
-                    }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-active,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-open,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-selected,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item:hover,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu-active,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu-open,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu-selected,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu:hover {
-                        border-bottom: none;
-                    }
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-active,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-open,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item-selected,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-item:hover,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu-active,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu-open,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu-selected,
-                    .announce_menu .ant-menu-horizontal > .ant-menu-submenu:hover {
-                        border-bottom: 6px solid #daa360;
-                        line-height: 53px;
+                    .ant-tabs-bottom>.ant-tabs-nav, 
+                    .ant-tabs-bottom>div>.ant-tabs-nav, 
+                    .ant-tabs-top>.ant-tabs-nav, 
+                    .ant-tabs-top>div>.ant-tabs-nav{
+                        margin:0;
                     }
                 `}
             </style>

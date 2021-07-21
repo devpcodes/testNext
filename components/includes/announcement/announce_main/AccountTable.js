@@ -5,7 +5,6 @@ import filterIcon from '../../../../resources/images/components/tradingAccount/i
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
 
 const AccountTable = ({ filterColumns, ...props }) => {
-    
 const [columns, setColumns] = useState([]);
     useEffect(() => {
         let newColumns = [];
@@ -40,29 +39,35 @@ const [columns, setColumns] = useState([]);
         });
         return active;
     };
+
   
     return (
         
         <div>
             <div className="sino__table announce">
-                <Table columns={columns} {...props} />
+                <Table columns={columns} {...props}  />
             </div>
 
             <style jsx global>{`
                 .filterBtn {cursor:pointer;}
                 .sino__table.announce {margin-bottom:20px;}
-                .sino__table.announce {border-radius:0;}
-                .sino__table.announce .ant-table-container{border:solid 1px #d7e0ef;}
+                .sino__table.announce .ant-table-container{border:solid 1px #d7e0ef;border-radius:0;}
                 .sino__table.announce .ant-tooltip-inner{color:white;box-shadow:0 2px 15px 0 rgba(169,182,203,0.7);padding:16px;line-height:25px;margin-right:-4px;margin-top:-3px;z-index:3;}
                 .sino__table.announce .ant-tooltip-arrow{width:25px;height:25px;margin-top:-10px;}
-                .sino__table.announce .ant-table-thead > tr > th{background-color:#f2f5fa;color:#6c7b94;}
-                .sino__table.announce .ant-table-thead > tr > th{padding-top:12px;padding-bottom:12px;border-bottom:solid 1px #d7e0ef;white-space:nowrap;padding-left:12px;padding-right:12px;}
+                .sino__table.announce .title_a{display: block;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+                .sino__table.announce .title_a:hover{color:#daa360;}
+                .sino__table.announce .ant-table-thead > tr > th{background-color:#f2f5fa;color:#6c7b94;white-space:nowrap;}
+                .sino__table.announce .ant-table-tbody > tr > td{border-bottom:solid 1px #e6ebf5;font-size:1.6rem;color:#0d1623;white-space:nowrap;}
+                .sino__table.announce .ant-table-thead > tr > th:first-child {  padding-left:45px; }
+                .sino__table.announce .ant-table-tbody > tr > td:first-child {  padding-left:45px;text-align:center;color:#daa360; }
                 .sino__table.announce .ant-table-thead > tr > th:nth-child(2) { width:7.5em;}
                 .sino__table.announce .ant-table-thead > tr > th:nth-child(3) { width:5.5em;}
-                .sino__table.announce .ant-table-thead > tr > th:last-child {  width:10em;   }
-                .sino__table.announce .ant-table-tbody > tr > td{border-bottom:solid 1px #e6ebf5;font-size:1.6rem;color:#0d1623;white-space:nowrap;}
-                .sino__table.announce .ant-table-thead > tr > th:nth-child(4),
-                .sino__table.announce .ant-table-tbody > tr > td:nth-child(4){width:60%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:0px;}
+                .sino__table.announce .ant-table-thead > tr > th:last-child,
+                .sino__table.announce .ant-table-tbody > tr > td:last-child {  width:10em;  padding-right:45px; }
+                .sino__table.announce .ant-table-thead > tr > th:nth-child(4){width:60%;overflow:hidden;}
+                .sino__table.announce .ant-table-tbody > tr > td:nth-child(4){max-width:0px;}
+                .sino__table.announce .ant-table-thead > tr > th:nth-child(5),
+                .sino__table.announce .ant-table-tbody > tr > td:nth-child(5){text-align:right;padding-right:15px}
                 .sino__table.announce .ant-pagination-disabled .ant-pagination-item-link{border-color:#d7e0ef;}
                 .sino__table.announce .ant-pagination-item-active a{color:white;}
                 .sino__table.announce .ant-pagination-item-active{background-color:#c43826;border:none;}
@@ -101,7 +106,6 @@ const [columns, setColumns] = useState([]);
                 .sino__table.announce .ant-table-tbody > tr.ant-table-row-selected > td{background:#f7f8fb;}
                 .sino__table.announce .ant-table-tbody > tr > td{padding:12px;}
                 .sino__table.announce .ant-table-filter-column-title{padding:12px 2.3em 12px 17px;}
-                .sino__table.announce .ant-table-thead > tr > th:first-child{padding-left:25px;}
 
             `}</style>
         </div>
