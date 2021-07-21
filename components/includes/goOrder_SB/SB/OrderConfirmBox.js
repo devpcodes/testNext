@@ -36,7 +36,8 @@ const OrderConfirmBox = ({ title, color }) => {
             <div className="line"></div>
             {title === '委託確認' && (
                 <OrderBox
-                    StockId={productInfo?.market === 'US' ? stockId : wordingService(stockInfo['@StockName'], 18)}
+                    StockId={stockId}
+                    name={productInfo?.market === 'US' ? stockId : wordingService(stockInfo['@StockName'], 18)}
                     Price={price}
                     transactionCost={transactionCost}
                     Qty={qty}
