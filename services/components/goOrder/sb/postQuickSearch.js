@@ -1,5 +1,7 @@
 import { getA8Instance } from '../../../myAxios';
-
+export const postQuickSearchWithSwr = async strObj => {
+    return await postQuickSearch(JSON.parse(strObj));
+};
 export const postQuickSearch = async ({ AID, orderID, sort, stockID, token }) => {
     var url = '/SubBrokerage/QueryTradeData/QuickSearch';
     try {
