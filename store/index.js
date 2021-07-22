@@ -8,10 +8,11 @@ import future from './future/reducer';
 import general from './general/reducer';
 import goOrder from './goOrder/reducer';
 import solace from './solace/reducer';
-
+import goOrderSB from './goOrderSB/reducer';
 const reducers = combineReducers({
     layout,
     goOrder,
+    goOrderSB,
     server,
     user,
     stock,
