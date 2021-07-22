@@ -8,7 +8,6 @@ import { objectToQueryHandler } from '../services/objectToQueryHandler';
 import { useSessionStorage } from '../hooks/useSessionStorage';
 
 const Navigation = () => {
-    const [modal, contextHolder] = Modal.useModal();
     const router = useRouter();
     const [, setPlatform] = useSessionStorage('newweb_platform', 'newweb'); // 因為沒用到，忽略陣列解構的第一個回傳值，只取 setPlatform
 
