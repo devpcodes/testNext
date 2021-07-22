@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { Modal } from 'antd';
 import { useEffect } from 'react';
 
 import { submit } from '../services/components/login/trustLogin';
@@ -7,6 +8,7 @@ import { objectToQueryHandler } from '../services/objectToQueryHandler';
 import { useSessionStorage } from '../hooks/useSessionStorage';
 
 const Navigation = () => {
+    const [modal, contextHolder] = Modal.useModal();
     const router = useRouter();
     const [, setPlatform] = useSessionStorage('newweb_platform', 'newweb'); // 因為沒用到，忽略陣列解構的第一個回傳值，只取 setPlatform
 
@@ -28,6 +30,8 @@ const Navigation = () => {
 
         try {
             const res = await submit(router.query.otp);
+            const result = res.data?.result;
+            console.log('=================', result);
             if (res.data.success) {
                 if (router.query.platform) {
                     // 新站一律使用 newweb_platform 作為 key，不與舊站 `platform` 與 `source` 兩個 key 混用，以保證舊站未來可安全下架
@@ -41,6 +45,21 @@ const Navigation = () => {
                     location.href = router.query.page;
                 } else {
                     router.push(`/${router.query.page || ''}${getQueryStr()}`);
+                }
+            } else {
+                if (result.isOpenAccount) {
+                    Modal.confirm({
+                        content: '您尚未開立證券帳戶，請點選「確定」，即可進行線上開戶。',
+                        onOk: () => {
+                            window.open(result.url);
+                        },
+                        visible: true,
+                        okText: '確定',
+                        cancelText: '取消',
+                        onCancel: () => {
+                            location.href = `${process.env.NEXT_PUBLIC_SUBPATH}`;
+                        },
+                    });
                 }
             }
         } catch (e) {
