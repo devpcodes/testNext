@@ -175,8 +175,8 @@ const Invetory = () => {
     const onMarketFilterSubmit = useCallback((confirm, val) => {
         confirm();
         setSearchColumns(columns => {
-            if (!columns.includes('market')) {
-                columns.push('market');
+            if (!columns.includes('Market')) {
+                columns.push('Market');
             }
             return columns;
         });
@@ -211,7 +211,7 @@ const Invetory = () => {
         </div> */}
             <AccountTable 
             filterColumns={searchColumns}
-            dataSource={filterData} 
+            dataSource={data} 
             pagination={false} 
             columns={columns}
             />
