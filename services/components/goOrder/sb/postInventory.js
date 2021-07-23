@@ -20,7 +20,7 @@ export const postInventory = async ({ AID, token }) => {
                 res.data.result.map(x=>{
                     x.Currency = getCurrency(x.Currency)
                     x.Symbol = x.StockID.substring(0, x.StockID.lastIndexOf('.'));
-                    x.TT = getMarket(x.TT)
+                    x.Market = getMarket(x.TT)
                     return x
                 })
                 return res.data.result;
