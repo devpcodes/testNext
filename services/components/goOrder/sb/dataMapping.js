@@ -109,3 +109,14 @@ export const getTT = MarketID => {
     else if (MarketID == 'SZSE') tt = '9';
     return tt;
 };
+
+
+export const getMarket = tt => {
+    let c = '';
+    if(tt == '0') c = '香港';
+    else if (tt == '1') c = '日本';
+    else if (tt == '2') c = '美國';
+    else if (tt == '8') c = '滬股通';
+    else if (tt == '9') c = '深股通';
+    return c;
+};
