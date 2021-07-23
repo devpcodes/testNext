@@ -360,7 +360,7 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
                         <span
                             style={{
                                 color: record.ord_bs === 'B' ? '#f45a4c' : '#22a16f',
-                                opacity: record.status_code == 4 ? 0.45 : 1,
+                                opacity: record.State === '99' ? 0.45 : 1,
                             }}
                         >
                             {mappingCommissionedCodeTradingAcc(

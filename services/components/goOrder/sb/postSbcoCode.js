@@ -1,4 +1,9 @@
 import { getA8Instance } from '../../../myAxios';
+export const postSbcoCodeWithSwr = async strObj => {
+    if (JSON.parse(strObj).length > 0) {
+        return await postSbcoCode(JSON.parse(strObj));
+    }
+};
 export const postSbcoCode = async stockList => {
     var url = `/codeList/sbco_code`;
     try {

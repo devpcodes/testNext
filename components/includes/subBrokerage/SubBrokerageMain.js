@@ -5,7 +5,7 @@ import { Modal } from 'antd';
 import { Input, Space } from 'antd';
 import TabBar from './elements/TabBar';
 import TradingAccount from './page/TradingAccount';
-import OrderStatus from '../tradingAccount/subbrokerage/orderStatus/OrderStatus';
+import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
@@ -71,7 +71,7 @@ const SubBrokerMain = () => {
                         console.log('current', current);
                         switch (current) {
                             case 'order':
-                                return <OrderStatus />;
+                                return <OrderStatusPage />;
                                 break;
                             case 'deal':
                                 return '第二頁';

@@ -15,6 +15,11 @@ export const marketName = market => {
     return found;
 };
 
+export const currencyChName = currency => {
+    const obj = { NTD: '台幣', USD: '美金', CNY: '人民幣', JPY: '日圓', HKD: '港幣' };
+    return obj[currency] || currency;
+};
+
 export const getCodeType = market => {
     switch (market) {
         case 'US':
