@@ -17,6 +17,8 @@ import { themeColor } from '../../../../goOrder_SB/panel/PanelTabs';
 import { formatNum } from '../../../../../../services/formatNum';
 import { useCheckMobile } from '../../../../../../hooks/useCheckMobile';
 import { timeFormatter } from '../../../../../../services/timeFormatter';
+import ControlBtns from './ControlBtns';
+import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 const OrderStatusTable = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -25,6 +27,8 @@ const OrderStatusTable = () => {
     const [symbolList, setSymbolList] = useState([]);
     const isMobile = useCheckMobile();
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [searchColumns, setSearchColumns] = useState([]);
+    const [marketFilterValue, setMarketFilterValue] = useState('');
     // useEffect(() => {
     //     reload.current += 1;
     // }, [])
@@ -111,7 +115,11 @@ const OrderStatusTable = () => {
                 fixed: !isMobile ? 'left' : 'auto',
                 width: 100,
                 render: (text, record) => {
-                    return <></>;
+                    return (
+                        <>
+                            <ControlBtns BS={record.BS} CanModify={record.CanModify} CanCancel={record.CanCancel} />
+                        </>
+                    );
                 },
             },
             {
@@ -130,6 +138,7 @@ const OrderStatusTable = () => {
                 key: 'market',
                 fixed: !isMobile ? 'left' : 'auto',
                 width: 100,
+                ...getColumnSearchProps('market'),
                 render: (text, record) => {
                     const marketID = record.StockID.split('.').slice(-1).pop();
                     const market = marketName(marketID).name;
@@ -151,9 +160,9 @@ const OrderStatusTable = () => {
                 title: '商品',
                 dataIndex: 'name',
                 key: 'name',
-                width: 250,
+                width: 200,
                 render: (text, record) => {
-                    return <>{text}</>;
+                    return <span style={{ whiteSpace: 'pre-wrap' }}>{text}</span>;
                 },
             },
             {
@@ -322,7 +331,6 @@ const OrderStatusTable = () => {
                 width: 100,
                 render: (text, record) => {
                     const time = getTimerHandler(record);
-                    console.log('arr', time.split(' '));
                     const timeArr = time.split(' ');
                     return (
                         <div>
@@ -354,7 +362,41 @@ const OrderStatusTable = () => {
             },
         ];
         setColumns(newColumns);
-    }, [data, isMobile]);
+    }, [data, isMobile, searchColumns, marketFilterValue]);
+
+    const getColumnSearchProps = dataIndex => {
+        if (dataIndex === 'market') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'radio'}
+                        onSubmit={onMarketFilterSubmit.bind(null, confirm)}
+                        onReset={onMarketFilterReset.bind(null, confirm)}
+                        // value={searchStatus}
+                        data={[
+                            { text: '全部', value: 'ALL' },
+                            { text: '香港', value: '香港' },
+                            { text: '美國', value: '美國' },
+                            { text: '滬股通', value: '滬股通' },
+                            { text: '深股通', value: '深股通' },
+                            { text: '日本', value: '日本' },
+                        ]}
+                    />
+                ),
+                filteredValue: [marketFilterValue] || null,
+                onFilter: (value, record) => {
+                    // console.log('record.........',value, record);
+                    const marketID = record.StockID.split('.').slice(-1).pop();
+                    const market = marketName(marketID).name;
+                    if (value === 'ALL' || value === '') {
+                        return true;
+                    } else {
+                        return market === value;
+                    }
+                },
+            };
+        }
+    };
 
     const getTouchPrice = info => {
         const marketID = info.StockID.split('.').slice(-1).pop();
@@ -390,9 +432,33 @@ const OrderStatusTable = () => {
         setSelectedRowKeys(selectedRowKeys);
     });
 
+    const onMarketFilterSubmit = useCallback((confirm, val) => {
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('market')) {
+                columns.push('market');
+            }
+            return columns;
+        });
+        setMarketFilterValue(val[0]);
+    });
+
+    const onMarketFilterReset = useCallback((confirm, val) => {
+        confirm();
+        if (searchColumns.indexOf('market') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('market');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setMarketFilterValue('');
+        }
+    });
+    console.log('searchColumns', searchColumns);
     return (
         <div>
             <AccountTable
+                filterColumns={searchColumns}
                 scroll={{ x: 780 }}
                 dataSource={data}
                 pagination={false}
