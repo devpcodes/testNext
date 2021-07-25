@@ -90,7 +90,7 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
                         return true;
                     }
                 });
-                if (found.broker_id != null) {
+                if (found?.broker_id != null) {
                     return `${found.broker_id}-${found.account}`;
                 } else {
                     return '';

@@ -19,7 +19,7 @@ import { useCheckMobile } from '../../../../../../hooks/useCheckMobile';
 import { timeFormatter } from '../../../../../../services/timeFormatter';
 import ControlBtns from './ControlBtns';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
-const OrderStatusTable = () => {
+const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -29,6 +29,7 @@ const OrderStatusTable = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('');
+    const [stateMsgFilterValue, setStateMsgFilterValue] = useState('');
     // useEffect(() => {
     //     reload.current += 1;
     // }, [])
@@ -90,7 +91,7 @@ const OrderStatusTable = () => {
 
     useEffect(() => {
         if (nameData?.length > 0) {
-            let newData = fetchData.map(item => {
+            let newData = fetchData?.map(item => {
                 const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
                 item.name = symbol;
                 for (let index = 0; index < nameData.length; index++) {
@@ -128,6 +129,7 @@ const OrderStatusTable = () => {
                 key: 'StateMsg',
                 fixed: !isMobile ? 'left' : 'auto',
                 width: 100,
+                ...getColumnSearchProps('StateMsg'),
                 render: (text, record) => {
                     return <>{text}</>;
                 },
@@ -305,8 +307,9 @@ const OrderStatusTable = () => {
             },
             {
                 title: '觸發價格',
-                dataIndex: 'OrderNo',
-                key: 'OrderNo',
+                dataIndex: 'TouchedPrice',
+                key: 'TouchedPrice',
+                ...getColumnSearchProps('TouchedPrice'),
                 align: 'center',
                 width: 100,
                 render: (text, record) => {
@@ -362,7 +365,7 @@ const OrderStatusTable = () => {
             },
         ];
         setColumns(newColumns);
-    }, [data, isMobile, searchColumns, marketFilterValue]);
+    }, [data, isMobile, searchColumns, marketFilterValue, stateMsgFilterValue, touchPriceFilterValue]);
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'market') {
@@ -392,6 +395,45 @@ const OrderStatusTable = () => {
                         return true;
                     } else {
                         return market === value;
+                    }
+                },
+            };
+        }
+        if (dataIndex === 'StateMsg') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'radio'}
+                        onSubmit={onStateFilterSubmit.bind(null, confirm)}
+                        onReset={onStateFilterReset.bind(null, confirm)}
+                        // value={searchStatus}
+                        data={[
+                            { text: '全部', value: 'ALL' },
+                            { text: '未完全成交', value: '未完全成交' },
+                            { text: '委託傳送中', value: '委託傳送中' },
+                        ]}
+                    />
+                ),
+                filteredValue: [stateMsgFilterValue] || null,
+                onFilter: (value, record) => {
+                    // console.log('record.........',value, record);
+                    if (value === 'ALL' || value === '') {
+                        return true;
+                    } else {
+                        return record.StateMsg.includes(value);
+                    }
+                },
+            };
+        }
+
+        if (dataIndex === 'TouchedPrice') {
+            return {
+                filteredValue: [touchPriceFilterValue] || null,
+                onFilter: (value, record) => {
+                    if (!value) {
+                        return true;
+                    } else {
+                        return parseFloat(record.TouchedPrice) != 0 ? true : false;
                     }
                 },
             };
@@ -454,6 +496,30 @@ const OrderStatusTable = () => {
             setMarketFilterValue('');
         }
     });
+
+    const onStateFilterSubmit = useCallback((confirm, val) => {
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('StateMsg')) {
+                columns.push('StateMsg');
+            }
+            return columns;
+        });
+        setStateMsgFilterValue(val[0]);
+    });
+
+    const onStateFilterReset = useCallback((confirm, val) => {
+        confirm();
+        if (searchColumns.indexOf('StateMsg') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('StateMsg');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setStateMsgFilterValue('');
+        }
+    });
+
     console.log('searchColumns', searchColumns);
     return (
         <div>
