@@ -6,7 +6,7 @@ import { themeColor } from '../../panel/PanelTabs';
 import TitleBox from './TitleBox';
 import { setConfirmBoxOpen, setSearchListSubmitSuccess } from '../../../../../store/goOrderSB/action';
 import { usePlatform } from '../../../../../hooks/usePlatform';
-import { getTT } from '../../../../../services/components/goOrder/sb/dataMapping';
+import { getPriceType, getTT, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
 import { getWebId } from '../../../../../services/components/goOrder/getWebId';
 import { postUpdate } from '../../../../../services/components/goOrder/sb/postUpdate';
 import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
@@ -36,10 +36,35 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
         dispatch(setConfirmBoxOpen(false));
     };
 
+    const getType = info => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        const priceType = getPriceType(info.PriceType);
+        let arr = goOrderMapping(priceType, info.GTCDate);
+        arr = arr.filter(item => {
+            if (item === 'ANY' || item === 'AON') {
+                return item;
+            }
+        });
+        if (marketID !== 'US') {
+            return '--';
+        } else {
+            return arr[0] || '--';
+        }
+    };
+
     const submitData = async (info, currentAccount) => {
         const marketID = info.StockID.split('.').slice(-1).pop();
         console.log('marketID', marketID);
         let newQty = getCanCancelQty(info) - qty;
+
+        const type = getType(info);
+        if (type === 'AON' && newQty < 100) {
+            message.error({
+                title: '資料格式錯誤',
+                content: 'AON 委託不得低於 100 股',
+            });
+            return;
+        }
         if (newQty == 0) {
             try {
                 setSubmitLoading(true);
