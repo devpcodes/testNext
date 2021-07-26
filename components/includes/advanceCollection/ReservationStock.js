@@ -104,6 +104,8 @@ const ReservationStock = () => {
         //     }
         // }
         selectedAccount.current = state.accountsReducer.selected;
+        setSearchVal('');
+        setSearchStock('');
         return () => {
             if (timer.current != null) {
                 window.clearInterval(timer.current);
@@ -111,7 +113,20 @@ const ReservationStock = () => {
             }
         };
     }, [state.accountsReducer.selected]);
-
+    const typeString = type => {
+        switch (type) {
+            case '':
+                return '一般';
+            case '1':
+                return '全額管理';
+            case '2':
+                return '收足款券';
+            case '3':
+                return '處置一二';
+            default:
+                break;
+        }
+    };
     useEffect(() => {
         stockColumns.current = [
             {
@@ -136,7 +151,9 @@ const ReservationStock = () => {
                 key: 'load_type',
                 index: 2,
                 sorter: (a, b) => {
-                    return sortString(a.load_type, b.load_type);
+                    const aTypeStr = typeString(a.load_type);
+                    const bTypeStr = typeString(b.load_type);
+                    return sortString(aTypeStr, bTypeStr);
                 },
                 render: (text, record, index) => {
                     switch (text) {
@@ -340,6 +357,8 @@ const ReservationStock = () => {
 
     const changleHandler = activeKey => {
         stockActiveTabKey.current = activeKey;
+        setSearchVal('');
+        setSearchStock('');
         if (activeKey == 1) {
             dataHandler(activeKey);
             setColumnsData(stockColumns.current);
@@ -538,25 +557,43 @@ const ReservationStock = () => {
         setSearchVal(e.target.value);
     };
 
-    const resetHandler = () => {
+    const resetHandler = type => {
         setSearchVal('');
-        setFilterData(statusData);
+        if (type === 'status') {
+            setFilterData(statusData);
+        }
+        if (type === 'apply') {
+            setFilterData(stockInventory);
+        }
     };
 
-    const searchHandler = () => {
+    const searchHandler = type => {
         console.log(searchVal);
-        let newStatusData = statusData.filter(val => {
-            console.log(val.code, val.code_name);
-            if (val.code.indexOf(searchVal) >= 0) {
-                return true;
-            }
-            if (val.code_name.indexOf(searchVal) >= 0) {
-                return true;
-            }
-        });
-        setFilterData(newStatusData);
-        setSearchStock(searchVal);
-        console.log('newData', newStatusData);
+        if (type === 'apply') {
+            let newInventory = stockInventory.filter(val => {
+                if (val.code.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+                if (val.code_name.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+            });
+            setFilterData(newInventory);
+            setSearchStock(searchVal);
+        }
+        if (type === 'status') {
+            let newStatusData = statusData.filter(val => {
+                console.log(val.code, val.code_name);
+                if (val.code.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+                if (val.code_name.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+            });
+            setFilterData(newStatusData);
+            setSearchStock(searchVal);
+        }
     };
 
     return (
@@ -570,11 +607,26 @@ const ReservationStock = () => {
             >
                 <TabPane tab="預收股票申請" key="1" disabled={dataLoading}>
                     <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
+                    <div className="searchBox">
+                        <Input
+                            onChange={selectCodeHandler}
+                            value={searchVal}
+                            placeholder="請輸入股票名稱或代號"
+                            className="searchInp"
+                        />
+                        {/* <SearchAutoComplete onChange={selectCodeHandler} selectHandler={selectCodeHandler} width={width <= 580 ? "100%" : '200px'}/> */}
+                        <Button type="primary" className="searchBtn" onClick={searchHandler.bind(null, 'apply')}>
+                            搜尋
+                        </Button>
+                        <Button type="primary" className="searchBtn" onClick={resetHandler.bind(null, 'apply')}>
+                            重置
+                        </Button>
+                    </div>
                     <ApplyContent
                         key="table1"
                         scroll={{ x: 860 }}
                         contenterTitle={'預收股票申請'}
-                        dataSource={stockInventory}
+                        dataSource={searchStock != '' ? filterData : stockInventory}
                         columns={columnsData}
                         pagination={false}
                         loading={{
@@ -625,10 +677,10 @@ const ReservationStock = () => {
                             className="searchInp"
                         />
                         {/* <SearchAutoComplete onChange={selectCodeHandler} selectHandler={selectCodeHandler} width={width <= 580 ? "100%" : '200px'}/> */}
-                        <Button type="primary" className="searchBtn" onClick={searchHandler}>
+                        <Button type="primary" className="searchBtn" onClick={searchHandler.bind(null, 'status')}>
                             搜尋
                         </Button>
-                        <Button type="primary" className="searchBtn" onClick={resetHandler}>
+                        <Button type="primary" className="searchBtn" onClick={resetHandler.bind(null, 'status')}>
                             重置
                         </Button>
                     </div>
