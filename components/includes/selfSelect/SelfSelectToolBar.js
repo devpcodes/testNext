@@ -7,7 +7,7 @@ import refresh from '../../../resources/images/pages/Self_select/basic-refresh-0
 import pen from '../../../resources/images/pages/Self_select/edit-edit.svg';
 import add from '../../../resources/images/pages/Self_select/edit-plus.svg';
 
-const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectReloadTime }) => {
+const SelfSelectToolBar = ({ count, tabkey, reloadTabkey, isSocalLogin, reload, reloadSelectReloadTime }) => {
     const [isEditSelectGroupVisitable, setEditSelectGroupVisitable] = useState(false);
     const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
 
@@ -65,6 +65,7 @@ const SelfSelectToolBar = ({ count, tabkey, isSocalLogin, reload, reloadSelectRe
                 isAddSelectGroupVisitable={isAddSelectGroupVisitable}
                 handleClose={closeAddSelfGroup}
                 callBack={reload}
+                reloadTabkey={reloadTabkey}
             />
             <style jsx>{`
                 .select__toolbar {

@@ -4,7 +4,7 @@ import { Modal, Button, Input } from 'antd';
 import { fetchAddSelectGroup } from '../../../services/selfSelect/addSelectGroup';
 import { getToken } from '../../../services/user/accessToken';
 
-const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack }) => {
+const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack, reloadTabkey }) => {
     const textInput = useRef(null);
     const [inputValue, setInputValue] = useState('我的自選');
     useEffect(() => {
@@ -15,7 +15,10 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack 
     };
 
     const handleConfirm = async () => {
-        fetchAddSelectGroup(textInput.current.state.value, getToken());
+        const response = await fetchAddSelectGroup(textInput.current.state.value, getToken());
+        if (response.message === 'OK' && response.success === true) {
+            reloadTabkey(response.result.selectId);
+        }
         handleClose();
     };
 

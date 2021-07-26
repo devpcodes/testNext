@@ -49,6 +49,7 @@ function Self_select_stocks() {
                 <SelfSelectToolBar
                     count={count}
                     tabkey={tabkey}
+                    reloadTabkey={reloadTabkey}
                     isSocalLogin={isSocalLogin}
                     reload={reload}
                     reloadSelectReloadTime={reloadSelectReloadTime}
