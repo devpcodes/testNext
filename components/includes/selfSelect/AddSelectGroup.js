@@ -17,13 +17,17 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack,
     const handleConfirm = async () => {
         const response = await fetchAddSelectGroup(textInput.current.state.value, getToken());
         if (response.message === 'OK' && response.success === true) {
-            reloadTabkey(response.result.selectId);
+            callBack();
+
+            setTimeout(function () {
+                reloadTabkey(response.result.selectId + '');
+            }, 500);
         }
         handleClose();
     };
 
     const afterModalClose = () => {
-        callBack();
+        setInputValue('我的自選');
     };
 
     const groupOnchangeHandler = e => {
