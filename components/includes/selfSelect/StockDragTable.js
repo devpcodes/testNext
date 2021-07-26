@@ -143,7 +143,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             {
                 stockid: stockData.code,
                 bs: bs,
-                marketType: stockData.market === 'SB' ? 'H' : stockData.market,
+                type: stockData.market === 'SB' ? 'H' : stockData.market,
             },
             isMobile,
             router,
