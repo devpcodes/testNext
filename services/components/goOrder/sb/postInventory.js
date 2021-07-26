@@ -16,7 +16,7 @@ export const postInventory = async ({ AID, token }) => {
         console.log('[RES]',res)
         if (res.data.success === 'True') {
             const arr = [];
-            if (res.data.result) {
+            if (!res.data.result.msg) {
                 res.data.result.map(x=>{
                     x.Currency = getCurrency(x.Currency)
                     x.Symbol = x.StockID.substring(0, x.StockID.lastIndexOf('.'));
