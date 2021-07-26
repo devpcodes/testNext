@@ -58,7 +58,8 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
         let newQty = getCanCancelQty(info) - qty;
 
         const type = getType(info);
-        if (type === 'AON' && newQty < 100) {
+        console.log('newQty', newQty, type, qty);
+        if (type === 'AON' && newQty < 100 && newQty != 0) {
             message.error({
                 title: '資料格式錯誤',
                 content: 'AON 委託不得低於 100 股',
@@ -87,6 +88,7 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
                 });
                 closeHandler();
             } catch (error) {
+                setSubmitLoading(false);
                 message.info({
                     content: error,
                 });
@@ -114,6 +116,7 @@ const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
                 });
                 closeHandler();
             } catch (error) {
+                setSubmitLoading(false);
                 message.info({
                     content: error,
                 });
