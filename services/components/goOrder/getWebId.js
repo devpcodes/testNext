@@ -33,6 +33,12 @@ const chart = [
             recommisiioned: '163',
         },
     },
+    {
+        source: {
+            id: 'alpha',
+            recommisiioned: '168',
+        },
+    },
 ];
 const defaultSource = {
     stock: '129',

@@ -145,6 +145,7 @@ const OrderBox = ({ ordPrice, lot, ordType, transactionCost, ordQty, stockId, ma
         //     certSN: '6036E563',
         //     type: 'web',
         // };
+        //checkSignCA(ca_content)
         if (checkSignCA(ca_content)) {
             setSubmitLoading(true);
             const res = await postOrder({
