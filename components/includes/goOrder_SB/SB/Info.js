@@ -276,8 +276,14 @@ const Info = ({ stockid }) => {
                     tm = insert(quote.tm, 2, ':');
                 }
                 let info = '收盤價';
-                info = quote?.dc === 'realStream' && '即時報價';
-                info = quote?.dc === 'delay' && '延遲15分';
+                if (quote?.dc === 'realStream') {
+                    return '即時報價';
+                }
+                if (quote?.dc === 'delay') {
+                    return '延遲15分';
+                }
+                //info = quote?.dc === 'realStream' && '即時報價';
+                // info = quote?.dc === 'delay' && '延遲15分';
                 return td + ' ' + tm + ' ' + info;
             } else {
                 return '';
