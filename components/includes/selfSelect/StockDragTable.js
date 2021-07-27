@@ -55,6 +55,18 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
+            title: '買價',
+            dataIndex: 'buyPrice',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
+            title: '賣價',
+            dataIndex: 'sellPrice',
+            align: 'right',
+            render: data => <span className={data.class}>{data.text}</span>,
+        },
+        {
             title: '成交量',
             dataIndex: 'totalVolume',
             align: 'right',

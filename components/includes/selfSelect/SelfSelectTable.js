@@ -121,6 +121,12 @@ const SelfSelectTable = ({
                                 exchange = 'SEHK';
                             }
                             break;
+                        case 'SHH':
+                            exchange = 'SHSE';
+                            break;
+                        case 'SHZ':
+                            exchange = 'SZSE';
+                            break;
                         default:
                             exchange = stock.exchange;
                             break;
@@ -165,6 +171,7 @@ const SelfSelectTable = ({
                     if (snapshot && ['O', 'F', 'S'].includes(stock.market)) {
                         // 證期權
                         snapshot.some((snapshotData, snapshotIndex) => {
+                            console.log(snapshotData.BuyPrice);
                             const isupper =
                                 parseFloat(snapshotData.ChangePrice) == 0
                                     ? ''
@@ -202,6 +209,24 @@ const SelfSelectTable = ({
                                         : '--',
                                     class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
                                 };
+                                stockData.buyPrice = {
+                                    text: snapshotData.BuyPrice ? snapshotData.BuyPrice.toFixed(2) : '--',
+                                    class:
+                                        snapshotData.BuyPrice > snapshotData.Reference
+                                            ? 'upper'
+                                            : snapshotData.BuyPrice < snapshotData.Reference
+                                            ? 'lower'
+                                            : '',
+                                };
+                                stockData.sellPrice = {
+                                    text: snapshotData.SellPrice ? snapshotData.SellPrice.toFixed(2) : '--',
+                                    class:
+                                        snapshotData.SellPrice > snapshotData.Reference
+                                            ? 'upper'
+                                            : snapshotData.BuyPrice < snapshotData.Reference
+                                            ? 'lower'
+                                            : '',
+                                };
                                 stockData.totalVolume = {
                                     text: snapshotData.TotalVolume ? snapshotData.TotalVolume : '--',
                                 };
@@ -214,8 +239,24 @@ const SelfSelectTable = ({
                         });
                     } else if (sbQuote && ['SB'].includes(stock.market)) {
                         // 複委託
-                        const mk = stock.exchange === 'NASDAQ' ? 'US' : stock.exchange;
+                        let mk;
                         const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
+
+                        switch (stock.exchange) {
+                            case 'NASDAQ':
+                                mk = 'US';
+                                break;
+                            case 'SHH':
+                                mk = 'SHSE';
+                                break;
+                            case 'SHZ':
+                                mk = 'SZSE';
+                                break;
+                            default:
+                                mk = stock.exchange;
+                                break;
+                        }
+
                         console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
                         console.log(sbQuoteData);
                         console.log(sbQuote[`${stock.symbol}.${mk}`]);
@@ -225,7 +266,8 @@ const SelfSelectTable = ({
                         stockData.market = stock.market;
                         stockData.exchange = stock.exchange;
                         stockData.name = {
-                            text: sbQuoteData.stockName,
+                            text:
+                                sbQuoteData && sbQuoteData.stockName ? sbQuoteData.stockName : `${stock.symbol}.${mk}`,
                             link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_SubBrokerage/?tab=2&symbol=${stock.symbol}&exch=${stock.exchange}`,
                         };
                         stockData.close = {
@@ -238,6 +280,12 @@ const SelfSelectTable = ({
                             text: '--',
                         };
                         stockData.changeRate = {
+                            text: '--',
+                        };
+                        stockData.buyPrice = {
+                            text: '--',
+                        };
+                        stockData.sellPrice = {
                             text: '--',
                         };
                         stockData.totalVolume = { text: '--' };
