@@ -39,7 +39,6 @@ function GoOrder() {
                     </div>
                 </>
             )}
-
             <style jsx>{`
                 .container {
                     margin-top: ${nav == '0' ? '0' : '70px'};
