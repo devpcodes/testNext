@@ -350,7 +350,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
                 align: 'center',
                 width: 150,
                 render: (text, record) => {
-                    return <span>{text}</span>;
+                    return <span style={{ whiteSpace: 'pre-wrap' }}>{text}</span>;
                 },
             },
             {
