@@ -29,8 +29,8 @@ const TabBar = ({ current, menuList, onClick }) => {
             </div>
             <style jsx global>
                 {`
-                .subBrokerage.tab_box {padding:0 16px;}
                 .subBrokerage.tab_box .ant-tabs-nav{margin-bottom:0;}
+                .subBrokerage .ant-tabs-nav-wrap {padding:0 16px;}
                 `}
             </style>
         </>

@@ -1,20 +1,12 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Link from 'next/link';
-import { Modal } from 'antd';
-import { Input, Space } from 'antd';
 import TabBar from './elements/TabBar';
 import TradingAccount from './page/TradingAccount';
 import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
-    const [data, setData] = useState({});
     const [current, setCurrent] = useState('order');
-    const [refRows, setRefRows] = useState([]);
-    const [refresh, setRefresh] = useState('');
-    const keyWord = useSelector(state => state.keyWord);
-    const dispatch = useDispatch();
     const menuList = [
         { key: 'order', title: '委回' },
         { key: 'deal', title: '成交' },
@@ -51,12 +43,6 @@ const SubBrokerMain = () => {
     //         });
     //     }
     // }
-    const addKw = (e, x) => {
-        dispatch({
-            type: 'CHANGE_ITEM',
-            payload: { itemNew: x },
-        });
-    };
     const onClick = x => {
         setCurrent(x);
     };
@@ -80,7 +66,7 @@ const SubBrokerMain = () => {
                                 return '第三頁';
                                 break;
                             case 'inventory':
-                                return <TradingAccount></TradingAccount>;
+                                return <TradingAccount/>;
                                 break;
                             case 'holding':
                                 return '第五頁';
@@ -94,6 +80,7 @@ const SubBrokerMain = () => {
 
             <style jsx>
                 {`
+                    .page__container.subBrokerage{padding:20px 0;}
                     .page__container.subBrokerage .content_area {
                         max-width: 1240px;
                         width: 90%;
