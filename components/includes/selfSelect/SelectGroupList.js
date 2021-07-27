@@ -15,7 +15,7 @@ import pen from '../../../resources/images/components/goOrder/edit-edit.svg';
 import hamburger from '../../../resources/images/components/goOrder/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
-const SelectGroupList = ({ callBack }) => {
+const SelectGroupList = ({ callBack, tabkey, reloadTabkey }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
@@ -67,11 +67,17 @@ const SelectGroupList = ({ callBack }) => {
                     if (selectId === val.selectId) {
                         data.splice(idx, 1);
                         setSelfSelectGroup(data);
-
+                        // console.log(res);
+                        // console.log(val.selectId);
+                        // console.log(tabkey);
                         const res = await fetchDeletSelectGroup(val.selectId, getToken());
-                        console.log(res);
-                        if (typeof callBack === 'function') {
-                            callBack();
+                        if (res.message === 'OK' && res.success === true) {
+                            if (val.selectId + '' === tabkey + '') {
+                                reloadTabkey('0');
+                            }
+                            if (typeof callBack === 'function') {
+                                callBack();
+                            }
                         }
                     }
                 });

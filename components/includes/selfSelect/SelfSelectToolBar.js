@@ -59,6 +59,8 @@ const SelfSelectToolBar = ({ count, tabkey, reloadTabkey, isSocalLogin, reload, 
                 isEditSelectGroupVisitable={isEditSelectGroupVisitable}
                 handleClose={closeEditSelfGroup}
                 callBack={reload}
+                tabkey={tabkey}
+                reloadTabkey={reloadTabkey}
             />
 
             <AddSelectGroup

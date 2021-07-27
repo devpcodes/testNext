@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Modal, Button } from 'antd';
 import SelectGroupList from './SelectGroupList';
-const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBack }) => {
+const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBack, tabkey, reloadTabkey }) => {
     const handleCancel = () => {
         handleClose();
     };
@@ -41,7 +41,7 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
                     </Button>,
                 ]}
             >
-                <SelectGroupList callBack={callBack} />
+                <SelectGroupList callBack={callBack} tabkey={tabkey} reloadTabkey={reloadTabkey} />
             </Modal>
             <style jsx>{`
                 .self__select__list {

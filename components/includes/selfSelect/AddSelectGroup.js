@@ -17,7 +17,9 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack,
     const handleConfirm = async () => {
         const response = await fetchAddSelectGroup(textInput.current.state.value, getToken());
         if (response.message === 'OK' && response.success === true) {
-            callBack();
+            if (typeof callBack === 'function') {
+                callBack();
+            }
 
             setTimeout(function () {
                 reloadTabkey(response.result.selectId + '');
