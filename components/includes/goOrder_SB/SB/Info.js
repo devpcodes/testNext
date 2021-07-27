@@ -37,6 +37,7 @@ export const defaultProductInfo = {
     name: 'Apple',
     market: 'US',
     marketType: 'SB',
+    exchange: 'NASDAQ',
 };
 const Info = ({ stockid }) => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
