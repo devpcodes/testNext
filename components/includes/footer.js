@@ -159,11 +159,11 @@ const Footer = memo(({ showNav }) => {
                         <li>109年金管期總字第008號(委任期貨商永豐期貨)</li>
                     </ul>
                     <ul>
-                        <li>
+                        {/* <li>
                             <a href="https://www.taiwanresearch.com/index.asp" target="_blank">
                                 Taiwan Research
                             </a>
-                        </li>
+                        </li> */}
                         <li>
                             <a
                                 href="http://www.sinopac.com/footer/20170512111026126000000000000863.html"
