@@ -108,6 +108,9 @@ const Navbar = memo(() => {
             case 'gugu':
                 url = `/goOrder?source=gugu`;
                 break;
+            case 'alpha':
+                url = `/goOrder?platform=alpha`;
+                break;
             default:
                 url = `/goOrder`;
                 break;
