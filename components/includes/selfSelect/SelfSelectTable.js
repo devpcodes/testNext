@@ -306,6 +306,7 @@ const SelfSelectTable = ({
     }, [snapshot, sbQuote]);
 
     useEffect(() => {
+        // 遮罩
         reloadTabkey(selectGroupID);
     }, [selectGroupID]);
 

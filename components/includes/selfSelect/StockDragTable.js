@@ -21,11 +21,16 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
 
     const [selfSelectList, setSelfSelectList] = useState([]);
     const [topic, setTopic] = useState([]);
+    const [dataLoading, setDataLoading] = useState(false);
+    // const [tableColumns, setTableColumns] = useState([]);
 
     const isMobile = useCheckMobile();
     const router = useRouter();
     const solaceData = useSelector(store => store.solace.solaceData);
 
+    useEffect(() => {
+        setDataLoading(true);
+    }, [tabKey, tableData]);
     const columns = [
         {
             title: '商品',
@@ -128,6 +133,18 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
     ];
 
+    columns.forEach((val, index) => {
+        if (tabKey + '' === '0' && (val.dataIndex === 'del' || val.dataIndex === 'move')) {
+            delete columns[index];
+        } else if (isSocalLogin === true && val.dataIndex === 'action') {
+            delete columns[index];
+        } else if (isMobile && val.dataIndex === 'move') {
+            delete columns[index];
+        }
+    });
+
+    // setTableColumns(columns)
+
     const locale = {
         emptyText: (
             <span>
@@ -140,15 +157,6 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             </span>
         ),
     };
-
-    columns.forEach((val, index) => {
-        if (tabKey + '' === '0' && (val.dataIndex === 'del' || val.dataIndex === 'move')) {
-            delete columns[index];
-        }
-        if (isSocalLogin === true && val.dataIndex === 'action') {
-            delete columns[index];
-        }
-    });
 
     const goOrder = (stockData, bs) => {
         openGoOrder(
@@ -205,6 +213,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             setTopic([]);
             setSelfSelectList([]);
         }
+        setTimeout(() => {
+            setDataLoading(false);
+        }, 200);
     }, [tableData]);
 
     useEffect(() => {
@@ -280,6 +291,22 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     pagination={false}
                     dataSource={selfSelectList}
                     locale={locale}
+                    loading={{
+                        indicator: (
+                            <div
+                                style={{
+                                    marginTop: '20px',
+                                    color: 'black',
+                                    fontSize: '1.6rem',
+                                    width: '100%',
+                                    transform: 'translateX(-49%) translateY(-54px)',
+                                }}
+                            >
+                                資料加載中...
+                            </div>
+                        ),
+                        spinning: dataLoading,
+                    }}
                 />
             </ReactDragListView>
             {checkLogin() && <MultipleSolaceClientComponent subscribeTopic={topic} idno={currentAccount?.idno} />}
@@ -329,6 +356,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     font-size: 16px;
                     color: #3f5372;
                     margin-top: 16px;
+                }
+                body .ant-table-row[draggable] {
+                    opacity: 0.3 !important;
                 }
             `}</style>
         </>

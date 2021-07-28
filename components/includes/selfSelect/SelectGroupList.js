@@ -6,6 +6,7 @@ import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
 import { fetchDeletSelectGroup } from '../../../services/selfSelect/deleteSelectGroup';
 import { fetchUpdateSelectGroup } from '../../../services/selfSelect/updateSelectGroup';
+import { useCheckMobile } from '../../../hooks/useCheckMobile';
 
 import ReactDragListView from 'react-drag-listview';
 
@@ -19,7 +20,7 @@ const SelectGroupList = ({ callBack, tabkey, reloadTabkey }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
-
+    const isMobile = useCheckMobile();
     const [selfSelectGroup, setSelfSelectGroup] = useState([]);
     const [isVisibleEditGroupName, setIsVisibleEditGroupName] = useState(false);
     const [selectGroupName, setSelectGroupName] = useState('');
@@ -123,9 +124,11 @@ const SelectGroupList = ({ callBack, tabkey, reloadTabkey }) => {
                                             <img src={cancel} alt="刪除"></img>
                                         </span>
                                     )}
-                                    <span className="sort__icon">
-                                        <img src={hamburger} alt="排序"></img>
-                                    </span>
+                                    {!isMobile && (
+                                        <span className="sort__icon">
+                                            <img src={hamburger} alt="排序"></img>
+                                        </span>
+                                    )}
                                 </li>
                             );
                         })}
