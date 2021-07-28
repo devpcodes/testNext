@@ -3,8 +3,8 @@ import { mappingPriceMsg } from '../../../../../../services/components/goOrder/d
 import { formatPriceByUnit } from '../../../../../../services/numFormat';
 import ChangeNum from '../../../../goOrder/searchList/ChangeNum';
 
-const qtyUnit = 1;
-const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue, data, title }) => {
+// const qtyUnit = 1;
+const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue, data, title, qtyUnit }) => {
     const [qtyVal, setQtyVal] = useState('');
     const initValue = useRef('');
     const [disabledPlus, setDisabledPlus] = useState(true);
@@ -72,7 +72,7 @@ const UpdateQtyModal = ({ product, color, label, price, unit, value, getValue, d
             </p>
             <p className="item-modal item-modalFirst">
                 <span>委託價格</span>
-                {/* {price} */}
+                {price}
                 {/* {formatPriceByUnit(
                     data.stock_id,
                     mappingPriceMsg(data.price, data.price_type, data.price_flag, data.ord_type1),

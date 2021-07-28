@@ -1,16 +1,140 @@
+import { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { postStockInfo } from '../../../../../../services/components/goOrder/sb/postStockInfo';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { setModal } from '../../../../../../store/components/layouts/action';
 import UpdateQtyModal from './UpdateQtyModal';
 import TitleBox from '../../../../goOrder_SB/SB/searchList/TitleBox';
+import { postCancel } from '../../../../../../services/components/goOrder/sb/postCancel';
+import { postUpdate } from '../../../../../../services/components/goOrder/sb/postUpdate';
+import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
+import { usePlatform } from '../../../../../../hooks/usePlatform';
+import { getPriceType, getTT, goOrderMapping } from '../../../../../../services/components/goOrder/sb/dataMapping';
 
-const ControlBtns = ({ BS, CanCancel, CanModify, data }) => {
+const ControlBtns = ({ BS, CanCancel, CanModify, data, successHandler }) => {
     const dispatch = useDispatch();
+    const platform = usePlatform();
+    const nowQty = useRef(0);
     const currentAccount = useSelector(store => store.user.currentAccount);
-    const getQtyValueHandler = () => {};
-    const delHandler = () => {};
+
+    const getQtyValueHandler = qty => {
+        nowQty.current = qty;
+    };
+
+    const delHandler = info => {
+        dispatch(
+            setModal({
+                visible: true,
+                title: '刪單確認',
+                type: 'confirm',
+                content: '確認刪除1筆資料嗎？',
+                onOk: async () => {
+                    closeHandler();
+                    await delSubmit(info);
+                },
+            }),
+        );
+    };
+
+    const delSubmit = async info => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        try {
+            const resVal = await postCancel({
+                currentAccount,
+                BS: info.BS,
+                CID: getWebId(platform, 'recommisiioned'),
+                Creator: currentAccount.idno,
+                DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                Exchid: marketID,
+                OID: info.OID,
+                OT: '0',
+                StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                TT: getTT(marketID),
+            });
+            successHandler();
+            Modal.info({
+                content: resVal,
+            });
+        } catch (error) {
+            message.info({
+                content: error,
+            });
+        }
+    };
+
+    const closeHandler = () => {
+        dispatch(setModal({ visible: false }));
+    };
+
+    const getType = info => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        const priceType = getPriceType(info.PriceType);
+        let arr = goOrderMapping(priceType, info.GTCDate);
+        arr = arr.filter(item => {
+            if (item === 'ANY' || item === 'AON') {
+                return item;
+            }
+        });
+        if (marketID !== 'US') {
+            return '--';
+        } else {
+            return arr[0] || '--';
+        }
+    };
+
+    const submitData = async (info, currentAccount) => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        console.log('marketID', marketID);
+        let newQty = getCanCancelQty(info) - nowQty.current;
+
+        const type = getType(info);
+        if (type === 'AON' && newQty < 100 && newQty != 0) {
+            message.error({
+                title: '資料格式錯誤',
+                content: 'AON 委託不得低於 100 股',
+            });
+            return;
+        }
+
+        if (newQty == 0) {
+            closeHandler();
+            await delSubmit(info);
+        } else {
+            try {
+                closeHandler();
+                const resVal = await postUpdate({
+                    currentAccount,
+                    BS: info.BS,
+                    CID: getWebId(platform, 'recommisiioned'),
+                    Creator: currentAccount.idno,
+                    DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                    Exchid: marketID,
+                    OID: info.OID,
+                    OT: '0',
+                    StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                    TT: getTT(marketID),
+                    NewQty: newQty,
+                });
+                successHandler();
+                Modal.success({
+                    content: resVal,
+                });
+            } catch (error) {
+                message.info({
+                    content: error,
+                });
+            }
+        }
+    };
+
+    const getCanCancelQty = info => {
+        if (info.hasOwnProperty('Qcurrent') && info['Qmatched'] != null && !isNaN(info['Qmatched'])) {
+            info.cancel = parseFloat((info.Qoriginal - parseFloat(info['Qnext'])).toPrecision(12));
+            return parseFloat(info?.Qoriginal) - parseFloat(info?.cancel) - parseFloat(info?.Qmatched);
+        }
+    };
+
     const updateHandler = async () => {
         const marketID = data.StockID.split('.').slice(-1).pop();
         const symbol = data.StockID.substring(0, data.StockID.lastIndexOf('.'));
@@ -30,21 +154,21 @@ const ControlBtns = ({ BS, CanCancel, CanModify, data }) => {
                                     showIcon={false}
                                 />
                             }
-                            product={'123'}
-                            label={'123'}
                             color={BS === 'B' ? '#f45a4c' : '#22a16f'}
-                            price={100}
+                            price={parseFloat(data.Price)}
                             unit={'股'}
-                            value={100}
+                            value={getCanCancelQty(data)}
                             getValue={getQtyValueHandler}
-                            data={[]}
+                            data={data}
+                            qtyUnit={Number(stockInfo['@LotSize'])}
                         />
                     ),
                     visible: true,
+                    onOk: submitData.bind(null, data, currentAccount),
                 }),
             );
         } catch (error) {
-            message.info({
+            message.error({
                 content: error,
             });
         }
@@ -66,7 +190,7 @@ const ControlBtns = ({ BS, CanCancel, CanModify, data }) => {
     return (
         <>
             {CanCancel === 'Y' && (
-                <button className="btn" onClick={delHandler}>
+                <button className="btn" onClick={delHandler.bind(null, data)}>
                     <span>刪</span>
                 </button>
             )}

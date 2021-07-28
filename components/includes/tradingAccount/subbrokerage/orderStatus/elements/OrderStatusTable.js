@@ -30,6 +30,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('');
     const [stateMsgFilterValue, setStateMsgFilterValue] = useState('');
+    const [reload, setReload] = useState(0);
     // useEffect(() => {
     //     reload.current += 1;
     // }, [])
@@ -48,7 +49,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
         }
     }, [currentAccount]);
 
-    const { data: fetchData } = useSWR([JSON.stringify(postData)], postQuickSearchWithSwr, {
+    const { data: fetchData } = useSWR([JSON.stringify(postData), reload], postQuickSearchWithSwr, {
         onError: (error, key) => {
             Modal.error({
                 title: error,
@@ -123,6 +124,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
                                 CanModify={record.CanModify}
                                 CanCancel={record.CanCancel}
                                 data={record}
+                                successHandler={successHandler}
                             />
                         </>
                     );
@@ -371,6 +373,12 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
         ];
         setColumns(newColumns);
     }, [data, isMobile, searchColumns, marketFilterValue, stateMsgFilterValue, touchPriceFilterValue]);
+
+    const successHandler = () => {
+        setReload(prev => {
+            return (prev += 1);
+        });
+    };
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'market') {
