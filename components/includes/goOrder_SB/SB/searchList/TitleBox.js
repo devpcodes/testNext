@@ -6,9 +6,10 @@ import { themeColor } from '../../panel/PanelTabs';
 import moment from 'moment';
 import { wordingService } from '../../../../../services/components/goOrder/sb/wordingService';
 
-const TitleBox = ({ info, stockInfo, style, icon }) => {
+const TitleBox = ({ info, stockInfo, style, showIcon }) => {
     const [icons, setIcons] = useState([]);
     useEffect(() => {
+        console.log('show', showIcon);
         getIcon(info);
     }, [info]);
     const getIcon = info => {
@@ -48,7 +49,7 @@ const TitleBox = ({ info, stockInfo, style, icon }) => {
             <div className="name__zh">
                 <span className="bs">{info.BS === 'B' ? '買進' : '賣出'}</span>
                 <span>{wordingService(info.name, 13)}</span>
-                {icon && (
+                {(showIcon == null || showIcon) && (
                     <Tooltip
                         placement="bottom"
                         title={

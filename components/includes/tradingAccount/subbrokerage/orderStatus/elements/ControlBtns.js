@@ -27,7 +27,7 @@ const ControlBtns = ({ BS, CanCancel, CanModify, data }) => {
                                     info={data}
                                     stockInfo={stockInfo}
                                     style={{ marginBottom: '10px' }}
-                                    icon={false}
+                                    showIcon={false}
                                 />
                             }
                             product={'123'}
