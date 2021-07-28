@@ -538,7 +538,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
         <div>
             <AccountTable
                 filterColumns={searchColumns}
-                scroll={{ x: 780 }}
+                scroll={{ x: 780, y: 600 }}
                 dataSource={data}
                 pagination={false}
                 columns={columns}
