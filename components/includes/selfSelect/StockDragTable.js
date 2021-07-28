@@ -30,7 +30,8 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
 
     useEffect(() => {
         setDataLoading(true);
-    }, [tabKey, tableData]);
+    }, [tableData]);
+
     const columns = [
         {
             title: '商品',
@@ -213,6 +214,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             setTopic([]);
             setSelfSelectList([]);
         }
+        setTimeout(() => {
+            setDataLoading(false);
+        }, 200);
     }, [tableData]);
 
     useEffect(() => {
@@ -252,9 +256,6 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             }
         });
         setSelfSelectList(selfSelectList);
-        setTimeout(() => {
-            setDataLoading(false);
-        }, 200);
     }, [solaceData]);
 
     const tableDataToReqDataForUpdate = tableData => {
