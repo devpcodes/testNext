@@ -6,7 +6,7 @@ import { themeColor } from '../../panel/PanelTabs';
 import moment from 'moment';
 import { wordingService } from '../../../../../services/components/goOrder/sb/wordingService';
 
-const TitleBox = ({ info, stockInfo }) => {
+const TitleBox = ({ info, stockInfo, style, icon }) => {
     const [icons, setIcons] = useState([]);
     useEffect(() => {
         getIcon(info);
@@ -38,7 +38,7 @@ const TitleBox = ({ info, stockInfo }) => {
         }
     };
     return (
-        <div className="title__box">
+        <div className="title__box" style={style ? style : {}}>
             {icons.map((icon, i) => (
                 <span key={i} className="ord__char" style={{ backgroundColor: icon === '長' && '#6c7b94' }}>
                     {icon}
@@ -48,32 +48,34 @@ const TitleBox = ({ info, stockInfo }) => {
             <div className="name__zh">
                 <span className="bs">{info.BS === 'B' ? '買進' : '賣出'}</span>
                 <span>{wordingService(info.name, 13)}</span>
-                <Tooltip
-                    placement="bottom"
-                    title={
-                        <>
-                            <span>買賣類別</span>
-                            <span className="tooltip__val">{getType()}</span>
-                            <br />
-                            <span>幣別</span>
-                            <span className="tooltip__val">{stockInfo['@CHCurrency']}</span>
-                            <br />
-                            <span>長效單</span>
-                            <span className="tooltip__val">
-                                {info.GTCDate ? moment(info.GTCDate).format('YYYY/MM/DD') : '--'}
-                            </span>
-                            <br />
-                            <span>委託書號</span>
-                            <span className="tooltip__val">{info.OrderNo || '--'}</span>
-                            <br />
-                            <span>下單來源</span>
-                            <span className="tooltip__val">{info.Source}</span>
-                        </>
-                    }
-                    color="white"
-                >
-                    <img className="info__icon" src={infoIcon} />
-                </Tooltip>
+                {icon && (
+                    <Tooltip
+                        placement="bottom"
+                        title={
+                            <>
+                                <span>買賣類別</span>
+                                <span className="tooltip__val">{getType()}</span>
+                                <br />
+                                <span>幣別</span>
+                                <span className="tooltip__val">{stockInfo['@CHCurrency']}</span>
+                                <br />
+                                <span>長效單</span>
+                                <span className="tooltip__val">
+                                    {info.GTCDate ? moment(info.GTCDate).format('YYYY/MM/DD') : '--'}
+                                </span>
+                                <br />
+                                <span>委託書號</span>
+                                <span className="tooltip__val">{info.OrderNo || '--'}</span>
+                                <br />
+                                <span>下單來源</span>
+                                <span className="tooltip__val">{info.Source}</span>
+                            </>
+                        }
+                        color="white"
+                    >
+                        <img className="info__icon" src={infoIcon} />
+                    </Tooltip>
+                )}
             </div>
             <style jsx>{`
                 .info__icon {

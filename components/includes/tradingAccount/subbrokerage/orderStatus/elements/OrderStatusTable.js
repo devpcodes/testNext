@@ -118,7 +118,12 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
                 render: (text, record) => {
                     return (
                         <>
-                            <ControlBtns BS={record.BS} CanModify={record.CanModify} CanCancel={record.CanCancel} />
+                            <ControlBtns
+                                BS={record.BS}
+                                CanModify={record.CanModify}
+                                CanCancel={record.CanCancel}
+                                data={record}
+                            />
                         </>
                     );
                 },
