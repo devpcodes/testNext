@@ -117,7 +117,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 width: 100,
                 render: (text, record) => {
                     return (
-                        <>
+                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             <ControlBtns
                                 BS={record.BS}
                                 CanModify={record.CanModify}
@@ -125,7 +125,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                                 data={record}
                                 successHandler={successHandler}
                             />
-                        </>
+                        </div>
                     );
                 },
             },
@@ -137,7 +137,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 width: 100,
                 ...getColumnSearchProps('StateMsg'),
                 render: (text, record) => {
-                    return <>{text}</>;
+                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</div>;
                 },
             },
             {
@@ -150,7 +150,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 render: (text, record) => {
                     const marketID = record.StockID.split('.').slice(-1).pop();
                     const market = marketName(marketID).name;
-                    return <>{market}</>;
+                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
                 },
             },
             {
@@ -161,7 +161,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 width: 100,
                 render: (text, record) => {
                     const symbol = text.substring(0, text.lastIndexOf('.'));
-                    return <>{symbol}</>;
+                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
                 },
             },
             {
@@ -170,7 +170,11 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 key: 'name',
                 width: 200,
                 render: (text, record) => {
-                    return <span style={{ whiteSpace: 'pre-wrap' }}>{text}</span>;
+                    return (
+                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {text}
+                        </span>
+                    );
                 },
             },
             {
@@ -183,7 +187,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                         <span
                             style={{
                                 color: text === 'B' ? '#f45a4c' : '#22a16f',
-                                opacity: record.status_code == 4 ? 0.45 : 1,
+                                opacity: record.State === '99' ? 0.45 : 1,
                             }}
                         >
                             {text === 'B' ? '買' : '賣'}
@@ -201,7 +205,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                     const icons = goOrderMapping(priceType, record.GTCDate);
                     const marketID = record.StockID.split('.').slice(-1).pop();
                     return (
-                        <span>
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             {marketID === 'US' && (
                                 <>
                                     {icons.map((icon, index) => {
@@ -253,7 +257,11 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'right',
                 width: 100,
                 render: (text, record) => {
-                    return <span>{!isNaN(text) ? formatNum(parseFloat(text)) : 0}</span>;
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
+                        </span>
+                    );
                 },
             },
             {
@@ -263,7 +271,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'right',
                 width: 100,
                 render: (text, record) => {
-                    return <span>{text}</span>;
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
                 },
             },
             {
@@ -278,7 +286,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                         record.cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
                         cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
                     }
-                    return <span>{cancel}</span>;
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{cancel}</span>;
                 },
             },
             {
@@ -288,7 +296,9 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'right',
                 width: 100,
                 render: (text, record) => {
-                    return <span>{parseFloat(text) || '--'}</span>;
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
+                    );
                 },
             },
             {
@@ -298,7 +308,9 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'right',
                 width: 100,
                 render: (text, record) => {
-                    return <span>{parseFloat(text) || '--'}</span>;
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
+                    );
                 },
             },
             {
@@ -308,7 +320,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 width: 100,
                 align: 'center',
                 render: (text, record) => {
-                    return <span>{text || '--'}</span>;
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
                 },
             },
             {
@@ -319,7 +331,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'center',
                 width: 100,
                 render: (text, record) => {
-                    return <span>{getTouchPrice(record)}</span>;
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{getTouchPrice(record)}</span>;
                 },
             },
             {
@@ -329,7 +341,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'center',
                 width: 100,
                 render: (text, record) => {
-                    return <span>{text || '--'}</span>;
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
                 },
             },
             {
@@ -342,7 +354,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                     const time = getTimerHandler(record);
                     const timeArr = time.split(' ');
                     return (
-                        <div>
+                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             <p style={{ marginBottom: 0 }}>{timeArr[0]}</p>
                             <p style={{ marginBottom: 0 }}>{timeArr[1]}</p>
                         </div>
@@ -356,7 +368,11 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'center',
                 width: 150,
                 render: (text, record) => {
-                    return <span style={{ whiteSpace: 'pre-wrap' }}>{text}</span>;
+                    return (
+                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {text}
+                        </span>
+                    );
                 },
             },
             {
@@ -366,7 +382,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 align: 'center',
                 width: 150,
                 render: (text, record) => {
-                    return <span>{currencyChName(text)}</span>;
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
                 },
             },
         ];
