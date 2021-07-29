@@ -38,7 +38,9 @@ const OrderStatusPage = () => {
                         setControlReload(prev => {
                             return (prev += 1);
                         });
-
+                        setTimeout(() => {
+                            setControlReload(0);
+                        }, 1000);
                         setShowDel(false);
                         dispatch(
                             setModal({
