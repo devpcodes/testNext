@@ -8,6 +8,7 @@ import { getTT } from './dataMapping';
 export const delCancelList = async (currentAccount, data) => {
     const resList = [];
     for (let info of data) {
+        console.log('info', info, currentAccount);
         const marketID = info.StockID.split('.').slice(-1).pop();
         const res = await postCancel({
             currentAccount,

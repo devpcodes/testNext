@@ -43,7 +43,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
             };
             return postData;
         } else {
-            return {};
+            return null;
         }
     }, [currentAccount]);
 
