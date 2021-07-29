@@ -49,6 +49,21 @@ export const postCancel = async ({ currentAccount, BS, CID, Creator, DJCrypt_pwd
         true,
         token,
     );
+    console.log('submit', {
+        AID: currentAccount.broker_id + currentAccount.account,
+        BS,
+        CID,
+        ClientIP: getCookie('client_ip'),
+        Creator,
+        DJCrypt_pwd,
+        Exchid,
+        OID,
+        OT,
+        StockID,
+        TT,
+        ca_content,
+        token,
+    });
     if (checkSignCA(ca_content)) {
         try {
             const res = await getA8Instance('v2', undefined, true).post(url, {
