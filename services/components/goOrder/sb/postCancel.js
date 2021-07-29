@@ -64,6 +64,7 @@ export const postCancel = async ({ currentAccount, BS, CID, Creator, DJCrypt_pwd
         ca_content,
         token,
     });
+    //checkSignCA(ca_content)
     if (checkSignCA(ca_content)) {
         try {
             const res = await getA8Instance('v2', undefined, true).post(url, {
