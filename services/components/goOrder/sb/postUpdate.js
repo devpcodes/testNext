@@ -54,7 +54,7 @@ export const postUpdate = async ({
                 NewQty,
             });
             if (res.data.success === 'True') {
-                return res.data.result.msg || '改量成功';
+                return res.data.result.msg || '改量已送出';
             } else {
                 return res.data.result.msg;
             }

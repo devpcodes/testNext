@@ -37,6 +37,7 @@ export const defaultProductInfo = {
     name: 'Apple',
     market: 'US',
     marketType: 'SB',
+    exchange: 'NASDAQ',
 };
 const Info = ({ stockid }) => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -274,7 +275,16 @@ const Info = ({ stockid }) => {
                 if (quote.tm) {
                     tm = insert(quote.tm, 2, ':');
                 }
-                return td + ' ' + tm + ' ' + '收盤價';
+                let info = '收盤價';
+                if (quote?.dc === 'realStream' || quote?.dc === 'real') {
+                    info = '即時報價';
+                }
+                if (quote?.dc === 'delay') {
+                    info = '延遲15分';
+                }
+                //info = quote?.dc === 'realStream' && '即時報價';
+                // info = quote?.dc === 'delay' && '延遲15分';
+                return td + ' ' + tm + ' ' + info;
             } else {
                 return '';
             }
