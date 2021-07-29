@@ -22,6 +22,7 @@ export const delCancelList = async (currentAccount, data) => {
             StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
             TT: getTT(marketID),
         });
+        console.log('res', res);
         resList.push(res);
     }
     return new Promise((resolve, reject) => {
