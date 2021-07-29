@@ -389,27 +389,27 @@ export const Info = ({ stockid }) => {
         }
     };
 
-    // const getSelect = useCallback(async () => {
-    //     let exchange;
-    //     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-    //     switch (type) {
-    //         case 'S':
-    //             exchange = 'TAI';
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     const reqData = {
-    //         symbol: code,
-    //         exchange: exchange,
-    //         market: type,
-    //         isShowDetail: true,
-    //         isSocalLogin: isSocalLogin,
-    //         token: isSocalLogin ? getSocalToken() : getToken(),
-    //     };
-    //     const res = await fetchCheckSelfSelect(reqData);
-    //     dispatch(setSelectInfo(res));
-    // });
+    const getSelect = useCallback(async () => {
+        let exchange;
+        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+        switch (type) {
+            case 'S':
+                exchange = 'TAI';
+                break;
+            default:
+                break;
+        }
+        const reqData = {
+            symbol: code,
+            exchange: exchange,
+            market: type,
+            isShowDetail: true,
+            isSocalLogin: isSocalLogin,
+            token: isSocalLogin ? getSocalToken() : getToken(),
+        };
+        const res = await fetchCheckSelfSelect(reqData);
+        dispatch(setSelectInfo(res));
+    });
 
     const getTimeWording = (hour, min, sec) => {
         if (!tradingDate) {
@@ -592,7 +592,7 @@ export const Info = ({ stockid }) => {
                 </MoreInfo>
             </div>
 
-            {/* <div className="more__info__container">
+            <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
                     <button
@@ -603,14 +603,14 @@ export const Info = ({ stockid }) => {
                     </button>
                 </div>
             </div>
-            <div className="page__mask"></div> */}
+            <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            {/* <AddSelectStock
+            <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
                 reloadSelect={getSelect}
-            /> */}
+            />
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;

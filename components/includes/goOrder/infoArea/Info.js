@@ -247,12 +247,12 @@ export const Info = ({ stockid }) => {
         }
     }, [code, lot, isLogin]);
 
-    // useEffect(async () => {
-    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
-    //         return;
-    //     }
-    //     getSelect();
-    // }, [code, isLogin, isSelfSelectVisitable]);
+    useEffect(async () => {
+        if (!isLogin && Object.keys(socalLoginData).length === 0) {
+            return;
+        }
+        getSelect();
+    }, [code, isLogin, isSelfSelectVisitable]);
 
     useEffect(() => {
         if (!code) {
@@ -262,11 +262,11 @@ export const Info = ({ stockid }) => {
     }, [code]);
 
     // 暫時移除自選邏輯
-    // useEffect(() => {
-    //     if (selectInfo) {
-    //         reloadSelfSelectSmallIcon();
-    //     }
-    // }, [selectInfo]);
+    useEffect(() => {
+        if (selectInfo) {
+            reloadSelfSelectSmallIcon();
+        }
+    }, [selectInfo]);
 
     const updateQueryStringParameter = (uri, key, value) => {
         var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
@@ -561,22 +561,22 @@ export const Info = ({ stockid }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    {/* <button
+                    <button
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
                         {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
-                    </button> */}
+                    </button>
                 </div>
             </div>
             <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            {/* <AddSelectStock
+            <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 isEdit={false}
                 reloadSelect={getSelect}
-            /> */}
+            />
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
