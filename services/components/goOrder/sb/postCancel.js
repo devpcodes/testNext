@@ -5,7 +5,7 @@ import { checkSignCA, sign } from '../../../webCa';
 import { getWebId } from '../getWebId';
 import { getTT } from './dataMapping';
 
-export const delCancelList = async (currentAccount, data) => {
+export const delCancelList = async (currentAccount, data, platform) => {
     const resList = [];
     for (let info of data) {
         console.log('info', info, currentAccount);

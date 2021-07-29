@@ -8,6 +8,7 @@ import ControlBar from '../elements/ControlBar';
 import DelButton from '../../../vipOrderStatus/buttons/DelButton';
 import { setModal } from '../../../../../../store/components/layouts/action';
 import { delCancelList } from '../../../../../../services/components/goOrder/sb/postCancel';
+import { usePlatform } from '../../../../../../hooks/usePlatform';
 
 const OrderStatusPage = () => {
     const [touchPriceFilterValue, setTouchPriceFilterValue] = useState(false);
@@ -16,6 +17,7 @@ const OrderStatusPage = () => {
     const [showDel, setShowDel] = useState(false);
     const userInfo = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
+    const platform = usePlatform();
     const delClickHandler = () => {
         if (selectData.length > 0) {
             dispatch(
@@ -26,7 +28,7 @@ const OrderStatusPage = () => {
                     type: 'confirm',
                     onOk: async () => {
                         dispatch(setModal({ visible: false }));
-                        let res = await delCancelList(userInfo, selectData, true);
+                        let res = await delCancelList(userInfo, selectData, platform, true);
                         const delSuccess = res.filter(item => {
                             if (item === 'True') {
                                 return true;
