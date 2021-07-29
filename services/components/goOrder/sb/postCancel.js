@@ -2,6 +2,32 @@ import { getA8Instance } from '../../../myAxios';
 import { getToken } from '../../../user/accessToken';
 import { getCookie } from '../../layouts/cookieController';
 import { checkSignCA, sign } from '../../../webCa';
+import { getWebId } from '../getWebId';
+import { getTT } from './dataMapping';
+
+export const delCancelList = async (currentAccount, data) => {
+    const resList = [];
+    for (let info of data) {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        const res = await postCancel({
+            currentAccount,
+            BS: info.BS,
+            CID: getWebId(platform, 'recommisiioned'),
+            Creator: currentAccount.idno,
+            DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+            Exchid: marketID,
+            OID: info.OID,
+            OT: '0',
+            StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+            TT: getTT(marketID),
+        });
+        resList.push(res);
+    }
+    return new Promise((resolve, reject) => {
+        resolve(resList);
+    });
+};
+
 export const postCancel = async ({ currentAccount, BS, CID, Creator, DJCrypt_pwd, Exchid, OID, OT, StockID, TT }) => {
     var url = `/SubBrokerage/SecuritiesTrade/Cancel`;
     let token = getToken();

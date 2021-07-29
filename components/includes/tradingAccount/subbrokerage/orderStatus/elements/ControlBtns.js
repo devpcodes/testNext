@@ -147,12 +147,14 @@ const ControlBtns = ({ BS, CanCancel, CanModify, data, successHandler }) => {
                     content: (
                         <UpdateQtyModal
                             title={
-                                <TitleBox
-                                    info={data}
-                                    stockInfo={stockInfo}
-                                    style={{ marginBottom: '10px' }}
-                                    showIcon={false}
-                                />
+                                <>
+                                    <TitleBox
+                                        info={data}
+                                        stockInfo={stockInfo}
+                                        style={{ marginBottom: '10px' }}
+                                        showIcon={false}
+                                    />
+                                </>
                             }
                             color={BS === 'B' ? '#f45a4c' : '#22a16f'}
                             price={parseFloat(data.Price)}

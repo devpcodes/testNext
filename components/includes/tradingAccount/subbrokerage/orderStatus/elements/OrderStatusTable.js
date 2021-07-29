@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
@@ -19,7 +19,7 @@ import { useCheckMobile } from '../../../../../../hooks/useCheckMobile';
 import { timeFormatter } from '../../../../../../services/timeFormatter';
 import ControlBtns from './ControlBtns';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
-const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
+const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -31,9 +31,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
     const [marketFilterValue, setMarketFilterValue] = useState('');
     const [stateMsgFilterValue, setStateMsgFilterValue] = useState('');
     const [reload, setReload] = useState(0);
-    // useEffect(() => {
-    //     reload.current += 1;
-    // }, [])
+    const currentReload = useRef(0);
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -49,7 +47,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
         }
     }, [currentAccount]);
 
-    const { data: fetchData } = useSWR([JSON.stringify(postData), reload], postQuickSearchWithSwr, {
+    const { data: fetchData } = useSWR([JSON.stringify(postData), reload, controlReload], postQuickSearchWithSwr, {
         onError: (error, key) => {
             Modal.error({
                 title: error,
@@ -83,6 +81,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
                 const marketID = item.StockID.split('.').slice(-1).pop();
                 item.name = symbol;
                 newSymbolList.push({ exchange: marketID, code: symbol });
+                setSelectedRowKeys([]);
                 setSymbolList(newSymbolList);
                 return item;
             });
@@ -423,7 +422,8 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
                         data={[
                             { text: '全部', value: 'ALL' },
                             { text: '未完全成交', value: '未完全成交' },
-                            { text: '委託傳送中', value: '委託傳送中' },
+                            { text: '完全成交', value: '完全成交' },
+                            { text: '部份成交', value: '部份成交' },
                         ]}
                     />
                 ),
@@ -483,8 +483,11 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
     );
 
     const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys, selectedRows);
+        console.log('sssss', selectedRowKeys, selectedRows);
         setSelectedRowKeys(selectedRowKeys);
+        if (showDelBtn != null) {
+            showDelBtn(selectedRows);
+        }
     });
 
     const onMarketFilterSubmit = useCallback((confirm, val) => {
@@ -533,7 +536,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
         }
     });
 
-    console.log('searchColumns', searchColumns);
+    console.log('searchColumns......', currentReload.current, controlReload, fetchData);
     return (
         <div>
             <AccountTable
@@ -556,7 +559,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload }) => {
                             資料加載中...
                         </div>
                     ),
-                    spinning: fetchData == null && !error ? true : false,
+                    spinning: (fetchData == null && !error) || controlReload != 0 ? true : false,
                 }}
                 sticky={true}
                 rowSelection={{
