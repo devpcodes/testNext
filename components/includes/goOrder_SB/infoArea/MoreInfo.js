@@ -18,6 +18,7 @@ const MoreInfo = ({ children }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const type = useSelector(store => store.goOrder.type);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
     const dispatch = useDispatch();
 
     let defaultMoreItems = [
@@ -66,12 +67,31 @@ const MoreInfo = ({ children }) => {
             setMoreItems(defaultMoreItems);
         }
     }, [code]);
+
+    useEffect(() => {
+        if (type === 'H') {
+            moreItemHandler(defaultMoreItems, code, type, productInfo);
+        }
+    }, [code, type, productInfo]);
     // 暫時移除自選邏輯
     useEffect(() => {
         if (selectInfo) {
             reloadSelfSelectSmallIcon();
         }
     }, [selectInfo]);
+
+    const moreItemHandler = (defaultMoreItems, code, type, productInfo) => {
+        if (type === 'H') {
+            defaultMoreItems[0].link = `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_SubBrokerage/?tab=2&symbol=${code}&exch=${productInfo?.exchange}`;
+            defaultMoreItems[1].link =
+                productInfo?.market === 'US'
+                    ? `https://aiinvest.sinotrade.com.tw/foreign/product/quote/${code}`
+                    : 'https://aiinvest.sinotrade.com.tw/foreign';
+            defaultMoreItems[2].link = 'https://www.sinotrade.com.tw/richclub/oversea';
+        }
+        setMoreItems(defaultMoreItems);
+    };
+
     const reloadSelfSelectSmallIcon = useCallback(() => {
         const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
         const index = cloneMoreItems.findIndex(obj => obj.id === '4');
@@ -192,12 +212,12 @@ const MoreInfo = ({ children }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    <button
+                    {/* <button
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
                         {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="page__mask"></div>

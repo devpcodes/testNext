@@ -134,7 +134,9 @@ const SearchList = ({ active }) => {
                                                         display: 'inline-block',
                                                         fontSize: '1rem',
                                                         background:
-                                                            record.BS === 'B'
+                                                            icon === '長'
+                                                                ? '#6c7b94'
+                                                                : record.BS === 'B'
                                                                 ? themeColor.buyTabColor
                                                                 : themeColor.sellTabColor,
                                                         color: 'white',
@@ -206,7 +208,7 @@ const SearchList = ({ active }) => {
                 sortOrder: sortKey === 'StateMsg' && sortOrder,
                 render: (text, record) => {
                     let showBtn = false;
-                    if (record.CanCancel !== 'N' || record.CanModify !== 'N') {
+                    if (record.CanCancel === 'Y' || record.CanModify === 'Y') {
                         showBtn = true;
                     }
                     return (
@@ -246,7 +248,7 @@ const SearchList = ({ active }) => {
                                             >
                                                 刪單
                                             </Button>
-                                            {record.CanCancel !== 'N' ? null : (
+                                            {record.CanModify === 'Y' && (
                                                 <Button
                                                     style={{
                                                         width: '102px',
@@ -402,13 +404,13 @@ const SearchList = ({ active }) => {
                 item.key = index;
                 const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
                 const marketID = item.StockID.split('.').slice(-1).pop();
+                item.name = symbol;
                 if (marketID !== 'US') {
                     symbolList.push({ exchange: marketID, code: symbol });
                 }
                 return item;
             });
             getSymbolName(symbolList, res);
-            console.log(res, symbolList);
             setData(res);
         } catch (error) {
             console.log(error);
@@ -433,7 +435,7 @@ const SearchList = ({ active }) => {
                     }
                     return item;
                 });
-                // console.log('data', newData);
+                console.log('data', newData);
                 setData(newData);
             } catch (error) {}
         }

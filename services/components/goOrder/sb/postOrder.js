@@ -6,9 +6,9 @@ export const postOrder = async data => {
         if (res.data.success === 'True') {
             return res.data;
         } else {
-            throw res?.data?.result?.msg || 'error';
+            throw res?.data?.result?.Msg || 'error';
         }
     } catch (error) {
-        throw error?.response?.data?.result?.msg || '伺服器錯誤';
+        throw error?.response?.data?.result?.msg || error || '伺服器錯誤';
     }
 };

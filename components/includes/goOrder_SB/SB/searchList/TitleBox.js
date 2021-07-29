@@ -4,6 +4,7 @@ import infoIcon from '../../../../../resources/images/components/goOrder/attenti
 import { getCurrency, getPriceType, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
 import { themeColor } from '../../panel/PanelTabs';
 import moment from 'moment';
+import { wordingService } from '../../../../../services/components/goOrder/sb/wordingService';
 
 const TitleBox = ({ info, stockInfo }) => {
     const [icons, setIcons] = useState([]);
@@ -39,14 +40,14 @@ const TitleBox = ({ info, stockInfo }) => {
     return (
         <div className="title__box">
             {icons.map((icon, i) => (
-                <span key={i} className="ord__char">
+                <span key={i} className="ord__char" style={{ backgroundColor: icon === '長' && '#6c7b94' }}>
                     {icon}
                 </span>
             ))}
 
             <div className="name__zh">
                 <span className="bs">{info.BS === 'B' ? '買進' : '賣出'}</span>
-                <span>{info.name}</span>
+                <span>{wordingService(info.name, 13)}</span>
                 <Tooltip
                     placement="bottom"
                     title={

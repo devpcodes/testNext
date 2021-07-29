@@ -29,6 +29,18 @@ const reLoginHandler = async () => {
     }
 };
 
+const reLoginAndStopFetchHandler = async () => {
+    try {
+        sessionStorage.setItem('newweb_modal', '您在其他裝置上進行登入，已強制登出');
+        await logout();
+        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login?currentPath=${encodeURIComponent(
+            getCurrentPath(),
+        )}`;
+    } catch (error) {
+        console.error(`logout error:`, error);
+    }
+};
+
 const errorHandler = (error, modal = true) => {
     const isServer = checkServer();
     const defaultErrorMsg = '伺服器錯誤，請稍後再試';
@@ -38,6 +50,9 @@ const errorHandler = (error, modal = true) => {
             switch (error.response.status) {
                 case 401:
                     reLoginHandler();
+                    break;
+                case 403:
+                    reLoginAndStopFetchHandler();
                     break;
                 default:
                     modal &&

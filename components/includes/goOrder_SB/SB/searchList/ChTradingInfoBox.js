@@ -8,6 +8,7 @@ const { TabPane } = Tabs;
 const ChTradingInfoBox = () => {
     const [tabKey, setTabKey] = useState('2');
     const info = useSelector(store => store.goOrderSB.confirmBoxChanValInfo);
+    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     // const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     // useEffect(() => {
     //     // if (checkPriceBtn(info)) {
@@ -40,7 +41,7 @@ const ChTradingInfoBox = () => {
                     </TabPane>
                 )} */}
                 <TabPane tab="改量" key="2">
-                    {tabKey === '2' && <ChangeBox info={info} />}
+                    {tabKey === '2' && <ChangeBox info={info} stockInfo={stockInfo} />}
                 </TabPane>
             </Tabs>
             <style jsx global>{`

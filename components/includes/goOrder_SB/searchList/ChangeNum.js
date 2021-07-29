@@ -1,7 +1,7 @@
 import { Input, Button } from 'antd';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { themeColor } from '../panel/PanelTabs';
-// import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle.svg';
+import infoIcon from '../../../../resources/images/components/goOrder/attention-info-circle.svg';
 const ChangeNum = ({
     title,
     val,
@@ -15,6 +15,8 @@ const ChangeNum = ({
     conditionText,
     textAlign,
     style,
+    showIcon,
+    iconClickHandler,
 }) => {
     const valChangeHandler = e => {
         console.log(e.target.value);
@@ -25,7 +27,7 @@ const ChangeNum = ({
             <div className="select__box">
                 <div className="select__label">
                     {title}
-                    {/* <img className="info__icon" src={infoIcon} /> */}
+                    {showIcon && <img className="info__icon" src={infoIcon} onClick={iconClickHandler} />}
                 </div>
             </div>
             <div className="input__box">
@@ -45,7 +47,7 @@ const ChangeNum = ({
             <style jsx>{``}</style>
             <style global jsx>{`
                 .select__label {
-                    width: 62px;
+                    width: ${showIcon ? '70px' : '62px'};
                     font-size: 1.6rem;
                     color: #0d1623;
                     margin-top: 4px;
@@ -157,7 +159,7 @@ const ChangeNum = ({
                 }
                 .info__icon {
                     margin-top: -3px;
-                    margin-left: 5px;
+                    margin-left: 2px;
                 }
             `}</style>
         </div>

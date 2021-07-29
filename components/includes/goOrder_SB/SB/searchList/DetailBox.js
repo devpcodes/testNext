@@ -9,6 +9,7 @@ import infoIcon from '../../../../../resources/images/components/goOrder/attenti
 import { timeFormatter } from '../../../../../services/timeFormatter';
 import { getPriceType, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
 import TitleBox from './TitleBox';
+import { setConfirmBoxClickSource, setConfirmBoxTitle } from '../../../../../store/goOrderSB/action';
 
 const DetailBox = () => {
     const dispatch = useDispatch();
@@ -27,7 +28,11 @@ const DetailBox = () => {
 
     const showHandler = () => {
         // return mappingShowChangeBtn(info.status_code);
-        return false;
+        if (info.CanModify === 'Y') {
+            return true;
+        } else {
+            return false;
+        }
     };
 
     const showInfoHandler = status_code => {
@@ -181,7 +186,7 @@ const DetailBox = () => {
                             border: 'none',
                         }}
                         onClick={() => {
-                            window.open(process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount?option=S&tab=inventory');
+                            window.open(process.env.NEXT_PUBLIC_SUBPATH + '/TradingAccount?option=SB&tab=position');
                         }}
                         // loading={}
                     >

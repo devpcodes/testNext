@@ -1,6 +1,27 @@
+import { useState, useEffect } from 'react';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'antd';
+import { setRefreshCode } from '../../../../store/goOrderSB/action';
 const UpdateBar = ({ text }) => {
+    const code = useSelector(store => store.goOrder.code);
+    const refreshCode = useSelector(store => store.goOrderSB.refreshCode);
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (refreshCode === '') {
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
+        } else {
+            setLoading(true);
+        }
+    }, [refreshCode]);
+
+    const reloadHandler = () => {
+        dispatch(setRefreshCode(code));
+    };
     return (
         <>
             <div className="noLogin__box">
@@ -21,8 +42,9 @@ const UpdateBar = ({ text }) => {
                         border: 'none',
                     }}
                     onClick={() => {
-                        // reloadHandler();
+                        reloadHandler();
                     }}
+                    loading={loading}
                 >
                     更新
                 </Button>

@@ -1,64 +1,143 @@
 import { useEffect, useState, useRef } from 'react';
-import { Button, Tooltip, Modal, Tabs } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import QtyBox from '../sbPanel/QtyBox';
 import { themeColor } from '../../panel/PanelTabs';
+import TitleBox from './TitleBox';
+import { setConfirmBoxOpen, setSearchListSubmitSuccess } from '../../../../../store/goOrderSB/action';
+import { usePlatform } from '../../../../../hooks/usePlatform';
+import { getPriceType, getTT, goOrderMapping } from '../../../../../services/components/goOrder/sb/dataMapping';
+import { getWebId } from '../../../../../services/components/goOrder/getWebId';
+import { postUpdate } from '../../../../../services/components/goOrder/sb/postUpdate';
+import { postCancel } from '../../../../../services/components/goOrder/sb/postCancel';
 
-const qtyUnit = 1;
-const ChangeBox = ({ type, tabKey, btnClassName, info }) => {
+const ChangeBox = ({ type, tabKey, btnClassName, info, stockInfo }) => {
     const dispatch = useDispatch();
+    const currentAccount = useSelector(store => store.user.currentAccount);
+    const qty = useSelector(store => store.goOrderSB.qty);
+    const [submitLoading, setSubmitLoading] = useState(false);
+    const platform = usePlatform();
+    useEffect(() => {
+        getCancel(info);
+    }, [info]);
+
+    const getCancel = () => {
+        if (info.hasOwnProperty('Qcurrent') && info['Qmatched'] != null && !isNaN(info['Qmatched'])) {
+            info.cancel = parseFloat((info.Qoriginal - parseFloat(info['Qnext'])).toPrecision(12));
+            return parseFloat((info.Qoriginal - parseFloat(info['Qnext'])).toPrecision(12));
+        }
+    };
+
+    const getCanCancelQty = info => {
+        return parseFloat(info?.Qoriginal) - parseFloat(info?.cancel) - parseFloat(info?.Qmatched);
+    };
+
+    const closeHandler = () => {
+        dispatch(setConfirmBoxOpen(false));
+    };
+
+    const getType = info => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        const priceType = getPriceType(info.PriceType);
+        let arr = goOrderMapping(priceType, info.GTCDate);
+        arr = arr.filter(item => {
+            if (item === 'ANY' || item === 'AON') {
+                return item;
+            }
+        });
+        if (marketID !== 'US') {
+            return '--';
+        } else {
+            return arr[0] || '--';
+        }
+    };
+
+    const submitData = async (info, currentAccount) => {
+        const marketID = info.StockID.split('.').slice(-1).pop();
+        console.log('marketID', marketID);
+        let newQty = getCanCancelQty(info) - qty;
+
+        const type = getType(info);
+        console.log('newQty', newQty, type, qty);
+        if (type === 'AON' && newQty < 100 && newQty != 0) {
+            message.error({
+                title: '資料格式錯誤',
+                content: 'AON 委託不得低於 100 股',
+            });
+            return;
+        }
+        if (newQty == 0) {
+            try {
+                setSubmitLoading(true);
+                const resVal = await postCancel({
+                    currentAccount,
+                    BS: info.BS,
+                    CID: getWebId(platform, 'recommisiioned'),
+                    Creator: currentAccount.idno,
+                    DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                    Exchid: marketID,
+                    OID: info.OID,
+                    OT: '0',
+                    StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                    TT: getTT(marketID),
+                });
+                setSubmitLoading(false);
+                dispatch(setSearchListSubmitSuccess(true));
+                Modal.info({
+                    content: resVal,
+                });
+                closeHandler();
+            } catch (error) {
+                setSubmitLoading(false);
+                message.info({
+                    content: error,
+                });
+            }
+        } else {
+            try {
+                setSubmitLoading(true);
+                const resVal = await postUpdate({
+                    currentAccount,
+                    BS: info.BS,
+                    CID: getWebId(platform, 'recommisiioned'),
+                    Creator: currentAccount.idno,
+                    DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                    Exchid: marketID,
+                    OID: info.OID,
+                    OT: '0',
+                    StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                    TT: getTT(marketID),
+                    NewQty: newQty,
+                });
+                setSubmitLoading(false);
+                dispatch(setSearchListSubmitSuccess(true));
+                Modal.success({
+                    content: resVal,
+                });
+                closeHandler();
+            } catch (error) {
+                setSubmitLoading(false);
+                message.info({
+                    content: error,
+                });
+            }
+        }
+    };
     return (
         <>
             <div className="tradingInfo__container">
-                <div className="title__box">
-                    <span className="ord__char">{123}</span>
-                    <div className="name__zh">
-                        <span className="bs">{'買進'}</span>
-                        {123}
-                        {/* <Tooltip
-                            placement="bottom"
-                            title={
-                                <>
-                                    <span>買賣條件</span>
-                                    <span className="tooltip__val">
-                                        {mappingCommissionedCodeTradingAcc(
-                                            info.ord_bs,
-                                            info.ord_type2,
-                                            info.market_id,
-                                            info.ord_type1,
-                                        )}
-                                    </span>
-                                    <br />
-                                    <span>委託條件 </span>
-                                    <span className="tooltip__val">{info.time_in_force}</span>
-                                    <br />
-                                    <span>委託書號 </span>
-                                    <span className="tooltip__val">{info.ord_no}</span>
-                                    <br />
-                                    <span>網路單號 </span>
-                                    <span className="tooltip__val">{info.sord_seq}</span>
-                                    <br />
-                                    <span>下單來源</span>
-                                    <span className="tooltip__val">{mappingWebId(info.web_id)}</span>
-                                </>
-                            }
-                            color="white"
-                        >
-                            <img className="info__icon" src={infoIcon} />
-                        </Tooltip> */}
-                    </div>
-                </div>
+                <TitleBox info={info} stockInfo={stockInfo} />
 
                 <div className="price__box">
                     <span className="price__label">委託價格</span>
-                    <span className="price__val">100</span>
+                    <span className="price__val">{!isNaN(info.Price) ? parseFloat(info.Price) : 0}</span>
                 </div>
                 <div className="qty__box">
                     <span className="qty__label">剩餘數量</span>
-                    <span className="qty__val">{12}</span>
+                    <span className="qty__val">{getCanCancelQty(info)}</span>
                     <span className="qty__unit">股</span>
                 </div>
-                <QtyBox label="欲減量" color="#254a91" />
+                <QtyBox label="欲減量" color="#254a91" parentVal={getCanCancelQty(info)} />
 
                 <div
                     className={btnClassName}
@@ -96,8 +175,8 @@ const ChangeBox = ({ type, tabKey, btnClassName, info }) => {
                             fontWeight: 'bold',
                             border: 'none',
                         }}
-                        // onClick={submitData}
-                        // loading={submitLoading}
+                        onClick={submitData.bind(null, info, currentAccount)}
+                        loading={submitLoading}
                     >
                         確定
                     </Button>

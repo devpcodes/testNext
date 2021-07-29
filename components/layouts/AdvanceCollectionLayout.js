@@ -10,30 +10,52 @@ import { getToken } from '../../services/user/accessToken';
 import { ReducerContext } from '../../pages/AdvanceCollection';
 import { ACCOUNTS, DISABLED } from '../../store/advanceCollection/actionType';
 import { SELECTED } from '../../store/advanceCollection/actionType';
+import { fetchCheckTradingDate } from '../../services/components/goOrder/fetchCheckTradingDate';
 const AdvanceCollectionLayout = function ({ children, startTime, endTime, type }) {
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [state, dispatch] = useContext(ReducerContext);
 
     useEffect(() => {
-        if (checkTimeHandler() && checkLoginHandler(type)) {
-            setVerifySuccess(true);
-        }
+        // if (checkTimeHandler() && checkLoginHandler(type)) {
+        //     setVerifySuccess(true);
+        // }
+        checkHandler(type);
     }, [type]);
 
-    const checkTimeHandler = () => {
-        const formatTime = 'HH:mm:ss';
-        let time = moment().format(formatTime);
-        time = moment(time, formatTime);
-        const beforeTime = moment(startTime, formatTime);
-        const afterTime = moment(endTime, formatTime);
+    const checkHandler = async type => {
+        let chTime = await checkTimeHandler();
+        let chLogin = checkLoginHandler(type);
+        if (chTime && chLogin) {
+            setVerifySuccess(true);
+        }
+    };
 
-        if (time.isBetween(beforeTime, afterTime)) {
-            return true;
-        } else {
-            // alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
-            dispatch({ type: DISABLED, payload: `目前非申請時間，請於營業日${startTime}-${endTime}申請` });
+    const checkTimeHandler = async () => {
+        // const formatTime = 'HH:mm:ss';
+        // let time = moment().format(formatTime);
+        // time = moment(time, formatTime);
+        // const beforeTime = moment(startTime, formatTime);
+        // const afterTime = moment(endTime, formatTime);
+        try {
+            const currentDate = moment().format('YYYYMMDD');
+            const res = await fetchCheckTradingDate(currentDate, 'reserve');
+            if (res?.result?.hasTrading) {
+                return true;
+            } else {
+                dispatch({ type: DISABLED, payload: `目前非申請時間，請於營業日${startTime}-${endTime}申請` });
+                return true;
+            }
+        } catch (error) {
             return true;
         }
+
+        // if (time.isBetween(beforeTime, afterTime)) {
+        //     return true;
+        // } else {
+        //     // alert(`目前非申請時間，請於營業日${startTime}-${endTime}申請`);
+        //     dispatch({ type: DISABLED, payload: `目前非申請時間，請於營業日${startTime}-${endTime}申請` });
+        //     return true;
+        // }
     };
 
     const checkLoginHandler = type => {

@@ -46,6 +46,7 @@ const SwitchBox = ({ color }) => {
                         selected={gtcDate}
                         onChange={dateChangeHandler}
                         popperPlacement="top-end"
+                        maxDate={new Date(gtcDate)}
                     />
                 </div>
             )}

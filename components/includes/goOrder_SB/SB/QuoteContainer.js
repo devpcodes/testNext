@@ -6,7 +6,7 @@ import DKbar from './quotes/DKbar';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 import NoData from './NoData';
 import { checkRealtimeMarket } from '../../../../services/components/goOrder/sb/checkRealtimeMarket';
-
+import { marketName } from '../../../../services/components/goOrder/sb/dataMapping';
 // import noDataIcon from '../../../../resources/images/components/goOrder/sb/img-default.svg';
 const QuoteContainer = () => {
     const panelHeight = useSelector(store => store.goOrder.panelHeight);
@@ -27,6 +27,7 @@ const QuoteContainer = () => {
         } else {
             setNoData(false);
         }
+        // console.log(marketName(productInfo?.market))
     }, [ric, productInfo]);
 
     const quoteContainerStyleHandler = () => {
@@ -73,7 +74,9 @@ const QuoteContainer = () => {
     return (
         <div className="quote__container" ref={quoteContainerElement}>
             <div className="chart__info">
-                <span className="text">報價時間／美東，幣別／{stockInfo['@CHCurrency'] || '--'}</span>
+                <span className="text">
+                    報價時間／{marketName(productInfo?.market)?.area}，幣別／{stockInfo['@CHCurrency'] || '--'}
+                </span>
                 <span className="line"></span>
             </div>
             {noData ? (

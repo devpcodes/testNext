@@ -77,6 +77,26 @@ const DateSelectBox = ({ style, width, selected, onChange, ...props }) => {
                 .date__container .react-datepicker__header {
                     border-bottom: 1px solid #d4d4d4;
                 }
+                .react-datepicker__navigation-icon {
+                    width: 100%;
+                    height: 100%;
+                }
+                .react-datepicker__navigation-icon--previous::before {
+                    right: 13px;
+                }
+                .react-datepicker__navigation-icon--next::before {
+                    left: 13px;
+                }
+                .react-datepicker__current-month {
+                    font-size: 1.2rem;
+                }
+                .date__container .react-datepicker__month-container {
+                    font-size: 1.1rem;
+                }
+                .react-datepicker-popper[data-placement='bottom-end'] .react-datepicker__triangle,
+                .react-datepicker-popper[data-placement='top-end'] .react-datepicker__triangle {
+                    left: 11px !important;
+                }
             `}</style>
         </div>
     );

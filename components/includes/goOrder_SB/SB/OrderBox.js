@@ -11,6 +11,7 @@ import { setSBActiveTabKey } from '../../../../store/goOrderSB/action';
 
 const OrderBox = ({
     StockId,
+    name,
     Price,
     Qty,
     BS,
@@ -23,6 +24,7 @@ const OrderBox = ({
     currency,
 }) => {
     const StockIdC = useRef('');
+    const nameC = useRef('');
     const PriceC = useRef('');
     const QtyC = useRef('');
     const BSC = useRef('');
@@ -46,6 +48,7 @@ const OrderBox = ({
         TouchedPriceC.current = TouchedPrice;
         marketC.current = market;
         currencyC.current = currency;
+        nameC.current = name;
     }, []);
 
     const getTypeHandler = () => {
@@ -76,7 +79,7 @@ const OrderBox = ({
                 currentAccount,
             });
             message.success({
-                content: '委託成功',
+                content: '委託已送出',
             });
             closeHandler();
             dispatch(setSBActiveTabKey('3'));
@@ -90,7 +93,7 @@ const OrderBox = ({
         <div>
             <div className="trade__info--title">
                 <div className="info__box">
-                    <div className="stock__name">{StockIdC.current}</div>
+                    <div className="stock__name">{nameC.current}</div>
                     <div className="trade__type">{getTypeHandler()}</div>
                 </div>
                 <div className="buySell__box">{BSC.current === 'B' ? '買' : '賣'}</div>

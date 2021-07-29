@@ -155,3 +155,17 @@ export const setWebsocketEvent = boo => {
         payload: boo,
     };
 };
+
+export const setRealTimeUser = boo => {
+    return {
+        type: actionType.SET_REALTIME_USER,
+        payload: boo,
+    };
+};
+
+export const setConfirmBoxClickSource = str => {
+    return {
+        type: actionType.SET_CONFIRM_BOX_CLICK_SOURCE,
+        payload: str,
+    };
+};

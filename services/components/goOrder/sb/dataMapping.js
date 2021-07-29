@@ -1,11 +1,11 @@
 export const marketName = market => {
     const market_options = [
-        { name: '美國', value: 'US', category: true, label: '美股' },
-        { name: '香港', value: 'HKR', category: true, label: '港股人民幣' },
-        { name: '香港', value: 'SEHK', category: true, label: '港股' },
-        { name: '滬股通', value: 'SHSE', category: true, label: '滬股通' },
-        { name: '深股通', value: 'SZSE', category: true, label: '深股通' },
-        { name: '日本', value: 'JP', category: true, label: '日股' },
+        { name: '美國', value: 'US', category: true, label: '美股', area: '美東' },
+        { name: '香港', value: 'HKR', category: true, label: '港股人民幣', area: '香港' },
+        { name: '香港', value: 'SEHK', category: true, label: '港股', area: '香港' },
+        { name: '滬股通', value: 'SHSE', category: true, label: '滬股通', area: '深滬' },
+        { name: '深股通', value: 'SZSE', category: true, label: '深股通', area: '深滬' },
+        { name: '日本', value: 'JP', category: true, label: '日股', area: '日本' },
     ];
     const found = market_options.find(item => {
         if (item.value === market) {
@@ -50,9 +50,9 @@ export const getPriceType = code => {
         case '6':
             return '限&AON';
         case '10':
-            return 'GTC&ANY';
+            return '限&GTC&ANY';
         case '16':
-            return 'GTC&AON';
+            return '限&GTC&AON';
         case '60':
             return '觸價單&ANY';
         case '66':
@@ -83,8 +83,13 @@ export const goOrderMapping = (str, gtcDate) => {
                 return item;
             }
         });
+        const found = narr.find(element => element === '觸');
         if (filterArr.length == 0) {
-            narr.unshift('長');
+            if (found) {
+                narr.splice(1, 0, '長');
+            } else {
+                narr.unshift('長');
+            }
         }
     }
     return narr;

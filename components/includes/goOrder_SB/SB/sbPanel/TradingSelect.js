@@ -24,8 +24,8 @@ const TradingSelect = () => {
         { txt: '觸價單', val: 1 },
     ]);
     const [priceTypeOpt, setPriceTypeOpt] = useState([
-        { txt: '可部份成交', val: 'ANY' },
-        { txt: '限完全成交', val: 'AON' },
+        { txt: 'ANY', val: 'ANY' },
+        { txt: 'AON', val: 'AON' },
     ]);
 
     useEffect(() => {
@@ -91,7 +91,10 @@ const TradingSelect = () => {
     return (
         <div className="tradingSelect__container">
             <div className="trading__box">
-                <div className="select__container" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div
+                    className="select__container"
+                    style={{ display: productInfo?.market === 'US' ? 'flex' : 'none', justifyContent: 'space-between' }}
+                >
                     {/* calc((100vw - 32px - 16px) / 2); */}
                     <OrderSelect
                         style={{ display: 'inline-block', marginRight: '4px', textAlign: 'center' }}
