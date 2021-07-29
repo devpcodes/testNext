@@ -5,23 +5,26 @@ import { checkSignCA, sign } from '../../../webCa';
 import { getWebId } from '../getWebId';
 import { getTT } from './dataMapping';
 
-export const delCancelList = async (currentAccount, data, platform) => {
+export const delCancelList = async (currentAccount, data, platform, delList) => {
     const resList = [];
     for (let info of data) {
         console.log('info', info, currentAccount);
         const marketID = info.StockID.split('.').slice(-1).pop();
-        const res = await postCancel({
-            currentAccount,
-            BS: info.BS,
-            CID: getWebId(platform, 'recommisiioned'),
-            Creator: currentAccount.idno,
-            DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
-            Exchid: marketID,
-            OID: info.OID,
-            OT: '0',
-            StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
-            TT: getTT(marketID),
-        });
+        const res = await postCancel(
+            {
+                currentAccount,
+                BS: info.BS,
+                CID: getWebId(platform, 'recommisiioned'),
+                Creator: currentAccount.idno,
+                DJCrypt_pwd: info.DJCrypt_pwd != null ? info.DJCrypt_pwd : '',
+                Exchid: marketID,
+                OID: info.OID,
+                OT: '0',
+                StockID: info.StockID.substring(0, info.StockID.lastIndexOf('.')),
+                TT: getTT(marketID),
+            },
+            delList,
+        );
         console.log('res', res);
         resList.push(res);
     }
@@ -30,7 +33,10 @@ export const delCancelList = async (currentAccount, data, platform) => {
     });
 };
 
-export const postCancel = async ({ currentAccount, BS, CID, Creator, DJCrypt_pwd, Exchid, OID, OT, StockID, TT }) => {
+export const postCancel = async (
+    { currentAccount, BS, CID, Creator, DJCrypt_pwd, Exchid, OID, OT, StockID, TT },
+    delList,
+) => {
     var url = `/SubBrokerage/SecuritiesTrade/Cancel`;
     let token = getToken();
     // const ca_content = {
@@ -83,10 +89,14 @@ export const postCancel = async ({ currentAccount, BS, CID, Creator, DJCrypt_pwd
                 ca_content,
                 token,
             });
-            if (res.data.success === 'True') {
-                return res.data.result.msg || '刪單成功';
+            if (delList) {
+                return res.data.success;
             } else {
-                return res.data.result.msg;
+                if (res.data.success === 'True') {
+                    return res.data.result.msg || '刪單成功';
+                } else {
+                    return res.data.result.msg;
+                }
             }
         } catch (error) {
             throw '伺服器錯誤';

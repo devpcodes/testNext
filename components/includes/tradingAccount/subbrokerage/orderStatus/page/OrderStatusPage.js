@@ -38,9 +38,6 @@ const OrderStatusPage = () => {
                         setControlReload(prev => {
                             return (prev += 1);
                         });
-                        setTimeout(() => {
-                            setControlReload(0);
-                        }, 500);
 
                         setShowDel(false);
                         dispatch(
