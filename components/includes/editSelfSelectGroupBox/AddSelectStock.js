@@ -13,6 +13,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
     const socalLogin = useSelector(store => store.user.socalLogin);
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
+    const productInfo = useSelector(store => store.goOrder.productInfo);
     const [selectItem, setSelectItem] = useState([]); // 選項
     const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
@@ -39,18 +40,24 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
             }
 
             let exchange;
+            let market;
             switch (type) {
                 case 'S':
                     exchange = 'TAI';
+                    market = 'S';
+                    break;
+                case 'H':
+                    exchange = productInfo.exchange;
+                    market = 'SB';
                     break;
                 default:
                     break;
             }
             const select = {
-                selectId: item.value,
+                selectId: item.value + '',
                 symbol: code,
                 exchange: exchange,
-                market: type,
+                market: market,
                 action: selectCheckedValue.indexOf(item.value) === -1 ? 'D' : 'A',
             };
             reqData.push(select);

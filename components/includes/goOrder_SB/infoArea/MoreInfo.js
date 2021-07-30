@@ -4,7 +4,7 @@ import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 import { InfoBox } from './InfoBox';
 import { TextBox } from './TextBox';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
-import AddSelectStock from '../selfSelectStock/AddSelectStock';
+import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
 import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
 import { getToken } from '../../../../services/user/accessToken';
 
@@ -117,6 +117,9 @@ const MoreInfo = ({ children }) => {
             case 'S':
                 exchange = 'TAI';
                 break;
+            case 'H':
+                exchange = productInfo.exchange;
+                break;
             default:
                 break;
         }
@@ -212,12 +215,12 @@ const MoreInfo = ({ children }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    {/* <button
+                    <button
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
                         {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
-                    </button> */}
+                    </button>
                 </div>
             </div>
             <div className="page__mask"></div>
