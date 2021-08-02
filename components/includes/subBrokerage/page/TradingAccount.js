@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Modal } from 'antd';
 import TabBar  from '../elements/TabBar';
 import Inventory from '../../tradingAccount/subbrokerage/inventory/Inventory';
-//import Balance from '../../tradingAccount/subbrokerage/inventory/Balance';
+import Balance from '../../tradingAccount/subbrokerage/inventory/Balance';
 
 const TradingAccount = () => {
 const currentAccount = useSelector(store => store.user.currentAccount);
@@ -35,7 +35,7 @@ const onClick = (x) =>{
                     return <Inventory/>;
                     break;
                 case 'balance':
-                    return //<Balance/>;
+                    return <Balance/>;
                     break;
                 case 'unrealized':
                     return '第三頁';
