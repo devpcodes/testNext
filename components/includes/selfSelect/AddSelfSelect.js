@@ -32,6 +32,7 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
         };
         const res = await fetchAddSelectStock(addReqData, isSocalLogin);
         reloadSelectReloadTime();
+        setInputVal('');
     };
 
     return (
