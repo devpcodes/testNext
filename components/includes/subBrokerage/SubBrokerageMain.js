@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import TabBar from './elements/TabBar';
 import TradingAccount from './page/TradingAccount';
 import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
+import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
@@ -63,10 +64,10 @@ const SubBrokerMain = () => {
                                 return '第二頁';
                                 break;
                             case 'gtc':
-                                return '第三頁';
+                                return <GtcPage />;
                                 break;
                             case 'inventory':
-                                return <TradingAccount/>;
+                                return <TradingAccount />;
                                 break;
                             case 'holding':
                                 return '第五頁';
@@ -80,7 +81,9 @@ const SubBrokerMain = () => {
 
             <style jsx>
                 {`
-                    .page__container.subBrokerage{padding:20px 0;}
+                    .page__container.subBrokerage {
+                        padding: 20px 0;
+                    }
                     .page__container.subBrokerage .content_area {
                         max-width: 1240px;
                         width: 90%;
