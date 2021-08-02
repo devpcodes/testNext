@@ -66,6 +66,7 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
                 console.log('資料長度跟 mptp長度不符。');
             }
             // solaceData.current[code] = solaceMptpData;   // 全部資料放進 solaceData
+            console.log(solaceMptpData);
             solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
             dispatch(setSolaceData(solaceData.current));
         }

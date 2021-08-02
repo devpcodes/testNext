@@ -46,7 +46,12 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             title: '成交價',
             dataIndex: 'close',
             align: 'right',
-            render: data => <span className={data.class}>{data.text}</span>,
+            render: data => (
+                <span className={data.class}>
+                    {data.simtrade ? '*' : ''}
+                    {data.text}
+                </span>
+            ),
         },
         {
             title: '漲跌',
@@ -199,11 +204,11 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             tableData.forEach(stock => {
                 switch (stock.market) {
                     case 'S':
-                        topicList.push(`TIC/v1/STK/*/*/${stock.code}`);
+                        topicList.push(`SNA/v1/STK/*/*/${stock.code}`);
                         break;
                     case 'O':
                     case 'F':
-                        topicList.push(`TIC/v1/FOP/*/*/${stock.code}`);
+                        topicList.push(`SNA/v1/FOP/*/*/${stock.code}`);
                         break;
                 }
             });
@@ -225,33 +230,59 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         selfSelectList.forEach((selectData, index) => {
             if (selectData.code === solaceData.Code) {
                 selectData.totalVolume.text = solaceData.VolSum;
-                selectData.close.text = solaceData.Close;
+
+                selectData.close.text = parseFloat(solaceData.Close).toFixed(2);
                 selectData.close.class =
                     parseFloat(solaceData.DiffPrice) < 0
                         ? 'lower'
                         : parseFloat(solaceData.DiffPrice) > 0
                         ? 'upper'
                         : '';
-                selectData.changeRate.text = solaceData.DiffRate;
-                selectData.changeRate.text = solaceData.DiffRate;
+                selectData.close.simtrade = solaceData.Simtrade;
+                // selectData.changeRate.text = solaceData.DiffRate;
+                // selectData.changeRate.text = solaceData.DiffRate;
+
                 selectData.changePrice.text =
-                    parseFloat(solaceData.DiffPrice) === 0 ? '--' : parseFloat(solaceData.DiffPrice).toFixed(2);
+                    parseFloat(solaceData.DiffPrice) === 0
+                        ? '--'
+                        : parseFloat(Math.abs(solaceData.DiffPrice)).toFixed(2);
                 selectData.changePrice.class =
                     parseFloat(solaceData.DiffPrice) < 0
                         ? 'lower lower__icon'
                         : parseFloat(solaceData.DiffPrice) > 0
                         ? 'upper upper__icon'
                         : '';
+
                 selectData.changeRate.text =
                     parseFloat(solaceData.DiffRate) === 0
                         ? '--'
-                        : `${parseFloat(solaceData.DiffRate / 100).toFixed(2)} %`;
+                        : `${Math.abs(parseFloat(solaceData.DiffRate / 100).toFixed(2))} %`;
                 selectData.changeRate.class =
                     parseFloat(solaceData.DiffRate) < 0
                         ? 'lower lower__icon'
                         : parseFloat(solaceData.DiffRate) > 0
                         ? 'upper upper__icon'
                         : '';
+                selectData.buyPrice.text = Array.isArray(solaceData.BidPrice)
+                    ? parseFloat(solaceData.BidPrice[0]).toFixed(2)
+                    : '--';
+                selectData.buyPrice.class = Array.isArray(solaceData.BidPrice)
+                    ? parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) < 0
+                        ? 'lower'
+                        : parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) > 0
+                        ? 'upper'
+                        : ''
+                    : '';
+                selectData.sellPrice.text = Array.isArray(solaceData.AskPrice)
+                    ? parseFloat(solaceData.AskPrice[0]).toFixed(2)
+                    : '--';
+                selectData.sellPrice.class = Array.isArray(solaceData.AskPrice)
+                    ? parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) < 0
+                        ? 'lower'
+                        : parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) > 0
+                        ? 'upper'
+                        : ''
+                    : '';
                 return true;
             }
         });
@@ -358,9 +389,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     color: #3f5372;
                     margin-top: 16px;
                 }
-                body .ant-table-row[draggable] {
-                    opacity: 0.3 !important;
-                }
+                // body .ant-table-row[draggable] {
+                //     opacity: 0.3 !important;
+                // }
             `}</style>
         </>
     );
