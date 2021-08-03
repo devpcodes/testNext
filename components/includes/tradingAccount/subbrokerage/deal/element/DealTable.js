@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { BigNumber } from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
-import moment from 'moment';
-import { postQuickSearchWithSwr } from '../../../../../../services/components/goOrder/sb/postQuickSearch';
+import { postMatchWithSwr } from '../../../../../../services/components/tradingAccount/subBrokerage/postMatch';
 import { getToken } from '../../../../../../services/user/accessToken';
 import AccountTable from '../../../vipInventory/AccountTable';
 import {
@@ -12,33 +12,31 @@ import {
     goOrderMapping,
     marketName,
 } from '../../../../../../services/components/goOrder/sb/dataMapping';
-import { postSbcoCode, postSbcoCodeWithSwr } from '../../../../../../services/components/goOrder/sb/postSbcoCode';
+import { postSbcoCodeWithSwr } from '../../../../../../services/components/goOrder/sb/postSbcoCode';
 import { themeColor } from '../../../../goOrder_SB/panel/PanelTabs';
 import { formatNum } from '../../../../../../services/formatNum';
-import { useCheckMobile } from '../../../../../../hooks/useCheckMobile';
 import { timeFormatter } from '../../../../../../services/timeFormatter';
-import ControlBtns from './ControlBtns';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
-const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) => {
-    const currentAccount = useSelector(store => store.user.currentAccount);
+import DropFilterSearch from '../../../vipInventory/DropFilterSearch';
+
+const DealTable = () => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
-    const [error, setError] = useState('');
+    const [error, setError] = useState([]);
     const [symbolList, setSymbolList] = useState([]);
-    const isMobile = useCheckMobile();
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const currentAccount = useSelector(store => store.user.currentAccount);
+    // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('');
-    const [stateMsgFilterValue, setStateMsgFilterValue] = useState('');
-    const [reload, setReload] = useState(0);
-    const currentReload = useRef(0);
+    const [filterSearchVal, setFilterSearchVal] = useState('');
+    const [searchWords, setSearchWords] = useState('');
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 orderID: '',
-                sort: '-1',
-                stockID: '',
+                orderNo: '',
+                sort: '2',
                 token: getToken(),
             };
             return postData;
@@ -47,7 +45,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
         }
     }, [currentAccount]);
 
-    const { data: fetchData } = useSWR([JSON.stringify(postData), reload, controlReload], postQuickSearchWithSwr, {
+    const { data: fetchData } = useSWR([JSON.stringify(postData)], postMatchWithSwr, {
         onError: (error, key) => {
             Modal.error({
                 title: error,
@@ -81,11 +79,9 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 const marketID = item.StockID.split('.').slice(-1).pop();
                 item.name = symbol;
                 newSymbolList.push({ exchange: marketID, code: symbol });
-                setSelectedRowKeys([]);
                 setSymbolList(newSymbolList);
                 return item;
             });
-            // setData(newData);
         }
     }, [fetchData]);
 
@@ -110,41 +106,10 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
     useEffect(() => {
         const newColumns = [
             {
-                title: '動作',
-                dataIndex: 'active',
-                key: 'active',
-                fixed: !isMobile ? 'left' : 'auto',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            <ControlBtns
-                                BS={record.BS}
-                                CanModify={record.CanModify}
-                                CanCancel={record.CanCancel}
-                                data={record}
-                                successHandler={successHandler}
-                            />
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '狀態',
-                dataIndex: 'StateMsg',
-                key: 'StateMsg',
-                fixed: !isMobile ? 'left' : 'auto',
-                width: 100,
-                ...getColumnSearchProps('StateMsg'),
-                render: (text, record) => {
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</div>;
-                },
-            },
-            {
                 title: '市場',
                 dataIndex: 'market',
                 key: 'market',
-                fixed: !isMobile ? 'left' : 'auto',
+                align: 'left',
                 width: 100,
                 ...getColumnSearchProps('market'),
                 render: (text, record) => {
@@ -157,7 +122,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 title: '代碼',
                 dataIndex: 'StockID',
                 key: 'StockID',
-                fixed: !isMobile ? 'left' : 'auto',
+                align: 'center',
                 width: 100,
                 render: (text, record) => {
                     const symbol = text.substring(0, text.lastIndexOf('.'));
@@ -169,6 +134,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 dataIndex: 'name',
                 key: 'name',
                 width: 200,
+                ...getColumnSearchProps('name'),
                 render: (text, record) => {
                     return (
                         <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
@@ -182,6 +148,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 dataIndex: 'BS',
                 key: 'BS',
                 width: 100,
+                align: 'center',
                 render: (text, record) => {
                     return (
                         <span
@@ -251,7 +218,19 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 },
             },
             {
-                title: '價格',
+                title: '成交量',
+                dataIndex: 'Qmatched',
+                key: 'Qmatched',
+                align: 'right',
+                width: 100,
+                render: (text, record) => {
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
+                    );
+                },
+            },
+            {
+                title: '成交價',
                 dataIndex: 'Price',
                 key: 'Price',
                 align: 'right',
@@ -265,52 +244,29 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 },
             },
             {
-                title: '數量',
-                dataIndex: 'Qoriginal',
-                key: 'Qoriginal',
+                title: '成交價金',
+                dataIndex: 'Price',
+                key: 'Price',
+                align: 'right',
+                width: 100,
+                render: (text, record) => {
+                    let amont = new BigNumber(record.Qmatched).multipliedBy(new BigNumber(record.Price));
+                    // detailTrData.dealGoal = goOrder.utility.digitsFormat(amont.toString());
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {!isNaN(text) ? formatNum(parseFloat(amont)) : 0}
+                        </span>
+                    );
+                },
+            },
+            {
+                title: '概算手續費',
+                dataIndex: 'Fee',
+                key: 'Fee',
                 align: 'right',
                 width: 100,
                 render: (text, record) => {
                     return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
-                },
-            },
-            {
-                title: '取消',
-                dataIndex: 'cancel',
-                key: 'cancel',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    let cancel;
-                    if (record.hasOwnProperty('Qcurrent') && record['Qmatched'] != null && !isNaN(record['Qmatched'])) {
-                        record.cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
-                        cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
-                    }
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{cancel}</span>;
-                },
-            },
-            {
-                title: '成交量',
-                dataIndex: 'Qmatched',
-                key: 'Qmatched',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
-                    );
-                },
-            },
-            {
-                title: '成交均價',
-                dataIndex: 'AvgPrice',
-                key: 'AvgPrice',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
-                    );
                 },
             },
             {
@@ -324,55 +280,14 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 },
             },
             {
-                title: '觸發價格',
-                dataIndex: 'TouchedPrice',
-                key: 'TouchedPrice',
-                ...getColumnSearchProps('TouchedPrice'),
-                align: 'center',
+                title: '成交時間',
+                dataIndex: 'MatchTime',
+                key: 'MatchTime',
                 width: 100,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{getTouchPrice(record)}</span>;
-                },
-            },
-            {
-                title: '來源',
-                dataIndex: 'Source',
-                key: 'Source',
                 align: 'center',
-                width: 100,
                 render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
-                },
-            },
-            {
-                title: '委託時間',
-                dataIndex: 'CreateTime',
-                key: 'CreateTime',
-                align: 'center',
-                width: 100,
-                render: (text, record) => {
-                    const time = getTimerHandler(record);
-                    const timeArr = time.split(' ');
-                    return (
-                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            <p style={{ marginBottom: 0 }}>{timeArr[0]}</p>
-                            <p style={{ marginBottom: 0 }}>{timeArr[1]}</p>
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '原因',
-                dataIndex: 'CodeMsg',
-                key: 'CodeMsg',
-                align: 'center',
-                width: 150,
-                render: (text, record) => {
-                    return (
-                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {text}
-                        </span>
-                    );
+                    const timeStr = timeFormatter(text, false);
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{timeStr || '--'}</span>;
                 },
             },
             {
@@ -380,20 +295,14 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 dataIndex: 'Currency',
                 key: 'Currency',
                 align: 'center',
-                width: 150,
+                width: 80,
                 render: (text, record) => {
                     return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
                 },
             },
         ];
         setColumns(newColumns);
-    }, [data, isMobile, searchColumns, marketFilterValue, stateMsgFilterValue, touchPriceFilterValue]);
-
-    const successHandler = () => {
-        setReload(prev => {
-            return (prev += 1);
-        });
-    };
+    }, [data, searchColumns, marketFilterValue, searchWords]);
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'market') {
@@ -427,82 +336,62 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 },
             };
         }
-        if (dataIndex === 'StateMsg') {
+        if (dataIndex === 'name') {
             return {
                 filterDropdown: ({ confirm }) => (
-                    <DropfilterCheckBox
-                        type={'radio'}
-                        onSubmit={onStateFilterSubmit.bind(null, confirm)}
-                        onReset={onStateFilterReset.bind(null, confirm)}
-                        // value={searchStatus}
-                        data={[
-                            { text: '全部', value: 'ALL' },
-                            { text: '未完全成交', value: '未完全成交' },
-                            { text: '完全成交', value: '完全成交' },
-                            { text: '部份成交', value: '部份成交' },
-                        ]}
+                    <DropFilterSearch
+                        onSubmit={searchHandler.bind(null, confirm)}
+                        onReset={searchResetHandler.bind(null, confirm)}
+                        value={filterSearchVal}
+                        marketType={['SB']}
                     />
                 ),
-                filteredValue: [stateMsgFilterValue] || null,
+                filteredValue: [searchWords] || null,
                 onFilter: (value, record) => {
-                    // console.log('record.........',value, record);
-                    if (value === 'ALL' || value === '') {
+                    if (value === '') {
                         return true;
                     } else {
-                        return record.StateMsg.includes(value);
-                    }
-                },
-            };
-        }
-
-        if (dataIndex === 'TouchedPrice') {
-            return {
-                filteredValue: [touchPriceFilterValue] || null,
-                onFilter: (value, record) => {
-                    if (!value) {
-                        return true;
-                    } else {
-                        return parseFloat(record.TouchedPrice) != 0 ? true : false;
+                        const symbolVal = value.split(' ')[0];
+                        const nameVal = value.split(' ')[1];
+                        const symbol = record.StockID.substring(0, record.StockID.lastIndexOf('.'));
+                        if (symbol === symbolVal || record.name === nameVal) {
+                            return true;
+                        }
                     }
                 },
             };
         }
     };
 
-    const getTouchPrice = info => {
-        const marketID = info.StockID.split('.').slice(-1).pop();
-        if (info.hasOwnProperty('TouchedPrice')) {
-            if (info.hasOwnProperty('PriceType') && marketID == 'US') {
-                if (info['PriceType'] == '60' || info['PriceType'] == '66') {
-                    if (info['BS'] === 'B') {
-                        return '≥' + parseFloat(info['TouchedPrice']);
-                    } else if (info['BS'] === 'S') {
-                        return '≤' + parseFloat(info['TouchedPrice']);
-                    }
+    const searchHandler = useCallback(
+        (confirm, val) => {
+            confirm();
+            // getUnRealPrtlos(currentAccount, { stock: val });
+            setSearchColumns(columns => {
+                if (!columns.includes('name')) {
+                    columns.push('name');
                 }
-            }
-        }
-    };
-
-    const getTimerHandler = info => {
-        const timeArr = info.CreateTime.split(' ');
-        const d = moment(timeArr[0]).format('YYYY/MM/DD');
-        const timeStr = timeFormatter(timeArr[1], false);
-        return d + ' ' + timeStr;
-    };
-
-    const getCheckboxProps = useCallback(
-        record => {
-            return { disabled: record.CanCancel !== 'Y' && record.CanModify !== 'Y' };
+                return columns;
+            });
+            // 因為送出的資料，和ui顯示不同，所以新增變數儲存
+            setFilterSearchVal(val);
+            console.log('val', val);
+            // const submitVal = val.split(' ')[0];
+            setSearchWords(val);
         },
-        [data],
+        [currentAccount],
     );
 
-    const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
-        console.log('sssss', selectedRowKeys, selectedRows);
-        setSelectedRowKeys(selectedRowKeys);
-        if (showDelBtn != null) {
-            showDelBtn(selectedRows);
+    const searchResetHandler = useCallback(confirm => {
+        confirm();
+        if (searchColumns.indexOf('name') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('name');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchWords('');
+            setFilterSearchVal('');
         }
     });
 
@@ -528,70 +417,37 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
             setMarketFilterValue('');
         }
     });
-
-    const onStateFilterSubmit = useCallback((confirm, val) => {
-        confirm();
-        setSearchColumns(columns => {
-            if (!columns.includes('StateMsg')) {
-                columns.push('StateMsg');
-            }
-            return columns;
-        });
-        setStateMsgFilterValue(val[0]);
-    });
-
-    const onStateFilterReset = useCallback((confirm, val) => {
-        confirm();
-        if (searchColumns.indexOf('StateMsg') !== -1) {
-            setSearchColumns(columns => {
-                const index = searchColumns.indexOf('StateMsg');
-                columns.splice(index, 1);
-                return columns;
-            });
-            setStateMsgFilterValue('');
-        }
-    });
-
-    console.log('searchColumns......', currentReload.current, controlReload, fetchData);
     return (
-        <div>
+        <>
             <AccountTable
                 filterColumns={searchColumns}
                 scroll={{ x: 780, y: 600 }}
+                columns={columns}
                 dataSource={data}
                 pagination={false}
-                columns={columns}
-                loading={{
-                    indicator: (
-                        <div
-                            style={{
-                                marginTop: '20px',
-                                color: 'black',
-                                fontSize: '1.6rem',
-                                width: '100%',
-                                transform: 'translateX(-49%) translateY(-54px)',
-                            }}
-                        >
-                            資料加載中...
-                        </div>
-                    ),
-                    spinning: (fetchData == null && !error) || controlReload != 0 ? true : false,
-                }}
-                sticky={true}
-                rowSelection={{
-                    type: 'checkbox',
-                    getCheckboxProps,
-                    onChange: changeSelectedHandler,
-                    selectedRowKeys,
-                }}
+                // loading={{
+                //     indicator: (
+                //         <div
+                //             style={{
+                //                 marginTop: '20px',
+                //                 color: 'black',
+                //                 fontSize: '1.6rem',
+                //                 width: '100%',
+                //                 transform: 'translateX(-49%) translateY(-54px)',
+                //             }}
+                //         >
+                //             資料加載中...
+                //         </div>
+                //     ),
+                //     spinning: (fetchData == null && !error) || controlReload != 0 ? true : false,
+                // }}
             />
             <style jsx global>{`
                 .sino__table .ant-table-tbody > tr > td:last-child {
                     padding-right: 12px !important;
                 }
             `}</style>
-        </div>
+        </>
     );
 };
-
-export default OrderStatusTable;
+export default DealTable;

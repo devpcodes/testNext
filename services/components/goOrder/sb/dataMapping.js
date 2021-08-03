@@ -83,11 +83,17 @@ export const goOrderMapping = (str, gtcDate) => {
     }
 
     if (gtcDate != null && gtcDate) {
+        const foundGtc = narr.find(element => element === '長');
+        if (!foundGtc) {
+            narr.splice(1, 0, '長');
+        }
+
         let filterArr = narr.filter(item => {
             if (item === '長') {
                 return item;
             }
         });
+
         const found = narr.find(element => element === '觸');
         if (filterArr.length == 0) {
             if (found) {
@@ -110,10 +116,9 @@ export const getTT = MarketID => {
     return tt;
 };
 
-
 export const getMarket = tt => {
     let c = '';
-    if(tt == '0') c = '香港';
+    if (tt == '0') c = '香港';
     else if (tt == '1') c = '日本';
     else if (tt == '2') c = '美國';
     else if (tt == '8') c = '滬股通';

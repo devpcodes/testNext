@@ -138,7 +138,7 @@ const GtcTable = ({ controlReload }) => {
                 width: 100,
                 render: (text, record) => {
                     const priceType = getPriceType(record.PriceType);
-                    const icons = goOrderMapping(priceType, record.GTCDate);
+                    const icons = goOrderMapping(priceType, record.GtcDate);
                     const marketID = record.StockID.split('.').slice(-1).pop();
                     return (
                         <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>

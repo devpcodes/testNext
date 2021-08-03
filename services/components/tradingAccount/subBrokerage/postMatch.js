@@ -1,18 +1,17 @@
 import { getA8Instance } from '../../../myAxios';
-export const postQueryGtcWithSwr = async strObj => {
+export const postMatchWithSwr = async (strObj, type) => {
     if (strObj == 'null') return;
-    console.log('obj...', JSON.parse(strObj));
-    return await postQueryGtc(JSON.parse(strObj));
+    return await postMatch(JSON.parse(strObj), type);
 };
-export const postQueryGtc = async ({ AID, orderNo, query_type, sDate, token }) => {
-    console.log(AID, orderNo, query_type, sDate, token);
-    var url = '/SubBrokerage/QueryTradeData/QueryGTC';
+export const postMatch = async ({ AID, orderID, orderNo, sort, token }, type) => {
+    console.log('aaaa', AID, orderID, orderNo, sort, token);
     try {
+        var url = '/SubBrokerage/QueryTradeData/Match';
         const res = await getA8Instance('v1', undefined, true).post(url, {
             AID,
+            orderID,
             orderNo,
-            query_type,
-            sDate,
+            sort,
             token,
         });
         if (res.data.success === 'True') {
@@ -80,6 +79,8 @@ const keyHandler = data => {
             CanModify: d.hasOwnProperty('@CanModify') ? d['@CanModify'].trim() : null,
             StateMesg: d.hasOwnProperty('@StateMesg') ? d['@StateMesg'].trim() : null,
             TouchedPrice: d.hasOwnProperty('@TouchedPrice') ? d['@TouchedPrice'].trim() : null,
+            Fee: d.hasOwnProperty('@Fee') ? d['@Fee'].trim() : null,
+            MatchTime: d.hasOwnProperty('@MatchTime') ? d['@MatchTime'].trim() : null,
         };
         output.push(rtnData);
     }

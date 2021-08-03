@@ -4,6 +4,7 @@ import TabBar from './elements/TabBar';
 import TradingAccount from './page/TradingAccount';
 import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
 import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
+import DealPageComponent from '../tradingAccount/subbrokerage/deal/page/DealPageComponent.js';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
@@ -61,7 +62,7 @@ const SubBrokerMain = () => {
                                 return <OrderStatusPage />;
                                 break;
                             case 'deal':
-                                return '第二頁';
+                                return <DealPageComponent />;
                                 break;
                             case 'gtc':
                                 return <GtcPage />;
