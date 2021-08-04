@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import TabBar from './elements/TabBar';
+import TopTabBar from './elements/TopTabBar';
 import TradingAccount from '../tradingAccount/subbrokerage/inventory/page/TradingAccount';
 import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
 import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
@@ -51,7 +51,7 @@ const SubBrokerMain = () => {
         <div className="page__container subBrokerage">
             <div className="content_area">
                 <div className="content_box">
-                    <TabBar onClick={onClick} current={current} menuList={menuList}></TabBar>
+                    <TopTabBar onClick={onClick} current={current} menuList={menuList}></TopTabBar>
                 </div>
                 <div className="content_box">
                     {(() => {

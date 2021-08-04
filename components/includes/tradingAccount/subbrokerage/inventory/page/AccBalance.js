@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { postInventoryWithSwr, postInventoryBalance, postBankAccount} from '../../../../../../services/components/goOrder/sb/postInventory';
 import { getToken } from '../../../../../../services/user/accessToken';
 import AccountTable from '../../../vipInventory/AccountTable';
-const Balance = () => {
+const AccBalance = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [accountType, setAccountType] = useState('');
     const [inputData, setInputData] = useState(null);
@@ -251,4 +251,4 @@ const Balance = () => {
     );
 };
 
-export default Balance;
+export default AccBalance;

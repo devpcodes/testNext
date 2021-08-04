@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback ,useMemo} from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Modal } from 'antd';
-import TabBar  from '../../../../subbrokerage/elements/TabBar';
+import TopTabBar  from '../../../../subBrokerage/elements/TopTabBar';
 import Inventory from './Inventory';
-import Balance from './AccBalance';
+import AccBalance from './AccBalance';
 import Unrealized from './Unrealized';
 
 const TradingAccount = () => {
@@ -24,11 +24,11 @@ const onClick = (x) =>{
 
     return (
         <div className="content_box subBrokerage">
-            <TabBar
+            <TopTabBar
             onClick={onClick}
             current = { current }
             menuList = {menuList}
-            ></TabBar>
+            ></TopTabBar>
         <div className="content_box_inner">
         {(() => {
             switch (current) {
@@ -36,7 +36,7 @@ const onClick = (x) =>{
                     return <Inventory/>;
                     break;
                 case 'balance':
-                    return <Balance/>;
+                    return <AccBalance/>;
                     break;
                 case 'unrealized':
                     return <Unrealized/>;

@@ -2,7 +2,7 @@ import { Menu, Tabs } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
 
-const TabBar = ({ current, menuList, onClick }) => {
+const TopTabBar = ({ current, menuList, onClick }) => {
     const [state, setState] = useState({ current: 'all' });
     const { TabPane } = Tabs;
     const handleClick = (key) => {
@@ -37,4 +37,4 @@ const TabBar = ({ current, menuList, onClick }) => {
     );
 };
 
-export default TabBar;
+export default TopTabBar;
