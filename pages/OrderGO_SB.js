@@ -176,13 +176,16 @@ const OrderGO = ({ requestStockIdS, requestType, requestStockIdH }) => {
                 {...modal}
                 title={
                     <>
-                        <img src={getModalIconHandler(modal.type, modal.bs)} />
+                        <img
+                            style={{ display: modal.titleIcon === false ? 'none' : 'inline-block' }}
+                            src={getModalIconHandler(modal.type, modal.bs)}
+                        />
                         <span>{modal.title}</span>
                     </>
                 }
                 className="confirm__container2"
                 okText={modal.okText || '確定'}
-                cancelText="取消"
+                cancelText={modal.cancelText || '取消'}
                 closeIcon={<img src={modalCloseIcon} />}
                 onCancel={
                     modal.onCancel != null

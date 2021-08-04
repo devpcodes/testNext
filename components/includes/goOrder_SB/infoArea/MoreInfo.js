@@ -6,7 +6,7 @@ import { TextBox } from './TextBox';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import AddSelectStock from '../selfSelectStock/AddSelectStock';
 import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
-import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken, getToken } from '../../../../services/user/accessToken';
 
 const MoreInfo = ({ children }) => {
     const code = useSelector(store => store.goOrder.code);
