@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback ,useMemo} from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Modal } from 'antd';
-import TabBar  from '../elements/TabBar';
-import Inventory from '../../tradingAccount/subbrokerage/inventory/Inventory';
-import Balance from '../../tradingAccount/subbrokerage/inventory/Balance';
+import TopTabBar  from '../../../../subBrokerage/elements/TopTabBar';
+import Inventory from './Inventory';
+import AccBalance from './AccBalance';
+import Unrealized from './Unrealized';
 
 const TradingAccount = () => {
 const currentAccount = useSelector(store => store.user.currentAccount);
@@ -23,11 +24,11 @@ const onClick = (x) =>{
 
     return (
         <div className="content_box subBrokerage">
-            <TabBar
+            <TopTabBar
             onClick={onClick}
             current = { current }
             menuList = {menuList}
-            ></TabBar>
+            ></TopTabBar>
         <div className="content_box_inner">
         {(() => {
             switch (current) {
@@ -35,10 +36,10 @@ const onClick = (x) =>{
                     return <Inventory/>;
                     break;
                 case 'balance':
-                    return <Balance/>;
+                    return <AccBalance/>;
                     break;
                 case 'unrealized':
-                    return '第三頁';
+                    return <Unrealized/>;
                     break;
                 default:
                     return null;

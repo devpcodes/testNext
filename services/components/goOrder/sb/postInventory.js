@@ -1,14 +1,15 @@
-import { getA8Instance } from '../../../myAxios';
+import { getA8Instance, getDivoInstance } from '../../../myAxios';
 import { getCurrency,getMarket } from './dataMapping';
 
 export const postInventoryWithSwr = async strObj => {
     let d = await postInventory(JSON.parse(strObj))
     return d;
 };
+
 export const postInventory = async ({ AID, token }) => {
     var url = '/SubBrokerage/QueryTradeData/Position';
     try {
-        console.log('[REQ]',AID)
+        console.log('[REQ]',AID,token)
         const res = await getA8Instance('v2', undefined, true).post(url, {
             AID,
             token,
@@ -63,11 +64,41 @@ export const postInventoryBalance = async ( AID, token, TT ) => {
     }
 };
 
+export const postUnrealizedWithSwr = async strObj => {
+    let d = await postUnrealized(JSON.parse(strObj))
+    return d;
+};
+
+export const postUnrealized = async ({ account, broker_id, token, market }) => {
+    var url = '/assets/querySubBrokerageUnrealizedPrtLos'
+    try {
+        let data = {
+            account:account,
+            broker_id:broker_id,
+            token:token,
+            market:market
+        }
+        console.log('[REQ SubBrokerage]', data)
+        const res = await getDivoInstance('v1', true).post(url, data );
+        console.log('[RES SubBrokerage]',res)
+        if (res.data.success === true) {
+            console.log('[RES SubBrokerage]',res.data.result)
+            let data = res.data.result.data? res.data.result.data : []
+            let sum_data = res.data.result.sum_data? res.data.result.sum_data : []
+            return {data:data, sum_data:sum_data} 
+        } else {
+            throw 'error';
+        } 
+    } catch (error) {
+        throw '伺服器錯誤(3)'+error;
+    }
+};
+
 export const postBankAccount = async ( AID, token) => {
     var url = '/SubBrokerage/ClientData/BankAccount';
     try {
         console.log('[REQ]',AID, token )
-        const res = await getA8Instance('v1', undefined, true).post(url, {AID:AID,token:token});
+        const res = await getA8Instance('v1', undefined, true).post(url, {AID:AID, token:token});
         if (res.data.success === 'True') {
             const arr = [];
             console.log('[RES]',res)

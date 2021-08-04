@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Modal, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
-import { postInventoryWithSwr } from '../../../../../services/components/goOrder/sb/postInventory';
-import { getToken } from '../../../../../services/user/accessToken';
-import DropfilterCheckBox from '../../vipInventory/DropfilterCheckBox';
-import AccountTable from '../../vipInventory/AccountTable';
+import { postInventoryWithSwr } from '../../../../../../services/components/goOrder/sb/postInventory';
+import { getToken } from '../../../../../../services/user/accessToken';
+import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
+import AccountTable from '../../../vipInventory/AccountTable';
+import IconBtn from '../../../vipInventory/IconBtn';
 const Invetory = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState([]);
@@ -197,18 +198,16 @@ const Invetory = () => {
 
     return (
         <>
-        {/* <div className="active_box">
-            <Select defaultValue={defaultMarket} style={{ width: 120 }} onChange={handleChange}>
+         <div className="active_box">
+            {/* <Select defaultValue={defaultMarket} style={{ width: 120 }} onChange={handleChange}>
             {
                 selectType.map(x=>{
                   return <Option value={x} key={x}>{x}</Option>
                 })
             }
-            </Select>
-            <button onClick={onRefresh}>
-                更新
-            </button>
-        </div> */}
+            </Select> */}
+            <IconBtn onClick={onRefresh}> </IconBtn>
+        </div> 
             <AccountTable 
             filterColumns={searchColumns}
             dataSource={data} 
