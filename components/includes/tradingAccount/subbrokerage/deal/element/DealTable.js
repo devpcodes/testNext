@@ -19,7 +19,7 @@ import { timeFormatter } from '../../../../../../services/timeFormatter';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 import DropFilterSearch from '../../../vipInventory/DropFilterSearch';
 
-const DealTable = () => {
+const DealTable = ({ type }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [error, setError] = useState([]);
@@ -301,8 +301,84 @@ const DealTable = () => {
                 },
             },
         ];
-        setColumns(newColumns);
-    }, [data, searchColumns, marketFilterValue, searchWords]);
+
+        const newColumns2 = [
+            {
+                title: '市場',
+                dataIndex: 'market',
+                key: 'market',
+                align: 'left',
+                width: 100,
+                ...getColumnSearchProps('market'),
+                render: (text, record) => {
+                    const marketID = record.StockID.split('.').slice(-1).pop();
+                    const market = marketName(marketID).name;
+                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
+                },
+            },
+            {
+                title: '代碼',
+                dataIndex: 'StockID',
+                key: 'StockID',
+                align: 'center',
+                width: 100,
+                render: (text, record) => {
+                    const symbol = text.substring(0, text.lastIndexOf('.'));
+                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
+                },
+            },
+            {
+                title: '商品',
+                dataIndex: 'name',
+                key: 'name',
+                width: 200,
+                ...getColumnSearchProps('name'),
+                render: (text, record) => {
+                    return (
+                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {text}
+                        </span>
+                    );
+                },
+            },
+            {
+                title: '買賣',
+                dataIndex: 'BS',
+                key: 'BS',
+                width: 100,
+                align: 'center',
+                render: (text, record) => {
+                    return (
+                        <span
+                            style={{
+                                color: text === 'B' ? '#f45a4c' : '#22a16f',
+                                opacity: record.State === '99' ? 0.45 : 1,
+                            }}
+                        >
+                            {text === 'B' ? '買' : '賣'}
+                        </span>
+                    );
+                },
+            },
+            {
+                title: '成交量',
+                dataIndex: 'Qmatched',
+                key: 'Qmatched',
+                align: 'right',
+                width: 100,
+                render: (text, record) => {
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
+                    );
+                },
+            },
+        ];
+        if (type === 'detail') {
+            setColumns(newColumns);
+        } else {
+            setColumns(newColumns2);
+        }
+    }, [data, searchColumns, marketFilterValue, searchWords, type]);
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'market') {

@@ -8,12 +8,13 @@ const options = [
     { label: '匯總', value: 'all' },
     { label: '明細', value: 'detail' },
 ];
-const ControlBar = ({ reFreshHandler }) => {
+const ControlBar = ({ reFreshHandler, typeChangeHandler }) => {
     const dispatch = useDispatch();
 
     const [val, setVal] = useState('detail');
     const changeHandler = e => {
         setVal(e.target.value);
+        typeChangeHandler(e.target.value);
     };
     const clickHandler = () => {
         dispatch(
