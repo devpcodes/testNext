@@ -205,10 +205,12 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                 switch (stock.market) {
                     case 'S':
                         topicList.push(`SNA/v1/STK/*/*/${stock.code}`);
+                        topicList.push(`TIC/v1/STK/*/*/${stock.code}`);
                         break;
                     case 'O':
                     case 'F':
                         topicList.push(`SNA/v1/FOP/*/*/${stock.code}`);
+                        topicList.push(`TIC/v1/FOP/*/*/${stock.code}`);
                         break;
                 }
             });

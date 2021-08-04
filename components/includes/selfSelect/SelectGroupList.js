@@ -66,13 +66,10 @@ const SelectGroupList = ({ callBack, tabkey, reloadTabkey }) => {
                 const data = JSON.parse(JSON.stringify(selfSelectGroup));
                 data.map(async (val, idx) => {
                     if (selectId === val.selectId) {
-                        data.splice(idx, 1);
-                        setSelfSelectGroup(data);
-                        // console.log(res);
-                        // console.log(val.selectId);
-                        // console.log(tabkey);
                         const res = await fetchDeletSelectGroup(val.selectId, getToken());
                         if (res.message === 'OK' && res.success === true) {
+                            data.splice(idx, 1);
+                            setSelfSelectGroup(data);
                             if (val.selectId + '' === tabkey + '') {
                                 reloadTabkey('0');
                             }
