@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Modal, Select, Button, Input   } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
-import { postInventoryWithSwr, postInventoryBalance, postBankAccount} from '../../../../../services/components/goOrder/sb/postInventory';
-import { getToken } from '../../../../../services/user/accessToken';
-import AccountTable from '../../vipInventory/AccountTable';
+import { postInventoryWithSwr, postInventoryBalance, postBankAccount} from '../../../../../../services/components/goOrder/sb/postInventory';
+import { getToken } from '../../../../../../services/user/accessToken';
+import AccountTable from '../../../vipInventory/AccountTable';
 const Balance = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [accountType, setAccountType] = useState('');

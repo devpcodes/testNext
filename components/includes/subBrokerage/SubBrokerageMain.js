@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import TabBar from './elements/TabBar';
-import TradingAccount from './page/TradingAccount';
+import TradingAccount from '../tradingAccount/subbrokerage/inventory/page/TradingAccount';
 import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
 import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
