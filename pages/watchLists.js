@@ -91,6 +91,9 @@ function Self_select_stocks() {
                 .ant-tabs-top > .ant-tabs-nav {
                     margin: 0;
                 }
+                .page__container {
+                    background-color: rgb(249, 251, 255);
+                }
             `}</style>
         </>
     );

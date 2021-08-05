@@ -9,9 +9,10 @@ const EditGroupName = memo(({ isVisible, selectGroupName, selectGroupID, closeHa
         setIsModalVisible(isVisible);
     }, [isVisible]);
 
-    // useEffect(()=>{
-    //     console.log(selectGroupName, selectGroupID)
-    // }, [selectGroupName, selectGroupID])
+    useEffect(() => {
+        setInputValue(selectGroupName);
+    }, [selectGroupName, selectGroupID]);
+
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
     const [inputValue, setInputValue] = useState(selectGroupName);
     const socalLogin = useSelector(store => store.user.socalLogin);

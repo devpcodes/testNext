@@ -48,8 +48,8 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             align: 'right',
             render: data => (
                 <span className={data.class}>
-                    {data.simtrade ? '*' : ''}
                     {data.text}
+                    {data.simtrade ? '*' : ''}
                 </span>
             ),
         },
@@ -69,13 +69,23 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             title: '買價',
             dataIndex: 'buyPrice',
             align: 'right',
-            render: data => <span className={data.class}>{data.text}</span>,
+            render: data => (
+                <span className={data.class}>
+                    {data.text}
+                    {data.simtrade ? '*' : ''}
+                </span>
+            ),
         },
         {
             title: '賣價',
             dataIndex: 'sellPrice',
             align: 'right',
-            render: data => <span className={data.class}>{data.text}</span>,
+            render: data => (
+                <span className={data.class}>
+                    {data.text}
+                    {data.simtrade ? '*' : ''}
+                </span>
+            ),
         },
         {
             title: '成交量',

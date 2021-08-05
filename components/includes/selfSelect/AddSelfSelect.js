@@ -7,7 +7,7 @@ import { getSocalToken, getToken } from '../../../services/user/accessToken';
 const { Search } = Input;
 
 const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
-    const [inputVal, setInputVal] = useState(null);
+    const [inputVal, setInputVal] = useState('');
     const [searchData, setSearchData] = useState(null);
     const socalLoginData = useSelector(store => store.user.socalLogin);
 
@@ -38,12 +38,7 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
     return (
         <>
             <div className={`add__select__block ${['0'].includes(tabkey) ? 'hidden' : 'show'}`}>
-                <SearchAutoComplete
-                    selectHandler={selectHandler}
-                    parentValue={inputVal}
-                    onChange={onChangeHandler}
-                    marketType={['S', 'SB', 'F', 'O']}
-                />
+                <SearchAutoComplete selectHandler={selectHandler} parentValue={inputVal} onChange={onChangeHandler} />
                 <button
                     className="add__stock__btn"
                     onClick={addSelectStock}
@@ -85,6 +80,10 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
                 .ant-btn-primary:hover {
                     background: #c43826;
                     border-color: #c43826;
+                }
+                .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                    line-height: 36px;
+                    color: #3f5372;
                 }
             `}</style>
         </>
