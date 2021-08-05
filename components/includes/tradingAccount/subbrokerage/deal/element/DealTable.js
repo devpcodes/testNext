@@ -85,6 +85,58 @@ const DealTable = ({ type }) => {
         }
     }, [fetchData]);
 
+    //貼newweb過來的...
+    useEffect(() => {
+        if (type === 'all' && data?.length > 0) {
+            const totalList = [];
+            let total = {};
+            for (let index = 0; index < data.length; index++) {
+                const element = data[index];
+                element.dealNumber = element.Qmatched;
+                element.dealPrice = element.Price;
+                element.fee = element.Fee;
+                const marketID = element.StockID.split('.').slice(-1).pop();
+                const market = marketName(marketID).name;
+                const symbol = element.StockID.substring(0, element.StockID.lastIndexOf('.'));
+                const dictKeys = symbol + element.BS;
+                if (!total.hasOwnProperty(dictKeys)) {
+                    total[dictKeys] = {};
+                }
+
+                total[dictKeys].hasOwnProperty('dealNumber')
+                    ? (total[dictKeys].dealNumber =
+                          parseFloat(total[dictKeys].dealNumber) + parseFloat(element.dealNumber))
+                    : (total[dictKeys].dealNumber = parseFloat(element.dealNumber));
+                total[dictKeys].hasOwnProperty('dealAveragePrice')
+                    ? (total[dictKeys].dealAveragePrice =
+                          (parseFloat(total[dictKeys].dealAveragePrice) + parseFloat(element.dealPrice)) / 2)
+                    : (total[dictKeys].dealAveragePrice = parseFloat(element.dealPrice));
+                if (!total[dictKeys].hasOwnProperty('dealGoal')) {
+                    total[dictKeys].dealGoal = formatNum(
+                        new BigNumber(total[dictKeys].dealNumber)
+                            .multipliedBy(new BigNumber(total[dictKeys].dealAveragePrice))
+                            .toString(),
+                    );
+                } else {
+                    total[dictKeys].dealGoal = new BigNumber(0);
+                }
+                total[dictKeys].hasOwnProperty('fee')
+                    ? (total[dictKeys].fee = parseFloat(total[dictKeys].fee) + parseFloat(element.fee))
+                    : (total[dictKeys].fee = parseFloat(element.fee));
+                total[dictKeys].dealName = element.name;
+                total[dictKeys].dealStockID = symbol;
+                total[dictKeys].dealMarket = market;
+                total[dictKeys].dealCurrency = currencyChName(element.Currency);
+                total[dictKeys].dealBS = element.BS === 'B' ? '買' : '賣';
+                totalList.push(total);
+            }
+            console.log('Total', totalList);
+            for (let i of totalList) {
+                console.log(i, Object.keys(i)); // 3, 5, 7
+            }
+        }
+    }, [data, type]);
+
     useEffect(() => {
         if (nameData?.length > 0) {
             let newData = fetchData?.map(item => {
@@ -370,6 +422,56 @@ const DealTable = ({ type }) => {
                     return (
                         <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
                     );
+                },
+            },
+            {
+                title: '成交均價',
+                dataIndex: 'Price',
+                key: 'Price',
+                align: 'right',
+                width: 100,
+                render: (text, record) => {
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
+                        </span>
+                    );
+                },
+            },
+            {
+                title: '成交價金',
+                dataIndex: 'Price',
+                key: 'Price',
+                align: 'right',
+                width: 100,
+                render: (text, record) => {
+                    let amont = new BigNumber(record.Qmatched).multipliedBy(new BigNumber(record.Price));
+                    // detailTrData.dealGoal = goOrder.utility.digitsFormat(amont.toString());
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {!isNaN(text) ? formatNum(parseFloat(amont)) : 0}
+                        </span>
+                    );
+                },
+            },
+            {
+                title: '概算手續費',
+                dataIndex: 'Fee',
+                key: 'Fee',
+                align: 'right',
+                width: 100,
+                render: (text, record) => {
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
+                },
+            },
+            {
+                title: '幣別',
+                dataIndex: 'Currency',
+                key: 'Currency',
+                align: 'center',
+                width: 80,
+                render: (text, record) => {
+                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
                 },
             },
         ];
