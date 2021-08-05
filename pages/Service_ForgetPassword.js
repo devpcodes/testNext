@@ -148,7 +148,7 @@ function Service_ForgetPassword() {
                             </Popover>
                             <img className="service__img" src={sendpwdL} />
                             <div>
-                                <h5 className="service__title one__line">
+                                <h5 className="service__title">
                                     <span className="cbreak">臨櫃補發</span>
                                     <span className="cdisplay"> - </span>
                                     <span className="cbreak">洽營業員</span>
