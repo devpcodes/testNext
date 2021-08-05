@@ -5,6 +5,7 @@ import TradingAccount from '../tradingAccount/subbrokerage/inventory/page/Tradin
 import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/OrderStatusPage';
 import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
 import DealPageComponent from '../tradingAccount/subbrokerage/deal/page/DealPageComponent.js';
+import ShareholdingPage from '../tradingAccount/subbrokerage/shareholding/page/ShareholdingPage';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
@@ -60,19 +61,14 @@ const SubBrokerMain = () => {
                         switch (current) {
                             case 'order':
                                 return <OrderStatusPage />;
-                                break;
                             case 'deal':
                                 return <DealPageComponent />;
-                                break;
                             case 'gtc':
                                 return <GtcPage />;
-                                break;
                             case 'inventory':
                                 return <TradingAccount />;
-                                break;
                             case 'holding':
-                                return '第五頁';
-                                break;
+                                return <ShareholdingPage />;
                             default:
                                 return null;
                         }
