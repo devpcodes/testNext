@@ -132,6 +132,9 @@ const OrderBox = ({
                         </span>
                     </div>
                 )}
+                {marketC.current === 'US' && (
+                    <p className="warn__info">請注意！美股依交易所規定分別於開盤前 2~5 分鐘不得刪改委託</p>
+                )}
             </div>
             <div className="btn__box">
                 <Button
@@ -169,6 +172,13 @@ const OrderBox = ({
             </div>
 
             <style jsx>{`
+                .warn__info {
+                    margin-top: 5px;
+                    margin-bottom: 0;
+                    color: #f45a4c;
+                    padding-right: 10px;
+                    line-height: 20px;
+                }
                 .confirm__container {
                     display: block;
                     height: 100vh;
@@ -227,7 +237,7 @@ const OrderBox = ({
                     color: ${BSC.current === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                 }
                 .trade__info--num {
-                    margin-top: 16px;
+                    margin-top: 3px;
                     margin-left: 16px;
                 }
                 .info__price {

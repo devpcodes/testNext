@@ -48,7 +48,7 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
             `${process.env.NEXT_PUBLIC_SUBPATH}` +
             `/SinoTrade_login${queryStr}` +
             `${queryStr ? '&' : '?'}` +
-            'redirectUrl=OrderGO';
+            `redirectUrl=${router.pathname}`;
     };
 
     // const socalClickHandler = () => {

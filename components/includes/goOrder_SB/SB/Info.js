@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import theme from '../../../../resources/styles/theme';
@@ -31,6 +32,10 @@ import { postStockInfo } from '../../../../services/components/goOrder/sb/postSt
 import { checkRealtimeMarket } from '../../../../services/components/goOrder/sb/checkRealtimeMarket';
 import { fetchProducts } from '../../../../services/components/goOrder/productFetcher';
 import { clearComma } from '../../../../services/components/goOrder/sb/clearComma';
+import { useOpenAccountUrl } from '../../../../hooks/useOpenAccountUrl';
+import { setModal } from '../../../../store/components/layouts/action';
+import { checkLogin } from '../../../../services/components/layouts/checkLogin';
+import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
 
 export const defaultProductInfo = {
     symbol: 'AAPL',
@@ -57,6 +62,7 @@ const Info = ({ stockid }) => {
     const router = useRouter();
     const init = useRef(false);
     const timer = useRef(null);
+    const openAccountUrl = useOpenAccountUrl();
     useEffect(() => {
         return () => {
             if (timer?.current) {
@@ -64,6 +70,56 @@ const Info = ({ stockid }) => {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (!checkLogin()) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    title: '提醒',
+                    content: (
+                        <div style={{ color: '#3f5372', fontSize: '1.6rem' }}>
+                            目前尚未成為永豐金證券的客戶，無法查看海外證券行情，請立即登入或線上開立證券帳戶！
+                        </div>
+                    ),
+                    type: 'confirm',
+                    titleIcon: false,
+                    footer: (
+                        <div>
+                            <Button
+                                style={{ width: '48%', height: '44px', borderRadius: '3px', fontSize: '1.6rem' }}
+                                onClick={openAccountHandler.bind(null, openAccountUrl)}
+                            >
+                                線上開戶
+                            </Button>
+                            <Button
+                                style={{ width: '48%', height: '44px', borderRadius: '3px', fontSize: '1.6rem' }}
+                                type="primary"
+                                onClick={loginHandler}
+                            >
+                                登入
+                            </Button>
+                        </div>
+                    ),
+                }),
+            );
+        }
+    }, [openAccountUrl]);
+
+    const loginHandler = () => {
+        const query = router.query;
+        const queryStr = objectToQueryHandler(query);
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            `redirectUrl=${router.pathname}`;
+    };
+
+    const openAccountHandler = url => {
+        window.open(url);
+    };
+
     useEffect(() => {
         if (!init.current) {
             if (router?.query?.price && router?.query?.type === 'H') {
@@ -123,7 +179,9 @@ const Info = ({ stockid }) => {
                 setLabel(marketName(productInfo.market).label);
             }
             if (checkRealtimeMarket(productInfo.market)) {
-                getRic(code);
+                if (checkLogin()) {
+                    getRic(code);
+                }
             }
             getStockInfo(currentAccount, productInfo.market);
         }
