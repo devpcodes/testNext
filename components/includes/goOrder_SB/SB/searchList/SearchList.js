@@ -43,6 +43,13 @@ const SearchList = ({ active }) => {
     const timer = useRef(null);
 
     useEffect(() => {
+        window.addEventListener('focus', focusWindowHandler);
+        return () => {
+            window.removeEventListener('focus', focusWindowHandler);
+        };
+    }, []);
+
+    useEffect(() => {
         if (websocketEvent && !confirmBox && active) {
             if (currentSeconds.current === 0) {
                 timer.current = window.setInterval(() => {
@@ -56,6 +63,10 @@ const SearchList = ({ active }) => {
             }
         }
     }, [websocketEvent, reFetch, confirmBox, active]);
+
+    const focusWindowHandler = () => {
+        getData(currentAccount);
+    };
 
     const timerHandler = () => {
         if (currentSeconds.current >= waitSeconds) {
@@ -169,12 +180,17 @@ const SearchList = ({ active }) => {
                 dataIndex: 'Price',
                 key: 'Price',
                 render: (text, record) => {
+                    var canCancel = record?.Qoriginal;
+                    if (record.hasOwnProperty('Qcurrent') && record['Qmatched'] != null && !isNaN(record['Qmatched'])) {
+                        record.cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
+                        canCancel = parseFloat(record?.Qoriginal) - parseFloat(record?.cancel);
+                    }
                     return (
                         <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             <p className="item" style={{ whiteSpace: 'nowrap' }}>
                                 {!isNaN(text) ? parseFloat(text) : 0}
                             </p>
-                            <p className="item--down2">{record?.Qoriginal}</p>
+                            <p className="item--down2">{canCancel}</p>
                         </div>
                     );
                 },

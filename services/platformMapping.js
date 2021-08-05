@@ -5,6 +5,10 @@ export const platformMapping = platform => {
             obj.platform = 'udn';
             obj.source = 'udn';
             break;
+        case 'alpha':
+            obj.platform = 'alpha';
+            obj.source = 'alpha';
+            break;
         default:
             break;
     }

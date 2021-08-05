@@ -148,7 +148,11 @@ function Service_ForgetPassword() {
                             </Popover>
                             <img className="service__img" src={sendpwdL} />
                             <div>
-                                <h5 className="service__title one__line">臨櫃補發密碼</h5>
+                                <h5 className="service__title">
+                                    <span className="cbreak">臨櫃補發</span>
+                                    <span className="cdisplay"> - </span>
+                                    <span className="cbreak">洽營業員</span>
+                                </h5>
                                 <p className="service__desc">
                                     需本人持身分證及原留印鑑
                                     <br />

@@ -43,6 +43,14 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     useEffect(() => {
+        if (platform === 'udn') {
+            udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
+        }
+        if (platform === 'alpha') {
+            udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0064&strWeb=0086';
+        }
+    }, [platform]);
+    useEffect(() => {
         console.log('didmount');
         const account = localStorage.getItem('userID');
         if (account) {
@@ -383,11 +391,17 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //     setReCaptchaReady(true);
     // };
     const getSignUpUrl = () => {
-        if (platform === 'udn') {
-            return udnOpenact;
-        } else {
+        // console.log('platform', platform)
+        if (platform === 'newweb') {
             return defaultOpenact;
+        } else {
+            return udnOpenact;
         }
+        // if (platform === 'udn') {
+        //     return udnOpenact;
+        // } else {
+        //     return defaultOpenact;
+        // }
     };
 
     const logoHandler = () => {
@@ -511,7 +525,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                         '//' +
                                                         location.hostname +
                                                         path +
-                                                        redirectUrl;
+                                                        encodeURIComponent(redirectUrl);
                                                 }}
                                             >
                                                 Google
@@ -553,7 +567,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                         '//' +
                                                         location.hostname +
                                                         path +
-                                                        redirectUrl;
+                                                        encodeURIComponent(redirectUrl);
                                                 }}
                                             >
                                                 Facebook
