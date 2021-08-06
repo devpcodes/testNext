@@ -22,6 +22,7 @@ import DropFilterSearch from '../../../vipInventory/DropFilterSearch';
 const DealTable = ({ type }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
+    const [totalData, setTotalData] = useState([]);
     const [error, setError] = useState([]);
     const [symbolList, setSymbolList] = useState([]);
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -70,6 +71,316 @@ const DealTable = ({ type }) => {
     });
 
     useEffect(() => {
+        var newColumns = [];
+        console.log('type..............', type);
+        if (type === 'detail') {
+            newColumns = [
+                {
+                    title: '市場',
+                    dataIndex: 'market',
+                    key: 'market',
+                    align: 'left',
+                    width: 100,
+                    ...getColumnSearchProps('market'),
+                    render: (text, record) => {
+                        const marketID = record.StockID?.split('.').slice(-1).pop();
+                        const market = marketName(marketID)?.name;
+                        return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
+                    },
+                },
+                {
+                    title: '代碼',
+                    dataIndex: 'StockID',
+                    key: 'StockID',
+                    align: 'center',
+                    width: 100,
+                    render: (text, record) => {
+                        const symbol = text?.substring(0, text.lastIndexOf('.'));
+                        return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
+                    },
+                },
+                {
+                    title: '商品',
+                    dataIndex: 'name',
+                    key: 'name',
+                    width: 200,
+                    ...getColumnSearchProps('name'),
+                    render: (text, record) => {
+                        return (
+                            <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
+                                {text}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '買賣',
+                    dataIndex: 'BS',
+                    key: 'BS',
+                    width: 100,
+                    align: 'center',
+                    render: (text, record) => {
+                        return (
+                            <span
+                                style={{
+                                    color: text === 'B' ? '#f45a4c' : '#22a16f',
+                                    opacity: record.State === '99' ? 0.45 : 1,
+                                }}
+                            >
+                                {text === 'B' ? '買' : '賣'}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '類別',
+                    dataIndex: 'PriceType',
+                    key: 'PriceType',
+                    width: 100,
+                    render: (text, record) => {
+                        const priceType = getPriceType(record.PriceType);
+                        const icons = goOrderMapping(priceType, record.GTCDate);
+                        const marketID = record?.StockID?.split('.').slice(-1).pop();
+                        return (
+                            <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                                {marketID === 'US' && (
+                                    <>
+                                        {icons.map((icon, index) => {
+                                            return icon !== 'AON' && icon !== 'ANY' ? (
+                                                <p
+                                                    key={index}
+                                                    className="item--down2"
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        fontSize: '1rem',
+                                                        background:
+                                                            icon === '長'
+                                                                ? '#6c7b94'
+                                                                : record.BS === 'B'
+                                                                ? themeColor.buyTabColor
+                                                                : themeColor.sellTabColor,
+                                                        color: 'white',
+                                                        padding: '0 3px',
+                                                        borderRadius: '2px',
+                                                        marginRight: '4px',
+                                                        marginBottom: 0,
+                                                    }}
+                                                >
+                                                    {icon}
+                                                </p>
+                                            ) : (
+                                                <p
+                                                    key={'B' + index}
+                                                    className="item--down2"
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        marginBottom: 0,
+                                                    }}
+                                                >
+                                                    {icon}
+                                                </p>
+                                            );
+                                        })}
+                                    </>
+                                )}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '成交量',
+                    dataIndex: 'Qmatched',
+                    key: 'Qmatched',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        return (
+                            <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                                {parseFloat(text) || '--'}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '成交價',
+                    dataIndex: 'Price',
+                    key: 'Price',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        return (
+                            <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                                {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '成交價金',
+                    dataIndex: 'Price',
+                    key: 'Price',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        let amont = new BigNumber(record.Qmatched).multipliedBy(new BigNumber(record.Price));
+                        // detailTrData.dealGoal = goOrder.utility.digitsFormat(amont.toString());
+                        return (
+                            <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                                {!isNaN(text) ? formatNum(parseFloat(amont)) : 0}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '概算手續費',
+                    dataIndex: 'Fee',
+                    key: 'Fee',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
+                    },
+                },
+                {
+                    title: '委託書號',
+                    dataIndex: 'OrderNo',
+                    key: 'OrderNo',
+                    width: 100,
+                    align: 'center',
+                    render: (text, record) => {
+                        return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
+                    },
+                },
+                {
+                    title: '成交時間',
+                    dataIndex: 'MatchTime',
+                    key: 'MatchTime',
+                    width: 100,
+                    align: 'center',
+                    render: (text, record) => {
+                        const timeStr = timeFormatter(text, false);
+                        return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{timeStr || '--'}</span>;
+                    },
+                },
+                {
+                    title: '幣別',
+                    dataIndex: 'Currency',
+                    key: 'Currency',
+                    align: 'center',
+                    width: 80,
+                    render: (text, record) => {
+                        return (
+                            <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>
+                        );
+                    },
+                },
+            ];
+        } else {
+            newColumns = [
+                {
+                    title: '市場',
+                    dataIndex: 'dealMarket',
+                    key: 'dealMarket',
+                    width: 70,
+                    render: (text, record) => {
+                        return <div>{text}</div>;
+                    },
+                },
+                {
+                    title: '代碼',
+                    dataIndex: 'dealStockID',
+                    key: 'dealStockID',
+                    align: 'center',
+                    width: 100,
+                    render: (text, record) => {
+                        return <div>{text}</div>;
+                    },
+                },
+                {
+                    title: '商品',
+                    dataIndex: 'dealName',
+                    key: 'dealName',
+                    width: 200,
+                    render: (text, record) => {
+                        return <span>{text}</span>;
+                    },
+                },
+                {
+                    title: '買賣',
+                    dataIndex: 'dealBS',
+                    key: 'dealBS',
+                    width: 100,
+                    align: 'center',
+                    render: (text, record) => {
+                        return (
+                            <span
+                                style={{
+                                    color: text === '買' ? '#f45a4c' : '#22a16f',
+                                }}
+                            >
+                                {text}
+                            </span>
+                        );
+                    },
+                },
+                {
+                    title: '成交量',
+                    dataIndex: 'dealNumber',
+                    key: 'dealNumber',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        return <span>{parseFloat(text) || '--'}</span>;
+                    },
+                },
+                {
+                    title: '成交均價',
+                    dataIndex: 'dealAveragePrice',
+                    key: 'dealAveragePrice',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        return <span>{!isNaN(text) ? formatNum(parseFloat(text)) : 0}</span>;
+                    },
+                },
+                {
+                    title: '成交價金',
+                    dataIndex: 'dealGoal',
+                    key: 'dealGoal',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        console.log('tttt', text);
+                        return <span>{typeof text === 'string' ? text : ''}</span>;
+                    },
+                },
+                {
+                    title: '概算手續費',
+                    dataIndex: 'fee',
+                    key: 'fee',
+                    align: 'right',
+                    width: 100,
+                    render: (text, record) => {
+                        return <span>{text}</span>;
+                    },
+                },
+                {
+                    title: '幣別',
+                    dataIndex: 'dealCurrency',
+                    key: 'dealCurrency',
+                    align: 'center',
+                    width: 80,
+                    render: (text, record) => {
+                        return <span>{text}</span>;
+                    },
+                },
+            ];
+        }
+
+        setColumns(newColumns);
+    }, [data, searchColumns, marketFilterValue, searchWords, type]);
+
+    useEffect(() => {
         if (Array.isArray(fetchData)) {
             setError('');
             const newSymbolList = [];
@@ -87,6 +398,10 @@ const DealTable = ({ type }) => {
 
     //貼newweb過來的...
     useEffect(() => {
+        if (data?.length == 0) {
+            setTotalData([]);
+            return;
+        }
         if (type === 'all' && data?.length > 0) {
             const totalList = [];
             let total = {};
@@ -95,6 +410,7 @@ const DealTable = ({ type }) => {
                 element.dealNumber = element.Qmatched;
                 element.dealPrice = element.Price;
                 element.fee = element.Fee;
+                console.log('element===', element);
                 const marketID = element.StockID.split('.').slice(-1).pop();
                 const market = marketName(marketID).name;
                 const symbol = element.StockID.substring(0, element.StockID.lastIndexOf('.'));
@@ -128,12 +444,12 @@ const DealTable = ({ type }) => {
                 total[dictKeys].dealMarket = market;
                 total[dictKeys].dealCurrency = currencyChName(element.Currency);
                 total[dictKeys].dealBS = element.BS === 'B' ? '買' : '賣';
-                totalList.push(total);
             }
-            console.log('Total', totalList);
-            for (let i of totalList) {
-                console.log(i, Object.keys(i)); // 3, 5, 7
-            }
+            console.log('Total', totalList, total);
+            Object.keys(total).forEach(key => {
+                totalList.push(total[key]);
+            });
+            setTotalData(totalList);
         }
     }, [data, type]);
 
@@ -154,333 +470,6 @@ const DealTable = ({ type }) => {
             setData(newData);
         }
     }, [nameData, fetchData]);
-
-    useEffect(() => {
-        const newColumns = [
-            {
-                title: '市場',
-                dataIndex: 'market',
-                key: 'market',
-                align: 'left',
-                width: 100,
-                ...getColumnSearchProps('market'),
-                render: (text, record) => {
-                    const marketID = record.StockID.split('.').slice(-1).pop();
-                    const market = marketName(marketID).name;
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
-                },
-            },
-            {
-                title: '代碼',
-                dataIndex: 'StockID',
-                key: 'StockID',
-                align: 'center',
-                width: 100,
-                render: (text, record) => {
-                    const symbol = text.substring(0, text.lastIndexOf('.'));
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
-                },
-            },
-            {
-                title: '商品',
-                dataIndex: 'name',
-                key: 'name',
-                width: 200,
-                ...getColumnSearchProps('name'),
-                render: (text, record) => {
-                    return (
-                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {text}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '買賣',
-                dataIndex: 'BS',
-                key: 'BS',
-                width: 100,
-                align: 'center',
-                render: (text, record) => {
-                    return (
-                        <span
-                            style={{
-                                color: text === 'B' ? '#f45a4c' : '#22a16f',
-                                opacity: record.State === '99' ? 0.45 : 1,
-                            }}
-                        >
-                            {text === 'B' ? '買' : '賣'}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '類別',
-                dataIndex: 'PriceType',
-                key: 'PriceType',
-                width: 100,
-                render: (text, record) => {
-                    const priceType = getPriceType(record.PriceType);
-                    const icons = goOrderMapping(priceType, record.GTCDate);
-                    const marketID = record.StockID.split('.').slice(-1).pop();
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {marketID === 'US' && (
-                                <>
-                                    {icons.map((icon, index) => {
-                                        return icon !== 'AON' && icon !== 'ANY' ? (
-                                            <p
-                                                key={index}
-                                                className="item--down2"
-                                                style={{
-                                                    display: 'inline-block',
-                                                    fontSize: '1rem',
-                                                    background:
-                                                        icon === '長'
-                                                            ? '#6c7b94'
-                                                            : record.BS === 'B'
-                                                            ? themeColor.buyTabColor
-                                                            : themeColor.sellTabColor,
-                                                    color: 'white',
-                                                    padding: '0 3px',
-                                                    borderRadius: '2px',
-                                                    marginRight: '4px',
-                                                    marginBottom: 0,
-                                                }}
-                                            >
-                                                {icon}
-                                            </p>
-                                        ) : (
-                                            <p
-                                                key={'B' + index}
-                                                className="item--down2"
-                                                style={{
-                                                    display: 'inline-block',
-                                                    marginBottom: 0,
-                                                }}
-                                            >
-                                                {icon}
-                                            </p>
-                                        );
-                                    })}
-                                </>
-                            )}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '成交量',
-                dataIndex: 'Qmatched',
-                key: 'Qmatched',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
-                    );
-                },
-            },
-            {
-                title: '成交價',
-                dataIndex: 'Price',
-                key: 'Price',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '成交價金',
-                dataIndex: 'Price',
-                key: 'Price',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    let amont = new BigNumber(record.Qmatched).multipliedBy(new BigNumber(record.Price));
-                    // detailTrData.dealGoal = goOrder.utility.digitsFormat(amont.toString());
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {!isNaN(text) ? formatNum(parseFloat(amont)) : 0}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '概算手續費',
-                dataIndex: 'Fee',
-                key: 'Fee',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
-                },
-            },
-            {
-                title: '委託書號',
-                dataIndex: 'OrderNo',
-                key: 'OrderNo',
-                width: 100,
-                align: 'center',
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
-                },
-            },
-            {
-                title: '成交時間',
-                dataIndex: 'MatchTime',
-                key: 'MatchTime',
-                width: 100,
-                align: 'center',
-                render: (text, record) => {
-                    const timeStr = timeFormatter(text, false);
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{timeStr || '--'}</span>;
-                },
-            },
-            {
-                title: '幣別',
-                dataIndex: 'Currency',
-                key: 'Currency',
-                align: 'center',
-                width: 80,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
-                },
-            },
-        ];
-
-        const newColumns2 = [
-            {
-                title: '市場',
-                dataIndex: 'market',
-                key: 'market',
-                align: 'left',
-                width: 100,
-                ...getColumnSearchProps('market'),
-                render: (text, record) => {
-                    const marketID = record.StockID.split('.').slice(-1).pop();
-                    const market = marketName(marketID).name;
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
-                },
-            },
-            {
-                title: '代碼',
-                dataIndex: 'StockID',
-                key: 'StockID',
-                align: 'center',
-                width: 100,
-                render: (text, record) => {
-                    const symbol = text.substring(0, text.lastIndexOf('.'));
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
-                },
-            },
-            {
-                title: '商品',
-                dataIndex: 'name',
-                key: 'name',
-                width: 200,
-                ...getColumnSearchProps('name'),
-                render: (text, record) => {
-                    return (
-                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {text}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '買賣',
-                dataIndex: 'BS',
-                key: 'BS',
-                width: 100,
-                align: 'center',
-                render: (text, record) => {
-                    return (
-                        <span
-                            style={{
-                                color: text === 'B' ? '#f45a4c' : '#22a16f',
-                                opacity: record.State === '99' ? 0.45 : 1,
-                            }}
-                        >
-                            {text === 'B' ? '買' : '賣'}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '成交量',
-                dataIndex: 'Qmatched',
-                key: 'Qmatched',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
-                    );
-                },
-            },
-            {
-                title: '成交均價',
-                dataIndex: 'Price',
-                key: 'Price',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '成交價金',
-                dataIndex: 'Price',
-                key: 'Price',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    let amont = new BigNumber(record.Qmatched).multipliedBy(new BigNumber(record.Price));
-                    // detailTrData.dealGoal = goOrder.utility.digitsFormat(amont.toString());
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {!isNaN(text) ? formatNum(parseFloat(amont)) : 0}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '概算手續費',
-                dataIndex: 'Fee',
-                key: 'Fee',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
-                },
-            },
-            {
-                title: '幣別',
-                dataIndex: 'Currency',
-                key: 'Currency',
-                align: 'center',
-                width: 80,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
-                },
-            },
-        ];
-        if (type === 'detail') {
-            setColumns(newColumns);
-        } else {
-            setColumns(newColumns2);
-        }
-    }, [data, searchColumns, marketFilterValue, searchWords, type]);
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'market') {
@@ -504,8 +493,8 @@ const DealTable = ({ type }) => {
                 filteredValue: [marketFilterValue] || null,
                 onFilter: (value, record) => {
                     // console.log('record.........',value, record);
-                    const marketID = record.StockID.split('.').slice(-1).pop();
-                    const market = marketName(marketID).name;
+                    const marketID = record.StockID?.split('.').slice(-1).pop();
+                    const market = marketName(marketID)?.name;
                     if (value === 'ALL' || value === '') {
                         return true;
                     } else {
@@ -601,7 +590,7 @@ const DealTable = ({ type }) => {
                 filterColumns={searchColumns}
                 scroll={{ x: 780, y: 600 }}
                 columns={columns}
-                dataSource={data}
+                dataSource={type === 'detail' ? data : totalData}
                 pagination={false}
                 // loading={{
                 //     indicator: (

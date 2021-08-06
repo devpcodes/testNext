@@ -69,9 +69,9 @@ export const getPriceType = code => {
 
 //整合getPriceType(源自舊的)
 export const goOrderMapping = (str, gtcDate) => {
-    let arr = str.split('&');
+    let arr = str?.split('&');
     let narr = [];
-    for (let index = 0; index < arr.length; index++) {
+    for (let index = 0; index < arr?.length; index++) {
         const element = arr[index];
         if (element === 'GTC') {
             element = '長';
