@@ -194,7 +194,10 @@ const SelfSelectTable = ({
                                         : 'javascript:;',
                                 };
                                 stockData.close = {
-                                    text: snapshotData.Close ? snapshotData.Close.toFixed(2) : '--',
+                                    text:
+                                        !snapshotData.Close || snapshotData.Close.toFixed(2) == 0
+                                            ? '--'
+                                            : snapshotData.Close.toFixed(2),
                                     class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
                                 };
                                 stockData.changePrice = {
@@ -210,7 +213,10 @@ const SelfSelectTable = ({
                                     class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
                                 };
                                 stockData.buyPrice = {
-                                    text: snapshotData.BuyPrice ? snapshotData.BuyPrice.toFixed(2) : '--',
+                                    text:
+                                        !snapshotData.BuyPrice || snapshotData.BuyPrice.toFixed(2) == 0
+                                            ? '--'
+                                            : snapshotData.BuyPrice.toFixed(2),
                                     class:
                                         snapshotData.BuyPrice > snapshotData.Reference
                                             ? 'upper'
@@ -219,11 +225,14 @@ const SelfSelectTable = ({
                                             : '',
                                 };
                                 stockData.sellPrice = {
-                                    text: snapshotData.SellPrice ? snapshotData.SellPrice.toFixed(2) : '--',
+                                    text:
+                                        !snapshotData.SellPrice || snapshotData.SellPrice.toFixed(2) == 0
+                                            ? '--'
+                                            : snapshotData.SellPrice.toFixed(2),
                                     class:
                                         snapshotData.SellPrice > snapshotData.Reference
                                             ? 'upper'
-                                            : snapshotData.BuyPrice < snapshotData.Reference
+                                            : snapshotData.SellPrice < snapshotData.Reference
                                             ? 'lower'
                                             : '',
                                 };

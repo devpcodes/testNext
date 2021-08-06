@@ -49,7 +49,7 @@ const MoreInfo = ({ children }) => {
             inInfoBox: true,
             link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
         },
-        // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+        { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
     ];
     const showSelfSelect = () => {
         setIsSelfSelectVisitable(true);
@@ -73,12 +73,17 @@ const MoreInfo = ({ children }) => {
             moreItemHandler(defaultMoreItems, code, type, productInfo);
         }
     }, [code, type, productInfo]);
-    // 暫時移除自選邏輯
+
     useEffect(() => {
         if (selectInfo) {
             reloadSelfSelectSmallIcon();
         }
     }, [selectInfo]);
+
+    // 更新一次狀態
+    setTimeout(() => {
+        reloadSelfSelectSmallIcon();
+    }, 200);
 
     const moreItemHandler = (defaultMoreItems, code, type, productInfo) => {
         if (type === 'H') {

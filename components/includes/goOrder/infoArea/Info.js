@@ -254,19 +254,23 @@ export const Info = ({ stockid }) => {
         getSelect();
     }, [code, isLogin, isSelfSelectVisitable]);
 
-    useEffect(() => {
+    useEffect(async () => {
         if (!code) {
             return;
         }
-        setInfoItems(code);
+        await setInfoItems(code);
     }, [code]);
 
-    // 暫時移除自選邏輯
     useEffect(() => {
         if (selectInfo) {
             reloadSelfSelectSmallIcon();
         }
     }, [selectInfo]);
+
+    // 更新一次狀態
+    setTimeout(() => {
+        reloadSelfSelectSmallIcon();
+    }, 200);
 
     const updateQueryStringParameter = (uri, key, value) => {
         var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
@@ -292,6 +296,16 @@ export const Info = ({ stockid }) => {
     };
 
     const reloadSelfSelectSmallIcon = useCallback(() => {
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log('-----------------------------------------------------------');
+        console.log(moreItems);
         const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
         const index = cloneMoreItems.findIndex(obj => obj.id === '4');
         if (cloneMoreItems[index]) {
@@ -426,17 +440,8 @@ export const Info = ({ stockid }) => {
     };
 
     const setInfoItems = async code => {
-        // { id: '1', color: 'dark', text: '融' },
-        // { id: '2', color: 'red', text: '詳' },
-        // { id: '3', color: 'orange', text: '存' },
-        // { id: '4', color: 'green', text: '借' },
-        // { id: '5', color: 'blue', text: '學' },
-        // { id: '6', color: 'brown', text: '+ 自選' },
-
         const t30Res = await fetchStockT30(code);
         dispatch(setT30(t30Res));
-        // const test = await fetchGetRichClubReport(code);
-        // console.log(test)
 
         let moreItems = [
             {
@@ -466,7 +471,7 @@ export const Info = ({ stockid }) => {
                 inInfoBox: true,
                 link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
             },
-            // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+            { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
         if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {

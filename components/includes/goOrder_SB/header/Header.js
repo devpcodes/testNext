@@ -230,19 +230,19 @@ const Header = () => {
                             我的帳務
                         </a>
                         <br />
-                        {/* <a
+                        <a
                             style={{
                                 marginBottom: '8px',
                                 display: 'inline-block',
                                 color: '#0d1623',
                                 fontWeight: 'bold',
                             }}
-                            href={process.env.NEXT_PUBLIC_SUBPATH + '/TradingCenter_TWStocks_Self'}
+                            href={process.env.NEXT_PUBLIC_SUBPATH + '/watchLists'}
                             target="_blank"
                         >
                             我的自選
                         </a>
-                        <br /> */}
+                        <br />
                     </>
                 )}
 
