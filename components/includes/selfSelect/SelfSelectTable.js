@@ -249,7 +249,6 @@ const SelfSelectTable = ({
                     } else if (sbQuote && ['SB'].includes(stock.market)) {
                         // 複委託
                         let mk;
-                        const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
 
                         switch (stock.exchange) {
                             case 'NASDAQ':
@@ -266,6 +265,7 @@ const SelfSelectTable = ({
                                 break;
                         }
 
+                        const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
                         console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
                         console.log(sbQuoteData);
                         console.log(sbQuote[`${stock.symbol}.${mk}`]);

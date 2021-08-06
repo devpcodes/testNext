@@ -38,7 +38,12 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
     return (
         <>
             <div className={`add__select__block ${['0'].includes(tabkey) ? 'hidden' : 'show'}`}>
-                <SearchAutoComplete selectHandler={selectHandler} parentValue={inputVal} onChange={onChangeHandler} />
+                <SearchAutoComplete
+                    selectHandler={selectHandler}
+                    parentValue={inputVal}
+                    onChange={onChangeHandler}
+                    marketType={['S', 'SB', 'F', 'O']}
+                />
                 <button
                     className="add__stock__btn"
                     onClick={addSelectStock}
