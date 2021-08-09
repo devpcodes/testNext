@@ -17,7 +17,7 @@ import {
     goOrderMapping,
     marketName,
 } from '../../../../../../services/components/goOrder/sb/dataMapping';
-import { themeColor } from '../../../../goOrder_SB/panel/PanelTabs';
+import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 import { formatNum } from '../../../../../../services/formatNum';
 import { timeFormatter } from '../../../../../../services/timeFormatter';
 

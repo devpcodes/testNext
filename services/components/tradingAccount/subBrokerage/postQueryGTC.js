@@ -8,7 +8,7 @@ export const postQueryGtc = async ({ AID, orderNo, query_type, sDate, token }) =
     console.log(AID, orderNo, query_type, sDate, token);
     var url = '/SubBrokerage/QueryTradeData/QueryGTC';
     try {
-        const res = await getA8Instance('v1', undefined, true).post(url, {
+        const res = await getA8Instance('v1', undefined, false).post(url, {
             AID,
             orderNo,
             query_type,
@@ -29,10 +29,10 @@ export const postQueryGtc = async ({ AID, orderNo, query_type, sDate, token }) =
                 return [];
             }
         } else {
-            throw 'error';
+            throw res.data.result?.Error['@Msg'];
         }
     } catch (error) {
-        throw '伺服器錯誤';
+        throw error || '伺服器錯誤';
     }
 };
 

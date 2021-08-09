@@ -13,7 +13,7 @@ import {
     marketName,
 } from '../../../../../../services/components/goOrder/sb/dataMapping';
 import { postSbcoCodeWithSwr } from '../../../../../../services/components/goOrder/sb/postSbcoCode';
-import { themeColor } from '../../../../goOrder_SB/panel/PanelTabs';
+import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 import { formatNum } from '../../../../../../services/formatNum';
 import { timeFormatter } from '../../../../../../services/timeFormatter';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
