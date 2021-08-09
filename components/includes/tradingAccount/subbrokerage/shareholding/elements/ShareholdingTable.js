@@ -445,7 +445,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess }) => {
                 Price: record.price,
                 Qty: record.qty,
                 BS: 'S',
-                GTCDate: record.useGtc ? record.gtcDate.split('-').join('') : '',
+                GTCDate: record.useGtc ? record.gtcDate : '',
                 aon: record.aon,
                 Exchid: record.exch,
                 Creator: currentAccount.idno,
@@ -458,7 +458,9 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess }) => {
             submitSuccess();
         } catch (error) {
             setLoading(false);
-            alert(error);
+            message.info({
+                content: typeof error === 'string' ? error : '伺服器錯誤',
+            });
         }
     };
 
