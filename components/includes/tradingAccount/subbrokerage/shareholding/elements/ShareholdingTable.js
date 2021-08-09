@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { Button, Modal, Input, Select } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Modal, Input, Select, Switch, message } from 'antd';
 import moment from 'moment';
 import useSWR, { cache } from 'swr';
 import AccountTable from '../../../vipInventory/AccountTable';
@@ -9,6 +9,10 @@ import { getToken } from '../../../../../../services/user/accessToken';
 import { postQuerySubBrokerageQuoteWithSwr } from '../../../../../../services/components/tradingAccount/subBrokerage/postQuerySubBrokerageQuote';
 import { marketName } from '../../../../../../services/components/goOrder/sb/dataMapping';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
+import { submitService } from '../../../../../../services/components/goOrder/sb/submitService';
+import { usePlatform } from '../../../../../../hooks/usePlatform';
+import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
+import { setModal } from '../../../../../../store/components/layouts/action';
 // import DateSelectBox from '../../../../goOrder_SB/SB/sbPanel/DateSelectBox';
 
 const { Option } = Select;
@@ -21,7 +25,9 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
+    const [loading, setLoading] = useState(false);
+    const platform = usePlatform();
+    const dispatch = useDispatch();
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -58,12 +64,18 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
     });
 
     useEffect(() => {
-        console.log('-----', fetchData, quoteData);
-        cache.clear();
+        if (controlReload != 0) {
+            cache.clear();
+        }
     }, [controlReload]);
 
     useEffect(() => {
         if (Array.isArray(fetchData)) {
+            if (fetchData?.length == 0) {
+                setStockList([]);
+                return;
+            }
+
             setError('');
             const newStockList = [];
             for (const obj of fetchData) {
@@ -80,7 +92,6 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
 
     useEffect(() => {
         const newData = [];
-
         if (quoteData && fetchData) {
             console.log(quoteData, Object.keys(quoteData));
             Object.keys(quoteData).forEach(key => {
@@ -94,9 +105,10 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
                     if (fetchData[index] != null) {
                         item.useQty = fetchData[index]?.UseQty;
                         item.zIndex = 0;
-                        item.price = 0;
-                        item.qty = 0;
-                        item.aon = '';
+                        item.price = parseFloat(item.refPrice) || parseFloat(item.preClose);
+                        item.qty = item.useQty;
+                        item.aon = 'ANY';
+                        item.useGtc = false;
                         item.key = index;
                     }
                 });
@@ -118,7 +130,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
                 render: (text, record) => {
                     return (
                         <div>
-                            <Button>賣出</Button>
+                            <Button onClick={confirmHandler.bind(null, record)}>賣出</Button>
                         </div>
                     );
                 },
@@ -209,11 +221,17 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
                 title: '長效單',
                 dataIndex: 'gtcDate',
                 key: 'gtcDate',
-                width: 170,
+                width: 190,
                 render: (text, record) => {
                     // console.log('....record', record.zIndex);
                     return (
                         <div>
+                            <Switch
+                                size="small"
+                                style={{ marginRight: '4px' }}
+                                onChange={gtcChangeHandler.bind(null, record, data)}
+                                value={record?.useGtc}
+                            />
                             <Input
                                 type="date"
                                 style={{
@@ -320,6 +338,17 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
         setData(newData);
     };
 
+    const gtcChangeHandler = (record, data, value) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.useGtc = value;
+            }
+            return item;
+        });
+        console.log('newData', newData);
+        setData(newData);
+    };
+
     const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
         setSelectedRowKeys(selectedRowKeys);
         if (showSellBtn != null) {
@@ -376,7 +405,59 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
     //     })
     //     setData(newData);
     // }
-    console.log('quoteData', quoteData);
+    const loadingHandler = (fetchData, quoteData) => {
+        if (loading) return true;
+        if (fetchData?.length == 0 && quoteData == null) {
+            return false;
+        }
+        if ((fetchData == null || quoteData == null) && !error) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const confirmHandler = record => {
+        dispatch(
+            setModal({
+                title: '委託確認',
+                content: `確認送出此筆委託嗎？`,
+                visible: true,
+                type: 'confirm',
+                onOk: () => {
+                    setLoading(true);
+                    dispatch(setModal({ visible: false }));
+                    submitHandler(record);
+                },
+            }),
+        );
+    };
+
+    const submitHandler = async record => {
+        try {
+            const obj = {
+                CID: getWebId(platform, 'recommisiioned'),
+                StockID: record.StockID,
+                Price: record.price,
+                Qty: record.qty,
+                BS: 'S',
+                GTCDate: record.useGtc ? record.GTCDate : '',
+                aon: record.aon,
+                Exchid: record.exch,
+                Creator: currentAccount.idno,
+                token: getToken(),
+                currentAccount,
+            };
+            const res = await submitService(obj);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            message.info({
+                content: error,
+            });
+        }
+    };
+
     return (
         <div>
             <AccountTable
@@ -402,10 +483,10 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
                                 transform: 'translateX(-49%) translateY(-54px)',
                             }}
                         >
-                            資料加載中...
+                            {loading === true ? '資料送出中...' : '資料加載中...'}
                         </div>
                     ),
-                    spinning: (quoteData == null || fetchData == null) && !error ? true : false,
+                    spinning: loadingHandler.call(null, fetchData, quoteData),
                 }}
             />
             <style jsx global>{`
