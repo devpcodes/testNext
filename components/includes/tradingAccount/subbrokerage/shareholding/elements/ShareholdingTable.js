@@ -16,7 +16,7 @@ import { setModal } from '../../../../../../store/components/layouts/action';
 // import DateSelectBox from '../../../../goOrder_SB/SB/sbPanel/DateSelectBox';
 
 const { Option } = Select;
-const ShareholdingTable = ({ showSellBtn, controlReload }) => {
+const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -28,6 +28,13 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
     const [loading, setLoading] = useState(false);
     const platform = usePlatform();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (controlReload != 0) {
+            cache.clear();
+        }
+    }, [controlReload]);
+
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -49,6 +56,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
         errorRetryCount: 3,
         focusThrottleInterval: 10000,
         errorRetryInterval: 10000,
+        revalidateOnFocus: false,
     });
 
     const { data: quoteData } = useSWR([JSON.stringify(stockList), controlReload], postQuerySubBrokerageQuoteWithSwr, {
@@ -61,13 +69,8 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
         errorRetryCount: 3,
         focusThrottleInterval: 10000,
         errorRetryInterval: 10000,
+        revalidateOnFocus: false,
     });
-
-    useEffect(() => {
-        if (controlReload != 0) {
-            cache.clear();
-        }
-    }, [controlReload]);
 
     useEffect(() => {
         if (Array.isArray(fetchData)) {
@@ -419,7 +422,6 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
     };
 
     const confirmHandler = record => {
-        console.log('rrr---', record);
         dispatch(
             setModal({
                 title: '委託確認',
@@ -437,14 +439,13 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
 
     const submitHandler = async record => {
         try {
-            console.log('GTC', record.useGtc, record.GTCDate);
             const obj = {
                 CID: getWebId(platform, 'recommisiioned'),
                 StockID: record.StockID,
                 Price: record.price,
                 Qty: record.qty,
                 BS: 'S',
-                GTCDate: record.useGtc ? record.GTCDate.split('-').join('') : '',
+                GTCDate: record.useGtc ? record.gtcDate.split('-').join('') : '',
                 aon: record.aon,
                 Exchid: record.exch,
                 Creator: currentAccount.idno,
@@ -453,6 +454,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
             };
             const res = await submitService(obj);
             setLoading(false);
+            submitSuccess();
         } catch (error) {
             setLoading(false);
             message.info({

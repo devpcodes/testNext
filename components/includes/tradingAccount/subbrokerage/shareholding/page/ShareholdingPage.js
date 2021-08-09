@@ -26,6 +26,12 @@ const ShareholdingPage = () => {
         //     setControlReload(0);
         // }, 500);
     };
+
+    const submitSuccessHandler = () => {
+        setControlReload(prev => {
+            return (prev += 1);
+        });
+    };
     return (
         <div>
             <div style={{ textAlign: 'right', position: 'relative' }}>
@@ -44,7 +50,11 @@ const ShareholdingPage = () => {
                     }}
                 />
             </div>
-            <ShareholdingTable showSellBtn={sellBtnHandler} controlReload={controlReload} />
+            <ShareholdingTable
+                showSellBtn={sellBtnHandler}
+                controlReload={controlReload}
+                submitSuccess={submitSuccessHandler}
+            />
         </div>
     );
 };
