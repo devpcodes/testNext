@@ -1,22 +1,41 @@
+import { getToken } from '../../../user/accessToken';
 import { checkSignCA, sign } from '../../../webCa';
 import { getCookie } from '../../layouts/cookieController';
+import { getWebId } from '../getWebId';
 import { getTT } from './dataMapping';
 import { postOrder } from './postOrder';
 
-export const submitService = async ({
-    CID,
-    StockID,
-    Price,
-    Qty,
-    BS,
-    GTCDate,
-    aon,
-    TouchedPrice,
-    Exchid,
-    Creator,
-    token,
-    currentAccount,
-}) => {
+export const submitListService = async (currentAccount, data, platform) => {
+    const resList = [];
+    for (let record of data) {
+        const res = await submitService(
+            {
+                CID: getWebId(platform, 'recommisiioned'),
+                StockID: record.StockID,
+                Price: record.price,
+                Qty: record.qty,
+                BS: 'S',
+                GTCDate: record.useGtc ? record.gtcDate : '',
+                aon: record.aon,
+                Exchid: record.exch,
+                Creator: currentAccount.idno,
+                token: getToken(),
+                currentAccount,
+            },
+            true,
+        );
+        console.log('res', res);
+        resList.push(res);
+    }
+    return new Promise((resolve, reject) => {
+        resolve(resList);
+    });
+};
+
+export const submitService = async (
+    { CID, StockID, Price, Qty, BS, GTCDate, aon, TouchedPrice, Exchid, Creator, token, currentAccount },
+    orderList,
+) => {
     let gtcDate = '';
     if (GTCDate) {
         gtcDate = [GTCDate.slice(0, 4), GTCDate.slice(5, 7), GTCDate.slice(8)];
@@ -66,7 +85,7 @@ export const submitService = async ({
             orderData.PriceType = priceType(GTCDate, aon, TouchedPrice);
         }
         console.log(orderData);
-        return await postOrder(orderData);
+        return await postOrder(orderData, orderList);
     } else {
         throw '憑證驗證失敗';
     }
