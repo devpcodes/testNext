@@ -452,14 +452,13 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess }) => {
                 token: getToken(),
                 currentAccount,
             };
+            console.log('obj----------', obj);
             const res = await submitService(obj);
             setLoading(false);
             submitSuccess();
         } catch (error) {
             setLoading(false);
-            message.info({
-                content: error,
-            });
+            alert(error);
         }
     };
 
