@@ -37,6 +37,7 @@ const OrderBox = ({
     const currentAccount = useSelector(store => store.user.currentAccount);
     const platform = usePlatform();
     const dispatch = useDispatch();
+    const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
         StockIdC.current = StockId;
         PriceC.current = Price;
@@ -64,6 +65,7 @@ const OrderBox = ({
 
     const submitHandler = async () => {
         try {
+            setSubmitLoading(true);
             const res = await submitService({
                 CID: getWebId(platform, 'recommisiioned'),
                 StockID: StockIdC.current,
@@ -78,12 +80,14 @@ const OrderBox = ({
                 token: getToken(),
                 currentAccount,
             });
+            setSubmitLoading(false);
             message.success({
                 content: '委託已送出',
             });
             closeHandler();
             dispatch(setSBActiveTabKey('3'));
         } catch (error) {
+            setSubmitLoading(false);
             message.info({
                 content: error,
             });
@@ -165,7 +169,7 @@ const OrderBox = ({
                         border: 'none',
                     }}
                     onClick={submitHandler}
-                    // loading={}
+                    loading={submitLoading}
                 >
                     {BSC.current === 'B' ? '確認買進' : '確認賣出'}
                 </Button>
