@@ -109,6 +109,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
                         item.qty = item.useQty;
                         item.aon = 'ANY';
                         item.useGtc = false;
+                        item.gtcDate = moment().add(6, 'months').format('YYYY-MM-DD');
                         item.key = index;
                     }
                 });
@@ -345,7 +346,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
             }
             return item;
         });
-        console.log('newData', newData);
+        console.log('newData..', newData);
         setData(newData);
     };
 
@@ -418,6 +419,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
     };
 
     const confirmHandler = record => {
+        console.log('rrr---', record);
         dispatch(
             setModal({
                 title: '委託確認',
@@ -435,13 +437,14 @@ const ShareholdingTable = ({ showSellBtn, controlReload }) => {
 
     const submitHandler = async record => {
         try {
+            console.log('GTC', record.useGtc, record.GTCDate);
             const obj = {
                 CID: getWebId(platform, 'recommisiioned'),
                 StockID: record.StockID,
                 Price: record.price,
                 Qty: record.qty,
                 BS: 'S',
-                GTCDate: record.useGtc ? record.GTCDate : '',
+                GTCDate: record.useGtc ? record.GTCDate.split('-').join('') : '',
                 aon: record.aon,
                 Exchid: record.exch,
                 Creator: currentAccount.idno,
