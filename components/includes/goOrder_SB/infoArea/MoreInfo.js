@@ -19,6 +19,7 @@ const MoreInfo = ({ children }) => {
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const type = useSelector(store => store.goOrder.type);
     const productInfo = useSelector(store => store.goOrder.productInfo);
+    const T30 = useSelector(store => store.goOrder.T30Data);
     const dispatch = useDispatch();
 
     let defaultMoreItems = [
@@ -114,16 +115,21 @@ const MoreInfo = ({ children }) => {
             return;
         }
         getSelect();
-    }, [code, isLogin, isSelfSelectVisitable]);
+    }, [T30, productInfo, isLogin, isSelfSelectVisitable]);
+
     const getSelect = useCallback(async () => {
         let exchange;
+        let market;
         const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+
         switch (type) {
             case 'S':
-                exchange = 'TAI';
+                exchange = T30.EXCHANGE ? T30.EXCHANGE : 'OES';
+                market = type;
                 break;
             case 'H':
                 exchange = productInfo.exchange;
+                market = 'SB';
                 break;
             default:
                 break;
@@ -131,7 +137,7 @@ const MoreInfo = ({ children }) => {
         const reqData = {
             symbol: code,
             exchange: exchange,
-            market: type,
+            market: market,
             isShowDetail: true,
             isSocalLogin: isSocalLogin,
             token: isSocalLogin ? getSocalToken() : getToken(),
@@ -180,7 +186,7 @@ const MoreInfo = ({ children }) => {
                 inInfoBox: true,
                 link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
             },
-            // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+            { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
         if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {

@@ -14,6 +14,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
     const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const productInfo = useSelector(store => store.goOrder.productInfo);
+    const t30Exchange = useSelector(store => store.goOrder.T30Data.EXCHANGE);
     const [selectItem, setSelectItem] = useState([]); // 選項
     const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
@@ -38,12 +39,12 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
             if (item.disabled === true) {
                 return;
             }
-
+            console.log(productInfo.exchange);
             let exchange;
             let market;
             switch (type) {
                 case 'S':
-                    exchange = 'TAI';
+                    exchange = t30Exchange ? t30Exchange : 'OES';
                     market = 'S';
                     break;
                 case 'H':

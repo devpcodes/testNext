@@ -252,7 +252,7 @@ export const Info = ({ stockid }) => {
             return;
         }
         getSelect();
-    }, [code, isLogin, isSelfSelectVisitable]);
+    }, [T30, isLogin, isSelfSelectVisitable]);
 
     useEffect(async () => {
         if (!code) {
@@ -296,16 +296,6 @@ export const Info = ({ stockid }) => {
     };
 
     const reloadSelfSelectSmallIcon = useCallback(() => {
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log('-----------------------------------------------------------');
-        console.log(moreItems);
         const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
         const index = cloneMoreItems.findIndex(obj => obj.id === '4');
         if (cloneMoreItems[index]) {
@@ -386,7 +376,7 @@ export const Info = ({ stockid }) => {
         const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
         switch (type) {
             case 'S':
-                exchange = 'TAI';
+                exchange = T30.EXCHANGE ? T30.EXCHANGE : 'OES';
                 break;
             default:
                 break;
