@@ -253,7 +253,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                 width: 190,
                 render: (text, record) => {
                     // console.log('....record', record.zIndex);
-                    return (
+                    return record.exch === 'US' ? (
                         <div>
                             <Switch
                                 size="small"
@@ -286,7 +286,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                             onCalendarClose={handleCalendarOpen.bind(null, record, data, 'close')}
                         /> */}
                         </div>
-                    );
+                    ) : null;
                 },
             },
             {
