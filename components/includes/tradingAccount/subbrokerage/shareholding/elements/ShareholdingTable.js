@@ -481,6 +481,9 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
             const res = await submitService(obj);
             setLoading(false);
             submitSuccess();
+            message.success({
+                content: '委託已送出',
+            });
         } catch (error) {
             setLoading(false);
             message.info({
