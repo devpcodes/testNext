@@ -16,7 +16,7 @@ import { setModal } from '../../../../../../store/components/layouts/action';
 // import DateSelectBox from '../../../../goOrder_SB/SB/sbPanel/DateSelectBox';
 
 const { Option } = Select;
-const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSelectedRowKeys }) => {
+const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSelectedRowKeys, submitListLoading }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -38,6 +38,10 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
     useEffect(() => {
         setSelectedRowKeys(parentSelectedRowKeys);
     }, [parentSelectedRowKeys]);
+
+    useEffect(() => {
+        setLoading(submitListLoading);
+    }, [submitListLoading]);
 
     const postData = useMemo(() => {
         if (currentAccount.account != null) {

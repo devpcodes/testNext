@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import ShareholdingTable from '../elements/ShareholdingTable';
 import IconBtn from '../../../vipInventory/IconBtn';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ const ShareholdingPage = () => {
     const [controlReload, setControlReload] = useState(0);
     const userInfo = useSelector(store => store.user.currentAccount);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [submitListLoading, setSubmitListLoading] = useState(false);
     const platform = usePlatform();
     const dispatch = useDispatch();
 
@@ -37,27 +38,36 @@ const ShareholdingPage = () => {
                     type: 'confirm',
                     onOk: async () => {
                         dispatch(setModal({ visible: false }));
-                        let res = await submitListService(userInfo, selectData, platform);
-                        const sellSuccess = res.filter(item => {
-                            if (item === 'True') {
-                                return true;
-                            }
-                        });
-                        dispatch(
-                            setModal({
-                                visible: true,
-                                content: `共刪除${selectData.length}筆資料，${sellSuccess.length}筆資料刪除成功，${
-                                    selectData.length - sellSuccess.length
-                                }筆資料刪除失敗`,
-                                type: 'info',
-                                title: '系統訊息',
-                            }),
-                        );
-                        setSelectedRowKeys([]);
-                        setShowSell(false);
-                        setControlReload(prev => {
-                            return (prev += 1);
-                        });
+                        setSubmitListLoading(true);
+                        try {
+                            let res = await submitListService(userInfo, selectData, platform);
+                            const sellSuccess = res.filter(item => {
+                                if (item === 'True') {
+                                    return true;
+                                }
+                            });
+                            dispatch(
+                                setModal({
+                                    visible: true,
+                                    content: `共刪除${selectData.length}筆資料，${sellSuccess.length}筆資料刪除成功，${
+                                        selectData.length - sellSuccess.length
+                                    }筆資料刪除失敗`,
+                                    type: 'info',
+                                    title: '系統訊息',
+                                }),
+                            );
+                            setSubmitListLoading(false);
+                            setSelectedRowKeys([]);
+                            setShowSell(false);
+                            setControlReload(prev => {
+                                return (prev += 1);
+                            });
+                        } catch (error) {
+                            message.info({
+                                content: typeof error === 'string' ? error : '伺服器錯誤',
+                            });
+                            setSubmitListLoading(false);
+                        }
                     },
                 }),
             );
@@ -102,6 +112,7 @@ const ShareholdingPage = () => {
                 controlReload={controlReload}
                 submitSuccess={submitSuccessHandler}
                 parentSelectedRowKeys={selectedRowKeys}
+                submitListLoading={submitListLoading}
             />
         </div>
     );
