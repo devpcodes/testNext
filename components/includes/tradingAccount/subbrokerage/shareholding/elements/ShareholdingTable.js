@@ -4,7 +4,7 @@ import { Button, Modal, Input, Select, Switch, message } from 'antd';
 import moment from 'moment';
 import useSWR, { cache } from 'swr';
 import AccountTable from '../../../vipInventory/AccountTable';
-import { postInventoryWithSwr } from '../../../../../../services/components/goOrder/sb/postInventory';
+import { postInventoryWithSwr, postInventory } from '../../../../../../services/components/goOrder/sb/postInventory';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { postQuerySubBrokerageQuoteWithSwr } from '../../../../../../services/components/tradingAccount/subBrokerage/postQuerySubBrokerageQuote';
 import { marketName } from '../../../../../../services/components/goOrder/sb/dataMapping';
@@ -62,6 +62,24 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
         errorRetryInterval: 10000,
         revalidateOnFocus: false,
     });
+
+    // const { data: fetchData } = useSWR(() => {
+    //     if(postData.AID != null){
+    //         return JSON.stringify(postData);
+    //     }else{
+    //         return null;
+    //     }
+    // }, postInventoryWithSwr, {
+    //     onError: (error, key) => {
+    //         Modal.error({
+    //             title: error,
+    //         });
+    //     },
+    //     errorRetryCount: 3,
+    //     focusThrottleInterval: 10000,
+    //     errorRetryInterval: 10000,
+    //     revalidateOnFocus: false,
+    // });
 
     const { data: quoteData } = useSWR([JSON.stringify(stockList), controlReload], postQuerySubBrokerageQuoteWithSwr, {
         onError: (error, key) => {

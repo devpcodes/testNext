@@ -8,6 +8,7 @@ export const postInventoryWithSwr = async (strObj, controlReload) => {
 };
 
 export const postInventory = async ({ AID, token }) => {
+    console.log('test', AID, token);
     var url = '/SubBrokerage/QueryTradeData/Position';
     try {
         console.log('[REQ]', AID, token);
