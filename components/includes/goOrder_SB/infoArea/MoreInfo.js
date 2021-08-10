@@ -5,9 +5,9 @@ import { InfoBox } from './InfoBox';
 import { TextBox } from './TextBox';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
-import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
-import { getToken } from '../../../../services/user/accessToken';
 import AddSelectGroup from '../../selfSelect/AddSelectGroup';
+import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
+import { getSocalToken, getToken } from '../../../../services/user/accessToken';
 
 const MoreInfo = ({ children }) => {
     const code = useSelector(store => store.goOrder.code);
