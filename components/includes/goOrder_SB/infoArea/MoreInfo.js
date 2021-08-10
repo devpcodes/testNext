@@ -7,12 +7,14 @@ import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelec
 import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
 import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
 import { getToken } from '../../../../services/user/accessToken';
+import AddSelectGroup from '../../selfSelect/AddSelectGroup';
 
 const MoreInfo = ({ children }) => {
     const code = useSelector(store => store.goOrder.code);
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const [t30Data, setT30Data] = useState(false);
     const [moreItems, setMoreItems] = useState([]);
+    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
     const socalLoginData = useSelector(store => store.user.socalLogin);
@@ -85,6 +87,17 @@ const MoreInfo = ({ children }) => {
     setTimeout(() => {
         reloadSelfSelectSmallIcon();
     }, 200);
+
+    const closeAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(false);
+        setIsSelfSelectVisitable(true);
+    }, []);
+
+    const openAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(true);
+    }, []);
+    const reload = () => {};
+    const reloadTabkey = () => {};
 
     const moreItemHandler = (defaultMoreItems, code, type, productInfo) => {
         if (type === 'H') {
@@ -238,8 +251,13 @@ const MoreInfo = ({ children }) => {
             <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
-                isEdit={false}
-                reloadSelect={getSelect}
+                addSelectGroupWindowOpen={openAddSelfGroup}
+            />
+            <AddSelectGroup
+                isAddSelectGroupVisitable={isAddSelectGroupVisitable}
+                handleClose={closeAddSelfGroup}
+                callBack={reload}
+                reloadTabkey={reloadTabkey}
             />
             <style jsx>{`
                 .info__box {
@@ -311,6 +329,14 @@ const MoreInfo = ({ children }) => {
                     cursor: pointer;
                     right: 0;
                     top: 0;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-modal-wrap {
+                    z-index: 15001;
+                }
+                .ant-modal-mask {
+                    z-index: 15000;
                 }
             `}</style>
         </>

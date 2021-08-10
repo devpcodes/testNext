@@ -49,6 +49,7 @@ import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 import { checkServer } from '../../../../services/checkServer';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 import { fetchGetRichClubReport } from '../../../../services/components/richclub/getRichClubReport';
+import AddSelectGroup from '../../selfSelect/AddSelectGroup';
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 const solaceDataHandler = (solaceData, lot, checkLot) => {
@@ -108,6 +109,7 @@ export const Info = ({ stockid }) => {
     const [reloadLoading, setReloadLoading] = useState(false);
     const [t30Data, setT30Data] = useState(false);
     const [moreItems, setMoreItems] = useState([]);
+    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -122,7 +124,6 @@ export const Info = ({ stockid }) => {
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const userSettings = useSelector(store => store.user.userSettings);
     const T30 = useSelector(store => store.goOrder.T30Data);
-
     const { close, diffPrice, diffRate, volSum, reference, isSimTrade } = solaceDataHandler(solaceData, lot, checkLot);
 
     const router = useRouter();
@@ -271,6 +272,17 @@ export const Info = ({ stockid }) => {
     setTimeout(() => {
         reloadSelfSelectSmallIcon();
     }, 200);
+
+    const closeAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(false);
+        setIsSelfSelectVisitable(true);
+    }, []);
+
+    const openAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(true);
+    }, []);
+    const reload = () => {};
+    const reloadTabkey = () => {};
 
     const updateQueryStringParameter = (uri, key, value) => {
         var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
@@ -569,8 +581,13 @@ export const Info = ({ stockid }) => {
             <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
-                isEdit={false}
-                reloadSelect={getSelect}
+                addSelectGroupWindowOpen={openAddSelfGroup}
+            />
+            <AddSelectGroup
+                isAddSelectGroupVisitable={isAddSelectGroupVisitable}
+                handleClose={closeAddSelfGroup}
+                callBack={reload}
+                reloadTabkey={reloadTabkey}
             />
             <style jsx>{`
                 .noLogin__box {
@@ -762,15 +779,14 @@ export const Info = ({ stockid }) => {
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
             `}</style>
-            {/* <style jsx global>{`
-                .endTime {
-                    color: #254a91;
-                    font-size: 1.4rem;
-                    display: inline-block;
-                    line-height: 44px;
-                    margin-left: 8px;
+            <style jsx global>{`
+                .ant-modal-wrap {
+                    z-index: 15001;
                 }
-            `}</style> */}
+                .ant-modal-mask {
+                    z-index: 15000;
+                }
+            `}</style>
         </div>
     );
 };

@@ -7,26 +7,20 @@ import { fetchUpdateSelectGroup } from '../../../services/selfSelect/updateSelec
 import { getToken } from '../../../services/user/accessToken';
 import { getSocalToken } from '../../../services/user/accessToken';
 
-const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) => {
+const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen }) => {
     const code = useSelector(store => store.goOrder.code);
     const type = useSelector(store => store.goOrder.type);
     const socalLogin = useSelector(store => store.user.socalLogin);
-    const [isEditSelfSelectGroup, setIsEditSelfSelectGroup] = useState(isEdit);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const t30Exchange = useSelector(store => store.goOrder.T30Data.EXCHANGE);
     const [selectItem, setSelectItem] = useState([]); // 選項
     const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
-    const [selectCheckedSort, setSelectCheckedSort] = useState([]);
 
     useEffect(() => {
         setIsModalVisible(isVisible);
     }, [isVisible]);
-
-    // useEffect(() => {
-
-    // },[isEditSelfSelectGroup])
 
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
 
@@ -75,29 +69,10 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
         handleClose(false);
     };
 
-    const editSelfSelect = () => {
-        setIsEditSelfSelectGroup(true);
+    const addSelfSelect = () => {
+        handleClose(false);
+        addSelectGroupWindowOpen();
     };
-
-    const completeSelfSelectGroupEdit = async () => {
-        let sortArray = [];
-        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
-        const token = isSocalLogin ? getSocalToken() : getToken();
-        selectCheckedSort.forEach(data => {
-            sortArray.push({ selectId: data.selectId });
-        });
-        await fetchUpdateSelectGroup(sortArray, isSocalLogin, token);
-        await reloadSelect();
-        setIsEditSelfSelectGroup(false);
-    };
-
-    const afterModalClose = () => {
-        setIsEditSelfSelectGroup(false);
-    };
-
-    const handleCheckedSort = useCallback(sortArray => {
-        setSelectCheckedSort(sortArray);
-    });
 
     useEffect(() => {
         if (selectInfo && selectInfo.data && Array.isArray(selectInfo.data)) {
@@ -129,11 +104,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                 title={
                     <p className="title__box">
                         <span className="title">自選組合</span>
-                        <span className="header__tool__btn edit__btn" onClick={editSelfSelect}>
-                            編輯
-                        </span>
-                        <span className="header__tool__btn complete__btn" onClick={completeSelfSelectGroupEdit}>
-                            完成
+                        <span className="header__tool__btn add__btn" onClick={addSelfSelect}>
+                            新增
                         </span>
                     </p>
                 }
@@ -144,7 +116,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                 cancelButtonProps={{ style: { display: 'none' } }}
                 zIndex="14998"
                 maskClosable={false}
-                afterClose={afterModalClose}
+                // afterClose={afterModalClose}
                 destroyOnClose={true}
                 footer={[
                     <Button
@@ -153,7 +125,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                         className="confirm"
                         danger
                         onClick={handleOk}
-                        disabled={isEditSelfSelectGroup ? true : false}
+                        // disabled={isEditSelfSelectGroup ? true : false}
                     >
                         確認
                     </Button>,
@@ -167,25 +139,10 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                                 defaultValue={selectDefaultValue}
                                 onChange={onChange}
                             />
-
                             <Checkbox.Group />
-
-                            {/* {selectInfo.data.map((d, i) => (
-                                <li className="self__select__items" key={i}>
-                                    <Checkbox className="self__select__checkbox" value={d.selectId} defaultChecked={d.isAllowAdd && d.isExist} disabled={!d.isAllowAdd}>
-                                        {` ${d.selectName} (${d.selectCount})`}
-                                    </Checkbox>
-                                </li>
-                            ))} */}
                         </ul>
                     </section>
                 }
-
-                {!!selectInfo && (
-                    <section className="edit">
-                        <SortableList reloadSelect={reloadSelect} handleCheckedSort={handleCheckedSort} />
-                    </section>
-                )}
             </Modal>
             <style jsx>{`
                 .self__select__list {
@@ -193,12 +150,10 @@ const AddSelectStock = memo(({ isVisible, handleClose, isEdit, reloadSelect }) =
                     margin: 0;
                 }
                 .add,
-                .header__tool__btn.edit__btn {
-                    display: ${isEditSelfSelectGroup === true ? 'none' : 'block'};
+                .header__tool__btn.add__btn {
                 }
                 .edit,
                 .header__tool__btn.complete__btn {
-                    display: ${isEditSelfSelectGroup === true ? 'block' : 'none'};
                 }
                 .self__select__items {
                     list-style: none;

@@ -40,7 +40,7 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack,
         <>
             <Modal
                 visible={isAddSelectGroupVisitable}
-                zIndex="1060"
+                zIndex="1401"
                 width={320}
                 title="新增自選組合"
                 closable={false}
