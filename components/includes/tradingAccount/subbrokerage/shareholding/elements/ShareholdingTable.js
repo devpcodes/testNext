@@ -234,7 +234,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                 key: 'aon',
                 width: 100,
                 render: (text, record) => {
-                    return (
+                    return record.exch === 'US' ? (
                         <Select
                             defaultValue="ANY"
                             onChange={aonChangeHandler.bind(null, record, data)}
@@ -243,7 +243,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                             <Option value="ANY">ANY</Option>
                             <Option value="AON">AON</Option>
                         </Select>
-                    );
+                    ) : null;
                 },
             },
             {
