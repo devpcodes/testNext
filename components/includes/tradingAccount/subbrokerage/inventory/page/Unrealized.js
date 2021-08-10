@@ -68,9 +68,11 @@ const Unrealized = () => {
     const newColumns = [
         {
             title: '動作',
-            dataIndex: 'Active',
+            dataIndex: 'symbol',
             key: 'active',
             align: 'center',
+            fixed: true,
+            width:'100px',
             render: (content) => {
                 return (
                     <button onClick={e=>consumeClick(e,content)}>下單</button>
@@ -81,56 +83,67 @@ const Unrealized = () => {
             dataIndex: 'market',
             key: 'market',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            fixed: true,
+            width:'110px',
+            sorter:(a,b)=> a.market.localeCompare(b.market),
             ...getColumnSearchProps('market'),
         },{
             title: '代碼',
             dataIndex: 'symbol',
             key: 'symbol',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            fixed: true,
+            width:'100px',
+            sorter: (a, b) => a.symbol - b.symbol,
         },{
             title: '商品',
             dataIndex: 'name',
             key: 'name',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'250px',
+            sorter:(a,b)=> a.name.localeCompare(b.name),
         },{
             title: '庫存',
             dataIndex: 'last_inv',
             key: 'last_inv',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'120px',
+            sorter: (a, b) => a.last_inv - b.last_inv,
         },{
             title: '成本',
             dataIndex: 'cost',
             key: 'cost',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'150px',
+            sorter: (a, b) => a.cost - b.cost,
         },{
             title: '成本均價',
             dataIndex: 'ave_cost',
             key: 'ave_cost',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'150px',
+            sorter: (a, b) => a.ave_cost - b.ave_cost,
         },{
             title: '市值',
             dataIndex: 'amount',
             key: 'amount',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'150px',
+            sorter: (a, b) => a.amount - b.amount,
         },{
             title: '損益',
             dataIndex: 'pl',
             key: 'pl',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'150px',
+            sorter: (a, b) => a.pl - b.pl,
         },{
             title: '報酬率',
             dataIndex: 'roi',
             key: 'roi',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'150px',
+            sorter: (a, b) => a.roi - b.roi,
             render: (content) => {
                 return (
                     <Tag color="#d9534f">{(content*1).toFixed(2)}%</Tag>
@@ -141,7 +154,8 @@ const Unrealized = () => {
             dataIndex: 'curr',
             key: 'Currency',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            width:'100px',
+            sorter: (a, b) => a.curr - b.curr,
         },
         
     ];
@@ -152,31 +166,31 @@ const Unrealized = () => {
             dataIndex: 'curr',
             key: 'curr',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            sorter: (a, b) => a.curr - b.curr,
         },{
             title: '總成本',
             dataIndex: 'sum_cost',
             key: 'sum_cost',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            sorter: (a, b) => a.sum_cost - b.sum_cost,
         },{
             title: '總市值',
             dataIndex: 'sum_amt',
             key: 'sum_amt',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            sorter: (a, b) => a.sum_amt - b.sum_amt,
         },{
             title: '總損益',
             dataIndex: 'sum_pl',
             key: 'sum_pl',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            sorter: (a, b) => a.sum_pl - b.sum_pl,
         },{
             title: '總報酬率',
             dataIndex: 'sum_roi',
             key: 'sum_roi',
             align: 'center',
-            sorter: (a, b) => a.age - b.age,
+            sorter: (a, b) => a.sum_roi - b.sum_roi,
             render: (content) => {
                 return (
                     <Tag color="#d9534f">{(content*1).toFixed(2)}%</Tag>
@@ -196,6 +210,7 @@ const Unrealized = () => {
     //     setFilterData(d_)
     // }
 
+
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'market') {
             return {
@@ -208,7 +223,7 @@ const Unrealized = () => {
                         data={[
                             { text: '全部', value: 'ALL' },
                             { text: '美股', value: 'US' },
-                            { text: '港股', value: 'HK' },
+                            { text: '港股', value: 'SEHK' },
                         ]}
                     />
                 ),
@@ -226,11 +241,10 @@ const Unrealized = () => {
 
     const consumeClick = (e,id) =>{
         e.preventDefault();
-        let ds_=data.filter(x=> x.Symbol == id)[0]
-        console.log(ds_)
+        let ds_=data.data.filter(x=> x.symbol == id)[0]
+        console.log('[ds]',ds_)
         window.open(`
-        ${url_base}?bs=S&stockid=${id}&price=${ds_.AvgPrice}&qty=1&account=${currentAccount.broker_id+'-'+currentAccount.account}
-        &nav=0`,'_blank', 'toolbar=0,location=0,menubar=0,width=450px,height=716px')
+        ${url_base}?bs=B&type=H&stockid=${id}&price=${ds_.ave_cost}&qty=1&account=${currentAccount.broker_id+'-'+currentAccount.account}&nav=0#tabs-1`,'_blank', 'toolbar=0,location=0,menubar=0,width=450px,height=716px')
     }
 
     const onRefresh = () =>{
@@ -279,6 +293,7 @@ const Unrealized = () => {
             <AccountTable 
             filterColumns={searchColumns}
             dataSource={data.data} 
+            scroll={{ x: 780 }}
             pagination={{
                 total:data.data.length,
                 defaultPageSize:10,

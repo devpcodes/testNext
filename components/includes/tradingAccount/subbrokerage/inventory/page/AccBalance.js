@@ -2,96 +2,141 @@ import { useEffect, useMemo, useState } from 'react';
 import { Modal, Select, Button, Input   } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
-import { postInventoryWithSwr, postInventoryBalance, postBankAccount} from '../../../../../../services/components/goOrder/sb/postInventory';
+import { postInventoryWithSwr, postInventoryBalance, postBankBalance} from '../../../../../../services/components/goOrder/sb/postInventory';
 import { getToken } from '../../../../../../services/user/accessToken';
 import AccountTable from '../../../vipInventory/AccountTable';
+import IconBtn from '../../../vipInventory/IconBtn';
 const AccBalance = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [accountType, setAccountType] = useState('');
     const [inputData, setInputData] = useState(null);
+    const [settleType, setSettleType] = useState('');
+    const [currency, setCurrency] = useState('');
     const [dataSource, setDataSource] = useState({
-        amount:null,
-        balance:null,
-        buyingPower:null,
-        currency:null,
-        t_1:null,
-        t_2:null,
+        amount:'',
+        balance:'',
+        buyingPower:'',
+        currency:'',
+        t_1:'',
+        t_2:'',
     });
-    const [dataFilter, setDataFilter] = useState({});
     const [dataCurrent, setDataCurrent] = useState('2');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isCashModalVisible, setIsCashModalVisible] = useState(false);
+    const [refresh, setRefresh] = useState(0);
     const [modalText, setModalText] = useState({title:'',content:''});
+    const [backact, setBackact] = useState('');
+    const [bankData, setBankData] = useState('');
+    const [topLoading, setTopLoading] = useState(true);
+    const [bottomLoading, setBottomLoading] = useState(true);
+    const columns = [
+        {
+            title: '幣別',
+            dataIndex: 'currency',
+            key: 'currency',
+            align: 'center',
+            width:'10%',
+        },{
+            title: '下單可用餘額',
+            dataIndex: 'buyingPower',
+            key: 'buyingPower',
+            align: 'center',
+            width:'20%',
+        },{
+            title: '銀行可用餘額-交割',
+            dataIndex: 'balance',
+            key: 'balance',
+            align: 'center',
+            width:'20%',
+        },{
+            title: 'T-1日在途',
+            dataIndex: 't_1',
+            key: 't_1',
+            align: 'center',
+            width:'15%',
+        },{
+            title: 'T-2日在途',
+            dataIndex: 't_2',
+            key: 't_2',
+            align: 'center',
+            width:'15%',
+        },{
+            title: 'T日賣出成交',
+            dataIndex: 'amount',
+            key: 'amount',
+            align: 'center',
+            width:'20%',
+        }      
+    ];
+    const columnsAcc = [{
+            title: '幣別',
+            dataIndex: 'name',
+            key: 'name',
+            align: 'center',
+            width:'30%',
+        },{
+            title: '幣別代號',
+            dataIndex: 'currency',
+            key: 'currency',
+            align: 'center',
+            width:'35%',
+        },{
+            title: '帳戶餘額',
+            dataIndex: 'amt',
+            key: 'amt',
+            align: 'center',
+            width:'35%',
+        }      
+    ];
     useEffect(() => {
-        setDataCurrent('2')
-    },[])
-    
-    useEffect(() => {
+        setTopLoading(true)
         let AID = currentAccount.broker_id + currentAccount.account
-        //postBankAccount(AID,getToken())
         postInventoryBalance(AID,getToken(),dataCurrent)
         .then(res => {
-            console.log(res.bank_balance_detail)
-            if(res.bank_balance_detail){
-             var ds_ = {currency:res.bank_balance_detail[0].currency}
-             res.bank_balance_detail.map(x=>{
-                if(x.balance_type=="1"){
-                    ds_.Balance = x.Balance
-                }else if(x.balance_type=="2"){
-                    ds_.t1 = x.t_1
-                    ds_.t2 = x.t_2
-                    ds_.t = x.amount
-                }else{
-                    ds_.buyingPower = x.buying_power
-                }
-            })   
+            if(res){
+            let r = res
+            !res.buyingPower? r.buyingPower='-':''
+            !res.balance? r.balance='-':''
+            !res.t_1? r.t_1='-':''
+            !res.t_2? r.t_2='-':''
+            !res.amount? r.amount='-':''
+            setDataSource(res)
+            setCurrency(res.currency)
             }
-            setDataSource(ds_)
-            setAccountType(res.settle_type)
+            //setBackact({act:res.act_backact,ntd:res.ntd_backact})
+            if(settleType==""&&res.settle_type){
+            setSettleType(res.settle_type)   
+            // console.log('SettleType',settleType) 
+            }
+            setTopLoading(false)
         })
-    },[dataCurrent])
-    
+    },[dataCurrent,refresh])
+
+    useEffect(() => {
+        setBottomLoading(true)
+        if(settleType=="2"||settleType=="4"){
+            let AID = currentAccount.broker_id + currentAccount.account
+            let UID = currentAccount.idno
+            postBankBalance(AID,getToken(),UID)
+            .then(res =>{
+                if(settleType=="2"){
+                    setBackact(res.act_backact)
+                }else if(settleType=="4"){
+                    setBackact(res.ntd_backact)
+                }
+                console.log(res.detail)
+                setBankData(res.detail)
+                setBottomLoading(false)
+            })   
+        }
+    },[settleType,refresh])
 
     const { Option } = Select;
+
     const handleChange = (value) => {
     setDataCurrent(value)    
     console.log(`selected ${value}`);
     }
-
-    // const postData = useMemo(() => {
-    //     if (currentAccount.account != null) {
-    //         const postData = {
-    //             AID: currentAccount.broker_id + currentAccount.account,
-    //             token: getToken(),
-    //         };
-    //         return postData;
-    //     } else {
-    //         return {};
-    //     }
-    // }, [currentAccount]);
-
-    // const { data: fetchData } = useSWR([JSON.stringify(postData)], postInventoryWithSwr, {
-    //     onError: (error, key) => {
-    //         Modal.error({
-    //             title: error,
-    //         });
-    //     },
-    //     errorRetryCount: 3,
-    //     focusThrottleInterval: 10000,
-    //     errorRetryInterval: 10000,
-    // });
-
-    // useEffect(() => {
-    //     if (Array.isArray(fetchData)) {
-    //         const newData = fetchData.map((item, index) => {
-    //             item.key = index;
-    //             return item;
-    //         });
-    //         console.log(newData)
-    //         setData(newData);
-    //     }
-        
-    // }, [fetchData]);
 
     const showCashModal = (e) => {
         e.preventDefault();
@@ -136,14 +181,12 @@ const AccBalance = () => {
         setInputData(e.target.value)
         console.log(e.target.value)
       };
-
+      const onRefresh = () =>{
+        let r = refresh
+        setRefresh(r+1)
+    }
     return (
         <div className="brokerage">
-            {/* <AccountTable 
-            dataSource={data} 
-            pagination={false} 
-            columns={columns}
-            /> */}
             <div className="action_box">
                 <div>
                 <Select defaultValue={dataCurrent} style={{ width: 120 }} onChange={handleChange}>
@@ -158,7 +201,7 @@ const AccBalance = () => {
                 </div>
                 <div>
                 <Button onClick={e=>showModal(e,1)}>說明</Button>    
-                <Button type="primary">更新</Button>    
+                <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn"> </IconBtn>    
                 </div>
                 <Modal 
                 title={modalText.title} 
@@ -182,11 +225,11 @@ const AccBalance = () => {
                         <table>
                             <tr>
                                 <td>幣別:</td>
-                                <td>{dataSource.currency==null?'-':dataSource.currency}</td>
+                                <td>{dataSource.currency?dataSource.currency:'-'}</td>
                             </tr>
                             <tr>
                                 <td>預估可出金金額:</td>
-                                <td>{dataSource.balance==null?'-':dataSource.balance}</td>
+                                <td>{dataSource.balance?dataSource.balance:'-'}</td>
                             </tr>
                             <tr>
                                 <td>出金金額:</td>
@@ -196,48 +239,98 @@ const AccBalance = () => {
                     </div>
                 </Modal>
             </div>
-            <table className="balance_table">
+            {/* <table className="balance_table">
                 <tbody>
                     <tr>
                         <td>幣別</td>
-                        <td>{dataSource.currency==null?'-':dataSource.currency}</td>
+                        <td>{dataSource.currency?dataSource.currency:'-'}</td>
                     </tr>
                     <tr>
                         <td>下單可用餘額</td>
-                        <td>{dataSource.buyingPower==null?'-':dataSource.buyingPower}</td>
+                        <td>{dataSource.buyingPower?dataSource.buyingPower:'-'}</td>
                     </tr>
                     <tr>
                         <td>銀行可用餘額-交割</td>
-                        <td>{dataSource.balance==null?'-':dataSource.balance}</td>
+                        <td>{dataSource.balance?dataSource.balance:'-'}</td>
                     </tr>
                     <tr>
                         <td>T-1日在途</td>
-                        <td>{dataSource.t_1==null?'-':dataSource.t_1}</td>
+                        <td>{dataSource.t_1?dataSource.t_1:'-'}</td>
                     </tr>
                     <tr>
                         <td>T-2日在途</td>
-                        <td>{dataSource.t_2==null?'-':dataSource.t_2}</td>
+                        <td>{dataSource.t_2?dataSource.t_2:'-'}</td>
                     </tr>
                     <tr>
                         <td>T日賣出成交</td>
-                        <td>{dataSource.amount==null?'-':dataSource.amount}</td>
+                        <td>{dataSource.amount?dataSource.amount:'-'}</td>
                     </tr>
                 </tbody>
-            </table>
-            
+            </table> */}
+            <AccountTable 
+            dataSource={[dataSource]} 
+            pagination={false} 
+            columns={columns}
+            loading={topLoading}
+            />
+           {(settleType=='2'||settleType=='4')?(
+            <div className="bank_table">
+            <p>{settleType=='2'?('外幣'):('台幣')}自有帳戶:<span>{backact}</span></p>
+            <AccountTable 
+            dataSource={bankData} 
+            pagination={false} 
+            columns={columnsAcc}
+            loading={bottomLoading}
+            />
+            {/* <table className="balance_table_bank">
+            <thead>
+                <tr>
+                    <th>幣別</th>
+                    <th>幣別代號</th>
+                    <th>帳戶餘額</th>
+                </tr>                
+            </thead>
+                <tbody>
+                {
+                    bankData.map(x=>{
+                    return(
+                    <tr>
+                        <td>{x.name}</td>
+                        <td>{x.currency}</td>
+                        <td>{x.amt}</td>
+                    </tr>                            
+                    )
+                    })
+                }
+
+            </tbody>
+        </table>  */}
+        </div>              
+           ):null}        
             <style jsx>
                 {`
-                .action_box{display:flex;justify-content: space-between; }
-                .action_box > div > Button{margin-left:10px; }
+                .action_box{display:flex;justify-content: space-between;align-items: center;margin-bottom:10px; }
+                
                 .balance_table {width:100%;font-size:16px; line-height:2; margin-top:20px;}
                 .balance_table tr td{width:50%;text-align:center;border:1px solid grey;}
                 .balance_table tr td:first-child{background-color:#f2f5fa;color:#6c7b94;}
 
+                .balance_table_bank {width:100%;font-size:16px; line-height:2; margin-top:20px;}
+                .balance_table_bank tr td,
+                .balance_table_bank tr th{text-align:center;border:1px solid grey;}
+                .balance_table_bank tr td:not(:first-child){width:35%}
+                .balance_table_bank tr th{background-color:#f2f5fa;color:#6c7b94;}
+                .bank_table {margin:45px auto;}
+                .bank_table p{font-size:16px;}
+                .bank_table p span{color:#1890ff;font-weight:700;margin-left:0.5em;}
+        
                 `}
             </style>
             <style global jsx>
                 {`
-                .brokerage .action_box .ant-btn{margin-left:10px; }
+                .brokerage .action_box .action_btn,
+                .brokerage .action_box .ant-btn{margin-left:10px;}
+                
                 .brokerage .action_box .ant-btn:hover:not(.ant-btn-primary){border-color:rgb(196, 56, 38); color:rgb(196, 56, 38); }
                 .brokerage .action_box .ant-btn-primary{margin-left:10px; background: rgb(196, 56, 38); border-color: rgb(196, 56, 38)}
                 .brokerage .action_box .ant-btn-primary:hover{filter: brightness(1.1);}
@@ -245,6 +338,7 @@ const AccBalance = () => {
                 .CashModal table tr td:first-child{text-align:right; }
                 .CashModal table tr td:last-child{text-align:center; }
                 .CashModal table tr td input{text-align:center; }
+
                 `}
             </style>
         </div>

@@ -22,6 +22,7 @@ const Invetory = () => {
             const postData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 token: getToken(),
+                seq: refresh
             };
             return postData;
         } else {
@@ -41,6 +42,7 @@ const Invetory = () => {
     });
 
     useEffect(() => {
+        
         if (Array.isArray(fetchData)) {
             const newData = fetchData.map((item, index) => {
                 item.key = index;
@@ -206,7 +208,7 @@ const Invetory = () => {
                 })
             }
             </Select> */}
-            <IconBtn onClick={onRefresh}> </IconBtn>
+            <IconBtn type={'refresh'} onClick={onRefresh}> </IconBtn>
         </div> 
             <AccountTable 
             filterColumns={searchColumns}
@@ -218,7 +220,7 @@ const Invetory = () => {
         <style jsx>
             {`
             AccountTable{margin-top:15px}
-            .active_box {margin-bottom:15px;display:flex;justify-content:space-between;}
+            .active_box {margin-bottom:15px;display:flex; justify-content: flex-end;}
             `}
         </style>
         </>

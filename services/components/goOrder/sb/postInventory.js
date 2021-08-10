@@ -7,8 +7,7 @@ export const postInventoryWithSwr = async (strObj, controlReload) => {
     return d;
 };
 
-export const postInventory = async ({ AID, token }) => {
-    console.log('test', AID, token);
+export const postInventory = async ({ AID, token, seq }) => {
     var url = '/SubBrokerage/QueryTradeData/Position';
     try {
         console.log('[REQ]', AID, token);
@@ -18,7 +17,7 @@ export const postInventory = async ({ AID, token }) => {
         });
         console.log('[RES]', res);
         if (res.data.success === 'True') {
-            const arr = [];
+            const obj = [];
             if (!res.data.result.msg) {
                 if (res.data.result?.length > 0) {
                     res.data.result.map(x => {
@@ -45,20 +44,51 @@ export const postInventory = async ({ AID, token }) => {
 export const postInventoryBalance = async (AID, token, TT) => {
     var url = '/SubBrokerage/ClientData/BankBalanceAll';
     try {
-        console.log('[REQ]', AID, token);
-        const res = await getA8Instance('v2', undefined, true).post(url, { AID: AID, token: token, TT: TT });
-        if (res.data.success === 'True') {
-            const arr = [];
-            console.log('[RES]', res);
-            if (res.data.data) {
-                //let data = res.data.data
-                //if(data.settle_type=="1")
-                // let result = {
-                //     data:data.bank_balance_detail,
-                //     type:data.settle_type
-                // }
-                // console.log('[RESULT]',result)
-                return res.data.data;
+        console.log('[REQ]',AID, token )
+        const res = await getA8Instance('v2', undefined, true).post(url, {AID:AID,token:token,TT:TT});
+        if (res.data.success === 'True') { console.log('[RES]',res)
+            let ds_ = {};
+            if(res.data.data.settle_type){
+                ds_.settle_type = res.data.data.settle_type
+            }
+            if (res.data.data.bank_balance_detail) {
+                
+                let origin = res.data.data.bank_balance_detail;
+                origin.map(x=>{
+                    if(x.currency && ds_.currency!==x.currency){
+                      ds_.currency = x.currency
+                    }
+                    if(x.balance_type=="1"){
+                        ds_.Balance = x.Balance
+                    }else if(x.balance_type=="2"){
+                        ds_.t1 = x.t_1
+                        ds_.t2 = x.t_2
+                        ds_.t = x.amount
+                    }else{
+                        ds_.buyingPower = x.buying_power
+                    }
+                })
+                return ds_;
+            } else {
+                return [];
+            }
+        } else {
+            throw 'error';
+        }
+    } catch (error) {
+        throw '伺服器錯誤(2)';
+    }
+};
+
+export const postBankBalance = async ( AID, token, UID ) => {
+    var url = '/SubBrokerage/ClientData/BankBalance';
+    try {
+        console.log('[REQ]',AID, token ,UID)
+        const res = await getA8Instance('v2', undefined, true).post(url, {AID:AID,token:token,user_id:UID});
+        if (res.data.success === 'True') { 
+            console.log('[RES]',res)
+            if (res.data.result.data) {
+                return res.data.result.data;
             } else {
                 return [];
             }
@@ -106,8 +136,8 @@ export const postBankAccount = async (AID, token) => {
         console.log('[REQ]', AID, token);
         const res = await getA8Instance('v1', undefined, true).post(url, { AID: AID, token: token });
         if (res.data.success === 'True') {
-            const arr = [];
-            console.log('[RES]', res);
+            const obj = [];
+            console.log('[RES]',res)
             if (res.data.result) {
                 // res.data.result.map(x=>{
                 //     x.Currency = getCurrency(x.Currency)
