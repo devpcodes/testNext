@@ -104,12 +104,12 @@ const MoreInfo = ({ children }) => {
             setMoreItems(cloneMoreItems);
         }
     });
-    useEffect(async () => {
-        if (!isLogin && Object.keys(socalLoginData).length === 0) {
-            return;
-        }
-        getSelect();
-    }, [code, isLogin, isSelfSelectVisitable]);
+    // useEffect(async () => {
+    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
+    //         return;
+    //     }
+    //     getSelect();
+    // }, [code, isLogin, isSelfSelectVisitable]);
     const getSelect = useCallback(async () => {
         let exchange;
         const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
