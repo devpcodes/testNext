@@ -179,7 +179,7 @@ const OrderBox = ({
                 .warn__info {
                     margin-top: 5px;
                     margin-bottom: 0;
-                    color: #f45a4c;
+                    color: ${BSC.current === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                     padding-right: 10px;
                     line-height: 20px;
                 }
