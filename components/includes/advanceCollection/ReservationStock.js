@@ -47,6 +47,7 @@ const ReservationStock = () => {
     const [searchStock, setSearchStock] = useState('');
     const [searchVal, setSearchVal] = useState('');
     const [dataLoading, setDataLoading] = useState(false);
+    const [activeType, setActiveType] = useState('1');
 
     const stockColumns = useRef([]);
     const nowPercent = useRef(0);
@@ -106,6 +107,7 @@ const ReservationStock = () => {
         selectedAccount.current = state.accountsReducer.selected;
         setSearchVal('');
         setSearchStock('');
+        setActiveType('1');
         return () => {
             if (timer.current != null) {
                 window.clearInterval(timer.current);
@@ -271,13 +273,13 @@ const ReservationStock = () => {
             return 0;
         }
     };
-    const dataHandler = async activeKey => {
+    const dataHandler = async (activeKey, activeType = '1') => {
         if (getToken()) {
             let data = getAccountsDetail(getToken());
             if (data.broker_id && data.account) {
                 setDataLoading(true);
                 if (activeKey == 1) {
-                    await fetchInventory(getToken(), data.broker_id, data.account);
+                    await fetchInventory(getToken(), data.broker_id, data.account, activeType);
                 } else {
                     await fetchStatus(getToken(), data.broker_id, data.account);
                 }
@@ -287,9 +289,9 @@ const ReservationStock = () => {
         }
     };
 
-    const fetchInventory = async (token, brokerId, account) => {
+    const fetchInventory = async (token, brokerId, account, activeType) => {
         try {
-            let resData = await fetchStockInventory(token, brokerId, account);
+            let resData = await fetchStockInventory(token, brokerId, account, activeType);
             if (Array.isArray(resData)) {
                 resData = resData.map((item, index) => {
                     item.key = String(index);
@@ -359,8 +361,9 @@ const ReservationStock = () => {
         stockActiveTabKey.current = activeKey;
         setSearchVal('');
         setSearchStock('');
+        setActiveType('1');
         if (activeKey == 1) {
-            dataHandler(activeKey);
+            dataHandler(activeKey, activeType);
             setColumnsData(stockColumns.current);
         } else {
             dataHandler(activeKey);
@@ -372,6 +375,7 @@ const ReservationStock = () => {
     };
 
     const clickHandler = (text, record) => {
+        console.log('activeType...', activeType);
         if (validateQty(record.qty, record.load_qty, record.stock_amount_t1)) {
             console.log(text, record);
             // console.log(jwt_decode(getToken()));
@@ -477,7 +481,7 @@ const ReservationStock = () => {
                 Modal.success({
                     content: resData,
                     onOk() {
-                        dataHandler(1);
+                        dataHandler(1, activeType);
                         // resetDataHandler();
                     },
                 });
@@ -596,6 +600,13 @@ const ReservationStock = () => {
         }
     };
 
+    const filterBtnHandler = type => {
+        setActiveType(type);
+        dataHandler(1, type);
+        setSearchVal('');
+        setSearchStock('');
+    };
+
     return (
         <div className="reservation__container">
             {/* <CaHead /> */}
@@ -621,6 +632,22 @@ const ReservationStock = () => {
                         <Button type="primary" className="searchBtn" onClick={resetHandler.bind(null, 'apply')}>
                             重置
                         </Button>
+                        <div className={'filterBox'}>
+                            <Button
+                                type="primary"
+                                className={activeType == '1' ? 'active searchBtn' : 'searchBtn'}
+                                onClick={filterBtnHandler.bind(null, '1')}
+                            >
+                                全額/收足/處置類股票
+                            </Button>
+                            <Button
+                                type="primary"
+                                className={activeType == '2' ? 'active searchBtn' : 'searchBtn'}
+                                onClick={filterBtnHandler.bind(null, '2')}
+                            >
+                                一般股票
+                            </Button>
+                        </div>
                     </div>
                     <ApplyContent
                         key="table1"
@@ -783,13 +810,25 @@ const ReservationStock = () => {
                     height: 100%;
                     background-color: rgb(249 249 249 / 70%);
                 }
+                .filterBox {
+                    display: inline-block;
+                    float: right;
+                }
                 @media (max-width: 580px) {
                     .title {
                         font-size: 26px;
                     }
+                    .filterBox {
+                        display: block;
+                        float: none;
+                        margin-top: 20px;
+                    }
                 }
             `}</style>
             <style jsx global>{`
+                .active.searchBtn {
+                    background: #425b77 !important;
+                }
                 .searchBox {
                     padding-left: 2px;
                     padding-right: 2px;
