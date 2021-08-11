@@ -1,7 +1,7 @@
 import { Input, Button } from 'antd';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { themeColor } from '../panel/PanelTabs';
-// import infoIcon from '../../../resources/images/components/goOrder/attention-info-circle.svg';
+import infoIcon from '../../../../resources/images/components/goOrder/attention-info-circle.svg';
 const ChangeNum = ({
     title,
     val,
@@ -12,17 +12,22 @@ const ChangeNum = ({
     inputWidth,
     color,
     fontSize,
+    conditionText,
+    textAlign,
+    style,
+    showIcon,
+    iconClickHandler,
 }) => {
     const valChangeHandler = e => {
         console.log(e.target.value);
         changeHandler(e.target.value);
     };
     return (
-        <div className="price_control">
+        <div className="price_control" style={style}>
             <div className="select__box">
                 <div className="select__label">
                     {title}
-                    {/* <img className="info__icon" src={infoIcon} /> */}
+                    {showIcon && <img className="info__icon" src={infoIcon} onClick={iconClickHandler} />}
                 </div>
             </div>
             <div className="input__box">
@@ -31,6 +36,7 @@ const ChangeNum = ({
                     onChange={valChangeHandler}
                     // onFocus={focusHandler}
                 />
+                {conditionText && <span className="condition__text">{conditionText}</span>}
             </div>
             <div className="btn__box-modal">
                 <Button onClick={minusClickHandler}>-</Button>
@@ -41,7 +47,7 @@ const ChangeNum = ({
             <style jsx>{``}</style>
             <style global jsx>{`
                 .select__label {
-                    width: 62px;
+                    width: ${showIcon ? '70px' : '62px'};
                     font-size: 1.6rem;
                     color: #0d1623;
                     margin-top: 4px;
@@ -59,7 +65,15 @@ const ChangeNum = ({
                 .input__box {
                     display: inline-block;
                     width: ${inputWidth == null ? 'calc(100vw - 32px - 100px - 54px - 8px)' : inputWidth};
+                    position: relative;
                     /* width: calc(100vw - 160px); */
+                }
+                .condition__text {
+                    position: absolute;
+                    left: 7px;
+                    font-size: 21px;
+                    font-weight: bold;
+                    top: 6px;
                 }
                 .btn__box-modal {
                     width: 100px;
@@ -121,6 +135,7 @@ const ChangeNum = ({
                     height: 46px;
                     font-size: ${fontSize == null ? '2.6rem' : fontSize};
                     color: black;
+                    text-align: ${textAlign || 'left'};
                 }
                 .price_control .ant-input:hover {
                     border-color: #dedede;
@@ -144,7 +159,7 @@ const ChangeNum = ({
                 }
                 .info__icon {
                     margin-top: -3px;
-                    margin-left: 5px;
+                    margin-left: 2px;
                 }
             `}</style>
         </div>
