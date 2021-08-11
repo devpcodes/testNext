@@ -42,9 +42,9 @@ import theme from '../../../../resources/styles/theme';
 import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
-// import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
-// import { getToken } from '../../../../services/user/accessToken';
-// import { getSocalToken } from '../../../../services/user/accessToken';
+import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
+import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 import { InstallWebCA } from './InstallWebCA';
 import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 
@@ -308,41 +308,41 @@ export const Info = ({ stockid }) => {
     const reload = () => {};
     const reloadTabkey = () => {};
 
-    // const updateQueryStringParameter = (uri, key, value) => {
-    //     var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
-    //     var separator = uri.indexOf('?') !== -1 ? '&' : '?';
-    //     if (uri.match(re)) {
-    //         return uri.replace(re, '$1' + key + '=' + value + '$2');
-    //     } else {
-    //         return uri + separator + key + '=' + value;
-    //     }
-    // };
+    const updateQueryStringParameter = (uri, key, value) => {
+        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+        var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + '=' + value + '$2');
+        } else {
+            return uri + separator + key + '=' + value;
+        }
+    };
 
-    // const loginClickHandler = () => {
-    //     const query = router.query;
-    //     let queryStr = objectToQueryHandler(query);
-    //     if (code) {
-    //         queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
-    //     }
-    //     window.location =
-    //         `${process.env.NEXT_PUBLIC_SUBPATH}` +
-    //         `/SinoTrade_login${queryStr}` +
-    //         `${queryStr ? '&' : '?'}` +
-    //         'redirectUrl=OrderGO';
-    // };
+    const loginClickHandler = () => {
+        const query = router.query;
+        let queryStr = objectToQueryHandler(query);
+        if (code) {
+            queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
+        }
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
+    };
 
-    // const reloadSelfSelectSmallIcon = useCallback(() => {
-    //     const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
-    //     const index = cloneMoreItems.findIndex(obj => obj.id === '4');
-    //     if (cloneMoreItems[index]) {
-    //         if (selectInfo.isExist) {
-    //             cloneMoreItems[index].text = '❤ 自選';
-    //         } else {
-    //             cloneMoreItems[index].text = '+ 自選';
-    //         }
-    //         setMoreItems(cloneMoreItems);
-    //     }
-    // });
+    const reloadSelfSelectSmallIcon = useCallback(() => {
+        const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
+        const index = cloneMoreItems.findIndex(obj => obj.id === '4');
+        if (cloneMoreItems[index]) {
+            if (selectInfo.isExist) {
+                cloneMoreItems[index].text = '❤ 自選';
+            } else {
+                cloneMoreItems[index].text = '+ 自選';
+            }
+            setMoreItems(cloneMoreItems);
+        }
+    });
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -378,13 +378,13 @@ export const Info = ({ stockid }) => {
         isMoreDetailVisitable ? setIsMoreDetailVisitable(false) : setIsMoreDetailVisitable(true);
     };
 
-    // const showSelfSelect = () => {
-    //     setIsSelfSelectVisitable(true);
-    // };
+    const showSelfSelect = () => {
+        setIsSelfSelectVisitable(true);
+    };
 
-    // const closeSelfSelect = useCallback(() => {
-    //     setIsSelfSelectVisitable(false);
-    // }, []);
+    const closeSelfSelect = useCallback(() => {
+        setIsSelfSelectVisitable(false);
+    }, []);
 
     const reloadHandler = () => {
         setReloadLoading(true);
@@ -602,7 +602,7 @@ export const Info = ({ stockid }) => {
                 </MoreInfo>
             </div>
 
-            {/* <div className="more__info__container">
+            <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
                     <button
@@ -613,7 +613,7 @@ export const Info = ({ stockid }) => {
                     </button>
                 </div>
             </div>
-            <div className="page__mask"></div> */}
+            <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
             <AddSelectStock
                 isVisible={isSelfSelectVisitable}
