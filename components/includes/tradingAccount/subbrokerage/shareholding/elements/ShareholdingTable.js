@@ -13,7 +13,7 @@ import { submitService } from '../../../../../../services/components/goOrder/sb/
 import { usePlatform } from '../../../../../../hooks/usePlatform';
 import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
 import { setModal } from '../../../../../../store/components/layouts/action';
-// import DateSelectBox from '../../../../goOrder_SB/SB/sbPanel/DateSelectBox';
+// import DateSelectBox from '../../../../goOrder/SB/sbPanel/DateSelectBox';
 
 const { Option } = Select;
 const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSelectedRowKeys, submitListLoading }) => {

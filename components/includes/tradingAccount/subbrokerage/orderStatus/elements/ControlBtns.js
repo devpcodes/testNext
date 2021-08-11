@@ -5,7 +5,7 @@ import { postStockInfo } from '../../../../../../services/components/goOrder/sb/
 import { getToken } from '../../../../../../services/user/accessToken';
 import { setModal } from '../../../../../../store/components/layouts/action';
 import UpdateQtyModal from './UpdateQtyModal';
-import TitleBox from '../../../../goOrder_SB/SB/searchList/TitleBox';
+import TitleBox from '../../../../goOrder/SB/searchList/TitleBox';
 import { postCancel } from '../../../../../../services/components/goOrder/sb/postCancel';
 import { postUpdate } from '../../../../../../services/components/goOrder/sb/postUpdate';
 import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
