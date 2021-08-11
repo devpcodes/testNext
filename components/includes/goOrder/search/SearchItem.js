@@ -64,6 +64,9 @@ export const SearchItem = memo(({ item, keyword, selectHandler, isMatched }) => 
                 .group__item .item__name {
                     height: 22px;
                     line-height: 22px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
                 .group__item ~ .group__item {
                     border-top: solid 1px ${theme.colors.normalBg};

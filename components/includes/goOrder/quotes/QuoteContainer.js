@@ -124,7 +124,7 @@ const QuoteContainer = () => {
     }, [stopRenderNum, checkLot]);
 
     const quoteContainerStyleHandler = () => {
-        if (panelHeight >= 100 && bs !== '') {
+        if (panelHeight >= 100 && bs !== '' && quoteContainerElement.current != null) {
             quoteContainerElement.current.scrollTop = 0;
             return {
                 transform: 'translateY(-290px)', //-60

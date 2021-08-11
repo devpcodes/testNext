@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { checkLogin } from '../../../services/components/layouts/checkLogin';
 import { usePlatform } from '../../../hooks/usePlatform';
+import { setSBBs } from '../../../store/goOrderSB/action';
 
 const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [shadow, setShadow] = useState('0px -7px 6px -3px #C7C7C7');
-
+    const type = useSelector(store => store.goOrder.type);
     const socalLoginData = useSelector(store => store.user.socalLogin);
     // const platform = useSelector(store => store.general.platform);
     const platform = usePlatform();
@@ -28,10 +29,18 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
         }
     }, [winSize, containerHeight]);
 
-    const bsHandler = type => {
+    const bsHandler = (bs, type) => {
         if (checkLogin()) {
-            dispatch(setBs(type));
-            return;
+            if (type === 'S') {
+                dispatch(setBs(bs));
+                dispatch(setSBBs(bs));
+                return;
+            }
+            if (type === 'H') {
+                dispatch(setBs(bs));
+                dispatch(setSBBs(bs));
+                return;
+            }
         }
         const query = router.query;
         const queryStr = objectToQueryHandler(query);
@@ -39,7 +48,7 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
             `${process.env.NEXT_PUBLIC_SUBPATH}` +
             `/SinoTrade_login${queryStr}` +
             `${queryStr ? '&' : '?'}` +
-            'redirectUrl=OrderGO';
+            `redirectUrl=${router.pathname}`;
     };
 
     // const socalClickHandler = () => {
@@ -82,10 +91,10 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
         <div className="container" style={{ display: show ? 'block' : 'none' }}>
             {socalLoginData._id == null && (
                 <>
-                    <button className="btn buy" onClick={bsHandler.bind(null, 'B')}>
+                    <button className="btn buy" onClick={bsHandler.bind(null, 'B', type)}>
                         買進
                     </button>
-                    <button className="btn sell" onClick={bsHandler.bind(null, 'S')}>
+                    <button className="btn sell" onClick={bsHandler.bind(null, 'S', type)}>
                         賣出
                     </button>
                 </>

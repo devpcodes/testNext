@@ -43,8 +43,12 @@ const PanelTabs = () => {
         //     dispatch(setWebsocketEvent(true));
         // }, 5000);
         return () => {
-            if (myWebsocket != null) {
-                myWebsocket.close();
+            try {
+                if (myWebsocket != null) {
+                    myWebsocket.close();
+                }
+            } catch (error) {
+                console.log(error);
             }
         };
         // console.log('mock', JSON.parse('{"TRACE_ID":"000147","TRACE_CHANNEL":"dev","CH_FG":"N","FORMAT":"ITOLOT","SYS_ID":"30","TRADE_TYPE":"02","MSG_TYPE":"01","MSG_STIME":"132835","ORD_STATUS":"00","BROKER_ID":"9A95","PVC_ID":"@@","ORD_NO":"WA058","ACCOUNT":"0475599","ACCOUNT_TYPE":"I","STOCK_ID":"2330","PRICE":307,"QTY":1,"BS":"S","ORD_TYPE1":"0","ORD_TYPE2":"0","ORD_DATE":"20210322","ORD_TIME":"132909955","ORD_QTY_O":0,"ORD_QTY_N":1,"PRICE_TYPE":"2","ORD_TYPE":"0","MARKET_ID":"S","AGENT_ID":"297","ORD_SEQ1":"049232","ORD_SEQ2":"049232","RTN_FORM":"1","TIMEOUT":" ","ERR_MSG":"","WEB_ID":"129","ORD_SEQ_UD":"000000","MSG_ID":"       ","MSG_FG1":"","MSG_FG2":"","TRF_FLD":"","ORD_SEQ_O":"      ","WEB_ID_N":"   ","WEB_ID_O":"","QTY_O":1,"EXH_MARK":" ","PRICE_FLAG":"1","SUBCOL":"","ADD_DATE":"20210322","ADD_TIME":"132835","ADD_USER":"HCSLSO","PROCESS_FG":" ","topic":"R/N/TFT/O/9A95/0475599"}'))
