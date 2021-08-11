@@ -413,99 +413,109 @@ const ReservationStock = () => {
     // }
 
     const submitData = async record => {
-        //token, branch, account, symbol, qty, category
-        const token = getToken();
-        let data = getAccountsDetail(token);
-        //未驗憑證
-        // const resData = await postApplyEarmark(
-        //     token,
-        //     data.broker_id,
-        //     data.account,
-        //     record.code,
-        //     String(record.qty),
-        //     '0',
-        // );
-        // submitSuccess();
-        // if(resData){
-        //     Modal.success({
-        //         content: resData,
-        //         onOk() {
-        //             dataHandler(1);
-        //             // resetDataHandler();
-        //         },
-        //     });
-        // }
+        try {
+            alert('開始申請');
+            //token, branch, account, symbol, qty, category
+            const token = getToken();
+            alert('getToken');
+            let data = getAccountsDetail(token);
+            alert('getAccountsDetail');
+            //未驗憑證
+            // const resData = await postApplyEarmark(
+            //     token,
+            //     data.broker_id,
+            //     data.account,
+            //     record.code,
+            //     String(record.qty),
+            //     '0',
+            // );
+            // submitSuccess();
+            // if(resData){
+            //     Modal.success({
+            //         content: resData,
+            //         onOk() {
+            //             dataHandler(1);
+            //             // resetDataHandler();
+            //         },
+            //     });
+            // }
 
-        //驗憑證(1)
-        // let caContent = await signCert(
-        //     {
-        //         idno: data.idno,
-        //         broker_id: data.broker_id,
-        //         account: data.account,
-        //     },
-        //     true,
-        //     token,
-        // );
+            //驗憑證(1)
+            // let caContent = await signCert(
+            //     {
+            //         idno: data.idno,
+            //         broker_id: data.broker_id,
+            //         account: data.account,
+            //     },
+            //     true,
+            //     token,
+            // );
 
-        //驗憑證(2)
-        let caContent = sign(
-            {
-                idno: data.idno,
-                broker_id: data.broker_id,
-                account: data.account,
-            },
-            true,
-            token,
-            isWebView.current,
-        );
-
-        console.log('newCaContent', caContent);
-        if (checkSignCA(caContent)) {
-            setLoading(true);
-            percentHandler();
-            const resData = await postApplyEarmark(
+            //驗憑證(2)
+            let caContent = sign(
+                {
+                    idno: data.idno,
+                    broker_id: data.broker_id,
+                    account: data.account,
+                },
+                true,
                 token,
-                data.broker_id,
-                data.account,
-                record.code,
-                String(record.qty),
-                '0',
-                caContent,
+                isWebView.current,
             );
-            submitSuccess();
-            if (resData) {
-                Modal.success({
-                    content: resData,
-                    onOk() {
-                        dataHandler(1);
-                        // resetDataHandler();
-                    },
-                });
-            }
-        }
+            alert('簽章');
+            console.log('newCaContent', caContent);
 
-        // CAHandler(token, async () => {
-        //     setLoading(true);
-        //     percentHandler();
-        //     const resData = await postApplyEarmark(
-        //         token,
-        //         data.broker_id,
-        //         data.account,
-        //         record.code,
-        //         String(record.qty),
-        //         '0',
-        //     );
-        //     submitSuccess();
-        //     if (resData) {
-        //         Modal.success({
-        //             content: resData,
-        //             onOk() {
-        //                 dataHandler(1);
-        //                 // resetDataHandler();
-        //             },
-        //         });
-        //     }
-        // });
+            if (checkSignCA(caContent)) {
+                alert('檢查憑證成功');
+                setLoading(true);
+                percentHandler();
+                const resData = await postApplyEarmark(
+                    token,
+                    data.broker_id,
+                    data.account,
+                    record.code,
+                    String(record.qty),
+                    '0',
+                    caContent,
+                );
+                submitSuccess();
+                alert('送出資料完成');
+                if (resData) {
+                    Modal.success({
+                        content: resData,
+                        onOk() {
+                            dataHandler(1);
+                            // resetDataHandler();
+                        },
+                    });
+                }
+            }
+
+            // CAHandler(token, async () => {
+            //     setLoading(true);
+            //     percentHandler();
+            //     const resData = await postApplyEarmark(
+            //         token,
+            //         data.broker_id,
+            //         data.account,
+            //         record.code,
+            //         String(record.qty),
+            //         '0',
+            //     );
+            //     submitSuccess();
+            //     if (resData) {
+            //         Modal.success({
+            //             content: resData,
+            //             onOk() {
+            //                 dataHandler(1);
+            //                 // resetDataHandler();
+            //             },
+            //         });
+            //     }
+            // });
+        } catch (e) {
+            alert(e.message);
+        }
     };
 
     //取得選擇帳號的詳細資料，驗憑證
