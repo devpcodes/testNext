@@ -37,6 +37,7 @@ const OrderBox = ({
     const currentAccount = useSelector(store => store.user.currentAccount);
     const platform = usePlatform();
     const dispatch = useDispatch();
+    const [submitLoading, setSubmitLoading] = useState(false);
     useEffect(() => {
         StockIdC.current = StockId;
         PriceC.current = Price;
@@ -64,6 +65,7 @@ const OrderBox = ({
 
     const submitHandler = async () => {
         try {
+            setSubmitLoading(true);
             const res = await submitService({
                 CID: getWebId(platform, 'recommisiioned'),
                 StockID: StockIdC.current,
@@ -78,12 +80,14 @@ const OrderBox = ({
                 token: getToken(),
                 currentAccount,
             });
+            setSubmitLoading(false);
             message.success({
                 content: '委託已送出',
             });
             closeHandler();
             dispatch(setSBActiveTabKey('3'));
         } catch (error) {
+            setSubmitLoading(false);
             message.info({
                 content: error,
             });
@@ -132,6 +136,9 @@ const OrderBox = ({
                         </span>
                     </div>
                 )}
+                {marketC.current === 'US' && (
+                    <p className="warn__info">請注意！美股依交易所規定分別於開盤前 2~5 分鐘不得刪改委託</p>
+                )}
             </div>
             <div className="btn__box">
                 <Button
@@ -162,13 +169,20 @@ const OrderBox = ({
                         border: 'none',
                     }}
                     onClick={submitHandler}
-                    // loading={}
+                    loading={submitLoading}
                 >
                     {BSC.current === 'B' ? '確認買進' : '確認賣出'}
                 </Button>
             </div>
 
             <style jsx>{`
+                .warn__info {
+                    margin-top: 5px;
+                    margin-bottom: 0;
+                    color: ${BSC.current === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                    padding-right: 10px;
+                    line-height: 20px;
+                }
                 .confirm__container {
                     display: block;
                     height: 100vh;
@@ -227,7 +241,7 @@ const OrderBox = ({
                     color: ${BSC.current === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                 }
                 .trade__info--num {
-                    margin-top: 16px;
+                    margin-top: 3px;
                     margin-left: 16px;
                 }
                 .info__price {

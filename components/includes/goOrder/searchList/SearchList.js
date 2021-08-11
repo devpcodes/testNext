@@ -281,6 +281,7 @@ const SearchList = ({ active }) => {
                         <>
                             {showBtn === true ? (
                                 <Tooltip
+                                    style={{ zIndex: 1000 }}
                                     arrowPointAtCenter={true}
                                     placement="bottomRight"
                                     visible={record.showControlBtn}
@@ -451,6 +452,9 @@ const SearchList = ({ active }) => {
     };
 
     const getOrderStatus = async () => {
+        if (userInfo == null) {
+            return;
+        }
         const account = userInfo.account;
         const action = 'account';
         const broker_id = userInfo.broker_id;

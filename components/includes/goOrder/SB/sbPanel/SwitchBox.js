@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from 'react';
+import moment from 'moment';
 import { Switch } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import DateSelectBox from './DateSelectBox';
@@ -32,6 +33,10 @@ const SwitchBox = ({ color }) => {
     const dateChangeHandler = useCallback(date => {
         dispatch(setGtcDate(date));
     });
+    const getMaxDate = useCallback(() => {
+        const newDate = moment().add(6, 'months').format('YYYY/MM/DD');
+        return new Date(newDate);
+    });
     return (
         <div className="firstSell__box">
             <span className="text">長效單</span>
@@ -46,7 +51,7 @@ const SwitchBox = ({ color }) => {
                         selected={gtcDate}
                         onChange={dateChangeHandler}
                         popperPlacement="top-end"
-                        maxDate={new Date(gtcDate)}
+                        maxDate={getMaxDate()}
                     />
                 </div>
             )}

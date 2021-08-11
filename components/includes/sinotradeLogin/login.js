@@ -511,7 +511,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                         '//' +
                                                         location.hostname +
                                                         path +
-                                                        redirectUrl;
+                                                        encodeURIComponent(redirectUrl);
                                                 }}
                                             >
                                                 Google
@@ -553,7 +553,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                                         '//' +
                                                         location.hostname +
                                                         path +
-                                                        redirectUrl;
+                                                        encodeURIComponent(redirectUrl);
                                                 }}
                                             >
                                                 Facebook

@@ -123,13 +123,12 @@ const MoreInfo = ({ children }) => {
             setMoreItems(cloneMoreItems);
         }
     });
-    useEffect(async () => {
-        if (!isLogin && Object.keys(socalLoginData).length === 0) {
-            return;
-        }
-        getSelect();
-    }, [T30, productInfo, isLogin, isSelfSelectVisitable]);
-
+    // useEffect(async () => {
+    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
+    //         return;
+    //     }
+    //     getSelect();
+    // }, [code, isLogin, isSelfSelectVisitable]);
     const getSelect = useCallback(async () => {
         let exchange;
         let market;
