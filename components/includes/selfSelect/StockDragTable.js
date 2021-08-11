@@ -36,6 +36,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         {
             title: '商品',
             dataIndex: 'name',
+            width: '15%',
             render: data => (
                 <a href={data.link} className="stock__name" target="_blank">
                     {data.text}
@@ -44,6 +45,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '成交價',
+            width: 92,
             dataIndex: 'close',
             align: 'right',
             render: data => (
@@ -55,18 +57,21 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '漲跌',
+            width: 92,
             dataIndex: 'changePrice',
             align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '漲跌幅',
+            width: 92,
             dataIndex: 'changeRate',
             align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '買價',
+            width: 92,
             dataIndex: 'buyPrice',
             align: 'right',
             render: data => (
@@ -78,6 +83,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '賣價',
+            width: 92,
             dataIndex: 'sellPrice',
             align: 'right',
             render: data => (
@@ -89,18 +95,21 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '成交量',
+            width: 100,
             dataIndex: 'totalVolume',
             align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '昨收',
+            width: 92,
             dataIndex: 'reference',
             align: 'right',
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
             title: '交易',
+            width: 140,
             dataIndex: 'action',
             render: (text, record, index) => (
                 <>
@@ -125,6 +134,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '刪除',
+            width: 60,
             dataIndex: 'del',
             render: (text, record, index) =>
                 tabKey === '0' ? (
@@ -137,6 +147,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
         },
         {
             title: '移動',
+            width: 60,
             dataIndex: 'move',
             render: (text, record, index) =>
                 tabKey === '0' ? (
