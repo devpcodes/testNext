@@ -4,7 +4,12 @@ import DealTable from '../element/DealTable';
 
 const DealPageComponent = () => {
     const [type, setType] = useState('detail');
-    const reFreshHandler = () => {};
+    const [controlReload, setControlReload] = useState(0);
+    const reFreshHandler = () => {
+        setControlReload(prev => {
+            return (prev += 1);
+        });
+    };
     const typeChangeHandler = val => {
         console.log('vvv...', val);
         setType(val);
@@ -12,7 +17,7 @@ const DealPageComponent = () => {
     return (
         <>
             <ControlBar reFreshHandler={reFreshHandler} typeChangeHandler={typeChangeHandler} />
-            <DealTable type={type} />
+            <DealTable type={type} controlReload={controlReload} />
         </>
     );
 };
