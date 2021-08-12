@@ -65,8 +65,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen 
     };
 
     const handleCancel = () => {
-        setIsModalVisible(false);
         handleClose(false);
+        setIsModalVisible(false);
     };
 
     const addSelfSelect = () => {
@@ -113,10 +113,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen 
                 visible={isModalVisible}
                 onCancel={handleCancel}
                 bodyStyle={{ maxHeight: 300, overflow: 'auto' }}
-                cancelButtonProps={{ style: { display: 'none' } }}
                 zIndex="14998"
                 maskClosable={false}
-                // afterClose={afterModalClose}
                 destroyOnClose={true}
                 footer={[
                     <Button

@@ -123,6 +123,7 @@ const MoreInfo = ({ children }) => {
             setMoreItems(cloneMoreItems);
         }
     });
+
     useEffect(async () => {
         if (!isLogin && Object.keys(socalLoginData).length === 0) {
             return;
