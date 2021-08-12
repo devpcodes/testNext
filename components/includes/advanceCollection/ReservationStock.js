@@ -55,7 +55,7 @@ const ReservationStock = () => {
     const stockActiveTabKey = useRef('1');
     const init = useRef(false);
     const selectedAccount = useRef({});
-    const isWebView = useRef(false);
+    const isWebView = useRef(true);
 
     const [defaultValue, setDefaultValue] = useState('');
     const { width } = useWindowSize();
@@ -458,8 +458,8 @@ const ReservationStock = () => {
             token,
             isWebView.current,
         );
-
         console.log('newCaContent', caContent);
+
         if (checkSignCA(caContent)) {
             setLoading(true);
             percentHandler();
