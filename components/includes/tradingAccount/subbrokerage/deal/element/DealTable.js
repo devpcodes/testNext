@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { BigNumber } from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Modal } from 'antd';
-import useSWR from 'swr';
+import useSWR, { cache } from 'swr';
 import { postMatchWithSwr } from '../../../../../../services/components/tradingAccount/subBrokerage/postMatch';
 import { getToken } from '../../../../../../services/user/accessToken';
 import AccountTable from '../../../vipInventory/AccountTable';
@@ -19,7 +19,7 @@ import { timeFormatter } from '../../../../../../services/timeFormatter';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 import DropFilterSearch from '../../../vipInventory/DropFilterSearch';
 
-const DealTable = ({ type }) => {
+const DealTable = ({ type, controlReload }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [totalData, setTotalData] = useState([]);
@@ -31,6 +31,13 @@ const DealTable = ({ type }) => {
     const [marketFilterValue, setMarketFilterValue] = useState('');
     const [filterSearchVal, setFilterSearchVal] = useState('');
     const [searchWords, setSearchWords] = useState('');
+
+    useEffect(() => {
+        if (controlReload != 0) {
+            cache.clear();
+        }
+    }, [controlReload]);
+
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -46,7 +53,7 @@ const DealTable = ({ type }) => {
         }
     }, [currentAccount]);
 
-    const { data: fetchData } = useSWR([JSON.stringify(postData)], postMatchWithSwr, {
+    const { data: fetchData } = useSWR([JSON.stringify(postData), controlReload], postMatchWithSwr, {
         onError: (error, key) => {
             Modal.error({
                 title: error,
@@ -584,6 +591,14 @@ const DealTable = ({ type }) => {
             setMarketFilterValue('');
         }
     });
+
+    const loadingHandler = (fetchData, error) => {
+        if ((fetchData == null || nameData == null) && !error) {
+            return true;
+        } else {
+            return false;
+        }
+    };
     return (
         <>
             <AccountTable
@@ -592,22 +607,22 @@ const DealTable = ({ type }) => {
                 columns={columns}
                 dataSource={type === 'detail' ? data : totalData}
                 pagination={false}
-                // loading={{
-                //     indicator: (
-                //         <div
-                //             style={{
-                //                 marginTop: '20px',
-                //                 color: 'black',
-                //                 fontSize: '1.6rem',
-                //                 width: '100%',
-                //                 transform: 'translateX(-49%) translateY(-54px)',
-                //             }}
-                //         >
-                //             資料加載中...
-                //         </div>
-                //     ),
-                //     spinning: (fetchData == null && !error) || controlReload != 0 ? true : false,
-                // }}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            資料加載中...
+                        </div>
+                    ),
+                    spinning: loadingHandler.call(null, fetchData, error),
+                }}
             />
             <style jsx global>{`
                 .sino__table .ant-table-tbody > tr > td:last-child {
