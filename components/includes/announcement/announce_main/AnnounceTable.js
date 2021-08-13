@@ -1,12 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Input, Space  } from 'antd';
 import { useSelector, useDispatch } from "react-redux";
-import AccountTable from './AccountTable';
+import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import AccountCard from './AccountCard';
 import DropfilterCheckBox from './DropfilterCheckBox';
 import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
-
 const AnnounceTable = ({ listData, getList, getData }) => {
     const keyWord  = useSelector(state => state.keyWord);
     const dispatch = useDispatch();
@@ -118,23 +117,27 @@ const newColumsUpdate = (d1, d2)=>{
             title: '項目',
             dataIndex: 'seq',
             key: 'seq',
+            width:'5%',
         },
         {
             title: '商品類別',
             dataIndex: 'category1',
             key: 'category1',
+            width:'11%',
             ...getColumnSearchProps(d1,1)
         },
         {
             title: '子類別',
             dataIndex: 'category2',
             key: 'category2',
+            width:'11%',
             ...getColumnSearchProps(d2,2)
         },
         {
             title: '標題',
             dataIndex: 'title',
             key: 'title',
+            width:'55%',
             render: (x,i) => 
             <a className="title_a" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{x}</a>
         
@@ -143,11 +146,13 @@ const newColumsUpdate = (d1, d2)=>{
             title: '公告類別',
             dataIndex: 'type',
             key: 'type',
+            width:'6%',
         },
         {
             title: '發布日期',
             dataIndex: 'postTime',
             key: 'postTime',
+            width:'12%',
         },
         ];  
     setColumns(newColumns); 
@@ -292,6 +297,13 @@ const getColumnSearchProps = (data,idx) => {
                 .announce__container .ant-table-filter-trigger{margin:0}
                 .announce__container .ant-input {  border: 1px solid #e6ebf5; }
                 .for_m{display:none;}
+                .announce__container {padding-bottom:20px;}
+                .announce__container .ant-table-container{border:solid 1px #d7e0ef;border-radius:0;}
+                .announce__container .ant-tooltip-inner{color:white;box-shadow:0 2px 15px 0 rgba(169,182,203,0.7);padding:16px;line-height:25px;margin-right:-4px;margin-top:-3px;z-index:3;}
+                .announce__container .ant-tooltip-arrow{width:25px;height:25px;margin-top:-10px;}
+                .announce__container .title_a{display: block;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+                .announce__container .title_a:hover{color:#daa360;}
+                .announce__container .ant-table-tbody > tr > td:nth-child(4){max-width:0px;}
                 @media (max-width: 768px) {
                     .for_pc{display:none;}
                     .for_m{display:block;}
