@@ -12,7 +12,23 @@ import theme from '../../../../resources/styles/theme';
 import searchImg from '../../../../resources/images/components/goOrder/edit-search.svg';
 import closeImg from '../../../../resources/images/components/goOrder/menu-close-big.svg';
 import { useLocalStorage } from '../../../../hooks/useLocalStorage';
+import { marketName } from '../../../../services/components/goOrder/sb/dataMapping';
+import { setQueryPrice, setQueryQty } from '../../../../store/goOrderSB/action';
 
+export const getMarketType = type => {
+    switch (type) {
+        case 'S':
+            return 'S';
+        case 'H':
+            return 'SB';
+        case 'F':
+            return 'F';
+        case 'O':
+            return 'O';
+        default:
+            return 'S';
+    }
+};
 export const Search = memo(({ isVisible, handleCancel }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('');
@@ -23,21 +39,21 @@ export const Search = memo(({ isVisible, handleCancel }) => {
     const type = useSelector(store => store.goOrder.type);
     const code = useSelector(store => store.goOrder.code);
     const textInput = useRef(null);
-
-    const getMarketType = type => {
-        switch (type) {
-            case 'S':
-                return 'S';
-            case 'H':
-                return 'SB';
-            case 'F':
-                return 'F';
-            case 'O':
-                return 'O';
-            default:
-                return 'S';
-        }
-    };
+    const categories = useRef([]);
+    // const getMarketType = type => {
+    //     switch (type) {
+    //         case 'S':
+    //             return 'S';
+    //         case 'H':
+    //             return 'SB';
+    //         case 'F':
+    //             return 'F';
+    //         case 'O':
+    //             return 'O';
+    //         default:
+    //             return 'S';
+    //     }
+    // };
 
     const getTypeByMarketType = marketType => {
         switch (marketType) {
@@ -84,6 +100,9 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             dispatch(setLot('Board'));
             dispatch(setCheckLot(false));
             dispatch(setProductInfo(item));
+            //清除複海外的querystring
+            dispatch(setQueryPrice(''));
+            dispatch(setQueryQty(''));
             cancelHandler();
         }
     };
@@ -138,7 +157,12 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             };
             try {
                 const { result } = await fetchProducts(data);
-                setProducts(result);
+                if (type === 'H') {
+                    let arr = categoriesHandler(result);
+                    setProducts(arr);
+                } else {
+                    setProducts(result);
+                }
             } catch (error) {
                 console.error(`fetchProducts-error:`, error);
             }
@@ -156,6 +180,39 @@ export const Search = memo(({ isVisible, handleCancel }) => {
             textInput.current.focus();
         }
     }, [isVisible]);
+
+    const categoriesHandler = data => {
+        let newArr = [];
+        for (let i of data) {
+            const category = marketName(i.market);
+            newArr.push(category);
+            newArr.push(i);
+        }
+        newArr = _.uniqBy(newArr, 'name');
+        return newArr;
+    };
+
+    const SearchItemHandler = () => {
+        return products.map(item => {
+            if (item.category) {
+                return (
+                    <div key={item.name} className="group__title">
+                        {item.name}
+                    </div>
+                );
+            } else {
+                return (
+                    <SearchItem
+                        key={item.id}
+                        item={item}
+                        keyword={keyword}
+                        selectHandler={selectHandler}
+                        isMatched={true}
+                    />
+                );
+            }
+        });
+    };
 
     return (
         <MyTransition isVisible={isVisible} classNames={'search'}>
@@ -196,15 +253,7 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         {keyword ? (
                             <article className="dropdown__group">
                                 {/* {<div className="group__title">個股</div>} */}
-                                {products.map(item => (
-                                    <SearchItem
-                                        key={item.id}
-                                        item={item}
-                                        keyword={keyword}
-                                        selectHandler={selectHandler}
-                                        isMatched={true}
-                                    />
-                                ))}
+                                {SearchItemHandler(products)}
                             </article>
                         ) : (
                             <>
@@ -217,13 +266,15 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                                             <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
                                         ))}
                                 </article>
-                                <article className="dropdown__group">
-                                    <div className="group__title">本日熱門搜尋</div>
-                                    {type === 'S' &&
-                                        popularItems.map(item => (
-                                            <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
-                                        ))}
-                                </article>
+                                {type === 'S' && (
+                                    <article className="dropdown__group">
+                                        <div className="group__title">本日熱門搜尋</div>
+                                        {type === 'S' &&
+                                            popularItems.map(item => (
+                                                <SearchItem key={item.id} item={item} selectHandler={selectHandler} />
+                                            ))}
+                                    </article>
+                                )}
                             </>
                         )}
                     </section>
@@ -301,6 +352,16 @@ export const Search = memo(({ isVisible, handleCancel }) => {
                         color: ${theme.colors.darkBg};
                     }
                     .dropdown__group .group__title {
+                        width: 100%;
+                        height: 24px;
+                        line-height: 24px;
+                        padding: 0 16px;
+                        background-color: ${theme.colors.normalBg};
+                        font-size: 1.2rem;
+                    }
+                `}</style>
+                <style global jsx>{`
+                    .group__title {
                         width: 100%;
                         height: 24px;
                         line-height: 24px;
