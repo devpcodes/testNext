@@ -7,8 +7,7 @@ import DropfilterCheckBox from './DropfilterCheckBox';
 import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
 const AnnounceTable = ({ listData, getList, getData }) => {
-    const keyWord  = useSelector(state => state.keyWord);
-    const dispatch = useDispatch();
+    const keyWord  = useSelector(store => store.announcement.keyWord);
     const [columns, setColumns] = useState([]);
     const [State, setState] = useState('');
     const [list, setList] = useState(listData);
@@ -36,6 +35,7 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     };
 
 useEffect(() => {  //選單初始值
+    console.log(keyWord)
         getList().then(res=>{ 
                 setList(res) 
                 setListMain(res.category1List)

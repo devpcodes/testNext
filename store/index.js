@@ -8,6 +8,7 @@ import future from './future/reducer';
 import general from './general/reducer';
 import goOrder from './goOrder/reducer';
 import solace from './solace/reducer';
+import announcement from './announcement/reducer';
 
 const reducers = combineReducers({
     layout,
@@ -19,6 +20,7 @@ const reducers = combineReducers({
     future,
     general,
     solace,
+    announcement
 });
 
 export default reducers;
