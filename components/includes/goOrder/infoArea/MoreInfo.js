@@ -78,15 +78,8 @@ const MoreInfo = ({ children }) => {
     }, [code, type, productInfo]);
 
     useEffect(() => {
-        if (selectInfo) {
-            reloadSelfSelectSmallIcon();
-        }
-    }, [selectInfo]);
-
-    // 更新一次狀態
-    setTimeout(() => {
         reloadSelfSelectSmallIcon();
-    }, 200);
+    }, [selectInfo]);
 
     const closeAddSelfGroup = useCallback(() => {
         setAddSelectGroupVisitable(false);
@@ -203,7 +196,7 @@ const MoreInfo = ({ children }) => {
             { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
-        if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
+        if (t30Res['券成數'] && t30Res['券配額'] && t30Res['資成數'] && t30Res['資配額']) {
             moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
         }
         setT30Data(t30Res);
