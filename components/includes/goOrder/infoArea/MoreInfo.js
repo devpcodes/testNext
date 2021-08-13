@@ -129,7 +129,7 @@ const MoreInfo = ({ children }) => {
             return;
         }
         getSelect();
-    }, [T30, productInfo, isLogin, isSelfSelectVisitable]);
+    }, [isLogin, isSelfSelectVisitable]);
 
     const getSelect = useCallback(async () => {
         let exchange;
