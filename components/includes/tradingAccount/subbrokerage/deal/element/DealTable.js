@@ -593,6 +593,9 @@ const DealTable = ({ type, controlReload }) => {
     });
 
     const loadingHandler = (fetchData, error) => {
+        if (fetchData?.length == 0 && nameData == null) {
+            return false;
+        }
         if ((fetchData == null || nameData == null) && !error) {
             return true;
         } else {
