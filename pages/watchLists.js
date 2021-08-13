@@ -6,12 +6,15 @@ import { PageHead } from '../components/includes/PageHead';
 import Header from '../components/includes/goOrder/header/Header';
 import SelfSelectToolBar from '../components/includes/selfSelect/SelfSelectToolBar';
 import SelfSelectTable from '../components/includes/selfSelect/SelfSelectTable';
-
+// import { getCookie } from '../services/components/layouts/cookieController';
+// const aa = getCookie('socialToken');
+// const bb = getCookie('token');
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
 
-const noNewwebHeader = false;
+const noNewwebHeader = true;
+
 function Self_select_stocks() {
     const socalLogin = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
@@ -102,4 +105,5 @@ function Self_select_stocks() {
 if (noNewwebHeader) {
     Self_select_stocks.getLayout = Page => Page;
 }
+
 export default Self_select_stocks;
