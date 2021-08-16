@@ -109,9 +109,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 title={
                     <p className="title__box">
                         <span className="title">自選組合</span>
-                        <span className="header__tool__btn" onClick={addSelfSelect}>
-                            新增
-                        </span>
                     </p>
                 }
                 className="add__select__self"
@@ -144,6 +141,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                             />
                             <Checkbox.Group />
                         </ul>
+                        <span className="header__tool__btn222" onClick={addSelfSelect}>
+                            新增
+                        </span>
                     </section>
                 }
             </Modal>
@@ -158,8 +158,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                     margin: 0;
                 }
                 .edit,
-                .header__tool__btn.complete__btn {
-                }
                 .self__select__items {
                     list-style: none;
                     margin: 11px 0;
@@ -169,7 +167,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 .title__box {
                     margin: 0;
                 }
-                .header__tool__btn {
+                .header__tool__btn222 {
                     display: block;
                     width: 56px;
                     height: 56px;
@@ -181,6 +179,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                     top: 0;
                     cursor: pointer;
                     color: #c43826;
+                    z-index: 1000000;
                 }
             `}</style>
             <style jsx global>{`
