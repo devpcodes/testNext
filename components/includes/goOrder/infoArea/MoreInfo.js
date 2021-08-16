@@ -100,7 +100,7 @@ const MoreInfo = ({ children }) => {
         const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
         const index = cloneMoreItems.findIndex(obj => obj.id === '4');
         if (cloneMoreItems[index]) {
-            if (selectInfo.isExist) {
+            if (selectInfo && selectInfo.isExist) {
                 cloneMoreItems[index].text = '❤ 自選';
             } else {
                 cloneMoreItems[index].text = '+ 自選';
@@ -114,7 +114,7 @@ const MoreInfo = ({ children }) => {
             return;
         }
         getSelect();
-    }, [isLogin, isSelfSelectVisitable]);
+    }, [T30, isLogin, isSelfSelectVisitable]);
 
     const getSelect = useCallback(async () => {
         let exchange;
@@ -145,17 +145,8 @@ const MoreInfo = ({ children }) => {
         dispatch(setSelectInfo(res));
     });
     const setInfoItems = async code => {
-        // { id: '1', color: 'dark', text: '融' },
-        // { id: '2', color: 'red', text: '詳' },
-        // { id: '3', color: 'orange', text: '存' },
-        // { id: '4', color: 'green', text: '借' },
-        // { id: '5', color: 'blue', text: '學' },
-        // { id: '6', color: 'brown', text: '+ 自選' },
-
         const t30Res = await fetchStockT30(code);
         dispatch(setT30(t30Res));
-        // const test = await fetchGetRichClubReport(code);
-        // console.log(test)
 
         let moreItems = [
             {

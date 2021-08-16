@@ -17,6 +17,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
     const [selectItem, setSelectItem] = useState([]); // 選項
     const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
+    const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
+    const token = isSocalLogin ? getSocalToken() : getToken();
 
     useEffect(() => {
         setIsModalVisible(isVisible);
@@ -31,8 +33,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
 
     const handleOk = async () => {
         let reqData = [];
-        const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
-        const token = isSocalLogin ? getSocalToken() : getToken();
         selectItem.forEach(item => {
             // 複委託期貨選擇權規格未出來。先 for 證券用。
             if (item.disabled === true) {
@@ -140,9 +140,11 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                                 onChange={onChange}
                             />
                             <Checkbox.Group />
-                            <span className="add__stock__group__btn" onClick={addSelfSelect}>
-                                ＋ 新增組合{' '}
-                            </span>
+                            {!isSocalLogin && (
+                                <span className="add__stock__group__btn" onClick={addSelfSelect}>
+                                    ＋ 新增組合{' '}
+                                </span>
+                            )}
                         </div>
                     </section>
                 }

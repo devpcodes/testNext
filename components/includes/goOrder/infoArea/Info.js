@@ -276,7 +276,7 @@ export const Info = ({ stockid }) => {
         if (!isLogin && Object.keys(socalLoginData).length === 0) {
             return;
         }
-        getSelect();
+        // getSelect();
     }, [T30, isLogin, isSelfSelectVisitable]);
 
     useEffect(async () => {
@@ -335,10 +335,10 @@ export const Info = ({ stockid }) => {
         const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
         const index = cloneMoreItems.findIndex(obj => obj.id === '4');
         if (cloneMoreItems[index]) {
-            if (selectInfo.isExist) {
-                cloneMoreItems[index].text = '❤ 自選';
+            if (selectInfo && selectInfo.isExist) {
+                cloneMoreItems[index].text = '❤ 222';
             } else {
-                cloneMoreItems[index].text = '+ 自選';
+                cloneMoreItems[index].text = '+ 222';
             }
             setMoreItems(cloneMoreItems);
         }
@@ -466,8 +466,8 @@ export const Info = ({ stockid }) => {
     };
 
     const setInfoItems = async code => {
-        const t30Res = await fetchStockT30(code);
-        dispatch(setT30(t30Res));
+        // const t30Res = await fetchStockT30(code);
+        // dispatch(setT30(t30Res));
 
         let moreItems = [
             {
@@ -500,10 +500,10 @@ export const Info = ({ stockid }) => {
             { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
-        if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
-            moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
-        }
-        setT30Data(t30Res);
+        // if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
+        //     moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
+        // }
+        // setT30Data(t30Res);
         setMoreItems(moreItems);
     };
 
