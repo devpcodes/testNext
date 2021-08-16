@@ -74,8 +74,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
         setIsModalVisible(false);
     };
 
-    const addSelfSelect = () => {
-        // handleClose(false);
+    const addSelfSelect = e => {
+        e.preventDefault();
         setAddSelectGroupVisitable(true);
     };
 
@@ -116,8 +116,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 onCancel={handleCancel}
                 bodyStyle={{ maxHeight: 300, overflow: 'auto' }}
                 zIndex="14998"
-                maskClosable={false}
-                destroyOnClose={true}
+                // maskClosable={false}
+                // destroyOnClose={true}
                 footer={[
                     <Button
                         key="confirm"
@@ -141,7 +141,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                             />
                             <Checkbox.Group />
                         </ul>
-                        <span className="header__tool__btn222" onClick={addSelfSelect}>
+                        <span className="header__tool__btn" onClick={addSelfSelect}>
                             新增
                         </span>
                     </section>
@@ -167,7 +167,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 .title__box {
                     margin: 0;
                 }
-                .header__tool__btn222 {
+                .header__tool__btn {
                     display: block;
                     width: 56px;
                     height: 56px;
