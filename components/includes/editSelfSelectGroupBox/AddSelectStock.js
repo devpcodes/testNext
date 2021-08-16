@@ -209,6 +209,12 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                     font-size: 1.6rem;
                     color: #0d1623;
                 }
+                body .ant-btn-dangerous.ant-btn-primary,
+                body .ant-btn-dangerous.ant-btn-primary:focus,
+                .ant-btn-dangerous.ant-btn-primary:hover {
+                    border: #c43826;
+                    background: #c43826;
+                }
             `}</style>
         </>
     );
