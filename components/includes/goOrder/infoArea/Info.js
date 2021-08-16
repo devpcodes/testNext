@@ -322,6 +322,7 @@ export const Info = ({ stockid }) => {
         // } else {
         //     return { width: '22px' };
         // }
+        //
         if (checkLot) {
             return { width: '44px' };
         } else {
