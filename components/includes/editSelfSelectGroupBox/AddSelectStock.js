@@ -140,7 +140,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                             />
                             <Checkbox.Group />
                         </ul>
-                        <span className="header__tool__btn add__btn" onClick={addSelfSelect}>
+                        <span className="" onClick={addSelfSelect}>
                             新增
                         </span>
                     </section>
@@ -155,9 +155,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 .self__select__list {
                     padding: 0;
                     margin: 0;
-                }
-                .add,
-                .header__tool__btn.add__btn {
                 }
                 .edit,
                 .header__tool__btn.complete__btn {
