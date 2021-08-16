@@ -114,7 +114,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 className="add__select__self"
                 visible={isModalVisible}
                 onCancel={handleCancel}
-                bodyStyle={{ maxHeight: 300, overflow: 'auto' }}
+                bodyStyle={{ maxHeight: 330, overflow: 'auto' }}
                 zIndex="14998"
                 // maskClosable={false}
                 // destroyOnClose={true}
@@ -133,17 +133,17 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
             >
                 {
                     <section className="add">
-                        <ul className="self__select__list">
+                        <div className="self__select__list">
                             <Checkbox.Group
                                 options={selectItem}
                                 defaultValue={selectDefaultValue}
                                 onChange={onChange}
                             />
                             <Checkbox.Group />
-                        </ul>
-                        <span className="header__tool__btn" onClick={addSelfSelect}>
-                            新增
-                        </span>
+                            <span className="add__stock__group__btn" onClick={addSelfSelect}>
+                                ＋ 新增組合{' '}
+                            </span>
+                        </div>
                     </section>
                 }
             </Modal>
@@ -167,19 +167,13 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 .title__box {
                     margin: 0;
                 }
-                .header__tool__btn {
-                    display: block;
-                    width: 56px;
-                    height: 56px;
-                    font-size: 1.6rem;
-                    line-height: 56px;
-                    text-align: center;
-                    position: absolute;
-                    right: 8px;
-                    top: 0;
-                    cursor: pointer;
+                .add__stock__group__btn {
                     color: #c43826;
-                    z-index: 1000000;
+                    display: block;
+                    font-size: 1.6rem;
+                    cursor: pointer;
+                    font-weight: bold;
+                    margin: 10px 0px;
                 }
             `}</style>
             <style jsx global>{`
