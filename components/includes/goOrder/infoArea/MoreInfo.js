@@ -237,7 +237,7 @@ const MoreInfo = ({ children }) => {
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
-                        {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
+                        {!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選'}
                     </button>
                 </div>
             </div>

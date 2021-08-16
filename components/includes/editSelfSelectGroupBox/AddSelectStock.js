@@ -70,7 +70,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen 
     };
 
     const addSelfSelect = () => {
-        handleClose(false);
+        // handleClose(false);
         addSelectGroupWindowOpen();
     };
 

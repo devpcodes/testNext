@@ -50,7 +50,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             align: 'right',
             render: data => (
                 <span className={data.class}>
-                    {data.text}
+                    {data.text == '0.00' ? '--' : data.text}
                     {data.simtrade ? '*' : ''}
                 </span>
             ),
@@ -76,7 +76,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             align: 'right',
             render: data => (
                 <span className={data.class}>
-                    {data.text}
+                    {data.text == '0.00' ? '--' : data.text}
                     {data.simtrade ? '*' : ''}
                 </span>
             ),
@@ -88,7 +88,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             align: 'right',
             render: data => (
                 <span className={data.class}>
-                    {data.text}
+                    {data.text == '0.00' ? '--' : data.text}
                     {data.simtrade ? '*' : ''}
                 </span>
             ),
