@@ -108,9 +108,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 title={
                     <p className="title__box">
                         <span className="title">自選組合</span>
-                        <span className="header__tool__btn add__btn" onClick={addSelfSelect}>
-                            新增
-                        </span>
                     </p>
                 }
                 className="add__select__self"
@@ -143,6 +140,9 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                             />
                             <Checkbox.Group />
                         </ul>
+                        <span className="header__tool__btn add__btn" onClick={addSelfSelect}>
+                            新增
+                        </span>
                     </section>
                 }
             </Modal>
