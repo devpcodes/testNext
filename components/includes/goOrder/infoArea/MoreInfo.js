@@ -5,7 +5,6 @@ import { InfoBox } from './InfoBox';
 import { TextBox } from './TextBox';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
 import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
-import AddSelectGroup from '../../selfSelect/AddSelectGroup';
 import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
 import { getSocalToken, getToken } from '../../../../services/user/accessToken';
 
@@ -14,7 +13,7 @@ const MoreInfo = ({ children }) => {
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const [t30Data, setT30Data] = useState(false);
     const [moreItems, setMoreItems] = useState([]);
-    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
+
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
     const socalLoginData = useSelector(store => store.user.socalLogin);
@@ -81,16 +80,9 @@ const MoreInfo = ({ children }) => {
         reloadSelfSelectSmallIcon();
     }, [selectInfo]);
 
-    const closeAddSelfGroup = useCallback(() => {
-        setAddSelectGroupVisitable(false);
-        setIsSelfSelectVisitable(true);
-    }, []);
-
     const openAddSelfGroup = useCallback(() => {
         setAddSelectGroupVisitable(true);
     }, []);
-    const reload = () => {};
-    const reloadTabkey = () => {};
 
     const moreItemHandler = (defaultMoreItems, code, type, productInfo) => {
         if (type === 'H') {
@@ -246,12 +238,7 @@ const MoreInfo = ({ children }) => {
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
                 addSelectGroupWindowOpen={openAddSelfGroup}
-            />
-            <AddSelectGroup
-                isAddSelectGroupVisitable={isAddSelectGroupVisitable}
-                handleClose={closeAddSelfGroup}
-                callBack={reload}
-                reloadTabkey={reloadTabkey}
+                reload={getSelect}
             />
             <style jsx>{`
                 .info__box {

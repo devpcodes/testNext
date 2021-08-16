@@ -1,19 +1,19 @@
 import React, { useState, memo, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Modal, Button, Checkbox, message } from 'antd';
-import SortableList from './sortable';
 import { fetchUpdateMultipleSelectStock } from '../../../services/selfSelect/updateMultipleSelectStock';
-import { fetchUpdateSelectGroup } from '../../../services/selfSelect/updateSelectGroup';
 import { getToken } from '../../../services/user/accessToken';
 import { getSocalToken } from '../../../services/user/accessToken';
+import AddSelectGroup from '../selfSelect/AddSelectGroup';
 
-const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen }) => {
+const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
     const code = useSelector(store => store.goOrder.code);
     const type = useSelector(store => store.goOrder.type);
     const socalLogin = useSelector(store => store.user.socalLogin);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const t30Exchange = useSelector(store => store.goOrder.T30Data.EXCHANGE);
+    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
     const [selectItem, setSelectItem] = useState([]); // 選項
     const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
@@ -23,6 +23,11 @@ const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen 
     }, [isVisible]);
 
     const [isModalVisible, setIsModalVisible] = useState(isVisible);
+
+    const closeAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(false);
+        reload();
+    }, []);
 
     const handleOk = async () => {
         let reqData = [];
@@ -71,7 +76,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen 
 
     const addSelfSelect = () => {
         // handleClose(false);
-        addSelectGroupWindowOpen();
+        setAddSelectGroupVisitable(true);
     };
 
     useEffect(() => {
@@ -142,6 +147,11 @@ const AddSelectStock = memo(({ isVisible, handleClose, addSelectGroupWindowOpen 
                     </section>
                 }
             </Modal>
+            <AddSelectGroup
+                isAddSelectGroupVisitable={isAddSelectGroupVisitable}
+                handleClose={closeAddSelfGroup}
+                zIndex="15003"
+            />
             <style jsx>{`
                 .self__select__list {
                     padding: 0;

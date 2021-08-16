@@ -4,7 +4,7 @@ import { Modal, Button, Input } from 'antd';
 import { fetchAddSelectGroup } from '../../../services/selfSelect/addSelectGroup';
 import { getToken } from '../../../services/user/accessToken';
 
-const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack, reloadTabkey }) => {
+const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack, reloadTabkey, zIndex = 1401 }) => {
     const textInput = useRef(null);
     const [inputValue, setInputValue] = useState('我的自選');
     useEffect(() => {
@@ -22,7 +22,9 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack,
             }
 
             setTimeout(function () {
-                reloadTabkey(response.result.selectId + '');
+                if (typeof reloadTabkey === 'function') {
+                    reloadTabkey(response.result.selectId + '');
+                }
             }, 500);
         }
         handleClose();
@@ -40,7 +42,7 @@ const AddSelectGroup = memo(({ isAddSelectGroupVisitable, handleClose, callBack,
         <>
             <Modal
                 visible={isAddSelectGroupVisitable}
-                zIndex="1401"
+                zIndex={zIndex}
                 width={320}
                 title="新增自選組合"
                 closable={false}
