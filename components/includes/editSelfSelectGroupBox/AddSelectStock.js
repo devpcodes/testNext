@@ -75,7 +75,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
     };
 
     const addSelfSelect = () => {
-        alert('test');
+        // handleClose(false);
+        setAddSelectGroupVisitable(true);
     };
 
     useEffect(() => {
