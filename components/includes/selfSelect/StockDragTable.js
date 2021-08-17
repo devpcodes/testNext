@@ -377,8 +377,20 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                 .drag__Table .upper__icon:before {
                     content: '▲ ';
                 }
+                .drag__Table .upper.up__limit {
+                    display: inline-block;
+                    padding: 0px 7px;
+                    background: #f45a4c;
+                    color: #fff;
+                }
                 .drag__Table .lower {
                     color: #22a16f;
+                }
+                .drag__Table .lower.down__limit {
+                    display: inline-block;
+                    padding: 0px 7px;
+                    background: #22a16f;
+                    color: #fff;
                 }
                 .drag__Table .lower__icon:before {
                     content: '▼ ';

@@ -31,27 +31,27 @@ const SelfSelectTable = ({
     const [isfirstTimeLoaded, setIsfirstTimeLoaded] = useState(true);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
-
-    // console.log('==========-----------------==============');
-    // console.log(isSocalLogin);
-    // console.log(token);
-    // console.log(currentAccount);
-    // console.log(selectGroupID);
-    // console.log(inventoryReloadTime);
-    // console.log('==========-----------------==============');
+    const [fetchSelectGroupData, setFetchSelectGroupData] = useState(null);
+    const [selectStocks, setSelectStocks] = useState([]);
+    const [snapshot, setSnapshot] = useState(null);
 
     // 查詢自選選單
-    const { data: fetchSelectGroupData } = useSWR(
-        token ? [isSocalLogin, token, setSelectGroupReloadTime] : null,
-        fetchQuerySelectGroup,
-        {
-            onError: (error, key) => {
-                Modal.error({
-                    title: '伺服器錯誤',
-                });
-            },
-        },
-    );
+    useEffect(async () => {
+        const res = await fetchQuerySelectGroup(isSocalLogin, token);
+        setFetchSelectGroupData(res);
+    }, [isSocalLogin, token, setSelectGroupReloadTime]);
+
+    // const { data: fetchSelectGroupData } = useSWR(
+    //     token ? [isSocalLogin, token, setSelectGroupReloadTime] : null,
+    //     fetchQuerySelectGroup,
+    //     {
+    //         onError: (error, key) => {
+    //             Modal.error({
+    //                 title: '伺服器錯誤',
+    //             });
+    //         },
+    //     },
+    // );
 
     // 查詢庫存股票
     const { data: inventoryStockData } = useSWR(
@@ -67,26 +67,40 @@ const SelfSelectTable = ({
     );
 
     // 查詢自選個股
-    const { data: selectStocks } = useSWR(
-        selectGroupID !== '0' && token ? [isSocalLogin, token, selectGroupID, selectReloadTime] : null,
-        fetchQuerySelectStock,
-        {
-            onError: (error, key) => {
-                Modal.error({
-                    title: '伺服器錯誤',
-                });
-            },
-        },
-    );
+    useEffect(async () => {
+        if (selectGroupID !== '0') {
+            const res = await fetchQuerySelectStock(isSocalLogin, token, selectGroupID);
+            setSelectStocks(res);
+        }
+    }, [isSocalLogin, token, selectGroupID, selectReloadTime]);
+
+    // const { data: selectStocks } = useSWR(
+    //     selectGroupID !== '0' && token ? [isSocalLogin, token, selectGroupID, selectReloadTime] : null,
+    //     fetchQuerySelectStock,
+    //     {
+    //         onError: (error, key) => {
+    //             Modal.error({
+    //                 title: '伺服器錯誤',
+    //             });
+    //         },
+    //     },
+    // );
 
     // 查詢個股報價
-    const { data: snapshot } = useSWR(snapshotInput.length > 0 ? [snapshotInput] : null, fetchSnapshot, {
-        onError: (error, key) => {
-            Modal.error({
-                title: '伺服器錯誤',
-            });
-        },
-    });
+    useEffect(async () => {
+        if (snapshotInput.length > 0) {
+            const res = await fetchSnapshot(snapshotInput);
+            setSnapshot(res);
+        }
+    }, [snapshotInput]);
+
+    // const { data: snapshot } = useSWR(snapshotInput.length > 0 ? [snapshotInput] : null, fetchSnapshot, {
+    //     onError: (error, key) => {
+    //         Modal.error({
+    //             title: '伺服器錯誤',
+    //         });
+    //     },
+    // });
 
     // 查詢複委託報價 ( 檔第三方登入 )
     const { data: sbQuote } = useSWR(sbInput.length > 0 ? [sbInput, token] : null, fetchQuerySubBrokerageQuote, {
@@ -139,7 +153,7 @@ const SelfSelectTable = ({
         setSBInput(sbInputArray);
     };
 
-    useEffect(async () => {
+    useEffect(() => {
         if (inventoryStockData) {
             setRequestData(inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]);
         } else if (selectStocks) {
@@ -158,8 +172,34 @@ const SelfSelectTable = ({
     useEffect(() => {
         // console.log(selectGroupID);
         if (inventoryStockData || selectStocks) {
+            const getClass = (snapshotData, price, needLimit, needIcon) => {
+                let className = '';
+                price
+                    ? parseFloat(price) > parseFloat(snapshotData.Reference)
+                        ? (className += 'upper ')
+                        : parseFloat(price) < parseFloat(snapshotData.Reference)
+                        ? (className += 'lower ')
+                        : ''
+                    : '';
+                if (needLimit) {
+                    parseFloat(price) === parseFloat(snapshotData.UpLimit)
+                        ? (className += 'up__limit ')
+                        : parseFloat(price) === parseFloat(snapshotData.DownLimit)
+                        ? (className += 'down__limit ')
+                        : '';
+                }
+                if (needIcon) {
+                    parseFloat(snapshotData.ChangePrice) == 0
+                        ? ''
+                        : parseFloat(snapshotData.ChangePrice) > 0
+                        ? (className += 'upper__icon ')
+                        : (className += 'lower__icon ');
+                }
+                return className;
+            };
+
             const tableData =
-                selectGroupID === '0'
+                selectGroupID === '0' && inventoryStockData
                     ? inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]
                     : selectStocks;
             const tableRowData = [];
@@ -171,13 +211,6 @@ const SelfSelectTable = ({
                     if (snapshot && ['O', 'F', 'S'].includes(stock.market)) {
                         // 證期權
                         snapshot.some((snapshotData, snapshotIndex) => {
-                            console.log(snapshotData.BuyPrice);
-                            const isupper =
-                                parseFloat(snapshotData.ChangePrice) == 0
-                                    ? ''
-                                    : parseFloat(snapshotData.ChangePrice) > 0
-                                    ? true
-                                    : false;
                             if (stock.symbol == snapshotData.Code) {
                                 stockData.key = index;
                                 stockData.code = snapshotData.Code;
@@ -198,43 +231,43 @@ const SelfSelectTable = ({
                                         !snapshotData.Close || snapshotData.Close.toFixed(2) == 0
                                             ? '--'
                                             : snapshotData.Close.toFixed(2),
-                                    class: isupper === '' ? '' : isupper ? 'upper' : 'lower',
+                                    class: (() => {
+                                        return getClass(snapshotData, snapshotData.Close, true, false);
+                                    })(),
                                 };
                                 stockData.changePrice = {
                                     text: snapshotData.ChangePrice
                                         ? Math.abs(snapshotData.ChangePrice).toFixed(2)
                                         : '--',
-                                    class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
+                                    class: (() => {
+                                        return getClass(snapshotData, snapshotData.Close, false, true);
+                                    })(),
                                 };
                                 stockData.changeRate = {
                                     text: snapshotData.ChangeRate
                                         ? `${Math.abs(snapshotData.ChangeRate).toFixed(2)} %`
                                         : '--',
-                                    class: isupper === '' ? '' : isupper ? 'upper upper__icon' : 'lower lower__icon',
+                                    class: (() => {
+                                        return getClass(snapshotData, snapshotData.Close, false, true);
+                                    })(),
                                 };
                                 stockData.buyPrice = {
                                     text:
                                         !snapshotData.BuyPrice || snapshotData.BuyPrice.toFixed(2) == 0
                                             ? '--'
                                             : snapshotData.BuyPrice.toFixed(2),
-                                    class:
-                                        snapshotData.BuyPrice > snapshotData.Reference
-                                            ? 'upper'
-                                            : snapshotData.BuyPrice < snapshotData.Reference
-                                            ? 'lower'
-                                            : '',
+                                    class: (() => {
+                                        return getClass(snapshotData, snapshotData.BuyPrice, true, false);
+                                    })(),
                                 };
                                 stockData.sellPrice = {
                                     text:
                                         !snapshotData.SellPrice || snapshotData.SellPrice.toFixed(2) == 0
                                             ? '--'
                                             : snapshotData.SellPrice.toFixed(2),
-                                    class:
-                                        snapshotData.SellPrice > snapshotData.Reference
-                                            ? 'upper'
-                                            : snapshotData.SellPrice < snapshotData.Reference
-                                            ? 'lower'
-                                            : '',
+                                    class: (() => {
+                                        return getClass(snapshotData, snapshotData.SellPrice, true, false);
+                                    })(),
                                 };
                                 stockData.totalVolume = {
                                     text: snapshotData.TotalVolume ? snapshotData.TotalVolume : '--',
@@ -312,7 +345,7 @@ const SelfSelectTable = ({
             setTableData(tableRowData);
             reloadCount(tableRowData.length);
         }
-    }, [snapshot, sbQuote]);
+    }, [snapshot, sbQuote, selectStocks]);
 
     useEffect(() => {
         // 遮罩
