@@ -16,7 +16,7 @@ const [tag, setTag] = useState([]);
 const [refRows, setRefRows] = useState([]); 
 const [refresh, setRefresh] = useState(''); 
 const keyWord  = useSelector(store => store.announcement.keyWord);
-
+const dispatch = useDispatch();
 useEffect(() =>{ 
     const GetNewData = async()=>{
         try {

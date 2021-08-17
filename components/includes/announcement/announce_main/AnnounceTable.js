@@ -6,6 +6,9 @@ import AccountCard from './AccountCard';
 import DropfilterCheckBox from './DropfilterCheckBox';
 import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
+import Modal from 'antd/lib/modal/Modal';
+import { GetArticleData } from '../../../../services/components/announcement/announceList';
+
 const AnnounceTable = ({ listData, getList, getData }) => {
     const keyWord  = useSelector(store => store.announcement.keyWord);
     const [columns, setColumns] = useState([]);
@@ -20,10 +23,11 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [dataType, setDataType] = useState('');
     const [searchColumn, setSearchColumn] = useState([]);
     const [searchColumn2, setSearchColumn2] = useState([]);
-    const [searchWords, setSearchWords] = useState(keyWord);
+    const [searchWords, setSearchWords] = useState('');
     const [current, setCurrent] = useState(''); 
     const [filterColumns, setFilterColumns] = useState([]); 
-
+    const [outerLinkPop, setOuterLinkPop] = useState(false); 
+    const [indexGUID, setIndexGUID] = useState(''); 
     const [dimensions, setDimensions] = useState({ 
         height: window.innerHeight,
         width: window.innerWidth
@@ -35,13 +39,17 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     };
 
 useEffect(() => {  //選單初始值
-    console.log(keyWord)
         getList().then(res=>{ 
+            console.log(res)
                 setList(res) 
                 setListMain(res.category1List)
                 setListSub(res.category2List)
                 newColumsUpdate(res.category1List,res.category2List)
-            })  
+            if(keyWord.length>0){
+                setSearchColumn(keyWord)
+            } 
+            }) 
+
 },[State])
  
 useEffect(() => { //子選單變更
@@ -49,6 +57,7 @@ useEffect(() => { //子選單變更
     let arr = []
     let list_ = []
     searchColumn.map(x=>{
+        console.log('x',x)
         arr = arr.concat(list.List_lib[x])
     })
     let arr_ = arr.filter((item, index, arr) => {
@@ -70,9 +79,11 @@ useEffect(() => {
 useEffect(() => {  
         const GetNewData = async()=>{
             try {
+                console.log(searchColumn)
                 getData(currentPage, pageSize, dataType , searchColumn, searchColumn2, searchWords)
                 .then(res=>{
-                    // console.log('[RES]',res)
+                    console.log(res.rows)
+                    if(res.rows.length>0){
                     let keyMatch = res.rows.map(x=>{
                         x.key=x.articleGUID
                         return x
@@ -80,7 +91,8 @@ useEffect(() => {
                     setRows(keyMatch)  
                     setTotal(res.dataCount) 
                     setCurrentPage(res.pageIdx) 
-                    setPageSize(res.pageSize) 
+                    setPageSize(res.pageSize)                         
+                    }
                 })
                 } catch(error) {
                 console.log('[error]',error)
@@ -138,9 +150,17 @@ const newColumsUpdate = (d1, d2)=>{
             dataIndex: 'title',
             key: 'title',
             width:'55%',
-            render: (x,i) => 
-            <a className="title_a" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{x}</a>
-        
+            render: (x,i) => {
+                if(i.outLinkVal==="0"){
+                    if(i.articleType==="0"){
+                        return <a className="title_a aa" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{x}</a>
+                    }else{
+                        return <a className="title_a bb" onClick={e=>showOuterLinkPop(e,false,i.articleGUID)}>{x}</a>
+                    }
+                }else{
+                        return <a className="title_a cc" onClick={e=>showOuterLinkPop(e,true,i.articleGUID)}>{x}</a>
+                }
+            }
         },
         {
             title: '公告類別',
@@ -156,6 +176,14 @@ const newColumsUpdate = (d1, d2)=>{
         },
         ];  
     setColumns(newColumns); 
+    }
+
+    const openOuterLink = (id) =>{
+        GetArticleData(id,0)
+        .then(x=>{
+            window.open(x.url)
+            return
+        })
     }
 
     const onFdSubmit = useCallback((confirm, val) => { //主類別過濾
@@ -196,7 +224,26 @@ const newColumsUpdate = (d1, d2)=>{
         setCurrentPage(1);
     }
 
+const showOuterLinkPop = (e,type,id) => {
+    e.preventDefault();
+    if(type==true){
+    setIndexGUID(id)
+    setOuterLinkPop(true)
+    }else{
+    openOuterLink(id)
+    }
+}
 
+const handleCancel = () => {
+    setIndexGUID('')
+    setOuterLinkPop(false)
+    return
+}
+const handleOk = async() => {
+    openOuterLink(indexGUID)
+    setIndexGUID('')
+    setOuterLinkPop(false)
+}
 const getColumnSearchProps = (data,idx) => {
         if(idx===1){
         return {
@@ -285,7 +332,16 @@ const getColumnSearchProps = (data,idx) => {
                 />  
             )
             }
-            
+            <Modal
+            className="OuterLinkModal"
+            title='提醒'
+            visible={outerLinkPop} 
+            onCancel={handleCancel} 
+            onOk={handleOk} 
+            ><p>
+                提醒您，您將離開永豐金理財網，前往其他機構提供之資訊網頁，<br></br>
+                您若同意繼續進入該網站，請點選「確認」，不同意請點選「取消」，謝謝！</p>
+            </Modal>
             <style jsx>{`
                 .search_box {position:absolute;right:0;top:20px;display:inline-block;}
                 @media (max-width: 768px) {
