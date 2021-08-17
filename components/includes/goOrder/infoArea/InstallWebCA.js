@@ -6,7 +6,7 @@ import { getToken } from '../../../../services/user/accessToken';
 import { setHaveCA } from '../../../../store/goOrder/action';
 import warning from '../../../../resources/images/components/goOrder/attention-warning.svg';
 
-export const InstallWebCA = () => {
+export const InstallWebCA = ({ getCheckCA }) => {
     const dispatch = useDispatch();
 
     const isLogin = useSelector(store => store.user.isLogin);
@@ -26,7 +26,7 @@ export const InstallWebCA = () => {
     };
     useEffect(() => {
         if (reCheckCA || reCheckCA == null) {
-            if (currentAccount.idno) {
+            if (currentAccount != null && currentAccount.idno) {
                 const checkData = checkCert(currentAccount.idno);
                 suggestAction.current = checkData.suggestAction;
 
@@ -41,6 +41,12 @@ export const InstallWebCA = () => {
             }
         }
     }, [reCheckCA, currentAccount]);
+
+    useEffect(() => {
+        if (getCheckCA != null) {
+            getCheckCA(checkCA);
+        }
+    }, [checkCA]);
 
     const signCaHandler = async () => {
         const token = getToken();
