@@ -175,11 +175,11 @@ const SelfSelectTable = ({
             const getClass = (snapshotData, price, needLimit, needIcon) => {
                 let className = '';
                 price
-                    ? parseFloat(price) > parseFloat(snapshotData.Reference)
+                    ? parseFloat(snapshotData.ChangePrice) == 0
+                        ? ''
+                        : parseFloat(snapshotData.ChangePrice) > 0
                         ? (className += 'upper ')
-                        : parseFloat(price) < parseFloat(snapshotData.Reference)
-                        ? (className += 'lower ')
-                        : ''
+                        : (className += 'lower ')
                     : '';
                 if (needLimit) {
                     parseFloat(price) === parseFloat(snapshotData.UpLimit)
