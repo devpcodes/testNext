@@ -183,6 +183,7 @@ const addKw = (e,x) => {
                         .announce__container .content_area .content_box .content_class .class_tag{width:fit-content;margin-right:1em;line-height:1.7;}
                         .announce__container .content_area .content_box .content_box_inside{border-width:1px 0 1px 0;border-radius:0;padding:16px;min-height:0;}
                         .announce__container .content_area .content_box .content_box_inside .content_title{text-align:justify;font-size:20px;}
+                        
                         .announce__container .content_area .link_box{width:100%;margin:0 auto;padding:16px 0;min-width:0;}
                         .announce__container .content_area .link_box .tag_box,
                         .announce__container .content_area .link_box .ad_box,
@@ -199,6 +200,7 @@ const addKw = (e,x) => {
             </style>
             <style jsx global>
                 {`
+                .announce__container .content_area .content_box .content_box_inside a{color:blue;text-decoration: underline;}
                 .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
                 .announce__container .search_box .ant-space-vertical { width:100%; }
                 `}

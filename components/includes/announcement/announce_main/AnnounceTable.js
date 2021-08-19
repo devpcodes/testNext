@@ -3,7 +3,7 @@ import { Input, Space  } from 'antd';
 import { useSelector, useDispatch } from "react-redux";
 import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import AccountCard from './AccountCard';
-import DropfilterCheckBox from './DropfilterCheckBox';
+import DropfilterCheckBox from '../../tradingAccount/vipInventory/DropfilterCheckBox';
 import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
 import Modal from 'antd/lib/modal/Modal';
@@ -24,7 +24,7 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [searchColumn, setSearchColumn] = useState([]);
     const [searchColumn2, setSearchColumn2] = useState([]);
     const [searchWords, setSearchWords] = useState('');
-    const [current, setCurrent] = useState(''); 
+    //const [current, setCurrent] = useState(''); 
     const [filterColumns, setFilterColumns] = useState([]); 
     const [outerLinkPop, setOuterLinkPop] = useState(false); 
     const [indexGUID, setIndexGUID] = useState(''); 
@@ -92,6 +92,10 @@ useEffect(() => {
                     setTotal(res.dataCount) 
                     setCurrentPage(res.pageIdx) 
                     setPageSize(res.pageSize)                         
+                    }else{
+                    setRows([])  
+                    setTotal(0) 
+                    setCurrentPage(1) 
                     }
                 })
                 } catch(error) {
@@ -252,7 +256,7 @@ const getColumnSearchProps = (data,idx) => {
                     type={''}
                     onSubmit={onFdSubmit.bind(null, confirm)}
                     onReset={onFdReset.bind(null, confirm)}
-                    value = ''
+                    value = {keyWord.length>0?keyWord:''}
                     data={data}
                 />
             ),
@@ -291,7 +295,7 @@ const getColumnSearchProps = (data,idx) => {
                     />
             </div>
             <TopTagBar
-                 current = { current }
+                 current = ''
                  onClick = {TopBarChange}
                  mobleType = {dimensions.width>=768?false:true}
               />
