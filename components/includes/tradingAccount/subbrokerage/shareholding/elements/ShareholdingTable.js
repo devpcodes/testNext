@@ -261,14 +261,14 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                 key: 'gtcDate',
                 width: 190,
                 render: (text, record) => {
-                    // console.log('....record', record.zIndex);
+                    console.log('....record useGtc', record.useGtc);
                     return record.exch === 'US' ? (
                         <div>
                             <Switch
                                 size="small"
                                 style={{ marginRight: '4px' }}
                                 onChange={gtcChangeHandler.bind(null, record, data)}
-                                value={record?.useGtc}
+                                checked={record.useGtc}
                             />
                             <Input
                                 type="date"
