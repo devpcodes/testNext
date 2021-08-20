@@ -1,8 +1,8 @@
 import { getA8Instance, getDivoInstance } from '../../../myAxios';
 import { getCurrency, getMarket } from './dataMapping';
 
-export const postInventoryWithSwr = async (strObj, controlReload) => {
-    // if (controlReload == 0) return;
+export const postInventoryWithSwr = async strObj => {
+    if (strObj == null) return false;
     let d = await postInventory(JSON.parse(strObj));
     return d;
 };

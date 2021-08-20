@@ -30,12 +30,6 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (controlReload != 0) {
-            cache.clear();
-        }
-    }, [controlReload]);
-
-    useEffect(() => {
         setSelectedRowKeys(parentSelectedRowKeys);
     }, [parentSelectedRowKeys]);
 
@@ -49,23 +43,51 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                 AID: currentAccount.broker_id + currentAccount.account,
                 token: getToken(),
             };
-            return postData;
+            return JSON.stringify(postData);
         } else {
-            return {};
+            return null;
         }
     }, [currentAccount]);
 
-    const { data: fetchData } = useSWR([JSON.stringify(postData), controlReload], postInventoryWithSwr, {
+    const { data: fetchData, revalidate, isValidating } = useSWR([postData], postInventoryWithSwr, {
         onError: (error, key) => {
             Modal.error({
                 title: error,
             });
+            setLoading(false);
         },
         errorRetryCount: 3,
         focusThrottleInterval: 10000,
         errorRetryInterval: 10000,
         revalidateOnFocus: false,
     });
+
+    const { data: quoteData, revalidate: revaliquotedate, isValidating: validaQuoteData } = useSWR(
+        [JSON.stringify(stockList)],
+        postQuerySubBrokerageQuoteWithSwr,
+        {
+            onError: (error, key) => {
+                Modal.error({
+                    title: error,
+                });
+                setError('伺服器錯誤');
+                setLoading(false);
+            },
+            errorRetryCount: 3,
+            focusThrottleInterval: 10000,
+            errorRetryInterval: 10000,
+            revalidateOnFocus: false,
+        },
+    );
+
+    useEffect(() => {
+        if (controlReload != 0) {
+            cache.clear();
+            setLoading(true);
+            revalidate();
+            revaliquotedate();
+        }
+    }, [controlReload]);
 
     // const { data: fetchData } = useSWR(() => {
     //     if(postData.AID != null){
@@ -84,19 +106,6 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
     //     errorRetryInterval: 10000,
     //     revalidateOnFocus: false,
     // });
-
-    const { data: quoteData } = useSWR([JSON.stringify(stockList), controlReload], postQuerySubBrokerageQuoteWithSwr, {
-        onError: (error, key) => {
-            Modal.error({
-                title: error,
-            });
-            setError('伺服器錯誤');
-        },
-        errorRetryCount: 3,
-        focusThrottleInterval: 10000,
-        errorRetryInterval: 10000,
-        revalidateOnFocus: false,
-    });
 
     useEffect(() => {
         if (Array.isArray(fetchData)) {
@@ -434,16 +443,27 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
     //     })
     //     setData(newData);
     // }
-    const loadingHandler = (fetchData, quoteData) => {
-        if (loading) return true;
+    useEffect(() => {
+        if (!isValidating && !validaQuoteData) {
+            setLoading(false);
+        }
+    }, [isValidating, validaQuoteData]);
+
+    const loadingHandler = (fetchData, quoteData, controlReload, loading) => {
         if (fetchData?.length == 0 && quoteData == null) {
             return false;
         }
-        if ((fetchData == null || quoteData == null) && !error) {
+        if (loading || fetchData == null || quoteData == null) {
             return true;
         } else {
             return false;
         }
+
+        // if ((fetchData == null || quoteData == null) && !error) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     };
 
     const confirmHandler = record => {
@@ -517,10 +537,10 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                                 transform: 'translateX(-49%) translateY(-54px)',
                             }}
                         >
-                            {loading === true ? '資料送出中...' : '資料加載中...'}
+                            {loading === true ? '資料加載中...' : '資料加載中...'}
                         </div>
                     ),
-                    spinning: loadingHandler.call(null, fetchData, quoteData),
+                    spinning: loadingHandler.call(null, fetchData, quoteData, controlReload, loading),
                 }}
             />
             <style jsx global>{`
