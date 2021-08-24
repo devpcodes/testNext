@@ -150,7 +150,15 @@ const postUnrealized = async ({ account, broker_id, token, market }) => {
 export const postWithdrawApply = async (currentAccount, Amount, Currency, token) => {
     var url = '/SubBrokerage/Withdraw/Apply';
     try {
-        const ca_content = getCAContent(currentAccount, token)
+        let ca_content = await sign(
+            {
+                idno: currentAccount.idno,
+                broker_id: currentAccount.broker_id,
+                account: currentAccount.account,
+            },
+            true,
+            token
+        );
         let reqData = { 
             AID: currentAccount.broker_id + currentAccount.account, 
             Amount: Amount,
@@ -183,15 +191,7 @@ export const postWithdrawApply = async (currentAccount, Amount, Currency, token)
 };
 
 const getCAContent = (currentAccount,token) => {
-    let ca_content = sign(
-    {
-        idno: currentAccount.idno,
-        broker_id: currentAccount.broker_id,
-        account: currentAccount.account,
-    },
-    true,
-    token,
-);
+    
 return ca_content
 }
 const formatDate = (date) => {
