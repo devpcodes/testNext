@@ -215,8 +215,11 @@ const AccBalance = () => {
         let token = await getToken()
         postWithdrawApply(currentAccount, Amount, Currency, token)
         .then(res=>{
+            console.log(res)
             if(res.data.success=="True"){
-                console.log(res.data)
+                Modal.info({
+                    content: res.statusText,
+                });
                 return
             }else{
                 Modal.error({
