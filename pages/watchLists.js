@@ -6,14 +6,12 @@ import { PageHead } from '../components/includes/PageHead';
 import Header from '../components/includes/goOrder/header/Header';
 import SelfSelectToolBar from '../components/includes/selfSelect/SelfSelectToolBar';
 import SelfSelectTable from '../components/includes/selfSelect/SelfSelectTable';
-// import { getCookie } from '../services/components/layouts/cookieController';
-// const aa = getCookie('socialToken');
-// const bb = getCookie('token');
+import { checkServer } from '../services/checkServer';
+import { getCookie } from '../services/components/layouts/cookieController';
+
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
-
-const noNewwebHeader = true;
 
 function Self_select_stocks() {
     const socalLogin = useSelector(store => store.user.socalLogin);
@@ -47,7 +45,7 @@ function Self_select_stocks() {
 
     return (
         <>
-            {noNewwebHeader ? <Header /> : ''}
+            {isSocalLogin ? <Header /> : ''}
             <div className="select__box">
                 <SelfSelectToolBar
                     count={count}
@@ -102,8 +100,18 @@ function Self_select_stocks() {
     );
 }
 
-if (noNewwebHeader) {
-    Self_select_stocks.getLayout = Page => Page;
-}
+const setGoOrderLayout = () => {
+    const isServer = checkServer();
+    if (isServer) {
+        Self_select_stocks.getLayout = Page => Page;
+    } else {
+        const token = getCookie('token');
+        if (!token) {
+            Self_select_stocks.getLayout = Page => Page;
+        }
+    }
+};
+
+setGoOrderLayout();
 
 export default Self_select_stocks;
