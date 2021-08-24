@@ -84,7 +84,7 @@ const Unrealized = () => {
             key: 'market',
             align: 'center',
             fixed: true,
-            width:'110px',
+            width:'130px',
             sorter:(a,b)=> a.market.localeCompare(b.market),
             ...getColumnSearchProps('market'),
         },{

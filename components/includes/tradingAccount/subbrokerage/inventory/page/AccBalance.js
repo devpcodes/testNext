@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Modal, Select, Button, Input   } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
-import { postInventoryWithSwr, postInventoryBalance, postBankBalance} from '../../../../../../services/components/goOrder/sb/postInventory';
+import { postAccBalanceWithSwr, postBankBalance, postWithdrawApply} from '../../../../../../services/components/goOrder/sb/postInventory';
 import { getToken } from '../../../../../../services/user/accessToken';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
@@ -23,12 +23,53 @@ const AccBalance = () => {
     const [dataCurrent, setDataCurrent] = useState('2');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isCashModalVisible, setIsCashModalVisible] = useState(false);
+    const [isCheckModalVisible, setIsCheckModalVisible] = useState(false);
     const [refresh, setRefresh] = useState(0);
     const [modalText, setModalText] = useState({title:'',content:''});
     const [backact, setBackact] = useState('');
     const [bankData, setBankData] = useState('');
     const [topLoading, setTopLoading] = useState(true);
     const [bottomLoading, setBottomLoading] = useState(true);
+    const [error, setError] = useState([]);
+    
+    const postData = useMemo(() => {
+        if (currentAccount.account != null) {
+            const postData = {
+                AID: currentAccount.broker_id + currentAccount.account,
+                token: getToken(),
+                TT: dataCurrent,
+                seq: refresh
+            };
+            return postData;
+        } else {
+            return {};
+        }
+    }, [currentAccount,dataCurrent,refresh]);
+
+    const { data: fetchData } = useSWR([JSON.stringify(postData)], postAccBalanceWithSwr, {
+        onError: (error, key) => {
+            Modal.error({
+                title: error,
+            });
+            setError('伺服器錯誤');
+        },
+        errorRetryCount: 3,
+        focusThrottleInterval: 10000,
+        errorRetryInterval: 10000,
+    });
+
+    useEffect(() => {
+        //console.log("[ACC]",currentAccount)
+        if (fetchData) {
+            setDataSource(fetchData);
+        if(fetchData.settle_type!==settleType){
+            setSettleType(fetchData.settle_type)
+        }
+        }
+        console.log('[SD]',dataSource)
+    }, [fetchData]);
+
+    
     const columns = [
         {
             title: '幣別',
@@ -88,29 +129,7 @@ const AccBalance = () => {
             width:'35%',
         }      
     ];
-    useEffect(() => {
-        setTopLoading(true)
-        let AID = currentAccount.broker_id + currentAccount.account
-        postInventoryBalance(AID,getToken(),dataCurrent)
-        .then(res => {
-            if(res){
-            let r = res
-            !res.buyingPower? r.buyingPower='-':''
-            !res.balance? r.balance='-':''
-            !res.t_1? r.t_1='-':''
-            !res.t_2? r.t_2='-':''
-            !res.amount? r.amount='-':''
-            setDataSource(res)
-            setCurrency(res.currency)
-            }
-            //setBackact({act:res.act_backact,ntd:res.ntd_backact})
-            if(settleType==""&&res.settle_type){
-            setSettleType(res.settle_type)   
-            // console.log('SettleType',settleType) 
-            }
-            setTopLoading(false)
-        })
-    },[dataCurrent,refresh])
+
 
     useEffect(() => {
         setBottomLoading(true)
@@ -140,6 +159,7 @@ const AccBalance = () => {
 
     const showCashModal = (e) => {
         e.preventDefault();
+        setInputData(dataSource.balance?dataSource.balance:0)
         setIsCashModalVisible(true);
         }
     const showModal = (e,n) => {
@@ -164,22 +184,51 @@ const AccBalance = () => {
         setModalText({title:title,content:content})
         setIsModalVisible(true);
       };
-    
-      const handleOk = () => {
-        setIsModalVisible(false);
-      };
-      const handleCancel = () => {
-        setIsCashModalVisible(false);
-      };
+      const loadingHandler = (fetchData, error) => {
+        if ((fetchData == null) && !error) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+      const handleCancel_cash = () => {
+            setIsCashModalVisible(false); 
+        }
+      const handleCancel_check = () => {
+            setIsCheckModalVisible(false);
+        }
+      const handleCancel_info = () => {
+            setIsModalVisible(false); 
+        }
       const CashOut = () => {
         setIsCashModalVisible(false);
+        setIsCheckModalVisible(true);
       };
       const CashOutAll = () => {
         setIsCashModalVisible(false);
+        setIsCheckModalVisible(true);
+      };
+      const CashOutFinal = async() => {
+        let currentAccount = currentAccount
+        let Currency = dataSource.currency
+        let Amount = inputData
+        let token = await getToken()
+        postWithdrawApply(currentAccount, Amount, Currency, token)
+        .then(res=>{
+            if(res.data.success=="True"){
+                console.log(res.data)
+                return
+            }else{
+                Modal.error({
+                    content: res.statusText,
+                });
+            }
+        })
+        setIsCheckModalVisible(false);
       };
       const InputChange = (e) => {
         setInputData(e.target.value)
-        console.log(e.target.value)
+        console.log('input',e.target.value)
       };
       const onRefresh = () =>{
         let r = refresh
@@ -187,28 +236,28 @@ const AccBalance = () => {
     }
     return (
         <div className="brokerage">
-            <div className="action_box">
-                <div>
-                <Select defaultValue={dataCurrent} style={{ width: 120 }} onChange={handleChange}>
-                    <Option value="2">美國</Option>
-                    <Option value="0">香港</Option>
-                    <Option value="1">日本</Option>
-                    <Option value="8">滬股通</Option>
-                    <Option value="9">深股通</Option>
-                </Select>
-                <Button type="primary" onClick={showCashModal}>出金</Button>
-                <Button onClick={e=>showModal(e,0)}>出金說明</Button>
-                </div>
-                <div>
-                <Button onClick={e=>showModal(e,1)}>說明</Button>    
-                <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn"> </IconBtn>    
-                </div>
+        <div className="action_box">
+        <div>
+             <Select defaultValue={dataCurrent} style={{ width: 120 }} onChange={handleChange}>
+                <Option value="2">美國</Option>
+                <Option value="0">香港</Option>
+                <Option value="1">日本</Option>
+                <Option value="8">滬股通</Option>
+                <Option value="9">深股通</Option>
+            </Select>
+            <Button type="primary" onClick={showCashModal}>出金</Button>
+            <Button onClick={e=>showModal(e,0)}>出金說明</Button>   
+            </div>
+            <div>
+            <Button onClick={e=>showModal(e,1)}>說明</Button>    
+            <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn"> </IconBtn>    
+            </div>
                 <Modal 
                 title={modalText.title} 
                 visible={isModalVisible} 
                 closable={false}//{ , className: "modal-footer-hiden-button" }
                 footer={[
-                    <Button onClick={handleOk}>關閉</Button>
+                    <Button onClick={handleCancel_info}>關閉</Button>
                 ]} >
                     <div dangerouslySetInnerHTML={{__html:modalText.content}}></div>
                 </Modal>
@@ -216,16 +265,16 @@ const AccBalance = () => {
                 className="CashModal"
                 title='出金'
                 visible={isCashModalVisible} 
-                onCancel={handleCancel} 
+                onCancel={handleCancel_cash} 
                 footer={[
                     <Button onClick={CashOut}>確認出金</Button>,
                     <Button onClick={CashOutAll}>全部出金</Button>
-                ]} >
-                    <div>
+                ]}>
+                 <div>
                         <table>
                             <tr>
                                 <td>幣別:</td>
-                                <td>{dataSource.currency?dataSource.currency:'-'}</td>
+                                <td>{dataSource.currency}</td>
                             </tr>
                             <tr>
                                 <td>預估可出金金額:</td>
@@ -236,81 +285,84 @@ const AccBalance = () => {
                                 <td><Input placeholder="請輸入金額" value={inputData} onChange={InputChange} type="number"/></td>
                             </tr>
                         </table>
-                    </div>
+                 </div>
                 </Modal>
-            </div>
-            {/* <table className="balance_table">
-                <tbody>
-                    <tr>
-                        <td>幣別</td>
-                        <td>{dataSource.currency?dataSource.currency:'-'}</td>
-                    </tr>
-                    <tr>
-                        <td>下單可用餘額</td>
-                        <td>{dataSource.buyingPower?dataSource.buyingPower:'-'}</td>
-                    </tr>
-                    <tr>
-                        <td>銀行可用餘額-交割</td>
-                        <td>{dataSource.balance?dataSource.balance:'-'}</td>
-                    </tr>
-                    <tr>
-                        <td>T-1日在途</td>
-                        <td>{dataSource.t_1?dataSource.t_1:'-'}</td>
-                    </tr>
-                    <tr>
-                        <td>T-2日在途</td>
-                        <td>{dataSource.t_2?dataSource.t_2:'-'}</td>
-                    </tr>
-                    <tr>
-                        <td>T日賣出成交</td>
-                        <td>{dataSource.amount?dataSource.amount:'-'}</td>
-                    </tr>
-                </tbody>
-            </table> */}
-            <AccountTable 
-            dataSource={[dataSource]} 
-            pagination={false} 
-            columns={columns}
-            loading={topLoading}
-            />
-           {(settleType=='2'||settleType=='4')?(
-            <div className="bank_table">
-            <p>{settleType=='2'?('外幣'):('台幣')}自有帳戶:<span>{backact}</span></p>
-            <AccountTable 
-            dataSource={bankData} 
-            pagination={false} 
-            columns={columnsAcc}
-            loading={bottomLoading}
-            />
-            {/* <table className="balance_table_bank">
-            <thead>
-                <tr>
-                    <th>幣別</th>
-                    <th>幣別代號</th>
-                    <th>帳戶餘額</th>
-                </tr>                
-            </thead>
-                <tbody>
-                {
-                    bankData.map(x=>{
-                    return(
-                    <tr>
-                        <td>{x.name}</td>
-                        <td>{x.currency}</td>
-                        <td>{x.amt}</td>
-                    </tr>                            
-                    )
-                    })
-                }
+                <Modal 
+                className="CheckModal"
+                title='出金確認'
+                visible={isCheckModalVisible} 
+                onCancel={handleCancel_check} 
+                footer={[
+                    <Button onClick={CashOutFinal}>確定出金</Button>,
+                ]}>
+                <div>
+                        <table>
+                            <tr>
+                                <td>幣別:</td>
+                                <td>{dataSource.currency}</td>
+                            </tr>
+                            <tr>
+                                <td>出金金額:</td>
+                                <td>{inputData}元</td>
+                            </tr>
+                        </table>
+                </div>
+                </Modal>
+        </div>        
+    <div className="table_box">
+   <AccountTable 
+     dataSource={[dataSource]} 
+     pagination={false} 
+     columns={columns}
+     loading={{
+         indicator: (
+             <div
+                 style={{
+                     marginTop: '20px',
+                     color: 'black',
+                     fontSize: '1.6rem',
+                     width: '100%',
+                     transform: 'translateX(-49%) translateY(-54px)',
+                 }}
+             >
+                 資料加載中...
+             </div>
+         ),
+         spinning: loadingHandler.call(null, fetchData, error),
+     }}
+     />        
+    </div>   
+    {(settleType=='2'||settleType=='4')?(
+        <div className="bank_table">
+        <p>{settleType=='2'?('外幣'):('台幣')}自有帳戶:<span>{backact}</span></p>
+        <AccountTable 
+        dataSource={bankData} 
+        pagination={false} 
+        columns={columnsAcc}
+        loading={{
+            indicator: (
+                <div
+                    style={{
+                        marginTop: '20px',
+                        color: 'black',
+                        fontSize: '1.6rem',
+                        width: '100%',
+                        transform: 'translateX(-49%) translateY(-54px)',
+                    }}
+                >
+                    資料加載中...
+                </div>
+            ),
+            spinning: loadingHandler.call(null, bankData, error),
+        }}
+        />
+    </div>              
+        ):null}            
 
-            </tbody>
-        </table>  */}
-        </div>              
-           ):null}        
-            <style jsx>
+    <style jsx>
                 {`
                 .action_box{display:flex;justify-content: space-between;align-items: center;margin-bottom:10px; }
-                
+                .table_box{margin:10px 0;}
                 .balance_table {width:100%;font-size:16px; line-height:2; margin-top:20px;}
                 .balance_table tr td{width:50%;text-align:center;border:1px solid grey;}
                 .balance_table tr td:first-child{background-color:#f2f5fa;color:#6c7b94;}
@@ -341,8 +393,8 @@ const AccBalance = () => {
 
                 `}
             </style>
-        </div>
-    );
+        </div> 
+   );
 };
 
 export default AccBalance;
