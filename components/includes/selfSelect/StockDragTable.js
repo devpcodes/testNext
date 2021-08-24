@@ -249,63 +249,84 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
 
     useEffect(() => {
         // let data = JSON.parse(JSON.stringify(selfSelectList));
+        const getClass = (solaceData, price, needLimit, needIcon) => {
+            console.log(solaceData);
+            console.log(price);
+            let className = '';
+            price
+                ? parseFloat(solaceData.DiffPrice) == 0
+                    ? ''
+                    : parseFloat(solaceData.DiffPrice) > 0
+                    ? (className += 'upper ')
+                    : (className += 'lower ')
+                : '';
+            if (needLimit) {
+                parseFloat(price) === parseFloat(solaceData.Upper)
+                    ? (className += 'up__limit ')
+                    : parseFloat(price) === parseFloat(solaceData.Lower)
+                    ? (className += 'down__limit ')
+                    : '';
+            }
+            if (needIcon) {
+                parseFloat(solaceData.DiffPrice) == 0
+                    ? ''
+                    : parseFloat(solaceData.DiffPrice) > 0
+                    ? (className += 'upper__icon ')
+                    : (className += 'lower__icon ');
+            }
+            return className;
+        };
 
         selfSelectList.forEach((selectData, index) => {
             if (selectData.code === solaceData.Code) {
                 selectData.totalVolume.text = solaceData.VolSum;
 
                 selectData.close.text = parseFloat(solaceData.Close).toFixed(2);
-                selectData.close.class =
-                    parseFloat(solaceData.DiffPrice) < 0
-                        ? 'lower'
-                        : parseFloat(solaceData.DiffPrice) > 0
-                        ? 'upper'
-                        : '';
-                selectData.close.simtrade = solaceData.Simtrade;
-                // selectData.changeRate.text = solaceData.DiffRate;
-                // selectData.changeRate.text = solaceData.DiffRate;
-
+                (selectData.close.class = (() => {
+                    return getClass(solaceData, solaceData.Close, true, false);
+                })()),
+                    (selectData.close.simtrade = solaceData.Simtrade);
                 selectData.changePrice.text =
                     parseFloat(solaceData.DiffPrice) === 0
                         ? '--'
                         : parseFloat(Math.abs(solaceData.DiffPrice)).toFixed(2);
-                selectData.changePrice.class =
-                    parseFloat(solaceData.DiffPrice) < 0
-                        ? 'lower lower__icon'
-                        : parseFloat(solaceData.DiffPrice) > 0
-                        ? 'upper upper__icon'
+                (selectData.changePrice.class = (() => {
+                    return getClass(solaceData, solaceData.DiffPrice, false, true);
+                })()),
+                    (selectData.changeRate.text =
+                        parseFloat(solaceData.DiffRate) === 0
+                            ? '--'
+                            : `${Math.abs(parseFloat(solaceData.DiffRate / 100).toFixed(2))} %`);
+                (selectData.changeRate.class = (() => {
+                    return getClass(solaceData, solaceData.DiffRate, false, true);
+                })()),
+                    parseFloat(solaceData.DiffRate) < 0;
+                if (Array.isArray(solaceData.BidPrice)) {
+                    selectData.buyPrice.text =
+                        parseFloat(solaceData.BidPrice[0]).toFixed(2) === 0
+                            ? '--'
+                            : parseFloat(solaceData.BidPrice[0]).toFixed(2);
+                    selectData.buyPrice.class = Array.isArray(solaceData.BidPrice)
+                        ? parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) < 0
+                            ? 'lower'
+                            : parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) > 0
+                            ? 'upper'
+                            : ''
                         : '';
-
-                selectData.changeRate.text =
-                    parseFloat(solaceData.DiffRate) === 0
-                        ? '--'
-                        : `${Math.abs(parseFloat(solaceData.DiffRate / 100).toFixed(2))} %`;
-                selectData.changeRate.class =
-                    parseFloat(solaceData.DiffRate) < 0
-                        ? 'lower lower__icon'
-                        : parseFloat(solaceData.DiffRate) > 0
-                        ? 'upper upper__icon'
+                }
+                if (Array.isArray(solaceData.AskPrice)) {
+                    selectData.sellPrice.text =
+                        parseFloat(solaceData.AskPrice[0]).toFixed(2) === 0
+                            ? '--'
+                            : parseFloat(solaceData.AskPrice[0]).toFixed(2);
+                    selectData.sellPrice.class = Array.isArray(solaceData.AskPrice)
+                        ? parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) < 0
+                            ? 'lower'
+                            : parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) > 0
+                            ? 'upper'
+                            : ''
                         : '';
-                selectData.buyPrice.text = Array.isArray(solaceData.BidPrice)
-                    ? parseFloat(solaceData.BidPrice[0]).toFixed(2)
-                    : '--';
-                selectData.buyPrice.class = Array.isArray(solaceData.BidPrice)
-                    ? parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) < 0
-                        ? 'lower'
-                        : parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) > 0
-                        ? 'upper'
-                        : ''
-                    : '';
-                selectData.sellPrice.text = Array.isArray(solaceData.AskPrice)
-                    ? parseFloat(solaceData.AskPrice[0]).toFixed(2)
-                    : '--';
-                selectData.sellPrice.class = Array.isArray(solaceData.AskPrice)
-                    ? parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) < 0
-                        ? 'lower'
-                        : parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) > 0
-                        ? 'upper'
-                        : ''
-                    : '';
+                }
                 return true;
             }
         });
