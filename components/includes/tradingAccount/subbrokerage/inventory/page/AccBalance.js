@@ -208,11 +208,11 @@ const AccBalance = () => {
         setIsCashModalVisible(false);
         setIsCheckModalVisible(true);
       };
-      const CashOutFinal = async() => {
-        let currentAccount = currentAccount
+      const CashOutFinal = () => {
         let Currency = dataSource.currency
         let Amount = inputData
-        let token = await getToken()
+        let token = getToken()
+        console.log('st',currentAccount, Amount, Currency, token)
         postWithdrawApply(currentAccount, Amount, Currency, token)
         .then(res=>{
             console.log(res)

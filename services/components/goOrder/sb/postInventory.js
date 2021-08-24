@@ -2,6 +2,7 @@ import { getA8Instance, getDivoInstance } from '../../../myAxios';
 import { getCurrency, getMarket } from './dataMapping';
 import { getCookie } from '../../layouts/cookieController';
 import { getWebId } from '../../goOrder/getWebId';
+import { sign } from '../../../webCa';
 import moment from 'moment';
 
 export const postInventoryWithSwr = async strObj => {
@@ -162,7 +163,6 @@ export const postWithdrawApply = async (currentAccount, Amount, Currency, token)
             token:token
         }
         console.log('[REQ]', reqData);
-        return
         const res = await getA8Instance('v1', undefined, true).post(url, reqData);
         console.log('[RES]',res)
         if (res.data.success === 'True') {
@@ -194,10 +194,10 @@ const getCAContent = (currentAccount,token) => {
 );
 return ca_content
 }
-const formatDate = date => {
+const formatDate = (date) => {
     let newDate = '--';
     if (date) {
-        newDate = moment(date, 'YYYYMMDD').format('YYYY.MM.DD');
+        newDate = moment(date, 'YYYYMMDD').format('YYYYMMDD');
     }
     return newDate;
 };
