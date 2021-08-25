@@ -159,18 +159,19 @@ export const postWithdrawApply = async (currentAccount, Amount, Currency, token)
             true,
             token
         );
+        console.log('[ca_content]',ca_content)
         let reqData = { 
             AID: currentAccount.broker_id + currentAccount.account, 
             Amount: Amount,
             Currency: Currency,
             sDate:formatDate(new Date),
             client_ip:getCookie('client_ip'),
-            webId:getWebId(platform, 'recommisiioned'),
+            webID:getWebId(platform, 'recommisiioned'),
             creator:currentAccount.idno,
             ca_content:ca_content,
             token:token
         }
-        console.log('[REQ]', reqData);
+        console.log('[reqData]', reqData);
         const res = await getA8Instance('v1', undefined, true).post(url, reqData);
         console.log('[RES]',res)
         if (res.data.success === 'True') {
@@ -186,7 +187,7 @@ export const postWithdrawApply = async (currentAccount, Amount, Currency, token)
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(3)';
+        throw '伺服器錯誤(2)'+error;
     }
 };
 
@@ -226,6 +227,6 @@ export const postBankAccount = async (AID, token) => {
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(3)';
+        throw '伺服器錯誤(1)'+error;
     }
 };

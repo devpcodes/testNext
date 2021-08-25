@@ -31,6 +31,7 @@ const AccBalance = () => {
     const [topLoading, setTopLoading] = useState(true);
     const [bottomLoading, setBottomLoading] = useState(true);
     const [error, setError] = useState([]);
+    const [coBackMsg, setCoBackMsg] = useState({amount:'',no:''});
     
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
@@ -66,9 +67,26 @@ const AccBalance = () => {
             setSettleType(fetchData.settle_type)
         }
         }
-        console.log('[SD]',dataSource)
     }, [fetchData]);
 
+    useEffect(() => {
+        if(settleType=="2"||settleType=="4"){
+            setBottomLoading(true)
+            let AID = currentAccount.broker_id + currentAccount.account
+            let UID = currentAccount.idno
+            postBankBalance(AID,getToken(),UID)
+            .then(res =>{
+                if(settleType=="2"){
+                    setBackact(res.act_backact)
+                }else if(settleType=="4"){
+                    setBackact(res.ntd_backact)
+                }
+                console.log(res.detail)
+                setBankData(res.detail)
+                setBottomLoading(false)
+            })   
+        }
+    },[settleType,refresh])
     
     const columns = [
         {
@@ -131,24 +149,6 @@ const AccBalance = () => {
     ];
 
 
-    useEffect(() => {
-        setBottomLoading(true)
-        if(settleType=="2"||settleType=="4"){
-            let AID = currentAccount.broker_id + currentAccount.account
-            let UID = currentAccount.idno
-            postBankBalance(AID,getToken(),UID)
-            .then(res =>{
-                if(settleType=="2"){
-                    setBackact(res.act_backact)
-                }else if(settleType=="4"){
-                    setBackact(res.ntd_backact)
-                }
-                console.log(res.detail)
-                setBankData(res.detail)
-                setBottomLoading(false)
-            })   
-        }
-    },[settleType,refresh])
 
     const { Option } = Select;
 
@@ -164,15 +164,18 @@ const AccBalance = () => {
         }
     const showModal = (e,n) => {
         e.preventDefault();
+        modalContentHandler(n)
+      };
+      const modalContentHandler = (id) =>{
         let title = ''
         let content = ''
-        if(n==0){
+        if(id==0){
             title = '出金說明'
             content = `
             <p>1.當日出金時間為9:00~12:00,下午14:30後入帳。</p>
             <p>2.超過中午12:00申請出金者, 於下一營業日下午14:30後入帳。</p>
             `
-        }else{
+        }else if(id==1){
             title = '帳戶餘額說明'
             content = `
             <p>1.下單可用金額=銀行餘額＋T＋1/T＋2/T＋3在途款＋當日賣出成交-當日買進委託。</p>
@@ -180,10 +183,18 @@ const AccBalance = () => {
             <p>3.已圈存金額 = T ＋ 1 + T ＋ 2在途款 ＋ 當日賣出成交 - 當日買進委託。</p>
             <p>4.台/外幣自有專戶無需申請出金美股若無成交客戶, 購買力於隔天晚上21:00才會再更新。</p>
             `
+        }else if(id==2){
+            title = '系統訊息'
+            content = `
+            <p style="text-align:center;font-size:1.5em;">出金申請已送出</p>
+            <p style="text-align:center">出金編號:${coBackMsg.no}</p>
+            <p style="text-align:center">出金金額:${coBackMsg.amount}</p>
+            `
         }
         setModalText({title:title,content:content})
         setIsModalVisible(true);
-      };
+      }
+
       const loadingHandler = (fetchData, error) => {
         if ((fetchData == null) && !error) {
             return true;
@@ -216,10 +227,10 @@ const AccBalance = () => {
         postWithdrawApply(currentAccount, Amount, Currency, token)
         .then(res=>{
             console.log(res)
-            if(res.data.success=="True"){
-                Modal.info({
-                    content: res.statusText,
-                });
+            if(res.success=="True"){
+                let result = res.result.Data.Row
+                setCoBackMsg({amount:result["@Amount"],no:result["@OID"]})
+                modalContentHandler(2)
                 return
             }else{
                 Modal.error({
