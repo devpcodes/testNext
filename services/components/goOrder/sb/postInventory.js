@@ -160,13 +160,15 @@ export const postWithdrawApply = async (currentAccount, Amount, Currency, token)
             token
         );
         console.log('[ca_content]',ca_content)
+        let date = formatDate(new Date)
+        let ip = getCookie('client_ip')
         let reqData = { 
             AID: currentAccount.broker_id + currentAccount.account, 
             Amount: Amount,
             Currency: Currency,
-            sDate:formatDate(new Date),
-            client_ip:getCookie('client_ip'),
-            webID:getWebId(platform, 'recommisiioned'),
+            sDate:date,
+            client_ip:ip,
+            webID:11,//getWebId(platform, 'recommisiioned') ,
             creator:currentAccount.idno,
             ca_content:ca_content,
             token:token
