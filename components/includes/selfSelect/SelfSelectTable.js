@@ -37,20 +37,8 @@ const SelfSelectTable = ({
 
     // 查詢自選選單
     useEffect(async () => {
-        const socalLoginData = useSelector(store => store.user.socalLogin);
-        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-        const token = isSocalLogin ? getSocalToken() : getToken();
-
-        console.log('=====================================');
-        console.log(socalLoginData);
-        console.log(isSocalLogin);
-        console.log(token);
-        console.log('=====================================');
-
-        if (token) {
-            const res = await fetchQuerySelectGroup(isSocalLogin, token);
-            setFetchSelectGroupData(res);
-        }
+        const res = await fetchQuerySelectGroup(isSocalLogin, token);
+        setFetchSelectGroupData(res);
     }, [isSocalLogin, token, setSelectGroupReloadTime]);
 
     // const { data: fetchSelectGroupData } = useSWR(

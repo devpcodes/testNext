@@ -45,7 +45,8 @@ function Self_select_stocks() {
 
     return (
         <>
-            {isSocalLogin ? <Header /> : ''}
+            {/* {isSocalLogin ? <Header /> : ''} */}
+            <Header />
             <div className="select__box">
                 <SelfSelectToolBar
                     count={count}
