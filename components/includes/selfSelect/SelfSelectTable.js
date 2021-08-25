@@ -35,18 +35,13 @@ const SelfSelectTable = ({
     const [selectStocks, setSelectStocks] = useState([]);
     const [snapshot, setSnapshot] = useState(null);
 
+    console.log('=======================');
+    console.log(isSocalLogin);
+    console.log(token);
+    console.log('=======================');
+
     // 查詢自選選單
     useEffect(async () => {
-        const socalLoginData = useSelector(store => store.user.socalLogin);
-        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-        const token = isSocalLogin ? getSocalToken() : getToken();
-
-        console.log('=====================================');
-        console.log(socalLoginData);
-        console.log(isSocalLogin);
-        console.log(token);
-        console.log('=====================================');
-
         if (token) {
             const res = await fetchQuerySelectGroup(isSocalLogin, token);
             setFetchSelectGroupData(res);
