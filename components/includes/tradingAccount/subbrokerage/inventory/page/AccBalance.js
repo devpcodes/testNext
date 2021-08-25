@@ -164,9 +164,9 @@ const AccBalance = () => {
         }
     const showModal = (e,n) => {
         e.preventDefault();
-        modalContentHandler(n)
+        modalContentHandler(n,'')
       };
-      const modalContentHandler = (id) =>{
+      const modalContentHandler = (id,data) =>{
         let title = ''
         let content = ''
         if(id==0){
@@ -187,8 +187,8 @@ const AccBalance = () => {
             title = '系統訊息'
             content = `
             <p style="text-align:center;font-size:1.5em;">出金申請已送出</p>
-            <p style="text-align:center">出金編號:${coBackMsg.no}</p>
-            <p style="text-align:center">出金金額:${coBackMsg.amount}</p>
+            <p style="text-align:center">出金編號:${data.no}</p>
+            <p style="text-align:center">出金金額:${data.amount}</p>
             `
         }
         setModalText({title:title,content:content})
@@ -229,8 +229,7 @@ const AccBalance = () => {
             console.log(res)
             if(res.success=="True"){
                 let result = res.result.Data.Row
-                setCoBackMsg({amount:result["@Amount"],no:result["@OID"]})
-                modalContentHandler(2)
+                modalContentHandler(2,{amount:result["@Amount"],no:result["@OID"]})
                 return
             }else{
                 Modal.error({
