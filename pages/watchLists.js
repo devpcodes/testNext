@@ -19,6 +19,8 @@ function Self_select_stocks() {
     if (!isServer) {
         isLogin = getCookie('token') ? true : false;
     }
+    const socalLogin = useSelector(store => store.user.socalLogin);
+    const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
     const [count, setCount] = useState('--');
     const [tabkey, setTabkey] = useState('0');
     const [selectReloadTime, setSelectReloadTime] = useState(null);
