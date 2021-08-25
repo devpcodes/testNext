@@ -14,8 +14,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 });
 
 function Self_select_stocks() {
-    const socalLogin = useSelector(store => store.user.socalLogin);
-    const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
+    const isSocalLogin = getCookie('socialToken');
     const [count, setCount] = useState('--');
     const [tabkey, setTabkey] = useState('0');
     const [selectReloadTime, setSelectReloadTime] = useState(null);
