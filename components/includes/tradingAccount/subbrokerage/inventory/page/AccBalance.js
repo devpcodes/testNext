@@ -4,10 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import { postAccBalanceWithSwr, postBankBalance, postWithdrawApply} from '../../../../../../services/components/goOrder/sb/postInventory';
 import { getToken } from '../../../../../../services/user/accessToken';
+import { usePlatform } from '../../../../../../hooks/usePlatform';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
 const AccBalance = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const platform = usePlatform();
     const [accountType, setAccountType] = useState('');
     const [inputData, setInputData] = useState(null);
     const [settleType, setSettleType] = useState('');
@@ -224,7 +226,7 @@ const AccBalance = () => {
         let Amount = inputData
         let token = getToken()
         console.log('st',currentAccount, Amount, Currency, token)
-        postWithdrawApply(currentAccount, Amount, Currency, token)
+        postWithdrawApply(currentAccount, platform, Amount, Currency, token)
         .then(res=>{
             console.log(res)
             if(res.success=="True"){

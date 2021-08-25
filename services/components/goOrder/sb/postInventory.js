@@ -147,7 +147,7 @@ const postUnrealized = async ({ account, broker_id, token, market }) => {
     }
 };
 
-export const postWithdrawApply = async (currentAccount, Amount, Currency, token) => {
+export const postWithdrawApply = async (currentAccount, platform, Amount, Currency, token) => {
     var url = '/SubBrokerage/Withdraw/Apply';
     try {
         let ca_content = await sign(
