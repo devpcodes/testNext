@@ -250,8 +250,6 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
     useEffect(() => {
         // let data = JSON.parse(JSON.stringify(selfSelectList));
         const getClass = (solaceData, price, needLimit, needIcon) => {
-            console.log(solaceData);
-            console.log(price);
             let className = '';
             price
                 ? parseFloat(solaceData.DiffPrice) == 0

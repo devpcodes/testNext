@@ -10,10 +10,6 @@ const EditSelectGroup = memo(({ isEditSelectGroupVisitable, handleClose, callBac
         handleClose();
     };
 
-    // const afterModalClose = () => {
-    //     console.log('afterModalClose');
-    // };
-
     return (
         <>
             <Modal

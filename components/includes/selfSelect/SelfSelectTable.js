@@ -35,11 +35,6 @@ const SelfSelectTable = ({
     const [selectStocks, setSelectStocks] = useState([]);
     const [snapshot, setSnapshot] = useState(null);
 
-    console.log('=======================');
-    console.log(isSocalLogin);
-    console.log(token);
-    console.log('=======================');
-
     // 查詢自選選單
     useEffect(async () => {
         if (token) {
@@ -177,7 +172,6 @@ const SelfSelectTable = ({
     }, [fetchSelectGroupData]);
 
     useEffect(() => {
-        // console.log(selectGroupID);
         if (inventoryStockData || selectStocks) {
             const getClass = (snapshotData, price, needLimit, needIcon) => {
                 let className = '';
@@ -306,10 +300,6 @@ const SelfSelectTable = ({
                         }
 
                         const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
-                        console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-                        console.log(sbQuoteData);
-                        console.log(sbQuote[`${stock.symbol}.${mk}`]);
-                        console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
                         stockData.key = index;
                         stockData.code = stock.symbol;
                         stockData.market = stock.market;
@@ -367,13 +357,11 @@ const SelfSelectTable = ({
     useEffect(() => {
         if (!!inventoryStockData && Object.keys(inventoryStockData).length > 0) {
             const InventoryStocks = inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`];
-            // console.log(InventoryStocks)
         }
     }, [inventoryStockData]);
 
     return (
         <>
-            {/* {console.log(selectStocks)} */}
             <div className="select__group__tab">
                 <Tabs onChange={changeSelectGroup} activeKey={selectGroupID}>
                     {!isSocalLogin && <TabPane tab="庫存" key="0" />}
