@@ -42,10 +42,8 @@ const SelfSelectTable = ({
 
     // 查詢自選選單
     useEffect(async () => {
-        if (token) {
-            const res = await fetchQuerySelectGroup(isSocalLogin, token);
-            setFetchSelectGroupData(res);
-        }
+        const res = await fetchQuerySelectGroup(isSocalLogin, token);
+        setFetchSelectGroupData(res);
     }, [isSocalLogin, token, setSelectGroupReloadTime]);
 
     // const { data: fetchSelectGroupData } = useSWR(
