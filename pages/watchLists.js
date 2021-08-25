@@ -14,10 +14,10 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 });
 
 function Self_select_stocks() {
-    let isSocalLogin;
+    let isLogin;
     const isServer = checkServer();
     if (!isServer) {
-        isSocalLogin = getCookie('socialToken');
+        isLogin = getCookie('token') ? true : false;
     }
     const [count, setCount] = useState('--');
     const [tabkey, setTabkey] = useState('0');
@@ -48,7 +48,7 @@ function Self_select_stocks() {
 
     return (
         <>
-            {isSocalLogin ? <Header /> : <></>}
+            {!isLogin ? <Header /> : <></>}
             <div className="select__box">
                 <SelfSelectToolBar
                     count={count}
