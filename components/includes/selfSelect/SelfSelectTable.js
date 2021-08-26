@@ -57,7 +57,7 @@ const SelfSelectTable = ({
 
     // 查詢庫存股票
     const { data: inventoryStockData } = useSWR(
-        !isSocalLogin && selectGroupID === '0' && token ? [token, inventoryReloadTime] : null,
+        !isSocalLogin && selectGroupID === '0' && token ? [token, currentAccount, inventoryReloadTime] : null,
         fetchQuerySelectInventoryStock,
         {
             onError: (error, key) => {
@@ -204,7 +204,7 @@ const SelfSelectTable = ({
                     ? inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]
                     : selectStocks;
             const tableRowData = [];
-
+            console.log(tableData);
             if (tableData && Array.isArray(tableData) && tableData.length > 0) {
                 tableData.some((stock, index) => {
                     let stockData = {};
@@ -342,7 +342,7 @@ const SelfSelectTable = ({
             setTableData(tableRowData);
             reloadCount(tableRowData.length);
         }
-    }, [snapshot, sbQuote, selectStocks]);
+    }, [snapshot, sbQuote, selectStocks, inventoryStockData]);
 
     useEffect(() => {
         // 遮罩
@@ -353,12 +353,12 @@ const SelfSelectTable = ({
         setSelectGroupID(tabkey);
     }, [tabkey]);
 
-    // 取得庫存檔案 ( 只有證券帳戶 )
-    useEffect(() => {
-        if (!!inventoryStockData && Object.keys(inventoryStockData).length > 0) {
-            const InventoryStocks = inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`];
-        }
-    }, [inventoryStockData]);
+    // // 取得庫存檔案 ( 只有證券帳戶 )
+    // useEffect(() => {
+    //     if (!!inventoryStockData && Object.keys(inventoryStockData).length > 0) {
+    //         const InventoryStocks = inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`];
+    //     }
+    // }, [inventoryStockData]);
 
     return (
         <>
