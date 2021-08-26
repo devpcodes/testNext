@@ -15,7 +15,6 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
     const t30Exchange = useSelector(store => store.goOrder.T30Data.EXCHANGE);
     const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
     const [selectItem, setSelectItem] = useState([]); // 選項
-    const [selectDefaultValue, setSelectDefaultValue] = useState([]); // 初始值
     const [selectCheckedValue, setSelectCheckedValue] = useState([]); // 選擇值
     const isSocalLogin = Object.keys(socalLogin).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
@@ -95,8 +94,8 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 }
             });
             setSelectItem(options);
-            setSelectDefaultValue(defaultValue);
-            // setSelectCheckedValue(defaultValue);
+            console.log(defaultValue);
+            setSelectCheckedValue(defaultValue);
         }
     }, [isModalVisible, selectInfo]);
 
@@ -134,11 +133,7 @@ const AddSelectStock = memo(({ isVisible, handleClose, reload }) => {
                 {
                     <section className="add">
                         <div className="self__select__list">
-                            <Checkbox.Group
-                                options={selectItem}
-                                defaultValue={selectDefaultValue}
-                                onChange={onChange}
-                            />
+                            <Checkbox.Group options={selectItem} value={selectCheckedValue} onChange={onChange} />
                             <Checkbox.Group />
                             {!isSocalLogin && (
                                 <span className="add__stock__group__btn" onClick={addSelfSelect}>
