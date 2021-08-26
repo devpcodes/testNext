@@ -26,7 +26,7 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
         const addReqData = {
             selectId: tabkey,
             symbol: searchData.symbol,
-            exchange: searchData.exchange,
+            exchange: searchData.market,
             market: searchData.marketType,
             token: isSocalLogin ? getSocalToken() : getToken(),
         };
