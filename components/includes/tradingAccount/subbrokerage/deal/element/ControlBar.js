@@ -8,7 +8,7 @@ const options = [
     { label: '匯總', value: 'all' },
     { label: '明細', value: 'detail' },
 ];
-const ControlBar = ({ reFreshHandler, typeChangeHandler }) => {
+const ControlBar = ({ reFreshHandler, typeChangeHandler, style }) => {
     const dispatch = useDispatch();
 
     const [val, setVal] = useState('detail');
@@ -56,9 +56,9 @@ const ControlBar = ({ reFreshHandler, typeChangeHandler }) => {
         );
     };
     return (
-        <div style={{ textAlign: 'right', position: 'relative' }}>
+        <div style={{ textAlign: 'right', ...style }}>
             <Radio.Group
-                style={{ position: 'absolute', left: 0, top: '4px' }}
+                style={{}}
                 options={options}
                 onChange={changeHandler}
                 value={val}

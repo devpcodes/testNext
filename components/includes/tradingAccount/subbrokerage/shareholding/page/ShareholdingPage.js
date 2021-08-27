@@ -87,8 +87,8 @@ const ShareholdingPage = () => {
     };
 
     return (
-        <div>
-            <div style={{ textAlign: 'right', position: 'relative' }}>
+        <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '-100px', width: '100%' }}>
                 {showSell && (
                     <Button
                         style={{ marginBottom: '10px', position: 'absolute', left: 0 }}
@@ -104,6 +104,8 @@ const ShareholdingPage = () => {
                         verticalAlign: 'top',
                         marginBottom: '10px',
                         cursor: 'pointer',
+                        position: 'absolute',
+                        right: 0,
                     }}
                 />
             </div>

@@ -52,7 +52,7 @@ const SubBrokerMain = () => {
     return (
         <div className="page__container subBrokerage">
             <div className="content_area">
-                <div className="content_box">
+                <div className="content_box--nav">
                     <TopTabBar onClick={onClick} current={current} menuList={menuList}></TopTabBar>
                 </div>
                 <div className="content_box">
@@ -85,6 +85,9 @@ const SubBrokerMain = () => {
                         max-width: 1240px;
                         width: 90%;
                         margin: 0 auto;
+                    }
+                    .content_box--nav {
+                        margin-top: 65px;
                     }
                 `}
             </style>

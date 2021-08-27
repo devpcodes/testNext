@@ -84,7 +84,15 @@ const OrderStatusPage = () => {
     return (
         <div className="vipOrderStatus__container">
             {showDel && <DelButton text="刪單" style={{ position: 'absolute' }} onClick={delClickHandler} />}
-            <ControlBar filterHandler={filterHandler} reFreshHandler={reFreshHandler} />
+            <ControlBar
+                filterHandler={filterHandler}
+                reFreshHandler={reFreshHandler}
+                style={{
+                    position: 'absolute',
+                    top: '-100px',
+                    right: 0,
+                }}
+            />
             <OrderStatusTable
                 touchPriceFilterValue={touchPriceFilterValue}
                 controlReload={controlReload}
@@ -102,18 +110,18 @@ const OrderStatusPage = () => {
                         // padding-right: 10%;
                         // padding-top: 50px;
                     }
-                    @media (max-width: 1250px) {
-                        .vipOrderStatus__container {
-                            padding-left: 5%;
-                            padding-right: 5%;
-                        }
-                    }
-                    @media (max-width: 1111px) {
-                        .vipOrderStatus__container {
-                            padding-left: 20px;
-                            padding-right: 20px;
-                        }
-                    }
+                    // @media (max-width: 1250px) {
+                    //     .vipOrderStatus__container {
+                    //         padding-left: 5%;
+                    //         padding-right: 5%;
+                    //     }
+                    // }
+                    // @media (max-width: 1111px) {
+                    //     .vipOrderStatus__container {
+                    //         padding-left: 20px;
+                    //         padding-right: 20px;
+                    //     }
+                    // }
                     .title {
                         font-size: 2.8rem;
                         color: #0d1623;

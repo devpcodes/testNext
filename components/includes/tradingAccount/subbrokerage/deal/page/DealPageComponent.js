@@ -15,10 +15,14 @@ const DealPageComponent = () => {
         setType(val);
     };
     return (
-        <>
-            <ControlBar reFreshHandler={reFreshHandler} typeChangeHandler={typeChangeHandler} />
+        <div style={{ position: 'relative' }}>
+            <ControlBar
+                reFreshHandler={reFreshHandler}
+                typeChangeHandler={typeChangeHandler}
+                style={{ position: 'absolute', top: '-100px' }}
+            />
             <DealTable type={type} controlReload={controlReload} />
-        </>
+        </div>
     );
 };
 

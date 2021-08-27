@@ -13,8 +13,8 @@ const GtcPage = () => {
         }, 500);
     };
     return (
-        <>
-            <div style={{ textAlign: 'right' }}>
+        <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '-100px', right: 0 }}>
                 <IconBtn
                     onClick={reFreshHandler}
                     type={'refresh'}
@@ -26,7 +26,7 @@ const GtcPage = () => {
                 />
             </div>
             <GtcTable controlReload={controlReload} />
-        </>
+        </div>
     );
 };
 

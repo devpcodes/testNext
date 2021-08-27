@@ -1,12 +1,12 @@
 import IconBtn from '../../../vipInventory/IconBtn';
 import { Switch } from 'antd';
-const ControlBar = ({ filterHandler, reFreshHandler }) => {
+const ControlBar = ({ filterHandler, reFreshHandler, style }) => {
     const onChange = checked => {
         console.log(`switch to ${checked}`);
         filterHandler(checked);
     };
     return (
-        <div className="controlBar">
+        <div className="controlBar" style={style}>
             <div className="touchPriceFilter">
                 <Switch onChange={onChange} />
                 <span>觸價單</span>
