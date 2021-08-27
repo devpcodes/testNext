@@ -29,7 +29,7 @@ const EarmarkReserve = () => {
     const init = useRef(false);
     const selectSymbol = useRef('');
     const selected = useRef(false);
-    const isWebView = useRef(false);
+    const isWebView = useRef(true);
     const [activeTabKey, setActiveTabKey] = useState('1');
     const router = useRouter();
 

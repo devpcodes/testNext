@@ -11,6 +11,9 @@ export const submit = async function (A8_trust) {
         },
     });
     // 儲存 token 在 localStorage
-    setToken(res.data.result.token);
+    console.log('token', res.data.result?.token);
+    if (res.data.result?.token) {
+        setToken(res.data.result.token);
+    }
     return res;
 };

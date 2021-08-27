@@ -15,7 +15,8 @@ import { fetchStockInventory } from '../../../services/components/reservationSto
 import { postApplyEarmark } from '../../../services/components/reservationStock/postApplyEarmark';
 import { fetchEarmarkStatus } from '../../../services/components/reservationStock/fetchEarmarkStatus';
 import Msg from './Msg';
-
+import SearchAutoComplete from '../tradingAccount/vipInventory/SearchAutoComplete.js';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 const { TabPane } = Tabs;
 
 const dataSource2 = [
@@ -42,7 +43,11 @@ const ReservationStock = () => {
     const [loading, setLoading] = useState(false);
     const [stockInventory, setStockInventory] = useState([]);
     const [statusData, setStatusData] = useState([]);
+    const [filterData, setFilterData] = useState([]);
+    const [searchStock, setSearchStock] = useState('');
+    const [searchVal, setSearchVal] = useState('');
     const [dataLoading, setDataLoading] = useState(false);
+    const [activeType, setActiveType] = useState('1');
 
     const stockColumns = useRef([]);
     const nowPercent = useRef(0);
@@ -51,11 +56,12 @@ const ReservationStock = () => {
     const stockActiveTabKey = useRef('1');
     const init = useRef(false);
     const selectedAccount = useRef({});
-    const isWebView = useRef(false);
+    const isWebView = useRef(true);
 
     const [defaultValue, setDefaultValue] = useState('');
-
+    const { width } = useWindowSize();
     const router = useRouter();
+    // const searchStock = useRef([]);
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -99,6 +105,9 @@ const ReservationStock = () => {
         //     }
         // }
         selectedAccount.current = state.accountsReducer.selected;
+        setSearchVal('');
+        setSearchStock('');
+        setActiveType('1');
         return () => {
             if (timer.current != null) {
                 window.clearInterval(timer.current);
@@ -106,7 +115,20 @@ const ReservationStock = () => {
             }
         };
     }, [state.accountsReducer.selected]);
-
+    const typeString = type => {
+        switch (type) {
+            case '':
+                return '一般';
+            case '1':
+                return '全額管理';
+            case '2':
+                return '收足款券';
+            case '3':
+                return '處置一二';
+            default:
+                break;
+        }
+    };
     useEffect(() => {
         stockColumns.current = [
             {
@@ -130,6 +152,11 @@ const ReservationStock = () => {
                 dataIndex: 'load_type',
                 key: 'load_type',
                 index: 2,
+                sorter: (a, b) => {
+                    const aTypeStr = typeString(a.load_type);
+                    const bTypeStr = typeString(b.load_type);
+                    return sortString(aTypeStr, bTypeStr);
+                },
                 render: (text, record, index) => {
                     switch (text) {
                         case '':
@@ -149,12 +176,18 @@ const ReservationStock = () => {
                 title: '股票代號',
                 dataIndex: 'code',
                 key: 'code',
+                sorter: (a, b) => {
+                    return Number(a.code) - Number(b.code);
+                },
                 index: 1,
             },
             {
                 title: '股票名稱',
                 dataIndex: 'code_name',
                 key: 'code_name',
+                sorter: (a, b) => {
+                    return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
+                },
                 index: 2,
             },
             {
@@ -223,13 +256,30 @@ const ReservationStock = () => {
         setColumnsData(stockColumns.current);
     }, [stockInventory]);
 
-    const dataHandler = async activeKey => {
+    const sortString = (a, b) => {
+        if (a.trim().length < b.trim().length) {
+            return -1;
+        } else if (a.trim().length > b.trim().length) {
+            return 1;
+        } else {
+            const stringA = a.toUpperCase();
+            const stringB = b.toUpperCase();
+            if (stringA < stringB) {
+                return -1;
+            }
+            if (stringA > stringB) {
+                return 1;
+            }
+            return 0;
+        }
+    };
+    const dataHandler = async (activeKey, activeType = '1') => {
         if (getToken()) {
             let data = getAccountsDetail(getToken());
             if (data.broker_id && data.account) {
                 setDataLoading(true);
                 if (activeKey == 1) {
-                    await fetchInventory(getToken(), data.broker_id, data.account);
+                    await fetchInventory(getToken(), data.broker_id, data.account, activeType);
                 } else {
                     await fetchStatus(getToken(), data.broker_id, data.account);
                 }
@@ -239,9 +289,9 @@ const ReservationStock = () => {
         }
     };
 
-    const fetchInventory = async (token, brokerId, account) => {
+    const fetchInventory = async (token, brokerId, account, activeType) => {
         try {
-            let resData = await fetchStockInventory(token, brokerId, account);
+            let resData = await fetchStockInventory(token, brokerId, account, activeType);
             if (Array.isArray(resData)) {
                 resData = resData.map((item, index) => {
                     item.key = String(index);
@@ -299,6 +349,7 @@ const ReservationStock = () => {
                 return item;
             });
             setStatusData(resData);
+            setFilterData(resData);
         } else {
             Modal.error({
                 title: '伺服器錯誤',
@@ -308,8 +359,11 @@ const ReservationStock = () => {
 
     const changleHandler = activeKey => {
         stockActiveTabKey.current = activeKey;
+        setSearchVal('');
+        setSearchStock('');
+        setActiveType('1');
         if (activeKey == 1) {
-            dataHandler(activeKey);
+            dataHandler(activeKey, activeType);
             setColumnsData(stockColumns.current);
         } else {
             dataHandler(activeKey);
@@ -321,6 +375,7 @@ const ReservationStock = () => {
     };
 
     const clickHandler = (text, record) => {
+        console.log('activeType...', activeType);
         if (validateQty(record.qty, record.load_qty, record.stock_amount_t1)) {
             console.log(text, record);
             // console.log(jwt_decode(getToken()));
@@ -407,8 +462,8 @@ const ReservationStock = () => {
             token,
             isWebView.current,
         );
-
         console.log('newCaContent', caContent);
+
         if (checkSignCA(caContent)) {
             setLoading(true);
             percentHandler();
@@ -426,7 +481,7 @@ const ReservationStock = () => {
                 Modal.success({
                     content: resData,
                     onOk() {
-                        dataHandler(1);
+                        dataHandler(1, activeType);
                         // resetDataHandler();
                     },
                 });
@@ -502,6 +557,56 @@ const ReservationStock = () => {
         setStockInventory(stockInventoryData);
     };
 
+    const selectCodeHandler = e => {
+        setSearchVal(e.target.value);
+    };
+
+    const resetHandler = type => {
+        setSearchVal('');
+        if (type === 'status') {
+            setFilterData(statusData);
+        }
+        if (type === 'apply') {
+            setFilterData(stockInventory);
+        }
+    };
+
+    const searchHandler = type => {
+        console.log(searchVal);
+        if (type === 'apply') {
+            let newInventory = stockInventory.filter(val => {
+                if (val.code.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+                if (val.code_name.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+            });
+            setFilterData(newInventory);
+            setSearchStock(searchVal);
+        }
+        if (type === 'status') {
+            let newStatusData = statusData.filter(val => {
+                console.log(val.code, val.code_name);
+                if (val.code.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+                if (val.code_name.indexOf(searchVal) >= 0) {
+                    return true;
+                }
+            });
+            setFilterData(newStatusData);
+            setSearchStock(searchVal);
+        }
+    };
+
+    const filterBtnHandler = type => {
+        setActiveType(type);
+        dataHandler(1, type);
+        setSearchVal('');
+        setSearchStock('');
+    };
+
     return (
         <div className="reservation__container">
             {/* <CaHead /> */}
@@ -513,11 +618,42 @@ const ReservationStock = () => {
             >
                 <TabPane tab="預收股票申請" key="1" disabled={dataLoading}>
                     <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
+                    <div className="searchBox">
+                        <Input
+                            onChange={selectCodeHandler}
+                            value={searchVal}
+                            placeholder="請輸入股票名稱或代號"
+                            className="searchInp"
+                        />
+                        {/* <SearchAutoComplete onChange={selectCodeHandler} selectHandler={selectCodeHandler} width={width <= 580 ? "100%" : '200px'}/> */}
+                        <Button type="primary" className="searchBtn" onClick={searchHandler.bind(null, 'apply')}>
+                            搜尋
+                        </Button>
+                        <Button type="primary" className="searchBtn" onClick={resetHandler.bind(null, 'apply')}>
+                            重置
+                        </Button>
+                        <div className={'filterBox'}>
+                            <Button
+                                type="primary"
+                                className={activeType == '1' ? 'active searchBtn' : 'searchBtn'}
+                                onClick={filterBtnHandler.bind(null, '1')}
+                            >
+                                全額/收足/處置類股票
+                            </Button>
+                            <Button
+                                type="primary"
+                                className={activeType == '2' ? 'active searchBtn' : 'searchBtn'}
+                                onClick={filterBtnHandler.bind(null, '2')}
+                            >
+                                一般股票
+                            </Button>
+                        </div>
+                    </div>
                     <ApplyContent
                         key="table1"
                         scroll={{ x: 860 }}
                         contenterTitle={'預收股票申請'}
-                        dataSource={stockInventory}
+                        dataSource={searchStock != '' ? filterData : stockInventory}
                         columns={columnsData}
                         pagination={false}
                         loading={{
@@ -560,11 +696,26 @@ const ReservationStock = () => {
                 </TabPane>
                 <TabPane tab="預收股票查詢" key="2" disabled={dataLoading}>
                     <Accounts key="2" style={{ marginTop: '35px' }} value={defaultValue} />
+                    <div className="searchBox">
+                        <Input
+                            onChange={selectCodeHandler}
+                            value={searchVal}
+                            placeholder="請輸入股票名稱或代號"
+                            className="searchInp"
+                        />
+                        {/* <SearchAutoComplete onChange={selectCodeHandler} selectHandler={selectCodeHandler} width={width <= 580 ? "100%" : '200px'}/> */}
+                        <Button type="primary" className="searchBtn" onClick={searchHandler.bind(null, 'status')}>
+                            搜尋
+                        </Button>
+                        <Button type="primary" className="searchBtn" onClick={resetHandler.bind(null, 'status')}>
+                            重置
+                        </Button>
+                    </div>
                     <ApplyContent
                         key="table2"
                         scroll={{ x: 860 }}
                         contenterTitle={'預收股票查詢'}
-                        dataSource={statusData}
+                        dataSource={searchStock != '' ? filterData : statusData}
                         columns={columnsData}
                         pagination={false}
                         loading={{
@@ -659,13 +810,75 @@ const ReservationStock = () => {
                     height: 100%;
                     background-color: rgb(249 249 249 / 70%);
                 }
+                .filterBox {
+                    display: inline-block;
+                    float: right;
+                }
                 @media (max-width: 580px) {
                     .title {
                         font-size: 26px;
                     }
+                    .filterBox {
+                        display: block;
+                        float: none;
+                        margin-top: 20px;
+                    }
                 }
             `}</style>
             <style jsx global>{`
+                .active.searchBtn {
+                    background: #425b77 !important;
+                }
+                .searchBox {
+                    padding-left: 2px;
+                    padding-right: 2px;
+                    padding-top: 15px;
+                }
+                .reservation__container .ant-input {
+                    width: 160px;
+                    font-size: 16px;
+                }
+                .reservation__container .ant-input.searchInp {
+                    width: 200px;
+                }
+                .reservation__container .ant-input::placeholder {
+                    font-size: 16px;
+                }
+                // .autoComplete__container{
+                //     padding-left: 3px;
+                //     padding-top: 20px;
+                //     display: inline-block;
+                // }
+                .reservation__container .ant-btn.searchBtn {
+                    background: #587ea8;
+                    height: 37px;
+                    margin-left: 5px;
+                    vertical-align: bottom;
+                }
+                .reservation__container .ant-btn.searchBtn:not([disabled]):hover {
+                    background: #4e6d90;
+                }
+                @media (max-width: 580px) {
+                    .reservation__container .ant-btn.searchBtn {
+                        width: calc(100% -5px);
+                        margin-top: 5px;
+                        margin-left: 0;
+                    }
+                    .reservation__container .ant-input.searchInp {
+                        width: 100%;
+                        height: 35px !important;
+                    }
+                    .reservation__container .ant-input {
+                        width: 100%;
+                    }
+                }
+
+                .ant-select-selection-placeholder {
+                    line-height: 35px !important;
+                }
+                .applyTable__container .ant-table-cell {
+                    white-space: nowrap;
+                }
                 .ant-notification-notice-with-icon .ant-notification-notice-message {
                     font-size: 1.5rem !important;
                 }

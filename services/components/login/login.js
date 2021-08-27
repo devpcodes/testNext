@@ -14,6 +14,9 @@ export const submit = async function (account, password, reCAPTCHAToken) {
         },
     });
     // 儲存 token 在 localStorage
-    setToken(res.data.result.token);
+    if (res.data?.result?.token) {
+        setToken(res.data.result.token);
+    }
+
     return res;
 };

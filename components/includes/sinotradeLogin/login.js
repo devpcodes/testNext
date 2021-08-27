@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
@@ -18,6 +18,7 @@ import logoDark from '../../../resources/images/logo/logo-dark.svg';
 import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
+import { setModal } from '../../../store/components/layouts/action';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
@@ -26,6 +27,7 @@ let defaultOpenact =
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
 
@@ -40,6 +42,14 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [containerHeight, setContainerHeight] = useState('100vh');
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
+    useEffect(() => {
+        if (platform === 'udn') {
+            udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
+        }
+        if (platform === 'alpha') {
+            udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0064&strWeb=0086';
+        }
+    }, [platform]);
     useEffect(() => {
         console.log('didmount');
         const account = localStorage.getItem('userID');
@@ -151,6 +161,23 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         accountInput.current.focus();
     };
 
+    const checkOpenAccount = result => {
+        if (result.isOpenAccount) {
+            dispatch(
+                setModal({
+                    title: '',
+                    content: `您尚未開立證券帳戶，請點選「確定」，即可進行線上開戶。`,
+                    visible: true,
+                    type: 'confirm',
+                    onOk: async () => {
+                        dispatch(setModal({ visible: false }));
+                        window.open(result.url);
+                    },
+                }),
+            );
+        }
+    };
+
     //登入動作處理
     const finishHandler = async function () {
         if (isLoading) {
@@ -181,11 +208,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 } else {
                                     localStorage.removeItem('userID');
                                 }
-
                                 if (!checkFirstLogin(res.data)) {
                                     //傳資料給神策
                                     sensorsHandler(form.getFieldValue('account'));
                                 }
+                            } else {
+                                //沒帳號處理
+                                checkOpenAccount(res.data.result);
                             }
                         } catch (error) {
                             setIsLoading(false);
@@ -362,11 +391,17 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //     setReCaptchaReady(true);
     // };
     const getSignUpUrl = () => {
-        if (platform === 'udn') {
-            return udnOpenact;
-        } else {
+        // console.log('platform', platform)
+        if (platform === 'newweb') {
             return defaultOpenact;
+        } else {
+            return udnOpenact;
         }
+        // if (platform === 'udn') {
+        //     return udnOpenact;
+        // } else {
+        //     return defaultOpenact;
+        // }
     };
 
     const logoHandler = () => {
