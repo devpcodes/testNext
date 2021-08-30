@@ -11,7 +11,7 @@ function OAuth_Cancel() {
         <>
             <PageHead title={'取消授權'} />
             <div>
-                <OAuthCancel/>
+                <OAuthCancel />
             </div>
         </>
     );

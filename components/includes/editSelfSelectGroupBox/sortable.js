@@ -2,10 +2,10 @@ import React, { memo, useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import EditSelectStock from '../selfSelectStock/EditSelectStock';
+import EditSelectStock from './EditSelectStock';
 
-import pen from '../../../../resources/images/components/goOrder/edit-edit.svg';
-import hamburger from '../../../../resources/images/components/goOrder/menu-hamburger.svg';
+import pen from '../../../resources/images/components/goOrder/edit-edit.svg';
+import hamburger from '../../../resources/images/components/goOrder/menu-hamburger.svg';
 
 const sortableList = memo(({ handleCheckedSort }) => {
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
@@ -66,6 +66,7 @@ const sortableList = memo(({ handleCheckedSort }) => {
                     <SortableItem key={`item-${value.selectId}`} index={index} value={value} />
                 ))}
             </SortableContainer>
+
             <EditSelectStock
                 isVisible={isEditSelfSelectNameVisitable}
                 editData={editGroupData}

@@ -255,10 +255,10 @@ const OrderGO = ({ requestStockIdS, requestType, requestStockIdH }) => {
                     padding: 19px 22px;
                 }
                 .ant-modal-mask {
-                    z-index: 10000;
+                    z-index: 15002;
                 }
                 .ant-modal-wrap {
-                    z-index: 10000;
+                    z-index: 15003;
                 }
                 /* * {
                     -webkit-overflow-scrolling: auto !important;
