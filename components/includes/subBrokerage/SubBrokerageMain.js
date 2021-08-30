@@ -6,6 +6,7 @@ import OrderStatusPage from '../tradingAccount/subbrokerage/orderStatus/page/Ord
 import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
 import DealPageComponent from '../tradingAccount/subbrokerage/deal/page/DealPageComponent.js';
 import ShareholdingPage from '../tradingAccount/subbrokerage/shareholding/page/ShareholdingPage';
+import BatchPage from '../tradingAccount/subbrokerage/batchSubbrokerage/page/BatchPage';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
@@ -16,6 +17,7 @@ const SubBrokerMain = () => {
         { key: 'gtc', title: 'GTC(長效單)明細' },
         { key: 'inventory', title: '即時庫存' },
         { key: 'holding', title: '持股賣出' },
+        { key: 'batch', title: '暫存夾' },
     ];
     // useEffect(() =>{
     //     const GetNewData = async()=>{
@@ -69,6 +71,8 @@ const SubBrokerMain = () => {
                                 return <TradingAccount />;
                             case 'holding':
                                 return <ShareholdingPage />;
+                            case 'batch':
+                                return <BatchPage />;
                             default:
                                 return null;
                         }
