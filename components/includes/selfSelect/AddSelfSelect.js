@@ -90,6 +90,9 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
                     line-height: 36px;
                     color: #3f5372;
                 }
+                .searchDropdown {
+                    width: 350px !important;
+                }
             `}</style>
         </>
     );

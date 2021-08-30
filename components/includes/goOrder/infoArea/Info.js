@@ -817,6 +817,12 @@ export const Info = ({ stockid }) => {
                 }
             `}</style>
             <style jsx global>{`
+                // 暫時藏自選
+                .add__self__select,
+                .text__box.brown {
+                    display: none !important;
+                }
+
                 .ant-modal-wrap {
                     z-index: 15001;
                 }
