@@ -1,4 +1,5 @@
 import MD5 from 'crypto-js/md5';
+import { encode, decode } from '@msgpack/msgpack';
 
 export const solaceClient = function (solaceName, userId) {
     var subscriber = {};
@@ -63,33 +64,46 @@ export const solaceClient = function (solaceName, userId) {
 
     // Set Message Callback events
     subscriber.setMessageEvent = function (market, callback) {
+        console.log('messageEvent', messageEvent);
         !messageEvent[market] ? (messageEvent[market] = []) : false;
         messageEvent[market].push(callback);
     };
 
     // Callback for message events
-    subscriber.messageEventCb = function (session, message) {
-        // console.log('topic-msg', message.getDestination().getName(), message.getSdtContainer());
+    subscriber.messageEventCb = function (session, message, type) {
+        console.log('topic-msg', message.getDestination().getName(), message.getSdtContainer());
         //message.getDestination()  -> getTopic
         try {
             if (Object.keys(messageEvent).length != 0) {
-                var container_p = message.getSdtContainer().getValue();
                 var topic = message.getDestination().getName();
+
+                // mpack 版本
+                if (type === 'mpack') {
+                    var container_p = message.getBinaryAttachment();
+                    var data = decode(Buffer.from(container_p, 'ascii'));
+                    var market = topic.split('/')[2];
+                } else {
+                    var container_p = message.getSdtContainer().getValue();
+                    var data = parseSdtMap(container_p);
+                    var market = topic.split('/')[1];
+                }
                 var type = topic.split('/')[0];
-                var market = topic.split('/')[1];
-                // console.log('solace', container_p, topic, type, market);
-                var data = parseSdtMap(container_p);
                 var result = {
                     topic: topic,
                     data: data,
                 };
+
                 if ((market == 'TSE' && (type == 'L' || type == 'Q')) || market == 'OTC' || market == 'OES')
                     market = 'ST';
                 if (
                     topic.split('/')[0] === 'MST' ||
                     topic.split('/')[0] === 'MKT' ||
                     topic.split('/')[0] === 'QUT' ||
-                    topic.split('/')[0] === 'SNP'
+                    topic.split('/')[0] === 'SNP' ||
+                    topic.split('/')[0] === 'SNA' ||
+                    topic.split('/')[0] === 'TIC' ||
+                    topic.split('/')[0] === 'QUO' ||
+                    topic.split('/')[0] === 'PUR'
                 )
                     market = 'ST';
                 if (topic.split('/')[0] === 'MPK' || topic.split('/')[0] === 'MPQ') market = 'ST';
@@ -105,7 +119,7 @@ export const solaceClient = function (solaceName, userId) {
 
     // Callback for session events
     subscriber.sessionEventCb = function (session, event) {
-        // console.log('solace', event.sessionEventCode);
+        console.log('solace', event);
         switch (event.sessionEventCode) {
             case solace.SessionEventCode.UP_NOTICE:
                 subscriber.log('=== Successfully connected ===');
@@ -139,14 +153,14 @@ export const solaceClient = function (solaceName, userId) {
     };
 
     //Establish connection to Solace
-    subscriber.connect = function () {
+    subscriber.connect = function (type) {
         if (subscriber.session !== null) {
             subscriber.log('=== Already connected. ===');
         } else {
             subscriber.session = solace.SolclientFactory.createSession(
                 connectSetting,
                 new solace.MessageRxCBInfo(function (session, message) {
-                    subscriber.messageEventCb(session, message);
+                    subscriber.messageEventCb(session, message, type);
                 }, subscriber),
                 new solace.SessionEventCBInfo(function (session, event) {
                     subscriber.sessionEventCb(session, event);
@@ -199,6 +213,7 @@ export const solaceClient = function (solaceName, userId) {
                     }
                 }
             } else {
+                console.log(subscriber);
                 subscriber.log('=== Wait Connect and Resubscribe ===');
                 setTimeout(function () {
                     subscriber.subscribeTopicCount[topicName] -= 1;

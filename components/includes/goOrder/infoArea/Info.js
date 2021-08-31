@@ -7,9 +7,10 @@ import { useRouter } from 'next/router';
 
 import { Search } from '../search/Search';
 import { TextBox } from './TextBox';
+
 import { InfoBox } from './InfoBox';
 import { objectToQueryHandler } from '../../../../services/objectToQueryHandler';
-import AddSelectStock from '../selfSelectStock/AddSelectStock';
+import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
 
 import {
     priceColor,
@@ -41,9 +42,9 @@ import theme from '../../../../resources/styles/theme';
 import { marketIdToMarket } from '../../../../services/stock/marketIdToMarket';
 import icon from '../../../../resources/images/components/goOrder/ic-trending-up.svg';
 import { fetchCheckTradingDate } from '../../../../services/components/goOrder/fetchCheckTradingDate';
-// import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
-// import { getToken } from '../../../../services/user/accessToken';
-// import { getSocalToken } from '../../../../services/user/accessToken';
+import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
+import { getToken } from '../../../../services/user/accessToken';
+import { getSocalToken } from '../../../../services/user/accessToken';
 import { InstallWebCA } from './InstallWebCA';
 import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 
@@ -52,6 +53,7 @@ import { getParamFromQueryString } from '../../../../services/getParamFromQueryS
 // import { fetchGetRichClubReport } from '../../../../services/components/richclub/getRichClubReport';
 import MoreInfo from './MoreInfo';
 import { setSBBs } from '../../../../store/goOrderSB/action';
+import AddSelectGroup from '../../selfSelect/AddSelectGroup';
 
 // 因 solace 定義的資料結構較雜亂，需要小心處理初始值及預設型態
 const solaceDataHandler = (solaceData, lot, checkLot) => {
@@ -111,6 +113,7 @@ export const Info = ({ stockid }) => {
     const [reloadLoading, setReloadLoading] = useState(false);
     const [t30Data, setT30Data] = useState(false);
     const [moreItems, setMoreItems] = useState([]);
+    const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -269,62 +272,77 @@ export const Info = ({ stockid }) => {
         }
     }, [code, lot, isLogin]);
 
-    // useEffect(async () => {
-    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
-    //         return;
-    //     }
-    //     getSelect();
-    // }, [code, isLogin, isSelfSelectVisitable]);
+    useEffect(async () => {
+        if (!isLogin && Object.keys(socalLoginData).length === 0) {
+            return;
+        }
+        // getSelect();
+    }, [T30, isLogin, isSelfSelectVisitable]);
 
-    // useEffect(() => {
-    //     if (!code) {
-    //         return;
-    //     }
-    //     setInfoItems(code);
-    // }, [code]);
+    useEffect(async () => {
+        if (!code) {
+            return;
+        }
+        await setInfoItems(code);
+    }, [code]);
 
-    // 暫時移除自選邏輯
-    // useEffect(() => {
-    //     if (selectInfo) {
-    //         reloadSelfSelectSmallIcon();
-    //     }
-    // }, [selectInfo]);
+    useEffect(() => {
+        if (selectInfo) {
+            reloadSelfSelectSmallIcon();
+        }
+    }, [selectInfo]);
 
-    // const updateQueryStringParameter = (uri, key, value) => {
-    //     var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
-    //     var separator = uri.indexOf('?') !== -1 ? '&' : '?';
-    //     if (uri.match(re)) {
-    //         return uri.replace(re, '$1' + key + '=' + value + '$2');
-    //     } else {
-    //         return uri + separator + key + '=' + value;
-    //     }
-    // };
+    // 更新一次狀態
+    setTimeout(() => {
+        reloadSelfSelectSmallIcon();
+    }, 200);
 
-    // const loginClickHandler = () => {
-    //     const query = router.query;
-    //     let queryStr = objectToQueryHandler(query);
-    //     if (code) {
-    //         queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
-    //     }
-    //     window.location =
-    //         `${process.env.NEXT_PUBLIC_SUBPATH}` +
-    //         `/SinoTrade_login${queryStr}` +
-    //         `${queryStr ? '&' : '?'}` +
-    //         'redirectUrl=OrderGO';
-    // };
+    const closeAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(false);
+        setIsSelfSelectVisitable(true);
+    }, []);
 
-    // const reloadSelfSelectSmallIcon = useCallback(() => {
-    //     const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
-    //     const index = cloneMoreItems.findIndex(obj => obj.id === '4');
-    //     if (cloneMoreItems[index]) {
-    //         if (selectInfo.isExist) {
-    //             cloneMoreItems[index].text = '❤ 自選';
-    //         } else {
-    //             cloneMoreItems[index].text = '+ 自選';
-    //         }
-    //         setMoreItems(cloneMoreItems);
-    //     }
-    // });
+    const openAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(true);
+    }, []);
+    const reload = () => {};
+    const reloadTabkey = () => {};
+
+    const updateQueryStringParameter = (uri, key, value) => {
+        var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+        var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + '=' + value + '$2');
+        } else {
+            return uri + separator + key + '=' + value;
+        }
+    };
+
+    const loginClickHandler = () => {
+        const query = router.query;
+        let queryStr = objectToQueryHandler(query);
+        if (code) {
+            queryStr = updateQueryStringParameter(queryStr, 'stockid', code);
+        }
+        window.location =
+            `${process.env.NEXT_PUBLIC_SUBPATH}` +
+            `/SinoTrade_login${queryStr}` +
+            `${queryStr ? '&' : '?'}` +
+            'redirectUrl=OrderGO';
+    };
+
+    const reloadSelfSelectSmallIcon = useCallback(() => {
+        const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
+        const index = cloneMoreItems.findIndex(obj => obj.id === '4');
+        if (cloneMoreItems[index]) {
+            if (selectInfo && selectInfo.isExist) {
+                cloneMoreItems[index].text = '❤ 222';
+            } else {
+                cloneMoreItems[index].text = '+ 222';
+            }
+            setMoreItems(cloneMoreItems);
+        }
+    });
 
     const lotHandler = () => {
         const nextLot = lot === 'Board' ? 'Odd' : 'Board';
@@ -361,13 +379,13 @@ export const Info = ({ stockid }) => {
         isMoreDetailVisitable ? setIsMoreDetailVisitable(false) : setIsMoreDetailVisitable(true);
     };
 
-    // const showSelfSelect = () => {
-    //     setIsSelfSelectVisitable(true);
-    // };
+    const showSelfSelect = () => {
+        setIsSelfSelectVisitable(true);
+    };
 
-    // const closeSelfSelect = useCallback(() => {
-    //     setIsSelfSelectVisitable(false);
-    // }, []);
+    const closeSelfSelect = useCallback(() => {
+        setIsSelfSelectVisitable(false);
+    }, []);
 
     const reloadHandler = () => {
         setReloadLoading(true);
@@ -390,27 +408,27 @@ export const Info = ({ stockid }) => {
         }
     };
 
-    // const getSelect = useCallback(async () => {
-    //     let exchange;
-    //     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-    //     switch (type) {
-    //         case 'S':
-    //             exchange = 'TAI';
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     const reqData = {
-    //         symbol: code,
-    //         exchange: exchange,
-    //         market: type,
-    //         isShowDetail: true,
-    //         isSocalLogin: isSocalLogin,
-    //         token: isSocalLogin ? getSocalToken() : getToken(),
-    //     };
-    //     const res = await fetchCheckSelfSelect(reqData);
-    //     dispatch(setSelectInfo(res));
-    // });
+    const getSelect = useCallback(async () => {
+        let exchange;
+        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+        switch (type) {
+            case 'S':
+                exchange = T30.EXCHANGE ? T30.EXCHANGE : 'OES';
+                break;
+            default:
+                break;
+        }
+        const reqData = {
+            symbol: code,
+            exchange: exchange,
+            market: type,
+            isShowDetail: true,
+            isSocalLogin: isSocalLogin,
+            token: isSocalLogin ? getSocalToken() : getToken(),
+        };
+        const res = await fetchCheckSelfSelect(reqData);
+        dispatch(setSelectInfo(res));
+    });
 
     const getTimeWording = (hour, min, sec) => {
         if (!tradingDate) {
@@ -448,56 +466,48 @@ export const Info = ({ stockid }) => {
         return `總量 ${volSum}`;
     };
 
-    // const setInfoItems = async code => {
-    //     // { id: '1', color: 'dark', text: '融' },
-    //     // { id: '2', color: 'red', text: '詳' },
-    //     // { id: '3', color: 'orange', text: '存' },
-    //     // { id: '4', color: 'green', text: '借' },
-    //     // { id: '5', color: 'blue', text: '學' },
-    //     // { id: '6', color: 'brown', text: '+ 自選' },
+    const setInfoItems = async code => {
+        // const t30Res = await fetchStockT30(code);
+        // dispatch(setT30(t30Res));
 
-    //     const t30Res = await fetchStockT30(code);
-    //     dispatch(setT30(t30Res));
-    //     // const test = await fetchGetRichClubReport(code);
-    //     // console.log(test)
+        let moreItems = [
+            {
+                id: '1',
+                color: 'red',
+                text: '詳',
+                title: '詳細報價',
+                desc: '理財網完整報價',
+                inInfoBox: true,
+                link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${code}`,
+            },
+            {
+                id: '2',
+                color: 'orange',
+                text: '存',
+                title: '豐存股',
+                desc: '優質個股輕鬆存',
+                inInfoBox: true,
+                link: `https://aiinvest.sinotrade.com.tw/Product/In?id=${code}`,
+            },
+            {
+                id: '3',
+                color: 'blue',
+                text: '學',
+                title: '豐雲學堂',
+                desc: '理財文章指點迷津',
+                inInfoBox: true,
+                link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
+            },
+            { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+        ];
 
-    //     let moreItems = [
-    //         {
-    //             id: '1',
-    //             color: 'red',
-    //             text: '詳',
-    //             title: '詳細報價',
-    //             desc: '理財網完整報價',
-    //             inInfoBox: true,
-    //             link: `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${code}`,
-    //         },
-    //         {
-    //             id: '2',
-    //             color: 'orange',
-    //             text: '存',
-    //             title: '豐存股',
-    //             desc: '優質個股輕鬆存',
-    //             inInfoBox: true,
-    //             link: `https://aiinvest.sinotrade.com.tw/Product/In?id=${code}`,
-    //         },
-    //         {
-    //             id: '3',
-    //             color: 'blue',
-    //             text: '學',
-    //             title: '豐雲學堂',
-    //             desc: '理財文章指點迷津',
-    //             inInfoBox: true,
-    //             link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
-    //         },
-    //         // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
-    //     ];
+        // if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
+        //     moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
+        // }
+        // setT30Data(t30Res);
+        setMoreItems(moreItems);
+    };
 
-    //     if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
-    //         moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
-    //     }
-    //     setT30Data(t30Res);
-    //     setMoreItems(moreItems);
-    // };
     return (
         <div className="info__container">
             {!isLogin && (
@@ -593,7 +603,7 @@ export const Info = ({ stockid }) => {
                 </MoreInfo>
             </div>
 
-            {/* <div className="more__info__container">
+            <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
                     <button
@@ -604,14 +614,19 @@ export const Info = ({ stockid }) => {
                     </button>
                 </div>
             </div>
-            <div className="page__mask"></div> */}
+            <div className="page__mask"></div>
             <Search isVisible={isSearchVisible} handleCancel={handleCancel} />
-            {/* <AddSelectStock
+            <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
-                isEdit={false}
-                reloadSelect={getSelect}
-            /> */}
+                addSelectGroupWindowOpen={openAddSelfGroup}
+            />
+            <AddSelectGroup
+                isAddSelectGroupVisitable={isAddSelectGroupVisitable}
+                handleClose={closeAddSelfGroup}
+                callBack={reload}
+                reloadTabkey={reloadTabkey}
+            />
             <style jsx>{`
                 .noLogin__box {
                     height: 44px;
@@ -802,15 +817,20 @@ export const Info = ({ stockid }) => {
                     display: ${isMoreDetailVisitable === false ? 'none' : 'block'};
                 }
             `}</style>
-            {/* <style jsx global>{`
-                .endTime {
-                    color: #254a91;
-                    font-size: 1.4rem;
-                    display: inline-block;
-                    line-height: 44px;
-                    margin-left: 8px;
+            <style jsx global>{`
+                // 暫時藏自選
+                .add__self__select,
+                .text__box.brown {
+                    display: none !important;
                 }
-            `}</style> */}
+
+                .ant-modal-wrap {
+                    z-index: 15001;
+                }
+                .ant-modal-mask {
+                    z-index: 15000;
+                }
+            `}</style>
         </div>
     );
 };
