@@ -288,6 +288,13 @@ const SelfSelectTable = ({
                             case 'NASDAQ':
                                 mk = 'US';
                                 break;
+                            case 'HKG':
+                                if (stock.symbol.search(/^[8]{1}[0-9]{4}$/) === 0) {
+                                    mk = 'HKR';
+                                } else {
+                                    mk = 'SEHK';
+                                }
+                                break;
                             case 'SHH':
                                 mk = 'SHSE';
                                 break;
