@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import trushIcon from '../../../../../resources/images/components/tradingAccount/ic-trash.svg';
-const DelButton = ({ text, width, height, fontSize, style, ...props }) => {
+import submitIcon from '../../../../../resources/images/components/tradingAccount/basic-checkbox-checked.svg';
+const DelButton = ({ text, width, height, fontSize, style, type, ...props }) => {
     return (
         <>
             <Button
@@ -15,8 +16,8 @@ const DelButton = ({ text, width, height, fontSize, style, ...props }) => {
                     backgroundColor: '#c43826',
                     ...style,
                 }}
-                className="del__btn"
-                icon={<img className="img" src={trushIcon} />}
+                className={type == null || type === 'del' ? 'del__btn' : 'submit__btn'}
+                icon={<img className="img" src={type == null || type === 'del' ? trushIcon : submitIcon} />}
                 {...props}
             >
                 {text}
@@ -24,6 +25,9 @@ const DelButton = ({ text, width, height, fontSize, style, ...props }) => {
             <style global jsx>{`
                 .del__btn.ant-btn:hover {
                     background-color: rgb(183 43 25) !important;
+                }
+                .submit__btn.ant-btn:hover {
+                    background-color: rgb(11 50 123) !important;
                 }
                 .img {
                     margin-top: -4px;

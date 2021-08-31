@@ -147,6 +147,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                         item.aon = 'ANY';
                         item.useGtc = false;
                         item.gtcDate = moment().add(6, 'months').format('YYYY-MM-DD');
+                        item.BS = 'S';
                         item.key = index;
                     }
                 });

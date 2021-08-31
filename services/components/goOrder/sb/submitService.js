@@ -8,13 +8,13 @@ import { postOrder } from './postOrder';
 export const submitListService = async (currentAccount, data, platform) => {
     const resList = [];
     for (let record of data) {
-        const res = await submitService(
+        const res = submitService(
             {
                 CID: getWebId(platform, 'recommisiioned'),
                 StockID: record.StockID,
                 Price: record.price,
                 Qty: record.qty,
-                BS: 'S',
+                BS: record.BS,
                 GTCDate: record.useGtc ? record.gtcDate : '',
                 aon: record.aon,
                 Exchid: record.exch,
@@ -24,12 +24,10 @@ export const submitListService = async (currentAccount, data, platform) => {
             },
             true,
         );
-        console.log('res', res);
         resList.push(res);
     }
-    return new Promise((resolve, reject) => {
-        resolve(resList);
-    });
+
+    return Promise.all(resList);
 };
 
 export const submitService = async (
