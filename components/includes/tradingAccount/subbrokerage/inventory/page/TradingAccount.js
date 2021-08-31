@@ -24,12 +24,12 @@ const onClick = (x) =>{
 
     return (
         <div className="content_box subBrokerage">
+        <div className="content_box_inner">
             <TopTabBar
             onClick={onClick}
             current = { current }
             menuList = {menuList}
-            ></TopTabBar>
-        <div className="content_box_inner">
+            ></TopTabBar>            
         {(() => {
             switch (current) {
                 case 'inventory':

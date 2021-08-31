@@ -3,17 +3,21 @@ import { Modal, Select, Button, Input   } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import { postAccBalanceWithSwr, postBankBalance, postWithdrawApply} from '../../../../../../services/components/goOrder/sb/postInventory';
+import { secretToggle } from '../../../../../../services/components/goOrder/sb/secretToggle';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
+import { setSBAccountBalance } from '../../../../../../store/sb/action';
 const AccBalance = () => {
+    const dispatch = useDispatch();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const platform = usePlatform();
     const [accountType, setAccountType] = useState('');
     const [inputData, setInputData] = useState(null);
     const [settleType, setSettleType] = useState('');
     const [currency, setCurrency] = useState('');
+    const [hidden, setHidden] = useState(true);
     const [dataSource, setDataSource] = useState({
         amount:'',
         balance:'',
@@ -34,7 +38,7 @@ const AccBalance = () => {
     const [bottomLoading, setBottomLoading] = useState(true);
     const [error, setError] = useState([]);
     const [coBackMsg, setCoBackMsg] = useState({amount:'',no:''});
-    
+    //
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -71,7 +75,7 @@ const AccBalance = () => {
         }
     }, [fetchData]);
 
-    useEffect(() => {
+    useEffect(() => { //datacount: 1, currency: "USD", name: "美元", amt: 213.75
         if(settleType=="2"||settleType=="4"){
             setBottomLoading(true)
             let AID = currentAccount.broker_id + currentAccount.account
@@ -83,9 +87,12 @@ const AccBalance = () => {
                 }else if(settleType=="4"){
                     setBackact(res.ntd_backact)
                 }
-                console.log(res.detail)
-                setBankData(res.detail)
-                setBottomLoading(false)
+                secretToggle(res.detail, hidden, ['currency','name','amt'])
+                .then(res => {
+                    console.log(res)
+                    setBankData(res)
+                    setBottomLoading(false)
+                })
             })   
         }
     },[settleType,refresh])
@@ -157,6 +164,16 @@ const AccBalance = () => {
     const handleChange = (value) => {
     setDataCurrent(value)    
     console.log(`selected ${value}`);
+    }
+
+    const secretChanger = (e) => {
+        e.preventDefault();
+        setHidden(!hidden) 
+        secretToggle(res.detail, !hidden ,['currency','name','amt'])
+        .then(res => {
+            setBankData(res)
+            setBottomLoading(false)
+        })
     }
 
     const showCashModal = (e) => {

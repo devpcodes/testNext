@@ -29,3 +29,10 @@ const setSBDeliveryTrial = sbDeliveryTrial => {
         payload: sbDeliveryTrial,
     };
 };
+
+const setSBAccountBalance = sbAccBalance => {
+    return {
+        type: actionType.SET_SB_ACCOUNT_BALANCE,
+        payload: sbAccBalance,
+    };
+};
