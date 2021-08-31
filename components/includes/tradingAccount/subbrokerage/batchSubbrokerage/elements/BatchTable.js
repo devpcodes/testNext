@@ -209,15 +209,29 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
     }, [data]);
 
     const delHandler = useCallback((record, data) => {
-        const newData = data.filter(item => {
-            if (item.key !== record.key) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-        console.log('newData', newData);
-        dispatch(setOrderList(newData));
+        dispatch(
+            setModal({
+                visible: true,
+                title: '刪除確認',
+                content: `確認刪除此筆資料嗎？`,
+                onOk: () => {
+                    const newData = data.filter(item => {
+                        if (item.key !== record.key) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+                    console.log('newData', newData);
+                    dispatch(setOrderList(newData));
+                    dispatch(
+                        setModal({
+                            visible: false,
+                        }),
+                    );
+                },
+            }),
+        );
     });
 
     const changeBS = useCallback((record, data, val) => {

@@ -27,16 +27,31 @@ const BatchPage = () => {
             setSelectData([]);
         }
     });
-    const delHandler = (selectData, orderList) => {
-        const newOrderList = orderList.filter(item => {
-            const delData = selectData.findIndex(sItem => {
-                return item.key === sItem.key;
-            });
-            if (delData === -1) {
-                return true;
-            }
-        });
-        dispatch(setOrderList(newOrderList));
+    const delHandler = (selectData, orderList, type) => {
+        dispatch(
+            setModal({
+                visible: true,
+                title: '刪除確認',
+                content: `確認刪除${selectData.length}筆資料嗎？`,
+                onOk: () => {
+                    const newOrderList = orderList.filter(item => {
+                        const delData = selectData.findIndex(sItem => {
+                            return item.key === sItem.key;
+                        });
+                        if (delData === -1) {
+                            return true;
+                        }
+                    });
+
+                    dispatch(setOrderList(newOrderList));
+                    dispatch(
+                        setModal({
+                            visible: false,
+                        }),
+                    );
+                },
+            }),
+        );
     };
 
     const submitHandler = (selectData, type) => {
@@ -82,6 +97,7 @@ const BatchPage = () => {
                                 );
                             }
                         } catch (error) {
+                            setParentLoading(false);
                             dispatch(
                                 setModal({
                                     visible: true,
