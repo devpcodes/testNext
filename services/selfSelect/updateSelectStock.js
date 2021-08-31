@@ -1,9 +1,9 @@
 import { getLykanInstance } from '../myAxios';
 
-export const fetchupdateSelectStock = async function (selectList, isSocalLogin, token) {
+export const fetchUpdateSelectStock = async function (selectList, isSocalLogin, token, selectId) {
     try {
         const reqUrl = isSocalLogin ? '/social/updateSelectStock' : '/select/updateSelectStock';
-        const res = await getLykanInstance().post(reqUrl, { selectList, token });
+        const res = await getLykanInstance().post(reqUrl, { selectList, token, selectId });
 
         if (res.data.success != null && res.data.success === true) {
             return res.data;

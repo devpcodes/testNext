@@ -4,7 +4,7 @@ import { fetchStockT30 } from '../../../../services/stock/stockT30Fetcher';
 import { InfoBox } from './InfoBox';
 import { TextBox } from './TextBox';
 import { fetchCheckSelfSelect } from '../../../../services/selfSelect/checkSelectStatus';
-import AddSelectStock from '../selfSelectStock/AddSelectStock';
+import AddSelectStock from '../../editSelfSelectGroupBox/AddSelectStock';
 import { setSelectInfo, setT30 } from '../../../../store/goOrder/action';
 import { getSocalToken, getToken } from '../../../../services/user/accessToken';
 
@@ -13,12 +13,14 @@ const MoreInfo = ({ children }) => {
     const [isMoreDetailVisitable, setIsMoreDetailVisitable] = useState(false);
     const [t30Data, setT30Data] = useState(false);
     const [moreItems, setMoreItems] = useState([]);
+
     const [isSelfSelectVisitable, setIsSelfSelectVisitable] = useState(false);
     const isLogin = useSelector(store => store.user.isLogin);
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const selectInfo = useSelector(store => store.goOrder.selectInfo);
     const type = useSelector(store => store.goOrder.type);
     const productInfo = useSelector(store => store.goOrder.productInfo);
+    const T30 = useSelector(store => store.goOrder.T30Data);
     const dispatch = useDispatch();
 
     let defaultMoreItems = [
@@ -49,7 +51,7 @@ const MoreInfo = ({ children }) => {
             inInfoBox: true,
             link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
         },
-        // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+        { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
     ];
     const showSelfSelect = () => {
         setIsSelfSelectVisitable(true);
@@ -73,12 +75,14 @@ const MoreInfo = ({ children }) => {
             moreItemHandler(defaultMoreItems, code, type, productInfo);
         }
     }, [code, type, productInfo]);
-    // 暫時移除自選邏輯
+
     useEffect(() => {
-        if (selectInfo) {
-            reloadSelfSelectSmallIcon();
-        }
+        reloadSelfSelectSmallIcon();
     }, [selectInfo]);
+
+    const openAddSelfGroup = useCallback(() => {
+        setAddSelectGroupVisitable(true);
+    }, []);
 
     const moreItemHandler = (defaultMoreItems, code, type, productInfo) => {
         if (type === 'H') {
@@ -96,7 +100,7 @@ const MoreInfo = ({ children }) => {
         const cloneMoreItems = JSON.parse(JSON.stringify(moreItems));
         const index = cloneMoreItems.findIndex(obj => obj.id === '4');
         if (cloneMoreItems[index]) {
-            if (selectInfo.isExist) {
+            if (selectInfo && selectInfo.isExist) {
                 cloneMoreItems[index].text = '❤ 自選';
             } else {
                 cloneMoreItems[index].text = '+ 自選';
@@ -104,18 +108,27 @@ const MoreInfo = ({ children }) => {
             setMoreItems(cloneMoreItems);
         }
     });
-    // useEffect(async () => {
-    //     if (!isLogin && Object.keys(socalLoginData).length === 0) {
-    //         return;
-    //     }
-    //     getSelect();
-    // }, [code, isLogin, isSelfSelectVisitable]);
+
+    useEffect(async () => {
+        if (!isLogin && Object.keys(socalLoginData).length === 0) {
+            return;
+        }
+        getSelect();
+    }, [T30, isLogin, isSelfSelectVisitable]);
+
     const getSelect = useCallback(async () => {
         let exchange;
+        let market;
         const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+
         switch (type) {
             case 'S':
-                exchange = 'TAI';
+                exchange = T30.EXCHANGE ? T30.EXCHANGE : 'OES';
+                market = type;
+                break;
+            case 'H':
+                exchange = productInfo.exchange;
+                market = 'SB';
                 break;
             default:
                 break;
@@ -123,7 +136,7 @@ const MoreInfo = ({ children }) => {
         const reqData = {
             symbol: code,
             exchange: exchange,
-            market: type,
+            market: market,
             isShowDetail: true,
             isSocalLogin: isSocalLogin,
             token: isSocalLogin ? getSocalToken() : getToken(),
@@ -132,17 +145,8 @@ const MoreInfo = ({ children }) => {
         dispatch(setSelectInfo(res));
     });
     const setInfoItems = async code => {
-        // { id: '1', color: 'dark', text: '融' },
-        // { id: '2', color: 'red', text: '詳' },
-        // { id: '3', color: 'orange', text: '存' },
-        // { id: '4', color: 'green', text: '借' },
-        // { id: '5', color: 'blue', text: '學' },
-        // { id: '6', color: 'brown', text: '+ 自選' },
-
         const t30Res = await fetchStockT30(code);
         dispatch(setT30(t30Res));
-        // const test = await fetchGetRichClubReport(code);
-        // console.log(test)
 
         let moreItems = [
             {
@@ -172,10 +176,10 @@ const MoreInfo = ({ children }) => {
                 inInfoBox: true,
                 link: `https://www.sinotrade.com.tw/richclub/stock?code=${code}`,
             },
-            // { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
+            { id: '4', color: 'brown', text: '+ 自選', title: '', desc: '', inInfoBox: false, link: '' },
         ];
 
-        if (![t30Res['券成數'], t30Res['券配額'], t30Res['資成數'], t30Res['資配額']].some(el => el == null)) {
+        if (t30Res['券成數'] && t30Res['券配額'] && t30Res['資成數'] && t30Res['資配額']) {
             moreItems.unshift({ id: '5', color: 'dark', text: '融', title: '', desc: '', inInfoBox: false, link: '' });
         }
         setT30Data(t30Res);
@@ -212,20 +216,20 @@ const MoreInfo = ({ children }) => {
             <div className="more__info__container">
                 <div className="information__box">
                     <InfoBox code={code} t30Data={t30Data} moreItems={moreItems} />
-                    {/* <button
+                    <button
                         className="btn add__self__select"
                         onClick={isLogin || Object.keys(socalLoginData).length > 0 ? showSelfSelect : loginClickHandler}
                     >
-                        {isLogin ? (!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選') : '加入自選'}
-                    </button> */}
+                        {!!selectInfo && selectInfo.isExist ? '編輯自選' : '加入自選'}
+                    </button>
                 </div>
             </div>
             <div className="page__mask"></div>
             <AddSelectStock
                 isVisible={isSelfSelectVisitable}
                 handleClose={closeSelfSelect}
-                isEdit={false}
-                reloadSelect={getSelect}
+                addSelectGroupWindowOpen={openAddSelfGroup}
+                reload={getSelect}
             />
             <style jsx>{`
                 .info__box {
@@ -297,6 +301,14 @@ const MoreInfo = ({ children }) => {
                     cursor: pointer;
                     right: 0;
                     top: 0;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-modal-wrap {
+                    z-index: 15001;
+                }
+                .ant-modal-mask {
+                    z-index: 15000;
                 }
             `}</style>
         </>

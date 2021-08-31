@@ -50,7 +50,7 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             solace.current = solaceClient('', idno);
             solace.current.connect();
             solace.current.setMessageEvent('ST', function (xhr) {
-                console.log('solace', xhr);
+                // console.log('solace', xhr);
                 solaceEventHandler(xhr);
             });
             setSolaceLoaded(true);
@@ -159,7 +159,7 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             }
         }
         if (realTimeData.topic.indexOf('MKT') >= 0 && realTimeData.topic.indexOf('ODDLOT') === -1) {
-            console.log(nextData);
+            // console.log(nextData);
             let High = Array.isArray(prevData?.High) && (prevData?.High[0] || 0);
             let Low = Array.isArray(prevData?.Low) && (prevData?.Low[0] || 0);
             if (Array.isArray(prevData?.High) && Array.isArray(prevData?.Low)) {
@@ -201,7 +201,7 @@ const SolaceClientComponent = ({ subscribeTopic, idno }) => {
             }
             // console.log(DiffPrice, DiffRate, AvgPrice, DiffType);
             Object.assign(prevData, nextData);
-            console.log('prev', prevData);
+            // console.log('prev', prevData);
             prevData.High[0] = High;
             prevData.Low[0] = Low;
             prevData.DiffPrice[0] = DiffPrice;
