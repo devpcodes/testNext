@@ -1,27 +1,45 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Button, InputNumber, Select, Checkbox, Input } from 'antd';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AccountTable from '../../../vipInventory/AccountTable';
 import Btn from './Btn';
 import OrderSelect from '../../../../goOrder/SB/sbPanel/OrderSelect';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
+import { setOrderList } from '../../../../../../store/subBrokerage/action';
+import { postQuerySubBrokerageQuote } from '../../../../../../services/components/tradingAccount/subBrokerage/postQuerySubBrokerageQuote';
+import { getToken } from '../../../../../../services/user/accessToken';
+import { setModal } from '../../../../../../store/components/layouts/action';
 
 const { Option } = Select;
-const BatchTable = () => {
+const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
     const orderList = useSelector(store => store.subBrokerage.orderList);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log('orderList', orderList);
+        if (refresh !== 0) {
+            updatePriceHandler();
+        }
+    }, [refresh]);
+
+    useEffect(() => {
         if (orderList.length > 0) {
             let newOrderList = orderList.map((item, index) => {
                 item.key = index;
+                if (item?.GTCDate) {
+                    item.gtcCheck = true;
+                } else {
+                    item.gtcCheck = false;
+                }
                 return item;
             });
             setData(newOrderList);
+        } else {
+            setData([]);
         }
     }, [orderList]);
 
@@ -46,8 +64,12 @@ const BatchTable = () => {
                 render: (text, record) => {
                     return (
                         <div>
-                            <Btn text={'刪'} BS={record.BS} />
-                            <Btn text={'送'} BS={record.BS} />
+                            <Btn text={'刪'} BS={record.BS} clickHandler={delHandler.bind(null, record, data)} />
+                            <Btn
+                                text={'送'}
+                                BS={record.BS}
+                                clickHandler={submitHandler.bind(null, [record], 'signle')}
+                            />
                         </div>
                     );
                 },
@@ -80,6 +102,7 @@ const BatchTable = () => {
                                 ]}
                                 color={record.BS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
                                 value={record.BS}
+                                onChange={changeBS.bind(null, record, data)}
                             />
                         </div>
                     );
@@ -94,7 +117,11 @@ const BatchTable = () => {
                 render: (text, record) => {
                     return (
                         <div>
-                            <InputNumber defaultValue={parseInt(text)} step={record.lotSize} />
+                            <InputNumber
+                                step={record.lotSize}
+                                onChange={changeQty.bind(null, record, data)}
+                                value={parseInt(text)}
+                            />
                         </div>
                     );
                 },
@@ -108,7 +135,11 @@ const BatchTable = () => {
                 render: (text, record) => {
                     return (
                         <div>
-                            <InputNumber defaultValue={parseFloat(text)} step={record.priceJumpPoint} />
+                            <InputNumber
+                                value={parseFloat(text)}
+                                step={record.priceJumpPoint}
+                                onChange={changePrice.bind(null, record, data)}
+                            />
                         </div>
                     );
                 },
@@ -121,7 +152,7 @@ const BatchTable = () => {
                 align: 'left',
                 render: (text, record) => {
                     return (
-                        <Select defaultValue={record.aon}>
+                        <Select value={record.aon} onChange={changeAON.bind(null, record, data)}>
                             <Option value="ANY">ANY</Option>
                             <Option value="AON">AON</Option>
                         </Select>
@@ -132,12 +163,12 @@ const BatchTable = () => {
                 title: '長效單',
                 dataIndex: 'GTCDate',
                 key: 'GTCDate',
-                width: 100,
+                width: 200,
                 align: 'left',
                 render: (text, record) => {
                     return (
                         <div>
-                            <Checkbox></Checkbox>
+                            <Checkbox onChange={gtcCheck.bind(null, record, data)} checked={record.gtcCheck}></Checkbox>
                             <Input
                                 type="date"
                                 style={{
@@ -148,9 +179,12 @@ const BatchTable = () => {
                                     marginLeft: '8px',
                                 }}
                                 value={
-                                    moment(text).format('YYYY-MM-DD') || moment().add(6, 'months').format('YYYY-MM-DD')
+                                    text != null
+                                        ? moment(text).format('YYYY-MM-DD')
+                                        : moment().add(6, 'months').format('YYYY-MM-DD')
                                 }
                                 max={moment().add(6, 'months').format('YYYY-MM-DD')}
+                                onChange={gtcChange.bind(null, record, data)}
                             />
                         </div>
                     );
@@ -158,32 +192,170 @@ const BatchTable = () => {
             },
             {
                 title: '送單後保留',
-                dataIndex: 'reserve',
-                key: 'reserve',
+                dataIndex: 'isKeep',
+                key: 'isKeep',
                 width: 100,
                 align: 'center',
                 render: (text, record) => {
                     return (
                         <div>
-                            <Checkbox></Checkbox>
+                            <Checkbox onChange={keepCheck.bind(null, record, data)} checked={text}></Checkbox>
                         </div>
                     );
                 },
             },
         ];
         setColumns(newColumns);
-    }, []);
+    }, [data]);
+
+    const delHandler = useCallback((record, data) => {
+        const newData = data.filter(item => {
+            if (item.key !== record.key) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        console.log('newData', newData);
+        dispatch(setOrderList(newData));
+    });
+
+    const changeBS = useCallback((record, data, val) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.BS = val;
+            }
+            return item;
+        });
+        dispatch(setOrderList(newData));
+    });
+
+    const changeQty = useCallback((record, data, val) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.Qty = val;
+            }
+            return item;
+        });
+        dispatch(setOrderList(newData));
+    });
+
+    const changePrice = useCallback((record, data, val) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.Price = val;
+            }
+            return item;
+        });
+        dispatch(setOrderList(newData));
+    });
+
+    const changeAON = useCallback((record, data, val) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.aon = val;
+            }
+            return item;
+        });
+        dispatch(setOrderList(newData));
+    });
+
+    const gtcCheck = useCallback((record, data, e) => {
+        if (e.target.checked) {
+            var newData = data.map(item => {
+                if (item.key === record.key) {
+                    item.gtcCheck = e.target.checked;
+                    item.GTCDate = record.GTCDate || moment().add(6, 'months').format('YYYY-MM-DD');
+                }
+                return item;
+            });
+        } else {
+            var newData = data.map(item => {
+                if (item.key === record.key) {
+                    if (item.GTCDate != null) {
+                        item.gtcCheck = e.target.checked;
+                        delete item.GTCDate;
+                    }
+                }
+                return item;
+            });
+        }
+        dispatch(setOrderList(newData));
+    });
+
+    const gtcChange = useCallback((record, data, e) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.GTCDate = e.target.value;
+            }
+            return item;
+        });
+        dispatch(setOrderList(newData));
+    });
+
+    const keepCheck = useCallback((record, data, e) => {
+        const newData = data.map(item => {
+            if (item.key === record.key) {
+                item.isKeep = e.target.checked;
+            }
+            return item;
+        });
+        dispatch(setOrderList(newData));
+    });
 
     const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
         console.log('sssss', selectedRowKeys, selectedRows);
         setSelectedRowKeys(selectedRowKeys);
-        // if (showDelBtn != null) {
-        //     showDelBtn(selectedRows);
-        // }
+        if (selectItemHandler != null) {
+            selectItemHandler(selectedRows);
+        }
     });
+
+    const updatePriceHandler = async () => {
+        const stockList = data.map(item => {
+            return {
+                symbol: item.StockID,
+                exchange: item.Exchid,
+            };
+        });
+        try {
+            setLoading(true);
+            const quoteData = await postQuerySubBrokerageQuote(stockList);
+            setLoading(false);
+            if (quoteData) {
+                setData(updateDate(quoteData));
+            }
+        } catch (error) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    content: error,
+                    type: 'info',
+                    title: '系統訊息',
+                }),
+            );
+        }
+    };
+
+    const updateDate = quoteData => {
+        const newData = [];
+        Object.keys(quoteData).forEach(key => {
+            newData.push(quoteData[key]);
+            const symbol = key.substring(0, key.lastIndexOf('.'));
+            quoteData[key].StockID = symbol;
+            quoteData[key].Price = parseFloat(quoteData[key].refPrice) || parseFloat(quoteData[key].preClose);
+        });
+        const updData = data.map((item, i) => {
+            item.Price = newData[i].Price;
+            return item;
+        });
+        return updData;
+    };
+
     return (
-        <div>
+        <div className="batch__table">
             <AccountTable
+                scroll={{ x: 780, y: 600 }}
                 columns={columns}
                 dataSource={data}
                 pagination={false}
@@ -193,7 +365,28 @@ const BatchTable = () => {
                     onChange: changeSelectedHandler,
                     selectedRowKeys,
                 }}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            {(loading === true || parentLoading === true) && '資料加載中...'}
+                        </div>
+                    ),
+                    spinning: loading || parentLoading,
+                }}
             />
+            <style global jsx>{`
+                .batch__table .ant-table-tbody > tr > td:last-child {
+                    padding-right: 0 !important;
+                }
+            `}</style>
         </div>
     );
 };
