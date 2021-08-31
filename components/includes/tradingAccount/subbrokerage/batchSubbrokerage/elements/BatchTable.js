@@ -7,14 +7,25 @@ import Btn from './Btn';
 import OrderSelect from '../../../../goOrder/SB/sbPanel/OrderSelect';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 import { setOrderList } from '../../../../../../store/subBrokerage/action';
+import { postQuerySubBrokerageQuote } from '../../../../../../services/components/tradingAccount/subBrokerage/postQuerySubBrokerageQuote';
+import { getToken } from '../../../../../../services/user/accessToken';
+import { setModal } from '../../../../../../store/components/layouts/action';
 
 const { Option } = Select;
-const BatchTable = ({ selectItemHandler, submitHandler }) => {
+const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }) => {
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
     const orderList = useSelector(store => store.subBrokerage.orderList);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (refresh !== 0) {
+            updatePriceHandler();
+        }
+    }, [refresh]);
+
     useEffect(() => {
         if (orderList.length > 0) {
             let newOrderList = orderList.map((item, index) => {
@@ -299,6 +310,48 @@ const BatchTable = ({ selectItemHandler, submitHandler }) => {
             selectItemHandler(selectedRows);
         }
     });
+
+    const updatePriceHandler = async () => {
+        const stockList = data.map(item => {
+            return {
+                symbol: item.StockID,
+                exchange: item.Exchid,
+            };
+        });
+        try {
+            setLoading(true);
+            const quoteData = await postQuerySubBrokerageQuote(stockList);
+            setLoading(false);
+            if (quoteData) {
+                setData(updateDate(quoteData));
+            }
+        } catch (error) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    content: error,
+                    type: 'info',
+                    title: '系統訊息',
+                }),
+            );
+        }
+    };
+
+    const updateDate = quoteData => {
+        const newData = [];
+        Object.keys(quoteData).forEach(key => {
+            newData.push(quoteData[key]);
+            const symbol = key.substring(0, key.lastIndexOf('.'));
+            quoteData[key].StockID = symbol;
+            quoteData[key].Price = parseFloat(quoteData[key].refPrice) || parseFloat(quoteData[key].preClose);
+        });
+        const updData = data.map((item, i) => {
+            item.Price = newData[i].Price;
+            return item;
+        });
+        return updData;
+    };
+
     return (
         <div className="batch__table">
             <AccountTable
@@ -311,6 +364,22 @@ const BatchTable = ({ selectItemHandler, submitHandler }) => {
                     // getCheckboxProps,
                     onChange: changeSelectedHandler,
                     selectedRowKeys,
+                }}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            {(loading === true || parentLoading === true) && '資料加載中...'}
+                        </div>
+                    ),
+                    spinning: loading || parentLoading,
                 }}
             />
             <style global jsx>{`

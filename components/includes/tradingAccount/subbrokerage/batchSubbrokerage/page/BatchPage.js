@@ -12,8 +12,10 @@ import BatchTable from '../elements/BatchTable';
 const BatchPage = () => {
     const [showBtn, setShowBtn] = useState(false);
     const [selectData, setSelectData] = useState([]);
+    const [parentLoading, setParentLoading] = useState(false);
     const orderList = useSelector(store => store.subBrokerage.orderList);
     const userInfo = useSelector(store => store.user.currentAccount);
+    const [refresh, setRefresh] = useState(0);
     const platform = usePlatform();
     const dispatch = useDispatch();
     const selectItemHandler = useCallback(data => {
@@ -49,7 +51,9 @@ const BatchPage = () => {
                         dispatch(setModal({ visible: false }));
                         let subData = dataHandler(selectData);
                         try {
+                            setParentLoading(true);
                             let res = await submitListService(userInfo, subData, platform);
+                            setParentLoading(false);
                             const sellSuccess = subData.filter((item, i) => {
                                 if (res[i] === 'True') {
                                     return true;
@@ -91,6 +95,12 @@ const BatchPage = () => {
                 }),
             );
         }
+    };
+
+    const refreshHandler = () => {
+        setRefresh(prev => {
+            return (prev += 1);
+        });
     };
 
     const dataHandler = data => {
@@ -136,13 +146,19 @@ const BatchPage = () => {
                                 type={'submit'}
                                 style={{ backgroundColor: '#10419c', marginLeft: '18px' }}
                                 onClick={submitHandler.bind(null, selectData, orderList)}
+                                loading={parentLoading}
                             />
                         </>
                     )}
                 </div>
-                <IconBtn type={'refresh'} style={{ verticalAlign: 'top' }} />
+                <IconBtn type={'refresh'} style={{ verticalAlign: 'top' }} onClick={refreshHandler} />
             </div>
-            <BatchTable selectItemHandler={selectItemHandler} submitHandler={submitHandler} />
+            <BatchTable
+                selectItemHandler={selectItemHandler}
+                submitHandler={submitHandler}
+                refresh={refresh}
+                parentLoading={parentLoading}
+            />
         </div>
     );
 };
