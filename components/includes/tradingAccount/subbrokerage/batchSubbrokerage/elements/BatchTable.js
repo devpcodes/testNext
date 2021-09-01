@@ -118,7 +118,7 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
                 title: '股數',
                 dataIndex: 'Qty',
                 key: 'Qty',
-                width: 100,
+                width: 105,
                 align: 'left',
                 render: (text, record) => {
                     return (
@@ -136,7 +136,7 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
                 title: '價格',
                 dataIndex: 'Price',
                 key: 'Price',
-                width: 100,
+                width: 108,
                 align: 'left',
                 render: (text, record) => {
                     return (
