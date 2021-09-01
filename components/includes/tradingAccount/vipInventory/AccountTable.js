@@ -1,13 +1,22 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Table } from 'antd';
+import { Table,ConfigProvider  } from 'antd';
 import theme from '../../../../resources/styles/theme';
+import { SmileOutlined } from '@ant-design/icons';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
+import noDataImg from '../../../../resources/images/components/oauthCancel/img-no-data.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
+
 
 // columns設定filterDropdown 會有自訂的icon產生
 // filterColumns 為現在 active的 filter key，icon會自動產生變化
-const AccountTable = ({ filterColumns, ...props }) => {
+const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
     const [columns, setColumns] = useState([]);
+    const [noData, setNoDataSetting] = useState({imgSrc:'',text:'',tStyle:''});
+    useEffect(() => {
+      if(noDataSetting!=undefined){
+          setNoDataSetting(noDataSetting)
+      }
+    }, []);
     useEffect(() => {
         let newColumns = [];
         if (props.columns?.length > 0) {
@@ -33,6 +42,14 @@ const AccountTable = ({ filterColumns, ...props }) => {
         setColumns(newColumns);
     }, [props.columns, filterColumns]);
 
+    //no Data customize
+    const customizeRenderEmpty = () => (
+        <div style={{ textAlign: 'center' }}>
+        <img src={ noData.imgSrc || noDataImg }></img>
+        <p style={ noData.tStyle || {color:"#3f5372", marginTop:'12px'}}>{noData.text || '目前暫無資料'}</p>
+        </div>
+    );
+
     const checkActiveHandler = (dataIndex, filterColumns) => {
         let active = false;
         filterColumns.forEach(item => {
@@ -45,10 +62,11 @@ const AccountTable = ({ filterColumns, ...props }) => {
 
     return (
         <div>
+        <ConfigProvider renderEmpty={customizeRenderEmpty}>
             <div className="sino__table">
                 <Table columns={columns} {...props} />
             </div>
-
+        </ConfigProvider>
             <style jsx global>{`
                 .filterBtn {
                     cursor: pointer;

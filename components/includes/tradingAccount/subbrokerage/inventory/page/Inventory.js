@@ -199,7 +199,7 @@ const Invetory = () => {
     });
 
     return (
-        <>
+        <div className="posi_relative">
          <div className="active_box">
             {/* <Select defaultValue={defaultMarket} style={{ width: 120 }} onChange={handleChange}>
             {
@@ -215,15 +215,17 @@ const Invetory = () => {
             dataSource={data} 
             pagination={false} 
             columns={columns}
+            //noDataSetting={{text:'text',tStyle:{color:"green"}}}
             />
             
         <style jsx>
             {`
+            .posi_relative{position:relative;}
             AccountTable{margin-top:15px}
-            .active_box {margin-bottom:15px;display:flex; justify-content: flex-end;}
+            .active_box {margin-bottom:15px;display:flex; justify-content: flex-end;position:absolute; top:-110px;}
             `}
         </style>
-        </>
+        </div>
     );
 };
 

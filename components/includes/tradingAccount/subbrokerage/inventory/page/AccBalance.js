@@ -267,9 +267,9 @@ const AccBalance = () => {
         setRefresh(r+1)
     }
     return (
-        <div className="brokerage">
+        <div className="brokerage brokerage_accBalance">
         <div className="action_box">
-        <div>
+           <div>
              <Select defaultValue={dataCurrent} style={{ width: 120 }} onChange={handleChange}>
                 <Option value="2">美國</Option>
                 <Option value="0">香港</Option>
@@ -283,7 +283,7 @@ const AccBalance = () => {
             <div>
             <Button onClick={e=>showModal(e,1)}>說明</Button>    
             <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn"> </IconBtn>    
-            </div>
+            </div>                
                 <Modal 
                 title={modalText.title} 
                 visible={isModalVisible} 
@@ -393,8 +393,10 @@ const AccBalance = () => {
 
     <style jsx>
                 {`
-                .action_box{display:flex;justify-content: space-between;align-items: center;margin-bottom:10px; }
-                .table_box{margin:10px 0;}
+                .brokerage_accBalance{position:relative;}
+                .action_box{position:absolute; top:-110px;width:100%;
+                    display:flex;justify-content: space-between;align-items: center;margin-bottom:10px;}
+                .table_box{margin:0 0 10px;}
                 .balance_table {width:100%;font-size:16px; line-height:2; margin-top:20px;}
                 .balance_table tr td{width:50%;text-align:center;border:1px solid grey;}
                 .balance_table tr td:first-child{background-color:#f2f5fa;color:#6c7b94;}
