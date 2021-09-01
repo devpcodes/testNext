@@ -10,7 +10,8 @@ const SearchAutoComplete = ({
     width = false,
     selectedHandler,
     marketType = ['S'],
-    height = '38px'
+    height = '38px',
+    placeholder = '請輸入股號或商品名稱'
 }) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
@@ -94,7 +95,7 @@ const SearchAutoComplete = ({
                 <AutoComplete
                     style={{ height: height }}
                     options={products}
-                    placeholder="請輸入股號或商品名稱"
+                    placeholder={placeholder}
                     dropdownClassName="searchDropdown"
                     dropdownMatchSelectWidth={width || 240}
                     onChange={changeHandler}

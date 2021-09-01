@@ -6,6 +6,8 @@ import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 import { Select, Switch ,Button,Tabs  } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { setPrice, setQueryPrice, setSBBs } from '../../../../../../store/goOrderSB/action';
+
+
 const OrderBoxBS = ({type}) => {
 const touch = useSelector(store => store.goOrderSB.touch);;
 const productInfo = useSelector(store => store.goOrder.productInfo);
@@ -123,7 +125,7 @@ const changeHandler = useCallback(value => {
             <style jsx>
                 {`
                 .mt-8{margin-top: 8px;}
-                .ctrl_item{line-height:46px;padding:0 25px;}
+                .ctrl_item{min-height:46px;padding:0 25px;}
                 .ctrl_item.submit_box{margin-top:90px;}
                 .ctrl_item > span{width: 62px; display:inline-block; font-size: 1.6rem;color: #0d1623; }
                 .text_view{ opacity: 0.7; font-family: PingFangTC, Arial; font-size: 16px; font-weight: 900;line-height:2;margin-top:20px;text-align:center;}
