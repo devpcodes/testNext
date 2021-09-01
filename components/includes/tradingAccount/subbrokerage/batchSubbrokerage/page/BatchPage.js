@@ -147,7 +147,7 @@ const BatchPage = () => {
             <div
                 style={{
                     position: 'absolute',
-                    top: '-100px',
+                    top: '-110px',
                     width: '100%',
                     display: 'flex',
                     justifyContent: 'space-between',
