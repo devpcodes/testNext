@@ -10,14 +10,19 @@ import { setOrderList } from '../../../../../../store/subBrokerage/action';
 import { postQuerySubBrokerageQuote } from '../../../../../../services/components/tradingAccount/subBrokerage/postQuerySubBrokerageQuote';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { setModal } from '../../../../../../store/components/layouts/action';
+import DropFilterSearch from '../../../vipInventory/DropFilterSearch';
 
 const { Option } = Select;
 const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }) => {
+    const orderList = useSelector(store => store.subBrokerage.orderList);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const orderList = useSelector(store => store.subBrokerage.orderList);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const [searchColumns, setSearchColumns] = useState([]);
+    const [filterSearchVal, setFilterSearchVal] = useState('');
+    const [searchWords, setSearchWords] = useState('');
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -80,6 +85,7 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
                 key: 'StockID',
                 width: 100,
                 align: 'left',
+                ...getColumnSearchProps('StockID'),
                 render: (text, record) => {
                     return <div>{text}</div>;
                 },
@@ -206,7 +212,64 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
             },
         ];
         setColumns(newColumns);
-    }, [data]);
+    }, [data, searchColumns, searchWords]);
+
+    const getColumnSearchProps = dataIndex => {
+        if (dataIndex === 'StockID') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropFilterSearch
+                        onSubmit={searchHandler.bind(null, confirm)}
+                        onReset={searchResetHandler.bind(null, confirm)}
+                        value={filterSearchVal}
+                        marketType={['SB']}
+                    />
+                ),
+                filteredValue: [searchWords] || null,
+                onFilter: (value, record) => {
+                    if (value === '') {
+                        return true;
+                    } else {
+                        const symbolVal = value.split(' ')[0];
+                        const nameVal = value.split(' ')[1];
+                        const symbol = record.StockID;
+                        if (symbol === symbolVal) {
+                            return true;
+                        }
+                    }
+                },
+            };
+        }
+    };
+
+    const searchHandler = useCallback((confirm, val) => {
+        confirm();
+        // getUnRealPrtlos(currentAccount, { stock: val });
+        setSearchColumns(columns => {
+            if (!columns.includes('StockID')) {
+                columns.push('StockID');
+            }
+            return columns;
+        });
+        // 因為送出的資料，和ui顯示不同，所以新增變數儲存
+        setFilterSearchVal(val);
+        console.log('val', val);
+        // const submitVal = val.split(' ')[0];
+        setSearchWords(val);
+    });
+
+    const searchResetHandler = useCallback(confirm => {
+        confirm();
+        if (searchColumns.indexOf('StockID') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('StockID');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setSearchWords('');
+            setFilterSearchVal('');
+        }
+    });
 
     const delHandler = useCallback((record, data) => {
         dispatch(
@@ -370,6 +433,7 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
         <div className="batch__table">
             <AccountTable
                 scroll={{ x: 780, y: 600 }}
+                filterColumns={searchColumns}
                 columns={columns}
                 dataSource={data}
                 pagination={false}
