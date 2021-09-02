@@ -7,7 +7,7 @@ import { Select, Switch, Button, Tabs } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { setPrice, setQueryPrice, setSBBs } from '../../../../../../store/goOrderSB/action';
 
-const OrderBoxBS = ({ type }) => {
+const OrderBoxBS = ({ type }) => { //test0902 t1
     const touch = useSelector(store => store.goOrderSB.touch);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
@@ -161,6 +161,7 @@ const OrderBoxBS = ({ type }) => {
             </style>
             <style jsx global>
                 {`
+                .subBrokerage .price_control .nothingbut{display: flex; flex-wrap: nowrap;}
                 .subBrokerage .price_control{display: flex; flex-wrap: nowrap;}
                 .subBrokerage .price_control .btn__box-modal{display: flex; flex-wrap: nowrap;}
                 .subBrokerage .OrderBox_BS .ant-switch-checked{background-color:${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}}
