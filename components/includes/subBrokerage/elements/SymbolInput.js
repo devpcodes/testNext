@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import lodash from 'lodash';
 import { message } from 'antd';
 import { setSymbolList } from '../../../../store/subBrokerage/action';
 import AddSelfSelect from '../../selfSelect/AddSelfSelect';
@@ -10,6 +11,11 @@ const SymbolInput = () => {
     const symbolList = useSelector(store => store.subBrokerage.symbolList);
     const setValueHandler = useCallback(value => {
         const data = [...symbolList];
+        const findIndex = _.findIndex(data, ['symbol', value.symbol]);
+        if (findIndex !== -1) {
+            message.warning('股號已設定');
+            return;
+        }
         if (data.length >= 10) {
             message.warning('常用股號最多設定十組');
             return;
