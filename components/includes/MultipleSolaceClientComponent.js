@@ -49,24 +49,46 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
         }
     };
 
+    // const solaceEventHandler = xhr => {
+    //     if (xhr && xhr.topic) {
+    //         const mptpIndex = MptpIns.get(xhr.topic.split('/', 3).join('/'));
+    //         let solaceMptpData = {};
+    //         let code = '';
+    //         if (xhr.data.length === mptpIndex.length) {
+    //             mptpIndex.forEach((data, index) => {
+    //                 solaceMptpData[mptpIndex[index]] = xhr.data[index];
+    //                 if (data === 'Code') {
+    //                     code = xhr.data[index];
+    //                 }
+    //             });
+    //         } else {
+    //             // 欄位錯誤 ( 停止訂閱 )
+    //             console.log('資料長度跟 mptp長度不符。');
+    //         }
+    //         if (!solaceData.current[code]) {
+    //             solaceData.current[code] = {};
+    //         }
+    //         // Object.assign(solaceData.current[code], solaceMptpData)
+    //         // const reservation_prop = Object.assign(solaceData.current[code], solaceMptpData)
+    //         // console.log(reservation_prop)
+    //         // solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
+    //         // dispatch(setSolaceData(Math.random()));
+    //     }
+    // };
+
     const solaceEventHandler = xhr => {
         if (xhr && xhr.topic) {
             const mptpIndex = MptpIns.get(xhr.topic.split('/', 3).join('/'));
             let solaceMptpData = {};
-            let code = '';
             if (xhr.data.length === mptpIndex.length) {
                 mptpIndex.forEach((data, index) => {
                     solaceMptpData[mptpIndex[index]] = xhr.data[index];
-                    if (data === 'Code') {
-                        code = xhr.data[index];
-                    }
                 });
+                solaceMptpData.Topic = xhr.topic.split('/', 3).join('/');
             } else {
                 // 欄位錯誤 ( 停止訂閱 )
                 console.log('資料長度跟 mptp長度不符。');
             }
-            // solaceData.current[code] = solaceMptpData;   // 全部資料放進 solaceData
-            // console.log(solaceMptpData);
             solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
             dispatch(setSolaceData(solaceData.current));
         }

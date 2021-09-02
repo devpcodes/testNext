@@ -23,6 +23,7 @@ const SelfSelectTable = ({
 }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLoginData = useSelector(store => store.user.socalLogin);
+    const isDataLoading = useSelector(store => store.watchLists.dataLoading);
 
     const [selectGroupID, setSelectGroupID] = useState(tabkey);
     const [snapshotInput, setSnapshotInput] = useState([]);
@@ -370,6 +371,7 @@ const SelfSelectTable = ({
     return (
         <>
             <div className="select__group__tab">
+                <div className="select__group__block"></div>
                 <Tabs onChange={changeSelectGroup} activeKey={selectGroupID}>
                     {!isSocalLogin && <TabPane tab="庫存" key="0" />}
                     {!!fetchSelectGroupData &&
@@ -394,9 +396,21 @@ const SelfSelectTable = ({
             {/* <Test /> */}
             <style jsx>{`
                 .select__group__tab {
+                    position: relative;
                     padding: 0 30px;
                     border: solid 1px #e6ebf5;
                     background: #fff;
+                }
+                .select__group__block {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: #fff;
+                    top: 0;
+                    left: 0;
+                    z-index: 2;
+                    display: ${!isDataLoading ? 'none' : 'block'};
+                    opacity: 0.5;
                 }
                 .select__stock__table {
                     overflow: auto;
