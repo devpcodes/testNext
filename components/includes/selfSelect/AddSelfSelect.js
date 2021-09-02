@@ -21,18 +21,27 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
         setSearchData(null);
     };
 
+    const onPressEnter = (value, products) => {
+        if (products[0]?.options[0]?.item.symbol) {
+            setSearchData(products[0].options[0].item);
+            addSelectStock();
+        }
+    };
+
     const addSelectStock = async () => {
-        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-        const addReqData = {
-            selectId: tabkey,
-            symbol: searchData.symbol,
-            exchange: searchData.exchange,
-            market: searchData.marketType,
-            token: isSocalLogin ? getSocalToken() : getToken(),
-        };
-        const res = await fetchAddSelectStock(addReqData, isSocalLogin);
-        reloadSelectReloadTime();
-        setInputVal('');
+        if (searchData) {
+            const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+            const addReqData = {
+                selectId: tabkey,
+                symbol: searchData.symbol,
+                exchange: searchData.exchange,
+                market: searchData.marketType,
+                token: isSocalLogin ? getSocalToken() : getToken(),
+            };
+            const res = await fetchAddSelectStock(addReqData, isSocalLogin);
+            reloadSelectReloadTime();
+            setInputVal('');
+        }
     };
 
     return (
@@ -43,6 +52,7 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
                     parentValue={inputVal}
                     onChange={onChangeHandler}
                     marketType={['S', 'SB', 'F', 'O']}
+                    onPressEnter={onPressEnter}
                 />
                 <button
                     className="add__stock__btn"

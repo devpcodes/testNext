@@ -9,6 +9,7 @@ import general from './general/reducer';
 import goOrder from './goOrder/reducer';
 import solace from './solace/reducer';
 import goOrderSB from './goOrderSB/reducer';
+import watchLists from './watchLists/reducer';
 const reducers = combineReducers({
     layout,
     goOrder,
@@ -20,6 +21,7 @@ const reducers = combineReducers({
     future,
     general,
     solace,
+    watchLists,
 });
 
 export default reducers;

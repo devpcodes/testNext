@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { memo, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
 import AccountTable from '../tradingAccount/vipInventory/AccountTable';
 import MultipleSolaceClientComponent from '../MultipleSolaceClientComponent';
-import { useSelector } from 'react-redux';
 import { checkLogin } from '../../../services/components/layouts/checkLogin';
 import ReactDragListView from 'react-drag-listview';
 import { openGoOrder } from '../../../services/openGoOrder';
@@ -11,25 +11,26 @@ import { useCheckMobile } from '../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
 import { fetchDeletSelectStock } from '../../../services/selfSelect/deletSelectStock';
 import { fetchUpdateSelectStock } from '../../../services/selfSelect/updateSelectStock';
+import { setDataLoading } from '../../../store/watchLists/action';
 import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 import noData from '../../../resources/images/pages/Self_select/img-default.svg';
 
 const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
+    const dispatch = useDispatch();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLogin = useSelector(store => store.user.socalLogin);
-
     const [selfSelectList, setSelfSelectList] = useState([]);
     const [topic, setTopic] = useState([]);
-    const [dataLoading, setDataLoading] = useState(false);
     // const [tableColumns, setTableColumns] = useState([]);
 
     const isMobile = useCheckMobile();
     const router = useRouter();
     const solaceData = useSelector(store => store.solace.solaceData);
+    const isDataLoading = useSelector(store => store.watchLists.dataLoading);
 
     useEffect(() => {
-        setDataLoading(true);
+        dispatch(setDataLoading(true));
     }, [tableData]);
 
     const columns = [
@@ -225,12 +226,12 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             tableData.forEach(stock => {
                 switch (stock.market) {
                     case 'S':
-                        topicList.push(`SNA/v1/STK/*/*/${stock.code}`);
+                        topicList.push(`QUO/v1/STK/*/*/${stock.code}`);
                         topicList.push(`TIC/v1/STK/*/*/${stock.code}`);
                         break;
                     case 'O':
                     case 'F':
-                        topicList.push(`SNA/v1/FOP/*/*/${stock.code}`);
+                        topicList.push(`QUO/v1/FOP/*/*/${stock.code}`);
                         topicList.push(`TIC/v1/FOP/*/*/${stock.code}`);
                         break;
                 }
@@ -243,12 +244,15 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             setSelfSelectList([]);
         }
         setTimeout(() => {
-            setDataLoading(false);
-        }, 200);
+            dispatch(setDataLoading(false));
+        }, 500);
     }, [tableData]);
 
+    // useEffect(() => {
+    //     console.log(1231)
+    // }, [solaceData])
+
     useEffect(() => {
-        // let data = JSON.parse(JSON.stringify(selfSelectList));
         const getClass = (solaceData, price, needLimit, needIcon) => {
             let className = '';
             price
@@ -277,50 +281,50 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
 
         selfSelectList.forEach((selectData, index) => {
             if (selectData.code === solaceData.Code) {
-                selectData.totalVolume.text = solaceData.VolSum;
+                if (solaceData.Topic.split('/')[0] === 'TIC') {
+                    selectData.totalVolume.text = solaceData.VolSum;
 
-                selectData.close.text = parseFloat(solaceData.Close).toFixed(2);
-                (selectData.close.class = (() => {
-                    return getClass(solaceData, solaceData.Close, true, false);
-                })()),
-                    (selectData.close.simtrade = solaceData.Simtrade);
-                selectData.changePrice.text =
-                    parseFloat(solaceData.DiffPrice) === 0
-                        ? '--'
-                        : parseFloat(Math.abs(solaceData.DiffPrice)).toFixed(2);
-                (selectData.changePrice.class = (() => {
-                    return getClass(solaceData, solaceData.DiffPrice, false, true);
-                })()),
-                    (selectData.changeRate.text =
-                        parseFloat(solaceData.DiffRate) === 0
+                    selectData.close.text = parseFloat(solaceData.Close).toFixed(2);
+                    (selectData.close.class = (() => {
+                        return getClass(solaceData, solaceData.Close, true, false);
+                    })()),
+                        (selectData.close.simtrade = solaceData.Simtrade);
+                    selectData.changePrice.text =
+                        parseFloat(solaceData.DiffPrice) === 0
                             ? '--'
-                            : `${Math.abs(parseFloat(solaceData.DiffRate / 100).toFixed(2))} %`);
-                (selectData.changeRate.class = (() => {
-                    return getClass(solaceData, solaceData.DiffRate, false, true);
-                })()),
-                    parseFloat(solaceData.DiffRate) < 0;
-                if (Array.isArray(solaceData.BidPrice)) {
+                            : parseFloat(Math.abs(solaceData.DiffPrice)).toFixed(2);
+                    (selectData.changePrice.class = (() => {
+                        return getClass(solaceData, solaceData.DiffPrice, false, true);
+                    })()),
+                        (selectData.changeRate.text =
+                            parseFloat(solaceData.DiffRate) === 0
+                                ? '--'
+                                : `${Math.abs(parseFloat(solaceData.DiffRate / 100).toFixed(2))} %`);
+                    (selectData.changeRate.class = (() => {
+                        return getClass(solaceData, solaceData.DiffRate, false, true);
+                    })()),
+                        parseFloat(solaceData.DiffRate) < 0;
+                }
+                if (solaceData.Topic.split('/')[0] === 'QUO') {
                     selectData.buyPrice.text =
                         parseFloat(solaceData.BidPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData.BidPrice[0]).toFixed(2);
                     selectData.buyPrice.class = Array.isArray(solaceData.BidPrice)
-                        ? parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) < 0
+                        ? parseFloat(solaceData.BidPrice[0]) - parseFloat(selectData.reference.text) < 0
                             ? 'lower'
-                            : parseFloat(solaceData.BidPrice[0]) - parseFloat(solaceData.Reference) > 0
+                            : parseFloat(solaceData.BidPrice[0]) - parseFloat(selectData.reference.text) > 0
                             ? 'upper'
                             : ''
                         : '';
-                }
-                if (Array.isArray(solaceData.AskPrice)) {
                     selectData.sellPrice.text =
                         parseFloat(solaceData.AskPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData.AskPrice[0]).toFixed(2);
                     selectData.sellPrice.class = Array.isArray(solaceData.AskPrice)
-                        ? parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) < 0
+                        ? parseFloat(solaceData.AskPrice[0]) - parseFloat(selectData.reference.text) < 0
                             ? 'lower'
-                            : parseFloat(solaceData.AskPrice[0]) - parseFloat(solaceData.Reference) > 0
+                            : parseFloat(solaceData.AskPrice[0]) - parseFloat(selectData.reference.text) > 0
                             ? 'upper'
                             : ''
                         : '';
@@ -379,7 +383,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                                 資料加載中...
                             </div>
                         ),
-                        spinning: dataLoading,
+                        spinning: isDataLoading,
                     }}
                 />
             </ReactDragListView>
