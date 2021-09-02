@@ -7,7 +7,8 @@ import { Select, Switch, Button, Tabs } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { setPrice, setQueryPrice, setSBBs } from '../../../../../../store/goOrderSB/action';
 
-const OrderBoxBS = ({ type }) => { //test0902 t1
+const OrderBoxBS = ({ type }) => {
+    //test0902 t1
     const touch = useSelector(store => store.goOrderSB.touch);
     const productInfo = useSelector(store => store.goOrder.productInfo);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
@@ -161,18 +162,40 @@ const OrderBoxBS = ({ type }) => { //test0902 t1
             </style>
             <style jsx global>
                 {`
-                .subBrokerage .price_control .nothingbut{display: flex; flex-wrap: nowrap;}
-                .subBrokerage .price_control{display: flex; flex-wrap: nowrap;}
-                .subBrokerage .price_control .btn__box-modal{display: flex; flex-wrap: nowrap;}
-                .subBrokerage .OrderBox_BS .ant-switch-checked{background-color:${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}}
-                .subBrokerage .ctrl_item_select .ant-select-selector,
-                .subBrokerage .ctrl_item_select .ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
-                    border-color: transparent; background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
-                    color: #FFF; border-color: transparent;}
-                .subBrokerage .left_box_inner .ant-select-single .ant-select-arrow{color:#FFF}
-                .subBrokerage .left_box_inner .submit_box button{ width: 100%; line-height: 50px; height: 60px;margin:4px auto;}
-                .subBrokerage .left_box_inner .submit_box .ant-btn-primary{background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
-                border-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}}
+                    .subBrokerage .price_control {
+                        display: flex;
+                        flex-wrap: nowrap;
+                    }
+                    .subBrokerage .price_control .btn__box-modal {
+                        display: flex;
+                        flex-wrap: nowrap;
+                    }
+                    .subBrokerage .OrderBox_BS .ant-switch-checked {
+                        background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                    }
+                    .subBrokerage .ctrl_item_select .ant-select-selector,
+                    .subBrokerage
+                        .ctrl_item_select
+                        .ant-select-single:not(.ant-select-customize-input)
+                        .ant-select-selector {
+                        border-color: transparent;
+                        background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                        color: #fff;
+                        border-color: transparent;
+                    }
+                    .subBrokerage .left_box_inner .ant-select-single .ant-select-arrow {
+                        color: #fff;
+                    }
+                    .subBrokerage .left_box_inner .submit_box button {
+                        width: 100%;
+                        line-height: 50px;
+                        height: 60px;
+                        margin: 4px auto;
+                    }
+                    .subBrokerage .left_box_inner .submit_box .ant-btn-primary {
+                        background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                        border-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                    }
                 `}
             </style>
         </div>

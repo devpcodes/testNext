@@ -8,36 +8,35 @@ import SymbolList from '../../../../subBrokerage/elements/SymbolList';
 import SymbolInput from '../../../../subBrokerage/elements/SymbolInput';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 const OrderBox = () => {
-const [current, setCurrent] = useState('B'); 
-const [tabColor, setTabColor] = useState(themeColor.buyTabColor); 
-const selected = useRef(false);
-const selectSymbol = useRef('');
-const { TabPane } = Tabs;
-useEffect(() => {
-    if(current=='B'){
-        setTabColor(themeColor.buyTabColor)
-        console.log('BUY')
-    }else if(current=='S'){
-        setTabColor(themeColor.sellTabColor)
-        console.log('SELL')
-    }else{
-        setTabColor(themeColor.tradingAccColor)
-        console.log('OTHER')
-    }
-    
-}, [current]);
-
-const selectHandler = useCallback(async val => {
-    const symbol = val.split(' ')[0];
-    try {
-        const res = await fetchSnapshot([symbol]);
-        if (Array.isArray(res) && res.length > 0) {
-            if (res[0].UpLimit == 9999.95) {
-                setPriceVal(formatPriceByUnit(symbol, res[0].Close * 1.2));
-            } else {
-                setPriceVal(formatPriceByUnit(symbol, res[0].UpLimit));
-            }
+    const [current, setCurrent] = useState('B');
+    const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
+    const selected = useRef(false);
+    const selectSymbol = useRef('');
+    const { TabPane } = Tabs;
+    useEffect(() => {
+        if (current == 'B') {
+            setTabColor(themeColor.buyTabColor);
+            console.log('BUY');
+        } else if (current == 'S') {
+            setTabColor(themeColor.sellTabColor);
+            console.log('SELL');
+        } else {
+            setTabColor(themeColor.tradingAccColor);
+            console.log('OTHER');
         }
+    }, [current]);
+
+    const selectHandler = useCallback(async val => {
+        const symbol = val.split(' ')[0];
+        try {
+            const res = await fetchSnapshot([symbol]);
+            if (Array.isArray(res) && res.length > 0) {
+                if (res[0].UpLimit == 9999.95) {
+                    setPriceVal(formatPriceByUnit(symbol, res[0].Close * 1.2));
+                } else {
+                    setPriceVal(formatPriceByUnit(symbol, res[0].UpLimit));
+                }
+            }
         } catch (error) {
             console.log(error);
         }
@@ -150,8 +149,13 @@ const selectHandler = useCallback(async val => {
                     .subBrokerage .left_box_inner .ant-tabs-nav-wrap {
                         padding: 0;
                     }
-                    .subBrokerage .left_box_inner .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{color:${tabColor};}
-                    .subBrokerage .left_box_inner .ant-tabs .ant-tabs-ink-bar{background:${tabColor};height:4px;}
+                    .subBrokerage .left_box_inner .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+                        color: ${tabColor};
+                    }
+                    .subBrokerage .left_box_inner .ant-tabs .ant-tabs-ink-bar {
+                        background: ${tabColor};
+                        height: 4px;
+                    }
                     .subBrokerage .left_box_inner .ant-tabs .ant-tabs-tab {
                         justify-content: center;
                         width: 33.3%;

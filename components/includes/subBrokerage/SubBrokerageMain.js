@@ -9,7 +9,7 @@ import GtcPage from '../tradingAccount/subbrokerage/gtc/page/GtcPage';
 import DealPageComponent from '../tradingAccount/subbrokerage/deal/page/DealPageComponent.js';
 import ShareholdingPage from '../tradingAccount/subbrokerage/shareholding/page/ShareholdingPage';
 import BatchPage from '../tradingAccount/subbrokerage/batchSubbrokerage/page/BatchPage';
-import OrderBox  from '../tradingAccount/subbrokerage/inventory/elements/OrderBox';
+import OrderBox from '../tradingAccount/subbrokerage/inventory/elements/OrderBox';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
@@ -28,10 +28,10 @@ const SubBrokerMain = () => {
     const onClick = x => {
         setCurrent(x);
     };
-    const onChange = () =>{
-        let status = orderBoxCtrl
-        setOrderBoxCtrl(!status)
-    }
+    const onChange = () => {
+        let status = orderBoxCtrl;
+        setOrderBoxCtrl(!status);
+    };
     return (
         <div className="page__container subBrokerage">
             <div className="left_area">
@@ -57,11 +57,11 @@ const SubBrokerMain = () => {
                             case 'gtc':
                                 return <GtcPage />;
                             case 'inventory':
-                                return <Inventory/>;
+                                return <Inventory />;
                             case 'balance':
-                                return <AccBalance/>;
+                                return <AccBalance />;
                             case 'unrealized':
-                                return <Unrealized/>;
+                                return <Unrealized />;
                             case 'holding':
                                 return <ShareholdingPage />;
                             case 'batch':
@@ -75,22 +75,69 @@ const SubBrokerMain = () => {
 
             <style jsx>
                 {`
-                    .page__container.subBrokerage {min-height:960px; padding:0; display:flex; align-items:stretch; }
-                    .page__container.subBrokerage .content_area { width: 100%; margin: 0 auto;}
-                    .page__container.subBrokerage .right_area{overflow:hidden;padding:15px 40px 15px 30px;background-color:#f9fbff;flex-shrink:383px;}
-                    .page__container.subBrokerage .left_area{position:relative;}
-                    .page__container.subBrokerage .left_ctrl_box{position:relative; width:${orderBoxCtrl?383:15}px;transition:width 0.8s;
-                        border-right:1px solid #e6ebf5;overflow:hidden;min-height: 100%;}
-                        .page__container.subBrokerage .left_ctrl_box > div{min-width:383px;${orderBoxCtrl?'':'opacity:0%;'};transition:opacity 0.8s;}
-                    .page__container.subBrokerage .left_area .ctrl_btn{position:absolute; right:-10px; bottom:20%;margin-left:10px;width:20px;line-height:40px;
-                        display:inline-block; padding:0;text-align:center; background:#FFF;border:1px solid #ddd;border-radius:2px;height:40px; }
-                    .page__container.subBrokerage .left_area .ctrl_btn::after{display:block;content:"";width:10px;height:10px;border: 2px solid #666;transform-origin:20% 50%;
-                        border-width:0 0 2px 2px; transform:translate(${orderBoxCtrl?'60%, 30%':'60%, 70%'}) rotate(${orderBoxCtrl?'45':'-135'}deg) ;margin-top:50%;
-                        transition:transform 0.5s;}
+                    .page__container.subBrokerage {
+                        min-height: 960px;
+                        padding: 0;
+                        display: flex;
+                        align-items: stretch;
+                    }
+                    .page__container.subBrokerage .content_area {
+                        width: 100%;
+                        margin: 0 auto;
+                    }
+                    .page__container.subBrokerage .right_area {
+                        overflow: hidden;
+                        padding: 15px 40px 15px 30px;
+                        background-color: #f9fbff;
+                        flex-shrink: 383px;
+                    }
+                    .page__container.subBrokerage .left_area {
+                        position: relative;
+                    }
+                    .page__container.subBrokerage .left_ctrl_box {
+                        position: relative;
+                        width: ${orderBoxCtrl ? 383 : 15}px;
+                        transition: width 0.8s;
+                        border-right: 1px solid #e6ebf5;
+                        overflow: hidden;
+                        min-height: 100%;
+                    }
+                    .page__container.subBrokerage .left_ctrl_box > div {
+                        min-width: 383px;
+                        ${orderBoxCtrl ? '' : 'opacity:0%;'};
+                        transition: opacity 0.8s;
+                    }
+                    .page__container.subBrokerage .left_area .ctrl_btn {
+                        position: absolute;
+                        right: -10px;
+                        bottom: 20%;
+                        margin-left: 10px;
+                        width: 20px;
+                        line-height: 40px;
+                        display: inline-block;
+                        padding: 0;
+                        text-align: center;
+                        background: #fff;
+                        border: 1px solid #ddd;
+                        border-radius: 2px;
+                        height: 40px;
+                    }
+                    .page__container.subBrokerage .left_area .ctrl_btn::after {
+                        display: block;
+                        content: '';
+                        width: 10px;
+                        height: 10px;
+                        border: 2px solid #666;
+                        transform-origin: 20% 50%;
+                        border-width: 0 0 2px 2px;
+                        transform: translate(${orderBoxCtrl ? '60%, 30%' : '60%, 70%'})
+                            rotate(${orderBoxCtrl ? '45' : '-135'}deg);
+                        margin-top: 50%;
+                        transition: transform 0.5s;
+                    }
                     .content_box--nav {
                         margin-top: 65px;
                     }
-
                 `}
             </style>
             <style jsx global>
