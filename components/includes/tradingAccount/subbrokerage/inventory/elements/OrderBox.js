@@ -4,14 +4,22 @@ import SearchAutoComplete from '../../../vipInventory/SearchAutoComplete';
 import { Tabs  } from 'antd';
 import OrderBoxBS  from './OrderBoxBS';
 import { SearchOutlined } from '@ant-design/icons';
-
+import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 const OrderBox = () => {
 const [current, setCurrent] = useState('B'); 
+const [tabColor, setTabColor] = useState(themeColor.buyTabColor); 
 const selected = useRef(false);
 const selectSymbol = useRef('');
 const { TabPane } = Tabs;
 useEffect(() => {
-}, []);
+    if(current=='B'){
+        setTabColor(themeColor.buyTabColor)
+    }else if(current=='S'){
+        setTabColor(themeColor.sellTabColor)
+    }else{
+        setTabColor(themeColor.tradingAccColor)
+    }
+}, [current]);
 const selectHandler = useCallback(async val => {
     const symbol = val.split(' ')[0];
     try {
@@ -107,8 +115,8 @@ const onTabChange = useCallback(val => {
                 .subBrokerage .left_box_inner .search_box .ant-select-selection-placeholder{line-height:40px;}
                 .subBrokerage .left_box_inner .ant-tabs-nav-wrap{padding:0;}
                 .subBrokerage .left_box_inner .ant-tabs .ant-tabs-tab{justify-content: center;width:33.3%;margin:0;font-size:16px;}
-                .subBrokerage .left_box_inner .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{color:#f45a4c;}
-                .subBrokerage .left_box_inner .ant-tabs .ant-tabs-ink-bar{background:#f45a4c;height:4px;}
+                .subBrokerage .left_box_inner .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{color:${tabColor};}
+                .subBrokerage .left_box_inner .ant-tabs .ant-tabs-ink-bar{background:${tabColor};height:4px;}
                 .subBrokerage .left_box_inner .ant-tabs>.ant-tabs-nav .ant-tabs-nav-list{width: 100%;}
                 .subBrokerage .left_box_inner .search_box .ant-select-selector,.ant-select:hover .ant-select-selector,
                 .ant-select:focus .ant-select-selector { border:none; box-shadow: none !important; }

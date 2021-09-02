@@ -135,6 +135,7 @@ const changeHandler = useCallback(value => {
                 {`
                 .subBrokerage .price_control{display: flex; flex-wrap: nowrap;}
                 .subBrokerage .price_control .btn__box-modal{display: flex; flex-wrap: nowrap;}
+                .subBrokerage .OrderBox_BS .ant-switch-checked{background-color:${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}}
                 .subBrokerage .ctrl_item_select .ant-select-selector,
                 .subBrokerage .ctrl_item_select .ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
                     border-color: transparent; background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
