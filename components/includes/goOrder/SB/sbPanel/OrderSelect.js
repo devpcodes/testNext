@@ -4,7 +4,7 @@ const { Option } = Select;
 const OrderSelect = ({ data, width, height, color, style, arrowLeft, ...props }) => {
     return (
         <>
-            <div className="select__container" style={style}>
+            <div className="select__container ordergo" style={style}>
                 <Select suffixIcon={<img src={selectIcon} />} {...props}>
                     {data.length >= 0 &&
                         data.map((item, index) => {
@@ -29,7 +29,7 @@ const OrderSelect = ({ data, width, height, color, style, arrowLeft, ...props })
                     border: none;
                 }
 
-                .select__container .ant-select-single .ant-select-selector .ant-select-selection-item,
+                .select__container.ordergo .ant-select-single .ant-select-selector .ant-select-selection-item,
                 .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
                     line-height: ${height};
                     color: #ffffff;

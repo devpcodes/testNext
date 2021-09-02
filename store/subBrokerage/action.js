@@ -6,3 +6,10 @@ export const setOrderList = orderList => {
         payload: orderList,
     };
 };
+
+export const setSymbolList = symbolList => {
+    return {
+        type: actionType.SET_SYMBOL,
+        payload: symbolList,
+    };
+};

@@ -14,7 +14,7 @@ const GtcPage = () => {
     };
     return (
         <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '-100px', right: 0 }}>
+            <div style={{ position: 'absolute', top: '-110px', right: 0 }}>
                 <IconBtn
                     onClick={reFreshHandler}
                     type={'refresh'}

@@ -88,7 +88,7 @@ const ShareholdingPage = () => {
 
     return (
         <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '-100px', width: '100%' }}>
+            <div style={{ position: 'absolute', top: '-110px', width: '100%' }}>
                 {showSell && (
                     <Button
                         style={{ marginBottom: '10px', position: 'absolute', left: 0 }}

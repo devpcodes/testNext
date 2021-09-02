@@ -89,7 +89,7 @@ const OrderStatusPage = () => {
                 reFreshHandler={reFreshHandler}
                 style={{
                     position: 'absolute',
-                    top: '-100px',
+                    top: '-110px',
                     right: 0,
                 }}
             />

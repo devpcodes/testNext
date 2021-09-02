@@ -11,7 +11,8 @@ const SearchAutoComplete = ({
     selectedHandler,
     marketType = ['S'],
     height = '38px',
-    placeholder = '請輸入股號或商品名稱'
+    placeholder = '請輸入股號或商品名稱',
+    className = '',
 }) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
@@ -91,7 +92,7 @@ const SearchAutoComplete = ({
 
     return (
         <>
-            <div className="autoComplete__container">
+            <div className={`autoComplete__container ${className}`}>
                 <AutoComplete
                     style={{ height: height }}
                     options={products}
@@ -139,7 +140,7 @@ const SearchAutoComplete = ({
                 }
                 .search__container .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
                     line-height: 36px;
-                    color: #6c7b94;
+                    color: #6c7b94 !important;
                 }
                 .autoComplete__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
                     border: solid 1px #e6ebf5;

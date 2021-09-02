@@ -19,7 +19,7 @@ const DealPageComponent = () => {
             <ControlBar
                 reFreshHandler={reFreshHandler}
                 typeChangeHandler={typeChangeHandler}
-                style={{ position: 'absolute', top: '-100px' }}
+                style={{ position: 'absolute', top: '-110px' }}
             />
             <DealTable type={type} controlReload={controlReload} />
         </div>

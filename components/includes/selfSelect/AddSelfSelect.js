@@ -6,7 +6,14 @@ import { useSelector } from 'react-redux';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
 const { Search } = Input;
 
-const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
+const AddSelfSelect = ({
+    tabkey,
+    reloadSelectReloadTime,
+    controlFunction,
+    width = '219px',
+    marketType = ['S', 'SB', 'F', 'O'],
+    className = '',
+}) => {
     const [inputVal, setInputVal] = useState('');
     const [searchData, setSearchData] = useState(null);
     const socalLoginData = useSelector(store => store.user.socalLogin);
@@ -22,17 +29,21 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
     };
 
     const addSelectStock = async () => {
-        const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-        const addReqData = {
-            selectId: tabkey,
-            symbol: searchData.symbol,
-            exchange: searchData.exchange,
-            market: searchData.marketType,
-            token: isSocalLogin ? getSocalToken() : getToken(),
-        };
-        const res = await fetchAddSelectStock(addReqData, isSocalLogin);
-        reloadSelectReloadTime();
-        setInputVal('');
+        if (controlFunction == null) {
+            const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+            const addReqData = {
+                selectId: tabkey,
+                symbol: searchData.symbol,
+                exchange: searchData.exchange,
+                market: searchData.marketType,
+                token: isSocalLogin ? getSocalToken() : getToken(),
+            };
+            const res = await fetchAddSelectStock(addReqData, isSocalLogin);
+            reloadSelectReloadTime();
+            setInputVal('');
+        } else {
+            controlFunction(searchData);
+        }
     };
 
     return (
@@ -42,7 +53,9 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
                     selectHandler={selectHandler}
                     parentValue={inputVal}
                     onChange={onChangeHandler}
-                    marketType={['S', 'SB', 'F', 'O']}
+                    marketType={marketType}
+                    width={width}
+                    className={className}
                 />
                 <button
                     className="add__stock__btn"
@@ -80,15 +93,17 @@ const AddSelfSelect = ({ tabkey, reloadSelectReloadTime }) => {
                 }
             `}</style>
             <style jsx global>{`
-                .ant-btn-primary,
+                .add__select__block .ant-btn-primary,
                 .ant-btn-primary:focus,
                 .ant-btn-primary:hover {
                     background: #c43826;
                     border-color: #c43826;
                 }
-                .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                .add__select__block .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
                     line-height: 36px;
                     color: #3f5372;
+                    font-size: 1.4rem;
+                    letter-spacing: 0;
                 }
                 .searchDropdown {
                     width: 350px !important;
