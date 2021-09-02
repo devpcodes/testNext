@@ -1,68 +1,53 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import ReactDragListView from 'react-drag-listview';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSymbolList } from '../../../../store/subBrokerage/action';
 import SymbolItem from './SymbolItem';
-const listData = [
-    {
-        title: 'AAPL',
-        description: 'Apple',
-    },
-    {
-        title: '00003',
-        description: '香港中華煤氣',
-    },
-    {
-        title: 'GOOGL',
-        description: 'Alphabet - Class A',
-    },
-    {
-        title: '9003',
-        description: 'Sotetsu Holdings,Inc.',
-    },
-    {
-        title: 'MIG',
-        description: 'Meadowbrook Insurance Group Inc.',
-    },
-];
-const SymbolList = () => {
-    const [data, setData] = useState([]);
+
+const SymbolList = ({ style }) => {
+    const dispatch = useDispatch();
+    const symbolList = useSelector(store => store.subBrokerage.symbolList);
 
     useEffect(() => {
-        const newData = listData.map((item, i) => {
-            item.id = i;
-            return item;
-        });
-        setData(newData);
+        if (localStorage.getItem('subBrokerage_symbolList')) {
+            const oldSymbolList = JSON.parse(localStorage.getItem('subBrokerage_symbolList'));
+            dispatch(setSymbolList(oldSymbolList));
+        }
     }, []);
 
+    useEffect(() => {
+        localStorage.setItem('subBrokerage_symbolList', JSON.stringify(symbolList));
+    }, [symbolList]);
+
     const delHandler = useCallback(id => {
-        const newData = data.filter(item => {
+        const newData = symbolList.filter(item => {
             if (item.id === id) {
                 return false;
             }
             return true;
         });
-        setData(newData);
+        dispatch(setSymbolList(newData));
     });
 
     const dragProps = {
         async onDragEnd(fromIndex, toIndex) {
-            const newData = [...data];
+            const newData = [...symbolList];
             const item = newData.splice(fromIndex, 1)[0];
             newData.splice(toIndex, 0, item);
-            setData(newData);
+            dispatch(setSymbolList(newData));
         },
         nodeSelector: '.container',
         handleSelector: '.drag',
     };
 
     return (
-        <div className="symbolList__container">
+        <div className="symbolList__container" style={style}>
             <ReactDragListView {...dragProps}>
-                {data.map(item => {
+                {symbolList.map(item => {
                     return (
                         <SymbolItem
-                            title={item.title}
-                            description={item.description}
+                            title={item.symbol}
+                            description={item.name}
                             delHandler={delHandler}
                             id={item.id}
                             key={item.id}
@@ -70,6 +55,12 @@ const SymbolList = () => {
                     );
                 })}
             </ReactDragListView>
+            <style jsx>{`
+                .symbolList__container {
+                    height: 500px;
+                    overflow: auto;
+                }
+            `}</style>
         </div>
     );
 };

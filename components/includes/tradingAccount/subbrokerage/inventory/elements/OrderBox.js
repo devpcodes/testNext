@@ -5,6 +5,7 @@ import { Tabs } from 'antd';
 import OrderBoxBS from './OrderBoxBS';
 import { SearchOutlined } from '@ant-design/icons';
 import SymbolList from '../../../../subBrokerage/elements/SymbolList';
+import SymbolInput from '../../../../subBrokerage/elements/SymbolInput';
 
 const OrderBox = () => {
     const [current, setCurrent] = useState('B');
@@ -38,7 +39,6 @@ const OrderBox = () => {
     const onTabChange = useCallback(val => {
         setCurrent(val);
     });
-
     return (
         <div className="left_box subBrokerage">
             <div className="left_box_inner">
@@ -62,7 +62,7 @@ const OrderBox = () => {
                                 </div>
                             );
                         case 'N':
-                            return '常用股的搜尋放這兒';
+                            return <SymbolInput />;
                         default:
                             return null;
                     }
@@ -82,7 +82,13 @@ const OrderBox = () => {
                         case 'S':
                             return <OrderBoxBS type={current} />;
                         case 'N':
-                            return <SymbolList />;
+                            return (
+                                <SymbolList
+                                    style={{
+                                        marginTop: '-15px',
+                                    }}
+                                />
+                            );
                         default:
                             return null;
                     }

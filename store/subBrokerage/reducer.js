@@ -21,6 +21,7 @@ const initialState = {
             aon: 'ANY',
         },
     ],
+    symbolList: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -29,6 +30,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 orderList: action.payload,
+            };
+        case actionType.SET_SYMBOL:
+            return {
+                ...state,
+                symbolList: action.payload,
             };
         default:
             return state;
