@@ -16,8 +16,8 @@ const SymbolInput = () => {
             message.warning('股號已設定');
             return;
         }
-        if (data.length >= 10) {
-            message.warning('常用股號最多設定十組');
+        if (data.length >= maxLength) {
+            message.warning(`常用股號最多設定${maxLength}組`);
             return;
         }
         data.push(value);
