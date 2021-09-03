@@ -1,5 +1,5 @@
 import { Input, Space } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import SearchAutoComplete from '../tradingAccount/vipInventory/SearchAutoComplete';
 import { fetchAddSelectStock } from '../../../services/selfSelect/addSelectStock';
 import { useSelector } from 'react-redux';
@@ -17,30 +17,47 @@ const AddSelfSelect = ({
     const [inputVal, setInputVal] = useState('');
     const [searchData, setSearchData] = useState(null);
     const socalLoginData = useSelector(store => store.user.socalLogin);
-
+    const currentData = useRef({});
     const selectHandler = (val, options) => {
         setInputVal(val);
         setSearchData(options.item);
+        currentData.current = options.item;
     };
 
     const onChangeHandler = val => {
-        setInputVal(val);
         setSearchData(null);
+    };
+
+    const onPressEnter = (value, products) => {
+        if (controlFunction != null) {
+            if (currentData.current?.symbol && value.split(' ')[1]) {
+                controlFunction(currentData.current);
+                return;
+            }
+        }
+
+        if (products[0]?.options[0]?.item.symbol) {
+            if (controlFunction == null && currentData.current?.symbol) {
+                addSelectStock();
+            }
+        }
     };
 
     const addSelectStock = async () => {
         if (controlFunction == null) {
-            const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
-            const addReqData = {
-                selectId: tabkey,
-                symbol: searchData.symbol,
-                exchange: searchData.exchange,
-                market: searchData.marketType,
-                token: isSocalLogin ? getSocalToken() : getToken(),
-            };
-            const res = await fetchAddSelectStock(addReqData, isSocalLogin);
-            reloadSelectReloadTime();
-            setInputVal('');
+            if (currentData.current?.symbol && inputVal.split(' ')[1]) {
+                const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
+                const addReqData = {
+                    selectId: tabkey,
+                    symbol: currentData.current.symbol,
+                    exchange: currentData.current.exchange,
+                    market: currentData.current.marketType,
+                    token: isSocalLogin ? getSocalToken() : getToken(),
+                };
+                const res = await fetchAddSelectStock(addReqData, isSocalLogin);
+                reloadSelectReloadTime();
+                setInputVal('');
+            }
         } else {
             controlFunction(searchData);
         }
@@ -56,6 +73,7 @@ const AddSelfSelect = ({
                     marketType={marketType}
                     width={width}
                     className={className}
+                    onPressEnter={onPressEnter}
                 />
                 <button
                     className="add__stock__btn"

@@ -7,6 +7,7 @@ const SearchAutoComplete = ({
     selectHandler,
     parentValue,
     onChange,
+    onPressEnter,
     width = false,
     selectedHandler,
     marketType = ['S'],
@@ -90,9 +91,14 @@ const SearchAutoComplete = ({
         }
     };
 
+    const onKeyDown = e => {
+        if (e.keyCode === 13 && typeof eval(onPressEnter) == 'function') {
+            onPressEnter(value, products);
+        }
+    };
     return (
         <>
-            <div className={`autoComplete__container ${className}`}>
+            <div className={`autoComplete__container ${className}`} onKeyDown={onKeyDown}>
                 <AutoComplete
                     style={{ height: height }}
                     options={products}

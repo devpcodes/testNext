@@ -10,6 +10,7 @@ import goOrder from './goOrder/reducer';
 import solace from './solace/reducer';
 import goOrderSB from './goOrderSB/reducer';
 import subBrokerage from './subBrokerage/reducer';
+import watchLists from './watchLists/reducer';
 const reducers = combineReducers({
     layout,
     goOrder,
@@ -22,6 +23,7 @@ const reducers = combineReducers({
     general,
     solace,
     subBrokerage,
+    watchLists,
 });
 
 export default reducers;
