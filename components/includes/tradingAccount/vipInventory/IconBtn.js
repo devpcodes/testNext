@@ -1,5 +1,6 @@
 import downloadIcon from '../../../../resources/images/components/tradingAccount/ic-download.svg';
 import refreshIcon from '../../../../resources/images/components/tradingAccount/c-refresh.svg';
+import infoIcon from '../../../../resources/images/components/tradingAccount/ic-info.svg';
 const IconBtn = ({ type, style, className, onClick }) => {
     const getImageHandler = type => {
         switch (type) {
@@ -7,6 +8,8 @@ const IconBtn = ({ type, style, className, onClick }) => {
                 return downloadIcon;
             case 'refresh':
                 return refreshIcon;
+            case 'info':
+                return infoIcon;
         }
     };
     return (

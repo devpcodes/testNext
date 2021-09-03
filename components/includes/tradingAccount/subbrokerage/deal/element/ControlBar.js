@@ -56,25 +56,85 @@ const ControlBar = ({ reFreshHandler, typeChangeHandler, style }) => {
         );
     };
     return (
-        <div style={{ textAlign: 'right', ...style }}>
-            <Radio.Group
-                style={{}}
-                options={options}
-                onChange={changeHandler}
-                value={val}
-                optionType="button"
-                buttonStyle="solid"
-            />
-            <Button style={{ height: '40px', marginRight: '5px' }} onClick={clickHandler}>
-                說明
-            </Button>
-            <IconBtn onClick={reFreshHandler} type={'refresh'} style={{ verticalAlign: 'top' }} />
+        <div className="dealControl__container" style={{ textAlign: 'left', ...style }}>
+            <div className="left">
+                <Radio.Group
+                    style={{}}
+                    options={options}
+                    onChange={changeHandler}
+                    value={val}
+                    optionType="button"
+                    buttonStyle="solid"
+                    className="dealRadio"
+                />
+            </div>
+            <div className="right">
+                {/* <Button style={{ height: '40px', marginRight: '5px' }} onClick={clickHandler}>
+                    說明
+                </Button> */}
+                <IconBtn onClick={clickHandler} type={'info'} style={{ verticalAlign: 'top' }} />
+                <IconBtn
+                    onClick={reFreshHandler}
+                    type={'refresh'}
+                    style={{ verticalAlign: 'top', marginLeft: '16px' }}
+                />
+            </div>
+            <style jsx>{`
+                .dealControl__container {
+                    width: 100%;
+                    /* display: flex;
+                    justify-content: space-between; */
+                }
+                .left {
+                    display: inline-block;
+                }
+                .right {
+                    display: inline-block;
+                    position: absolute;
+                    right: 0;
+                }
+            `}</style>
             <style global jsx>{`
                 .info {
                     color: #585858;
                 }
                 .confirm__container {
                     width: 70% !important;
+                }
+                .dealRadio .ant-radio-button-wrapper {
+                    text-align: center;
+                    width: 83px;
+                    height: 40px;
+                    line-height: 40px;
+                }
+                .dealRadio .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+                    color: #fff;
+                    background: #c43826;
+                    border-color: #c43826;
+                }
+                .dealRadio .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+                    color: #fff;
+                    background: #c43826;
+                    border-color: #c43826;
+                }
+                .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
+                    background-color: white;
+                }
+                .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover:before {
+                    background-color: white;
+                }
+                .dealRadio
+                    .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+                    border-right-color: white;
+                }
+                .dealRadio .ant-radio-button-wrapper:first-child {
+                    border-right-color: white !important;
+                }
+                .dealRadio .ant-radio-button-wrapper:hover {
+                    color: #0d1623;
+                }
+                .dealRadio .ant-radio-button-wrapper {
+                    color: #0d1623;
                 }
             `}</style>
         </div>
