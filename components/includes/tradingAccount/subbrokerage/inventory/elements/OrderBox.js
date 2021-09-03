@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import SearchAutoComplete from '../../../vipInventory/SearchAutoComplete';
 import { Tabs } from 'antd';
 import OrderBoxBS from './OrderBoxBS';
-import { SearchOutlined } from '@ant-design/icons';
 import SymbolList from '../../../../subBrokerage/elements/SymbolList';
 import SymbolInput from '../../../../subBrokerage/elements/SymbolInput';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
@@ -31,6 +29,7 @@ const OrderBox = () => {
         try {
             const res = await fetchSnapshot([symbol]);
             if (Array.isArray(res) && res.length > 0) {
+                console.log('[DATA]', res);
                 if (res[0].UpLimit == 9999.95) {
                     setPriceVal(formatPriceByUnit(symbol, res[0].Close * 1.2));
                 } else {
@@ -59,21 +58,7 @@ const OrderBox = () => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            return (
-                                <div className="ctrl_item">
-                                    <div className="search_box">
-                                        <SearchOutlined style={{ fontSize: '16px', color: '#333' }} />
-                                        <SearchAutoComplete
-                                            selectHandler={selectHandler}
-                                            onChange={onSeChangeHandler}
-                                            width={'100%'}
-                                            height={'40px'}
-                                            selectedHandler={selectedHandler}
-                                            placeholder={'股票代號／名稱'}
-                                        />
-                                    </div>
-                                </div>
-                            );
+                            return <div className="space_box"></div>;
                         case 'N':
                             return <SymbolInput />;
                         default:
@@ -109,12 +94,8 @@ const OrderBox = () => {
             </div>
             <style jsx>
                 {`
-                    .search_box {
-                        display: flex;
-                        align-items: center;
-                        border: 1px solid #e6ebf5;
-                        border-radius: 2px;
-                        padding: 0 10px;
+                    .space_box {
+                        height: 85px;
                     }
                     .ctrl_item {
                         min-height: 46px;
@@ -134,17 +115,12 @@ const OrderBox = () => {
             </style>
             <style jsx global>
                 {`
-                    .subBrokerage .left_box_inner .search_box .autoComplete__container {
-                        margin-left: 10px;
-                    }
-                    .subBrokerage .left_box_inner .search_box .ant-select-selector {
-                        border: none !important;
-                    }
-                    .subBrokerage .left_box_inner .search_box .ant-select {
-                        vertical-align: super;
-                    }
-                    .subBrokerage .left_box_inner .search_box .ant-select-selection-placeholder {
-                        line-height: 40px;
+                    .subBrokerage .left_box_inner .ant-tabs-tab-btn:active,
+                    .subBrokerage .left_box_inner.ant-tabs-tab-btn:focus,
+                    .subBrokerage .left_box_inner .ant-tabs-tab-remove:active,
+                    .subBrokerage .left_box_inner .ant-tabs-tab-remove:focus,
+                    .subBrokerage .left_box_inner .ant-tabs-tab:hover {
+                        color: rgba(0, 0, 0, 0.65);
                     }
                     .subBrokerage .left_box_inner .ant-tabs-nav-wrap {
                         padding: 0;

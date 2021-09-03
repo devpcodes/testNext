@@ -3,59 +3,88 @@ import { useSelector, useDispatch } from 'react-redux';
 import SearchAutoComplete from '../../../vipInventory/SearchAutoComplete';
 import ChangeNum from '../../../../goOrder/searchList/ChangeNum';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
-import { Select, Switch, Button, Tabs } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { setPrice, setQueryPrice, setSBBs } from '../../../../../../store/goOrderSB/action';
-
+import { Select, Switch, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { postStockInfo } from '../../../../../../services/components/goOrder/sb/postStockInfo';
+import { getToken } from '../../../../../../services/user/accessToken';
+import { fetchQuerySubBrokerageQuote } from '../../../../../../services/sb/querySubBrokerageQuote';
+import { getPriceJumpPoint } from '../../../../../../services/components/goOrder/sb/getPriceJumpPoint';
+import { getTT } from '../../../../../../services/components/goOrder/sb/dataMapping';
+import { getCookie } from '../../../../../../services/components/layouts/cookieController';
+import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
+import { submitService } from '../../../../../../services/components/goOrder/sb/submitService';
 const OrderBoxBS = ({ type }) => {
-    //test0902 t1
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const touch = useSelector(store => store.goOrderSB.touch);
-    const productInfo = useSelector(store => store.goOrder.productInfo);
+    // const productInfo = useSelector(store => store.goOrder.productInfo);
     const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const queryQty = useSelector(store => store.goOrderSB.queryQty);
     const [disabledPlus, setDisabledPlus] = useState(false);
-    const currentAccount = useSelector(store => store.user.currentAccount);
-    const [data, setData] = useState({});
+    const [aon, setAon] = useState('ANY');
     const [bs, setBs] = useState('B');
     const [color, setColor] = useState(null);
+    const [usSelect, setUsSelect] = useState(false);
+    const [dateSelect, setDateSelect] = useState(false);
     const selected = useRef(false);
     const selectSymbol = useRef('');
-    const [val, setVal] = useState('');
-    const { Option } = Select;
-    const { TabPane } = Tabs;
+    const [date, setDate] = useState('');
+    const [valPrice, setValPrice] = useState('');
+    const [valNum, setValNum] = useState('');
+    const [selectData, setSelectData] = useState([]);
+    const [inputVal, setInputVal] = useState('');
+    const [productInfo, setProductInfo] = useState({});
+    const [priceJumpPoint, setPriceJumpPoint] = useState('');
+    const [inputMarket, setInputMarket] = useState('');
     const dispatch = useDispatch();
-
+    const { Option } = Select;
     useEffect(() => {
         setBs(type);
     }, [type]);
+    useEffect(() => {
+        if(inputVal!=''){
+           queryStockQuote(); 
+           queryStockInfo()
+        }
+    }, [productInfo]);
 
-    const selectHandler = useCallback(async val => {
-        const symbol = val.split(' ')[0];
+    const selectHandler = useCallback(async (val, option) => {
         try {
-            const res = await fetchSnapshot([symbol]);
-            if (Array.isArray(res) && res.length > 0) {
-                if (res[0].UpLimit == 9999.95) {
-                    setPriceVal(formatPriceByUnit(symbol, res[0].Close * 1.2));
-                } else {
-                    setPriceVal(formatPriceByUnit(symbol, res[0].UpLimit));
-                }
-                selectSymbol.current = symbol;
+            let info = option.item
+            if (info.market == 'US') {
+                setUsSelect(true);
+            } else {
+                setUsSelect(false);
             }
+            setInputVal(val);
+            setProductInfo(info);
+            console.log('[handler]', val, option);
         } catch (error) {
             console.log(error);
         }
     });
-    const onSeChangeHandler = useCallback(val => {
-        // selectHandler(val);
+
+    const onDateChange = e => {
+        let d = e.target.value.replaceAll('-', '');
+        setDate(d);
+        console.log('date', d);
+    };
+
+    const onChangeHandler = useCallback(val => {
+        console.log(val);
     });
+
     const selectedHandler = useCallback(bol => {
         selected.current = bol;
     });
-    const handleChange = useCallback(val => {});
-    const onChange = useCallback(val => {});
-    const onTabChange = useCallback(val => {
-        dispatch(setSBBs(val));
+
+    const handleChange = useCallback(val => {
+        setAon(val);
     });
+
+    const onChange = useCallback(val => {
+        setDateSelect(val);
+    });
+
     const plusHandler = useCallback((val, productInfo) => {
         if (isNaN(parseFloat(val))) {
             return;
@@ -81,11 +110,131 @@ const OrderBoxBS = ({ type }) => {
             }
         }
     });
+
     const changeHandler = useCallback(value => {
         setVal(value);
     });
+    
+    const submitHandler = async () => {
+        try {
+            setSubmitLoading(true);
+            const res = await submitService({
+                CID: getWebId(platform, 'recommisiioned'),
+                StockID: StockIdC.current,
+                Price: PriceC.current,
+                Qty: QtyC.current,
+                BS: BSC.current,
+                GTCDate: GTCDateC.current,
+                aon: aonC.current,
+                TouchedPrice: TouchedPriceC.current,
+                Exchid: marketC.current,
+                Creator: currentAccount.idno,
+                token: getToken(),
+                currentAccount,
+            });
+            setSubmitLoading(false);
+            message.success({
+                content: '委託已送出',
+            });
+            closeHandler();
+            dispatch(setSBActiveTabKey('3'));
+        } catch (error) {
+            setSubmitLoading(false);
+            message.info({
+                content: error,
+            });
+        }
+    };
+    const queryStockQuote = async () => {
+        try {
+            let token = getToken();
+            let stock_list = {
+                symbol: productInfo.symbol,
+                exchange: productInfo.market,
+            };
+            let key = productInfo.symbol+'.'+productInfo.market
+            console.log('stock_list', stock_list);
+            let result = await fetchQuerySubBrokerageQuote([stock_list], token, true);
+            console.log('[queryStockQuote]', result[key]);
+            let price = result[key].refPrice || result[key].preClose || ''
+            setValPrice(price)
+            setValNum(1)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const queryStockInfo = async () => {
+        try {
+            let AID = currentAccount.broker_id + currentAccount.account;
+            let token = getToken();
+            let Exchid = productInfo.market;
+            let stockID = productInfo.symbol;
+            let result = await postStockInfo({ AID, Exchid, stockID, token });
+            setPriceJumpPoint(result['@LotSize'])
+            console.log('[queryStockInfo]', result);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const addLocal = async() => {
+        try{
+            const res = await submitService({
+                CID: getWebId('newweb', 'recommisiioned'),
+                StockID: productInfo.symbol,
+                Price: valPrice,
+                Qty: valNum,
+                BS: bs,
+                GTCDate: date,
+                aon: aon,
+                TouchedPrice: 0,
+                Exchid: productInfo.market,
+                Creator: currentAccount.idno,
+                token: getToken(),
+                currentAccount,
+            });
+            console.log('addLocal',res)
+            let TT = getTT(productInfo.market)
+            let data = {
+                AID: currentAccount.broker_id + currentAccount.account,
+                BS: bs,
+                CID: getWebId('newweb', 'recommisiioned'),
+                ClientIP: getCookie('client_ip'),
+                Creator: currentAccount.idno,
+                Exchid: productInfo.market,
+                OT: '0',
+                Price: valPrice,
+                PriceType: '0',
+                Qty: valNum,
+                StockID: productInfo.symbol,
+                TT: TT,
+                GTCDate: date,
+                lotSize: priceJumpPoint,
+                priceJumpPoint: 0.01,
+                aon: aon       
+            }
+            console.log('POSTDATA',data)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className="OrderBox_BS">
+            <div className="ctrl_item for_search">
+                <div className="search_box">
+                    <SearchOutlined style={{ fontSize: '16px', color: '#333' }} />
+                    <SearchAutoComplete
+                        selectHandler={selectHandler}
+                        onChange={onChangeHandler}
+                        width={'100%'}
+                        height={'40px'}
+                        marketType={['SB']}
+                        selectedHandler={selectedHandler}
+                        placeholder={'股票代號／名稱'}
+                    />
+                </div>
+                <div className="symbo_text">{inputVal}</div>
+            </div>
             <div className="ctrl_item">
                 <ChangeNum
                     title={'價格'}
@@ -93,9 +242,9 @@ const OrderBoxBS = ({ type }) => {
                     textAlign={'center'}
                     inputWidth={'calc(100% - 100px - 54px - 8px)'}
                     style={{ width: '100%' }}
-                    val={val}
-                    plusClickHandler={plusHandler.bind(null, val, productInfo)}
-                    minusClickHandler={minusHandler.bind(null, val, productInfo)}
+                    val={valPrice}
+                    plusClickHandler={plusHandler.bind(null, valPrice, productInfo)}
+                    minusClickHandler={minusHandler.bind(null, valPrice, productInfo)}
                     changeHandler={changeHandler}
                 />
             </div>
@@ -107,32 +256,56 @@ const OrderBoxBS = ({ type }) => {
                     inputWidth={'calc(100% - 100px - 54px - 8px)'}
                     style={{ width: '100%' }}
                     changeHandler={changeHandler}
-                    val={val}
-                    minusClickHandler={minusHandler.bind(null, val, stockInfo)}
+                    val={valNum}
+                    plusClickHandler={plusHandler.bind(null, valNum, stockInfo)}
+                    minusClickHandler={minusHandler.bind(null, valNum, stockInfo)}
                     disabledPlus={disabledPlus}
                 />
             </div>
-            <div className="ctrl_item mt-8 ctrl_item_select">
-                <span>條件</span>
-                <Select defaultValue="ANY" style={{ width: 110 }} onChange={handleChange} size="large">
-                    <Option value="ANY">ANY</Option>
-                    <Option value="AON">AON</Option>
-                </Select>
-            </div>
-            <div className="ctrl_item mt-8">
-                <span>長效單</span>
-                <Switch onChange={onChange} />
-            </div>
+            {usSelect ? (
+                <>
+                    <div className="ctrl_item mt-8 ctrl_item_select">
+                        <span>條件</span>
+                        <Select defaultValue="ANY" style={{ width: 110 }} onChange={handleChange} size="large">
+                            <Option value="ANY">ANY</Option>
+                            <Option value="AON">AON</Option>
+                        </Select>
+                    </div>
+                    <div className="ctrl_item mt-8">
+                        <span>長效單</span>
+                        <Switch onChange={onChange} />
+                        {dateSelect ? <input type="date" onChange={onDateChange} /> : ''}
+                    </div>
+                </>
+            ) : (
+                ''
+            )}
+
             <div className="ctrl_item mt-8 submit_box">
                 <Button type="primary" size="large">
                     委託買進
                 </Button>
                 <br></br>
-                <Button size="large">加入暫存夾</Button>
+                <Button size="large" onClick={addLocal}>
+                    加入暫存夾
+                </Button>
             </div>
             <div className="text_view">預估金額 4,325元(台幣)</div>
             <style jsx>
                 {`
+                    input[type='date'] {
+                        margin-left: 10px;
+                    }
+                    .symbo_text {
+                        font-size: 14px;
+                        line-height: 2;
+                    }
+                    .for_search {
+                        position: absolute;
+                        top: 15px;
+                        left: 0;
+                        width: 100%;
+                    }
                     .mt-8 {
                         margin-top: 8px;
                     }
@@ -157,6 +330,13 @@ const OrderBoxBS = ({ type }) => {
                         line-height: 2;
                         margin-top: 20px;
                         text-align: center;
+                    }
+                    .search_box {
+                        display: flex;
+                        align-items: center;
+                        border: 1px solid #e6ebf5;
+                        border-radius: 2px;
+                        padding: 0 10px;
                     }
                 `}
             </style>
@@ -195,6 +375,18 @@ const OrderBoxBS = ({ type }) => {
                     .subBrokerage .left_box_inner .submit_box .ant-btn-primary {
                         background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                         border-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
+                    }
+                    .subBrokerage .left_box_inner .search_box .autoComplete__container {
+                        margin-left: 10px;
+                    }
+                    .subBrokerage .left_box_inner .search_box .ant-select-selector {
+                        border: none !important;
+                    }
+                    .subBrokerage .left_box_inner .search_box .ant-select {
+                        vertical-align: super;
+                    }
+                    .subBrokerage .left_box_inner .search_box .ant-select-selection-placeholder {
+                        line-height: 40px;
                     }
                 `}
             </style>

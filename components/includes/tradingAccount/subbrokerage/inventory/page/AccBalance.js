@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Modal, Select, Button, Input } from 'antd';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import {
@@ -7,6 +8,7 @@ import {
     postBankBalance,
     postWithdrawApply,
 } from '../../../../../../services/components/goOrder/sb/postInventory';
+import { setBalanceData } from '../../../../../../store/accBalance/action';
 import { secretToggle } from '../../../../../../services/components/goOrder/sb/secretToggle';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
@@ -14,8 +16,8 @@ import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
 import { setSBAccountBalance } from '../../../../../../store/sb/action';
 const AccBalance = () => {
-    const dispatch = useDispatch();
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const accBalanceData = useSelector(store => store.accBalance.bankData);
     const platform = usePlatform();
     const [accountType, setAccountType] = useState('');
     const [inputData, setInputData] = useState(null);
@@ -42,7 +44,7 @@ const AccBalance = () => {
     const [bottomLoading, setBottomLoading] = useState(true);
     const [error, setError] = useState([]);
     const [coBackMsg, setCoBackMsg] = useState({ amount: '', no: '' });
-    //
+    const dispatch = useDispatch();
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -86,16 +88,14 @@ const AccBalance = () => {
             let AID = currentAccount.broker_id + currentAccount.account;
             let UID = currentAccount.idno;
             postBankBalance(AID, getToken(), UID).then(res => {
+                let base = res.detail
+                console.log('ORIGIN',base)
                 if (settleType == '2') {
                     setBackact(res.act_backact);
                 } else if (settleType == '4') {
                     setBackact(res.ntd_backact);
                 }
-                secretToggle(res.detail, hidden, ['currency', 'name', 'amt']).then(res => {
-                    console.log(res);
-                    setBankData(res);
-                    setBottomLoading(false);
-                });
+
             });
         }
     }, [settleType, refresh]);
@@ -177,11 +177,14 @@ const AccBalance = () => {
 
     const secretChanger = e => {
         e.preventDefault();
+        if(hidden){
+            secretToggle(bankData, ['currency', 'name', 'amt']).then(res => {
+                setBankData(res);
+            });
+        }else{
+          setBankData(accBalanceData)  
+        }
         setHidden(!hidden);
-        secretToggle(res.detail, !hidden, ['currency', 'name', 'amt']).then(res => {
-            setBankData(res);
-            setBottomLoading(false);
-        });
     };
 
     const showCashModal = e => {
@@ -290,11 +293,13 @@ const AccBalance = () => {
                     <Button onClick={e => showModal(e, 0)}>出金說明</Button>
                 </div>
                 <div>
+                    <Button onClick={e => secretChanger(e)}>{hidden?<EyeInvisibleOutlined />:<EyeOutlined />}</Button>
                     <Button onClick={e => showModal(e, 1)}>說明</Button>
                     <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn">
                         {' '}
                     </IconBtn>
                 </div>
+
                 <Modal
                     title={modalText.title}
                     visible={isModalVisible}

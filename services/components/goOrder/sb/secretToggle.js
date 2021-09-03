@@ -1,16 +1,13 @@
 import { getA8Instance, getDivoInstance } from '../../../myAxios';
-import { getCurrency, getMarket } from './dataMapping';
-import { getCookie } from '../../layouts/cookieController';
-import { getWebId } from '../getWebId';
-import { sign } from '../../../webCa';
-import moment from 'moment';
+import { useSelector } from 'react-redux';
+
+
 
 export const secretToggle = async (data, hidden, keys)=>{
-    if(hidden){
-    
+    const accBalanceData = useSelector(store => store.accBalance.bankData);
     let data_ = data
-    console.log('[data]',data)
-        keys.map((x,i)=>{
+    if(hidden){
+    keys.map((x,i)=>{
             let ds = data.map((y,j)=>{
                 let n  = y[x].length
                 let star = ''
@@ -20,10 +17,10 @@ export const secretToggle = async (data, hidden, keys)=>{
                 data_[j][x]=star                
             })
             return ds
-        })    
-        return data_ 
+        })  
+          return data_         
     }else{
-
+        return accBalanceData
     }
-
+        
 }
