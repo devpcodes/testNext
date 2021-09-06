@@ -1,5 +1,4 @@
 import React, { useState, memo, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { Modal, Button, Input } from 'antd';
 import { fetchAddSelectGroup } from '../../../services/selfSelect/addSelectGroup';
 import { getToken } from '../../../services/user/accessToken';
