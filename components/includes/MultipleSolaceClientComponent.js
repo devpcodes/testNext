@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useRef, useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { solaceClient } from '../../services/solaceClient';
@@ -8,13 +8,18 @@ import { loadScriptByURL } from '../../services/loadScriptByURL';
 import { checkLogin } from '../../services/components/layouts/checkLogin';
 import { Mptp } from './Mptp';
 
-const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
+const MultipleSolaceClientComponent = memo(({ subscribeTopic, idno, delay }) => {
     const solace = useRef(null);
     const dispatch = useDispatch();
     const topic = useRef([]);
     const solaceData = useRef({});
+    const isUpdate = useRef(null);
     // const currentSubscribe = useRef([]);
     const [solaceLoaded, setSolaceLoaded] = useState(false);
+
+    setInterval(() => {
+        isUpdate.current = true;
+    }, delay);
 
     useEffect(() => {
         loadScriptByURL('solace', `${process.env.NEXT_PUBLIC_SUBPATH}/js/solclient.js`, solaceLoadedHandler);
@@ -39,6 +44,9 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
     const MptpIns = new Mptp();
 
     const solaceLoadedHandler = () => {
+        // console.log("----------------------------")
+        // console.log(idno)
+        // console.log("----------------------------")
         if (solace.current == null) {
             solace.current = solaceClient('', idno);
             solace.current.connect('mpack');
@@ -49,50 +57,54 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
         }
     };
 
-    // const solaceEventHandler = xhr => {
-    //     if (xhr && xhr.topic) {
-    //         const mptpIndex = MptpIns.get(xhr.topic.split('/', 3).join('/'));
-    //         let solaceMptpData = {};
-    //         let code = '';
-    //         if (xhr.data.length === mptpIndex.length) {
-    //             mptpIndex.forEach((data, index) => {
-    //                 solaceMptpData[mptpIndex[index]] = xhr.data[index];
-    //                 if (data === 'Code') {
-    //                     code = xhr.data[index];
-    //                 }
-    //             });
-    //         } else {
-    //             // 欄位錯誤 ( 停止訂閱 )
-    //             console.log('資料長度跟 mptp長度不符。');
-    //         }
-    //         if (!solaceData.current[code]) {
-    //             solaceData.current[code] = {};
-    //         }
-    //         // Object.assign(solaceData.current[code], solaceMptpData)
-    //         // const reservation_prop = Object.assign(solaceData.current[code], solaceMptpData)
-    //         // console.log(reservation_prop)
-    //         // solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
-    //         // dispatch(setSolaceData(Math.random()));
-    //     }
-    // };
-
     const solaceEventHandler = xhr => {
         if (xhr && xhr.topic) {
             const mptpIndex = MptpIns.get(xhr.topic.split('/', 3).join('/'));
             let solaceMptpData = {};
+            let code = '';
             if (xhr.data.length === mptpIndex.length) {
                 mptpIndex.forEach((data, index) => {
                     solaceMptpData[mptpIndex[index]] = xhr.data[index];
+                    solaceMptpData.Topic = xhr.topic.split('/', 3).join('/');
+                    if (data === 'Code') {
+                        code = xhr.data[index];
+                    }
                 });
-                solaceMptpData.Topic = xhr.topic.split('/', 3).join('/');
             } else {
                 // 欄位錯誤 ( 停止訂閱 )
                 console.log('資料長度跟 mptp長度不符。');
             }
-            solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
-            dispatch(setSolaceData(solaceData.current));
+            if (!solaceData.current[code]) {
+                solaceData.current[code] = {};
+            }
+            Object.assign(solaceData.current[code], solaceMptpData);
+            const updateData = JSON.parse(JSON.stringify(solaceData.current));
+            if (isUpdate.current) {
+                dispatch(setSolaceData(updateData));
+                if (delay) {
+                    isUpdate.current = false;
+                }
+            }
         }
     };
+
+    // const solaceEventHandler = useCallback(xhr => {
+    //     if (xhr && xhr.topic) {
+    //         const mptpIndex = MptpIns.get(xhr.topic.split('/', 3).join('/'));
+    //         let solaceMptpData = {};
+    //         if (xhr.data.length === mptpIndex.length) {
+    //             mptpIndex.forEach((data, index) => {
+    //                 solaceMptpData[mptpIndex[index]] = xhr.data[index];
+    //             });
+    //             solaceMptpData.Topic = xhr.topic.split('/', 3).join('/');
+    //         } else {
+    //             // 欄位錯誤 ( 停止訂閱 )
+    //             console.log('資料長度跟 mptp長度不符。');
+    //         }
+    //         solaceData.current = solaceMptpData; // 單筆單筆更新 solaceData
+    //         dispatch(setSolaceData(solaceData.current));
+    //     }
+    // });
 
     const subscribeHandler = () => {
         if (JSON.stringify(subscribeTopic) != JSON.stringify(topic.current)) {
@@ -124,6 +136,6 @@ const MultipleSolaceClientComponent = ({ subscribeTopic, idno }) => {
         }
     };
     return <></>;
-};
+});
 
 export default memo(MultipleSolaceClientComponent);
