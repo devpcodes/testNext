@@ -9,7 +9,7 @@ import {
     postWithdrawApply,
 } from '../../../../../../services/components/goOrder/sb/postInventory';
 import { setBalanceData } from '../../../../../../store/accBalance/action';
-import { secretToggle } from '../../../../../../services/components/goOrder/sb/secretToggle';
+import { secretToggle } from '../../../../../../services/components/tradingAccount/subBrokerage/secretToggle';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
 import AccountTable from '../../../vipInventory/AccountTable';
@@ -23,7 +23,7 @@ const AccBalance = () => {
     const [inputData, setInputData] = useState(null);
     const [settleType, setSettleType] = useState('');
     const [currency, setCurrency] = useState('');
-    const [hidden, setHidden] = useState(true);
+    const [hidden, setHidden] = useState(false);
     const [dataSource, setDataSource] = useState({
         amount: '',
         balance: '',
@@ -72,7 +72,7 @@ const AccBalance = () => {
     });
 
     useEffect(() => {
-        //console.log("[ACC]",currentAccount)
+        console.log("[ACC]",fetchData)
         if (fetchData) {
             setDataSource(fetchData);
             if (fetchData.settle_type !== settleType) {
@@ -87,16 +87,23 @@ const AccBalance = () => {
             setBottomLoading(true);
             let AID = currentAccount.broker_id + currentAccount.account;
             let UID = currentAccount.idno;
-            postBankBalance(AID, getToken(), UID).then(res => {
-                let base = res.detail
-                console.log('ORIGIN',base)
+            const result = postBankBalance(AID, getToken(), UID)
                 if (settleType == '2') {
                     setBackact(res.act_backact);
                 } else if (settleType == '4') {
                     setBackact(res.ntd_backact);
-                }
+                }            
+            
+            // .then(res => {
+            //     let base = res.detail
+            //     console.log('ORIGIN',base)
+                // if (settleType == '2') {
+                //     setBackact(res.act_backact);
+                // } else if (settleType == '4') {
+                //     setBackact(res.ntd_backact);
+                // }
 
-            });
+            // });
         }
     }, [settleType, refresh]);
 
@@ -177,14 +184,16 @@ const AccBalance = () => {
 
     const secretChanger = e => {
         e.preventDefault();
-        if(hidden){
-            secretToggle(bankData, ['currency', 'name', 'amt']).then(res => {
-                setBankData(res);
-            });
+        if(hidden===false){
+            // console.log('hidden1',hidden)
+             let result = secretToggle(dataSource, ['balance', 'buyingPower', 'currency'])
+             setDataSource(result)
+             setHidden(true);
         }else{
-          setBankData(accBalanceData)  
+            // console.log('hidden2',hidden)
+            setDataSource(fetchData)  
+            setHidden(false);
         }
-        setHidden(!hidden);
     };
 
     const showCashModal = e => {
@@ -283,7 +292,7 @@ const AccBalance = () => {
                     <Select defaultValue={dataCurrent} style={{ width: 120 }} onChange={handleChange}>
                         <Option value="2">美國</Option>
                         <Option value="0">香港</Option>
-                        <Option value="1">日本</Option>
+                        <Option value="1">日本</Option> 
                         <Option value="8">滬股通</Option>
                         <Option value="9">深股通</Option>
                     </Select>
@@ -293,7 +302,7 @@ const AccBalance = () => {
                     <Button onClick={e => showModal(e, 0)}>出金說明</Button>
                 </div>
                 <div>
-                    <Button onClick={e => secretChanger(e)}>{hidden?<EyeInvisibleOutlined />:<EyeOutlined />}</Button>
+                    <Button onClick={secretChanger}>{hidden?<EyeInvisibleOutlined />:<EyeOutlined />}</Button>
                     <Button onClick={e => showModal(e, 1)}>說明</Button>
                     <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn">
                         {' '}
@@ -386,7 +395,7 @@ const AccBalance = () => {
                     }}
                 />
             </div>
-            {settleType == '2' || settleType == '4' ? (
+            {/* {settleType == '2' || settleType == '4' ? (
                 <div className="bank_table">
                     <p>
                         {settleType == '2' ? '外幣' : '台幣'}自有帳戶:<span>{backact}</span>
@@ -413,7 +422,7 @@ const AccBalance = () => {
                         }}
                     />
                 </div>
-            ) : null}
+            ) : null} */}
 
             <style jsx>
                 {`

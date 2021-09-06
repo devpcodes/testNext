@@ -9,7 +9,7 @@ const SearchAutoComplete = ({
     onChange,
     onPressEnter,
     width = false,
-    selectedHandler,
+    selectedHandler, //回覆搜尋後是否選定 (boolean)
     marketType = ['S'],
     height = '38px',
     placeholder = '請輸入股號或商品名稱',
