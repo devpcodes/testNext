@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import ReactDragListView from 'react-drag-listview';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSymbolList } from '../../../../store/subBrokerage/action';
+import Empty from './Empty';
 import SymbolItem from './SymbolItem';
 
 const SymbolList = ({ style }) => {
@@ -39,9 +40,11 @@ const SymbolList = ({ style }) => {
         nodeSelector: '.container',
         handleSelector: '.drag',
     };
-
     return (
         <div className="symbolList__container" style={style}>
+            {symbolList.length === 0 && (
+                <Empty style={{ marginTop: '46px' }} text="目前還沒加入個股請使用上方搜尋列新增個股" />
+            )}
             <ReactDragListView {...dragProps}>
                 {symbolList.map(item => {
                     return (

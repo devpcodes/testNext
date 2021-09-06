@@ -8,8 +8,8 @@ const ControlBar = ({ filterHandler, reFreshHandler, style }) => {
     return (
         <div className="controlBar" style={style}>
             <div className="touchPriceFilter">
-                <Switch onChange={onChange} />
                 <span>觸價單</span>
+                <Switch onChange={onChange} />
             </div>
 
             <IconBtn onClick={reFreshHandler} type={'refresh'} style={{ verticalAlign: 'top' }} />
@@ -21,11 +21,18 @@ const ControlBar = ({ filterHandler, reFreshHandler, style }) => {
                 .touchPriceFilter {
                     display: inline-block;
                     margin-right: 20px;
-                    margin-top: 10px;
+                    margin-top: 7px;
                     font-size: 1.6rem;
                 }
                 .touchPriceFilter span {
                     margin-left: 5px;
+                    margin-right: 9px;
+                    vertical-align: middle;
+                }
+            `}</style>
+            <style global jsx>{`
+                .controlBar .ant-switch-checked {
+                    background-color: #c43826;
                 }
             `}</style>
         </div>

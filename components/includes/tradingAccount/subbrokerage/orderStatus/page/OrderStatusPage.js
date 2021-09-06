@@ -83,7 +83,9 @@ const OrderStatusPage = () => {
 
     return (
         <div className="vipOrderStatus__container">
-            {showDel && <DelButton text="刪單" style={{ position: 'absolute' }} onClick={delClickHandler} />}
+            {showDel && (
+                <DelButton text="刪單" style={{ position: 'absolute', top: '-110px' }} onClick={delClickHandler} />
+            )}
             <ControlBar
                 filterHandler={filterHandler}
                 reFreshHandler={reFreshHandler}
