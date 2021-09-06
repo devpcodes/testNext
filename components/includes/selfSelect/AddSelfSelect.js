@@ -71,7 +71,9 @@ const AddSelfSelect = memo(
                         selectHandler={selectHandler}
                         parentValue={inputVal}
                         onChange={onChangeHandler}
-                        marketType={['S', 'SB', 'F', 'O']}
+                        marketType={marketType}
+                        width={width}
+                        className={className}
                         onPressEnter={onPressEnter}
                     />
                     <button
@@ -110,15 +112,17 @@ const AddSelfSelect = memo(
                     }
                 `}</style>
                 <style jsx global>{`
-                    .ant-btn-primary,
+                    .add__select__block .ant-btn-primary,
                     .ant-btn-primary:focus,
                     .ant-btn-primary:hover {
                         background: #c43826;
                         border-color: #c43826;
                     }
-                    .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                    .add__select__block .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
                         line-height: 36px;
                         color: #3f5372;
+                        font-size: 1.4rem;
+                        letter-spacing: 0;
                     }
                     .searchDropdown {
                         width: 350px !important;
