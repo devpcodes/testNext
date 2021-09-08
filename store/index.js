@@ -12,6 +12,8 @@ import goOrderSB from './goOrderSB/reducer';
 import subBrokerage from './subBrokerage/reducer';
 import watchLists from './watchLists/reducer';
 import accBalance from './accBalance/reducer';
+import activeReturn from './activeReturn/reducer';
+
 const reducers = combineReducers({
     layout,
     goOrder,
@@ -26,6 +28,7 @@ const reducers = combineReducers({
     subBrokerage,
     watchLists,
     accBalance,
+    activeReturn,
 });
 
 export default reducers;
