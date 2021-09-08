@@ -32,11 +32,11 @@ const ActiveReturn = () => {
         try {
             const socketData = JSON.parse(e.data);
             if (socketData.topic.indexOf('TFT') >= 0) {
+                openNotification('topRight', socketData);
             }
             if (socketData.topic.indexOf('R/F/S') >= 0) {
             }
 
-            openNotification('topRight', socketData);
             dispatch(setWebSocketInfo(socketData));
         } catch (err) {
             console.log('websocket data error:', err);
