@@ -50,7 +50,7 @@ const SelfSelectTable = memo(
 
         // 查詢庫存股票
         const { data: inventoryStockData } = useSWR(
-            !isSocalLogin && selectGroupID === '0' && token ? [token, currentAccount, inventoryReloadTime] : null,
+            !isSocalLogin && selectGroupID === '0' && token ? [token, inventoryReloadTime] : null,
             fetchQuerySelectInventoryStock,
             {
                 onError: (error, key) => {
@@ -150,7 +150,7 @@ const SelfSelectTable = memo(
 
         useEffect(() => {
             if (inventoryStockData) {
-                setRequestData(inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]);
+                setRequestData(inventoryStockData);
             } else if (selectStocks) {
                 setRequestData(selectStocks);
             }
@@ -192,12 +192,8 @@ const SelfSelectTable = memo(
                     return className;
                 };
 
-                const tableData =
-                    selectGroupID === '0' && inventoryStockData
-                        ? inventoryStockData[`${currentAccount.broker_id}${currentAccount.account}`]
-                        : selectStocks;
+                const tableData = selectGroupID === '0' && inventoryStockData ? inventoryStockData : selectStocks;
                 const tableRowData = [];
-                console.log(tableData);
                 if (tableData && Array.isArray(tableData) && tableData.length > 0) {
                     tableData.some((stock, index) => {
                         let stockData = {};
