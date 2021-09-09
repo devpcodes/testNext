@@ -1,4 +1,5 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
+import moment from 'moment';
 import { notification } from 'antd';
 import { getCookie } from '../../services/components/layouts/cookieController';
 import { webSocketLogin } from '../../services/components/goOrder/websocketService';
@@ -6,14 +7,18 @@ import { themeColor } from './goOrder/panel/PanelTabs';
 import { useDispatch, useSelector } from 'react-redux';
 import { setWebSocketInfo } from '../../store/activeReturn/action';
 import { fetchOneContracts } from '../../services/stock/fetchOneContracts';
+import { postSbcoCode } from '../../services/components/goOrder/sb/postSbcoCode';
+import { throttle } from '../../services/throttle';
 // import { fetchOneContracts } from '../../services/stock/fetchOneContracts';
 
+var myWebsocket;
 const ActiveReturn = () => {
     const dispatch = useDispatch();
     const websocketInfo = useSelector(store => store.activeReturn?.websocketInfo);
+
     useEffect(() => {
         if (getCookie('accounts')) {
-            const myWebsocket = webSocketLogin(getCookie('accounts'));
+            myWebsocket = webSocketLogin(getCookie('accounts'));
             myWebsocket.onmessage = sockeHandler;
         }
 
@@ -35,8 +40,8 @@ const ActiveReturn = () => {
                 openNotification('topRight', socketData);
             }
             if (socketData.topic.indexOf('R/F/S') >= 0) {
+                throttle(openNotificationSB.bind(null, 'topRight', socketData), 1000);
             }
-
             dispatch(setWebSocketInfo(socketData));
         } catch (err) {
             console.log('websocket data error:', err);
@@ -188,18 +193,34 @@ const ActiveReturn = () => {
         }
     };
 
+    const getIcon = (msg, socketData) => {
+        if (msg.indexOf('失敗') >= 0) {
+            return <span>!</span>;
+        }
+        if (msg.indexOf('改價') >= 0 || msg.indexOf('改量') >= 0) {
+            return <span>改</span>;
+        }
+        if (msg.indexOf('成交') >= 0) {
+            return <span>成</span>;
+        }
+        if (msg.indexOf('成功') >= 0) {
+            return <span>{socketData.BS === 'B' ? '買' : '賣'}</span>;
+        }
+    };
+
     const openNotification = async (placement, socketData) => {
         if (socketData?.topic) {
             const res = await fetchOneContracts([socketData.STOCK_ID]);
 
             let message =
-                getTradeType(socketData).result +
+                getTradeType(socketData)?.result +
                 ' ' +
                 getProductType(socketData).name +
                 getTradeType(socketData).type +
                 ' ' +
                 getOrderType(socketData);
             if (socketData?.ERR_MSG) message = '委託失敗' + ' ' + socketData.STOCK_ID + res[0]?.Name;
+            const icon = getIcon(message, socketData);
             notification.info({
                 className: 'activeReturn',
                 message: message,
@@ -235,7 +256,68 @@ const ActiveReturn = () => {
                             boxShadow: 'rgb(123 123 123 / 18%) 4px 4px 3px 0px',
                         }}
                     >
-                        <span>{socketData.BS === 'B' ? '買' : '賣'}</span>
+                        {icon}
+                    </div>
+                ),
+                onClose: () => {
+                    dispatch(setWebSocketInfo({}));
+                },
+            });
+        }
+    };
+
+    const openNotificationSB = async (placement, socketData) => {
+        if (socketData?.topic) {
+            let stockName = '';
+            if (socketData?.EXCHANGE && socketData?.STOCK_ID) {
+                const res = await postSbcoCode([{ exchange: socketData.EXCHANGE, code: socketData.STOCK_ID }]);
+                stockName = res[0]?.name;
+            }
+
+            let message =
+                getTradeType(socketData)?.result +
+                ' ' +
+                getProductType(socketData)?.name +
+                getTradeType(socketData)?.type;
+            if (socketData?.ERR_MSG) message = '委託失敗' + ' ' + socketData.STOCK_ID + ' ' + stockName;
+            const icon = getIcon(message, socketData);
+
+            notification.info({
+                className: 'activeReturn',
+                message: message,
+                description: socketData?.ERR_MSG
+                    ? decodeURIComponent(escape(socketData.ERR_MSG))
+                    : socketData.STOCK_ID +
+                      ' ' +
+                      stockName +
+                      ' / ' +
+                      getTradeType(socketData)?.price +
+                      ' / ' +
+                      getTradeType(socketData)?.amount +
+                      '股',
+                placement,
+                style: {
+                    background: socketData.BS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor,
+                    width: '300px',
+                },
+                top: '59px',
+                icon: (
+                    <div
+                        style={{
+                            background: 'white',
+                            width: '45px',
+                            height: '45px',
+                            textAlign: 'center',
+                            paddingTop: '11px',
+                            fontSize: '32px',
+                            fontWeight: 'bold',
+                            borderRadius: '2px',
+                            marginLeft: '-12px',
+                            color: `${socketData.BS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}`,
+                            boxShadow: 'rgb(123 123 123 / 18%) 4px 4px 3px 0px',
+                        }}
+                    >
+                        {icon}
                     </div>
                 ),
                 onClose: () => {

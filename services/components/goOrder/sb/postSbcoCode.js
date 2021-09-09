@@ -4,6 +4,7 @@ export const postSbcoCodeWithSwr = async strObj => {
         return await postSbcoCode(JSON.parse(strObj));
     }
 };
+// stockList = [{exchange: "SEHK", code: "00001"}]
 export const postSbcoCode = async stockList => {
     var url = `/codeList/sbco_code`;
     try {
