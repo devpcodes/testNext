@@ -15,7 +15,7 @@ var myWebsocket;
 const ActiveReturn = () => {
     const dispatch = useDispatch();
     const websocketInfo = useSelector(store => store.activeReturn?.websocketInfo);
-
+    const currResult = useRef('');
     useEffect(() => {
         if (getCookie('accounts')) {
             myWebsocket = webSocketLogin(getCookie('accounts'));
@@ -40,7 +40,15 @@ const ActiveReturn = () => {
                 openNotification('topRight', socketData);
             }
             if (socketData.topic.indexOf('R/F/S') >= 0) {
-                throttle(openNotificationSB.bind(null, 'topRight', socketData), 1000);
+                // 一樣的結果1秒彈出一次，不同就直接彈出；因為複委回報會跳很多次一樣的event回來....
+                if (getTradeType(socketData)?.result) {
+                    if (getTradeType(socketData).result === currResult.current) {
+                        throttle(openNotificationSB.bind(null, 'topRight', socketData), 1000);
+                    } else {
+                        currResult.current = getTradeType(socketData).result;
+                        openNotificationSB('topRight', socketData);
+                    }
+                }
             }
             dispatch(setWebSocketInfo(socketData));
         } catch (err) {
