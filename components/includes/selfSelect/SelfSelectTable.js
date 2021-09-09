@@ -363,7 +363,7 @@ const SelfSelectTable = memo(
                 <div className="select__group__tab">
                     <div className="select__group__block"></div>
                     <Tabs onChange={changeSelectGroup} activeKey={selectGroupID}>
-                        {!isSocalLogin && <TabPane tab="庫存" key="0" />}
+                        {!isSocalLogin && <TabPane tab="台股庫存" key="0" />}
                         {!!fetchSelectGroupData &&
                             fetchSelectGroupData.map((val, key) => {
                                 return (
