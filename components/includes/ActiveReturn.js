@@ -42,7 +42,8 @@ const ActiveReturn = () => {
             if (socketData.topic.indexOf('R/F/S') >= 0) {
                 // 一樣的結果1秒彈出一次，不同就直接彈出；因為複委回報會跳很多次一樣的event回來....
                 if (getTradeType(socketData)?.result) {
-                    if (getTradeType(socketData).result === currResult.current) {
+                    // console.log('-------', getTradeType(socketData).result, currResult.current)
+                    if (getTradeType(socketData).result === currResult.current || !currResult.current) {
                         throttle(openNotificationSB.bind(null, 'topRight', socketData), 1000);
                     } else {
                         currResult.current = getTradeType(socketData).result;
