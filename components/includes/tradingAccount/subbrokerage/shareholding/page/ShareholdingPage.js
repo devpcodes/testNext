@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../../../../store/components/layouts/action';
 import { submitListService } from '../../../../../../services/components/goOrder/sb/submitService';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
+import DelButton from '../../../vipOrderStatus/buttons/DelButton';
 
 const ShareholdingPage = () => {
     const [showSell, setShowSell] = useState(false);
@@ -85,17 +86,22 @@ const ShareholdingPage = () => {
             return (prev += 1);
         });
     };
-
     return (
         <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', top: '-110px', width: '100%' }}>
                 {showSell && (
-                    <Button
-                        style={{ marginBottom: '10px', position: 'absolute', left: 0 }}
+                    // <Button
+                    //     style={{ marginBottom: '10px', position: 'absolute', left: 0 }}
+                    //     onClick={sellClickHandler.bind(null, selectData)}
+                    // >
+                    //     選取賣出
+                    // </Button>
+                    <DelButton
+                        text="送單"
+                        type={'submit'}
+                        style={{ backgroundColor: '#10419c' }}
                         onClick={sellClickHandler.bind(null, selectData)}
-                    >
-                        選取賣出
-                    </Button>
+                    />
                 )}
                 <IconBtn
                     onClick={reFreshHandler}

@@ -345,7 +345,7 @@ const DealTable = ({ type, controlReload }) => {
                     dataIndex: 'dealAveragePrice',
                     key: 'dealAveragePrice',
                     align: 'right',
-                    width: 100,
+                    width: 200,
                     render: (text, record) => {
                         return <span>{!isNaN(text) ? formatNum(parseFloat(text)) : 0}</span>;
                     },

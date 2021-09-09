@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Modal, Input, Select, Switch, message } from 'antd';
+import { Button, Modal, Input, Select, Checkbox, message } from 'antd';
 import moment from 'moment';
 import useSWR, { cache } from 'swr';
 import AccountTable from '../../../vipInventory/AccountTable';
@@ -13,6 +13,7 @@ import { submitService } from '../../../../../../services/components/goOrder/sb/
 import { usePlatform } from '../../../../../../hooks/usePlatform';
 import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
 import { setModal } from '../../../../../../store/components/layouts/action';
+import SellButton from '../../../vipInventory/buttons/SellButton';
 // import DateSelectBox from '../../../../goOrder/SB/sbPanel/DateSelectBox';
 
 const { Option } = Select;
@@ -159,23 +160,10 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
 
     useEffect(() => {
         console.log('rerander...');
+
         const newColumns = [
             {
-                title: '動作',
-                dataIndex: 'active',
-                key: 'active',
-                width: 100,
-                align: 'center',
-                render: (text, record) => {
-                    return (
-                        <div>
-                            <Button onClick={confirmHandler.bind(null, record)}>賣出</Button>
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '市場別',
+                title: '市場',
                 dataIndex: 'exch',
                 key: 'exch',
                 ...getColumnSearchProps('exch'),
@@ -186,12 +174,26 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                 },
             },
             {
-                title: '股票名稱',
+                title: '商品',
                 dataIndex: 'StockID',
                 key: 'StockID',
                 width: 100,
                 render: (text, record) => {
                     return <div>{text}</div>;
+                },
+            },
+            {
+                title: '動作',
+                dataIndex: 'active',
+                key: 'active',
+                width: 100,
+                align: 'center',
+                render: (text, record) => {
+                    return (
+                        <div>
+                            <SellButton onClick={confirmHandler.bind(null, record)} text="賣出" />
+                        </div>
+                    );
                 },
             },
             {
@@ -265,12 +267,16 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                     console.log('....record useGtc', record.useGtc);
                     return record.exch === 'US' ? (
                         <div>
-                            <Switch
+                            <Checkbox
+                                onChange={gtcChangeHandler.bind(null, record, data)}
+                                checked={record.useGtc}
+                            ></Checkbox>
+                            {/* <Switch
                                 size="small"
                                 style={{ marginRight: '4px' }}
                                 onChange={gtcChangeHandler.bind(null, record, data)}
                                 checked={record.useGtc}
-                            />
+                            /> */}
                             <Input
                                 type="date"
                                 style={{
@@ -278,6 +284,7 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
                                     height: '33px',
                                     paddingLeft: '8px',
                                     width: '150px',
+                                    marginLeft: '8px',
                                 }}
                                 value={record?.gtcDate || moment().add(6, 'months').format('YYYY-MM-DD')}
                                 max={moment().add(6, 'months').format('YYYY-MM-DD')}
@@ -377,10 +384,10 @@ const ShareholdingTable = ({ showSellBtn, controlReload, submitSuccess, parentSe
         setData(newData);
     };
 
-    const gtcChangeHandler = (record, data, value) => {
+    const gtcChangeHandler = (record, data, e) => {
         const newData = data.map(item => {
             if (item.key === record.key) {
-                item.useGtc = value;
+                item.useGtc = e.target.checked;
             }
             return item;
         });
