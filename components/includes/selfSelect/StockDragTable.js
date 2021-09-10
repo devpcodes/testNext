@@ -97,6 +97,30 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             ),
         },
         {
+            title: '最高',
+            width: 92,
+            dataIndex: 'high',
+            align: 'right',
+            render: data => (
+                <span className={data.class}>
+                    {data.text == '0.00' ? '--' : data.text}
+                    {data.simtrade ? '*' : ''}
+                </span>
+            ),
+        },
+        {
+            title: '最低',
+            width: 92,
+            dataIndex: 'low',
+            align: 'right',
+            render: data => (
+                <span className={data.class}>
+                    {data.text == '0.00' ? '--' : data.text}
+                    {data.simtrade ? '*' : ''}
+                </span>
+            ),
+        },
+        {
             title: '成交量',
             width: 100,
             dataIndex: 'totalVolume',
@@ -307,6 +331,16 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                         return getClass(solaceData[selectData.code], solaceData[selectData.code].DiffRate, false, true);
                     })()),
                         parseFloat(solaceData[selectData.code].DiffRate) < 0;
+                    selectData.high.text = parseFloat(solaceData[selectData.code].High).toFixed(2);
+                    (selectData.high.class = (() => {
+                        return getClass(solaceData[selectData.code], solaceData[selectData.code].High, true, false);
+                    })()),
+                        (selectData.high.simtrade = solaceData[selectData.code].Simtrade);
+                    selectData.low.text = parseFloat(solaceData[selectData.code].Low).toFixed(2);
+                    (selectData.low.class = (() => {
+                        return getClass(solaceData[selectData.code], solaceData[selectData.code].Low, true, false);
+                    })()),
+                        (selectData.low.simtrade = solaceData[selectData.code].Simtrade);
                 }
                 if (solaceData[selectData.code].BidPrice && solaceData[selectData.code].AskPrice) {
                     selectData.buyPrice.text =
