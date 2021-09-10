@@ -343,6 +343,12 @@ const SelfSelectTable = memo(
                             stockData.sellPrice = {
                                 text: '--',
                             };
+                            stockData.high = {
+                                text: '--',
+                            };
+                            stockData.low = {
+                                text: '--',
+                            };
                             stockData.totalVolume = { text: '--' };
                             stockData.reference = {
                                 text:
