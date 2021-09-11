@@ -75,7 +75,7 @@ function Self_select_stocks() {
 
             <style jsx>{`
                 .select__box {
-                    max-width: 1200px;
+                    max-width: 1560px;
                     margin: 0 auto;
                     padding: 20px 15px 22px 15px;
                 }

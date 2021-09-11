@@ -259,6 +259,24 @@ const SelfSelectTable = memo(
                                             return getClass(snapshotData, snapshotData.SellPrice, true, false);
                                         })(),
                                     };
+                                    stockData.high = {
+                                        text:
+                                            !snapshotData.High || snapshotData.High.toFixed(2) == 0
+                                                ? '--'
+                                                : snapshotData.High.toFixed(2),
+                                        class: (() => {
+                                            return getClass(snapshotData, snapshotData.High, true, false);
+                                        })(),
+                                    };
+                                    stockData.low = {
+                                        text:
+                                            !snapshotData.Low || snapshotData.Low.toFixed(2) == 0
+                                                ? '--'
+                                                : snapshotData.Low.toFixed(2),
+                                        class: (() => {
+                                            return getClass(snapshotData, snapshotData.Low, true, false);
+                                        })(),
+                                    };
                                     stockData.totalVolume = {
                                         text: snapshotData.TotalVolume ? snapshotData.TotalVolume : '--',
                                     };
@@ -323,6 +341,12 @@ const SelfSelectTable = memo(
                                 text: '--',
                             };
                             stockData.sellPrice = {
+                                text: '--',
+                            };
+                            stockData.high = {
+                                text: '--',
+                            };
+                            stockData.low = {
                                 text: '--',
                             };
                             stockData.totalVolume = { text: '--' };
