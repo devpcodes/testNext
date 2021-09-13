@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const next = require('next');
 const { join } = require('path');
 const { parse } = require('url');
@@ -12,8 +13,10 @@ const port = 3888;
 app.prepare().then(() => {
     const server = express();
 
+    server.use(compression());
     server.use('/widget', express.static('./widget'));
     server.use('/signature', express.static('./signature'));
+    server.use('/files', express.static('./files'));
 
     server.get('*', (req, res) => {
         if (req.url.includes('/sw')) {
