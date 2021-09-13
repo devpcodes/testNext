@@ -15,6 +15,8 @@ var myWebsocket;
 const ActiveReturn = () => {
     const dispatch = useDispatch();
     const websocketInfo = useSelector(store => store.activeReturn?.websocketInfo);
+
+    const stmbCodeList_future = useRef([]);
     const currResult = useRef('');
     useEffect(() => {
         if (getCookie('accounts')) {
@@ -36,6 +38,8 @@ const ActiveReturn = () => {
     const sockeHandler = useCallback(e => {
         try {
             const socketData = JSON.parse(e.data);
+            const topicArgs = socketData.topic.split('/');
+            // console.log('-------', socketData, topicArgs);
             if (socketData.topic.indexOf('TFT') >= 0) {
                 openNotification('topRight', socketData);
             }
@@ -51,11 +55,30 @@ const ActiveReturn = () => {
                     }
                 }
             }
+            if (topicArgs[2] === 'F') {
+                futureOptionsHandler(socketData);
+                // openNotificationF('topRight', socketData);
+            }
             dispatch(setWebSocketInfo(socketData));
         } catch (err) {
             console.log('websocket data error:', err);
         }
     });
+
+    const futureOptionsHandler = socketData => {
+        switch (socketData.COMTYPE) {
+            case '0':
+            case '2':
+                console.log('ffff', socketData);
+                openNotificationF('topRight', socketData);
+                break;
+
+            case '1':
+            case '3':
+                console.log('ooooo', socketData);
+                break;
+        }
+    };
 
     const getProductType = message => {
         if (message.SYS_ID == '03' || message.SYS_ID == '05') {
@@ -216,6 +239,49 @@ const ActiveReturn = () => {
             return <span>{socketData.BS === 'B' ? '買' : '賣'}</span>;
         }
     };
+    //message就是socketdata
+    const getFuturesInfo = message => {
+        message.category = message.COMNO = message.COMNO.trim();
+        message.COMYM = message.COMYM.trim();
+        switch (message.COMNO) {
+            case 'FITE':
+                message.category = 'EXF';
+                break;
+            case 'FITF':
+                message.category = 'FXF';
+                break;
+            case 'FIMTX':
+                message.category = 'MXF'; //小台
+                break;
+            case 'FIMTX1':
+                message.COMYM = message.COMYM + 'W1'; //周小台
+                message.category = 'MXF';
+                break;
+            case 'FIMTX2':
+                message.COMYM = message.COMYM + 'W2'; //周小台
+                message.category = 'MXF';
+                break;
+            case 'FIMTX4':
+                message.COMYM = message.COMYM + 'W4'; //周小台
+                message.category = 'MXF';
+                break;
+            case 'FIMTX5':
+                message.COMYM = message.COMYM + 'W5'; //周小台
+                message.category = 'MXF';
+                break;
+            default:
+                switch (message.COMNO.length) {
+                    case 4:
+                        message.category = message.COMNO.substring(2) + 'F';
+                        break;
+                    case 5:
+                        message.category = message.COMNO.substring(2);
+                        break;
+                    default:
+                        message.category = message.COMNO;
+                }
+        }
+    };
 
     const openNotification = async (placement, socketData) => {
         if (socketData?.topic) {
@@ -334,6 +400,10 @@ const ActiveReturn = () => {
                 },
             });
         }
+    };
+
+    const openNotificationF = socketData => {
+        // getFuturesInfo(socketData);
     };
 
     return (
