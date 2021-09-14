@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useEffect, useCallback, memo, useRef } from 'react';
 import moment from 'moment';
 import { notification } from 'antd';
 import { getCookie } from '../../services/components/layouts/cookieController';
@@ -21,8 +21,9 @@ const ActiveReturn = () => {
     const websocketInfo = useSelector(store => store.activeReturn?.websocketInfo);
 
     const stmbCodeList_future = useRef([]);
+    const stmbCodeList_option = useRef([]);
     const currResult = useRef('');
-    // const currSocket = useRef({});
+    const currSocket = useRef({});
     useEffect(() => {
         if (getCookie('accounts')) {
             myWebsocket = webSocketLogin(getCookie('accounts'));
@@ -45,7 +46,7 @@ const ActiveReturn = () => {
             const socketData = JSON.parse(e.data);
             const topicArgs = socketData.topic.split('/');
 
-            console.log('-------', socketData, topicArgs);
+            // console.log('-------', socketData, topicArgs);
             if (socketData.topic.indexOf('TFT') >= 0) {
                 openNotification('topRight', socketData);
             }
@@ -63,13 +64,14 @@ const ActiveReturn = () => {
             }
             if (topicArgs[2] === 'F') {
                 // 一段時間內只執行最後一次的呼叫
-                debounce(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
-                // if(currSocket.current == JSON.stringify(socketData)) {
-                //     throttle(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000)
-                // }else{
-                //     futureOptionsHandler(socketData, topicArgs[3]);
-                //     currSocket.current = socketData;
-                // }
+                // debounce(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
+
+                if (currSocket.current == JSON.stringify(socketData)) {
+                    throttle(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
+                } else {
+                    futureOptionsHandler(socketData, topicArgs[3]);
+                    currSocket.current = socketData;
+                }
             }
             dispatch(setWebSocketInfo(socketData));
         } catch (err) {
@@ -78,7 +80,7 @@ const ActiveReturn = () => {
     });
 
     const futureOptionsHandler = (socketData, Oore) => {
-        console.log('ffff', socketData);
+        // console.log('ffff', socketData);
         switch (socketData.COMTYPE) {
             case '0':
             case '2':
@@ -87,7 +89,7 @@ const ActiveReturn = () => {
 
             case '1':
             case '3':
-                console.log('ooooo', socketData);
+                openNotificationO('topRight', socketData, Oore);
                 break;
         }
     };
@@ -312,7 +314,7 @@ const ActiveReturn = () => {
                         message.category = message.COMNO;
                 }
         }
-        console.log('why............', message.category, message.COMNO);
+        // console.log('why............', message.category, message.COMNO);
         return message.category;
     };
     //message就是socketdata
@@ -320,10 +322,8 @@ const ActiveReturn = () => {
         const category = getFutureCategory(message);
         let cateObj = {};
         try {
-            const res = await postStmbCode();
-            console.log('res', res);
+            const res = await postStmbCode('F', 'contract');
             stmbCodeList_future.current = res.content;
-            console.log('========', stmbCodeList_future.current[category], stmbCodeList_future.current, category);
             if (stmbCodeList_future.current.hasOwnProperty(message.category)) {
                 cateObj = stmbCodeList_future.current[message.category].find(function (d) {
                     return d.deliverymonth == message.COMYM.trim();
@@ -389,6 +389,53 @@ const ActiveReturn = () => {
                 return '退單基準價';
             default:
                 return '';
+        }
+    };
+
+    const getOptionInfo = async message => {
+        message.category = message.COMNO = message.COMNO.trim();
+        message.COMYM = message.COMYM.trim();
+        //周台選對照表
+        switch (message.COMNO) {
+            case 'TX1':
+                message.COMYM = message.COMYM + 'W1';
+                message.category = 'TXO';
+                break;
+            case 'TX2':
+                message.COMYM = message.COMYM + 'W2';
+                message.category = 'TXO';
+                break;
+            case 'TX4':
+                message.COMYM = message.COMYM + 'W4';
+                message.category = 'TXO';
+                break;
+            case 'TX5':
+                message.COMYM = message.COMYM + 'W5';
+                message.category = 'TXO';
+                break;
+        }
+        try {
+            let cateObj = {};
+            const res = await postStmbCode('O', 'delivery');
+            stmbCodeList_option.current = res.content;
+            if (stmbCodeList_option.current.hasOwnProperty(message.category)) {
+                cateObj = stmbCodeList_option.current[message.category].find(function (d) {
+                    return d.deliverymonth == message.COMYM.trim();
+                });
+                return {
+                    name:
+                        (!!cateObj ? cateObj.csname + ' ' : '') +
+                        message.category +
+                        ' ' +
+                        message.COMYM +
+                        ' 月 ' +
+                        message.STKPRC +
+                        message.CALLPUT,
+                    msg: message,
+                };
+            }
+        } catch (error) {
+            throw error?.message;
         }
     };
 
@@ -515,8 +562,7 @@ const ActiveReturn = () => {
         const info = await getFuturesInfo(socketData);
         socketData.startText = '';
         if (getFuturesOrderType(socketData) == '刪單') socketData.startText = '取消';
-        console.log('info', info, socketData, getFuturesResult(socketData.CODE, getOorE(Oore)), Oore);
-        const message =
+        let message =
             getFuturesResult(socketData.CODE, Oore) +
             ' ' +
             getOPOF(socketData.OPOF) +
@@ -525,12 +571,74 @@ const ActiveReturn = () => {
             socketData.startText +
             getBS(socketData.PS).name;
         socketData.BS = socketData.PS;
+
+        if (socketData?.ERRMSG?.trim()) message = '委託失敗' + ' ' + info.name;
         const icon = getIcon(message, socketData);
-        console.log('oore', Oore);
         if (getOorE(Oore) == '成') {
             socketData.PRICE1 = parseFloat(socketData.TRDPRC1); //價格
             socketData.ORDQTY = parseInt(socketData.TRDQTY); //數量
         }
+        notification.info({
+            className: 'activeReturn',
+            message: message,
+            description: socketData?.ERRMSG?.trim()
+                ? decodeURIComponent(escape(socketData.ERRMSG))
+                : info.name + ' / ' + parseFloat(socketData?.PRICE1) + ' / ' + parseInt(socketData?.ORDQTY) + '口',
+
+            placement,
+            style: {
+                background: socketData.PS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor,
+                width: '300px',
+            },
+            top: '59px',
+            icon: (
+                <div
+                    style={{
+                        background: 'white',
+                        width: '45px',
+                        height: '45px',
+                        textAlign: 'center',
+                        paddingTop: '11px',
+                        fontSize: '32px',
+                        fontWeight: 'bold',
+                        borderRadius: '2px',
+                        marginLeft: '-12px',
+                        color: `${socketData.PS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}`,
+                        boxShadow: 'rgb(123 123 123 / 18%) 4px 4px 3px 0px',
+                    }}
+                >
+                    {icon}
+                </div>
+            ),
+            onClose: () => {
+                dispatch(setWebSocketInfo({}));
+            },
+        });
+    };
+
+    const openNotificationO = async (placement, socketData, Oore) => {
+        const info = await getOptionInfo(socketData);
+        socketData.startText = '';
+        if (getFuturesOrderType(socketData) == '刪單') socketData.startText = '取消';
+        let message =
+            getFuturesResult(socketData.CODE, Oore) +
+            ' ' +
+            getOPOF(socketData.OPOF) +
+            getFuturesOrderType(socketData) +
+            ' ' +
+            socketData.startText +
+            getBS(socketData.PS).name;
+
+        socketData.BS = socketData.PS;
+
+        if (socketData?.ERRMSG?.trim()) message = '委託失敗' + ' ' + info.name;
+        const icon = getIcon(message, socketData);
+
+        if (getOorE(Oore) == '成') {
+            socketData.PRICE1 = parseFloat(socketData.TRDPRC1); //價格
+            socketData.ORDQTY = parseInt(socketData.TRDQTY); //數量
+        }
+
         notification.info({
             className: 'activeReturn',
             message: message,
@@ -586,5 +694,8 @@ const ActiveReturn = () => {
         </>
     );
 };
-
-export default ActiveReturn;
+function arePropsEqual(prevProps, nextProps) {
+    let propsEqual = true;
+    return propsEqual;
+}
+export default memo(ActiveReturn, arePropsEqual);
