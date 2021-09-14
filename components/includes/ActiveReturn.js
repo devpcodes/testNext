@@ -64,14 +64,14 @@ const ActiveReturn = () => {
             }
             if (topicArgs[2] === 'F') {
                 // 一段時間內只執行最後一次的呼叫
-                // debounce(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
+                debounce(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
 
-                if (currSocket.current == JSON.stringify(socketData)) {
-                    throttle(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
-                } else {
-                    futureOptionsHandler(socketData, topicArgs[3]);
-                    currSocket.current = socketData;
-                }
+                // if (currSocket.current == JSON.stringify(socketData)) {
+                //     throttle(futureOptionsHandler.bind(null, socketData, topicArgs[3]), 1000);
+                // } else {
+                //     futureOptionsHandler(socketData, topicArgs[3]);
+                //     currSocket.current = socketData;
+                // }
             }
             dispatch(setWebSocketInfo(socketData));
         } catch (err) {
