@@ -5,7 +5,7 @@ import OrderBoxBS from './OrderBoxBS';
 import SymbolList from '../../../../subBrokerage/elements/SymbolList';
 import SymbolInput from '../../../../subBrokerage/elements/SymbolInput';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
-const OrderBox = () => {
+const OrderBox = ({tabDefault, orderData}) => {
     const [current, setCurrent] = useState('B');
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
     const selected = useRef(false);
@@ -51,6 +51,10 @@ const OrderBox = () => {
         setCurrent(val);
     });
 
+    // const toOrderBox = useCallback(data => {
+    //     setOrderData(data);
+    // }); 
+
     return (
         <div className="left_box subBrokerage">
             <div className="left_box_inner">
@@ -78,7 +82,10 @@ const OrderBox = () => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            return <OrderBoxBS type={current} />;
+                            return <OrderBoxBS 
+                                        type={current} 
+                                        orderData={orderData}
+                                    />;
                         case 'N':
                             return (
                                 <SymbolList

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Modal, Select, Button, Input } from 'antd';
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import {
@@ -14,7 +13,7 @@ import { getToken } from '../../../../../../services/user/accessToken';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
-import { setSBAccountBalance } from '../../../../../../store/sb/action';
+import ItemCard from '../elements/ItemCard';
 const AccBalance = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const accBalanceData = useSelector(store => store.accBalance.bankData);
@@ -40,7 +39,7 @@ const AccBalance = () => {
     const [modalText, setModalText] = useState({ title: '', content: '' });
     const [backact, setBackact] = useState('');
     const [bankData, setBankData] = useState('');
-    const [topLoading, setTopLoading] = useState(true);
+    const [icBoxOpen, setIcBoxOpen] = useState(false);
     const [bottomLoading, setBottomLoading] = useState(true);
     const [error, setError] = useState([]);
     const [coBackMsg, setCoBackMsg] = useState({ amount: '', no: '' });
@@ -85,28 +84,32 @@ const AccBalance = () => {
         //datacount: 1, currency: "USD", name: "美元", amt: 213.75
         if (settleType == '2' || settleType == '4') {
             setBottomLoading(true);
-            let AID = currentAccount.broker_id + currentAccount.account;
-            let UID = currentAccount.idno;
-            const result = postBankBalance(AID, getToken(), UID)
-                if (settleType == '2') {
-                    setBackact(res.act_backact);
-                } else if (settleType == '4') {
-                    setBackact(res.ntd_backact);
-                }            
-            
-            // .then(res => {
-            //     let base = res.detail
-            //     console.log('ORIGIN',base)
-                // if (settleType == '2') {
-                //     setBackact(res.act_backact);
-                // } else if (settleType == '4') {
-                //     setBackact(res.ntd_backact);
-                // }
-
-            // });
+            getBankData()
         }
     }, [settleType, refresh]);
-
+    
+    const getBankData = async() => {
+        let AID = currentAccount.broker_id + currentAccount.account;
+        let UID = currentAccount.idno;
+        const result = await postBankBalance(AID, getToken(), UID)
+        if (settleType == '2') {
+            setBackact(result.act_backact);
+        } else if (settleType == '4') {
+            setBackact(result.ntd_backact);
+        } 
+        
+        let bankData_ = result.detail.map( (x,i) =>{
+            let obj = {
+                key:i,
+                icon: x.currency,
+                title: x.name+' '+x.currency,
+                content:x.amt
+            }
+            return obj
+        })
+        setBankData(bankData_)          
+        console.log('ORIGIN',bankData_)
+    }
     const columns = [
         {
             title: '幣別',
@@ -200,6 +203,10 @@ const AccBalance = () => {
         e.preventDefault();
         setInputData(dataSource.balance ? dataSource.balance : 0);
         setIsCashModalVisible(true);
+    };
+    const IcBoxController = (e) => {
+        e.preventDefault();
+        setIcBoxOpen(!icBoxOpen)
     };
     const showModal = (e, n) => {
         e.preventDefault();
@@ -296,24 +303,47 @@ const AccBalance = () => {
                         <Option value="8">滬股通</Option>
                         <Option value="9">深股通</Option>
                     </Select>
-                    <Button type="primary" onClick={showCashModal}>
+                    {/* <Button className="co_btn" type="primary" onClick={showCashModal}>
                         出金
-                    </Button>
-                    <Button onClick={e => showModal(e, 0)}>出金說明</Button>
+                    </Button> */}
+                    <IconBtn 
+                        style = {{
+                            color: '#FFF',
+                            fontSize: '16px',
+                            padding: '0 16px',
+                            backgroundColor: '#c43826',
+                            borderColor: 'transparent',
+                            width:'auto',
+                        }}
+                        type={'money'} 
+                        onClick={showCashModal} 
+                        className="hover-light" 
+                        text="申請出金">
+                    </IconBtn>
+                    <IconBtn 
+                        style = {{
+                            color: '#0d1623',
+                            fontSize: '16px',
+                            padding: '0 16px',
+                            width:'auto',
+                        }}
+                        type={'info'} 
+                        onClick={e => showModal(e, 0)} 
+                        text="出金說明">
+                    </IconBtn>
+                    {/* <Button className="iconBtn" onClick={e => showModal(e, 0)}>出金說明</Button> */}
                 </div>
                 <div>
-                    <Button onClick={secretChanger}>{hidden?<EyeInvisibleOutlined />:<EyeOutlined />}</Button>
-                    <Button onClick={e => showModal(e, 1)}>說明</Button>
-                    <IconBtn type={'refresh'} onClick={onRefresh} className="action_btn">
-                        {' '}
-                    </IconBtn>
+                    <IconBtn type={hidden?'eyeClose':'eyeOpen'} onClick={secretChanger}></IconBtn>
+                    <IconBtn type={'info'} onClick={e => showModal(e, 1)}></IconBtn>
+                    <IconBtn type={'refresh'} onClick={onRefresh}></IconBtn>
                 </div>
 
                 <Modal
                     title={modalText.title}
                     visible={isModalVisible}
                     closable={false} //{ , className: "modal-footer-hiden-button" }
-                    footer={[<Button onClick={handleCancel_info}>關閉</Button>]}
+                    footer={[<Button type="primary" onClick={handleCancel_info}>確定</Button>]}
                 >
                     <div dangerouslySetInnerHTML={{ __html: modalText.content }}></div>
                 </Modal>
@@ -323,40 +353,38 @@ const AccBalance = () => {
                     visible={isCashModalVisible}
                     onCancel={handleCancel_cash}
                     footer={[
-                        <Button onClick={CashOut}>確認出金</Button>,
-                        <Button onClick={CashOutAll}>全部出金</Button>,
+                        <Button onClick={handleCancel_cash}>取消</Button>,
+                        <Button type="primary" onClick={CashOut}>確定</Button>,
                     ]}
                 >
                     <div>
-                        <table>
-                            <tr>
-                                <td>幣別:</td>
-                                <td>{dataSource.currency}</td>
-                            </tr>
-                            <tr>
-                                <td>預估可出金金額:</td>
-                                <td>{dataSource.balance ? dataSource.balance : '-'}</td>
-                            </tr>
-                            <tr>
-                                <td>出金金額:</td>
-                                <td>
-                                    <Input
-                                        placeholder="請輸入金額"
-                                        value={inputData}
-                                        onChange={InputChange}
-                                        type="number"
-                                    />
-                                </td>
-                            </tr>
-                        </table>
+                        <div>
+                            <div>{dataSource.currency}</div>
+                            <div>
+                            <Input
+                                placeholder="0.00"
+                                value={inputData}
+                                onChange={InputChange}
+                                type="number"
+                            />    
+                            </div>
+                        </div>
+                        <div>
+                            <label>
+                             <input type='checkbox'/><div>申請所有可出金金額(預估)<br/>{dataSource.currency} {dataSource.balance ? dataSource.balance : '-'}</div>   
+                            </label>
+                        </div>
                     </div>
                 </Modal>
                 <Modal
                     className="CheckModal"
                     title="出金確認"
                     visible={isCheckModalVisible}
-                    onCancel={handleCancel_check}
-                    footer={[<Button onClick={CashOutFinal}>確定出金</Button>]}
+                    closable={false}
+                    footer={[
+                    <Button onClick={handleCancel_check}>取消</Button>,
+                    <Button type="primary" onClick={CashOutFinal}>確定</Button>,
+                ]}
                 >
                     <div>
                         <table>
@@ -395,34 +423,20 @@ const AccBalance = () => {
                     }}
                 />
             </div>
-            {/* {settleType == '2' || settleType == '4' ? (
+            {settleType == '2' || settleType == '4' ? (
                 <div className="bank_table">
-                    <p>
-                        {settleType == '2' ? '外幣' : '台幣'}自有帳戶:<span>{backact}</span>
+                    <p>銀行可用餘額－自有帳戶
+                        {/* {settleType == '2' ? '外幣' : '台幣'}自有帳戶:<span>{backact}</span> */}
                     </p>
-                    <AccountTable
+                    <div className="itemCard_box">
+                    <ItemCard
                         dataSource={bankData}
-                        pagination={false}
-                        columns={columnsAcc}
-                        loading={{
-                            indicator: (
-                                <div
-                                    style={{
-                                        marginTop: '20px',
-                                        color: 'black',
-                                        fontSize: '1.6rem',
-                                        width: '100%',
-                                        transform: 'translateX(-49%) translateY(-54px)',
-                                    }}
-                                >
-                                    資料加載中...
-                                </div>
-                            ),
-                            spinning: loadingHandler.call(null, bankData, error),
-                        }}
+                        lineNum={5}
                     />
+                    </div>
+                    <div className="itemCard_box_btn" onClick={IcBoxController}>{icBoxOpen?'收起':'展開'}更多</div>
                 </div>
-            ) : null} */}
+            ) : null}
 
             <style jsx>
                 {`
@@ -486,15 +500,36 @@ const AccBalance = () => {
                         font-weight: 700;
                         margin-left: 0.5em;
                     }
+                    .itemCard_box_btn {
+                        cursor:pointer;
+                        font-size: 16px;
+                        text-align: center;
+                        font-weight: 700;
+                    }
+                    .itemCard_box_btn:after {
+                        display: inline-block;
+                        content: '';
+                        margin-left:5px;
+                        width: 8px;
+                        height: 8px;
+                        border: 2px solid #666;
+                        transform: translate(${icBoxOpen ? '0%, 0%' : '0%, -50%'}) rotate(${icBoxOpen?'135':'-45'}deg);
+                        border-width: 0 0 2px 2px;
+                        transition: transform 0.5s;
+                    }
+                    .itemCard_box {
+                        max-height: ${icBoxOpen?'300px':'80px'};
+                        overflow: hidden;
+                        transition: max-height 0.8s;
+                    }
+
                 `}
             </style>
             <style global jsx>
                 {`
-                    .brokerage .action_box .action_btn,
-                    .brokerage .action_box .ant-btn {
+                    .subBrokerage .action_box button {
                         margin-left: 10px;
                     }
-
                     .brokerage .action_box .ant-btn:hover:not(.ant-btn-primary) {
                         border-color: rgb(196, 56, 38);
                         color: rgb(196, 56, 38);

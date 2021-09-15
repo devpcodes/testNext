@@ -7,7 +7,7 @@ import { getToken } from '../../../../../../services/user/accessToken';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
-const Invetory = () => {
+const Invetory = ({toOrderBox}) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -42,7 +42,6 @@ const Invetory = () => {
     });
 
     useEffect(() => {
-        
         if (Array.isArray(fetchData)) {
             const newData = fetchData.map((item, index) => {
                 item.key = index;
@@ -52,7 +51,7 @@ const Invetory = () => {
             setFilterData(newData);
         }
     }, [fetchData]);
-
+// <button onClick={e=>consumeClick(e,content)}>下單</button>
     useEffect(() => {
     const newColumns = [
         {
@@ -62,7 +61,7 @@ const Invetory = () => {
             align: 'center',
             render: (content) => {
                 return (
-                    <button onClick={e=>consumeClick(e,content)}>下單</button>
+                    <button onClick={e=>toOrderBox_inv(e,content)}>下單</button>
                 );
             },
         },{
@@ -160,6 +159,11 @@ const Invetory = () => {
             };
         }
     };
+
+    const toOrderBox_inv = (e,id) =>{
+        e.preventDefault();
+        toOrderBox(id)
+    }
 
     const consumeClick = (e,id) =>{
         e.preventDefault();

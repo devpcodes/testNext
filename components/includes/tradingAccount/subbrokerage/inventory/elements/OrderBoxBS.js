@@ -3,22 +3,24 @@ import { useSelector, useDispatch } from 'react-redux';
 import SearchAutoComplete from '../../../vipInventory/SearchAutoComplete';
 import ChangeNum from '../../../../goOrder/searchList/ChangeNum';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
-import { Select, Switch, Button } from 'antd';
+import { Select, Switch, Button, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { postStockInfo } from '../../../../../../services/components/goOrder/sb/postStockInfo';
 import { getToken } from '../../../../../../services/user/accessToken';
+import { setOrderList } from '../../../../../../store/subBrokerage/action';
 import { fetchQuerySubBrokerageQuote } from '../../../../../../services/sb/querySubBrokerageQuote';
 import { getPriceJumpPoint } from '../../../../../../services/components/goOrder/sb/getPriceJumpPoint';
+import { getTransactionCost } from '../../../../../../services/stock/transactionCost';
 import { getTT } from '../../../../../../services/components/goOrder/sb/dataMapping';
 import { getCookie } from '../../../../../../services/components/layouts/cookieController';
 import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
 import { submitService } from '../../../../../../services/components/goOrder/sb/submitService';
-const OrderBoxBS = ({ type }) => {
+import { setStockInfo } from '../../../../../../store/goOrderSB/action';
+import { concat } from 'lodash';
+const OrderBoxBS = ({ type, orderData }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
-    const touch = useSelector(store => store.goOrderSB.touch);
-    // const productInfo = useSelector(store => store.goOrder.productInfo);
-    const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
-    const queryQty = useSelector(store => store.goOrderSB.queryQty);
+    const orderList = useSelector(store => store.subBrokerage.orderList);
+    //const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
     const [disabledPlus, setDisabledPlus] = useState(false);
     const [aon, setAon] = useState('ANY');
     const [bs, setBs] = useState('B');
@@ -30,22 +32,51 @@ const OrderBoxBS = ({ type }) => {
     const [date, setDate] = useState('');
     const [valPrice, setValPrice] = useState('');
     const [valNum, setValNum] = useState('');
-    const [selectData, setSelectData] = useState([]);
+    const [transactionCost, setTransactionCost] = useState(0);
+    const [submitLoading, setSubmitLoading] = useState(false);
     const [inputVal, setInputVal] = useState('');
+    const [stockInfo, setStockInfo] = useState({});
     const [productInfo, setProductInfo] = useState({});
     const [priceJumpPoint, setPriceJumpPoint] = useState('');
-    const [inputMarket, setInputMarket] = useState('');
+    const [orderBoxData, setOrderBoxData] = useState('');
     const dispatch = useDispatch();
     const { Option } = Select;
     useEffect(() => {
-        setBs(type);
-    }, [type]);
+        if(stockInfo['@StockID']){
+            console.log('[getTransactionCost-]',valNum, valPrice, bs, stockInfo['@Currency']) 
+        let val = getTransactionCost(valNum, valPrice, bs, stockInfo['@Currency'])
+        console.log('[getTransactionCost]',val)
+        setTransactionCost(val);            
+        }
+    }, [valNum, valPrice, bs, stockInfo]);
+
     useEffect(() => {
+    setBs(type);
+    }, [type]);
+
+    useEffect(() => {
+    console.log('[orderList]',orderList)
+    }, [orderList]);
+
+    useEffect(() => {
+        console.log('stockInfo',stockInfo)
+        setPriceJumpPoint(stockInfo['@LotSize'])
+    }, [stockInfo]);
+    
+    useEffect(() => {
+        console.log('[productInfo]',productInfo)
         if(inputVal!=''){
            queryStockQuote(); 
            queryStockInfo()
         }
     }, [productInfo]);
+
+    useEffect(() => {
+        console.log('od',orderData)
+        if(orderData){
+            setOrderBoxData(orderData)
+        }
+    }, [orderData]);
 
     const selectHandler = useCallback(async (val, option) => {
         try {
@@ -64,9 +95,9 @@ const OrderBoxBS = ({ type }) => {
     });
 
     const onDateChange = e => {
-        let d = e.target.value.replaceAll('-', '');
-        setDate(d);
-        console.log('date', d);
+        //let d = e.target.value.replaceAll('-', '');
+        setDate(e.target.value);
+        console.log('date', e.target.value);
     };
 
     const onChangeHandler = useCallback(val => {
@@ -117,27 +148,31 @@ const OrderBoxBS = ({ type }) => {
     
     const submitHandler = async () => {
         try {
-            setSubmitLoading(true);
-            const res = await submitService({
-                CID: getWebId(platform, 'recommisiioned'),
-                StockID: StockIdC.current,
-                Price: PriceC.current,
-                Qty: QtyC.current,
-                BS: BSC.current,
-                GTCDate: GTCDateC.current,
-                aon: aonC.current,
-                TouchedPrice: TouchedPriceC.current,
-                Exchid: marketC.current,
+            console.log('[submitHandler1]',date)
+           setSubmitLoading(true);
+           let obj = {
+                CID: getWebId('newweb', 'recommisiioned'),
+                StockID: productInfo.symbol,
+                Price: valPrice,
+                Qty: valNum,
+                BS: bs,
+                GTCDate: dateSelect?date:'',
+                aon: aon,
+                TouchedPrice: 0,
+                Exchid: productInfo.market,
                 Creator: currentAccount.idno,
                 token: getToken(),
                 currentAccount,
-            });
+           }
+           console.log('[submitHandler]',obj)
+            const res = await submitService(obj);
+            console.log('[WT]',res)
             setSubmitLoading(false);
             message.success({
                 content: '委託已送出',
             });
-            closeHandler();
-            dispatch(setSBActiveTabKey('3'));
+            //closeHandler();
+            //dispatch(setSBActiveTabKey('3'));
         } catch (error) {
             setSubmitLoading(false);
             message.info({
@@ -170,7 +205,8 @@ const OrderBoxBS = ({ type }) => {
             let Exchid = productInfo.market;
             let stockID = productInfo.symbol;
             let result = await postStockInfo({ AID, Exchid, stockID, token });
-            setPriceJumpPoint(result['@LotSize'])
+            setStockInfo(result)
+            
             console.log('[queryStockInfo]', result);
         } catch (error) {
             console.log(error);
@@ -178,23 +214,40 @@ const OrderBoxBS = ({ type }) => {
     };
     const addLocal = async() => {
         try{
-            const res = await submitService({
-                CID: getWebId('newweb', 'recommisiioned'),
-                StockID: productInfo.symbol,
-                Price: valPrice,
-                Qty: valNum,
-                BS: bs,
-                GTCDate: date,
-                aon: aon,
-                TouchedPrice: 0,
-                Exchid: productInfo.market,
-                Creator: currentAccount.idno,
-                token: getToken(),
-                currentAccount,
-            });
-            console.log('addLocal',res)
+            // const res = await submitService({
+            //     CID: getWebId('newweb', 'recommisiioned'),
+            //     StockID: productInfo.symbol,
+            //     Price: valPrice,
+            //     Qty: valNum,
+            //     BS: bs,
+            //     GTCDate: date,
+            //     aon: aon,
+            //     TouchedPrice: 0,
+            //     Exchid: productInfo.market,
+            //     Creator: currentAccount.idno,
+            //     token: getToken(),
+            //     currentAccount,
+            // });
+            let test = {
+                AID: "9A950000087",
+                BS: "B",
+                CID: "11",
+                ClientIP: "10.255.0.2",
+                Creator: "MCCAFIGAGI",
+                Exchid: "US",
+                OT: "0",
+                Price: 48.00,
+                PriceType: "0",
+                Qty: '1',
+                StockID: "AA",
+                TT: "2",
+                GTCDate: "",
+                lotSize: "1",
+                priceJumpPoint: 0.01,
+                aon: "ANY",
+            }
             let TT = getTT(productInfo.market)
-            let data = {
+            let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 BS: bs,
                 CID: getWebId('newweb', 'recommisiioned'),
@@ -202,7 +255,7 @@ const OrderBoxBS = ({ type }) => {
                 Creator: currentAccount.idno,
                 Exchid: productInfo.market,
                 OT: '0',
-                Price: valPrice,
+                Price: valPrice,//valPrice,
                 PriceType: '0',
                 Qty: valNum,
                 StockID: productInfo.symbol,
@@ -212,7 +265,9 @@ const OrderBoxBS = ({ type }) => {
                 priceJumpPoint: 0.01,
                 aon: aon       
             }
-            console.log('POSTDATA',data)
+            let nd = orderList.concat(newData)
+            //console.log('POSTDATA',newData)
+            dispatch(setOrderList(nd));
         } catch (error) {
             console.log(error);
         }
@@ -233,7 +288,7 @@ const OrderBoxBS = ({ type }) => {
                         placeholder={'股票代號／名稱'}
                     />
                 </div>
-                <div className="symbo_text">{inputVal}</div>
+             { /*  <div className="symbo_text">{{data:orderData}}</div>*/}
             </div>
             <div className="ctrl_item">
                 <ChangeNum
@@ -277,20 +332,21 @@ const OrderBoxBS = ({ type }) => {
                         {dateSelect ? <input type="date" onChange={onDateChange} /> : ''}
                     </div>
                 </>
-            ) : (
-                ''
-            )}
+            ) : ('')}
 
             <div className="ctrl_item mt-8 submit_box">
-                <Button type="primary" size="large">
-                    委託買進
+                <Button type="primary" size="large" onClick={submitHandler}>
+                    委託{bs=='B'?'買進':'賣出'}
                 </Button>
                 <br></br>
                 <Button size="large" onClick={addLocal}>
                     加入暫存夾
                 </Button>
             </div>
-            <div className="text_view">預估金額 4,325元(台幣)</div>
+            <div className="text_view">預估金額 {transactionCost}元(台幣)</div>
+            <div>
+                {submitLoading?('Loading...'):('')}
+            </div>
             <style jsx>
                 {`
                     input[type='date'] {

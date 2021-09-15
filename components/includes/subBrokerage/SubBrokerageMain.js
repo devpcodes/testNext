@@ -14,6 +14,7 @@ import OrderBox from '../tradingAccount/subbrokerage/inventory/elements/OrderBox
 
 const SubBrokerMain = () => {
     const [current, setCurrent] = useState('order');
+    const [orderData, setOrderData] = useState('');
     const [orderBoxCtrl, setOrderBoxCtrl] = useState(true);
     const menuList = [
         { key: 'order', title: '委回' },
@@ -32,12 +33,17 @@ const SubBrokerMain = () => {
         let status = orderBoxCtrl;
         setOrderBoxCtrl(!status);
     };
+    
+    const toOrderBox = data => {
+        console.log(data)
+        setOrderData(data);
+    };
     return (
         <div className="page__container subBrokerage">
             <div className="left_area">
                 <div className="left_ctrl_box">
                     <div>
-                        <OrderBox></OrderBox>
+                        <OrderBox orderData={orderData}></OrderBox>
                     </div>
                 </div>
                 <a className="ctrl_btn" onClick={onChange}></a>
@@ -57,11 +63,15 @@ const SubBrokerMain = () => {
                             case 'gtc':
                                 return <GtcPage />;
                             case 'inventory':
-                                return <Inventory />;
+                                return <Inventory 
+                                toOrderBox={toOrderBox}
+                                />;
                             case 'balance':
                                 return <AccBalance />;
                             case 'unrealized':
-                                return <Unrealized />;
+                                return <Unrealized 
+                                
+                                />;
                             case 'holding':
                                 return <ShareholdingPage />;
                             case 'batch':
@@ -136,7 +146,7 @@ const SubBrokerMain = () => {
                         transition: transform 0.5s;
                     }
                     .content_box--nav {
-                        margin-top: 65px;
+                        margin-top: ${current==='unrealized'? '150px':'65px'};
                     }
                 `}
             </style>

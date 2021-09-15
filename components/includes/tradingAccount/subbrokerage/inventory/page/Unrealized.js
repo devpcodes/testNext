@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { Modal, Select, Tag } from 'antd';
+import { Modal, Select, Tag, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import { postUnrealizedWithSwr } from '../../../../../../services/components/goOrder/sb/postInventory';
 import { getToken } from '../../../../../../services/user/accessToken';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 import AccountTable from '../../../vipInventory/AccountTable';
-const Unrealized = () => {
+import IconBtn from '../../../vipInventory/IconBtn';
+import { secretToggle } from '../../../../../../services/components/tradingAccount/subBrokerage/secretToggle';
+import BuyButton from '../../../vipInventory/buttons/BuyButton';
+import SellButton from '../../../vipInventory/buttons/SellButton';
+import ItemCard from '../elements/ItemCard';
+const Unrealized = ({}) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({data:[],sum_data:[]});
     const [columns, setColumns] = useState([]);
@@ -16,7 +21,9 @@ const Unrealized = () => {
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('ALL');
     const url_base = 'https://webrd.sinotrade.com.tw/newweb/goOrder/'
-    
+    const [hidden, setHidden] = useState(false);  
+    const orderData = {stockID:'JCPNQ', symbo:'J.C. Penney', key:'aa'}
+
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -67,18 +74,6 @@ const Unrealized = () => {
     useEffect(() => {
     const newColumns = [
         {
-            title: '動作',
-            dataIndex: 'symbol',
-            key: 'active',
-            align: 'center',
-            fixed: true,
-            width:'100px',
-            render: (content) => {
-                return (
-                    <button onClick={e=>consumeClick(e,content)}>下單</button>
-                );
-            },
-        },{
             title: '市場',
             dataIndex: 'market',
             key: 'market',
@@ -156,8 +151,81 @@ const Unrealized = () => {
             align: 'center',
             width:'100px',
             sorter: (a, b) => a.curr - b.curr,
+        },{
+            title: '動作',
+            dataIndex: 'symbol',
+            key: 'active',
+            align: 'center',
+            fixed: true,
+            width:'150px',
+            render: (content) => {
+                return (
+                    <div style={{ marginLeft: '12px' }}>
+                            <BuyButton
+                                text={'買進'}
+                                onClick={e =>{
+                                    defaultFunc2()
+                                }
+                                    // let qty;
+                                    // let marketType = '';
+                                    // if (record.rqty % 1000 == 0) {
+                                    //     qty = record.rqty / 1000;
+                                    // } else {
+                                    //     qty = record.rqty;
+                                    //     marketType = 'Z';
+                                    // }
+                                    // openGoOrder(
+                                    //     {
+                                    //         stockid: record.stock,
+                                    //         bs: 'B',
+                                    //         qty: qty,
+                                    //         marketType,
+                                    //         // qty: parseInt(
+                                    //         //     Number(record.preqty + record.tranqty + record.bqty - record.sqty) /
+                                    //         //         1000,
+                                    //         // ),
+                                    //     },
+                                    //     isMobile,
+                                    //     router,
+                                    // );
+                                }
+                            />
+                            <SellButton
+                                text={'賣出'}
+                                onClick={void(0)
+                                    //toOrderBox(orderData)
+                                    // {
+                                    //     Market: 'US',
+                                    //     Code: 'AMD',
+                                    //     Product: 'AMD',
+                                    //     Amount: 80,
+                                    //     Cost: 6865.82
+                                    // }
+                                    // let qty;
+                                    // let marketType = '';
+                                    // if (record.rqty % 1000 == 0) {
+                                    //     qty = record.rqty / 1000;
+                                    // } else {
+                                    //     qty = record.rqty;
+                                    //     marketType = 'Z';
+                                    // }
+                                    // openGoOrder(
+                                    //     {
+                                    //         stockid: record.stock,
+                                    //         bs: 'S',
+                                    //         qty: qty,
+                                    //         marketType,
+                                    //     },
+                                    //     isMobile,
+                                    //     router,
+                                    // );
+                                }
+                            />
+                        </div>
+                    // <button onClick={e=>consumeClick(e,content)}>下單</button>
+                );
+            },
         },
-        
     ];
     setColumns(newColumns);
     const newColumnsSum = [
@@ -202,7 +270,29 @@ const Unrealized = () => {
     setColumnsSum(newColumnsSum);
     }, [data, searchColumns, marketFilterValue]);
 
+const ItemCardDemoData = [
+    {
+        key:'a',
+        title:'總成本',
+        content:1111
+    },
+    {
+        key:'b',
+        title:'總市值',
+        content:2222
+    },
+    {
+        key:'c',
+        title:'總損益',
+        content:33373
+    },
+    {
+        key:'d',
+        title:'總報酬率',
+        content:44484
+    },
 
+]
     // const handleChange = v =>{
     //     let d = data
     //     let d_ = v =='全部'? d : d.filter(x => x.TT==v)
@@ -276,20 +366,43 @@ const Unrealized = () => {
         }
     });
 
+    const defaultFunc = () => {
+        console.log('default')
+    }
+    const defaultFunc2 = (e) => {
+        e.preventDefault();
+        console.log('D2')
+     //   toOrderBox(orderData)
+    }
     return (
-        <>
-        {/* <div className="active_box">
-            <Select defaultValue={defaultMarket} style={{ width: 120 }} onChange={handleChange}>
-            {
-                selectType.map(x=>{
-                  return <Option value={x} key={x}>{x}</Option>
-                })
-            }
-            </Select>
-            <button onClick={onRefresh}>
-                更新
-            </button>
-        </div> */}
+        <div className="brokerage unrealized_content">
+                <div className="action_box">
+                <div className="currencyT">幣別 USD</div>
+                <div>
+                    <span className="updateTime">
+                        更新時間：{'2021.09.03  15:45'}
+                    </span>
+                    <IconBtn type={hidden?'eyeClose':'eyeOpen'} onClick={defaultFunc/*secretChanger*/}></IconBtn>
+                    <IconBtn type={'info'} onClick={defaultFunc/*e => showModal(e, 1)*/}></IconBtn>
+                    <IconBtn type={'refresh'} onClick={defaultFunc/*onRefresh*/}></IconBtn>
+                </div>
+                <Modal
+                   // title={modalText.title}
+                   // visible={isModalVisible}
+                    closable={false}
+                    footer={[<Button onClick={defaultFunc/*handleCancel_info*/}>關閉</Button>]}
+                >
+                    {/* <div dangerouslySetInnerHTML={{ __html: modalText.content }}></div> */}
+                </Modal>
+            </div>
+
+            <div className="itemCard_box">
+            <ItemCard
+                dataSource={ItemCardDemoData}
+                lineNum={4}
+            />
+            </div>
+            <div className="table_box">
             <AccountTable 
             filterColumns={searchColumns}
             dataSource={data.data} 
@@ -309,20 +422,46 @@ const Unrealized = () => {
                 defaultCurrent:1
             } }
             columns={sum_columns}
-            />           
+            />                  
+            </div>
+         
         <style jsx>
             {`
-            AccountTable{margin-top:15px}
+            AccountTable{margin-top:15px;}
+            .updateTime {color:#3f5372; font-size:16px;vertical-align: middle;}
             .active_box {margin-bottom:15px;display:flex;justify-content:space-between;}
+            .unrealized_content .currencyT{font-size:16px; color:#3f5372;}
+            .unrealized_content{position:relative;}
+            .action_box {
+                position: absolute;
+                top: -195px;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            .table_box {
+                margin: 0 0 10px;
+            }
+            .itemCard_box{
+                position: absolute;
+                top: -140px;
+                width: 100%;
+            }
             `}
         </style>
         <style jsx global>
             {`
+            .subBrokerage .action_box button {
+                margin-left: 10px;
+                vertical-align: middle;
+            }
             .subBrokerage .ant-table-thead>tr>th:hover{background-color: #f2f5fa;}
             .subBrokerage .ant-table-thead tr th.ant-table-column-has-sorters .ant-table-filter-column-title{padding:0}
             `}
         </style>
-        </>
+        </div>
     );
 };
 

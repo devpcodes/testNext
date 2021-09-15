@@ -46,7 +46,6 @@ export const postInventory = async ({ AID, token, seq }) => {
 };
 
 export const postAccBalanceWithSwr = async (strObj) => {
-    console.log('[RES]',JSON.parse(strObj))
     let d = await postAccBalance(JSON.parse(strObj));
     return d;
 };
@@ -54,7 +53,7 @@ export const postAccBalanceWithSwr = async (strObj) => {
 const postAccBalance = async (req) => {
     var url = '/SubBrokerage/ClientData/BankBalanceAll';
     try {
-        console.log('[REQ]',{AID:req.AID,token:req.token,TT:req.TT} )
+        //console.log('[REQ]',{AID:req.AID,token:req.token,TT:req.TT} )
         const res = await getA8Instance('v2', undefined, true).post(url, {AID:req.AID,token:req.token,TT:req.TT});
         if (res.data.success === 'True') { console.log('[RES]',res)
             let ds_ = {};
@@ -72,7 +71,6 @@ const postAccBalance = async (req) => {
                     }else if(x.balance_type=="2"){
                         ds_.t1 = x.t_1
                         ds_.t2 = x.t_2
-                        //ds_.balance = x.amount
                     }else{
                         ds_.buyingPower = x.buying_power
                     }
