@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderStatusTable from '../elements/OrderStatusTable';
 import theme from '../../../../../../resources/styles/theme';
@@ -9,6 +9,7 @@ import DelButton from '../../../vipOrderStatus/buttons/DelButton';
 import { setModal } from '../../../../../../store/components/layouts/action';
 import { delCancelList } from '../../../../../../services/components/goOrder/sb/postCancel';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
+import { useActiveReturnMarket } from '../../../../../../hooks/useActiveReturnMarket';
 
 const OrderStatusPage = () => {
     const [touchPriceFilterValue, setTouchPriceFilterValue] = useState(false);
@@ -18,6 +19,8 @@ const OrderStatusPage = () => {
     const userInfo = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
     const platform = usePlatform();
+    const activeReturnMarket = useActiveReturnMarket();
+
     const delClickHandler = () => {
         if (selectData.length > 0) {
             dispatch(
@@ -57,6 +60,14 @@ const OrderStatusPage = () => {
             );
         }
     };
+
+    useEffect(() => {
+        if (activeReturnMarket === 'H') {
+            setTimeout(() => {
+                reFreshHandler();
+            }, 1000);
+        }
+    }, [activeReturnMarket]);
 
     const reFreshHandler = useCallback(() => {
         setControlReload(prev => {
