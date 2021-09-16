@@ -9,12 +9,12 @@ export const useActiveReturnMarket = () => {
         if (websocketInfo?.topic) {
             const topicArgs = websocketInfo.topic.split('/');
             if (websocketInfo.topic.indexOf('TFT') >= 0) {
-                // debounce(setMarket.bind(null, 'S'), 2000);
-                setMarket('S');
+                debounce(setMarket.bind(null, 'S'), 2000);
+                // setMarket('S');
             }
             if (websocketInfo.topic.indexOf('R/F/S') >= 0) {
-                // debounce(setMarket.bind(null, 'H'), 2000);
-                setMarket('H');
+                debounce(setMarket.bind(null, 'H'), 2000);
+                // setMarket('H');
             }
             if (topicArgs[2] === 'F') {
                 debounce(checkFOMarket.bind(null, websocketInfo), 2000);
