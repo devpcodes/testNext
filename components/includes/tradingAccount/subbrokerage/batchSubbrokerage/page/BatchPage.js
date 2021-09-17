@@ -81,7 +81,7 @@ const BatchPage = () => {
                             dispatch(setOrderList(newData));
                             setSelectedRowKeys([]);
                             setSelectData([]);
-
+                            setShowBtn(false);
                             if (type !== 'signle') {
                                 dispatch(
                                     setModal({
