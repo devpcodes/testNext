@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { usePlatform } from '../../../../../../hooks/usePlatform';
@@ -70,19 +70,25 @@ const BatchPage = () => {
                             setParentLoading(true);
                             let res = await submitListService(userInfo, subData, platform);
                             setParentLoading(false);
+                            console.log('success...01', subData, res);
                             const sellSuccess = subData.filter((item, i) => {
                                 if (res[i] === 'True') {
                                     return true;
                                 }
                             });
-                            dispatch(setOrderList(keepHandler(sellSuccess)));
+                            // console.log('success...', keepHandler(sellSuccess));
+                            const newData = keepHandler(sellSuccess);
+                            dispatch(setOrderList(newData));
+                            setSelectedRowKeys([]);
+                            setSelectData([]);
+
                             if (type !== 'signle') {
                                 dispatch(
                                     setModal({
                                         visible: true,
-                                        content: `共刪除${selectData.length}筆資料，${
+                                        content: `共送出${selectData.length}筆資料，${
                                             sellSuccess.length
-                                        }筆資料刪除成功，${selectData.length - sellSuccess.length}筆資料刪除失敗`,
+                                        }筆資料送出成功，${selectData.length - sellSuccess.length}筆資料刪除失敗`,
                                         type: 'info',
                                         title: '系統訊息',
                                     }),
@@ -97,7 +103,6 @@ const BatchPage = () => {
                                     }),
                                 );
                             }
-                            setSelectedRowKeys([]);
                         } catch (error) {
                             setParentLoading(false);
                             dispatch(
@@ -136,11 +141,36 @@ const BatchPage = () => {
     };
 
     const keepHandler = data => {
-        const newData = data.filter(item => {
-            if (item.isKeep) {
-                return true;
+        // let newData = data.filter(item => {
+        //     if (item.isKeep) {
+        //         return true;
+        //     }
+        // });
+        if (data.length === 0) {
+            return orderList;
+        }
+
+        let delKeys = [];
+        orderList.forEach(item => {
+            for (let index = 0; index < data.length; index++) {
+                const element = data[index];
+                if (item.key === element.key) {
+                    if (!!element.isKeep == false) {
+                        delKeys.push(item.key);
+                    }
+                }
             }
         });
+        const newData = orderList.filter(item => {
+            for (const dkey of delKeys) {
+                if (item.key === dkey) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        console.log('newData', newData);
         return newData;
     };
 

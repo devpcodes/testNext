@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Button, InputNumber, Select, Checkbox, Input } from 'antd';
+import { Button, InputNumber, Select, Checkbox, Input, Tooltip } from 'antd';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import AccountTable from '../../../vipInventory/AccountTable';
@@ -91,7 +91,11 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, 
                 align: 'left',
                 ...getColumnSearchProps('StockID'),
                 render: (text, record) => {
-                    return <div>{text}</div>;
+                    return (
+                        <Tooltip title={record.StockName} placement={'topLeft'}>
+                            <div>{text}</div>
+                        </Tooltip>
+                    );
                 },
             },
             {
