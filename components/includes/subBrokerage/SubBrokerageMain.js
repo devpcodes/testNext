@@ -33,9 +33,9 @@ const SubBrokerMain = () => {
         let status = orderBoxCtrl;
         setOrderBoxCtrl(!status);
     };
-    
+
     const toOrderBox = data => {
-        console.log(data)
+        console.log(data);
         setOrderData(data);
     };
     return (
@@ -63,15 +63,11 @@ const SubBrokerMain = () => {
                             case 'gtc':
                                 return <GtcPage />;
                             case 'inventory':
-                                return <Inventory 
-                                toOrderBox={toOrderBox}
-                                />;
+                                return <Inventory toOrderBox={toOrderBox} />;
                             case 'balance':
                                 return <AccBalance />;
                             case 'unrealized':
-                                return <Unrealized 
-                                
-                                />;
+                                return <Unrealized />;
                             case 'holding':
                                 return <ShareholdingPage />;
                             case 'batch':
@@ -146,7 +142,7 @@ const SubBrokerMain = () => {
                         transition: transform 0.5s;
                     }
                     .content_box--nav {
-                        margin-top: ${current==='unrealized'? '150px':'65px'};
+                        margin-top: ${current === 'unrealized' ? '150px' : '65px'};
                     }
                 `}
             </style>

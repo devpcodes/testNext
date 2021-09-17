@@ -1,23 +1,21 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import SearchAutoComplete from '../../../vipInventory/SearchAutoComplete';
 import ChangeNum from '../../../../goOrder/searchList/ChangeNum';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
 import { Select, Switch, Button, message } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import { postStockInfo } from '../../../../../../services/components/goOrder/sb/postStockInfo';
 import { getToken } from '../../../../../../services/user/accessToken';
 import { setOrderList } from '../../../../../../store/subBrokerage/action';
 import { fetchQuerySubBrokerageQuote } from '../../../../../../services/sb/querySubBrokerageQuote';
 import { getPriceJumpPoint } from '../../../../../../services/components/goOrder/sb/getPriceJumpPoint';
-import { getTransactionCost } from '../../../../../../services/stock/transactionCost';
+import { getTransactionCost } from '../../../../../../services/components/goOrder/sb/getTransitionCost';
 import { getTT } from '../../../../../../services/components/goOrder/sb/dataMapping';
 import { getCookie } from '../../../../../../services/components/layouts/cookieController';
 import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
 import { submitService } from '../../../../../../services/components/goOrder/sb/submitService';
 import { setStockInfo } from '../../../../../../store/goOrderSB/action';
-import { concat } from 'lodash';
-const OrderBoxBS = ({ type, orderData }) => {
+const OrderBoxBS = ({ type, orderData, product }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const orderList = useSelector(store => store.subBrokerage.orderList);
     //const stockInfo = useSelector(store => store.goOrderSB.stockInfo);
@@ -27,8 +25,7 @@ const OrderBoxBS = ({ type, orderData }) => {
     const [color, setColor] = useState(null);
     const [usSelect, setUsSelect] = useState(false);
     const [dateSelect, setDateSelect] = useState(false);
-    const selected = useRef(false);
-    const selectSymbol = useRef('');
+    const [toDay, setToDay] = useState([]);
     const [date, setDate] = useState('');
     const [valPrice, setValPrice] = useState('');
     const [valNum, setValNum] = useState('');
@@ -42,57 +39,48 @@ const OrderBoxBS = ({ type, orderData }) => {
     const dispatch = useDispatch();
     const { Option } = Select;
     useEffect(() => {
-        if(stockInfo['@StockID']){
-            console.log('[getTransactionCost-]',valNum, valPrice, bs, stockInfo['@Currency']) 
-        let val = getTransactionCost(valNum, valPrice, bs, stockInfo['@Currency'])
-        console.log('[getTransactionCost]',val)
-        setTransactionCost(val);            
+        if (stockInfo['@StockID']) {
+            let val = getTransactionCost(valNum, valPrice, bs, stockInfo['@Currency']);
+            console.log('試算', valNum, valPrice, bs, stockInfo['@Currency'], val);
+            setTransactionCost(val);
         }
     }, [valNum, valPrice, bs, stockInfo]);
 
     useEffect(() => {
-    setBs(type);
+        setBs(type);
     }, [type]);
 
     useEffect(() => {
-    console.log('[orderList]',orderList)
-    }, [orderList]);
+        setProductInfo(product);
+    }, [product]);
 
     useEffect(() => {
-        console.log('stockInfo',stockInfo)
-        setPriceJumpPoint(stockInfo['@LotSize'])
-    }, [stockInfo]);
-    
+        let d = moment(new Date()).format('YYYY-MM-DD');
+        let d_ = moment(d).add(6, 'M').format('YYYY-MM-DD');
+        setToDay([d, d_]);
+    }, []);
+
+    // useEffect(() => {
+    //     console.log('[orderList]', symbolList);
+    // }, [symbolList]);
+
     useEffect(() => {
-        console.log('[productInfo]',productInfo)
-        if(inputVal!=''){
-           queryStockQuote(); 
-           queryStockInfo()
-        }
+        console.log('stockInfo', stockInfo);
+        setPriceJumpPoint(stockInfo['@LotSize']);
+    }, [stockInfo]);
+
+    useEffect(() => {
+        console.log('[productInfo]', productInfo);
+        queryStockQuote();
+        queryStockInfo();
     }, [productInfo]);
 
     useEffect(() => {
-        console.log('od',orderData)
-        if(orderData){
-            setOrderBoxData(orderData)
+        console.log('od', orderData);
+        if (orderData) {
+            setOrderBoxData(orderData);
         }
     }, [orderData]);
-
-    const selectHandler = useCallback(async (val, option) => {
-        try {
-            let info = option.item
-            if (info.market == 'US') {
-                setUsSelect(true);
-            } else {
-                setUsSelect(false);
-            }
-            setInputVal(val);
-            setProductInfo(info);
-            console.log('[handler]', val, option);
-        } catch (error) {
-            console.log(error);
-        }
-    });
 
     const onDateChange = e => {
         //let d = e.target.value.replaceAll('-', '');
@@ -100,44 +88,53 @@ const OrderBoxBS = ({ type, orderData }) => {
         console.log('date', e.target.value);
     };
 
-    const onChangeHandler = useCallback(val => {
-        console.log(val);
-    });
-
-    const selectedHandler = useCallback(bol => {
-        selected.current = bol;
+    const onChange = useCallback(val => {
+        setDateSelect(val);
     });
 
     const handleChange = useCallback(val => {
         setAon(val);
     });
 
-    const onChange = useCallback(val => {
-        setDateSelect(val);
-    });
-
-    const plusHandler = useCallback((val, productInfo) => {
+    const plusHandler = useCallback((val, stockInfo, type) => {
         if (isNaN(parseFloat(val))) {
             return;
         } else {
-            const pt = getPriceJumpPoint(productInfo?.market, val, false);
-            let tickPointLen = pt.toString().indexOf('.') > 0 ? pt.toString().split('.')[1].length : 0;
-            const prevValue = parseFloat(parseFloat(val).toFixed(tickPointLen));
-            setVal(parseFloat(prevValue + pt).toFixed(tickPointLen));
+            if (type === 'qty') {
+                // if (Number(val) >= parentVal) {
+                //     return;
+                // }
+                let newVal = Number(val) + Number(stockInfo['@LotSize']);
+                setValNum(newVal);
+            } else {
+                const pt = getPriceJumpPoint(stockInfo?.market, val, false);
+                let tickPointLen = pt.toString().indexOf('.') > 0 ? pt.toString().split('.')[1].length : 0;
+                const prevValue = parseFloat(parseFloat(val).toFixed(tickPointLen));
+                setValPrice(parseFloat(prevValue + pt).toFixed(tickPointLen));
+            }
         }
     });
 
-    const minusHandler = useCallback((val, productInfo) => {
+    const minusHandler = useCallback((val, stockInfo, type) => {
         if (isNaN(parseFloat(val))) {
             return;
         } else {
-            const pt = getPriceJumpPoint(productInfo?.market, val, true);
-            let tickPointLen = pt.toString().indexOf('.') > 0 ? pt.toString().split('.')[1].length : 0;
-            const prevValue = parseFloat(parseFloat(val).toFixed(tickPointLen));
-            if (prevValue - pt <= 0) {
-                setVal(parseFloat(pt).toFixed(tickPointLen));
+            if (type === 'qty') {
+                if (Number(val) - Number(stockInfo['@LotSize']) <= 0) {
+                    setValNum(Number(stockInfo['@LotSize']));
+                } else {
+                    let newVal = Number(val) - Number(stockInfo['@LotSize']);
+                    setValNum(newVal);
+                }
             } else {
-                setVal(parseFloat(prevValue - pt).toFixed(tickPointLen));
+                const pt = getPriceJumpPoint(stockInfo?.market, val, true);
+                let tickPointLen = pt.toString().indexOf('.') > 0 ? pt.toString().split('.')[1].length : 0;
+                const prevValue = parseFloat(parseFloat(val).toFixed(tickPointLen));
+                if (prevValue - pt <= 0) {
+                    setValPrice(parseFloat(pt).toFixed(tickPointLen));
+                } else {
+                    setValPrice(parseFloat(prevValue - pt).toFixed(tickPointLen));
+                }
             }
         }
     });
@@ -145,28 +142,28 @@ const OrderBoxBS = ({ type, orderData }) => {
     const changeHandler = useCallback(value => {
         setVal(value);
     });
-    
+
     const submitHandler = async () => {
         try {
-            console.log('[submitHandler1]',date)
-           setSubmitLoading(true);
-           let obj = {
+            console.log('[submitHandler1]', date);
+            setSubmitLoading(true);
+            let obj = {
                 CID: getWebId('newweb', 'recommisiioned'),
                 StockID: productInfo.symbol,
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
-                GTCDate: dateSelect?date:'',
+                GTCDate: dateSelect ? date : '',
                 aon: aon,
                 TouchedPrice: 0,
                 Exchid: productInfo.market,
                 Creator: currentAccount.idno,
                 token: getToken(),
                 currentAccount,
-           }
-           console.log('[submitHandler]',obj)
+            };
+            console.log('[submitHandler]', obj);
             const res = await submitService(obj);
-            console.log('[WT]',res)
+            console.log('[WT]', res);
             setSubmitLoading(false);
             message.success({
                 content: '委託已送出',
@@ -187,13 +184,11 @@ const OrderBoxBS = ({ type, orderData }) => {
                 symbol: productInfo.symbol,
                 exchange: productInfo.market,
             };
-            let key = productInfo.symbol+'.'+productInfo.market
-            console.log('stock_list', stock_list);
+            let key = productInfo.symbol + '.' + productInfo.market;
             let result = await fetchQuerySubBrokerageQuote([stock_list], token, true);
-            console.log('[queryStockQuote]', result[key]);
-            let price = result[key].refPrice || result[key].preClose || ''
-            setValPrice(price)
-            setValNum(1)
+            let price = result[key].refPrice || result[key].preClose || '';
+            setValPrice(price);
+            setValNum(1);
         } catch (error) {
             console.log(error);
         }
@@ -205,48 +200,32 @@ const OrderBoxBS = ({ type, orderData }) => {
             let Exchid = productInfo.market;
             let stockID = productInfo.symbol;
             let result = await postStockInfo({ AID, Exchid, stockID, token });
-            setStockInfo(result)
-            
-            console.log('[queryStockInfo]', result);
+            setStockInfo(result);
         } catch (error) {
             console.log(error);
         }
     };
-    const addLocal = async() => {
-        try{
-            // const res = await submitService({
-            //     CID: getWebId('newweb', 'recommisiioned'),
-            //     StockID: productInfo.symbol,
-            //     Price: valPrice,
-            //     Qty: valNum,
-            //     BS: bs,
-            //     GTCDate: date,
-            //     aon: aon,
-            //     TouchedPrice: 0,
-            //     Exchid: productInfo.market,
-            //     Creator: currentAccount.idno,
-            //     token: getToken(),
-            //     currentAccount,
-            // });
+    const addLocal = async () => {
+        try {
             let test = {
-                AID: "9A950000087",
-                BS: "B",
-                CID: "11",
-                ClientIP: "10.255.0.2",
-                Creator: "MCCAFIGAGI",
-                Exchid: "US",
-                OT: "0",
-                Price: 48.00,
-                PriceType: "0",
+                AID: '9A950000087',
+                BS: 'B',
+                CID: '11',
+                ClientIP: '10.255.0.2',
+                Creator: 'MCCAFIGAGI',
+                Exchid: 'US',
+                OT: '0',
+                Price: 48.0,
+                PriceType: '0',
                 Qty: '1',
-                StockID: "AA",
-                TT: "2",
-                GTCDate: "",
-                lotSize: "1",
+                StockID: 'AA',
+                TT: '2',
+                GTCDate: '',
+                lotSize: '1',
                 priceJumpPoint: 0.01,
-                aon: "ANY",
-            }
-            let TT = getTT(productInfo.market)
+                aon: 'ANY',
+            };
+            let TT = getTT(productInfo.market);
             let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 BS: bs,
@@ -255,7 +234,7 @@ const OrderBoxBS = ({ type, orderData }) => {
                 Creator: currentAccount.idno,
                 Exchid: productInfo.market,
                 OT: '0',
-                Price: valPrice,//valPrice,
+                Price: valPrice, //valPrice,
                 PriceType: '0',
                 Qty: valNum,
                 StockID: productInfo.symbol,
@@ -263,9 +242,9 @@ const OrderBoxBS = ({ type, orderData }) => {
                 GTCDate: date,
                 lotSize: priceJumpPoint,
                 priceJumpPoint: 0.01,
-                aon: aon       
-            }
-            let nd = orderList.concat(newData)
+                aon: aon,
+            };
+            let nd = orderList.concat(newData);
             //console.log('POSTDATA',newData)
             dispatch(setOrderList(nd));
         } catch (error) {
@@ -275,21 +254,6 @@ const OrderBoxBS = ({ type, orderData }) => {
 
     return (
         <div className="OrderBox_BS">
-            <div className="ctrl_item for_search">
-                <div className="search_box">
-                    <SearchOutlined style={{ fontSize: '16px', color: '#333' }} />
-                    <SearchAutoComplete
-                        selectHandler={selectHandler}
-                        onChange={onChangeHandler}
-                        width={'100%'}
-                        height={'40px'}
-                        marketType={['SB']}
-                        selectedHandler={selectedHandler}
-                        placeholder={'股票代號／名稱'}
-                    />
-                </div>
-             { /*  <div className="symbo_text">{{data:orderData}}</div>*/}
-            </div>
             <div className="ctrl_item">
                 <ChangeNum
                     title={'價格'}
@@ -298,8 +262,8 @@ const OrderBoxBS = ({ type, orderData }) => {
                     inputWidth={'calc(100% - 100px - 54px - 8px)'}
                     style={{ width: '100%' }}
                     val={valPrice}
-                    plusClickHandler={plusHandler.bind(null, valPrice, productInfo)}
-                    minusClickHandler={minusHandler.bind(null, valPrice, productInfo)}
+                    plusClickHandler={plusHandler.bind(null, valPrice, stockInfo, 'price')}
+                    minusClickHandler={minusHandler.bind(null, valPrice, stockInfo, 'price')}
                     changeHandler={changeHandler}
                 />
             </div>
@@ -312,8 +276,8 @@ const OrderBoxBS = ({ type, orderData }) => {
                     style={{ width: '100%' }}
                     changeHandler={changeHandler}
                     val={valNum}
-                    plusClickHandler={plusHandler.bind(null, valNum, stockInfo)}
-                    minusClickHandler={minusHandler.bind(null, valNum, stockInfo)}
+                    plusClickHandler={plusHandler.bind(null, valNum, stockInfo, 'qty')}
+                    minusClickHandler={minusHandler.bind(null, valNum, stockInfo, 'qty')}
                     disabledPlus={disabledPlus}
                 />
             </div>
@@ -329,24 +293,26 @@ const OrderBoxBS = ({ type, orderData }) => {
                     <div className="ctrl_item mt-8">
                         <span>長效單</span>
                         <Switch onChange={onChange} />
-                        {dateSelect ? <input type="date" onChange={onDateChange} /> : ''}
+                        {dateSelect ? <input type="date" onChange={onDateChange} min={toDay[0]} max={toDay[1]} /> : ''}
                     </div>
                 </>
-            ) : ('')}
+            ) : (
+                ''
+            )}
 
             <div className="ctrl_item mt-8 submit_box">
                 <Button type="primary" size="large" onClick={submitHandler}>
-                    委託{bs=='B'?'買進':'賣出'}
+                    委託{bs == 'B' ? '買進' : '賣出'}
                 </Button>
                 <br></br>
                 <Button size="large" onClick={addLocal}>
                     加入暫存夾
                 </Button>
             </div>
-            <div className="text_view">預估金額 {transactionCost}元(台幣)</div>
-            <div>
-                {submitLoading?('Loading...'):('')}
+            <div className="text_view">
+                預估金額 {transactionCost}元({stockInfo['@CHCurrency']})
             </div>
+            <div>{submitLoading ? 'Loading...' : ''}</div>
             <style jsx>
                 {`
                     input[type='date'] {
@@ -356,12 +322,7 @@ const OrderBoxBS = ({ type, orderData }) => {
                         font-size: 14px;
                         line-height: 2;
                     }
-                    .for_search {
-                        position: absolute;
-                        top: 15px;
-                        left: 0;
-                        width: 100%;
-                    }
+
                     .mt-8 {
                         margin-top: 8px;
                     }
@@ -386,13 +347,6 @@ const OrderBoxBS = ({ type, orderData }) => {
                         line-height: 2;
                         margin-top: 20px;
                         text-align: center;
-                    }
-                    .search_box {
-                        display: flex;
-                        align-items: center;
-                        border: 1px solid #e6ebf5;
-                        border-radius: 2px;
-                        padding: 0 10px;
                     }
                 `}
             </style>
@@ -431,18 +385,6 @@ const OrderBoxBS = ({ type, orderData }) => {
                     .subBrokerage .left_box_inner .submit_box .ant-btn-primary {
                         background-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
                         border-color: ${bs === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor};
-                    }
-                    .subBrokerage .left_box_inner .search_box .autoComplete__container {
-                        margin-left: 10px;
-                    }
-                    .subBrokerage .left_box_inner .search_box .ant-select-selector {
-                        border: none !important;
-                    }
-                    .subBrokerage .left_box_inner .search_box .ant-select {
-                        vertical-align: super;
-                    }
-                    .subBrokerage .left_box_inner .search_box .ant-select-selection-placeholder {
-                        line-height: 40px;
                     }
                 `}
             </style>

@@ -45,36 +45,41 @@ export const postInventory = async ({ AID, token, seq }) => {
     }
 };
 
-export const postAccBalanceWithSwr = async (strObj) => {
+export const postAccBalanceWithSwr = async strObj => {
     let d = await postAccBalance(JSON.parse(strObj));
     return d;
 };
 
-const postAccBalance = async (req) => {
+const postAccBalance = async req => {
     var url = '/SubBrokerage/ClientData/BankBalanceAll';
     try {
         //console.log('[REQ]',{AID:req.AID,token:req.token,TT:req.TT} )
-        const res = await getA8Instance('v2', undefined, true).post(url, {AID:req.AID,token:req.token,TT:req.TT});
-        if (res.data.success === 'True') { console.log('[RES]',res)
+        const res = await getA8Instance('v2', undefined, true).post(url, {
+            AID: req.AID,
+            token: req.token,
+            TT: req.TT,
+        });
+        if (res.data.success === 'True') {
+            console.log('[RES]', res);
             let ds_ = {};
-            if (res.data.data.settle_type){
-                ds_.settle_type = res.data.data.settle_type
+            if (res.data.data.settle_type) {
+                ds_.settle_type = res.data.data.settle_type;
             }
             if (res.data.data.bank_balance_detail) {
                 let origin = res.data.data.bank_balance_detail;
-                origin.map(x=>{
-                    if(x.currency && ds_.currency!==x.currency){
-                      ds_.currency = x.currency
+                origin.map(x => {
+                    if (x.currency && ds_.currency !== x.currency) {
+                        ds_.currency = x.currency;
                     }
-                    if(x.balance_type=="1"){
-                        ds_.balance = x.balance
-                    }else if(x.balance_type=="2"){
-                        ds_.t1 = x.t_1
-                        ds_.t2 = x.t_2
-                    }else{
-                        ds_.buyingPower = x.buying_power
+                    if (x.balance_type == '1') {
+                        ds_.balance = x.balance;
+                    } else if (x.balance_type == '2') {
+                        ds_.t1 = x.t_1;
+                        ds_.t2 = x.t_2;
+                    } else {
+                        ds_.buyingPower = x.buying_power;
                     }
-                })
+                });
                 return ds_;
             } else {
                 return {};
@@ -93,13 +98,13 @@ export const postBankBalanceWithSwr = async (strObj, controlReload) => {
     return d;
 };
 
-export const postBankBalance = async ( AID, token, UID ) => {
+export const postBankBalance = async (AID, token, UID) => {
     var url = '/SubBrokerage/ClientData/BankBalance';
     try {
-        console.log('[REQ]',AID, token ,UID)
-        const res = await getA8Instance('v2', undefined, true).post(url, {AID:AID,token:token,user_id:UID});
-        if (res.data.success === 'True') { 
-            console.log('[RES]',res)
+        console.log('[REQ]', AID, token, UID);
+        const res = await getA8Instance('v2', undefined, true).post(url, { AID: AID, token: token, user_id: UID });
+        if (res.data.success === 'True') {
+            console.log('[RES]', res);
             if (res.data.result.data) {
                 return res.data.result.data;
             } else {
@@ -112,8 +117,6 @@ export const postBankBalance = async ( AID, token, UID ) => {
         throw '伺服器錯誤(2)';
     }
 };
-
-
 
 export const postUnrealizedWithSwr = async strObj => {
     let d = await postUnrealized(JSON.parse(strObj));
@@ -155,30 +158,30 @@ export const postWithdrawApply = async (currentAccount, platform, Amount, Curren
                 account: currentAccount.account,
             },
             true,
-            token
+            token,
         );
-        console.log('[ca_content]',ca_content)
-        let date = formatDate(new Date)
-        let ip = getCookie('client_ip')
-        let webid = await getWebId('newweb', 'recommisiioned') 
+        console.log('[ca_content]', ca_content);
+        let date = formatDate(new Date());
+        let ip = getCookie('client_ip');
+        let webid = await getWebId('newweb', 'recommisiioned');
         console.log('[webid]', webid);
-        let reqData = { 
-            AID: currentAccount.broker_id + currentAccount.account, 
+        let reqData = {
+            AID: currentAccount.broker_id + currentAccount.account,
             Amount: Amount,
             Currency: Currency,
-            sDate:date,
-            client_ip:ip,
-            webID:webid,
-            creator:currentAccount.idno,
-            ca_content:ca_content,
-            token:token
-        }
+            sDate: date,
+            client_ip: ip,
+            webID: webid,
+            creator: currentAccount.idno,
+            ca_content: ca_content,
+            token: token,
+        };
         console.log('[reqData]', reqData);
         const res = await getA8Instance('v1', undefined, true).post(url, reqData);
-        console.log('[RES]',res)
+        console.log('[RES]', res);
         if (res.data.success === 'True') {
             const obj = [];
-            console.log('[RES]',res)
+            console.log('[RES]', res);
             if (res.data.result) {
                 console.log('[RES]', res);
                 return res.data;
@@ -189,15 +192,14 @@ export const postWithdrawApply = async (currentAccount, platform, Amount, Curren
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(2)'+error;
+        throw '伺服器錯誤(2)' + error;
     }
 };
 
-const getCAContent = (currentAccount,token) => {
-    
-return ca_content
-}
-const formatDate = (date) => {
+const getCAContent = (currentAccount, token) => {
+    return ca_content;
+};
+const formatDate = date => {
     let newDate = '--';
     if (date) {
         newDate = moment(date, 'YYYYMMDD').format('YYYYMMDD');
@@ -209,10 +211,10 @@ export const postBankAccount = async (AID, token) => {
     try {
         console.log('[REQ]', AID, token);
         const res = await getA8Instance('v1', undefined, true).post(url, { AID: AID, token: token });
-        
+
         if (res.data.success === 'True') {
             const obj = [];
-            
+
             if (res.data.result) {
                 // res.data.result.map(x=>{
                 //     x.Currency = getCurrency(x.Currency)
@@ -229,6 +231,6 @@ export const postBankAccount = async (AID, token) => {
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(1)'+error;
+        throw '伺服器錯誤(1)' + error;
     }
 };

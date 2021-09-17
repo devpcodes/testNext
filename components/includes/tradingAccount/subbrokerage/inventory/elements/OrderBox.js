@@ -2,12 +2,14 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tabs } from 'antd';
 import OrderBoxBS from './OrderBoxBS';
+import SymbolSearch from '../../../../subBrokerage/elements/SymbolSearch';
 import SymbolList from '../../../../subBrokerage/elements/SymbolList';
 import SymbolInput from '../../../../subBrokerage/elements/SymbolInput';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
-const OrderBox = ({tabDefault, orderData}) => {
+const OrderBox = ({ tabDefault, orderData }) => {
     const [current, setCurrent] = useState('B');
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
+    const [productInfo, setProductInfo] = useState({});
     const selected = useRef(false);
     const selectSymbol = useRef('');
     const { TabPane } = Tabs;
@@ -41,6 +43,9 @@ const OrderBox = ({tabDefault, orderData}) => {
         }
     });
 
+    const getProductInfo = useCallback(val => {
+        setProductInfo(val);
+    });
     const onSeChangeHandler = useCallback(val => {});
 
     const selectedHandler = useCallback(bol => {
@@ -53,7 +58,7 @@ const OrderBox = ({tabDefault, orderData}) => {
 
     // const toOrderBox = useCallback(data => {
     //     setOrderData(data);
-    // }); 
+    // });
 
     return (
         <div className="left_box subBrokerage">
@@ -62,7 +67,8 @@ const OrderBox = ({tabDefault, orderData}) => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            return <div className="space_box"></div>;
+                            // return <div className="space_box"></div>;
+                            return <SymbolSearch getProductInfo={getProductInfo} />;
                         case 'N':
                             return <SymbolInput />;
                         default:
@@ -82,10 +88,7 @@ const OrderBox = ({tabDefault, orderData}) => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            return <OrderBoxBS 
-                                        type={current} 
-                                        orderData={orderData}
-                                    />;
+                            return <OrderBoxBS type={current} product={productInfo} />;
                         case 'N':
                             return (
                                 <SymbolList

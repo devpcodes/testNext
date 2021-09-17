@@ -71,7 +71,6 @@ const AccBalance = () => {
     });
 
     useEffect(() => {
-        console.log("[ACC]",fetchData)
         if (fetchData) {
             setDataSource(fetchData);
             if (fetchData.settle_type !== settleType) {
@@ -84,32 +83,32 @@ const AccBalance = () => {
         //datacount: 1, currency: "USD", name: "美元", amt: 213.75
         if (settleType == '2' || settleType == '4') {
             setBottomLoading(true);
-            getBankData()
+            getBankData();
         }
     }, [settleType, refresh]);
-    
-    const getBankData = async() => {
+
+    const getBankData = async () => {
         let AID = currentAccount.broker_id + currentAccount.account;
         let UID = currentAccount.idno;
-        const result = await postBankBalance(AID, getToken(), UID)
+        const result = await postBankBalance(AID, getToken(), UID);
         if (settleType == '2') {
             setBackact(result.act_backact);
         } else if (settleType == '4') {
             setBackact(result.ntd_backact);
-        } 
-        
-        let bankData_ = result.detail.map( (x,i) =>{
+        }
+
+        let bankData_ = result.detail.map((x, i) => {
             let obj = {
-                key:i,
+                key: i,
                 icon: x.currency,
-                title: x.name+' '+x.currency,
-                content:x.amt
-            }
-            return obj
-        })
-        setBankData(bankData_)          
-        console.log('ORIGIN',bankData_)
-    }
+                title: x.name + ' ' + x.currency,
+                content: x.amt,
+            };
+            return obj;
+        });
+        setBankData(bankData_);
+        console.log('ORIGIN', bankData_);
+    };
     const columns = [
         {
             title: '幣別',
@@ -187,14 +186,14 @@ const AccBalance = () => {
 
     const secretChanger = e => {
         e.preventDefault();
-        if(hidden===false){
+        if (hidden === false) {
             // console.log('hidden1',hidden)
-             let result = secretToggle(dataSource, ['balance', 'buyingPower', 'currency'])
-             setDataSource(result)
-             setHidden(true);
-        }else{
+            let result = secretToggle(dataSource, ['balance', 'buyingPower', 'currency']);
+            setDataSource(result);
+            setHidden(true);
+        } else {
             // console.log('hidden2',hidden)
-            setDataSource(fetchData)  
+            setDataSource(fetchData);
             setHidden(false);
         }
     };
@@ -204,9 +203,9 @@ const AccBalance = () => {
         setInputData(dataSource.balance ? dataSource.balance : 0);
         setIsCashModalVisible(true);
     };
-    const IcBoxController = (e) => {
+    const IcBoxController = e => {
         e.preventDefault();
-        setIcBoxOpen(!icBoxOpen)
+        setIcBoxOpen(!icBoxOpen);
     };
     const showModal = (e, n) => {
         e.preventDefault();
@@ -299,42 +298,42 @@ const AccBalance = () => {
                     <Select defaultValue={dataCurrent} style={{ width: 120 }} onChange={handleChange}>
                         <Option value="2">美國</Option>
                         <Option value="0">香港</Option>
-                        <Option value="1">日本</Option> 
+                        <Option value="1">日本</Option>
                         <Option value="8">滬股通</Option>
                         <Option value="9">深股通</Option>
                     </Select>
                     {/* <Button className="co_btn" type="primary" onClick={showCashModal}>
                         出金
                     </Button> */}
-                    <IconBtn 
-                        style = {{
+                    <IconBtn
+                        style={{
                             color: '#FFF',
                             fontSize: '16px',
                             padding: '0 16px',
                             backgroundColor: '#c43826',
                             borderColor: 'transparent',
-                            width:'auto',
+                            width: 'auto',
                         }}
-                        type={'money'} 
-                        onClick={showCashModal} 
-                        className="hover-light" 
-                        text="申請出金">
-                    </IconBtn>
-                    <IconBtn 
-                        style = {{
+                        type={'money'}
+                        onClick={showCashModal}
+                        className="hover-light"
+                        text="申請出金"
+                    ></IconBtn>
+                    <IconBtn
+                        style={{
                             color: '#0d1623',
                             fontSize: '16px',
                             padding: '0 16px',
-                            width:'auto',
+                            width: 'auto',
                         }}
-                        type={'info'} 
-                        onClick={e => showModal(e, 0)} 
-                        text="出金說明">
-                    </IconBtn>
+                        type={'info'}
+                        onClick={e => showModal(e, 0)}
+                        text="出金說明"
+                    ></IconBtn>
                     {/* <Button className="iconBtn" onClick={e => showModal(e, 0)}>出金說明</Button> */}
                 </div>
                 <div>
-                    <IconBtn type={hidden?'eyeClose':'eyeOpen'} onClick={secretChanger}></IconBtn>
+                    <IconBtn type={hidden ? 'eyeClose' : 'eyeOpen'} onClick={secretChanger}></IconBtn>
                     <IconBtn type={'info'} onClick={e => showModal(e, 1)}></IconBtn>
                     <IconBtn type={'refresh'} onClick={onRefresh}></IconBtn>
                 </div>
@@ -343,7 +342,11 @@ const AccBalance = () => {
                     title={modalText.title}
                     visible={isModalVisible}
                     closable={false} //{ , className: "modal-footer-hiden-button" }
-                    footer={[<Button type="primary" onClick={handleCancel_info}>確定</Button>]}
+                    footer={[
+                        <Button type="primary" onClick={handleCancel_info}>
+                            確定
+                        </Button>,
+                    ]}
                 >
                     <div dangerouslySetInnerHTML={{ __html: modalText.content }}></div>
                 </Modal>
@@ -354,24 +357,26 @@ const AccBalance = () => {
                     onCancel={handleCancel_cash}
                     footer={[
                         <Button onClick={handleCancel_cash}>取消</Button>,
-                        <Button type="primary" onClick={CashOut}>確定</Button>,
+                        <Button type="primary" onClick={CashOut}>
+                            確定
+                        </Button>,
                     ]}
                 >
                     <div>
                         <div>
                             <div>{dataSource.currency}</div>
                             <div>
-                            <Input
-                                placeholder="0.00"
-                                value={inputData}
-                                onChange={InputChange}
-                                type="number"
-                            />    
+                                <Input placeholder="0.00" value={inputData} onChange={InputChange} type="number" />
                             </div>
                         </div>
                         <div>
                             <label>
-                             <input type='checkbox'/><div>申請所有可出金金額(預估)<br/>{dataSource.currency} {dataSource.balance ? dataSource.balance : '-'}</div>   
+                                <input type="checkbox" />
+                                <div>
+                                    申請所有可出金金額(預估)
+                                    <br />
+                                    {dataSource.currency} {dataSource.balance ? dataSource.balance : '-'}
+                                </div>
                             </label>
                         </div>
                     </div>
@@ -382,9 +387,11 @@ const AccBalance = () => {
                     visible={isCheckModalVisible}
                     closable={false}
                     footer={[
-                    <Button onClick={handleCancel_check}>取消</Button>,
-                    <Button type="primary" onClick={CashOutFinal}>確定</Button>,
-                ]}
+                        <Button onClick={handleCancel_check}>取消</Button>,
+                        <Button type="primary" onClick={CashOutFinal}>
+                            確定
+                        </Button>,
+                    ]}
                 >
                     <div>
                         <table>
@@ -425,16 +432,16 @@ const AccBalance = () => {
             </div>
             {settleType == '2' || settleType == '4' ? (
                 <div className="bank_table">
-                    <p>銀行可用餘額－自有帳戶
+                    <p>
+                        銀行可用餘額－自有帳戶
                         {/* {settleType == '2' ? '外幣' : '台幣'}自有帳戶:<span>{backact}</span> */}
                     </p>
                     <div className="itemCard_box">
-                    <ItemCard
-                        dataSource={bankData}
-                        lineNum={5}
-                    />
+                        <ItemCard dataSource={bankData} lineNum={5} />
                     </div>
-                    <div className="itemCard_box_btn" onClick={IcBoxController}>{icBoxOpen?'收起':'展開'}更多</div>
+                    <div className="itemCard_box_btn" onClick={IcBoxController}>
+                        {icBoxOpen ? '收起' : '展開'}更多
+                    </div>
                 </div>
             ) : null}
 
@@ -501,7 +508,7 @@ const AccBalance = () => {
                         margin-left: 0.5em;
                     }
                     .itemCard_box_btn {
-                        cursor:pointer;
+                        cursor: pointer;
                         font-size: 16px;
                         text-align: center;
                         font-weight: 700;
@@ -509,20 +516,20 @@ const AccBalance = () => {
                     .itemCard_box_btn:after {
                         display: inline-block;
                         content: '';
-                        margin-left:5px;
+                        margin-left: 5px;
                         width: 8px;
                         height: 8px;
                         border: 2px solid #666;
-                        transform: translate(${icBoxOpen ? '0%, 0%' : '0%, -50%'}) rotate(${icBoxOpen?'135':'-45'}deg);
+                        transform: translate(${icBoxOpen ? '0%, 0%' : '0%, -50%'})
+                            rotate(${icBoxOpen ? '135' : '-45'}deg);
                         border-width: 0 0 2px 2px;
                         transition: transform 0.5s;
                     }
                     .itemCard_box {
-                        max-height: ${icBoxOpen?'300px':'80px'};
+                        max-height: ${icBoxOpen ? '300px' : '80px'};
                         overflow: hidden;
                         transition: max-height 0.8s;
                     }
-
                 `}
             </style>
             <style global jsx>
