@@ -209,24 +209,6 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     };
     const addLocal = async () => {
         try {
-            let test = {
-                AID: '9A950000087',
-                BS: 'B',
-                CID: '11',
-                ClientIP: '10.255.0.2',
-                Creator: 'MCCAFIGAGI',
-                Exchid: 'US',
-                OT: '0',
-                Price: 48.0,
-                PriceType: '0',
-                Qty: '1',
-                StockID: 'AA',
-                TT: '2',
-                GTCDate: '',
-                lotSize: '1',
-                priceJumpPoint: 0.01,
-                aon: 'ANY',
-            };
             let TT = getTT(product.market);
             let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
@@ -236,7 +218,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 Creator: currentAccount.idno,
                 Exchid: product.market,
                 OT: '0',
-                Price: valPrice, //valPrice,
+                Price: valPrice,
                 PriceType: '0',
                 Qty: valNum,
                 StockID: product.symbol,
@@ -245,6 +227,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 lotSize: priceJumpPoint,
                 priceJumpPoint: 0.01,
                 aon: aon,
+                StockName:stockInfo['@StockName'],
             };
             let nd = orderList.concat(newData);
             //console.log('POSTDATA',newData)
@@ -283,7 +266,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     disabledPlus={disabledPlus}
                 />
             </div>
-            {usSelect ? (
+            {product.market=='US' ? (
                 <>
                     <div className="ctrl_item mt-8 ctrl_item_select">
                         <span>條件</span>
