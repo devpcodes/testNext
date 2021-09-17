@@ -1,10 +1,11 @@
 import { Select } from 'antd';
 import selectIcon from '../../../../../resources/images/components/goOrder/arrow-selectdown.png';
+import { themeColor } from '../../panel/PanelTabs';
 const { Option } = Select;
-const OrderSelect = ({ data, width, height, color, style, arrowLeft, ...props }) => {
+const OrderSelect = ({ data, width, height, color, style, arrowLeft, className, ...props }) => {
     return (
         <>
-            <div className="select__container ordergo" style={style}>
+            <div className={'select__container ordergo ' + className} style={style}>
                 <Select suffixIcon={<img src={selectIcon} />} {...props}>
                     {data.length >= 0 &&
                         data.map((item, index) => {
@@ -26,6 +27,18 @@ const OrderSelect = ({ data, width, height, color, style, arrowLeft, ...props })
                     width: ${width};
                     height: ${height};
                     background: ${color};
+                    border: none;
+                }
+                .select__container.orderBuy .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    width: ${width};
+                    height: ${height};
+                    background: ${themeColor.buyTabColor};
+                    border: none;
+                }
+                .select__container.orderSell .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+                    width: ${width};
+                    height: ${height};
+                    background: ${themeColor.sellTabColor};
                     border: none;
                 }
 

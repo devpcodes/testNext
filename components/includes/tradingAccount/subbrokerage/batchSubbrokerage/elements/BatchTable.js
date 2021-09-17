@@ -114,7 +114,8 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, 
                                     { txt: '買進', val: 'B' },
                                     { txt: '賣出', val: 'S' },
                                 ]}
-                                color={record.BS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
+                                className={record.BS === 'B' ? 'orderBuy' : 'orderSell'}
+                                // color={record.BS === 'B' ? themeColor.buyTabColor : themeColor.sellTabColor}
                                 value={record.BS}
                                 onChange={changeBS.bind(null, record, data)}
                             />
