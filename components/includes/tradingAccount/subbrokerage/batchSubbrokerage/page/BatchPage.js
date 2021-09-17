@@ -15,6 +15,7 @@ const BatchPage = () => {
     const [parentLoading, setParentLoading] = useState(false);
     const orderList = useSelector(store => store.subBrokerage.orderList);
     const userInfo = useSelector(store => store.user.currentAccount);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [refresh, setRefresh] = useState(0);
     const platform = usePlatform();
     const dispatch = useDispatch();
@@ -96,6 +97,7 @@ const BatchPage = () => {
                                     }),
                                 );
                             }
+                            setSelectedRowKeys([]);
                         } catch (error) {
                             setParentLoading(false);
                             dispatch(
@@ -174,6 +176,7 @@ const BatchPage = () => {
                 submitHandler={submitHandler}
                 refresh={refresh}
                 parentLoading={parentLoading}
+                parentSelectedRowKeys={selectedRowKeys}
             />
         </div>
     );

@@ -13,7 +13,7 @@ import { setModal } from '../../../../../../store/components/layouts/action';
 import DropFilterSearch from '../../../vipInventory/DropFilterSearch';
 
 const { Option } = Select;
-const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }) => {
+const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, parentSelectedRowKeys }) => {
     const orderList = useSelector(store => store.subBrokerage.orderList);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -30,6 +30,10 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading }
             updatePriceHandler();
         }
     }, [refresh]);
+
+    useEffect(() => {
+        setSelectedRowKeys(parentSelectedRowKeys);
+    }, [parentSelectedRowKeys]);
 
     useEffect(() => {
         if (orderList.length > 0) {
