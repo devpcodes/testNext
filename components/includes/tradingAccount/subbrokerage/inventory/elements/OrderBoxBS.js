@@ -33,7 +33,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [inputVal, setInputVal] = useState('');
     const [stockInfo, setStockInfo] = useState({});
-    const [productInfo, setProductInfo] = useState({});
+    const [productInfo, setProductInfo] = useState('');
     const [priceJumpPoint, setPriceJumpPoint] = useState('');
     const [orderBoxData, setOrderBoxData] = useState('');
     const dispatch = useDispatch();
@@ -70,10 +70,12 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     }, [stockInfo]);
 
     useEffect(() => {
-        console.log('[productInfo]', productInfo);
-        queryStockQuote();
-        queryStockInfo();
-    }, [productInfo]);
+        if (product.id) {
+            console.log('[productInfo]', product);
+            queryStockQuote();
+            queryStockInfo();
+        }
+    }, [product]);
 
     useEffect(() => {
         console.log('od', orderData);
@@ -149,14 +151,14 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             setSubmitLoading(true);
             let obj = {
                 CID: getWebId('newweb', 'recommisiioned'),
-                StockID: productInfo.symbol,
+                StockID: product.symbol,
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
                 GTCDate: dateSelect ? date : '',
                 aon: aon,
                 TouchedPrice: 0,
-                Exchid: productInfo.market,
+                Exchid: product.market,
                 Creator: currentAccount.idno,
                 token: getToken(),
                 currentAccount,
@@ -181,10 +183,10 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         try {
             let token = getToken();
             let stock_list = {
-                symbol: productInfo.symbol,
-                exchange: productInfo.market,
+                symbol: product.symbol,
+                exchange: product.market,
             };
-            let key = productInfo.symbol + '.' + productInfo.market;
+            let key = product.symbol + '.' + product.market;
             let result = await fetchQuerySubBrokerageQuote([stock_list], token, true);
             let price = result[key].refPrice || result[key].preClose || '';
             setValPrice(price);
@@ -197,8 +199,8 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         try {
             let AID = currentAccount.broker_id + currentAccount.account;
             let token = getToken();
-            let Exchid = productInfo.market;
-            let stockID = productInfo.symbol;
+            let Exchid = product.market;
+            let stockID = product.symbol;
             let result = await postStockInfo({ AID, Exchid, stockID, token });
             setStockInfo(result);
         } catch (error) {
@@ -225,19 +227,19 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 priceJumpPoint: 0.01,
                 aon: 'ANY',
             };
-            let TT = getTT(productInfo.market);
+            let TT = getTT(product.market);
             let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 BS: bs,
                 CID: getWebId('newweb', 'recommisiioned'),
                 ClientIP: getCookie('client_ip'),
                 Creator: currentAccount.idno,
-                Exchid: productInfo.market,
+                Exchid: product.market,
                 OT: '0',
                 Price: valPrice, //valPrice,
                 PriceType: '0',
                 Qty: valNum,
-                StockID: productInfo.symbol,
+                StockID: product.symbol,
                 TT: TT,
                 GTCDate: date,
                 lotSize: priceJumpPoint,
