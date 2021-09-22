@@ -22,7 +22,7 @@ export const submitListService = async (currentAccount, data, platform) => {
                 token: getToken(),
                 currentAccount,
             },
-            true,
+            data.length > 1 ? true : false,
         );
         resList.push(res);
     }
