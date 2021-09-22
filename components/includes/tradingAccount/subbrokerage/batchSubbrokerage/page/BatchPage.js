@@ -91,7 +91,7 @@ const BatchPage = () => {
                                         visible: true,
                                         content: `共送出${selectData.length}筆資料，${
                                             sellSuccess.length
-                                        }筆資料送出成功，${selectData.length - sellSuccess.length}筆資料刪除失敗`,
+                                        }筆資料送出成功，${selectData.length - sellSuccess.length}筆資料送出失敗`,
                                         type: 'info',
                                         title: '系統訊息',
                                     }),
