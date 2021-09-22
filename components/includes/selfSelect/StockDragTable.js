@@ -104,7 +104,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             render: data => (
                 <span className={data.class}>
                     {data.text == '0.00' ? '--' : data.text}
-                    {data.simtrade ? '*' : ''}
+                    {/* {data.simtrade ? '*' : ''} */}
                 </span>
             ),
         },
@@ -116,7 +116,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
             render: data => (
                 <span className={data.class}>
                     {data.text == '0.00' ? '--' : data.text}
-                    {data.simtrade ? '*' : ''}
+                    {/* {data.simtrade ? '*' : ''} */}
                 </span>
             ),
         },
@@ -311,36 +311,37 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                         return getClass(solaceData[selectData.code], solaceData[selectData.code].Close, true, false);
                     })()),
                         (selectData.close.simtrade = solaceData[selectData.code].Simtrade);
+
                     selectData.changePrice.text =
                         parseFloat(solaceData[selectData.code].DiffPrice) === 0
                             ? '--'
                             : parseFloat(Math.abs(solaceData[selectData.code].DiffPrice)).toFixed(2);
-                    (selectData.changePrice.class = (() => {
+                    selectData.changePrice.class = (() => {
                         return getClass(
                             solaceData[selectData.code],
                             solaceData[selectData.code].DiffPrice,
                             false,
                             true,
                         );
-                    })()),
-                        (selectData.changeRate.text =
-                            parseFloat(solaceData[selectData.code].DiffRate) === 0
-                                ? '--'
-                                : `${Math.abs(parseFloat(solaceData[selectData.code].DiffRate / 100).toFixed(2))} %`);
-                    (selectData.changeRate.class = (() => {
+                    })();
+                    selectData.changeRate.text =
+                        parseFloat(solaceData[selectData.code].DiffRate) === 0
+                            ? '--'
+                            : `${Math.abs(parseFloat(solaceData[selectData.code].DiffRate / 100).toFixed(2))} %`;
+
+                    selectData.changeRate.class = (() => {
                         return getClass(solaceData[selectData.code], solaceData[selectData.code].DiffRate, false, true);
-                    })()),
-                        parseFloat(solaceData[selectData.code].DiffRate) < 0;
-                    selectData.high.text = parseFloat(solaceData[selectData.code].High).toFixed(2);
-                    (selectData.high.class = (() => {
-                        return getClass(solaceData[selectData.code], solaceData[selectData.code].High, true, false);
-                    })()),
-                        (selectData.high.simtrade = solaceData[selectData.code].Simtrade);
-                    selectData.low.text = parseFloat(solaceData[selectData.code].Low).toFixed(2);
-                    (selectData.low.class = (() => {
-                        return getClass(solaceData[selectData.code], solaceData[selectData.code].Low, true, false);
-                    })()),
-                        (selectData.low.simtrade = solaceData[selectData.code].Simtrade);
+                    })();
+                    if (!solaceData[selectData.code].Simtrade) {
+                        selectData.high.text = parseFloat(solaceData[selectData.code].High).toFixed(2);
+                        selectData.high.class = (() => {
+                            return getClass(solaceData[selectData.code], solaceData[selectData.code].High, true, false);
+                        })();
+                        selectData.low.text = parseFloat(solaceData[selectData.code].Low).toFixed(2);
+                        selectData.low.class = (() => {
+                            return getClass(solaceData[selectData.code], solaceData[selectData.code].Low, true, false);
+                        })();
+                    }
                 }
                 if (solaceData[selectData.code].BidPrice && solaceData[selectData.code].AskPrice) {
                     selectData.buyPrice.text =
@@ -374,7 +375,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                 }
             }
         });
-        // console.log(JSON.stringify(selfSelectList))
+
         setSelfSelectList(selfSelectList);
     }, [solaceData]);
 
