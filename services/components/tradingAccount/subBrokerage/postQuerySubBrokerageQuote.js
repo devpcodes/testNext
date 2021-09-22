@@ -14,11 +14,11 @@ export const postQuerySubBrokerageQuote = async stock_list => {
             stock_list,
             token: getToken(),
         });
-        console.log(res.data);
-        if (res.data.success) {
+        // console.log(res.data);
+        if (res?.data?.success) {
             return res.data.result;
         }
     } catch (error) {
-        throw error.response.data.message || '伺服器錯誤';
+        throw error.response?.data?.message || error?.message || '伺服器錯誤';
     }
 };

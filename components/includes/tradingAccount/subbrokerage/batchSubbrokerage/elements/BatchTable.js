@@ -398,6 +398,9 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, 
     });
 
     const updatePriceHandler = async () => {
+        if (data.length == 0) {
+            return;
+        }
         const stockList = data.map(item => {
             return {
                 symbol: item.StockID,
@@ -420,19 +423,29 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, 
                     title: '系統訊息',
                 }),
             );
+            setLoading(false);
         }
     };
 
     const updateDate = quoteData => {
         const newData = [];
         Object.keys(quoteData).forEach(key => {
-            newData.push(quoteData[key]);
-            const symbol = key.substring(0, key.lastIndexOf('.'));
-            quoteData[key].StockID = symbol;
-            quoteData[key].Price = parseFloat(quoteData[key].refPrice) || parseFloat(quoteData[key].preClose);
+            if (key) {
+                newData.push(quoteData[key]);
+                const symbol = key.substring(0, key.lastIndexOf('.'));
+                quoteData[key].StockID = symbol;
+                quoteData[key].Exchange = key.substring(key.lastIndexOf('.') + 1);
+                quoteData[key].Price = parseFloat(quoteData[key].refPrice) || parseFloat(quoteData[key].preClose);
+            }
         });
         const updData = data.map((item, i) => {
-            item.Price = newData[i].Price;
+            for (let index = 0; index < newData.length; index++) {
+                const element = newData[index];
+                if (element.Exchange === item.Exchid && element.StockID === item.StockID) {
+                    item.Price = element.Price;
+                }
+            }
+            // item.Price = newData[i].Price;
             return item;
         });
         return updData;

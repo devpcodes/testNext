@@ -45,6 +45,10 @@ const BatchPage = () => {
                     });
 
                     dispatch(setOrderList(newOrderList));
+                    setSelectedRowKeys([]);
+                    setSelectData([]);
+                    setShowBtn(false);
+
                     dispatch(
                         setModal({
                             visible: false,
@@ -70,7 +74,6 @@ const BatchPage = () => {
                             setParentLoading(true);
                             let res = await submitListService(userInfo, subData, platform);
                             setParentLoading(false);
-                            console.log('success...01', subData, res);
                             const sellSuccess = subData.filter((item, i) => {
                                 if (res[i] === 'True') {
                                     return true;
