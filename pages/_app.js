@@ -7,6 +7,8 @@ import TagManager from 'react-gtm-module';
 import { wrapper } from '../store/store';
 import Layout from '../components/layouts/layout';
 import { initGA, logPageView } from '../services/analytics';
+import { checkServer } from '../services/checkServer';
+import { loadScriptByURL } from '../services/loadScriptByURL';
 
 const tagManagerArgs = {
     gtmId: 'GTM-KHJQQ4C',
@@ -14,6 +16,11 @@ const tagManagerArgs = {
 
 function MyApp({ Component, pageProps, router }) {
     useEffect(() => {
+        //手機debug
+        if (/sinoVconsole=true/.test(window.location)) {
+            loadScriptByURL('vconsole', `${process.env.NEXT_PUBLIC_SUBPATH}/js/vconsole.min.js`, vconsoleLoaded);
+        }
+
         //googletagmanager
         TagManager.initialize(tagManagerArgs);
 
@@ -126,6 +133,9 @@ function MyApp({ Component, pageProps, router }) {
             window.GA_INITIALIZED = true;
         }
         logPageView();
+    };
+    const vconsoleLoaded = () => {
+        var vConsole = new window.VConsole();
     };
     const getLayout = Component.getLayout || (page => <Layout children={page} />);
     const renderComp = getLayout(<Component {...pageProps} />);
