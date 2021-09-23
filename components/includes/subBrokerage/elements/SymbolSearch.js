@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import lodash from 'lodash';
 import { message } from 'antd';
@@ -10,41 +10,60 @@ const SymbolSearch = ({getProductInfo}) => {
     const selected = useRef(false);
     const selectSymbol = useRef('');
     const [productInfo, setProductInfo] = useState({});
-    const symbolList = useSelector(store => store.subBrokerage.symbolList);
+    const [defaultValue, setDefaultValue] = useState(null);
     const dispatch = useDispatch();
+    const symbolList = useSelector(store => store.subBrokerage.symbolList);
+
+    useEffect(() => {
+        if (localStorage.getItem('subBrokerage_symbolList')) {
+            const oldSymbolList = JSON.parse(localStorage.getItem('subBrokerage_symbolList'));
+            console.log('oldSymbolList',oldSymbolList)
+            dispatch(setSymbolList(oldSymbolList));
+        }
+    }, []);
+
     const selectHandler = useCallback(async (val, option) => {
         try {
+            let maxLength = 10 //標籤最大值
             let info = option.item;
             console.log('***info',info)
-            let obj = {
-                id:info.id,
-                symbol:info.symbol,
-                name:info.name,
-                exchange:info.exchange,
-                market:"US",
-                sortId:100,
-                marketType:"SB",
-                hasChinese:false
-            }
-            // if (info.market == 'US') {
-            //     setUsSelect(true);
-            // } else {
-            //     setUsSelect(false);
-            // }
-            // setInputVal(val);
-            // setProductInfo(info);
             getProductInfo(info)
-            let newSymbolList = symbolList.concat(info)
+            let data = [...symbolList]
+            const findIndex = _.findIndex(data, ['symbol', info.symbol]);
+            if (findIndex !== -1) {
+                console.log('重複的symbol')
+                return;
+            }
+            if (data.length >= maxLength) {
+                console.log('超過'+maxLength+'個標籤')
+                data.splice(0,1)
+            }
+            let newSymbolList = data.concat(info)
+            console.log(data,newSymbolList)
             dispatch(setSymbolList(newSymbolList))
+            localUpdate(newSymbolList)
+            
         } catch (error) {
             console.log(error);
         }
     });
+
+    const localUpdate = (newData) => {
+        console.log('***UPDATE')
+        localStorage.setItem('subBrokerage_symbolList', JSON.stringify(newData));
+    }
+
     const onChangeHandler = useCallback(val => {
         console.log('[onChangeHandler]',val);
     });
     const selectedHandler = useCallback(bol => {
         selected.current = bol;
+    });
+    const onClickHandler = useCallback((e,val) => {
+        e.preventDefault();
+        console.log('[onClickHandler]',val);
+        setDefaultValue(val)
+        selected.current = true;
     });
 
     return (
@@ -59,11 +78,12 @@ const SymbolSearch = ({getProductInfo}) => {
                     marketType={['SB']}
                     selectedHandler={selectedHandler}
                     placeholder={'股票代號／名稱'}
+                    defaultValue={defaultValue}
                 />
             </div>
             <div className="searchLabelBox">
                 {symbolList.map(x => {
-                    return <label key={x.id}>{x.symbol}</label>;
+                    return <a onClick={e=>onClickHandler(e,x.symbol+' '+x.name)}><label key={x.id}>{x.symbol}</label></a>;
                 })}
             </div>
             <style jsx>
@@ -83,8 +103,9 @@ const SymbolSearch = ({getProductInfo}) => {
                         display: inline-block;
                         font-size: 16px;
                         font-weight: 700;
+                        margin-bottom:5px;
                     }
-                    .searchLabelBox label:not(:last-child) {
+                    .searchLabelBox a:not(:last-child) {
                         margin-right: 10px;
                     }
 
@@ -105,6 +126,9 @@ const SymbolSearch = ({getProductInfo}) => {
                 {`
                     .for_search .search_box .ant-select-selection-placeholder {
                         line-height: 40px;
+                    }
+                    .for_search .autoComplete__container .ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
+                        border-color:transparent;
                     }
                     .for_search .search_box {
                         display: flex;

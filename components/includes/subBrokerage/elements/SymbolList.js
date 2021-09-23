@@ -33,6 +33,7 @@ const SymbolList = ({ style }) => {
     const dragProps = {
         async onDragEnd(fromIndex, toIndex) {
             const newData = [...symbolList];
+            console.log('n',newData)
             const item = newData.splice(fromIndex, 1)[0];
             newData.splice(toIndex, 0, item);
             dispatch(setSymbolList(newData));
