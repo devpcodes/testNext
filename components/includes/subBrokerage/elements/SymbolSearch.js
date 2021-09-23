@@ -52,17 +52,20 @@ const SymbolSearch = ({getProductInfo}) => {
         console.log('***UPDATE')
         localStorage.setItem('subBrokerage_symbolList', JSON.stringify(newData));
     }
-
+    
     const onChangeHandler = useCallback(val => {
         console.log('[onChangeHandler]',val);
     });
     const selectedHandler = useCallback(bol => {
         selected.current = bol;
     });
-    const onClickHandler = useCallback((e,val) => {
+    const onClickHandler = useCallback((e,txt,symbol) => {
         e.preventDefault();
-        console.log('[onClickHandler]',val);
-        setDefaultValue(val)
+        console.log('[onClickHandler]',txt,symbol);
+        setDefaultValue(txt)
+        let info = symbolList.filter(x=>x.symbol==symbol)
+        console.log('[onClickHandler2]',info)
+        getProductInfo(info[0])
         selected.current = true;
     });
 
@@ -78,12 +81,12 @@ const SymbolSearch = ({getProductInfo}) => {
                     marketType={['SB']}
                     selectedHandler={selectedHandler}
                     placeholder={'股票代號／名稱'}
-                    defaultValue={defaultValue}
+                    parentValue={defaultValue}
                 />
             </div>
             <div className="searchLabelBox">
                 {symbolList.map(x => {
-                    return <a onClick={e=>onClickHandler(e,x.symbol+' '+x.name)}><label key={x.id}>{x.symbol}</label></a>;
+                    return <a onClick={e=>onClickHandler(e,x.symbol+' '+x.name,x.symbol)}><label key={x.id}>{x.symbol}</label></a>;
                 })}
             </div>
             <style jsx>

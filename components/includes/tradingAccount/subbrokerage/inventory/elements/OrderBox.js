@@ -44,6 +44,7 @@ const OrderBox = ({ tabDefault, orderData }) => {
     });
 
     const getProductInfo = useCallback(val => {
+        console.log('getProductInfo',val)
         setProductInfo(val);
     });
     const onSeChangeHandler = useCallback(val => {});

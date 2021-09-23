@@ -60,10 +60,6 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         setToDay([d, d_]);
     }, []);
 
-    // useEffect(() => {
-    //     console.log('[orderList]', symbolList);
-    // }, [symbolList]);
-
     useEffect(() => {
         console.log('stockInfo', stockInfo);
         setPriceJumpPoint(stockInfo['@LotSize']);
@@ -110,7 +106,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 let newVal = Number(val) + Number(stockInfo['@LotSize']);
                 setValNum(newVal);
             } else {
-                const pt = getPriceJumpPoint(stockInfo?.market, val, false);
+                const pt = getPriceJumpPoint(stockInfo['@Exch'], val, false);
                 let tickPointLen = pt.toString().indexOf('.') > 0 ? pt.toString().split('.')[1].length : 0;
                 const prevValue = parseFloat(parseFloat(val).toFixed(tickPointLen));
                 setValPrice(parseFloat(prevValue + pt).toFixed(tickPointLen));
@@ -122,7 +118,6 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         if (isNaN(parseFloat(val))) {
             return;
         } else {
-            console.log(stockInfo['@LotSize'])
             if (type === 'qty') {
                 if (Number(val) - Number(stockInfo['@LotSize']) <= 0) {
                     setValNum(Number(stockInfo['@LotSize']));
@@ -131,7 +126,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     setValNum(newVal);
                 }
             } else {
-                const pt = getPriceJumpPoint(stockInfo?.market, val, true);
+                const pt = getPriceJumpPoint(stockInfo['@Exch'], val, true);
                 let tickPointLen = pt.toString().indexOf('.') > 0 ? pt.toString().split('.')[1].length : 0;
                 const prevValue = parseFloat(parseFloat(val).toFixed(tickPointLen));
                 if (prevValue - pt <= 0) {
@@ -143,9 +138,12 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         }
     });
 
-    const changeHandler = useCallback(val => {
-        console.log('va',val)
-        //setValPrice(val);
+    const changeHandlerQty = useCallback(val => {
+            setValNum(val); 
+    });
+    
+    const changeHandlerPrice = useCallback(val => {
+            setValPrice(val); 
     });
 
     const submitHandler = async () => {
@@ -258,7 +256,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     val={valPrice}
                     plusClickHandler={plusHandler.bind(null, valPrice, stockInfo, 'price')}
                     minusClickHandler={minusHandler.bind(null, valPrice, stockInfo, 'price')}
-                    changeHandler={changeHandler.bind(null, 'price')}
+                    changeHandler={changeHandlerPrice}
                 />
             </div>
             <div className="ctrl_item">
@@ -268,7 +266,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     textAlign={'center'}
                     inputWidth={'calc(100% - 100px - 54px - 8px)'}
                     style={{ width: '100%' }}
-                    changeHandler={changeHandler.bind(null, 'qty')}
+                    changeHandler={changeHandlerQty}
                     val={valNum}
                     plusClickHandler={plusHandler.bind(null, valNum, stockInfo, 'qty')}
                     minusClickHandler={minusHandler.bind(null, valNum, stockInfo, 'qty')}
@@ -303,9 +301,9 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     加入暫存夾
                 </Button>
             </div>
-            <div className="text_view">
+            {transactionCost?(<div className="text_view">
                 預估金額 {transactionCost}元({stockInfo['@CHCurrency']})
-            </div>
+            </div>):('')}
             <div>{submitLoading ? 'Loading...' : ''}</div>
             <style jsx>
                 {`
