@@ -91,6 +91,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     };
 
     const onChange = useCallback(val => {
+        console.log('date__',val);
         setDateSelect(val);
     });
 
@@ -121,6 +122,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         if (isNaN(parseFloat(val))) {
             return;
         } else {
+            console.log(stockInfo['@LotSize'])
             if (type === 'qty') {
                 if (Number(val) - Number(stockInfo['@LotSize']) <= 0) {
                     setValNum(Number(stockInfo['@LotSize']));
@@ -141,8 +143,9 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         }
     });
 
-    const changeHandler = useCallback(value => {
-        setVal(value);
+    const changeHandler = useCallback(val => {
+        console.log('va',val)
+        //setValPrice(val);
     });
 
     const submitHandler = async () => {
@@ -155,7 +158,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
-                GTCDate: dateSelect ? date : '',
+                GTCDate: dateSelect ? null : date,
                 aon: aon,
                 TouchedPrice: 0,
                 Exchid: product.market,
@@ -181,6 +184,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     };
     const queryStockQuote = async () => {
         try {
+
             let token = getToken();
             let stock_list = {
                 symbol: product.symbol,
@@ -189,8 +193,10 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             let key = product.symbol + '.' + product.market;
             let result = await fetchQuerySubBrokerageQuote([stock_list], token, true);
             let price = result[key].refPrice || result[key].preClose || '';
+            let num = result[key].lotSize || result[key].lotSize || '';
+            console.log('queryStockQuote',result)
             setValPrice(price);
-            setValNum(1);
+            setValNum(num);
         } catch (error) {
             console.log(error);
         }
@@ -209,6 +215,8 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     };
     const addLocal = async () => {
         try {
+            console.log('dateSelect',dateSelect ? date : null)
+            console.log('dateSelect2',stockInfo)
             let TT = getTT(product.market);
             let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
@@ -223,12 +231,13 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 Qty: valNum,
                 StockID: product.symbol,
                 TT: TT,
-                GTCDate: date,
-                lotSize: priceJumpPoint,
-                priceJumpPoint: 0.01,
+                GTCDate: dateSelect ? date : null,
+                lotSize: stockInfo['@LotSize'],
+                priceJumpPoint: priceJumpPoint,
                 aon: aon,
                 StockName:stockInfo['@StockName'],
             };
+            console.log(newData)
             let nd = orderList.concat(newData);
             //console.log('POSTDATA',newData)
             dispatch(setOrderList(nd));
@@ -249,7 +258,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     val={valPrice}
                     plusClickHandler={plusHandler.bind(null, valPrice, stockInfo, 'price')}
                     minusClickHandler={minusHandler.bind(null, valPrice, stockInfo, 'price')}
-                    changeHandler={changeHandler}
+                    changeHandler={changeHandler.bind(null, 'price')}
                 />
             </div>
             <div className="ctrl_item">
@@ -259,7 +268,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     textAlign={'center'}
                     inputWidth={'calc(100% - 100px - 54px - 8px)'}
                     style={{ width: '100%' }}
-                    changeHandler={changeHandler}
+                    changeHandler={changeHandler.bind(null, 'qty')}
                     val={valNum}
                     plusClickHandler={plusHandler.bind(null, valNum, stockInfo, 'qty')}
                     minusClickHandler={minusHandler.bind(null, valNum, stockInfo, 'qty')}
@@ -278,7 +287,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     <div className="ctrl_item mt-8">
                         <span>長效單</span>
                         <Switch onChange={onChange} />
-                        {dateSelect ? <input type="date" onChange={onDateChange} min={toDay[0]} max={toDay[1]} /> : ''}
+                        {dateSelect ? <input type="date" onChange={onDateChange} min={toDay[0]} max={toDay[1]} value={toDay[1]||null}/> : ''}
                     </div>
                 </>
             ) : (
