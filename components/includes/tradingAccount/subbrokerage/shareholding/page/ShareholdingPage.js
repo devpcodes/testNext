@@ -42,17 +42,17 @@ const ShareholdingPage = () => {
                         setSubmitListLoading(true);
                         try {
                             let res = await submitListService(userInfo, selectData, platform);
-                            const sellSuccess = res.filter(item => {
-                                if (item === 'True') {
+                            const sellSuccess = res.filter((item, i) => {
+                                if (res[i] === 'True') {
                                     return true;
                                 }
                             });
                             dispatch(
                                 setModal({
                                     visible: true,
-                                    content: `共刪除${selectData.length}筆資料，${sellSuccess.length}筆資料刪除成功，${
+                                    content: `共賣出${selectData.length}筆資料，${sellSuccess.length}筆資料委託成功，${
                                         selectData.length - sellSuccess.length
-                                    }筆資料刪除失敗`,
+                                    }筆資料委託失敗`,
                                     type: 'info',
                                     title: '系統訊息',
                                 }),
