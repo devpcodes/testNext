@@ -14,13 +14,15 @@ export const useAutoSelectAccount = type => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (accounts?.length > 0) {
-            const groupedAccount = accountGroupByType(accounts);
+            setTimeout(() => {
+                const groupedAccount = accountGroupByType(accounts);
 
-            if (groupedAccount[type] != null && groupedAccount[type]?.length > 0 && type !== 'S') {
-                dispatch(setCurrentAccount(groupedAccount[type][0]));
-            } else {
-                dispatch(setModal({ visible: true, type: 'confirm', content: '無可交易帳號', title: '系統訊息' }));
-            }
+                if (groupedAccount[type] != null && groupedAccount[type]?.length > 0 && type !== 'S') {
+                    dispatch(setCurrentAccount(groupedAccount[type][0]));
+                } else {
+                    dispatch(setModal({ visible: true, type: 'confirm', content: '無可交易帳號', title: '系統訊息' }));
+                }
+            }, 500);
         }
     }, [accounts]);
 };
