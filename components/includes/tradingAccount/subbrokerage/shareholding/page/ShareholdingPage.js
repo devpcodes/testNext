@@ -42,7 +42,7 @@ const ShareholdingPage = () => {
                         setSubmitListLoading(true);
                         try {
                             let res = await submitListService(userInfo, selectData, platform);
-                            const sellSuccess = res.filter((item, i) => {
+                            const sellSuccess = selectData.filter((item, i) => {
                                 if (res[i] === 'True') {
                                     return true;
                                 }
