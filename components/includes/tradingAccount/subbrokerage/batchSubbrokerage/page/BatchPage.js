@@ -85,7 +85,7 @@ const BatchPage = () => {
                             setSelectedRowKeys([]);
                             setSelectData([]);
                             setShowBtn(false);
-                            if (type !== 'signle') {
+                            if (selectData.length > 1) {
                                 dispatch(
                                     setModal({
                                         visible: true,
