@@ -166,12 +166,16 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, 
                 width: 100,
                 align: 'left',
                 render: (text, record) => {
-                    return (
-                        <Select value={record.aon} onChange={changeAON.bind(null, record, data)}>
-                            <Option value="ANY">ANY</Option>
-                            <Option value="AON">AON</Option>
-                        </Select>
-                    );
+                    if (record.Exchid === 'US') {
+                        return (
+                            <Select value={record.aon} onChange={changeAON.bind(null, record, data)}>
+                                <Option value="ANY">ANY</Option>
+                                <Option value="AON">AON</Option>
+                            </Select>
+                        );
+                    } else {
+                        return '';
+                    }
                 },
             },
             {
@@ -181,28 +185,35 @@ const BatchTable = ({ selectItemHandler, submitHandler, refresh, parentLoading, 
                 width: 200,
                 align: 'left',
                 render: (text, record) => {
-                    return (
-                        <div>
-                            <Checkbox onChange={gtcCheck.bind(null, record, data)} checked={record.gtcCheck}></Checkbox>
-                            <Input
-                                type="date"
-                                style={{
-                                    border: '1px solid #d9d9d9',
-                                    height: '33px',
-                                    paddingLeft: '8px',
-                                    width: '150px',
-                                    marginLeft: '8px',
-                                }}
-                                value={
-                                    text != null
-                                        ? moment(text).format('YYYY-MM-DD')
-                                        : moment().add(6, 'months').format('YYYY-MM-DD')
-                                }
-                                max={moment().add(6, 'months').format('YYYY-MM-DD')}
-                                onChange={gtcChange.bind(null, record, data)}
-                            />
-                        </div>
-                    );
+                    if (record.Exchid === 'US') {
+                        return (
+                            <div>
+                                <Checkbox
+                                    onChange={gtcCheck.bind(null, record, data)}
+                                    checked={record.gtcCheck}
+                                ></Checkbox>
+                                <Input
+                                    type="date"
+                                    style={{
+                                        border: '1px solid #d9d9d9',
+                                        height: '33px',
+                                        paddingLeft: '8px',
+                                        width: '150px',
+                                        marginLeft: '8px',
+                                    }}
+                                    value={
+                                        text != null
+                                            ? moment(text).format('YYYY-MM-DD')
+                                            : moment().add(6, 'months').format('YYYY-MM-DD')
+                                    }
+                                    max={moment().add(6, 'months').format('YYYY-MM-DD')}
+                                    onChange={gtcChange.bind(null, record, data)}
+                                />
+                            </div>
+                        );
+                    } else {
+                        return '';
+                    }
                 },
             },
             {
