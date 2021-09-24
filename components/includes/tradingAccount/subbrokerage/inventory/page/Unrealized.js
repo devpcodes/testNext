@@ -11,7 +11,7 @@ import { secretToggle } from '../../../../../../services/components/tradingAccou
 import BuyButton from '../../../vipInventory/buttons/BuyButton';
 import SellButton from '../../../vipInventory/buttons/SellButton';
 import ItemCard from '../elements/ItemCard';
-const Unrealized = ({}) => {
+const Unrealized = ({toOrderBox}) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({ data: [], sum_data: [] });
     const [columns, setColumns] = useState([]);
@@ -20,7 +20,6 @@ const Unrealized = ({}) => {
     const [filterData, setFilterData] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('ALL');
-    const url_base = 'https://webrd.sinotrade.com.tw/newweb/goOrder/';
     const [hidden, setHidden] = useState(false);
     const orderData = { stockID: 'JCPNQ', symbo: 'J.C. Penney', key: 'aa' };
 
@@ -172,9 +171,7 @@ const Unrealized = ({}) => {
                             <BuyButton
                                 text={'買進'}
                                 onClick={
-                                    e => {
-                                        defaultFunc2();
-                                    }
+                                    void 0
                                     // let qty;
                                     // let marketType = '';
                                     // if (record.rqty % 1000 == 0) {
@@ -337,6 +334,13 @@ const Unrealized = ({}) => {
             };
         }
     };
+    const toOrderBox_ = (e,id) =>{
+        e.preventDefault();
+        let data_ = data.filter(x=>x.Symbol===id)
+        let data__ = data_[0]
+        data__.stemp = (new Date).getTime()
+        toOrderBox(data__)
+    }
 
     const consumeClick = (e, id) => {
         e.preventDefault();

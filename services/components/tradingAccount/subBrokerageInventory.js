@@ -8,9 +8,9 @@ export const getSubBrokerageData = async function (id) {
             AID : id,
             token: getToken(),
         }
-        console.log('[REQ]',data)
+        // console.log('[REQ]',data)
         const res = await getA8Instance('v2', undefined, false).post(url,data)
-        console.log('[RES]',res)
+        // console.log('[RES]',res)
         if (res.data?.success === true) {
             return dataSource || [];
         } else {

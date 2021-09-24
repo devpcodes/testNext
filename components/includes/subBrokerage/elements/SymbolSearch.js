@@ -6,7 +6,7 @@ import { setSymbolList } from '../../../../store/subBrokerage/action';
 import AddSelfSelect from '../../selfSelect/AddSelfSelect';
 import { SearchOutlined } from '@ant-design/icons';
 import SearchAutoComplete from '../../tradingAccount/vipInventory/SearchAutoComplete';
-const SymbolSearch = ({getProductInfo}) => {
+const SymbolSearch = ({getProductInfo, defaultVal}) => {
     const selected = useRef(false);
     const selectSymbol = useRef('');
     const [productInfo, setProductInfo] = useState({});
@@ -22,6 +22,14 @@ const SymbolSearch = ({getProductInfo}) => {
         }
     }, []);
 
+    useEffect(() => {
+        console.log('defaultVal',defaultVal)
+        if (defaultVal.symbol) {
+            let val = defaultVal.symbol + ' ' + defaultVal.name
+            setDefaultValue(val)
+        }
+    }, [defaultVal]);
+
     const selectHandler = useCallback(async (val, option) => {
         try {
             let maxLength = 10 //標籤最大值
@@ -31,11 +39,9 @@ const SymbolSearch = ({getProductInfo}) => {
             let data = [...symbolList]
             const findIndex = _.findIndex(data, ['symbol', info.symbol]);
             if (findIndex !== -1) {
-                console.log('重複的symbol')
                 return;
             }
             if (data.length >= maxLength) {
-                console.log('超過'+maxLength+'個標籤')
                 data.splice(0,1)
             }
             let newSymbolList = data.concat(info)
@@ -107,6 +113,7 @@ const SymbolSearch = ({getProductInfo}) => {
                         font-size: 16px;
                         font-weight: 700;
                         margin-bottom:5px;
+                        cursor: pointer;
                     }
                     .searchLabelBox a:not(:last-child) {
                         margin-right: 10px;

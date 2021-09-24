@@ -7,6 +7,7 @@ import { getToken } from '../../../../../../services/user/accessToken';
 import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
+import { DEFAULT_MAX_DEPTH } from '@msgpack/msgpack/dist/Encoder';
 const Invetory = ({toOrderBox}) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState([]);
@@ -15,8 +16,6 @@ const Invetory = ({toOrderBox}) => {
     const [filterData, setFilterData] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('');
-    const url_base = 'https://webrd.sinotrade.com.tw/newweb/goOrder/'
-    
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
             const postData = {
@@ -162,17 +161,28 @@ const Invetory = ({toOrderBox}) => {
 
     const toOrderBox_inv = (e,id) =>{
         e.preventDefault();
-        toOrderBox(id)
+        let data_ = data.filter(x=>x.Symbol===id)
+        let data__ = data_[0]
+        console.log('data__ ',data__ )
+        let marketArr = data__.StockID.split('.')
+        let newData = {
+            symbol: data__.Symbol,
+            name: data__.StockName,
+            market: marketArr[1],
+            qty: data__.UseQty,
+            stemp: (new Date).getTime()
+        }
+        toOrderBox(newData)
     }
 
-    const consumeClick = (e,id) =>{
-        e.preventDefault();
-        let ds_=data.filter(x=> x.Symbol == id)[0]
-        console.log(ds_)
-        window.open(`
-        ${url_base}?bs=S&stockid=${id}&price=${ds_.AvgPrice}&qty=1&account=${currentAccount.broker_id+'-'+currentAccount.account}
-        &nav=0`,'_blank', 'toolbar=0,location=0,menubar=0,width=450px,height=716px')
-    }
+    // const consumeClick = (e,id) =>{
+    //     e.preventDefault();
+    //     let ds_=data.filter(x=> x.Symbol == id)[0]
+    //     console.log(ds_)
+    //     window.open(`
+    //     ${url_base}?bs=S&stockid=${id}&price=${ds_.AvgPrice}&qty=1&account=${currentAccount.broker_id+'-'+currentAccount.account}
+    //     &nav=0`,'_blank', 'toolbar=0,location=0,menubar=0,width=450px,height=716px')
+    // }
 
     const onRefresh = () =>{
         let r = refresh
@@ -226,7 +236,7 @@ const Invetory = ({toOrderBox}) => {
             {`
             .posi_relative{position:relative;}
             AccountTable{margin-top:15px}
-            .active_box {margin-bottom:15px;display:flex; justify-content: flex-end;position:absolute; top:-110px;}
+            .active_box {width:100%;margin-bottom:15px;display:flex; justify-content: flex-end;position:absolute; top:-110px; text-align:right;}
             `}
         </style>
         </div>

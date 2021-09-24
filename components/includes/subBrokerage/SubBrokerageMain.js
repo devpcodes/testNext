@@ -14,7 +14,7 @@ import OrderBox from '../tradingAccount/subbrokerage/inventory/elements/OrderBox
 
 const SubBrokerMain = () => {
     const [current, setCurrent] = useState('order');
-    const [orderData, setOrderData] = useState('');
+    const [orderDataN, setOrderDataN] = useState('');
     const [orderBoxCtrl, setOrderBoxCtrl] = useState(true);
     const menuList = [
         { key: 'order', title: '委回' },
@@ -34,16 +34,17 @@ const SubBrokerMain = () => {
         setOrderBoxCtrl(!status);
     };
 
-    const toOrderBox = data => {
-        console.log(data);
-        setOrderData(data);
+    const toOrderBox = (data) => {
+        console.log('SBM', data);
+        setOrderDataN(data);
     };
+
     return (
         <div className="page__container subBrokerage">
             <div className="left_area">
                 <div className="left_ctrl_box">
                     <div>
-                        <OrderBox orderData={orderData}></OrderBox>
+                        <OrderBox orderData={orderDataN}></OrderBox>
                     </div>
                 </div>
                 <a className="ctrl_btn" onClick={onChange}></a>
@@ -54,7 +55,7 @@ const SubBrokerMain = () => {
                 </div>
                 <div className="content_box">
                     {(() => {
-                        console.log('current', current);
+                        console.log('[current]', current);
                         switch (current) {
                             case 'order':
                                 return <OrderStatusPage />;
@@ -67,7 +68,7 @@ const SubBrokerMain = () => {
                             case 'balance':
                                 return <AccBalance />;
                             case 'unrealized':
-                                return <Unrealized />;
+                                return <Unrealized toOrderBox={toOrderBox} />;
                             case 'holding':
                                 return <ShareholdingPage />;
                             case 'batch':

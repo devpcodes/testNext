@@ -6,25 +6,32 @@ import SymbolSearch from '../../../../subBrokerage/elements/SymbolSearch';
 import SymbolList from '../../../../subBrokerage/elements/SymbolList';
 import SymbolInput from '../../../../subBrokerage/elements/SymbolInput';
 import { themeColor } from '../../../../goOrder/panel/PanelTabs';
-const OrderBox = ({ tabDefault, orderData }) => {
+const OrderBox = ({ orderData }) => {
     const [current, setCurrent] = useState('B');
     const [tabColor, setTabColor] = useState(themeColor.buyTabColor);
     const [productInfo, setProductInfo] = useState({});
+    const [newOrderData, setNewOrderData] = useState({});
+    const [toSearchBox, setToSearchBox] = useState(null);
     const selected = useRef(false);
     const selectSymbol = useRef('');
     const { TabPane } = Tabs;
     useEffect(() => {
         if (current == 'B') {
             setTabColor(themeColor.buyTabColor);
-            console.log('BUY');
         } else if (current == 'S') {
             setTabColor(themeColor.sellTabColor);
-            console.log('SELL');
         } else {
             setTabColor(themeColor.tradingAccColor);
-            console.log('OTHER');
         }
     }, [current]);
+
+    useEffect(() => {
+        console.log('NewOrderData',orderData)
+        if(orderData){
+            setNewOrderData(orderData)
+            setToSearchBox(orderData.symbol+' '+orderData.name)
+        }
+    }, [orderData]);
 
     const selectHandler = useCallback(async val => {
         const symbol = val.split(' ')[0];
@@ -47,6 +54,7 @@ const OrderBox = ({ tabDefault, orderData }) => {
         console.log('getProductInfo',val)
         setProductInfo(val);
     });
+
     const onSeChangeHandler = useCallback(val => {});
 
     const selectedHandler = useCallback(bol => {
@@ -68,8 +76,7 @@ const OrderBox = ({ tabDefault, orderData }) => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            // return <div className="space_box"></div>;
-                            return <SymbolSearch getProductInfo={getProductInfo} />;
+                            return <SymbolSearch getProductInfo={getProductInfo} defaultVal={newOrderData}/>;
                         case 'N':
                             return <SymbolInput />;
                         default:
@@ -89,7 +96,7 @@ const OrderBox = ({ tabDefault, orderData }) => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            return <OrderBoxBS type={current} product={productInfo} />;
+                            return <OrderBoxBS type={current} product={productInfo} orderData={newOrderData} />;
                         case 'N':
                             return (
                                 <SymbolList

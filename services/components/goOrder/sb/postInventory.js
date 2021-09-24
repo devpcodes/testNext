@@ -14,7 +14,7 @@ export const postInventoryWithSwr = async strObj => {
 export const postInventory = async ({ AID, token, seq }) => {
     var url = '/SubBrokerage/QueryTradeData/Position';
     try {
-        console.log('[REQ]', AID, token);
+        // console.log('[REQ]', AID, token);
         const res = await getA8Instance('v2', undefined, false).post(url, {
             AID,
             token,
@@ -88,7 +88,7 @@ const postAccBalance = async req => {
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(2)';
+        throw '伺服器錯誤';
     }
 };
 
@@ -101,7 +101,7 @@ export const postBankBalanceWithSwr = async (strObj, controlReload) => {
 export const postBankBalance = async (AID, token, UID) => {
     var url = '/SubBrokerage/ClientData/BankBalance';
     try {
-        console.log('[REQ]', AID, token, UID);
+        // console.log('[REQ]', AID, token, UID);
         const res = await getA8Instance('v2', undefined, true).post(url, { AID: AID, token: token, user_id: UID });
         if (res.data.success === 'True') {
             console.log('[RES]', res);
@@ -114,7 +114,7 @@ export const postBankBalance = async (AID, token, UID) => {
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(2)';
+        throw '伺服器錯誤';
     }
 };
 
@@ -144,7 +144,7 @@ const postUnrealized = async ({ account, broker_id, token, market }) => {
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(3)' + error;
+        throw '伺服器錯誤' + error;
     }
 };
 
@@ -192,7 +192,7 @@ export const postWithdrawApply = async (currentAccount, platform, Amount, Curren
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(2)' + error;
+        throw '伺服器錯誤' + error;
     }
 };
 
@@ -209,12 +209,10 @@ const formatDate = date => {
 export const postBankAccount = async (AID, token) => {
     var url = '/SubBrokerage/ClientData/BankAccount';
     try {
-        console.log('[REQ]', AID, token);
+        // console.log('[REQ]', AID, token);
         const res = await getA8Instance('v1', undefined, true).post(url, { AID: AID, token: token });
-
         if (res.data.success === 'True') {
             const obj = [];
-
             if (res.data.result) {
                 // res.data.result.map(x=>{
                 //     x.Currency = getCurrency(x.Currency)
@@ -231,6 +229,6 @@ export const postBankAccount = async (AID, token) => {
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤(1)' + error;
+        throw '伺服器錯誤' + error;
     }
 };
