@@ -11,7 +11,7 @@ import { secretToggle } from '../../../../../../services/components/tradingAccou
 import BuyButton from '../../../vipInventory/buttons/BuyButton';
 import SellButton from '../../../vipInventory/buttons/SellButton';
 import ItemCard from '../elements/ItemCard';
-const Unrealized = ({toOrderBox}) => {
+const Unrealized = ({ toOrderBox }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({ data: [], sum_data: [] });
     const [columns, setColumns] = useState([]);
@@ -21,7 +21,6 @@ const Unrealized = ({toOrderBox}) => {
     const [searchColumns, setSearchColumns] = useState([]);
     const [marketFilterValue, setMarketFilterValue] = useState('ALL');
     const [hidden, setHidden] = useState(false);
-    const orderData = { stockID: 'JCPNQ', symbo: 'J.C. Penney', key: 'aa' };
 
     const postData = useMemo(() => {
         if (currentAccount.account != null) {
@@ -171,7 +170,7 @@ const Unrealized = ({toOrderBox}) => {
                             <BuyButton
                                 text={'買進'}
                                 onClick={
-                                    void 0
+                                    e => toOrderBox_unr(e, content, 'B')
                                     // let qty;
                                     // let marketType = '';
                                     // if (record.rqty % 1000 == 0) {
@@ -199,7 +198,7 @@ const Unrealized = ({toOrderBox}) => {
                             <SellButton
                                 text={'賣出'}
                                 onClick={
-                                    void 0
+                                    e => toOrderBox_unr(e, content, 'S')
                                     //toOrderBox(orderData)
                                     // {
                                     //     Market: 'US',
@@ -334,13 +333,22 @@ const Unrealized = ({toOrderBox}) => {
             };
         }
     };
-    const toOrderBox_ = (e,id) =>{
+    const toOrderBox_unr = (e, id, bs) => {
         e.preventDefault();
-        let data_ = data.filter(x=>x.Symbol===id)
-        let data__ = data_[0]
-        data__.stemp = (new Date).getTime()
-        toOrderBox(data__)
-    }
+        console.log('toOrderBox_unr', data);
+        let data_ = data.data.filter(x => x.symbol === id);
+        let data__ = data_[0];
+        let newData = {
+            symbol: data__.symbol,
+            name: data__.name,
+            market: data__.market,
+            qty: data__.last_inv,
+            bs: bs,
+            stemp: new Date().getTime(),
+        };
+        console.log('data__ ', newData);
+        toOrderBox(newData);
+    };
 
     const consumeClick = (e, id) => {
         e.preventDefault();

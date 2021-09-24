@@ -39,7 +39,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     useEffect(() => {
         if (stockInfo['@StockID']) {
             let val = getTransactionCost(valNum, valPrice, bs, stockInfo['@Currency']);
-           // console.log('試算', valNum, valPrice, bs, stockInfo['@Currency'], val);
+            // console.log('試算', valNum, valPrice, bs, stockInfo['@Currency'], val);
             setTransactionCost(val);
         }
     }, [valNum, valPrice, bs, stockInfo]);
@@ -74,12 +74,12 @@ const OrderBoxBS = ({ type, orderData, product }) => {
 
     useEffect(() => {
         console.log('od', orderData);
-        if (orderData.symbol) {     
+        if (orderData.symbol) {
             setOrderBoxData(orderData);
             queryStockQuote('o');
             queryStockInfo('o');
-            if(orderData.qty && orderData.qty!=='0'){
-                setValNum(orderData.qty)
+            if (orderData.qty && orderData.qty !== '0') {
+                setValNum(orderData.qty);
             }
         }
     }, [orderData]);
@@ -90,7 +90,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     };
 
     const onChange = useCallback(val => {
-        console.log('date__',val);
+        console.log('date__', val);
         setDateSelect(val);
     });
 
@@ -142,11 +142,11 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     });
 
     const changeHandlerQty = useCallback(val => {
-            setValNum(val); 
+        setValNum(val);
     });
-    
+
     const changeHandlerPrice = useCallback(val => {
-            setValPrice(val); 
+        setValPrice(val);
     });
 
     const submitHandler = async () => {
@@ -182,27 +182,33 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             });
         }
     };
-    const queryStockQuote = async (type) => {
+    const queryStockQuote = async type => {
         try {
             let token = getToken();
             let stock_list = {};
             let key = '';
-            if(type==='p'){
+            if (type === 'p') {
                 stock_list = {
                     symbol: product.symbol,
                     exchange: product.market,
                 };
                 key = product.symbol + '.' + product.market;
-            }else{
+            } else {
                 stock_list = {
                     symbol: orderData.symbol,
                     exchange: orderData.market,
                 };
                 key = orderData.symbol + '.' + orderData.market;
             }
-            console.log('stock_list',stock_list)
+            console.log('stock_list', stock_list);
             let result = await fetchQuerySubBrokerageQuote([stock_list], token, true);
-            console.log('queryStockQuote',result)
+            console.log('queryStockQuote', result);
+            if (!result[key]) {
+                setValPrice('');
+                setValNum('');
+                setTransactionCost(null);
+                throw '查無資料';
+            }
             let price = result[key].refPrice || result[key].preClose || '';
             let num = result[key].lotSize || result[key].lotSize || '';
             setValPrice(price);
@@ -211,16 +217,16 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             console.log(error);
         }
     };
-    const queryStockInfo = async (type) => {
+    const queryStockInfo = async type => {
         try {
             let AID = currentAccount.broker_id + currentAccount.account;
             let token = getToken();
             let Exchid = '';
             let stockID = '';
-            if(type==='p'){
+            if (type === 'p') {
                 Exchid = product.market;
                 stockID = product.symbol;
-            }else{
+            } else {
                 Exchid = orderData.market;
                 stockID = orderData.symbol;
             }
@@ -230,10 +236,11 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             console.log(error);
         }
     };
-    const addLocal = async () => { //加入暫存夾
+    const addLocal = async () => {
+        //加入暫存夾
         try {
-            console.log('dateSelect',dateSelect ? date : null)
-            console.log('dateSelect2',stockInfo)
+            console.log('dateSelect', dateSelect ? date : null);
+            console.log('dateSelect2', stockInfo);
             let TT = getTT(product.market);
             let pt = await getPriceJumpPoint(stockInfo['@Exch'], valPrice, true);
             let newData = {
@@ -253,9 +260,9 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 lotSize: stockInfo['@LotSize'],
                 priceJumpPoint: pt,
                 aon: aon,
-                StockName:stockInfo['@StockName'],
+                StockName: stockInfo['@StockName'],
             };
-            console.log(newData)
+            console.log(newData);
             let nd = orderList.concat(newData);
             //console.log('POSTDATA',newData)
             dispatch(setOrderList(nd));
@@ -293,7 +300,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     disabledPlus={disabledPlus}
                 />
             </div>
-            {product.market=='US' ? (
+            {product.market == 'US' ? (
                 <>
                     <div className="ctrl_item mt-8 ctrl_item_select">
                         <span>條件</span>
@@ -305,7 +312,17 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     <div className="ctrl_item mt-8">
                         <span>長效單</span>
                         <Switch onChange={onChange} />
-                        {dateSelect ? <input type="date" onChange={onDateChange} min={toDay[0]} max={toDay[1]} value={toDay[1]||null}/> : ''}
+                        {dateSelect ? (
+                            <input
+                                type="date"
+                                onChange={onDateChange}
+                                min={toDay[0]}
+                                max={toDay[1]}
+                                value={toDay[1] || null}
+                            />
+                        ) : (
+                            ''
+                        )}
                     </div>
                 </>
             ) : (
@@ -321,9 +338,13 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     加入暫存夾
                 </Button>
             </div>
-            {transactionCost?(<div className="text_view">
-                預估金額 {transactionCost}元({stockInfo['@CHCurrency']})
-            </div>):('')}
+            {transactionCost ? (
+                <div className="text_view">
+                    預估金額 {transactionCost}元({stockInfo['@CHCurrency']})
+                </div>
+            ) : (
+                ''
+            )}
             <style jsx>
                 {`
                     input[type='date'] {

@@ -34,7 +34,7 @@ const SubBrokerMain = () => {
         setOrderBoxCtrl(!status);
     };
 
-    const toOrderBox = (data) => {
+    const toOrderBox = data => {
         console.log('SBM', data);
         setOrderDataN(data);
     };

@@ -8,7 +8,7 @@ import DropfilterCheckBox from '../../../vipInventory/DropfilterCheckBox';
 import AccountTable from '../../../vipInventory/AccountTable';
 import IconBtn from '../../../vipInventory/IconBtn';
 import { DEFAULT_MAX_DEPTH } from '@msgpack/msgpack/dist/Encoder';
-const Invetory = ({toOrderBox}) => {
+const Invetory = ({ toOrderBox }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -21,13 +21,13 @@ const Invetory = ({toOrderBox}) => {
             const postData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 token: getToken(),
-                seq: refresh
+                seq: refresh,
             };
             return postData;
         } else {
             return {};
         }
-    }, [currentAccount,refresh]);
+    }, [currentAccount, refresh]);
 
     const { data: fetchData } = useSWR([JSON.stringify(postData)], postInventoryWithSwr, {
         onError: (error, key) => {
@@ -50,76 +50,82 @@ const Invetory = ({toOrderBox}) => {
             setFilterData(newData);
         }
     }, [fetchData]);
-// <button onClick={e=>consumeClick(e,content)}>下單</button>
+    // <button onClick={e=>consumeClick(e,content)}>下單</button>
     useEffect(() => {
-    const newColumns = [
-        {
-            title: '動作',
-            dataIndex: 'Symbol',
-            key: 'active',
-            align: 'center',
-            render: (content) => {
-                return (
-                    <button onClick={e=>toOrderBox_inv(e,content)}>下單</button>
-                );
+        const newColumns = [
+            {
+                title: '動作',
+                dataIndex: 'Symbol',
+                key: 'active',
+                align: 'center',
+                render: content => {
+                    return <button onClick={e => toOrderBox_inv(e, content)}>下單</button>;
+                },
             },
-        },{
-            title: '市場',
-            dataIndex: 'Market',
-            key: 'Market',
-            align: 'center',
-            ...getColumnSearchProps('Market'),
-        },{
-            title: '代碼',
-            dataIndex: 'Symbol',
-            key: 'Symbol',
-            align: 'center',
-        },{
-            title: '商品',
-            dataIndex: 'StockName',
-            key: 'StockName',
-            align: 'center',
-        },{
-            title: '昨庫存',
-            dataIndex: 'QtyInfo1',
-            key: 'QtyInfo1',
-            align: 'center',
-        },{
-            title: '今委買',
-            dataIndex: 'QtyInfo2',
-            key: 'QtyInfo2',
-            align: 'center',
-        },{
-            title: '今委賣',
-            dataIndex: 'QtyInfo3',
-            key: 'QtyInfo3',
-            align: 'center',
-        },{
-            title: '今買成',
-            dataIndex: 'QtyInfo4',
-            key: 'QtyInfo4',
-            align: 'center',
-        },{
-            title: '今賣成',
-            dataIndex: 'QtyInfo5',
-            key: 'QtyInfo5',
-            align: 'center',
-        },{
-            title: '目前庫存',
-            dataIndex: 'UseQty',
-            key: 'UseQty',
-            align: 'center',
-        },{
-            title: '幣別',
-            dataIndex: 'Currency',
-            key: 'Currency',
-            align: 'center',
-        },
-        
-    ];
-    setColumns(newColumns);
+            {
+                title: '市場',
+                dataIndex: 'Market',
+                key: 'Market',
+                align: 'center',
+                ...getColumnSearchProps('Market'),
+            },
+            {
+                title: '代碼',
+                dataIndex: 'Symbol',
+                key: 'Symbol',
+                align: 'center',
+            },
+            {
+                title: '商品',
+                dataIndex: 'StockName',
+                key: 'StockName',
+                align: 'center',
+            },
+            {
+                title: '昨庫存',
+                dataIndex: 'QtyInfo1',
+                key: 'QtyInfo1',
+                align: 'center',
+            },
+            {
+                title: '今委買',
+                dataIndex: 'QtyInfo2',
+                key: 'QtyInfo2',
+                align: 'center',
+            },
+            {
+                title: '今委賣',
+                dataIndex: 'QtyInfo3',
+                key: 'QtyInfo3',
+                align: 'center',
+            },
+            {
+                title: '今買成',
+                dataIndex: 'QtyInfo4',
+                key: 'QtyInfo4',
+                align: 'center',
+            },
+            {
+                title: '今賣成',
+                dataIndex: 'QtyInfo5',
+                key: 'QtyInfo5',
+                align: 'center',
+            },
+            {
+                title: '目前庫存',
+                dataIndex: 'UseQty',
+                key: 'UseQty',
+                align: 'center',
+            },
+            {
+                title: '幣別',
+                dataIndex: 'Currency',
+                key: 'Currency',
+                align: 'center',
+            },
+        ];
+        setColumns(newColumns);
     }, [data, searchColumns, marketFilterValue]);
-
 
     // const handleChange = v =>{
     //     let d = data
@@ -159,21 +165,21 @@ const Invetory = ({toOrderBox}) => {
         }
     };
 
-    const toOrderBox_inv = (e,id) =>{
+    const toOrderBox_inv = (e, id) => {
         e.preventDefault();
-        let data_ = data.filter(x=>x.Symbol===id)
-        let data__ = data_[0]
-        console.log('data__ ',data__ )
-        let marketArr = data__.StockID.split('.')
+        let data_ = data.filter(x => x.Symbol === id);
+        let data__ = data_[0];
+        console.log('data__ ', data__);
+        let marketArr = data__.StockID.split('.');
         let newData = {
             symbol: data__.Symbol,
             name: data__.StockName,
             market: marketArr[1],
             qty: data__.UseQty,
-            stemp: (new Date).getTime()
-        }
-        toOrderBox(newData)
-    }
+            stemp: new Date().getTime(),
+        };
+        toOrderBox(newData);
+    };
 
     // const consumeClick = (e,id) =>{
     //     e.preventDefault();
@@ -184,10 +190,10 @@ const Invetory = ({toOrderBox}) => {
     //     &nav=0`,'_blank', 'toolbar=0,location=0,menubar=0,width=450px,height=716px')
     // }
 
-    const onRefresh = () =>{
-        let r = refresh
-        setRefresh(r+1)
-    }
+    const onRefresh = () => {
+        let r = refresh;
+        setRefresh(r + 1);
+    };
 
     const onMarketFilterSubmit = useCallback((confirm, val) => {
         confirm();
@@ -214,31 +220,45 @@ const Invetory = ({toOrderBox}) => {
 
     return (
         <div className="posi_relative">
-         <div className="active_box">
-            {/* <Select defaultValue={defaultMarket} style={{ width: 120 }} onChange={handleChange}>
+            <div className="active_box">
+                {/* <Select defaultValue={defaultMarket} style={{ width: 120 }} onChange={handleChange}>
             {
                 selectType.map(x=>{
                   return <Option value={x} key={x}>{x}</Option>
                 })
             }
             </Select> */}
-            <IconBtn type={'refresh'} onClick={onRefresh}> </IconBtn>
-        </div> 
-            <AccountTable 
-            filterColumns={searchColumns}
-            dataSource={data} 
-            pagination={false} 
-            columns={columns}
-            //noDataSetting={{text:'text',tStyle:{color:"green"}}}
+                <IconBtn type={'refresh'} onClick={onRefresh}>
+                    {' '}
+                </IconBtn>
+            </div>
+            <AccountTable
+                filterColumns={searchColumns}
+                dataSource={data}
+                pagination={false}
+                columns={columns}
+                //noDataSetting={{text:'text',tStyle:{color:"green"}}}
             />
-            
-        <style jsx>
-            {`
-            .posi_relative{position:relative;}
-            AccountTable{margin-top:15px}
-            .active_box {width:100%;margin-bottom:15px;display:flex; justify-content: flex-end;position:absolute; top:-110px; text-align:right;}
-            `}
-        </style>
+
+            <style jsx>
+                {`
+                    .posi_relative {
+                        position: relative;
+                    }
+                    AccountTable {
+                        margin-top: 15px;
+                    }
+                    .active_box {
+                        width: 100%;
+                        margin-bottom: 15px;
+                        display: flex;
+                        justify-content: flex-end;
+                        position: absolute;
+                        top: -110px;
+                        text-align: right;
+                    }
+                `}
+            </style>
         </div>
     );
 };

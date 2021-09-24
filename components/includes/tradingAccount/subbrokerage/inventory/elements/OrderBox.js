@@ -26,10 +26,15 @@ const OrderBox = ({ orderData }) => {
     }, [current]);
 
     useEffect(() => {
-        console.log('NewOrderData',orderData)
-        if(orderData){
-            setNewOrderData(orderData)
-            setToSearchBox(orderData.symbol+' '+orderData.name)
+        console.log('NewOrderData', orderData);
+        if (orderData) {
+            setNewOrderData(orderData);
+            setToSearchBox(orderData.symbol + ' ' + orderData.name);
+        }
+        if (orderData.bs === 'S') {
+            setCurrent('S');
+        } else {
+            setCurrent('B');
         }
     }, [orderData]);
 
@@ -51,7 +56,7 @@ const OrderBox = ({ orderData }) => {
     });
 
     const getProductInfo = useCallback(val => {
-        console.log('getProductInfo',val)
+        console.log('getProductInfo', val);
         setProductInfo(val);
     });
 
@@ -76,7 +81,7 @@ const OrderBox = ({ orderData }) => {
                     switch (current) {
                         case 'B':
                         case 'S':
-                            return <SymbolSearch getProductInfo={getProductInfo} defaultVal={newOrderData}/>;
+                            return <SymbolSearch getProductInfo={getProductInfo} defaultVal={newOrderData} />;
                         case 'N':
                             return <SymbolInput />;
                         default:
