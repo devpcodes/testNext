@@ -26,6 +26,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     const [usSelect, setUsSelect] = useState(false);
     const [dateSelect, setDateSelect] = useState(false);
     const [toDay, setToDay] = useState([]);
+    const [dataType, setDataType] = useState('p');
     const [date, setDate] = useState('');
     const [valPrice, setValPrice] = useState('');
     const [valNum, setValNum] = useState('');
@@ -68,15 +69,16 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     useEffect(() => {
         if (product.id) {
             console.log('[productInfo]', product);
+            setDataType('p')
             queryStockQuote('p');
             queryStockInfo('p');
         }
     }, [product]);
 
     useEffect(() => {
-        console.log('od', orderData);
         if (orderData.symbol) {
             setOrderBoxData(orderData);
+            setDataType('o')
             queryStockQuote('o');
             queryStockInfo('o');
             if (orderData.qty && orderData.qty !== '0') {
@@ -156,14 +158,14 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             setSubmitLoading(true);
             let obj = {
                 CID: getWebId('newweb', 'recommisiioned'),
-                StockID: product.symbol,
+                StockID: setDataType=='p'? product.symbol:orderData.symbol,
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
                 GTCDate: dateSelect ? date : '',
                 aon: aon,
                 TouchedPrice: 0,
-                Exchid: product.market,
+                Exchid: setDataType=='p'? product.market:orderData.market,
                 Creator: currentAccount.idno,
                 token: getToken(),
                 currentAccount,
@@ -174,8 +176,6 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             message.success({
                 content: '委託已送出',
             });
-            //closeHandler();
-            //dispatch(setSBActiveTabKey('3'));
         } catch (error) {
             setSubmitLoading(false);
             message.info({
@@ -242,7 +242,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         try {
             console.log('dateSelect',dateSelect, dateSelect ? date : null);
             console.log('dateSelect2', stockInfo);
-            let TT = getTT(product.market);
+            let TT = getTT(setDataType=='p'? product.market:orderData.market);
             let pt = await getPriceJumpPoint(stockInfo['@Exch'], valPrice, true);
             let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
@@ -250,12 +250,12 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 CID: getWebId('newweb', 'recommisiioned'),
                 ClientIP: getCookie('client_ip'),
                 Creator: currentAccount.idno,
-                Exchid: product.market,
+                Exchid: setDataType=='p'? product.market:orderData.market,
                 OT: '0',
                 Price: valPrice,
                 PriceType: '0',
                 Qty: valNum,
-                StockID: product.symbol,
+                StockID: setDataType=='p'? product.symbol:orderData.symbol,
                 TT: TT,
                 GTCDate: dateSelect ? date : '',
                 lotSize: stockInfo['@LotSize'],
@@ -264,12 +264,29 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 StockName: stockInfo['@StockName'],
             };
             console.log('newData',newData);
-            let nd = orderList.concat(newData);
-            //console.log('POSTDATA',newData)
-            dispatch(setOrderList(nd));
+            let check = await dataCheck(newData)
+            console.log('check',check)
+            if( check ){  
+                let nd = orderList.concat(newData);
+                dispatch(setOrderList(nd));                
+            }else{
+                throw '資料不齊全'             
+            }
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const dataCheck = obj => {
+        console.log('dataCheck',obj)
+        if(
+            obj.Price==='' ||
+            obj.Qty==='' ||
+            obj.StockID===''
+        ){
+            return false
+        }
+        return true
     };
 
     return (
