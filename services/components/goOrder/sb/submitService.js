@@ -5,9 +5,20 @@ import { getWebId } from '../getWebId';
 import { getTT } from './dataMapping';
 import { postOrder } from './postOrder';
 
-export const submitListService = async (currentAccount, data, platform) => {
+export const submitListService = async (currentAccount, data, platform, signgl) => {
     const resList = [];
     for (let record of data) {
+        let orderList;
+        if (!!signgl) {
+            orderList = true;
+        } else {
+            if (data.length > 1) {
+                orderList = true;
+            } else {
+                orderList = false;
+            }
+        }
+
         const res = submitService(
             {
                 CID: getWebId(platform, 'recommisiioned'),
@@ -22,7 +33,7 @@ export const submitListService = async (currentAccount, data, platform) => {
                 token: getToken(),
                 currentAccount,
             },
-            data.length > 1 ? true : false,
+            orderList,
         );
         resList.push(res);
     }

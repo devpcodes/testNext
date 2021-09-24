@@ -72,7 +72,7 @@ const BatchPage = () => {
                         let subData = dataHandler(selectData);
                         try {
                             setParentLoading(true);
-                            let res = await submitListService(userInfo, subData, platform);
+                            let res = await submitListService(userInfo, subData, platform, true);
                             setParentLoading(false);
                             const sellSuccess = subData.filter((item, i) => {
                                 if (res[i] === 'True') {
@@ -85,27 +85,37 @@ const BatchPage = () => {
                             setSelectedRowKeys([]);
                             setSelectData([]);
                             setShowBtn(false);
-                            if (selectData.length > 1) {
-                                dispatch(
-                                    setModal({
-                                        visible: true,
-                                        content: `共送出${selectData.length}筆資料，${
-                                            sellSuccess.length
-                                        }筆資料送出成功，${selectData.length - sellSuccess.length}筆資料送出失敗`,
-                                        type: 'info',
-                                        title: '系統訊息',
-                                    }),
-                                );
-                            } else {
-                                dispatch(
-                                    setModal({
-                                        visible: true,
-                                        content: '委託已送出',
-                                        type: 'info',
-                                        title: '系統訊息',
-                                    }),
-                                );
-                            }
+                            dispatch(
+                                setModal({
+                                    visible: true,
+                                    content: `共送出${selectData.length}筆資料，${sellSuccess.length}筆資料送出成功，${
+                                        selectData.length - sellSuccess.length
+                                    }筆資料送出失敗`,
+                                    type: 'info',
+                                    title: '系統訊息',
+                                }),
+                            );
+                            // if (selectData.length > 1) {
+                            //     dispatch(
+                            //         setModal({
+                            //             visible: true,
+                            //             content: `共送出${selectData.length}筆資料，${
+                            //                 sellSuccess.length
+                            //             }筆資料送出成功，${selectData.length - sellSuccess.length}筆資料送出失敗`,
+                            //             type: 'info',
+                            //             title: '系統訊息',
+                            //         }),
+                            //     );
+                            // } else {
+                            //     dispatch(
+                            //         setModal({
+                            //             visible: true,
+                            //             content: '委託已送出',
+                            //             type: 'info',
+                            //             title: '系統訊息',
+                            //         }),
+                            //     );
+                            // }
                         } catch (error) {
                             setParentLoading(false);
                             dispatch(
