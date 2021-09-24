@@ -56,6 +56,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         let d = moment(new Date()).format('YYYY-MM-DD');
         let d_ = moment(d).add(6, 'M').format('YYYY-MM-DD');
         setToDay([d, d_]);
+        setDate(d_)
     }, []);
 
     // useEffect(() => {
@@ -239,7 +240,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     const addLocal = async () => {
         //加入暫存夾
         try {
-            console.log('dateSelect', dateSelect ? date : null);
+            console.log('dateSelect',dateSelect, dateSelect ? date : null);
             console.log('dateSelect2', stockInfo);
             let TT = getTT(product.market);
             let pt = await getPriceJumpPoint(stockInfo['@Exch'], valPrice, true);
@@ -256,13 +257,13 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 Qty: valNum,
                 StockID: product.symbol,
                 TT: TT,
-                GTCDate: dateSelect ? date : null,
+                GTCDate: dateSelect ? date : '',
                 lotSize: stockInfo['@LotSize'],
                 priceJumpPoint: pt,
                 aon: aon,
                 StockName: stockInfo['@StockName'],
             };
-            console.log(newData);
+            console.log('newData',newData);
             let nd = orderList.concat(newData);
             //console.log('POSTDATA',newData)
             dispatch(setOrderList(nd));
@@ -318,7 +319,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                                 onChange={onDateChange}
                                 min={toDay[0]}
                                 max={toDay[1]}
-                                value={toDay[1] || null}
+                                value={date}
                             />
                         ) : (
                             ''
