@@ -160,7 +160,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
-                GTCDate: dateSelect ? null : date,
+                GTCDate: dateSelect ? date : '',
                 aon: aon,
                 TouchedPrice: 0,
                 Exchid: product.market,
