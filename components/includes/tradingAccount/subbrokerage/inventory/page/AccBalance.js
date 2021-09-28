@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Modal, Select, Button, Input } from 'antd';
+import { Modal, Select, Button, Input, Checkbox, InputNumber } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import {
@@ -21,7 +21,7 @@ const AccBalance = () => {
     const [accountType, setAccountType] = useState('');
     const [inputData, setInputData] = useState(null);
     const [settleType, setSettleType] = useState('');
-    const [currency, setCurrency] = useState('');
+    const [inputAble, setInputAble] = useState(true);
     const [hidden, setHidden] = useState(false);
     const [dataSource, setDataSource] = useState({
         amount: '',
@@ -200,7 +200,7 @@ const AccBalance = () => {
 
     const showCashModal = e => {
         e.preventDefault();
-        setInputData(dataSource.balance ? dataSource.balance : 0);
+        //setInputData(dataSource.balance ? dataSource.balance : 0);
         setIsCashModalVisible(true);
     };
     const IcBoxController = e => {
@@ -229,11 +229,11 @@ const AccBalance = () => {
             <p>4.台/外幣自有專戶無需申請出金美股若無成交客戶, 購買力於隔天晚上21:00才會再更新。</p>
             `;
         } else if (id == 2) {
-            title = '系統訊息';
+            title = '訊息';
             content = `
-            <p style="text-align:center;font-size:1.5em;">出金申請已送出</p>
-            <p style="text-align:center">出金編號:${data.no}</p>
-            <p style="text-align:center">出金金額:${data.amount}</p>
+            <p style="font-weight:900;margin:0;color:#3f5372;">出金申請已送出</p>
+            <p style="margin:0;color:#3f5372;">出金編號：${data.no}</p>
+            <p style="margin:0;color:#3f5372;">出金金額：${dataSource.currency} ${data.amount}</p>
             `;
         }
         setModalText({ title: title, content: content });
@@ -260,9 +260,18 @@ const AccBalance = () => {
         setIsCashModalVisible(false);
         setIsCheckModalVisible(true);
     };
-    const CashOutAll = () => {
-        setIsCashModalVisible(false);
-        setIsCheckModalVisible(true);
+    // const CashOutAll = () => {
+    //     setIsCashModalVisible(false);
+    //     setIsCheckModalVisible(true);
+    // };
+    const CashOutAll = (e) => {
+        if(e.target.checked){
+        let total = dataSource.balance ? dataSource.balance : null
+        setInputData(total);
+            setInputAble(false)
+        }else{
+            setInputAble(true)    
+        }
     };
     const CashOutFinal = () => {
         let Currency = dataSource.currency;
@@ -315,6 +324,7 @@ const AccBalance = () => {
                             width: 'auto',
                         }}
                         type={'money'}
+                        closable={false}
                         onClick={showCashModal}
                         className="hover-light"
                         text="申請出金"
@@ -341,6 +351,7 @@ const AccBalance = () => {
                 <Modal
                     title={modalText.title}
                     visible={isModalVisible}
+                    className="co_CashModal"
                     closable={false} //{ , className: "modal-footer-hiden-button" }
                     footer={[
                         <Button type="primary" onClick={handleCancel_info}>
@@ -351,10 +362,11 @@ const AccBalance = () => {
                     <div dangerouslySetInnerHTML={{ __html: modalText.content }}></div>
                 </Modal>
                 <Modal
-                    className="CashModal"
-                    title="出金"
+                    className="CashModal co_CashModal"
+                    title="申請出金"
                     visible={isCashModalVisible}
                     onCancel={handleCancel_cash}
+                    closable={false}
                     footer={[
                         <Button onClick={handleCancel_cash}>取消</Button>,
                         <Button type="primary" onClick={CashOut}>
@@ -362,27 +374,30 @@ const AccBalance = () => {
                         </Button>,
                     ]}
                 >
-                    <div>
-                        <div>
+                    <div className="co_preview">
+                        <div className="co_preview_input">
                             <div>{dataSource.currency}</div>
                             <div>
-                                <Input placeholder="0.00" value={inputData} onChange={InputChange} type="number" />
+                                <Input
+                                    disabled={!inputAble}
+                                    placeholder="0.00" value={inputData} onChange={InputChange} type="number" />
                             </div>
                         </div>
-                        <div>
-                            <label>
-                                <input type="checkbox" />
-                                <div>
-                                    申請所有可出金金額(預估)
-                                    <br />
-                                    {dataSource.currency} {dataSource.balance ? dataSource.balance : '-'}
+                        <div className="co_preview_ckeck">
+                                <Checkbox 
+                                    className="co_preview_checkbox"
+                                    onChange={CashOutAll}
+                                >
+                                <span className="wordy">申請所有可出金金額(預估)</span>
+                                </Checkbox>
+                                <div className="text">
+                                    {dataSource.currency} <span>{dataSource.balance ? dataSource.balance : '-'}</span>
                                 </div>
-                            </label>
                         </div>
                     </div>
                 </Modal>
                 <Modal
-                    className="CheckModal"
+                    className="CheckModal co_CashModal"
                     title="出金確認"
                     visible={isCheckModalVisible}
                     closable={false}
@@ -393,18 +408,7 @@ const AccBalance = () => {
                         </Button>,
                     ]}
                 >
-                    <div>
-                        <table>
-                            <tr>
-                                <td>幣別:</td>
-                                <td>{dataSource.currency}</td>
-                            </tr>
-                            <tr>
-                                <td>出金金額:</td>
-                                <td>{inputData}元</td>
-                            </tr>
-                        </table>
-                    </div>
+                    <span className="wordy">確認申請出金 {dataSource.currency} {inputData} 元？</span>
                 </Modal>
             </div>
             <div className="table_box">
@@ -446,7 +450,29 @@ const AccBalance = () => {
             ) : null}
 
             <style jsx>
-                {`
+                {`  .wordy{font-size:16px;color:#3f5372;}
+                    .co_preview{}
+                    .co_preview .co_preview_input{display:flex;font-size:16px;border: 1px solid #d7e0ef;}
+                    .co_preview .co_preview_input div:first-child{
+                        background:#f3f6fe;
+                        line-height: 40px;
+                        width: 80px;
+                        text-align: center;
+                        border-right: 1px solid #d7e0ef;
+                    }
+                    .co_preview_ckeck{
+                        margin-top:12px;
+                        font-size:16px;
+                    }
+                    .co_preview_ckeck label span{
+                        font-weight:900;
+                    }
+                    .co_preview_ckeck label{
+                        display:flex;
+                    }
+                    .co_preview_ckeck .text{
+                        padding-left:26px;
+                    }
                     .brokerage_accBalance {
                         position: relative;
                     }
@@ -534,6 +560,48 @@ const AccBalance = () => {
             </style>
             <style global jsx>
                 {`
+                    .co_CashModal.CheckModal{
+                    }
+                    .co_preview_checkbox .ant-checkbox span{
+                        font-size:16px;
+                    }
+                    .co_preview_input .ant-input{
+                        line-height: 40px;
+                        padding: 0 10px;
+                        border:none;
+                        font-size: 16px;
+                    }
+                    .co_CashModal .ant-btn{
+                        width:80px;
+                        height:40px;
+                        font-size:16px;
+                        text-align:center;
+                    }
+                    .co_CashModal .ant-btn-primary:hover{
+                        filter: brightness(1.2);
+                    }
+                    .co_CashModal .ant-btn-primary{
+                        background-color:#c43826;
+                        border-color:#c43826;
+                    }
+                    .co_CashModal .ant-btn:not(.ant-btn-primary):hover{
+                        color:#c43826;
+                        border-color:#c43826;
+                    }
+                    .co_CashModal .ant-modal-content{
+                        max-width: 320px;
+                    }
+                    .co_CashModal .ant-modal-body{
+                        font-size:16px;
+                    }
+                    .co_CashModal .ant-modal-title{
+                        font-weight:900;
+                        font-size: 20px;
+                    }
+                    .co_CashModal .ant-modal-content .ant-modal-header{
+                        font-size:16px;
+                        font-weight:700;
+                    }
                     .subBrokerage .action_box button {
                         margin-left: 10px;
                     }

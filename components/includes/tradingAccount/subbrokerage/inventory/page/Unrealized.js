@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Modal, Select, Tag, Button } from 'antd';
+import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR from 'swr';
 import { postUnrealizedWithSwr } from '../../../../../../services/components/goOrder/sb/postInventory';
@@ -16,6 +17,7 @@ const Unrealized = ({ toOrderBox }) => {
     const [data, setData] = useState({ data: [], sum_data: [] });
     const [columns, setColumns] = useState([]);
     const [sum_columns, setColumnsSum] = useState([]);
+    const [refreshTime, setRefreshTime] = useState('');
     const [refresh, setRefresh] = useState(0);
     const [filterData, setFilterData] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
@@ -48,7 +50,8 @@ const Unrealized = ({ toOrderBox }) => {
     });
 
     useEffect(() => {
-        console.log('[fetchData]', fetchData);
+        let time = moment(new Date).format('YYYY.MM.DD HH:mm:SS') 
+        setRefreshTime(time)
         const newData = { data: [], sum_data: [] };
         if (fetchData && Array.isArray(fetchData.data)) {
             const d_ = fetchData.data.map((item, index) => {
@@ -364,8 +367,11 @@ const Unrealized = ({ toOrderBox }) => {
         );
     };
 
-    const onRefresh = () => {
+    const onRefresh = (e) => {
+        e.preventDefault();
         let r = refresh;
+        let time = moment(new Date).format('YYYY.MM.DD HH:mm:ss') 
+        setRefreshTime(time)
         setRefresh(r + 1);
     };
 
@@ -406,10 +412,10 @@ const Unrealized = ({ toOrderBox }) => {
             <div className="action_box">
                 <div className="currencyT">幣別 USD</div>
                 <div>
-                    <span className="updateTime">更新時間：{'2021.09.03  15:45'}</span>
+                    <span className="updateTime">更新時間：{refreshTime}</span>
                     <IconBtn type={hidden ? 'eyeClose' : 'eyeOpen'} onClick={defaultFunc /*secretChanger*/}></IconBtn>
-                    <IconBtn type={'info'} onClick={defaultFunc /*e => showModal(e, 1)*/}></IconBtn>
-                    <IconBtn type={'refresh'} onClick={defaultFunc /*onRefresh*/}></IconBtn>
+                    <IconBtn type={'info'} onClick={e => showModal(e, 1)}></IconBtn>
+                    <IconBtn type={'refresh'} onClick={e => onRefresh(e) /*onRefresh*/}></IconBtn>
                 </div>
                 <Modal
                     // title={modalText.title}
