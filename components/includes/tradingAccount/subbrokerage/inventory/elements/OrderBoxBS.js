@@ -57,7 +57,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
         let d = moment(new Date()).format('YYYY-MM-DD');
         let d_ = moment(d).add(6, 'M').format('YYYY-MM-DD');
         setToDay([d, d_]);
-        setDate(d_)
+        setDate(d_);
     }, []);
 
     // useEffect(() => {
@@ -69,7 +69,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     useEffect(() => {
         if (product.id) {
             console.log('[productInfo]', product);
-            setDataType('p')
+            setDataType('p');
             queryStockQuote('p');
             queryStockInfo('p');
         }
@@ -78,7 +78,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     useEffect(() => {
         if (orderData.symbol) {
             setOrderBoxData(orderData);
-            setDataType('o')
+            setDataType('o');
             queryStockQuote('o');
             queryStockInfo('o');
             if (orderData.qty && orderData.qty !== '0') {
@@ -168,21 +168,27 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 token: getToken(),
                 currentAccount,
             };
-            let check = await dataCheck(obj)
-            console.log('check',check)
-            setSubmitLoading(false);
-            if( check ){  
+            let check = await dataCheck(obj);
+            console.log('check', check);
+            if (check) {
                 const res = await submitService(obj);
-                console.log('[submitHandler]',res)          
-            }else{
-                message.info({
+                console.log('[submitHandler]', res);
+                if (res.success == 'True') {
+                    message.success({
+                        content: '委託已送出',
+                    });
+                } else {
+                    throw '委託未送出';
+                }
+            } else {
+                message.error({
                     content: '資料不齊全',
-                });                   
+                });
             }
-
+            setSubmitLoading(false);
         } catch (error) {
             setSubmitLoading(false);
-            message.info({
+            message.error({
                 content: error,
             });
         }
@@ -236,10 +242,9 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 stockID = orderData.symbol;
             }
             let result = await postStockInfo({ AID, Exchid, stockID, token });
-            let text = result['@StockID']
+            let text = result['@StockID'];
             result['@symbol'] = text.substring(0, text.lastIndexOf('.'));
-            console.log('stockInfo',result)
-
+            console.log('stockInfo', result);
             setStockInfo(result);
         } catch (error) {
             console.log(error);
@@ -248,9 +253,9 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     const addLocal = async () => {
         //加入暫存夾
         try {
-            console.log('dateSelect',dateSelect, dateSelect ? date : null);
+            console.log('dateSelect', dateSelect, dateSelect ? date : null);
             console.log('dateSelect2', stockInfo);
-            let TT = getTT(setDataType=='p'? product.market:orderData.market);
+            let TT = getTT(setDataType == 'p' ? product.market : orderData.market);
             let pt = await getPriceJumpPoint(stockInfo['@Exch'], valPrice, true);
             let newData = {
                 AID: currentAccount.broker_id + currentAccount.account,
@@ -271,30 +276,31 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 aon: aon,
                 StockName: stockInfo['@StockName'],
             };
-            console.log('newData',newData);
-            let check = await dataCheck(newData)
-            console.log('check',check)
-            if( check ){  
+            console.log('newData', newData);
+            let check = await dataCheck(newData);
+            console.log('check', check);
+            if (check) {
                 let nd = orderList.concat(newData);
-                dispatch(setOrderList(nd));                
-            }else{
-                throw '資料不齊全'             
+                dispatch(setOrderList(nd));
+                message.success({
+                    content: '已加入暫存夾',
+                });
+            } else {
+                throw '資料不齊全';
             }
         } catch (error) {
-            console.log(error);
+            message.error({
+                content: error,
+            });
         }
     };
 
     const dataCheck = obj => {
-        console.log('dataCheck',obj)
-        if(
-            obj.Price==='' ||
-            obj.Qty==='' ||
-            obj.StockID===''
-        ){
-            return false
+        console.log('dataCheck', obj);
+        if (obj.Price === '' || obj.Qty === '' || obj.StockID === '') {
+            return false;
         }
-        return true
+        return true;
     };
 
     return (
@@ -339,13 +345,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                         <span>長效單</span>
                         <Switch onChange={onChange} />
                         {dateSelect ? (
-                            <input
-                                type="date"
-                                onChange={onDateChange}
-                                min={toDay[0]}
-                                max={toDay[1]}
-                                value={date}
-                            />
+                            <input type="date" onChange={onDateChange} min={toDay[0]} max={toDay[1]} value={date} />
                         ) : (
                             ''
                         )}
