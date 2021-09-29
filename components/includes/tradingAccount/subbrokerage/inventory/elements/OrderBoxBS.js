@@ -158,14 +158,14 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             setSubmitLoading(true);
             let obj = {
                 CID: getWebId('newweb', 'recommisiioned'),
-                StockID: setDataType=='p'? product.symbol:orderData.symbol,
+                StockID: stockInfo['@StockID'],
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
                 GTCDate: dateSelect ? date : '',
                 aon: aon,
                 TouchedPrice: 0,
-                Exchid: setDataType=='p'? product.market:orderData.market,
+                Exchid: stockInfo['@Exch'],
                 Creator: currentAccount.idno,
                 token: getToken(),
                 currentAccount,
@@ -232,6 +232,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 stockID = orderData.symbol;
             }
             let result = await postStockInfo({ AID, Exchid, stockID, token });
+            console.log('stockInfo',result)
             setStockInfo(result);
         } catch (error) {
             console.log(error);
@@ -250,12 +251,12 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 CID: getWebId('newweb', 'recommisiioned'),
                 ClientIP: getCookie('client_ip'),
                 Creator: currentAccount.idno,
-                Exchid: setDataType=='p'? product.market:orderData.market,
+                Exchid: stockInfo['@Exch'],
                 OT: '0',
                 Price: valPrice,
                 PriceType: '0',
                 Qty: valNum,
-                StockID: setDataType=='p'? product.symbol:orderData.symbol,
+                StockID: stockInfo['@StockID'],
                 TT: TT,
                 GTCDate: dateSelect ? date : '',
                 lotSize: stockInfo['@LotSize'],
@@ -318,7 +319,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                     disabledPlus={disabledPlus}
                 />
             </div>
-            {product.market == 'US' ? (
+            {stockInfo['@Exch'] == 'US' ? (
                 <>
                     <div className="ctrl_item mt-8 ctrl_item_select">
                         <span>條件</span>
