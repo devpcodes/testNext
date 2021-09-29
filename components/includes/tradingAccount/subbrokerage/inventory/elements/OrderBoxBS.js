@@ -154,7 +154,6 @@ const OrderBoxBS = ({ type, orderData, product }) => {
 
     const submitHandler = async () => {
         try {
-            console.log('[submitHandler1]', date);
             setSubmitLoading(true);
             let obj = {
                 CID: getWebId('newweb', 'recommisiioned'),
@@ -164,18 +163,23 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 BS: bs,
                 GTCDate: dateSelect ? date : '',
                 aon: aon,
-                TouchedPrice: 0,
                 Exchid: stockInfo['@Exch'],
                 Creator: currentAccount.idno,
                 token: getToken(),
                 currentAccount,
             };
-            console.log('[submitHandler]', obj);
-            const res = await submitService(obj);
+            let check = await dataCheck(obj)
+            console.log('check',check)
             setSubmitLoading(false);
-            message.success({
-                content: '委託已送出',
-            });
+            if( check ){  
+                const res = await submitService(obj);
+                console.log('[submitHandler]',res)          
+            }else{
+                message.info({
+                    content: '資料不齊全',
+                });                   
+            }
+
         } catch (error) {
             setSubmitLoading(false);
             message.info({
