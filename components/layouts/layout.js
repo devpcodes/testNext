@@ -137,7 +137,7 @@ const Layout = memo(({ children }) => {
     }, [showMask, showLogin, showBigLogin]);
 
     useEffect(() => {
-        if (isLogin && localStorage.getItem('INCB') !== 'false') {
+        if (isLogin && localStorage.getItem('INCB') === 'true') {
             alert('INCB');
         }
     }, [router.query]);
