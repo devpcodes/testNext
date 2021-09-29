@@ -158,7 +158,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             setSubmitLoading(true);
             let obj = {
                 CID: getWebId('newweb', 'recommisiioned'),
-                StockID: stockInfo['@StockID'],
+                StockID: stockInfo['@symbol'],
                 Price: valPrice,
                 Qty: valNum,
                 BS: bs,
@@ -232,7 +232,10 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 stockID = orderData.symbol;
             }
             let result = await postStockInfo({ AID, Exchid, stockID, token });
+            let text = result['@StockID']
+            result['@symbol'] = text.substring(0, text.lastIndexOf('.'));
             console.log('stockInfo',result)
+
             setStockInfo(result);
         } catch (error) {
             console.log(error);
@@ -256,7 +259,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
                 Price: valPrice,
                 PriceType: '0',
                 Qty: valNum,
-                StockID: stockInfo['@StockID'],
+                StockID: stockInfo['@symbol'],
                 TT: TT,
                 GTCDate: dateSelect ? date : '',
                 lotSize: stockInfo['@LotSize'],
