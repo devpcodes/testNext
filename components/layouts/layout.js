@@ -136,6 +136,12 @@ const Layout = memo(({ children }) => {
         }
     }, [showMask, showLogin, showBigLogin]);
 
+    useEffect(() => {
+        if (isLogin && localStorage.getItem('INCB') !== 'false') {
+            alert('INCB');
+        }
+    }, [router.query]);
+
     // 不需檢查是否登入的頁面
     const noVerifyRouter = () => {
         const arr = noVerifyRouters.filter(val => {

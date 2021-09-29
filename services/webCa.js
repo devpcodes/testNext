@@ -1,7 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import { Modal, notification } from 'antd';
 import { getToken } from './user/accessToken';
-
+import BirthdayChecker from '../components/includes/BirthdayChecker';
 export const signCert = async function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         let DM;
@@ -200,6 +200,7 @@ export const applyCert = function (user_idNo, token, callBack) {
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                localStorage.setItem('INCB', false);
                 resolve(applyCertMsg);
             },
         );
@@ -228,6 +229,7 @@ export const renewCert = function (user_idNo, token, callBack) {
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                localStorage.setItem('INCB', false);
                 resolve(applyCertMsg);
             },
         );
@@ -241,9 +243,17 @@ export const CAHandler = function (token, cb) {
     if (checkData.suggestAction != 'None') {
         setTimeout(() => {
             const modal = Modal.confirm();
+            const content = (
+                <React.Fragment>
+                    <p>
+                        為保障您的電子交易安全，登入時將檢查電子憑證，是否載入憑證? <br />
+                        若暫不載入，系統將於每次登入時，進行出生年月日之身分驗證。
+                    </p>
+                </React.Fragment>
+            );
             modal.update({
                 title: '憑證系統',
-                content: `您現在無憑證。是否要載入憑證 ?`,
+                content: content,
                 async onOk() {
                     modal.destroy();
                     await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
@@ -251,11 +261,15 @@ export const CAHandler = function (token, cb) {
                 okText: '是',
                 cancelText: '否',
                 onCancel() {
+                    modal.destroy();
                     sessionStorage.setItem('deployCA', false);
+                    BirthdayChecker();
                 },
             });
         }, 600);
     } else {
+        const cert = signCert({ idno: tokenVal.user_id }, true, token);
+        console.log(cert);
         if (cb != null) {
             cb();
         }
