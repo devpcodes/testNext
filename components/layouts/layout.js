@@ -12,6 +12,7 @@ import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
 import CaHead from '../includes/CaHead';
 import ReCaptchaComponent from '../includes/sinotradeLogin/ReCaptchaComponent';
+import BirthdayChecker from '../includes/BirthdayChecker';
 
 import {
     showLoginHandler,
@@ -137,8 +138,12 @@ const Layout = memo(({ children }) => {
     }, [showMask, showLogin, showBigLogin]);
 
     useEffect(() => {
+        console.log(router);
         if (isLogin && localStorage.getItem('INCB') === 'true') {
-            alert('INCB');
+            BirthdayChecker();
+        }
+        if (localStorage.getItem('INCB') === null) {
+            localStorage.setItem('INCB', true);
         }
     }, [router.query]);
 

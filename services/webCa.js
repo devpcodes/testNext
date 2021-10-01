@@ -241,7 +241,7 @@ export const CAHandler = function (token, cb) {
     const tokenVal = jwt_decode(token);
     const checkData = checkCert(tokenVal.user_id);
     if (checkData.suggestAction != 'None') {
-        localStorage.setItem('INCB', false); // 有憑證不用做生日驗證
+        localStorage.removeItem('INCB');
         setTimeout(() => {
             const modal = Modal.confirm();
             const content = (
