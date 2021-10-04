@@ -271,7 +271,7 @@ export const CAHandler = async function (token, cb) {
         }, 600);
     } else {
         const cert = signCert({ idno: tokenVal.user_id }, true, token);
-        res = await caValidator(getToken(), {
+        const res = await caValidator(getToken(), {
             signature: cert.signature,
             plainText: cert.plainText,
             certSN: cert.certSN,
