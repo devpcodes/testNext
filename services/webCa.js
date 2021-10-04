@@ -2,6 +2,7 @@ import jwt_decode from 'jwt-decode';
 import { Modal, notification } from 'antd';
 import { getToken } from './user/accessToken';
 import BirthdayChecker from '../components/includes/BirthdayChecker';
+import { caValidator } from '../services/caValidator';
 export const signCert = async function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         let DM;
@@ -237,7 +238,7 @@ export const renewCert = function (user_idNo, token, callBack) {
 };
 
 //憑證檢查整合安裝
-export const CAHandler = function (token, cb) {
+export const CAHandler = async function (token, cb) {
     const tokenVal = jwt_decode(token);
     const checkData = checkCert(tokenVal.user_id);
     if (checkData.suggestAction != 'None') {
@@ -270,6 +271,13 @@ export const CAHandler = function (token, cb) {
         }, 600);
     } else {
         const cert = signCert({ idno: tokenVal.user_id }, true, token);
+        res = await caValidator(getToken(), {
+            signature: cert.signature,
+            plainText: cert.plainText,
+            certSN: cert.certSN,
+            type: 'web',
+        });
+        console.log(res);
         console.log(cert);
         if (cb != null) {
             cb();
