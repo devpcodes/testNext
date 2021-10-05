@@ -3,6 +3,7 @@ import { Modal, notification } from 'antd';
 import { getToken } from './user/accessToken';
 import BirthdayChecker from '../components/includes/BirthdayChecker';
 import { caValidator } from '../services/caValidator';
+import { logout } from '../../../../services/user/logoutFetcher';
 export const signCert = async function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         let DM;
@@ -278,9 +279,13 @@ export const CAHandler = async function (token, cb) {
             certSN: cert.certSN,
             type: 'web',
         });
-        console.log(res);
-        if (cb != null) {
-            cb();
+        if (res.msg !== '驗章成功') {
+            await logout();
+            window.location.reload();
+        } else {
+            if (cb != null) {
+                cb();
+            }
         }
     }
 };
