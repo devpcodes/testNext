@@ -3,7 +3,7 @@ import { Modal, notification } from 'antd';
 import { getToken } from './user/accessToken';
 import BirthdayChecker from '../components/includes/BirthdayChecker';
 import { caValidator } from '../services/caValidator';
-import { logout } from '../../../../services/user/logoutFetcher';
+import { logout } from '../services/user/logoutFetcher';
 export const signCert = async function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         let DM;
