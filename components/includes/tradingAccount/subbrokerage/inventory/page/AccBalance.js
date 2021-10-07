@@ -65,7 +65,7 @@ const AccBalance = () => {
             });
             setError('伺服器錯誤');
         },
-        errorRetryCount: 3,
+        errorRetryCount: 0,
         focusThrottleInterval: 10000,
         errorRetryInterval: 10000,
     });

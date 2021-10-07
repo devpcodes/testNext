@@ -14,12 +14,10 @@ export const postInventoryWithSwr = async strObj => {
 export const postInventory = async ({ AID, token, seq }) => {
     var url = '/SubBrokerage/QueryTradeData/Position';
     try {
-        // console.log('[REQ]', AID, token);
         const res = await getA8Instance('v2', undefined, false).post(url, {
             AID,
             token,
         });
-        console.log('[RES]', res);
         if (res.data.success === 'True') {
             const obj = [];
             if (!res.data.result.msg) {
@@ -69,15 +67,16 @@ const postAccBalance = async req => {
                 let origin = res.data.data.bank_balance_detail;
                 origin.map(x => {
                     if (x.currency && ds_.currency !== x.currency) {
-                        ds_.currency = x.currency;
+                        ds_.currency = x.currency || '0';
                     }
                     if (x.balance_type == '1') {
-                        ds_.balance = x.balance;
+                        ds_.balance = x.balance || '-';
                     } else if (x.balance_type == '2') {
-                        ds_.t1 = x.t_1;
-                        ds_.t2 = x.t_2;
+                        ds_.t_1 = x.t_1 || '0';
+                        ds_.t_2 = x.t_2 || '0';
+                        ds_.amount = x.amount || '0';
                     } else {
-                        ds_.buyingPower = x.buying_power;
+                        ds_.buyingPower = x.buying_power || '0';
                     }
                 });
                 return ds_;
@@ -93,7 +92,6 @@ const postAccBalance = async req => {
 };
 
 export const postBankBalanceWithSwr = async (strObj, controlReload) => {
-    // if (controlReload == 0) return;
     let d = await postBankBalance(JSON.parse(strObj));
     return d;
 };
