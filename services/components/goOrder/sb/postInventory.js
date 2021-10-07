@@ -59,7 +59,14 @@ const postAccBalance = async req => {
         });
         if (res.data.success === 'True') {
             console.log('[RES]', res);
-            let ds_ = {};
+            let ds_ = {
+                "currency" : "0",
+                "buyingPower" : "0",
+                "balance" : "-",
+                "t_1": "0",
+                "t_2": "0",
+                "amount": "0"
+            };
             if (res.data.data.settle_type) {
                 ds_.settle_type = res.data.data.settle_type;
             }
