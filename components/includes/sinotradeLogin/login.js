@@ -19,11 +19,13 @@ import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { setModal } from '../../../store/components/layouts/action';
+import { useOpenAccountUrl } from '../../../hooks/useOpenAccountUrl';
+import { thirdPartyLayout } from '../../../services/components/goOrder/thirdPartyLayout';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
-let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
-let defaultOpenact =
-    'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
+// let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
+// let defaultOpenact =
+//     'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
 
 const Login = function ({ popup, isPC, onClose, successHandler }) {
     const router = useRouter();
@@ -42,14 +44,17 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [containerHeight, setContainerHeight] = useState('100vh');
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
-    useEffect(() => {
-        if (platform === 'udn') {
-            udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
-        }
-        if (platform === 'alpha') {
-            udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0064&strWeb=0086';
-        }
-    }, [platform]);
+    const udnOpenact = useOpenAccountUrl();
+
+    // useEffect(() => {
+
+    //     if (platform === 'udn') {
+    //         udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
+    //     }
+    //     if (platform === 'alpha') {
+    //         udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0064&strWeb=0086';
+    //     }
+    // }, [platform]);
     useEffect(() => {
         console.log('didmount');
         const account = localStorage.getItem('userID');
@@ -361,7 +366,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const signUpHandler = function (e) {
         e.preventDefault();
-        iframeHandler(defaultOpenact);
+        iframeHandler(udnOpenact);
     };
 
     const overflowHandler = () => {
@@ -392,11 +397,13 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // };
     const getSignUpUrl = () => {
         // console.log('platform', platform)
-        if (platform === 'newweb') {
-            return defaultOpenact;
-        } else {
-            return udnOpenact;
-        }
+        // if (platform === 'newweb') {
+        //     return defaultOpenact;
+        // } else {
+        //     return udnOpenact;
+        // }
+
+        return udnOpenact;
         // if (platform === 'udn') {
         //     return udnOpenact;
         // } else {
@@ -410,7 +417,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             return;
         }
 
-        if (platform === 'udn' && !isPC) {
+        if (thirdPartyLayout.includes(platform) && !isPC) {
             return (
                 <></>
                 // <div className="udn__container">
@@ -436,7 +443,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const adHandler = () => {
-        if (platform === 'udn' && !isPC) {
+        if (thirdPartyLayout.includes(platform) && !isPC) {
             return (
                 <div className="ad_container">
                     <a
@@ -452,7 +459,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const getHeightHandler = () => {
-        if (platform === 'udn') {
+        if (thirdPartyLayout.includes(platform)) {
             return '100vh';
         }
         if (isPC) {
@@ -479,18 +486,20 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 role="button"
                                 tabIndex="0"
                             >
-                                {platform === 'udn' && <img className="logo__dark" src={logoDark} alt="永豐金證券" />}
+                                {thirdPartyLayout.includes(platform) && (
+                                    <img className="logo__dark" src={logoDark} alt="永豐金證券" />
+                                )}
                                 <img
                                     alt="關閉"
                                     className="close__icon"
-                                    src={platform === 'udn' ? udnCloseIcon : closeMobile}
+                                    src={thirdPartyLayout.includes(platform) ? udnCloseIcon : closeMobile}
                                     onClick={() => {
                                         redirectHandler();
                                         onClose();
                                     }}
                                 />
-                                {platform === 'udn' && <div className="line"></div>}
-                                {platform === 'udn' && (
+                                {thirdPartyLayout.includes(platform) && <div className="line"></div>}
+                                {thirdPartyLayout.includes(platform) && (
                                     <div className="socal__box">
                                         <p className="socal__title">使用社群帳戶登入</p>
                                         <div>
@@ -824,8 +833,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     cursor: pointer;
                 }
                 .close__box {
-                    text-align: ${platform === 'udn' ? 'left' : 'right'};
-                    padding-top: ${platform === 'udn' ? '17px' : '10px'};
+                    text-align: ${thirdPartyLayout.includes(platform) ? 'left' : 'right'};
+                    padding-top: ${thirdPartyLayout.includes(platform) ? '17px' : '10px'};
                 }
                 .close__img {
                     background: url(${close}) no-repeat center center;
@@ -942,12 +951,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             `}</style>
             <style global jsx>{`
                 .login__box2 {
-                    height: ${platform === 'udn' ? '600px' : 'auto'};
+                    height: ${thirdPartyLayout.includes(platform) ? '600px' : 'auto'};
                 }
                 .login__container--2 {
-                    height: ${platform === 'udn' ? 'calc( 100vh - 118px)' : 'auto'};
-                    overflow: ${platform === 'udn' ? 'auto' : 'hidden'};
-                    padding: ${platform === 'udn' ? '0 16px' : '0'};
+                    height: ${thirdPartyLayout.includes(platform) ? 'calc( 100vh - 118px)' : 'auto'};
+                    overflow: ${thirdPartyLayout.includes(platform) ? 'auto' : 'hidden'};
+                    padding: ${thirdPartyLayout.includes(platform) ? '0 16px' : '0'};
                 }
                 .login__box {
                     /* isPC ? '548px' : '100vh' */
@@ -958,15 +967,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     top: ${isPC ? 'calc((100vh - 548px)/2)' : '0'};
                     left: 50%;
                     transform: ${popup ? 'translate(-50%, 0)' : 'translate(0, 0)'};
-                    padding: ${isPC ? '0 41px' : platform === 'udn' ? '12px 0 0 0' : '0 20px'};
+                    padding: ${isPC ? '0 41px' : thirdPartyLayout.includes(platform) ? '12px 0 0 0' : '0 20px'};
                     padding-top: ${popup ? '0' : '1px'};
                     background-color: ${isPC ? '#f9fbff' : 'white'};
                     border: ${popup ? 'none' : 'solid 1px #e6ebf5'};
-                    overflow-y: ${isIframe ? 'hidden' : platform === 'udn' ? 'hidden' : 'auto'};
+                    overflow-y: ${isIframe ? 'hidden' : thirdPartyLayout.includes(platform) ? 'hidden' : 'auto'};
                 }
                 @media (max-width: 330px), print {
                     .login__box {
-                        padding: ${isPC ? '0 41px' : platform === 'udn' ? '0 0' : '0 20px'};
+                        padding: ${isPC ? '0 41px' : thirdPartyLayout.includes(platform) ? '0 0' : '0 20px'};
                     }
                 }
                 .ad_container {
@@ -995,7 +1004,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     /* height: 53px; */
                 }
                 .close__icon {
-                    float: ${platform === 'udn' ? 'right' : 'none'};
+                    float: ${thirdPartyLayout.includes(platform) ? 'right' : 'none'};
                 }
                 .line {
                     height: 1px;
