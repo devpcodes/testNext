@@ -21,7 +21,6 @@ import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { setModal } from '../../../store/components/layouts/action';
-
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
