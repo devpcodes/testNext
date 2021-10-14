@@ -10,6 +10,8 @@ import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-clos
 import udnCloseIcon from '../../../resources/images/pages/SinoTrade_login/menu-close-big.svg';
 import fbIcon from '../../../resources/images/pages/SinoTrade_login/img-fb.svg';
 import googleIcon from '../../../resources/images/pages/SinoTrade_login/img-google.svg';
+import { getToken } from '../../../services/user/accessToken';
+import { CAHandler } from '../../../services/webCa';
 
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
@@ -19,8 +21,7 @@ import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { setModal } from '../../../store/components/layouts/action';
-import { getToken } from '../../../services/user/accessToken';
-import { CAHandler } from '../../../services/webCa';
+
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
