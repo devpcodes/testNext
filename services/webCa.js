@@ -203,7 +203,10 @@ export const applyCert = function (user_idNo, token, callBack) {
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
                 localStorage.setItem('INCB', false);
-                resolve(applyCertMsg);
+                resolve({
+                    code: applyCertCode,
+                    msg: applyCertMsg,
+                });
             },
         );
     });
@@ -232,7 +235,10 @@ export const renewCert = function (user_idNo, token, callBack) {
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
                 localStorage.setItem('INCB', false);
-                resolve(applyCertMsg);
+                resolve({
+                    code: applyCertCode,
+                    msg: applyCertMsg,
+                });
             },
         );
     });
@@ -259,7 +265,9 @@ export const CAHandler = async function (token, cb) {
                 content: content,
                 async onOk() {
                     modal.destroy();
-                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
+                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
+                        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+                    });
                 },
                 okText: '是',
                 cancelText: '否',
@@ -290,14 +298,22 @@ export const CAHandler = async function (token, cb) {
 };
 
 //憑證安裝
-export const caResultDataHandler = async function (suggestAction, userIdNo, token) {
+export const caResultDataHandler = async function (suggestAction, userIdNo, token, successCallback, failCallback) {
     if (suggestAction === 'ApplyCert') {
         const msg = await applyCert(userIdNo, token);
-        console.log('msg', msg);
+        console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
+        if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
+            alert('部屬成功');
+            successCallback();
+        }
+        if (typeof failCallback === 'function' && (result.code != '7000' || result.code != '0000')) {
+            alert('部屬失敗');
+            failCallback();
+        }
         notification.open({
             message: '系統訊息',
-            description: msg,
+            description: result.msg,
             top: 70,
             style: {
                 width: '200px',
@@ -305,12 +321,18 @@ export const caResultDataHandler = async function (suggestAction, userIdNo, toke
         });
     }
     if (suggestAction == 'RenewCert') {
-        const msg = await renewCert(userIdNo, token);
-        console.log('msg', msg);
+        const result = await renewCert(userIdNo, token);
+        console.log('result', result);
+        if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
+            successCallback();
+        }
+        if (typeof failCallback === 'function' && (result.code != '7000' || result.code != '0000')) {
+            failCallback();
+        }
         // console.log('RenewCert憑證回傳訊息', msg);
         notification.open({
             message: '系統訊息',
-            description: msg,
+            description: result.msg,
             top: 70,
             style: {
                 width: '200px',
