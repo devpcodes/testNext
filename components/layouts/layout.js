@@ -286,9 +286,9 @@ const Layout = memo(({ children }) => {
                 router.push(prevPathname.current);
             }
         }, 500);
-        setTimeout(() => {
-            CAHandler(getToken());
-        }, 700);
+        // setTimeout(() => {
+        //     CAHandler(getToken());
+        // }, 700);
     }, []);
 
     // 關閉大的login
@@ -302,7 +302,7 @@ const Layout = memo(({ children }) => {
         setShowBigLogin(false);
         dispatch(setIsLogin(true));
         bigLoginRouterHandler();
-        CAHandler(getToken());
+        // CAHandler(getToken());
     };
 
     const bigLoginRouterHandler = function (type) {

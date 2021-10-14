@@ -266,13 +266,12 @@ export const CAHandler = async function (token, cb) {
                 onCancel() {
                     modal.destroy();
                     sessionStorage.setItem('deployCA', false);
-                    BirthdayChecker();
+                    BirthdayChecker(cb);
                 },
             });
         }, 600);
     } else {
         const cert = await signCert({ idno: tokenVal.user_id }, true, token);
-        console.log(cert);
         const res = await caValidator(getToken(), {
             signature: cert.signature,
             plainText: cert.plainText,

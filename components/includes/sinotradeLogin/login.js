@@ -19,6 +19,8 @@ import udnAD from '../../../resources/images/components/login/udnAD.jpg';
 import MD5 from 'crypto-js/md5';
 import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { setModal } from '../../../store/components/layouts/action';
+import { getToken } from '../../../services/user/accessToken';
+import { CAHandler } from '../../../services/webCa';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
@@ -304,13 +306,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //神策傳送成功後 做的事
     const afterSensors = function () {
-        redirectHandler();
-        //iframe登入處理(來自舊理財網)
-        if (isIframe) {
-            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
-        } else {
-            successHandler();
-        }
+        localStorage.setItem('INCB', true);
+        CAHandler(getToken(), function () {
+            redirectHandler();
+            //iframe登入處理(來自舊理財網)
+            if (isIframe) {
+                iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
+            } else {
+                successHandler();
+            }
+        });
     };
 
     //忘記密碼

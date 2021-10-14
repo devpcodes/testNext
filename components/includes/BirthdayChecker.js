@@ -4,7 +4,7 @@ import { checkBirthday } from '../../services/checkBirthday';
 import { getToken } from '../../services/user/accessToken';
 import { logout } from '../../services/user/logoutFetcher';
 import { getCurrentPath } from '../../services/getCurrentPath';
-const BirthdayChecker = (setss, getss) => {
+const BirthdayChecker = cb => {
     const { Search } = Input;
     const modal = Modal.confirm();
     let errorTimes = 0;
@@ -35,9 +35,9 @@ const BirthdayChecker = (setss, getss) => {
         content: content,
         cancelText: '取消',
         okButtonProps: { style: { display: 'none' } },
-        onCancel() {
-            localStorage.setItem('INCB', true);
-            modal.destroy();
+        onCancel: async function () {
+            await logout();
+            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
         },
     });
 
@@ -46,6 +46,9 @@ const BirthdayChecker = (setss, getss) => {
         if (res.success === 'True') {
             localStorage.setItem('INCB', false);
             modal.destroy();
+            if (typeof cb === 'function') {
+                cb();
+            }
         } else {
             errorTimes = errorTimes + 1;
             document.getElementById('birthday__error').style.display = 'block';
