@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
 import { checkBirthday } from '../../services/checkBirthday';
 import { getToken } from '../../services/user/accessToken';
-
+import { logout } from '../../services/user/logoutFetcher';
+import { getCurrentPath } from '../../services/getCurrentPath';
 const BirthdayChecker = (setss, getss) => {
     const { Search } = Input;
     const modal = Modal.confirm();
     let errorTimes = 0;
+    const style = {
+        display: 'none',
+        color: '#c43826',
+    };
     const content = (
         <React.Fragment>
             <p>為保障您的電子交易安全，請輸入西元出生年月日共8碼進行驗證</p>
@@ -18,7 +23,9 @@ const BirthdayChecker = (setss, getss) => {
                     onSearch={value => check(value, modal)}
                     maxLength="8"
                 />
-                <p id="tttttt">123123123123123123123</p>
+                <p id="birthday__error" style={style}>
+                    生日驗證錯誤，請重新輸入。
+                </p>
                 (EX: 2001年2月3日，請輸入20010203，法人戶請輸入營利事業登記證登記日)
             </div>
         </React.Fragment>
@@ -41,7 +48,18 @@ const BirthdayChecker = (setss, getss) => {
             modal.destroy();
         } else {
             errorTimes = errorTimes + 1;
-            console.log(errorTimes);
+            document.getElementById('birthday__error').style.display = 'block';
+            if (errorTimes === 3) {
+                await logout();
+                Modal.error({
+                    content: '輸入錯誤出生年月日超過三次，請重新登入。',
+                    onOk() {
+                        window.location = `${
+                            process.env.NEXT_PUBLIC_SUBPATH
+                        }/SinoTrade_login?currentPath=${encodeURIComponent(getCurrentPath())}`;
+                    },
+                });
+            }
         }
     };
 };
