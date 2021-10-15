@@ -300,7 +300,7 @@ export const CAHandler = async function (token, cb) {
 //憑證安裝
 export const caResultDataHandler = async function (suggestAction, userIdNo, token, successCallback, failCallback) {
     if (suggestAction === 'ApplyCert') {
-        const msg = await applyCert(userIdNo, token);
+        const result = await applyCert(userIdNo, token);
         console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
         if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
