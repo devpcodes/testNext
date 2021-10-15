@@ -307,7 +307,7 @@ export const caResultDataHandler = async function (suggestAction, userIdNo, toke
             console.log('部屬成功');
             successCallback();
         }
-        if (typeof failCallback === 'function' && (result.code != '7000' || result.code != '0000')) {
+        if (typeof failCallback === 'function' && result.code != '7000' && result.code != '0000') {
             console.log('部屬失敗');
             failCallback();
         }
