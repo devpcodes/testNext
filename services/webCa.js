@@ -304,11 +304,11 @@ export const caResultDataHandler = async function (suggestAction, userIdNo, toke
         console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
         if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
-            alert('部屬成功');
+            console.log('部屬成功');
             successCallback();
         }
         if (typeof failCallback === 'function' && (result.code != '7000' || result.code != '0000')) {
-            alert('部屬失敗');
+            console.log('部屬失敗');
             failCallback();
         }
         notification.open({
