@@ -291,6 +291,7 @@ export const CAHandler = async function (token, cb) {
             window.location.reload();
         } else {
             if (cb != null) {
+                localStorage.setItem('INCB', false);
                 cb();
             }
         }
