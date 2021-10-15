@@ -81,9 +81,10 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             setDataType('o');
             queryStockQuote('o');
             queryStockInfo('o');
-            if (orderData.qty && orderData.qty !== '0') {
-                setValNum(orderData.qty);
-            }
+            // if (orderData.qty && orderData.qty !== '0') {
+            //     console.log('QTY',orderData.qty)
+            //     setValNum(orderData.qty);
+            // }
         }
     }, [orderData]);
 
@@ -223,7 +224,9 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             let price = result[key].refPrice || result[key].preClose || '';
             let num = result[key].lotSize || result[key].lotSize || '';
             setValPrice(price);
-            setValNum(num);
+            // if(type=== 'p'){
+              setValNum(num);  
+            // }
         } catch (error) {
             console.log(error);
         }

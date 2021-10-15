@@ -89,7 +89,7 @@ const OrderBox = ({ orderData }) => {
                     }
                 })()}
                 <div className="tab_box">
-                    <Tabs defaultActiveKey="B" onChange={onTabChange}>
+                    <Tabs defaultActiveKey='B' activeKey={current} onChange={onTabChange} >
                         <TabPane tab="買進" key="B">
                             {' '}
                         </TabPane>

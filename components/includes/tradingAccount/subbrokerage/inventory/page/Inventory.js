@@ -176,6 +176,7 @@ const Invetory = ({ toOrderBox }) => {
             name: data__.StockName,
             market: marketArr[1],
             qty: data__.UseQty,
+            bs:'S',
             stemp: new Date().getTime(),
         };
         toOrderBox(newData);
