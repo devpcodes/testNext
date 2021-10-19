@@ -334,13 +334,23 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     })();
                     if (!solaceData[selectData.code].Simtrade) {
                         selectData.high.text = parseFloat(solaceData[selectData.code].High).toFixed(2);
-                        selectData.high.class = (() => {
-                            return getClass(solaceData[selectData.code], solaceData[selectData.code].High, true, false);
-                        })();
+                        selectData.high.class = solaceData[selectData.code].High
+                            ? parseFloat(solaceData[selectData.code].High) - parseFloat(selectData.reference.text) < 0
+                                ? 'lower'
+                                : parseFloat(solaceData[selectData.code].High) - parseFloat(selectData.reference.text) >
+                                  0
+                                ? 'upper'
+                                : ''
+                            : '';
                         selectData.low.text = parseFloat(solaceData[selectData.code].Low).toFixed(2);
-                        selectData.low.class = (() => {
-                            return getClass(solaceData[selectData.code], solaceData[selectData.code].Low, true, false);
-                        })();
+                        selectData.low.class = solaceData[selectData.code].Low
+                            ? parseFloat(solaceData[selectData.code].Low) - parseFloat(selectData.reference.text) < 0
+                                ? 'lower'
+                                : parseFloat(solaceData[selectData.code].Low) - parseFloat(selectData.reference.text) >
+                                  0
+                                ? 'upper'
+                                : ''
+                            : '';
                     }
                 }
                 if (solaceData[selectData.code].BidPrice && solaceData[selectData.code].AskPrice) {
