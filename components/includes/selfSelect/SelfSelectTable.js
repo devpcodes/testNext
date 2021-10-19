@@ -246,27 +246,18 @@ const SelfSelectTable = memo(
                                             !snapshotData.BuyPrice || snapshotData.BuyPrice.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.BuyPrice.toFixed(2),
-                                        class: snapshotData.BuyPrice
-                                            ? parseFloat(snapshotData.BuyPrice) - parseFloat(snapshotData.Close) < 0
-                                                ? 'lower'
-                                                : parseFloat(snapshotData.BuyPrice) - parseFloat(snapshotData.Close) > 0
-                                                ? 'upper'
-                                                : ''
-                                            : '',
+                                        class: (() => {
+                                            return getClass(snapshotData, snapshotData.BuyPrice, true, false);
+                                        })(),
                                     };
                                     stockData.sellPrice = {
                                         text:
                                             !snapshotData.SellPrice || snapshotData.SellPrice.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.SellPrice.toFixed(2),
-                                        class: snapshotData.SellPrice
-                                            ? parseFloat(snapshotData.SellPrice) - parseFloat(snapshotData.Close) < 0
-                                                ? 'lower'
-                                                : parseFloat(snapshotData.SellPrice) - parseFloat(snapshotData.Close) >
-                                                  0
-                                                ? 'upper'
-                                                : ''
-                                            : '',
+                                        class: (() => {
+                                            return getClass(snapshotData, snapshotData.SellPrice, true, false);
+                                        })(),
                                     };
                                     stockData.high = {
                                         text:
