@@ -15,6 +15,9 @@ export const useOpenAccountUrl = () => {
             case 'alpha':
                 setUrl('https://www.sinotrade.com.tw/openact?strProd=0064&strWeb=0086');
                 break;
+            case 'cnyes':
+                setUrl('https://www.sinotrade.com.tw/openact?strProd=0108&strWeb=0007');
+                break;
             default:
                 setUrl(
                     'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
