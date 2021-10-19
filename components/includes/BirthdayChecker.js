@@ -35,6 +35,7 @@ const BirthdayChecker = cb => {
         content: content,
         cancelText: '取消',
         okButtonProps: { style: { display: 'none' } },
+        keyboard: false,
         onCancel: async function () {
             await logout();
             window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
