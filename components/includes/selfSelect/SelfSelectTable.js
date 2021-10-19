@@ -246,61 +246,53 @@ const SelfSelectTable = memo(
                                             !snapshotData.BuyPrice || snapshotData.BuyPrice.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.BuyPrice.toFixed(2),
-                                        class:
-                                            !snapshotData.buyPrice || snapshotData.buyPrice.toFixed(2) == 0
-                                                ? parseFloat(snapshotData.buyPrice) - parseFloat(snapshotData.Close) < 0
-                                                    ? 'lower'
-                                                    : parseFloat(snapshotData.SellPrice) -
-                                                          parseFloat(snapshotData.Close) >
-                                                      0
-                                                    ? 'upper'
-                                                    : ''
-                                                : '',
+                                        class: snapshotData.BuyPrice
+                                            ? parseFloat(snapshotData.BuyPrice) - parseFloat(snapshotData.Close) < 0
+                                                ? 'lower'
+                                                : parseFloat(snapshotData.BuyPrice) - parseFloat(snapshotData.Close) > 0
+                                                ? 'upper'
+                                                : ''
+                                            : '',
                                     };
                                     stockData.sellPrice = {
                                         text:
                                             !snapshotData.SellPrice || snapshotData.SellPrice.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.SellPrice.toFixed(2),
-                                        class:
-                                            !snapshotData.SellPrice || snapshotData.SellPrice.toFixed(2) == 0
-                                                ? parseFloat(snapshotData.SellPrice) - parseFloat(snapshotData.Close) <
+                                        class: snapshotData.SellPrice
+                                            ? parseFloat(snapshotData.SellPrice) - parseFloat(snapshotData.Close) < 0
+                                                ? 'lower'
+                                                : parseFloat(snapshotData.SellPrice) - parseFloat(snapshotData.Close) >
                                                   0
-                                                    ? 'lower'
-                                                    : parseFloat(snapshotData.SellPrice) -
-                                                          parseFloat(snapshotData.Close) >
-                                                      0
-                                                    ? 'upper'
-                                                    : ''
-                                                : '',
+                                                ? 'upper'
+                                                : ''
+                                            : '',
                                     };
                                     stockData.high = {
                                         text:
                                             !snapshotData.High || snapshotData.High.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.High.toFixed(2),
-                                        class:
-                                            !snapshotData.High || snapshotData.High.toFixed(2) == 0
-                                                ? parseFloat(snapshotData.High) - parseFloat(snapshotData.Close) < 0
-                                                    ? 'lower'
-                                                    : parseFloat(snapshotData.High) - parseFloat(snapshotData.Close) > 0
-                                                    ? 'upper'
-                                                    : ''
-                                                : '',
+                                        class: snapshotData.High
+                                            ? parseFloat(snapshotData.High) - parseFloat(snapshotData.Close) < 0
+                                                ? 'lower'
+                                                : parseFloat(snapshotData.High) - parseFloat(snapshotData.Close) > 0
+                                                ? 'upper'
+                                                : ''
+                                            : '',
                                     };
                                     stockData.low = {
                                         text:
                                             !snapshotData.Low || snapshotData.Low.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.Low.toFixed(2),
-                                        class:
-                                            !snapshotData.Low || snapshotData.Low.toFixed(2) == 0
-                                                ? parseFloat(snapshotData.Low) - parseFloat(snapshotData.Close) < 0
-                                                    ? 'lower'
-                                                    : parseFloat(snapshotData.Low) - parseFloat(snapshotData.Close) > 0
-                                                    ? 'upper'
-                                                    : ''
-                                                : '',
+                                        class: snapshotData.Low
+                                            ? parseFloat(snapshotData.Low) - parseFloat(snapshotData.Close) < 0
+                                                ? 'lower'
+                                                : parseFloat(snapshotData.Low) - parseFloat(snapshotData.Close) > 0
+                                                ? 'upper'
+                                                : ''
+                                            : '',
                                     };
                                     stockData.totalVolume = {
                                         text: snapshotData.TotalVolume ? snapshotData.TotalVolume : '--',
