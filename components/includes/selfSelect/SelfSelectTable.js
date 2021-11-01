@@ -265,9 +265,9 @@ const SelfSelectTable = memo(
                                                 ? '--'
                                                 : snapshotData.High.toFixed(2),
                                         class: snapshotData.High
-                                            ? parseFloat(snapshotData.High) - parseFloat(snapshotData.Close) < 0
+                                            ? parseFloat(snapshotData.High) - parseFloat(snapshotData.Reference) < 0
                                                 ? 'lower'
-                                                : parseFloat(snapshotData.High) - parseFloat(snapshotData.Close) > 0
+                                                : parseFloat(snapshotData.High) - parseFloat(snapshotData.Reference) > 0
                                                 ? 'upper'
                                                 : ''
                                             : '',
@@ -278,9 +278,9 @@ const SelfSelectTable = memo(
                                                 ? '--'
                                                 : snapshotData.Low.toFixed(2),
                                         class: snapshotData.Low
-                                            ? parseFloat(snapshotData.Low) - parseFloat(snapshotData.Close) < 0
+                                            ? parseFloat(snapshotData.Low) - parseFloat(snapshotData.Reference) < 0
                                                 ? 'lower'
-                                                : parseFloat(snapshotData.Low) - parseFloat(snapshotData.Close) > 0
+                                                : parseFloat(snapshotData.Low) - parseFloat(snapshotData.Reference) > 0
                                                 ? 'upper'
                                                 : ''
                                             : '',
