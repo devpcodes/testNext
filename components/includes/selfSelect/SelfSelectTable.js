@@ -27,7 +27,6 @@ const SelfSelectTable = memo(
         const [fetchSelectGroupData, setFetchSelectGroupData] = useState(null);
         const [selectStocks, setSelectStocks] = useState([]);
         const [snapshot, setSnapshot] = useState(null);
-        const [upDownLimit, setUpDownLimit] = useState({});
 
         // 查詢自選選單
         useEffect(async () => {
@@ -202,12 +201,6 @@ const SelfSelectTable = memo(
                         if (snapshot && ['O', 'F', 'S'].includes(stock.market)) {
                             // 證期權
                             snapshot.some((snapshotData, snapshotIndex) => {
-                                // let test = JSON.parse(JSON.stringify(upDownLimit));
-                                // test[snapshotData.Code] = {};
-                                // test[snapshotData.Code].upper = snapshotData.UpLimit
-                                // test[snapshotData.Code].lower = snapshotData.DownLimit
-                                // setUpDownLimit(test)
-
                                 if (stock.symbol == snapshotData.Code) {
                                     stockData.key = index;
                                     stockData.code = snapshotData.Code;
