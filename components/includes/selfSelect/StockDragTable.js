@@ -276,11 +276,13 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
     useEffect(() => {
         // 從 snapshot 拿取最高最低價，solace 裡面沒有。
         let upDownLimit = {};
-        snapshotData.forEach((stockSNData, index) => {
-            upDownLimit[stockSNData.Code] = {};
-            upDownLimit[stockSNData.Code].upper = stockSNData.UpLimit;
-            upDownLimit[stockSNData.Code].lower = stockSNData.DownLimit;
-        });
+        if (snapshotData) {
+            snapshotData.forEach((stockSNData, index) => {
+                upDownLimit[stockSNData.Code] = {};
+                upDownLimit[stockSNData.Code].upper = stockSNData.UpLimit;
+                upDownLimit[stockSNData.Code].lower = stockSNData.DownLimit;
+            });
+        }
 
         const getClass = (solaceData, price, needLimit, needIcon) => {
             let className = '';
