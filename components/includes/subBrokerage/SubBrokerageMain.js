@@ -143,7 +143,8 @@ const SubBrokerMain = () => {
                         transition: transform 0.5s;
                     }
                     .content_box--nav {
-                        margin-top: ${current === 'unrealized' ? '150px' : '65px'};
+                        /*margin-top: ${current === 'unrealized' ? '150px' : '65px'};*/
+                        margin-top: 65px;
                     }
                 `}
             </style>

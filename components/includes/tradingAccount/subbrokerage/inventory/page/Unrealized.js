@@ -410,15 +410,15 @@ const Unrealized = ({ toOrderBox }) => {
     return (
         <div className="brokerage unrealized_content">
             <div className="action_box">
-                <div className="currencyT">幣別 USD</div>
+                <div className="currencyT">{/*幣別 USD*/}</div>
                 <div>
                     <span className="updateTime">更新時間：{refreshTime}</span>
-                    <IconBtn type={hidden ? 'eyeClose' : 'eyeOpen'} onClick={defaultFunc /*secretChanger*/}></IconBtn>
-                    <IconBtn type={'info'} onClick={e => showModal(e, 1)}></IconBtn>
+                    {/* <IconBtn type={hidden ? 'eyeClose' : 'eyeOpen'} onClick={defaultFunc}></IconBtn> */}
+                    {/* <IconBtn type={'info'} onClick={e => showModal(e, 1)}></IconBtn> */}
                     <IconBtn type={'refresh'} onClick={e => onRefresh(e) /*onRefresh*/}></IconBtn>
                 </div>
                 <Modal
-                    // title={modalText.title}
+                    title='INFO'
                     // visible={isModalVisible}
                     closable={false}
                     footer={[<Button onClick={defaultFunc /*handleCancel_info*/}>關閉</Button>]}
@@ -427,9 +427,9 @@ const Unrealized = ({ toOrderBox }) => {
                 </Modal>
             </div>
 
-            <div className="itemCard_box">
+            {/* <div className="itemCard_box">
                 <ItemCard dataSource={ItemCardDemoData} lineNum={4} />
-            </div>
+            </div> */}
             <div className="table_box">
                 <AccountTable
                     filterColumns={searchColumns}
@@ -477,7 +477,7 @@ const Unrealized = ({ toOrderBox }) => {
                     }
                     .action_box {
                         position: absolute;
-                        top: -195px;
+                        top: -110px;
                         width: 100%;
                         display: flex;
                         justify-content: space-between;
