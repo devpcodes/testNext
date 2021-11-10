@@ -264,18 +264,26 @@ const SelfSelectTable = memo(
                                             !snapshotData.High || snapshotData.High.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.High.toFixed(2),
-                                        class: (() => {
-                                            return getClass(snapshotData, snapshotData.High, true, false);
-                                        })(),
+                                        class: snapshotData.High
+                                            ? parseFloat(snapshotData.High) - parseFloat(snapshotData.Reference) < 0
+                                                ? 'lower'
+                                                : parseFloat(snapshotData.High) - parseFloat(snapshotData.Reference) > 0
+                                                ? 'upper'
+                                                : ''
+                                            : '',
                                     };
                                     stockData.low = {
                                         text:
                                             !snapshotData.Low || snapshotData.Low.toFixed(2) == 0
                                                 ? '--'
                                                 : snapshotData.Low.toFixed(2),
-                                        class: (() => {
-                                            return getClass(snapshotData, snapshotData.Low, true, false);
-                                        })(),
+                                        class: snapshotData.Low
+                                            ? parseFloat(snapshotData.Low) - parseFloat(snapshotData.Reference) < 0
+                                                ? 'lower'
+                                                : parseFloat(snapshotData.Low) - parseFloat(snapshotData.Reference) > 0
+                                                ? 'upper'
+                                                : ''
+                                            : '',
                                     };
                                     stockData.totalVolume = {
                                         text: snapshotData.TotalVolume ? snapshotData.TotalVolume : '--',
@@ -390,11 +398,7 @@ const SelfSelectTable = memo(
                         {!isSocalLogin && <TabPane tab="台股庫存" key="0" />}
                         {!!fetchSelectGroupData &&
                             fetchSelectGroupData.map((val, key) => {
-                                return (
-                                    <>
-                                        <TabPane tab={val.selectName} key={val.selectId} />
-                                    </>
-                                );
+                                return <TabPane tab={val.selectName} key={val.selectId} />;
                             })}
                     </Tabs>
                 </div>
@@ -404,6 +408,7 @@ const SelfSelectTable = memo(
                         tabKey={selectGroupID}
                         token={token}
                         isSocalLogin={isSocalLogin}
+                        snapshotData={snapshot}
                     />
                 </div>
 
