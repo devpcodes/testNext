@@ -398,11 +398,7 @@ const SelfSelectTable = memo(
                         {!isSocalLogin && <TabPane tab="台股庫存" key="0" />}
                         {!!fetchSelectGroupData &&
                             fetchSelectGroupData.map((val, key) => {
-                                return (
-                                    <>
-                                        <TabPane tab={val.selectName} key={val.selectId} />
-                                    </>
-                                );
+                                return <TabPane tab={val.selectName} key={val.selectId} />;
                             })}
                     </Tabs>
                 </div>
