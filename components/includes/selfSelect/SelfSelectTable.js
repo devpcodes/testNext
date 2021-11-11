@@ -6,7 +6,7 @@ import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectG
 import { fetchQuerySelectInventoryStock } from '../../../services/selfSelect/querySelectInventoryStock';
 import { fetchQuerySelectStock } from '../../../services/selfSelect/querySelectStock';
 import { fetchQuerySubBrokerageQuote } from '../../../services/sb/querySubBrokerageQuote';
-import { fetchSnapshot } from '../../../services/stock/snapshot';
+import { fetchSnapshot } from '../../../services/stock/fetchSnapshot';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import useSWR from 'swr';
 
