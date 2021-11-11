@@ -71,7 +71,7 @@ export const solaceClient = function (solaceName, userId) {
 
     // Callback for message events
     subscriber.messageEventCb = function (session, message, type) {
-        console.log('topic-msg', message.getDestination().getName(), message.getSdtContainer());
+        // console.log('topic-msg', message.getDestination().getName(), message.getSdtContainer());
         //message.getDestination()  -> getTopic
         try {
             if (Object.keys(messageEvent).length != 0) {

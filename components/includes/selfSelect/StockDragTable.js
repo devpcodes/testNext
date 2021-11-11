@@ -15,10 +15,9 @@ import drag from '../../../resources/images/pages/Self_select/menu-hamburger.svg
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 import noData from '../../../resources/images/pages/Self_select/img-default.svg';
 
-const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
+const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotData }) => {
     // const refCount = React.useRef(0);
     // console.log(refCount.current++);
-
     const dispatch = useDispatch();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const socalLogin = useSelector(store => store.user.socalLogin);
@@ -275,6 +274,16 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
     }, [tableData]);
 
     useEffect(() => {
+        // 從 snapshot 拿取最高最低價，solace 裡面沒有。
+        let upDownLimit = {};
+        if (snapshotData) {
+            snapshotData.forEach((stockSNData, index) => {
+                upDownLimit[stockSNData.Code] = {};
+                upDownLimit[stockSNData.Code].upper = stockSNData.UpLimit;
+                upDownLimit[stockSNData.Code].lower = stockSNData.DownLimit;
+            });
+        }
+
         const getClass = (solaceData, price, needLimit, needIcon) => {
             let className = '';
             price
@@ -285,9 +294,9 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     : (className += 'lower ')
                 : '';
             if (needLimit) {
-                parseFloat(price) === parseFloat(solaceData.Upper)
+                parseFloat(price) === parseFloat(upDownLimit[solaceData.Code]?.upper)
                     ? (className += 'up__limit ')
-                    : parseFloat(price) === parseFloat(solaceData.Lower)
+                    : parseFloat(price) === parseFloat(upDownLimit[solaceData.Code]?.lower)
                     ? (className += 'down__limit ')
                     : '';
             }
@@ -334,13 +343,23 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin }) => {
                     })();
                     if (!solaceData[selectData.code].Simtrade) {
                         selectData.high.text = parseFloat(solaceData[selectData.code].High).toFixed(2);
-                        selectData.high.class = (() => {
-                            return getClass(solaceData[selectData.code], solaceData[selectData.code].High, true, false);
-                        })();
+                        selectData.high.class = solaceData[selectData.code].High
+                            ? parseFloat(solaceData[selectData.code].High) - parseFloat(selectData.reference.text) < 0
+                                ? 'lower'
+                                : parseFloat(solaceData[selectData.code].High) - parseFloat(selectData.reference.text) >
+                                  0
+                                ? 'upper'
+                                : ''
+                            : '';
                         selectData.low.text = parseFloat(solaceData[selectData.code].Low).toFixed(2);
-                        selectData.low.class = (() => {
-                            return getClass(solaceData[selectData.code], solaceData[selectData.code].Low, true, false);
-                        })();
+                        selectData.low.class = solaceData[selectData.code].Low
+                            ? parseFloat(solaceData[selectData.code].Low) - parseFloat(selectData.reference.text) < 0
+                                ? 'lower'
+                                : parseFloat(solaceData[selectData.code].Low) - parseFloat(selectData.reference.text) >
+                                  0
+                                ? 'upper'
+                                : ''
+                            : '';
                     }
                 }
                 if (solaceData[selectData.code].BidPrice && solaceData[selectData.code].AskPrice) {
