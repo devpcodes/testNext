@@ -5,9 +5,9 @@ import ReservationStock from '../components/includes/advanceCollection/Reservati
 import { reducers } from '../store/advanceCollection/combineReducer';
 import EarmarkReserve from '../components/includes/advanceCollection/EarmarkReserve';
 import DebitDeposit from '../components/includes/debitDeposit/page/DebitDeposit';
-import { ReducerContext } from '../store/advanceCollection/reducerContext';
 const initState = reducers();
 // export const ReducerContext = createContext();
+import { ReducerContext } from '../store/advanceCollection/reducerContext';
 
 const { Option } = Select;
 
@@ -17,7 +17,7 @@ const options = [
     { label: '借券圈存', value: 'debitDeposit' },
 ];
 // 有獨立全局狀態不是redux
-const AdvanceCollection = function () {
+const AdvanceCollectionTest = function () {
     const [selectOption, setSelectOption] = useState('earmarkReserve');
     const reducer = useReducer(reducers, initState);
     const handleChange = value => {
@@ -108,4 +108,4 @@ const AdvanceCollection = function () {
 }; */
 }
 
-export default AdvanceCollection;
+export default AdvanceCollectionTest;
