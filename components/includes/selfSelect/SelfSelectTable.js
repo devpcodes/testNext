@@ -322,6 +322,7 @@ const SelfSelectTable = memo(
                             }
 
                             const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
+                            console.log('quote', stockData, sbQuoteData);
                             stockData.key = index;
                             stockData.code = stock.symbol;
                             stockData.market = stock.market;
@@ -338,26 +339,77 @@ const SelfSelectTable = memo(
                                     sbQuoteData && sbQuoteData.refPrice
                                         ? parseFloat(sbQuoteData.refPrice).toFixed(2)
                                         : '--',
+                                class: sbQuoteData?.refPrice
+                                    ? parseFloat(sbQuoteData.refPrice) - parseFloat(sbQuoteData.preClose) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.refPrice) - parseFloat(sbQuoteData.preClose) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
                             stockData.changePrice = {
-                                text: '--',
+                                text: sbQuoteData?.net ? parseFloat(sbQuoteData.net).toFixed(2) : '--', //net
+                                class: sbQuoteData?.net
+                                    ? parseFloat(sbQuoteData.net) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.net) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
                             stockData.changeRate = {
-                                text: '--',
+                                text: sbQuoteData?.pct ? parseFloat(sbQuoteData.pct).toFixed(2) : '--', //pct
+                                class: sbQuoteData?.pct
+                                    ? parseFloat(sbQuoteData.pct) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.pct) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
                             stockData.buyPrice = {
-                                text: '--',
+                                text: sbQuoteData?.bid ? parseFloat(sbQuoteData.bid).toFixed(2) : '--', //bid
+                                class: sbQuoteData?.bid
+                                    ? parseFloat(sbQuoteData.bid) - parseFloat(sbQuoteData.preClose) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.bid) - parseFloat(sbQuoteData.preClose) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
                             stockData.sellPrice = {
-                                text: '--',
+                                text: sbQuoteData?.ask ? parseFloat(sbQuoteData.ask).toFixed(2) : '--', //ask
+                                class: sbQuoteData?.ask
+                                    ? parseFloat(sbQuoteData.ask) - parseFloat(sbQuoteData.preClose) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.ask) - parseFloat(sbQuoteData.preClose) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
                             stockData.high = {
-                                text: '--',
+                                text: sbQuoteData?.high ? parseFloat(sbQuoteData.high).toFixed(2) : '--', //high
+                                class: sbQuoteData?.high
+                                    ? parseFloat(sbQuoteData.high) - parseFloat(sbQuoteData.preClose) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.high) - parseFloat(sbQuoteData.preClose) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
                             stockData.low = {
-                                text: '--',
+                                text: sbQuoteData?.low ? parseFloat(sbQuoteData.low).toFixed(2) : '--', //low
+                                class: sbQuoteData?.low
+                                    ? parseFloat(sbQuoteData.low) - parseFloat(sbQuoteData.preClose) < 0
+                                        ? 'lower'
+                                        : parseFloat(sbQuoteData.low) - parseFloat(sbQuoteData.preClose) > 0
+                                        ? 'upper'
+                                        : ''
+                                    : '',
                             };
-                            stockData.totalVolume = { text: '--' };
+                            stockData.totalVolume = {
+                                text: sbQuoteData?.volume ? parseFloat(sbQuoteData.volume).toFixed(2) : '--',
+                            }; //volume
                             stockData.reference = {
                                 text:
                                     sbQuoteData && sbQuoteData.preClose
