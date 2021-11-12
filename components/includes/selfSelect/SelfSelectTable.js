@@ -322,6 +322,7 @@ const SelfSelectTable = memo(
                             }
 
                             const sbQuoteData = sbQuote[`${stock.symbol}.${mk}`];
+                            console.log('quote', stockData, sbQuoteData);
                             stockData.key = index;
                             stockData.code = stock.symbol;
                             stockData.market = stock.market;
@@ -340,24 +341,26 @@ const SelfSelectTable = memo(
                                         : '--',
                             };
                             stockData.changePrice = {
-                                text: '--',
+                                text: sbQuoteData?.net ? parseFloat(sbQuoteData.net).toFixed(2) : '--', //net
                             };
                             stockData.changeRate = {
-                                text: '--',
+                                text: sbQuoteData?.pct ? parseFloat(sbQuoteData.pct).toFixed(2) : '--', //pct
                             };
                             stockData.buyPrice = {
-                                text: '--',
+                                text: sbQuoteData?.bid ? parseFloat(sbQuoteData.bid).toFixed(2) : '--', //bid
                             };
                             stockData.sellPrice = {
-                                text: '--',
+                                text: sbQuoteData?.ask ? parseFloat(sbQuoteData.ask).toFixed(2) : '--', //ask
                             };
                             stockData.high = {
-                                text: '--',
+                                text: sbQuoteData?.high ? parseFloat(sbQuoteData.high).toFixed(2) : '--', //high
                             };
                             stockData.low = {
-                                text: '--',
+                                text: sbQuoteData?.low ? parseFloat(sbQuoteData.low).toFixed(2) : '--', //low
                             };
-                            stockData.totalVolume = { text: '--' };
+                            stockData.totalVolume = {
+                                text: sbQuoteData?.volume ? parseFloat(sbQuoteData.volume).toFixed(2) : '--',
+                            }; //volume
                             stockData.reference = {
                                 text:
                                     sbQuoteData && sbQuoteData.preClose
