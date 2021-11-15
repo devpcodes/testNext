@@ -7,6 +7,7 @@ import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { checkLogin } from '../../../services/components/layouts/checkLogin';
 import { usePlatform } from '../../../hooks/usePlatform';
 import { setSBBs } from '../../../store/goOrderSB/action';
+import { useOpenAccountUrl } from '../../../hooks/useOpenAccountUrl';
 
 const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     // const platform = useSelector(store => store.general.platform);
     const platform = usePlatform();
-
+    const openAccountUrl = useOpenAccountUrl();
     const winSize = useWindowSize();
 
     useEffect(() => {
@@ -70,22 +71,23 @@ const LeadingBtn = ({ containerHeight, show } = { show: true }) => {
     // };
 
     const socalClickHandler = useCallback(() => {
-        switch (platform) {
-            case 'udn':
-                window.open('https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135');
-                // window.location =
-                //     'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
-                break;
+        window.open(openAccountUrl);
+        // switch (platform) {
+        //     case 'udn':
+        //         window.open('https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135');
+        //         // window.location =
+        //         //     'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135&utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=login';
+        //         break;
 
-            default:
-                window.open(
-                    'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
-                );
-                // window.location =
-                //     'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
-                break;
-        }
-    }, [platform]);
+        //     default:
+        //         window.open(
+        //             'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕',
+        //         );
+        //         // window.location =
+        //         //     'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=footer開戶按鈕';
+        //         break;
+        // }
+    }, [openAccountUrl]);
 
     return (
         <div className="container" style={{ display: show ? 'block' : 'none' }}>

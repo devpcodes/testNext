@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, memo } from 'react';
 import { useSelector } from 'react-redux';
-import { Modal, Button, Space } from 'antd';
+import { Modal } from 'antd';
 import useSWR from 'swr';
 import { getSocalToken, getToken } from '../../../services/user/accessToken';
 import { fetchQuerySelectGroup } from '../../../services/selfSelect/querySelectGroup';
@@ -16,7 +16,7 @@ import pen from '../../../resources/images/components/goOrder/edit-edit.svg';
 import hamburger from '../../../resources/images/components/goOrder/menu-hamburger.svg';
 import cancel from '../../../resources/images/pages/Self_select/menu-close-small.svg';
 
-const SelectGroupList = ({ callBack, tabkey, reloadTabkey }) => {
+const SelectGroupList = memo(({ callBack, tabkey, reloadTabkey }) => {
     const socalLoginData = useSelector(store => store.user.socalLogin);
     const isSocalLogin = Object.keys(socalLoginData).length > 0 ? true : false;
     const token = isSocalLogin ? getSocalToken() : getToken();
@@ -179,6 +179,6 @@ const SelectGroupList = ({ callBack, tabkey, reloadTabkey }) => {
             `}</style>
         </>
     );
-};
+});
 
 export default SelectGroupList;

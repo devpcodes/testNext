@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, memo } from 'react';
 import { Button } from 'antd';
 import EditSelectGroup from './EditSelectGroup';
 import AddSelfSelect from './AddSelfSelect';
@@ -7,7 +7,7 @@ import refresh from '../../../resources/images/pages/Self_select/basic-refresh-0
 import pen from '../../../resources/images/pages/Self_select/edit-edit.svg';
 import add from '../../../resources/images/pages/Self_select/edit-plus.svg';
 
-const SelfSelectToolBar = ({ count, tabkey, reloadTabkey, isSocalLogin, reload, reloadSelectReloadTime }) => {
+const SelfSelectToolBar = memo(({ count, tabkey, reloadTabkey, isSocalLogin, reload, reloadSelectReloadTime }) => {
     const [isEditSelectGroupVisitable, setEditSelectGroupVisitable] = useState(false);
     const [isAddSelectGroupVisitable, setAddSelectGroupVisitable] = useState(false);
 
@@ -156,6 +156,6 @@ const SelfSelectToolBar = ({ count, tabkey, reloadTabkey, isSocalLogin, reload, 
             `}</style>
         </>
     );
-};
+});
 
 export default SelfSelectToolBar;
