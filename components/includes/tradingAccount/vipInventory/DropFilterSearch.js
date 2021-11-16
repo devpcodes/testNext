@@ -4,7 +4,7 @@ import ConfirmButton from './buttons/ConfirmButton';
 import ResetButton from './buttons/ResetButton';
 import SearchAutoComplete from './SearchAutoComplete';
 
-const DropFilterSearch = ({ onSubmit, onReset, value }) => {
+const DropFilterSearch = ({ onSubmit, onReset, value, marketType }) => {
     const [inputVal, setInputVal] = useState(null);
 
     useEffect(() => {
@@ -21,14 +21,15 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
     };
 
     const onSubmitHandler = val => {
-        const patt = /^[\s-+a-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
-        if (patt.test(val)) {
-            onSubmit(val);
-        } else {
-            Modal.error({
-                title: '輸入格式錯誤',
-            });
-        }
+        // const patt = /^[\s-+a-zA-Z0-9\u4e00-\u9fa5]{0,20}$/;
+        // if (patt.test(val)) {
+        //     onSubmit(val);
+        // } else {
+        //     Modal.error({
+        //         title: '輸入格式錯誤',
+        //     });
+        // }
+        onSubmit(val);
     };
 
     const selectHandler = val => {
@@ -70,6 +71,7 @@ const DropFilterSearch = ({ onSubmit, onReset, value }) => {
                         selectHandler={selectHandler}
                         parentValue={inputVal}
                         onChange={onChangeHandler}
+                        marketType={marketType}
                     />
                 </div>
                 <div className="searchBtn__box">

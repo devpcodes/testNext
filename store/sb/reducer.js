@@ -3,6 +3,7 @@ import * as actionType from './actionType';
 const initialState = {
     SBUnRealPrtlos: {},
     SBDeliveryTrial: {},
+    SBAccountBalance: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 SBDeliveryTrial: action.payload,
+            };
+        case actionType.SET_SB_ACCOUNT_BALANCE:
+            return {
+                ...state,
+                SBAccountBalance: action.payload,
             };
         default:
             return state;

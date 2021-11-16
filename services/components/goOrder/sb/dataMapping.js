@@ -15,6 +15,11 @@ export const marketName = market => {
     return found;
 };
 
+export const currencyChName = currency => {
+    const obj = { NTD: '台幣', USD: '美金', CNY: '人民幣', JPY: '日圓', HKD: '港幣' };
+    return obj[currency] || currency;
+};
+
 export const getCodeType = market => {
     switch (market) {
         case 'US':
@@ -64,9 +69,9 @@ export const getPriceType = code => {
 
 //整合getPriceType(源自舊的)
 export const goOrderMapping = (str, gtcDate) => {
-    let arr = str.split('&');
+    let arr = str?.split('&');
     let narr = [];
-    for (let index = 0; index < arr.length; index++) {
+    for (let index = 0; index < arr?.length; index++) {
         const element = arr[index];
         if (element === 'GTC') {
             element = '長';
@@ -78,11 +83,17 @@ export const goOrderMapping = (str, gtcDate) => {
     }
 
     if (gtcDate != null && gtcDate) {
+        const foundGtc = narr.find(element => element === '長');
+        if (!foundGtc) {
+            narr.splice(1, 0, '長');
+        }
+
         let filterArr = narr.filter(item => {
             if (item === '長') {
                 return item;
             }
         });
+
         const found = narr.find(element => element === '觸');
         if (filterArr.length == 0) {
             if (found) {
@@ -103,4 +114,14 @@ export const getTT = MarketID => {
     else if (MarketID == 'SHSE') tt = '8';
     else if (MarketID == 'SZSE') tt = '9';
     return tt;
+};
+
+export const getMarket = tt => {
+    let c = '';
+    if (tt == '0') c = '香港';
+    else if (tt == '1') c = '日本';
+    else if (tt == '2') c = '美國';
+    else if (tt == '8') c = '滬股通';
+    else if (tt == '9') c = '深股通';
+    return c;
 };
