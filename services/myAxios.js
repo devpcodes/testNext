@@ -8,6 +8,7 @@ const lykanDefaultVersion = 'v1';
 const divoDefaultVersion = 'v1';
 const a8DefaultVersion = 'v1';
 const signDefaultVersion = 'v1';
+const zionDefaultVersion = 'v1';
 const a8Auth = {
     username: 'nweb',
     password: 'Nweb123',
@@ -197,6 +198,30 @@ export const getSignInstance = (version = signDefaultVersion, modal = true) => {
     );
 
     return SignIns;
+};
+
+// zion instance：設置 call zion server 的最低配置
+const createZionInstance = (version = zionDefaultVersion) =>
+    axios.create({
+        baseURL: `${process.env.NEXT_PUBLIC_ZION}/${version}/`,
+        timeout: 7000,
+        withCredentials: true,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getZionInstance = (version = zionDefaultVersion, modal = true) => {
+    const ZionIns = createZionInstance(version);
+
+    ZionIns.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
+
+    return ZionIns;
 };
 
 export default axios;
