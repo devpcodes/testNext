@@ -348,22 +348,22 @@ const SelfSelectTable = memo(
                                     : '',
                             };
                             stockData.changePrice = {
-                                text: sbQuoteData?.net ? parseFloat(sbQuoteData.net).toFixed(2) : '--', //net
+                                text: sbQuoteData?.net ? Math.abs(parseFloat(sbQuoteData.net)).toFixed(2) : '--', //net
                                 class: sbQuoteData?.net
                                     ? parseFloat(sbQuoteData.net) < 0
-                                        ? 'lower'
+                                        ? 'lower lower__icon'
                                         : parseFloat(sbQuoteData.net) > 0
-                                        ? 'upper'
+                                        ? 'upper upper__icon'
                                         : ''
                                     : '',
                             };
                             stockData.changeRate = {
-                                text: sbQuoteData?.pct ? parseFloat(sbQuoteData.pct).toFixed(2) : '--', //pct
+                                text: sbQuoteData?.pct ? Math.abs(parseFloat(sbQuoteData.pct)).toFixed(2) : '--', //pct
                                 class: sbQuoteData?.pct
                                     ? parseFloat(sbQuoteData.pct) < 0
-                                        ? 'lower'
+                                        ? 'lower lower__icon'
                                         : parseFloat(sbQuoteData.pct) > 0
-                                        ? 'upper'
+                                        ? 'upper upper__icon'
                                         : ''
                                     : '',
                             };
