@@ -32,7 +32,7 @@ import { getWebId } from '../../../../services/components/goOrder/getWebId';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { usePlatform } from '../../../../hooks/usePlatform';
 import { checkPriceBtn } from './ChTradingInfoBox';
-
+import { checkPriceUpdate } from '../../../../services/components/goOrder/dataMapping';
 const waitSeconds = 5;
 const SearchList = ({ active }) => {
     const dispatch = useDispatch();
@@ -316,7 +316,8 @@ const SearchList = ({ active }) => {
                                                 刪單
                                             </Button>
                                             {/* 興櫃又不需要改價的改單功能隱藏，否則顯示 */}
-                                            {!checkPriceBtn(record) && record.market_id === 'R' ? null : (
+                                            {!checkPriceUpdate(record.price_flag, record.ord_type1, record.market_id) &&
+                                            record.market_id === 'R' ? null : (
                                                 <Button
                                                     style={{
                                                         width: '102px',

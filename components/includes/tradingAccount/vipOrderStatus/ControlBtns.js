@@ -210,10 +210,12 @@ const ControlBtns = ({ data, delClickHandler, submitSuccess }) => {
                     <button className="btn" onClick={delClickHandler.bind(null, data.key)}>
                         <span>刪</span>
                     </button>
-                    <button className="btn" onClick={qtyUpdateHandler}>
-                        <span>改</span>
-                    </button>
-                    {checkPriceUpdate(data.price_flag, data.ord_type1) && (
+                    {data.market_id !== 'R' && (
+                        <button className="btn" onClick={qtyUpdateHandler}>
+                            <span>改</span>
+                        </button>
+                    )}
+                    {checkPriceUpdate(data.price_flag, data.ord_type1, data.market_id) && (
                         <button className="btn" onClick={priceUpdateHandler}>
                             <span>價</span>
                         </button>
