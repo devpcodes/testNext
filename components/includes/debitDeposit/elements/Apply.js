@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { Button, Input } from 'antd';
+import { Button, Input, notification } from 'antd';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
 import Accounts from '../../advanceCollection/Accounts';
@@ -14,6 +14,15 @@ const Apply = () => {
     // useEffect(() => {
     //     setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
     // }, []);
+    useEffect(() => {
+        if (state.accountsReducer.disabled) {
+            notification.warning({
+                message: state.accountsReducer.disabled,
+                top: '100px',
+            });
+        }
+    }, [state.accountsReducer.disabled]);
+
     useEffect(() => {
         setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
     }, [state.accountsReducer.selected.account]);
