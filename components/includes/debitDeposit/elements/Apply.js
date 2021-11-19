@@ -1,19 +1,21 @@
 import { useContext, useState, useEffect } from 'react';
-import { Button, Input, notification } from 'antd';
+import { Button, Input, notification, Modal } from 'antd';
+import jwt_decode from 'jwt-decode';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
 import Accounts from '../../advanceCollection/Accounts';
 import ApplyContent from '../../advanceCollection/ApplyContent';
 import SearchBox from './SearchBox';
 import Msg from '../../advanceCollection/Msg';
+import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
+import { getToken } from '../../../../services/user/accessToken';
 const Apply = () => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
     const [columns, setColumns] = useState([]);
+    const [activeType, setActiveType] = useState('1');
+    const [dataLoading, setDataLoading] = useState(false);
 
-    // useEffect(() => {
-    //     setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
-    // }, []);
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -25,7 +27,64 @@ const Apply = () => {
 
     useEffect(() => {
         setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        if (getToken()) {
+            let data = getAccountsDetail(getToken());
+            fetchInventory(getToken(), data.broker_id, data.account, activeType);
+        }
     }, [state.accountsReducer.selected.account]);
+
+    //取得選擇帳號的詳細資料，驗憑證
+    const getAccountsDetail = token => {
+        let data = jwt_decode(token);
+        data = data.acts_detail.filter(item => {
+            if (item.account === state.accountsReducer.selected.account) {
+                return true;
+            }
+        });
+        return data[0] || {};
+    };
+
+    const fetchInventory = async (token, brokerId, account, activeType) => {
+        setDataLoading(true);
+        try {
+            let resData = await fetchStockInventory(token, brokerId, account, activeType, '1');
+            if (Array.isArray(resData)) {
+                resData = resData.map((item, index) => {
+                    item.key = String(index);
+                    item.action = '申請';
+                    item.qty = '';
+                    return item;
+                });
+                console.log('res data', resData);
+                // setStockInventory(resData);
+            } else {
+                if (resData === '尚未簽署保管劃撥契約書') {
+                    Modal.confirm({
+                        content:
+                            '抱歉，您必須簽署「保管劃撥帳戶契約書」後，才能繼續申請，是否前往線上簽署中心進行簽署？',
+                        onOk() {
+                            window.location = `${
+                                process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN
+                            }/sign3382/?TOKEN=${getToken()}`;
+                        },
+                        okText: '確認',
+                        cancelText: '取消',
+                    });
+                } else {
+                    Modal.error({
+                        title: resData,
+                    });
+                }
+                // setStockInventory([]);
+            }
+            setDataLoading(false);
+        } catch (error) {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+            setDataLoading(false);
+        }
+    };
 
     useEffect(() => {
         setColumns([
@@ -116,7 +175,28 @@ const Apply = () => {
         <>
             <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
             <SearchBox showFilter={true} />
-            <ApplyContent scroll={{ x: 860 }} contenterTitle={'借券圈存申請'} columns={columns} dataSource={[]} />
+            <ApplyContent
+                scroll={{ x: 860 }}
+                contenterTitle={'借券圈存申請'}
+                columns={columns}
+                dataSource={[]}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            資料加載中...
+                        </div>
+                    ),
+                    spinning: dataLoading,
+                }}
+            />
             <Msg
                 style={{ marginTop: '30px' }}
                 list={[
