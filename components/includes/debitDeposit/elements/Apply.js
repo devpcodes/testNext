@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { Button, Input, notification, Modal } from 'antd';
 import jwt_decode from 'jwt-decode';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
@@ -9,12 +9,13 @@ import SearchBox from './SearchBox';
 import Msg from '../../advanceCollection/Msg';
 import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
 import { getToken } from '../../../../services/user/accessToken';
-const Apply = () => {
+const Apply = ({ activeType = '1' }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
     const [columns, setColumns] = useState([]);
-    const [activeType, setActiveType] = useState('1');
+    // const [activeType, setActiveType] = useState('1');
     const [dataLoading, setDataLoading] = useState(false);
+    const initReady = useRef(false);
 
     useEffect(() => {
         if (state.accountsReducer.disabled) {
@@ -27,11 +28,25 @@ const Apply = () => {
 
     useEffect(() => {
         setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        getInventory(state.accountsReducer.activeType);
+        if (!initReady.current) {
+            initReady.current = true;
+        }
+    }, [state.accountsReducer.selected.account]);
+
+    //未初始化完成不抓資料，避免二次重抓
+    useEffect(() => {
+        if (initReady.current) {
+            getInventory(state.accountsReducer.activeType);
+        }
+    }, [state.accountsReducer.activeType]);
+
+    const getInventory = activeType => {
         if (getToken()) {
             let data = getAccountsDetail(getToken());
             fetchInventory(getToken(), data.broker_id, data.account, activeType);
         }
-    }, [state.accountsReducer.selected.account]);
+    };
 
     //取得選擇帳號的詳細資料，驗憑證
     const getAccountsDetail = token => {

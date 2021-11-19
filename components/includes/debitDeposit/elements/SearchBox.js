@@ -1,15 +1,19 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import { Button, Input } from 'antd';
 import PropTypes from 'prop-types';
+import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
+import { ACTIVETYPE } from '../../../../store/advanceCollection/actionType';
 
 const SearchBox = ({ showFilter }) => {
-    const [activeType, setActiveType] = useState('1');
+    const [state, dispatch] = useContext(ReducerContext);
+    // const [activeType, setActiveType] = useState('1');
     const [searchVal, setSearchVal] = useState('');
     const searchHandler = () => {};
     const resetHandler = () => {};
     const filterBtnHandler = type => {
-        setActiveType(type);
-        setSearchVal('');
+        // setActiveType(type);
+        dispatch({ type: ACTIVETYPE, payload: type });
+        // setSearchVal('');
         // setSearchStock('');
     };
     const selectCodeHandler = e => {
@@ -22,14 +26,14 @@ const SearchBox = ({ showFilter }) => {
                 <div className={'filterBox'}>
                     <Button
                         type="primary"
-                        className={activeType == '1' ? 'active searchBtn' : 'searchBtn'}
+                        className={state.accountsReducer.activeType == '1' ? 'active searchBtn' : 'searchBtn'}
                         onClick={filterBtnHandler.bind(null, '1')}
                     >
                         全額/收足/處置類股票
                     </Button>
                     <Button
                         type="primary"
-                        className={activeType == '2' ? 'active searchBtn' : 'searchBtn'}
+                        className={state.accountsReducer.activeType == '2' ? 'active searchBtn' : 'searchBtn'}
                         onClick={filterBtnHandler.bind(null, '2')}
                     >
                         一般股票
@@ -37,7 +41,7 @@ const SearchBox = ({ showFilter }) => {
                 </div>
             );
         }
-    }, [showFilter, activeType]);
+    }, [showFilter, state.accountsReducer.activeType]);
 
     return (
         <div className="searchBox">
