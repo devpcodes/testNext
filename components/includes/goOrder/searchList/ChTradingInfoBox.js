@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Tooltip, Modal, Tabs } from 'antd';
 import ChangeBox from './ChangeBox';
+import { checkPriceUpdate } from '../../../../services/components/goOrder/dataMapping';
 
 const { TabPane } = Tabs;
 export const checkPriceBtn = info => {
@@ -20,7 +21,12 @@ const ChTradingInfoBox = () => {
     const info = useSelector(store => store.goOrder.confirmBoxChanValInfo);
     const market = useSelector(store => store.goOrder.productInfo?.solaceMarket);
     useEffect(() => {
-        if (checkPriceBtn(info)) {
+        // if (checkPriceBtn(info)) {
+        //     setTabKey('1');
+        // } else {
+        //     setTabKey('2');
+        // }
+        if (checkPriceUpdate(info.price_flag, info.ord_type, info.market_id)) {
             setTabKey('1');
         } else {
             setTabKey('2');
@@ -53,7 +59,7 @@ const ChTradingInfoBox = () => {
     return (
         <div className="trading__container">
             <Tabs activeKey={tabKey} onChange={tabChangeHandler} centered animated={{ inkBar: true, tabPane: false }}>
-                {checkPriceBtn(info) && (
+                {checkPriceUpdate(info.price_flag, info.ord_type, info.market_id) && (
                     <TabPane tab="改價" key="1">
                         {tabKey === '1' && (
                             <ChangeBox type="price" tabKey={tabKey} btnClassName="btn__container btn__container-00" />

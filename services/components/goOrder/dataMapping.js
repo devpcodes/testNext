@@ -202,13 +202,17 @@ export const mappingPriceMsg = function (price, type, flag, ord_type1) {
     }
 };
 
-export const checkPriceUpdate = function (flag, ord_type1) {
+export const checkPriceUpdate = function (flag, ord_type1, market_id) {
     // 檢查市價
     if (flag === '1' || flag == null) {
         return false;
     }
     // 檢查盤後零股 / 盤中零股 / 定盤
     if (ord_type1 === '2' || ord_type1 === 'C' || ord_type1 === 'P') {
+        return false;
+    }
+    //TODO 暫時拿掉興櫃改價功能
+    if (market_id === 'R') {
         return false;
     }
     return true;
