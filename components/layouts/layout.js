@@ -12,6 +12,7 @@ import SinoTradeLogin from '../includes/sinotradeLogin/SinoTradeLogin';
 import MyTransition from '../includes/myTransition';
 import CaHead from '../includes/CaHead';
 import ReCaptchaComponent from '../includes/sinotradeLogin/ReCaptchaComponent';
+import BirthdayChecker from '../includes/BirthdayChecker';
 
 import {
     showLoginHandler,
@@ -135,6 +136,16 @@ const Layout = memo(({ children }) => {
             document.body.style.overflow = 'auto';
         }
     }, [showMask, showLogin, showBigLogin]);
+
+    useEffect(() => {
+        console.log(router);
+        if (isLogin && localStorage.getItem('INCB') === 'true') {
+            BirthdayChecker();
+        }
+        if (localStorage.getItem('INCB') === null) {
+            localStorage.setItem('INCB', true);
+        }
+    }, [router.query]);
 
     // 不需檢查是否登入的頁面
     const noVerifyRouter = () => {
@@ -275,9 +286,9 @@ const Layout = memo(({ children }) => {
                 router.push(prevPathname.current);
             }
         }, 500);
-        setTimeout(() => {
-            CAHandler(getToken());
-        }, 700);
+        // setTimeout(() => {
+        //     CAHandler(getToken());
+        // }, 700);
     }, []);
 
     // 關閉大的login
@@ -291,7 +302,7 @@ const Layout = memo(({ children }) => {
         setShowBigLogin(false);
         dispatch(setIsLogin(true));
         bigLoginRouterHandler();
-        CAHandler(getToken());
+        // CAHandler(getToken());
     };
 
     const bigLoginRouterHandler = function (type) {
