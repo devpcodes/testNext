@@ -163,6 +163,8 @@ export const mappingWebId = webID => {
         111: 'MORE',
         158: '經濟日報',
         165: '網龍條件單',
+        156: 'XQM(i)',
+        157: 'XQM(G)',
     };
     return webIDList[webID];
 };
