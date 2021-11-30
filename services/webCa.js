@@ -266,7 +266,9 @@ export const CAHandler = async function (token, cb) {
                 async onOk() {
                     modal.destroy();
                     await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
-                        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+                        setTimeout(async function () {
+                            await logout();
+                        });
                     });
                 },
                 okText: '是',
