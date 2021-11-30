@@ -1,7 +1,9 @@
 import jwt_decode from 'jwt-decode';
 import { Modal, notification } from 'antd';
 import { getToken } from './user/accessToken';
-
+import BirthdayChecker from '../components/includes/BirthdayChecker';
+import { caValidator } from '../services/caValidator';
+import { logout } from '../services/user/logoutFetcher';
 export const signCert = async function (userInfo, isNeedSign = true, token) {
     if (isNeedSign) {
         let DM;
@@ -200,7 +202,11 @@ export const applyCert = function (user_idNo, token, callBack) {
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                resolve(applyCertMsg);
+                localStorage.setItem('INCB', false);
+                resolve({
+                    code: applyCertCode,
+                    msg: applyCertMsg,
+                });
             },
         );
     });
@@ -228,49 +234,87 @@ export const renewCert = function (user_idNo, token, callBack) {
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                resolve(applyCertMsg);
+                localStorage.setItem('INCB', false);
+                resolve({
+                    code: applyCertCode,
+                    msg: applyCertMsg,
+                });
             },
         );
     });
 };
 
 //憑證檢查整合安裝
-export const CAHandler = function (token, cb) {
+export const CAHandler = async function (token, cb) {
     const tokenVal = jwt_decode(token);
     const checkData = checkCert(tokenVal.user_id);
     if (checkData.suggestAction != 'None') {
+        localStorage.removeItem('INCB');
         setTimeout(() => {
             const modal = Modal.confirm();
+            const content = (
+                <React.Fragment>
+                    <p>
+                        為保障您的電子交易安全，登入時將檢查電子憑證，是否載入憑證? <br />
+                        若暫不載入，系統將於每次登入時，進行出生年月日之身分驗證。
+                    </p>
+                </React.Fragment>
+            );
             modal.update({
                 title: '憑證系統',
-                content: `您現在無憑證。是否要載入憑證 ?`,
+                content: content,
                 async onOk() {
                     modal.destroy();
-                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token);
+                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
+                        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+                    });
                 },
                 okText: '是',
                 cancelText: '否',
                 onCancel() {
+                    modal.destroy();
                     sessionStorage.setItem('deployCA', false);
+                    BirthdayChecker(cb);
                 },
             });
         }, 600);
     } else {
-        if (cb != null) {
-            cb();
+        const cert = await signCert({ idno: tokenVal.user_id }, true, token);
+        const res = await caValidator(getToken(), {
+            signature: cert.signature,
+            plainText: cert.plainText,
+            certSN: cert.certSN,
+            type: 'web',
+        });
+        if (res.msg !== '驗章成功') {
+            await logout();
+            window.location.reload();
+        } else {
+            if (cb != null) {
+                localStorage.setItem('INCB', false);
+                cb();
+            }
         }
     }
 };
 
 //憑證安裝
-export const caResultDataHandler = async function (suggestAction, userIdNo, token) {
+export const caResultDataHandler = async function (suggestAction, userIdNo, token, successCallback, failCallback) {
     if (suggestAction === 'ApplyCert') {
-        const msg = await applyCert(userIdNo, token);
-        console.log('msg', msg);
+        const result = await applyCert(userIdNo, token);
+        console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
+        if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
+            console.log('部屬成功');
+            successCallback();
+        }
+        if (typeof failCallback === 'function' && result.code != '7000' && result.code != '0000') {
+            console.log('部屬失敗');
+            failCallback();
+        }
         notification.open({
             message: '系統訊息',
-            description: msg,
+            description: result.msg,
             top: 70,
             style: {
                 width: '200px',
@@ -278,12 +322,18 @@ export const caResultDataHandler = async function (suggestAction, userIdNo, toke
         });
     }
     if (suggestAction == 'RenewCert') {
-        const msg = await renewCert(userIdNo, token);
-        console.log('msg', msg);
+        const result = await renewCert(userIdNo, token);
+        console.log('result', result);
+        if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
+            successCallback();
+        }
+        if (typeof failCallback === 'function' && (result.code != '7000' || result.code != '0000')) {
+            failCallback();
+        }
         // console.log('RenewCert憑證回傳訊息', msg);
         notification.open({
             message: '系統訊息',
-            description: msg,
+            description: result.msg,
             top: 70,
             style: {
                 width: '200px',

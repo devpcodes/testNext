@@ -10,6 +10,8 @@ import closeMobile from '../../../resources/images/pages/SinoTrade_login/ic-clos
 import udnCloseIcon from '../../../resources/images/pages/SinoTrade_login/menu-close-big.svg';
 import fbIcon from '../../../resources/images/pages/SinoTrade_login/img-fb.svg';
 import googleIcon from '../../../resources/images/pages/SinoTrade_login/img-google.svg';
+import { getToken } from '../../../services/user/accessToken';
+import { CAHandler } from '../../../services/webCa';
 
 import { submit } from '../../../services/components/login/login';
 import { checkBrowser } from '../../../services/checkBrowser';
@@ -309,13 +311,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     //神策傳送成功後 做的事
     const afterSensors = function () {
-        redirectHandler();
-        //iframe登入處理(來自舊理財網)
-        if (isIframe) {
-            iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
-        } else {
-            successHandler();
-        }
+        localStorage.setItem('INCB', true);
+        CAHandler(getToken(), function () {
+            redirectHandler();
+            //iframe登入處理(來自舊理財網)
+            if (isIframe) {
+                iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
+            } else {
+                successHandler();
+            }
+        });
     };
 
     //忘記密碼
