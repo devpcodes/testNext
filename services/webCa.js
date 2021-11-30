@@ -271,7 +271,6 @@ export const CAHandler = async function (token, cb) {
                         token,
                         cb,
                         function () {
-                            alert('部屬錯誤!!!!');
                             logout();
                         },
                         1000,
