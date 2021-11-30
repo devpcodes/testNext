@@ -265,11 +265,17 @@ export const CAHandler = async function (token, cb) {
                 content: content,
                 async onOk() {
                     modal.destroy();
-                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
-                        setTimeout(async function () {
-                            await logout();
-                        });
-                    });
+                    await caResultDataHandler(
+                        checkData.suggestAction,
+                        tokenVal.user_id,
+                        token,
+                        cb,
+                        function () {
+                            alert('部屬錯誤!!!!');
+                            logout();
+                        },
+                        1000,
+                    );
                 },
                 okText: '是',
                 cancelText: '否',
