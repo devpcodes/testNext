@@ -54,6 +54,16 @@ const errorHandler = (error, modal = true) => {
                 case 403:
                     reLoginAndStopFetchHandler();
                     break;
+                case 500:
+                    if (
+                        error.response.data.message.indexOf('驗證未通過') &&
+                        error.response.data.result.reCAPTCHA_ver === '3'
+                    ) {
+                        Modal.error({
+                            content: '請勾選檢核框後再試，謝謝',
+                        });
+                        break;
+                    }
                 default:
                     modal &&
                         Modal.error({
