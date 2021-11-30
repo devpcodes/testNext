@@ -234,6 +234,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             if (error.response.data.message.indexOf('驗證未通過') && error.response.data.result.reCAPTCHA_ver === '3') {
                 setRecaptchaVer('2');
             }
+            if (error.response?.data?.result?.reCAPTCHA_ver === '2') {
+                recaptchaRef.current.reset();
+                // setV2ResponseErr('responseError')
+            }
 
             sensors.track('LoginResults', {
                 is_success: false,
@@ -258,6 +262,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const recaptchaV2Handler = () => {
         const recaptchaValue = recaptchaRef.current.getValue();
+        console.log('recaptcha token ===============', recaptchaValue);
         submitHandler(recaptchaValue, '2');
     };
 
