@@ -237,7 +237,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             ) {
                 setRecaptchaVer('2');
             }
-            if (error.response?.data?.result?.reCAPTCHA_ver === '2') {
+            if (error.response?.data?.result?.reCAPTCHA_ver === '2' || recaptchaVer === '2') {
                 recaptchaRef.current.reset();
                 // setV2ResponseErr('responseError')
             }
