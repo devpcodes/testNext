@@ -231,7 +231,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             }
         } catch (error) {
             setIsLoading(false);
-            if (error.response.data.message.indexOf('驗證未通過') && error.response.data.result.reCAPTCHA_ver === '3') {
+            if (
+                error.response?.data?.message.indexOf('驗證未通過') &&
+                error.response?.data?.result?.reCAPTCHA_ver === '3'
+            ) {
                 setRecaptchaVer('2');
             }
             if (error.response?.data?.result?.reCAPTCHA_ver === '2') {
