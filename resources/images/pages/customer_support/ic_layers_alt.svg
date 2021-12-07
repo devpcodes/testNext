@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" fill="#000000" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic/ic_ layers_alt</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+        <path d="M1.62,10.0100002 L0,11.2700005 L9,18.2700005 L18,11.2700005 L16.3700008,10 L8.98999977,15.7399998 L1.62,10.0100002 Z M1.62,14.2800007 L0,15.5400009 L9,22.5400009 L18,15.5400009 L16.3700008,14.2700005 L8.98999977,20.0100002 L1.62,14.2800007 Z M16.3600006,8.27000046 L18,7 L9,0 L0,7 L1.63,8.27000046 L9,14 L16.3600006,8.27000046 Z" id="path-3"></path>
+    </defs>
+    <g id="ic/ic_-layers_alt" stroke="none" stroke-width="1" fill-rule="evenodd" fill="none">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g id="basic-/-layers_alt-(Background/Mask)"></g>
+        <g id="color/#0D1623" mask="url(#mask-2)">
+            <g transform="translate(3.000000, 0.730011)">
+                <mask id="mask-4" fill="white">
+                    <use xlink:href="#path-3"></use>
+                </mask>
+                <use id="Mask" stroke="none" fill="#2E3A59" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" mask="url(#mask-4)">
+                    <g transform="translate(-3.000000, -0.730011)" id="color/#0D1623">
+                        <rect id="Rectangle" fill="#0D1623" x="0" y="0" width="24" height="24"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

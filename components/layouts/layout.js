@@ -461,8 +461,8 @@ const Layout = memo(({ children }) => {
             `}</style>
             <style jsx global>{`
                 * {
-                    font-family: 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei',
-                        sans-serif;
+                    font-family: 'PingFangTC', 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體',
+                        'Microsoft JhengHei', sans-serif;
                 }
                 .grecaptcha-badge {
                     display: none !important;
