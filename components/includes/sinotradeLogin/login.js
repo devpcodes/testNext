@@ -269,6 +269,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         submitHandler(recaptchaValue, '2');
     };
 
+    const recaptchaError = () => {
+        recaptchaRef.current.reset();
+    };
+
     const redirectHandler = (redirect = true) => {
         if (router.query.redirectUrl != null) {
             const query = router.query;
@@ -759,6 +763,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 <ReCAPTCHA
                                     sitekey={process.env.NEXT_PUBLIC_reCAPTCHAV2}
                                     ref={recaptchaRef}
+                                    onErrored={recaptchaError}
                                     // onChange={onChange}
                                 />
                             </div>
