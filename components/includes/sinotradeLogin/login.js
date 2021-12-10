@@ -806,7 +806,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                     loading={isLoading}
                                     type="primary"
                                     htmlType="submit"
-                                    style={{ marginTop: isIframe ? '10px' : '16px' }} //20
+                                    style={{ marginTop: isIframe ? '10px' : '11px' }} //20
                                 >
                                     登入
                                 </Button>
