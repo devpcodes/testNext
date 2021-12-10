@@ -25,7 +25,7 @@ const SvgCaptcha = ({ style, getValue, refresh }) => {
                     <ReloadOutlined
                         style={{
                             position: 'absolute',
-                            right: '-10px',
+                            right: '-21px',
                             top: '20px',
                             cursor: 'pointer',
                         }}
@@ -70,9 +70,9 @@ const SvgCaptcha = ({ style, getValue, refresh }) => {
                     margin-bottom: 0;
                     /* width: 70%; */
                     margin-top: 10px;
-                    width: 100%;
+                    width: 93%;
                     margin-right: 1px;
-                    margin-left: 20px;
+                    margin-left: 30px;
                 }
             `}</style>
         </div>
