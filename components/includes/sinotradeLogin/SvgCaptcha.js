@@ -31,7 +31,7 @@ const SvgCaptcha = ({ style, getValue, refresh }) => {
                         }}
                     />
                 </div>
-                <img src={captchaSrc} style={{ width: '120px', display: 'inline-block' }} />
+                <img src={captchaSrc} style={{ width: '120px', display: 'inline-block', userSelect: 'none' }} />
             </div>
             <Form.Item
                 // style={{display: 'inline-block'}}
