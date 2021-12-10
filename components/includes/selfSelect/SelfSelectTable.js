@@ -291,6 +291,21 @@ const SelfSelectTable = memo(
                                     stockData.reference = {
                                         text: snapshotData.Reference ? snapshotData.Reference.toFixed(2) : '--',
                                     };
+                                    stockData.averagePrice = {
+                                        text: snapshotData.AveragePrice ? snapshotData.AveragePrice.toFixed(2) : '--',
+                                    };
+                                    stockData.open = {
+                                        text: snapshotData.Open ? snapshotData.Open.toFixed(2) : '--',
+                                    };
+                                    stockData.volume = {
+                                        text: snapshotData.Volume ? snapshotData.Volume : '--',
+                                    };
+                                    stockData.totalAmount = {
+                                        text: snapshotData.TotalAmount
+                                            ? (snapshotData.TotalAmount / 100000000).toFixed(2)
+                                            : '--',
+                                    };
+
                                     tableRowData.push(stockData);
                                     return true;
                                 }
@@ -415,6 +430,18 @@ const SelfSelectTable = memo(
                                     sbQuoteData && sbQuoteData.preClose
                                         ? parseFloat(sbQuoteData.preClose).toFixed(2)
                                         : '--',
+                            };
+                            stockData.averagePrice = {
+                                text: '--',
+                            };
+                            stockData.open = {
+                                text: '--',
+                            };
+                            stockData.volume = {
+                                text: '--',
+                            };
+                            stockData.totalAmount = {
+                                text: '--',
                             };
                             tableRowData.push(stockData);
                         }
