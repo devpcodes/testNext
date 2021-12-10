@@ -47,6 +47,7 @@ const Layout = memo(({ children }) => {
     const [showBigLogin, setShowBigLogin] = useState(false);
     const [verifyErrMsg, setVerifyErrMsg] = useState('權限不足');
     const [showNav, setShowNav] = useState(false);
+    const [overFlow, setOverFlow] = useState('auto');
 
     // window 寬度改變處理，回傳 isMobile
     const isMobile = useCheckMobile();
@@ -128,14 +129,23 @@ const Layout = memo(({ children }) => {
     }, [router.query]);
 
     useEffect(() => {
+        console.log('===========', showMask, showLogin, showBigLogin);
         if (showMask || showLogin || showBigLogin) {
-            document.body.style.overflow = 'hidden';
+            // document.body.style.overflow = 'hidden';
+            setOverFlow('hidden');
         }
 
         if (!showMask && !showLogin && !showBigLogin) {
-            document.body.style.overflow = 'auto';
+            // document.body.style.overflow = 'auto';
+            setOverFlow('auto');
         }
     }, [showMask, showLogin, showBigLogin]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            document.body.style.overflow = overFlow;
+        }, 500);
+    }, [overFlow]);
 
     useEffect(() => {
         console.log(router);
