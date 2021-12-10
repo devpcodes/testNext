@@ -23,6 +23,7 @@ import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { setModal } from '../../../store/components/layouts/action';
 import { useOpenAccountUrl } from '../../../hooks/useOpenAccountUrl';
 import { thirdPartyLayout } from '../../../services/components/goOrder/thirdPartyLayout';
+import SvgCaptcha from './SvgCaptcha';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 
 // let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
@@ -34,7 +35,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
-
+    const captchaInputVal = useRef(null);
     const recaptchaReady = useSelector(store => store.layout.recaptchaReady);
     const platform = useSelector(store => store.general.platform);
 
@@ -47,7 +48,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     const udnOpenact = useOpenAccountUrl();
-
+    const [refreshCaptcha, setRefreshCaptcha] = useState(0);
     // useEffect(() => {
 
     //     if (platform === 'udn') {
@@ -184,7 +185,50 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             );
         }
     };
+    const getCaptchaVal = data => {
+        // alert(data);
+        captchaInputVal.current = data;
+    };
 
+    const submitData = async () => {
+        try {
+            const res = await submit(
+                form.getFieldValue('account'),
+                MD5(form.getFieldValue('password')).toString(),
+                null,
+                captchaInputVal.current,
+            );
+            setIsLoading(false);
+            if (res.data.success) {
+                //記身份證字號
+                if (form.getFieldValue('remember')) {
+                    localStorage.setItem('userID', form.getFieldValue('account'));
+                } else {
+                    localStorage.removeItem('userID');
+                }
+                if (!checkFirstLogin(res.data)) {
+                    //傳資料給神策
+                    sensorsHandler(form.getFieldValue('account'));
+                }
+            } else {
+                //沒帳號處理
+                checkOpenAccount(res.data.result);
+            }
+        } catch (error) {
+            setRefreshCaptcha(val => {
+                return (val += 1);
+            });
+            setIsLoading(false);
+            sensors.track('LoginResults', {
+                is_success: false,
+                failure_reason: '',
+                is_login: false,
+                page_url: window.location.href,
+                page_title: document.title,
+                page_url_path: window.location.pathname,
+            });
+        }
+    };
     //登入動作處理
     const finishHandler = async function () {
         if (isLoading) {
@@ -196,46 +240,48 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         });
         if (errors.length === 0 && recaptchaReady) {
             setIsLoading(true);
-            //reCAPTCHA
-            window.grecaptcha.ready(() => {
-                window.grecaptcha
-                    .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
-                    .then(async reCAPTCHAToken => {
-                        try {
-                            const res = await submit(
-                                form.getFieldValue('account'),
-                                MD5(form.getFieldValue('password')).toString(),
-                                reCAPTCHAToken,
-                            );
-                            setIsLoading(false);
-                            if (res.data.success) {
-                                //記身份證字號
-                                if (form.getFieldValue('remember')) {
-                                    localStorage.setItem('userID', form.getFieldValue('account'));
-                                } else {
-                                    localStorage.removeItem('userID');
-                                }
-                                if (!checkFirstLogin(res.data)) {
-                                    //傳資料給神策
-                                    sensorsHandler(form.getFieldValue('account'));
-                                }
-                            } else {
-                                //沒帳號處理
-                                checkOpenAccount(res.data.result);
-                            }
-                        } catch (error) {
-                            setIsLoading(false);
-                            sensors.track('LoginResults', {
-                                is_success: false,
-                                failure_reason: '',
-                                is_login: false,
-                                page_url: window.location.href,
-                                page_title: document.title,
-                                page_url_path: window.location.pathname,
-                            });
-                        }
-                    });
-            });
+            submitData();
+
+            //reCAPTCHA3
+            // window.grecaptcha.ready(() => {
+            //     window.grecaptcha
+            //         .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
+            //         .then(async reCAPTCHAToken => {
+            //             try {
+            //                 const res = await submit(
+            //                     form.getFieldValue('account'),
+            //                     MD5(form.getFieldValue('password')).toString(),
+            //                     reCAPTCHAToken,
+            //                 );
+            //                 setIsLoading(false);
+            //                 if (res.data.success) {
+            //                     //記身份證字號
+            //                     if (form.getFieldValue('remember')) {
+            //                         localStorage.setItem('userID', form.getFieldValue('account'));
+            //                     } else {
+            //                         localStorage.removeItem('userID');
+            //                     }
+            //                     if (!checkFirstLogin(res.data)) {
+            //                         //傳資料給神策
+            //                         sensorsHandler(form.getFieldValue('account'));
+            //                     }
+            //                 } else {
+            //                     //沒帳號處理
+            //                     checkOpenAccount(res.data.result);
+            //                 }
+            //             } catch (error) {
+            //                 setIsLoading(false);
+            //                 sensors.track('LoginResults', {
+            //                     is_success: false,
+            //                     failure_reason: '',
+            //                     is_login: false,
+            //                     page_url: window.location.href,
+            //                     page_title: document.title,
+            //                     page_url_path: window.location.pathname,
+            //                 });
+            //             }
+            //         });
+            // });
         }
     };
 
@@ -727,13 +773,40 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                     忘記密碼
                                 </a>
                             </div>
-
+                            <SvgCaptcha getValue={getCaptchaVal} refresh={refreshCaptcha} />
+                            {/* <div className="captchaClass">
+                                <SvgCaptcha style={{marginTop: '10px', display: 'inline-block'}}/>
+                                <Form.Item
+                                    // style={{display: 'inline-block'}}
+                                    name="captcha"
+                                    label=""
+                                    validateFirst
+                                    // rules={[
+                                    //     {
+                                    //         required: true,
+                                    //         message: '請輸入驗證碼',
+                                    //     },
+                                    // ]}
+                                >
+                                    <Input
+                                        style={{
+                                            transition: 'none',
+                                            border: 'solid 1px #e6ebf5',
+                                            fontSize: '1.6rem',
+                                            height: '36px'
+                                        }}
+                                        placeholder="請輸入驗證碼"
+                                        onBlur={blurHandler}
+                                        ref={captchaInput}
+                                    />
+                                </Form.Item>
+                            </div> */}
                             <Form.Item label="">
                                 <Button
                                     loading={isLoading}
                                     type="primary"
                                     htmlType="submit"
-                                    style={{ marginTop: isIframe ? '10px' : '20px' }}
+                                    style={{ marginTop: isIframe ? '10px' : '16px' }} //20
                                 >
                                     登入
                                 </Button>
@@ -758,7 +831,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 </a>
                             )}
                         </p>
-                        <div
+                        {/* <div
                             style={{
                                 textAlign: 'center',
                                 color: '#a9b6cb',
@@ -779,7 +852,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 《服務條款》{' '}
                             </a>{' '}
                             。
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -953,6 +1026,10 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 .remember__box {
                     text-align: left;
                 }
+                /* .captchaClass {
+                    display: flex;
+                    justify-content: space-between;
+                } */
             `}</style>
             <style global jsx>{`
                 .login__box2 {
