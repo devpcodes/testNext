@@ -134,6 +134,34 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
             render: data => <span className={data.class}>{data.text}</span>,
         },
         {
+            title: '均價',
+            width: 100,
+            dataIndex: 'averagePrice',
+            align: 'right',
+            render: data => <span>{data.text}</span>,
+        },
+        {
+            title: '開盤價',
+            width: 100,
+            dataIndex: 'open',
+            align: 'right',
+            render: data => <span>{data.text}</span>,
+        },
+        {
+            title: '單量',
+            width: 100,
+            dataIndex: 'volume',
+            align: 'right',
+            render: data => <span>{data.text}</span>,
+        },
+        {
+            title: '金額(億)',
+            width: 100,
+            dataIndex: 'totalAmount',
+            align: 'right',
+            render: data => <span>{data.text}</span>,
+        },
+        {
             title: '交易',
             width: 140,
             dataIndex: 'action',
@@ -367,30 +395,42 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
                         parseFloat(solaceData[selectData.code].BidPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData[selectData.code].BidPrice[0]).toFixed(2);
-                    selectData.buyPrice.class = Array.isArray(solaceData[selectData.code].BidPrice)
-                        ? parseFloat(solaceData[selectData.code].BidPrice[0]) - parseFloat(selectData.reference.text) <
-                          0
-                            ? 'lower'
-                            : parseFloat(solaceData[selectData.code].BidPrice[0]) -
-                                  parseFloat(selectData.reference.text) >
-                              0
-                            ? 'upper'
-                            : ''
-                        : '';
+                    selectData.buyPrice.class = (() => {
+                        return getClass(
+                            solaceData[selectData.code],
+                            solaceData[selectData.code].BidPrice[0],
+                            true,
+                            false,
+                        );
+                    })();
                     selectData.sellPrice.text =
                         parseFloat(solaceData[selectData.code].AskPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData[selectData.code].AskPrice[0]).toFixed(2);
-                    selectData.sellPrice.class = Array.isArray(solaceData[selectData.code].AskPrice)
-                        ? parseFloat(solaceData[selectData.code].AskPrice[0]) - parseFloat(selectData.reference.text) <
-                          0
-                            ? 'lower'
-                            : parseFloat(solaceData[selectData.code].AskPrice[0]) -
-                                  parseFloat(selectData.reference.text) >
-                              0
-                            ? 'upper'
-                            : ''
-                        : '';
+                    selectData.sellPrice.class = (() => {
+                        return getClass(
+                            solaceData[selectData.code],
+                            solaceData[selectData.code].AskPrice[0],
+                            true,
+                            false,
+                        );
+                    })();
+                }
+                if (solaceData[selectData.code].AvgPrice) {
+                    selectData.averagePrice.text =
+                        parseFloat(solaceData[selectData.code].AvgPrice).toFixed(2) === 0
+                            ? '--'
+                            : parseFloat(solaceData[selectData.code].AvgPrice).toFixed(2);
+                }
+                if (solaceData[selectData.code].Volume) {
+                    selectData.volume.text =
+                        solaceData[selectData.code].Volume === 0 ? '--' : solaceData[selectData.code].Volume;
+                }
+                if (solaceData[selectData.code].AmountSum) {
+                    selectData.totalAmount.text =
+                        parseFloat(solaceData[selectData.code].AmountSum).toFixed(2) === 0
+                            ? '--'
+                            : parseFloat(solaceData[selectData.code].AmountSum / 100000000).toFixed(2);
                 }
             }
         });

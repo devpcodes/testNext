@@ -1,6 +1,6 @@
 import { getLykanInstance } from '../myAxios';
 
-export const fetchQuerySubBrokerageQuote = async function (stock_list, token, modal = true) {
+export const fetchQuerySubBrokerageQuote = async function (stock_list, token, modal = false) {
     try {
         const url = `/quotes/querySubBrokerageQuote`;
         const res = await getLykanInstance(undefined, modal).post(url, {
