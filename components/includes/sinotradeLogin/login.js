@@ -25,7 +25,7 @@ import { useOpenAccountUrl } from '../../../hooks/useOpenAccountUrl';
 import { thirdPartyLayout } from '../../../services/components/goOrder/thirdPartyLayout';
 import SvgCaptcha from './SvgCaptcha';
 // import ReCaptchaComponent from './ReCaptchaComponent';
-
+import ReCAPTCHA from 'react-google-recaptcha';
 // let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
 // let defaultOpenact =
 //     'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
@@ -35,7 +35,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const accountInput = useRef(null);
-    const captchaInputVal = useRef(null);
+    const recaptchaRef = useRef(null);
+
     const recaptchaReady = useSelector(store => store.layout.recaptchaReady);
     const platform = useSelector(store => store.general.platform);
 
@@ -45,6 +46,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [isIframe, setIsIframe] = useState(false);
 
     const [containerHeight, setContainerHeight] = useState('100vh');
+    const [recaptchaVer, setRecaptchaVer] = useState('2');
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     const udnOpenact = useOpenAccountUrl();
@@ -240,49 +242,81 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         });
         if (errors.length === 0 && recaptchaReady) {
             setIsLoading(true);
-            submitData();
-
-            //reCAPTCHA3
-            // window.grecaptcha.ready(() => {
-            //     window.grecaptcha
-            //         .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
-            //         .then(async reCAPTCHAToken => {
-            //             try {
-            //                 const res = await submit(
-            //                     form.getFieldValue('account'),
-            //                     MD5(form.getFieldValue('password')).toString(),
-            //                     reCAPTCHAToken,
-            //                 );
-            //                 setIsLoading(false);
-            //                 if (res.data.success) {
-            //                     //記身份證字號
-            //                     if (form.getFieldValue('remember')) {
-            //                         localStorage.setItem('userID', form.getFieldValue('account'));
-            //                     } else {
-            //                         localStorage.removeItem('userID');
-            //                     }
-            //                     if (!checkFirstLogin(res.data)) {
-            //                         //傳資料給神策
-            //                         sensorsHandler(form.getFieldValue('account'));
-            //                     }
-            //                 } else {
-            //                     //沒帳號處理
-            //                     checkOpenAccount(res.data.result);
-            //                 }
-            //             } catch (error) {
-            //                 setIsLoading(false);
-            //                 sensors.track('LoginResults', {
-            //                     is_success: false,
-            //                     failure_reason: '',
-            //                     is_login: false,
-            //                     page_url: window.location.href,
-            //                     page_title: document.title,
-            //                     page_url_path: window.location.pathname,
-            //                 });
-            //             }
-            //         });
-            // });
+            //reCAPTCHA V3
+            if (recaptchaVer === '3') {
+                recaptchaV3Handler();
+            } else {
+                recaptchaV2Handler();
+            }
         }
+    };
+
+    const submitHandler = async (reCAPTCHAToken, version) => {
+        try {
+            const res = await submit(
+                form.getFieldValue('account'),
+                MD5(form.getFieldValue('password')).toString(),
+                reCAPTCHAToken,
+                version,
+            );
+            setIsLoading(false);
+            if (res.data.success) {
+                //記身份證字號
+                if (form.getFieldValue('remember')) {
+                    localStorage.setItem('userID', form.getFieldValue('account'));
+                } else {
+                    localStorage.removeItem('userID');
+                }
+                if (!checkFirstLogin(res.data)) {
+                    //傳資料給神策
+                    sensorsHandler(form.getFieldValue('account'));
+                }
+            } else {
+                //沒帳號處理
+                checkOpenAccount(res.data.result);
+            }
+        } catch (error) {
+            setIsLoading(false);
+            if (
+                error.response?.data?.message.indexOf('驗證未通過') &&
+                error.response?.data?.result?.reCAPTCHA_ver === '3'
+            ) {
+                setRecaptchaVer('2');
+            }
+            if (error.response?.data?.result?.reCAPTCHA_ver === '2' || recaptchaVer === '2') {
+                recaptchaRef.current.reset();
+                // setV2ResponseErr('responseError')
+            }
+
+            sensors.track('LoginResults', {
+                is_success: false,
+                failure_reason: '',
+                is_login: false,
+                page_url: window.location.href,
+                page_title: document.title,
+                page_url_path: window.location.pathname,
+            });
+        }
+    };
+
+    const recaptchaV3Handler = () => {
+        window.grecaptcha.ready(() => {
+            window.grecaptcha
+                .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
+                .then(async reCAPTCHAToken => {
+                    submitHandler(reCAPTCHAToken, '3');
+                });
+        });
+    };
+
+    const recaptchaV2Handler = () => {
+        const recaptchaValue = recaptchaRef.current.getValue();
+        console.log('recaptcha token ===============', recaptchaValue);
+        submitHandler(recaptchaValue, '2');
+    };
+
+    const recaptchaError = () => {
+        recaptchaRef.current.reset();
     };
 
     const redirectHandler = (redirect = true) => {
@@ -773,34 +807,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                     忘記密碼
                                 </a>
                             </div>
-                            <SvgCaptcha getValue={getCaptchaVal} refresh={refreshCaptcha} />
-                            {/* <div className="captchaClass">
-                                <SvgCaptcha style={{marginTop: '10px', display: 'inline-block'}}/>
-                                <Form.Item
-                                    // style={{display: 'inline-block'}}
-                                    name="captcha"
-                                    label=""
-                                    validateFirst
-                                    // rules={[
-                                    //     {
-                                    //         required: true,
-                                    //         message: '請輸入驗證碼',
-                                    //     },
-                                    // ]}
-                                >
-                                    <Input
-                                        style={{
-                                            transition: 'none',
-                                            border: 'solid 1px #e6ebf5',
-                                            fontSize: '1.6rem',
-                                            height: '36px'
-                                        }}
-                                        placeholder="請輸入驗證碼"
-                                        onBlur={blurHandler}
-                                        ref={captchaInput}
-                                    />
-                                </Form.Item>
-                            </div> */}
+                            {/* recaptcha V2 */}
+                            <div style={{ marginTop: '10px', display: recaptchaVer === '2' ? 'block' : 'none' }}>
+                                <ReCAPTCHA
+                                    sitekey={process.env.NEXT_PUBLIC_reCAPTCHAV2}
+                                    ref={recaptchaRef}
+                                    onErrored={recaptchaError}
+                                    // onChange={onChange}
+                                />
+                            </div>
                             <Form.Item label="">
                                 <Button
                                     loading={isLoading}
@@ -831,28 +846,30 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 </a>
                             )}
                         </p>
-                        {/* <div
-                            style={{
-                                textAlign: 'center',
-                                color: '#a9b6cb',
-                                fontSize: '1.2rem',
-                                letterSpacing: '0.3px',
-                                marginTop: isIframe ? '-10px' : 0,
-                                lineHeight: isIframe ? '14px' : '18px',
-                            }}
-                        >
-                            此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
-                            <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
-                                {' '}
-                                《隱私權聲明》{' '}
-                            </a>{' '}
-                            與
-                            <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
-                                {' '}
-                                《服務條款》{' '}
-                            </a>{' '}
-                            。
-                        </div> */}
+                        {recaptchaVer === '3' && (
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    color: '#a9b6cb',
+                                    fontSize: '1.2rem',
+                                    letterSpacing: '0.3px',
+                                    marginTop: isIframe ? '-10px' : 0,
+                                    lineHeight: isIframe ? '14px' : '18px',
+                                }}
+                            >
+                                此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
+                                <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
+                                    {' '}
+                                    《隱私權聲明》{' '}
+                                </a>{' '}
+                                與
+                                <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
+                                    {' '}
+                                    《服務條款》{' '}
+                                </a>{' '}
+                                。
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
