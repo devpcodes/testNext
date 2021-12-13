@@ -13,6 +13,7 @@ const Apply = () => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
     const [columns, setColumns] = useState([]);
+    const [stockInventory, setStockInventory] = useState([]);
     // const [activeType, setActiveType] = useState('1');
     const [dataLoading, setDataLoading] = useState(false);
 
@@ -60,7 +61,7 @@ const Apply = () => {
                     return item;
                 });
                 console.log('res data', resData);
-                // setStockInventory(resData);
+                setStockInventory(resData);
             } else {
                 if (resData === '尚未簽署保管劃撥契約書') {
                     Modal.confirm({
@@ -79,7 +80,7 @@ const Apply = () => {
                         title: resData,
                     });
                 }
-                // setStockInventory([]);
+                setStockInventory([]);
             }
             setDataLoading(false);
         } catch (error) {
@@ -100,8 +101,9 @@ const Apply = () => {
                 render: (text, record, index) => {
                     return (
                         <Button
-                        //disabled={state.accountsReducer.disabled}
-                        //onClick={clickHandler.bind(null, text, record)}
+                            className="applyBtn"
+                            //disabled={state.accountsReducer.disabled}
+                            //onClick={clickHandler.bind(null, text, record)}
                         >
                             {text}
                         </Button>
@@ -114,9 +116,9 @@ const Apply = () => {
                 key: 'load_type',
                 index: 2,
                 sorter: (a, b) => {
-                    // const aTypeStr = typeString(a.load_type);
-                    // const bTypeStr = typeString(b.load_type);
-                    // return sortString(aTypeStr, bTypeStr);
+                    const aTypeStr = typeString(a.load_type);
+                    const bTypeStr = typeString(b.load_type);
+                    return sortString(aTypeStr, bTypeStr);
                 },
                 render: (text, record, index) => {
                     switch (text) {
@@ -138,7 +140,7 @@ const Apply = () => {
                 dataIndex: 'code',
                 key: 'code',
                 sorter: (a, b) => {
-                    // return Number(a.code) - Number(b.code);
+                    return Number(a.code) - Number(b.code);
                 },
                 index: 1,
             },
@@ -147,7 +149,7 @@ const Apply = () => {
                 dataIndex: 'code_name',
                 key: 'code_name',
                 sorter: (a, b) => {
-                    // return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
+                    return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
                 },
                 index: 2,
             },
@@ -173,7 +175,51 @@ const Apply = () => {
                 },
             },
         ]);
-    }, []);
+    }, [stockInventory]);
+
+    const inpChangeHandler = (record, stockInventory, e) => {
+        const { value } = e.target;
+        const stockInventoryData = stockInventory.map((item, i) => {
+            if (item.key == record.key) {
+                item.qty = value;
+            }
+            return item;
+        });
+        setStockInventory(stockInventoryData);
+    };
+
+    const typeString = type => {
+        switch (type) {
+            case '':
+                return '一般';
+            case '1':
+                return '全額管理';
+            case '2':
+                return '收足款券';
+            case '3':
+                return '處置一二';
+            default:
+                break;
+        }
+    };
+
+    const sortString = (a, b) => {
+        if (a.trim().length < b.trim().length) {
+            return -1;
+        } else if (a.trim().length > b.trim().length) {
+            return 1;
+        } else {
+            const stringA = a.toUpperCase();
+            const stringB = b.toUpperCase();
+            if (stringA < stringB) {
+                return -1;
+            }
+            if (stringA > stringB) {
+                return 1;
+            }
+            return 0;
+        }
+    };
 
     return (
         <>
@@ -183,7 +229,8 @@ const Apply = () => {
                 scroll={{ x: 860 }}
                 contenterTitle={'借券圈存申請'}
                 columns={columns}
-                dataSource={[]}
+                dataSource={stockInventory}
+                pagination={false}
                 loading={{
                     indicator: (
                         <div
@@ -225,6 +272,34 @@ const Apply = () => {
                     { txt: '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)' },
                 ]}
             />
+            <style global jsx>{`
+                .applyBtn.ant-btn {
+                    font-size: 16px;
+                    border: none;
+                    color: #ffffff;
+                    background: #d23749;
+                    line-height: 26px;
+                    font-weight: bold;
+                    transition: 0.3s;
+                    border-radius: 3px;
+                }
+                @media (max-width: 580px) {
+                    .applyBtn.ant-btn {
+                        width: 100%;
+                    }
+                }
+                .applyBtn.ant-btn:not([disabled]):hover {
+                    background: #bb1428;
+                }
+                .applyBtn.ant-btn:disabled {
+                    background: #b7b7b7;
+                    color: #dadada;
+                }
+                .applyBtn.ant-btn:disabled:hover {
+                    background: #b7b7b7;
+                    color: #dadada;
+                }
+            `}</style>
         </>
     );
 };
