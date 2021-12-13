@@ -46,7 +46,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     const [isIframe, setIsIframe] = useState(false);
 
     const [containerHeight, setContainerHeight] = useState('100vh');
-    const [recaptchaVer, setRecaptchaVer] = useState('2');
+    const [recaptchaVer, setRecaptchaVer] = useState('3');
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     const udnOpenact = useOpenAccountUrl();
