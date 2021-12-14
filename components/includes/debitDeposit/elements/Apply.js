@@ -12,7 +12,7 @@ import { getToken } from '../../../../services/user/accessToken';
 import { sign, signCert, checkSignCA } from '../../../../services/webCa';
 import { postApplyEarmark } from '../../../../services/components/reservationStock/postApplyEarmark';
 import Loading from './Loading';
-const Apply = () => {
+const Apply = ({ active }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
     const [columns, setColumns] = useState([]);
@@ -32,9 +32,11 @@ const Apply = () => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
-        setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
-        getInventory(state.accountsReducer.activeType);
-    }, [state.accountsReducer.selected.account, state.accountsReducer.activeType]);
+        if (active) {
+            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+            getInventory(state.accountsReducer.activeType);
+        }
+    }, [state.accountsReducer.selected.account, state.accountsReducer.activeType, active]);
 
     const getInventory = activeType => {
         if (getToken()) {
@@ -194,7 +196,7 @@ const Apply = () => {
                     return (
                         <Button
                             className="applyBtn"
-                            //disabled={state.accountsReducer.disabled}
+                            disabled={state.accountsReducer.disabled}
                             onClick={submitHandler.bind(null, text, record)}
                         >
                             {text}
@@ -232,7 +234,13 @@ const Apply = () => {
                 dataIndex: 'code',
                 key: 'code',
                 sorter: (a, b) => {
-                    return Number(a.code) - Number(b.code);
+                    if (String(a.code).trim().length < String(b.code).trim().length) {
+                        return -1;
+                    } else if (String(a.code).trim().length > String(b.code).trim().length) {
+                        return 1;
+                    } else {
+                        return Number(a.code) - Number(b.code);
+                    }
                 },
                 index: 1,
             },

@@ -1,14 +1,62 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
+import jwt_decode from 'jwt-decode';
+import moment from 'moment';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
 import Accounts from '../../advanceCollection/Accounts';
 import ApplyContent from '../../advanceCollection/ApplyContent';
 import SearchBox from './SearchBox';
 import Msg from '../../advanceCollection/Msg';
-const Status = () => {
+import { getToken } from '../../../../services/user/accessToken';
+import { fetchEarmarkStatus } from '../../../../services/components/reservationStock/fetchEarmarkStatus';
+const Status = ({ active }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
     const [columns, setColumns] = useState([]);
+    const [statusData, setStatusData] = useState([]);
+    const statusResData = useRef([]);
+    const [dataLoading, setDataLoading] = useState(false);
+    useEffect(() => {
+        if (active) {
+            getStatus();
+        }
+    }, [active, state.accountsReducer.selected.account]);
+
+    const getStatus = async () => {
+        const token = getToken();
+        if (token) {
+            let data = getAccountsDetail(token);
+            setDataLoading(true);
+            let resData = await fetchEarmarkStatus(token, data.broker_id, data.account, '1');
+            if (Array.isArray(resData)) {
+                resData = resData.map((item, index) => {
+                    item.key = String(index);
+                    return item;
+                });
+                setStatusData(resData);
+                setDataLoading(false);
+                statusResData.current = resData;
+                // setFilterData(resData);
+            } else {
+                Modal.error({
+                    title: '伺服器錯誤',
+                });
+                setDataLoading(false);
+                statusResData.current = [];
+            }
+        }
+    };
+
+    //取得選擇帳號的詳細資料，驗憑證
+    const getAccountsDetail = token => {
+        let data = jwt_decode(token);
+        data = data.acts_detail.filter(item => {
+            if (item.account === state.accountsReducer.selected.account) {
+                return true;
+            }
+        });
+        return data[0] || {};
+    };
 
     useEffect(() => {
         setColumns([
@@ -52,17 +100,56 @@ const Status = () => {
                 index: 7,
             },
         ]);
-    }, []);
+    }, [statusData]);
 
     useEffect(() => {
         setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
     }, [state.accountsReducer.selected.account]);
 
+    const searchClickHandler = searchVal => {
+        if (searchVal === '') {
+            setStatusData(statusResData.current);
+            return;
+        }
+
+        let newInventory = statusResData.current.filter(val => {
+            if (val.code.indexOf(searchVal) >= 0) {
+                return true;
+            }
+            if (val.code_name.indexOf(searchVal) >= 0) {
+                return true;
+            }
+        });
+        setStatusData(newInventory);
+    };
+
     return (
         <>
             <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
-            <SearchBox showFilter={false} />
-            <ApplyContent scroll={{ x: 860 }} contenterTitle={'借券圈存查詢'} columns={columns} dataSource={[]} />
+            <SearchBox showFilter={false} searchClickHandler={searchClickHandler} />
+            <ApplyContent
+                scroll={{ x: 860 }}
+                contenterTitle={'借券圈存查詢'}
+                columns={columns}
+                dataSource={statusData}
+                pagination={false}
+                loading={{
+                    indicator: (
+                        <div
+                            style={{
+                                marginTop: '20px',
+                                color: 'black',
+                                fontSize: '1.6rem',
+                                width: '100%',
+                                transform: 'translateX(-49%) translateY(-54px)',
+                            }}
+                        >
+                            資料加載中...
+                        </div>
+                    ),
+                    spinning: dataLoading,
+                }}
+            />
             <Msg
                 style={{ marginTop: '30px' }}
                 list={[

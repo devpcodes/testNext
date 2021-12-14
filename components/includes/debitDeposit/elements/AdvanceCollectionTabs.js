@@ -2,8 +2,11 @@ import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 
 const { TabPane } = Tabs;
-const AdvanceCollectionTabs = ({ data, ...props }) => {
-    const changleHandler = () => {};
+const AdvanceCollectionTabs = ({ data, activeKeyHandler, ...props }) => {
+    const changleHandler = key => {
+        console.log('key', key);
+        activeKeyHandler(key);
+    };
     return (
         <>
             <Tabs
