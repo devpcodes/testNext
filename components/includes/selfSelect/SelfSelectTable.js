@@ -291,6 +291,21 @@ const SelfSelectTable = memo(
                                     stockData.reference = {
                                         text: snapshotData.Reference ? snapshotData.Reference.toFixed(2) : '--',
                                     };
+                                    stockData.averagePrice = {
+                                        text: snapshotData.AveragePrice ? snapshotData.AveragePrice.toFixed(2) : '--',
+                                    };
+                                    stockData.open = {
+                                        text: snapshotData.Open ? snapshotData.Open.toFixed(2) : '--',
+                                    };
+                                    stockData.volume = {
+                                        text: snapshotData.Volume ? snapshotData.Volume : '--',
+                                    };
+                                    stockData.totalAmount = {
+                                        text: snapshotData.TotalAmount
+                                            ? (snapshotData.TotalAmount / 100000000).toFixed(2)
+                                            : '--',
+                                    };
+
                                     tableRowData.push(stockData);
                                     return true;
                                 }
@@ -348,22 +363,22 @@ const SelfSelectTable = memo(
                                     : '',
                             };
                             stockData.changePrice = {
-                                text: sbQuoteData?.net ? parseFloat(sbQuoteData.net).toFixed(2) : '--', //net
+                                text: sbQuoteData?.net ? Math.abs(parseFloat(sbQuoteData.net)).toFixed(2) : '--', //net
                                 class: sbQuoteData?.net
                                     ? parseFloat(sbQuoteData.net) < 0
-                                        ? 'lower'
+                                        ? 'lower lower__icon'
                                         : parseFloat(sbQuoteData.net) > 0
-                                        ? 'upper'
+                                        ? 'upper upper__icon'
                                         : ''
                                     : '',
                             };
                             stockData.changeRate = {
-                                text: sbQuoteData?.pct ? parseFloat(sbQuoteData.pct).toFixed(2) : '--', //pct
+                                text: sbQuoteData?.pct ? Math.abs(parseFloat(sbQuoteData.pct)).toFixed(2) : '--', //pct
                                 class: sbQuoteData?.pct
                                     ? parseFloat(sbQuoteData.pct) < 0
-                                        ? 'lower'
+                                        ? 'lower lower__icon'
                                         : parseFloat(sbQuoteData.pct) > 0
-                                        ? 'upper'
+                                        ? 'upper upper__icon'
                                         : ''
                                     : '',
                             };
@@ -415,6 +430,18 @@ const SelfSelectTable = memo(
                                     sbQuoteData && sbQuoteData.preClose
                                         ? parseFloat(sbQuoteData.preClose).toFixed(2)
                                         : '--',
+                            };
+                            stockData.averagePrice = {
+                                text: '--',
+                            };
+                            stockData.open = {
+                                text: '--',
+                            };
+                            stockData.volume = {
+                                text: '--',
+                            };
+                            stockData.totalAmount = {
+                                text: '--',
                             };
                             tableRowData.push(stockData);
                         }
