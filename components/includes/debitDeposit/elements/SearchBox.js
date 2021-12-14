@@ -4,16 +4,23 @@ import PropTypes from 'prop-types';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
 import { ACTIVETYPE } from '../../../../store/advanceCollection/actionType';
 
-const SearchBox = ({ showFilter }) => {
+const SearchBox = ({ showFilter, searchClickHandler }) => {
     const [state, dispatch] = useContext(ReducerContext);
     // const [activeType, setActiveType] = useState('1');
     const [searchVal, setSearchVal] = useState('');
-    const searchHandler = () => {};
-    const resetHandler = () => {};
+    const searchHandler = () => {
+        searchClickHandler(searchVal);
+    };
+    const resetHandler = () => {
+        setSearchVal(() => {
+            searchClickHandler('');
+            return '';
+        });
+    };
     const filterBtnHandler = type => {
         // setActiveType(type);
         dispatch({ type: ACTIVETYPE, payload: type });
-        // setSearchVal('');
+        setSearchVal('');
         // setSearchStock('');
     };
     const selectCodeHandler = e => {

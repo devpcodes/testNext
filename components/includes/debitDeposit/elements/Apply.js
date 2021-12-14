@@ -9,6 +9,9 @@ import SearchBox from './SearchBox';
 import Msg from '../../advanceCollection/Msg';
 import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
 import { getToken } from '../../../../services/user/accessToken';
+import { sign, signCert, checkSignCA } from '../../../../services/webCa';
+import { postApplyEarmark } from '../../../../services/components/reservationStock/postApplyEarmark';
+import Loading from './Loading';
 const Apply = () => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -16,7 +19,9 @@ const Apply = () => {
     const [stockInventory, setStockInventory] = useState([]);
     // const [activeType, setActiveType] = useState('1');
     const [dataLoading, setDataLoading] = useState(false);
-
+    const [loading, setLoading] = useState(null);
+    const stockInventoryData = useRef([]);
+    const isWebView = useRef(true);
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -62,6 +67,7 @@ const Apply = () => {
                 });
                 console.log('res data', resData);
                 setStockInventory(resData);
+                stockInventoryData.current = resData;
             } else {
                 if (resData === '尚未簽署保管劃撥契約書') {
                     Modal.confirm({
@@ -91,6 +97,92 @@ const Apply = () => {
         }
     };
 
+    const submitHandler = (text, record) => {
+        if (validateQty(record.qty, record.load_qty, record.stock_amount_t1)) {
+            console.log(text, record);
+            // console.log(jwt_decode(getToken()));
+            submitData(record);
+        }
+    };
+
+    const submitData = async record => {
+        //token, branch, account, symbol, qty, category
+        const token = getToken();
+        let data = getAccountsDetail(token);
+        //驗憑證(1)
+        // let caContent = await signCert(
+        //     {
+        //         idno: data.idno,
+        //         broker_id: data.broker_id,
+        //         account: data.account,
+        //     },
+        //     true,
+        //     token,
+        // );
+
+        //驗憑證(2)
+        let caContent = sign(
+            {
+                idno: data.idno,
+                broker_id: data.broker_id,
+                account: data.account,
+            },
+            true,
+            token,
+            isWebView.current,
+        );
+        // console.log('newCaContent', caContent);
+        if (checkSignCA(caContent)) {
+            //checkSignCA(caContent)
+            setLoading(true);
+            // percentHandler();
+            const resData = await postApplyEarmark(
+                token,
+                data.broker_id,
+                data.account,
+                record.code,
+                String(record.qty),
+                '1',
+                caContent,
+            );
+            setLoading(false);
+            // submitSuccess();
+            if (resData) {
+                Modal.success({
+                    content: resData,
+                    onOk() {
+                        getInventory(state.accountsReducer.activeType);
+                    },
+                });
+            }
+        }
+    };
+
+    const validateQty = (value, loadQty, stockAmount) => {
+        const regex = /^[0-9]{1,20}$/;
+        if (!isNaN(value) && regex.test(value)) {
+            if (Number(value) <= Number(stockAmount)) {
+                return true;
+            } else {
+                Modal.error({
+                    content: '超過可申請股數',
+                });
+                return false;
+            }
+        }
+        if (value === '') {
+            Modal.error({
+                content: '請輸入申請股數',
+            });
+        } else {
+            Modal.error({
+                content: '只能輸入數字',
+            });
+        }
+
+        return false;
+    };
+
     useEffect(() => {
         setColumns([
             {
@@ -103,7 +195,7 @@ const Apply = () => {
                         <Button
                             className="applyBtn"
                             //disabled={state.accountsReducer.disabled}
-                            //onClick={clickHandler.bind(null, text, record)}
+                            onClick={submitHandler.bind(null, text, record)}
                         >
                             {text}
                         </Button>
@@ -221,10 +313,27 @@ const Apply = () => {
         }
     };
 
+    const searchClickHandler = searchVal => {
+        if (searchVal === '') {
+            setStockInventory(stockInventoryData.current);
+            return;
+        }
+
+        let newInventory = stockInventoryData.current.filter(val => {
+            if (val.code.indexOf(searchVal) >= 0) {
+                return true;
+            }
+            if (val.code_name.indexOf(searchVal) >= 0) {
+                return true;
+            }
+        });
+        setStockInventory(newInventory);
+    };
+
     return (
         <>
             <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
-            <SearchBox showFilter={true} />
+            <SearchBox showFilter={true} searchClickHandler={searchClickHandler} />
             <ApplyContent
                 scroll={{ x: 860 }}
                 contenterTitle={'借券圈存申請'}
@@ -272,6 +381,7 @@ const Apply = () => {
                     { txt: '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)' },
                 ]}
             />
+            <Loading loading={loading} step={20} />
             <style global jsx>{`
                 .applyBtn.ant-btn {
                     font-size: 16px;
