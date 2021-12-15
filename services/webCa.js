@@ -176,6 +176,28 @@ export const checkCert = function (userIdNo) {
     return checkData;
 };
 
+// 挑選憑證
+export const selectSigner = function (userIdNo) {
+    let DM;
+    if (process.env.NEXT_PUBLIC_DM === 'false') {
+        DM = false;
+    } else {
+        DM = true;
+    }
+    const ca = new CA_Component({
+        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+        DM: DM,
+    });
+    console.log('selectSigner', {
+        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+        DM: DM,
+    });
+};
+
 // 安裝憑證
 export const applyCert = function (user_idNo, token, callBack) {
     let DM;
@@ -195,19 +217,25 @@ export const applyCert = function (user_idNo, token, callBack) {
         memberNo: token,
     });
     return new Promise((resolve, reject) => {
-        ca.applyCert(
+        ca.selectSigner(
             {
                 userID: user_idNo,
                 memberNo: token,
             },
-            function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-                console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                localStorage.setItem('INCB', false);
-                resolve({
-                    code: applyCertCode,
-                    msg: applyCertMsg,
-                });
-            },
+            ca.applyCert(
+                {
+                    userID: user_idNo,
+                    memberNo: token,
+                },
+                function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                    console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                    localStorage.setItem('INCB', false);
+                    resolve({
+                        code: applyCertCode,
+                        msg: applyCertMsg,
+                    });
+                },
+            ),
         );
     });
 };
@@ -243,8 +271,6 @@ export const renewCert = function (user_idNo, token, callBack) {
         );
     });
 };
-
-// export const selectSigner
 
 //憑證檢查整合安裝
 export const CAHandler = async function (token, cb) {
@@ -296,9 +322,10 @@ export const CAHandler = async function (token, cb) {
                 content: res.msg,
                 onOk() {
                     // 清除台網母憑證
-                    window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html'); // https://ca.sinotrade.com.tw/WebCA/clearLS.html
+                    window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html');
+
                     // 重新部署憑證
-                    signCert({ idno: tokenVal.user_id }, true, token);
+                    applyCert(tokenVal.user_id, token);
                 },
             });
         } else {
