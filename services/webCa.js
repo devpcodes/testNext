@@ -290,7 +290,7 @@ export const CAHandler = async function (token, cb) {
             console.log(res);
             await logout();
             Modal.error({
-                title: '憑證錯誤',
+                title: '憑證驗證錯誤，請確認憑證狀態是否有效。',
                 content: res.msg,
                 onOk() {
                     window.location.reload();
