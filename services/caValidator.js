@@ -8,11 +8,7 @@ export const caValidator = async function (token, ca_content, modal = true) {
             txn_code: 'newweb',
             ca_content,
         });
-        if (res.data.success != null && res.data.success === 'True') {
-            return res.data.result;
-        } else {
-            return [];
-        }
+        return res.data.result;
     } catch (error) {
         console.log(error);
         return {};
