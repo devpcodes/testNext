@@ -287,8 +287,15 @@ export const CAHandler = async function (token, cb) {
             type: 'web',
         });
         if (res.msg !== '驗章成功') {
+            console.log(res);
             await logout();
-            window.location.reload();
+            Modal.error({
+                title: '憑證錯誤',
+                content: res.msg,
+                onOk() {
+                    window.location.reload();
+                },
+            });
         } else {
             if (cb != null) {
                 localStorage.setItem('INCB', false);
