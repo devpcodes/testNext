@@ -50,7 +50,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     // const [reCaptchaReady, setReCaptchaReady] = useState(false);
     const noCloseBtn = useLoginClosBtn();
     const udnOpenact = useOpenAccountUrl();
-    const [loaded, setLoaded] = useState(false);
     const [refreshCaptcha, setRefreshCaptcha] = useState(0);
     // useEffect(() => {
 
@@ -89,7 +88,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
         window.addEventListener('keypress', winKeyDownHandler, false);
         window.addEventListener('resize', handleResize);
-        window.addEventListener('load', onLoadHandler);
         handleResize();
         if (checkIframe()) {
             setIsIframe(true);
@@ -103,7 +101,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         return () => {
             window.removeEventListener('keypress', winKeyDownHandler, false);
             window.removeEventListener('resize', handleResize);
-            window.removeEventListener('load', onLoadHandler);
         };
     }, []);
     // useEffect(() => {
@@ -111,10 +108,6 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //         document.getElementsByClassName('grecaptcha-badge')[0].style.display = 'none';
     //     }
     // });
-
-    const onLoadHandler = () => {
-        setLoaded(true);
-    };
 
     let account;
     const fieldsChange = function (changedFields) {
@@ -247,7 +240,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         errors = errors.filter(val => {
             return val.errors.length !== 0;
         });
-        if (errors.length === 0 && recaptchaReady && loaded) {
+        if (errors.length === 0 && recaptchaReady) {
             setIsLoading(true);
             //reCAPTCHA V3
             if (recaptchaVer === '3') {
