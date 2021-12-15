@@ -244,6 +244,8 @@ export const renewCert = function (user_idNo, token, callBack) {
     });
 };
 
+// export const selectSigner
+
 //憑證檢查整合安裝
 export const CAHandler = async function (token, cb) {
     const tokenVal = jwt_decode(token);
@@ -296,7 +298,7 @@ export const CAHandler = async function (token, cb) {
                     // 清除台網母憑證
                     window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html'); // https://ca.sinotrade.com.tw/WebCA/clearLS.html
                     // 重新部署憑證
-                    caResultDataHandler('ApplyCert', tokenVal.user_id, token);
+                    signCert({ idno: tokenVal.user_id }, true, token);
                 },
             });
         } else {
