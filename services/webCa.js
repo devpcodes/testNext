@@ -222,20 +222,22 @@ export const applyCert = function (user_idNo, token, callBack) {
                 userID: user_idNo,
                 memberNo: token,
             },
-            ca.applyCert(
-                {
-                    userID: user_idNo,
-                    memberNo: token,
-                },
-                function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-                    console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                    localStorage.setItem('INCB', false);
-                    resolve({
-                        code: applyCertCode,
-                        msg: applyCertMsg,
-                    });
-                },
-            ),
+            function (selectCode, selectMsg, selectToken, selectData) {
+                ca.applyCert(
+                    {
+                        userID: user_idNo,
+                        memberNo: token,
+                    },
+                    function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                        console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                        localStorage.setItem('INCB', false);
+                        resolve({
+                            code: applyCertCode,
+                            msg: applyCertMsg,
+                        });
+                    },
+                );
+            },
         );
     });
 };
