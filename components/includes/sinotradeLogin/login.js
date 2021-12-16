@@ -25,7 +25,7 @@ import { useOpenAccountUrl } from '../../../hooks/useOpenAccountUrl';
 import { thirdPartyLayout } from '../../../services/components/goOrder/thirdPartyLayout';
 import SvgCaptcha from './SvgCaptcha';
 // import ReCaptchaComponent from './ReCaptchaComponent';
-import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha-enterprise';
 // let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
 // let defaultOpenact =
 //     'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
@@ -300,11 +300,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     };
 
     const recaptchaV3Handler = () => {
-        window.grecaptcha.ready(() => {
-            window.grecaptcha
+        window.grecaptcha.enterprise.ready(() => {
+            window.grecaptcha.enterprise
                 .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
                 .then(async reCAPTCHAToken => {
-                    submitHandler(reCAPTCHAToken, '3');
+                    console.log('ttttt', reCAPTCHAToken);
+                    // submitHandler(reCAPTCHAToken, '3');
                 });
         });
     };

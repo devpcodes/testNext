@@ -23,7 +23,7 @@ const ReCaptchaComponent = ({ onLoadReady }) => {
         // load the script by passing the URL
         loadScriptByURL(
             'recaptcha-key',
-            `https://www.recaptcha.net/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_reCAPTCHA}`,
+            `https://www.recaptcha.net/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_reCAPTCHA}`,
             function () {
                 console.log('Script loaded!');
                 setRecaptchaReady(true);
