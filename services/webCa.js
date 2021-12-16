@@ -325,6 +325,7 @@ export const CAHandler = async function (token, cb) {
                 onOk() {
                     // 清除台網母憑證
                     window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html');
+                    localStorage.clear();
 
                     // 重新部署憑證
                     setTimeout(() => {
