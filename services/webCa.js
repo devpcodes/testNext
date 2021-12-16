@@ -288,22 +288,29 @@ export const CAHandler = async function (token, cb) {
         });
         if (res.msg !== '驗章成功') {
             console.log(res);
-            Modal.confirm({
-                title: '憑證已註銷，是否重新部署憑證 ? 。',
-                content: res.msg,
-                onOk() {
-                    // 清除台網母憑證
-                    window.open(process.env.NEXT_PUBLIC_webca_clear);
+            if (res.msg.split('||')[0].split('=')[1] === '8020') {
+                Modal.confirm({
+                    title: '憑證已註銷，是否重新部署憑證 ? 。',
+                    content: res.msg,
+                    onOk() {
+                        // 清除台網母憑證
+                        window.open(process.env.NEXT_PUBLIC_webca_clear);
 
-                    // 重新部署憑證
-                    caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
+                        // 重新部署憑證
+                        caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
+                            logout();
+                        });
+                    },
+                    onCancel() {
                         logout();
-                    });
-                },
-                onCancel() {
-                    logout();
-                },
-            });
+                    },
+                });
+            } else {
+                Modal.error({
+                    title: '憑證驗章失敗',
+                    content: res.msg,
+                });
+            }
         } else {
             if (cb != null) {
                 localStorage.setItem('INCB', false);
