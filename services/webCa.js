@@ -327,7 +327,9 @@ export const CAHandler = async function (token, cb) {
                     window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html');
 
                     // 重新部署憑證
-                    applyCert(tokenVal.user_id, token);
+                    setTimeout(() => {
+                        applyCert(tokenVal.user_id, token);
+                    }, 2000);
                 },
             });
         } else {
