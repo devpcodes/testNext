@@ -217,26 +217,18 @@ export const applyCert = function (user_idNo, token, callBack) {
         memberNo: token,
     });
     return new Promise((resolve, reject) => {
-        ca.selectSigner(
+        ca.applyCert(
             {
                 userID: user_idNo,
                 memberNo: token,
             },
-            function (selectCode, selectMsg, selectToken, selectData) {
-                ca.applyCert(
-                    {
-                        userID: user_idNo,
-                        memberNo: token,
-                    },
-                    function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-                        console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                        localStorage.setItem('INCB', false);
-                        resolve({
-                            code: applyCertCode,
-                            msg: applyCertMsg,
-                        });
-                    },
-                );
+            function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
+                console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
+                localStorage.setItem('INCB', false);
+                resolve({
+                    code: applyCertCode,
+                    msg: applyCertMsg,
+                });
             },
         );
     });
@@ -295,7 +287,7 @@ export const CAHandler = async function (token, cb) {
                 content: content,
                 async onOk() {
                     modal.destroy();
-                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
+                    await caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
                         logout();
                     });
                 },
@@ -325,9 +317,17 @@ export const CAHandler = async function (token, cb) {
                 onOk() {
                     // 清除台網母憑證
                     window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html');
+
+                    // 刪除 local 憑證
+                    for (var key in localStorage) {
+                        if (/^TWCA/.test(key) === true) {
+                            localStorage.removeItem(key);
+                        }
+                    }
+
                     // 重新部署憑證
                     setTimeout(() => {
-                        applyCert(tokenVal.user_id, token);
+                        caResultDataHandler;
                     }, 2000);
                 },
             });
