@@ -304,8 +304,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
             window.grecaptcha.enterprise
                 .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
                 .then(async reCAPTCHAToken => {
-                    console.log('ttttt', reCAPTCHAToken);
-                    // submitHandler(reCAPTCHAToken, '3');
+                    // console.log('ttttt', reCAPTCHAToken);
+                    submitHandler(reCAPTCHAToken, '3');
                 });
         });
     };
