@@ -317,11 +317,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         submitHandler(recaptchaValue, '2');
     };
 
-    const recaptchaError = err => {
-        if (err != null) {
-            console.log('V2 Error', err);
-        }
-
+    const recaptchaError = () => {
         recaptchaRef.current.reset();
     };
 
