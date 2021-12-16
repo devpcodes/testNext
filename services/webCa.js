@@ -315,14 +315,7 @@ export const CAHandler = async function (token, cb) {
                 content: res.msg,
                 onOk() {
                     // 清除台網母憑證
-                    window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html');
-                    //
-                    // // 刪除 local 憑證
-                    // for (var key in localStorage) {
-                    //     if (/^TWCA/.test(key) === true) {
-                    //         localStorage.removeItem(key);
-                    //     }
-                    // }
+                    window.open(process.env.NEXT_PUBLIC_webca_clear);
 
                     // 重新部署憑證
                     caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
