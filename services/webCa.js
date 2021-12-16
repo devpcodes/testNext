@@ -334,9 +334,9 @@ export const CAHandler = async function (token, cb) {
                     }
 
                     // 重新部署憑證
-                    setTimeout(() => {
-                        applyCert(tokenVal.user_id, token);
-                    }, 2000);
+                    caResultDataHandler(ApplyCert, tokenVal.user_id, token, cb, function () {
+                        alert(部屬錯誤);
+                    });
                 },
             });
         } else {
