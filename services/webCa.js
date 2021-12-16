@@ -265,9 +265,17 @@ export const CAHandler = async function (token, cb) {
                 content: content,
                 async onOk() {
                     modal.destroy();
-                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
-                        logout();
-                    });
+                    await caResultDataHandler(
+                        checkData.suggestAction,
+                        tokenVal.user_id,
+                        token,
+                        function () {
+                            logout();
+                        },
+                        function () {
+                            logout();
+                        },
+                    );
                 },
                 okText: '是',
                 cancelText: '否',
@@ -299,9 +307,17 @@ export const CAHandler = async function (token, cb) {
                         window.open(process.env.NEXT_PUBLIC_webca_clear);
 
                         // 重新部署憑證
-                        caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
-                            logout();
-                        });
+                        caResultDataHandler(
+                            'ApplyCert',
+                            tokenVal.user_id,
+                            token,
+                            function () {
+                                logout();
+                            },
+                            function () {
+                                logout();
+                            },
+                        );
                     },
                     onCancel() {
                         logout();
