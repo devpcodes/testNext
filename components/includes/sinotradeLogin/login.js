@@ -26,6 +26,7 @@ import { thirdPartyLayout } from '../../../services/components/goOrder/thirdPart
 import SvgCaptcha from './SvgCaptcha';
 // import ReCaptchaComponent from './ReCaptchaComponent';
 import ReCAPTCHA from 'react-google-recaptcha-enterprise';
+// import ReCAPTCHA from 'react-google-recaptcha';
 // let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
 // let defaultOpenact =
 //     'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
@@ -312,11 +313,15 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const recaptchaV2Handler = () => {
         const recaptchaValue = recaptchaRef.current.getValue();
-        console.log('recaptcha token ===============', recaptchaValue);
+        // console.log('recaptcha token ===============', recaptchaValue);
         submitHandler(recaptchaValue, '2');
     };
 
-    const recaptchaError = () => {
+    const recaptchaError = err => {
+        if (err != null) {
+            console.log('V2 Error', err);
+        }
+
         recaptchaRef.current.reset();
     };
 
