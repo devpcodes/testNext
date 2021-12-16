@@ -292,6 +292,8 @@ export const CAHandler = async function (token, cb) {
                 Modal.confirm({
                     title: '憑證已註銷，是否重新部署憑證 ? 。',
                     content: res.msg,
+                    okText: '是',
+                    cancelText: '否',
                     onOk() {
                         // 清除台網母憑證
                         window.open(process.env.NEXT_PUBLIC_webca_clear);
@@ -309,6 +311,7 @@ export const CAHandler = async function (token, cb) {
                 Modal.error({
                     title: '憑證驗章失敗',
                     content: res.msg,
+                    okText: '確認',
                 });
             }
         } else {
