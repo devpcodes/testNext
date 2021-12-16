@@ -310,14 +310,13 @@ export const CAHandler = async function (token, cb) {
         });
         if (res.msg !== '驗章成功') {
             console.log(res);
-            await logout();
-            Modal.info({
+            Modal.confirm({
                 title: '憑證已註銷，是否重新部署憑證 ? 。',
                 content: res.msg,
                 onOk() {
                     // 清除台網母憑證
                     window.open('https://catest.sinotrade.com.tw/WebCA/clearLS.html');
-
+                    //
                     // // 刪除 local 憑證
                     // for (var key in localStorage) {
                     //     if (/^TWCA/.test(key) === true) {
@@ -328,7 +327,11 @@ export const CAHandler = async function (token, cb) {
                     // 重新部署憑證
                     caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
                         alert('部屬錯誤');
+                        logout();
                     });
+                },
+                onCancel() {
+                    logout();
                 },
             });
         } else {
