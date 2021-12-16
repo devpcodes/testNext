@@ -271,9 +271,19 @@ export const CAHandler = async function (token, cb) {
                         token,
                         function () {
                             logout();
+                            Modal.info({
+                                title: '憑證部署完成，請重新登入',
+                                content: res.msg,
+                                okText: '確認',
+                            });
                         },
                         function () {
                             logout();
+                            Modal.error({
+                                title: '憑證部署失敗。',
+                                content: res.msg,
+                                okText: '確認',
+                            });
                         },
                     );
                 },
@@ -313,9 +323,19 @@ export const CAHandler = async function (token, cb) {
                             token,
                             function () {
                                 logout();
+                                Modal.info({
+                                    title: '憑證部署完成，請重新登入',
+                                    content: res.msg,
+                                    okText: '確認',
+                                });
                             },
                             function () {
                                 logout();
+                                Modal.error({
+                                    title: '憑證部署失敗。',
+                                    content: res.msg,
+                                    okText: '確認',
+                                });
                             },
                         );
                     },
