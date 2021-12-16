@@ -217,28 +217,6 @@ export const applyCert = function (user_idNo, token, callBack) {
         memberNo: token,
     });
     return new Promise((resolve, reject) => {
-        // ca.selectSigner(
-        //     {
-        //         userID: user_idNo,
-        //         memberNo: token,
-        //     },
-        //     function (selectCode, selectMsg, selectToken, selectData) {
-        //         ca.applyCert(
-        //             {
-        //                 userID: user_idNo,
-        //                 memberNo: token,
-        //             },
-        //             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
-        //                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-        //                 localStorage.setItem('INCB', false);
-        //                 resolve({
-        //                     code: applyCertCode,
-        //                     msg: applyCertMsg,
-        //                 });
-        //             },
-        //         );
-        //     },
-        // );
         ca.applyCert(
             {
                 userID: user_idNo,
@@ -349,7 +327,7 @@ export const CAHandler = async function (token, cb) {
 
                     // 重新部署憑證
                     caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
-                        alert(部屬錯誤);
+                        alert('部屬錯誤');
                     });
                 },
             });
