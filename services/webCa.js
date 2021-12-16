@@ -176,28 +176,6 @@ export const checkCert = function (userIdNo) {
     return checkData;
 };
 
-// 挑選憑證
-export const selectSigner = function (userIdNo) {
-    let DM;
-    if (process.env.NEXT_PUBLIC_DM === 'false') {
-        DM = false;
-    } else {
-        DM = true;
-    }
-    const ca = new CA_Component({
-        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
-        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
-        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-        DM: DM,
-    });
-    console.log('selectSigner', {
-        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
-        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
-        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
-        DM: DM,
-    });
-};
-
 // 安裝憑證
 export const applyCert = function (user_idNo, token, callBack) {
     let DM;
