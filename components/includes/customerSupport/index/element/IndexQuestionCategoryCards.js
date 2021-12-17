@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Card } from 'antd';
 import Link from 'next/link';
 import { RightOutlined } from '@ant-design/icons';
-import layers from '../../../resources/images/pages/customer_support/ic_layers_alt.svg';
+import layers from '../../../../../resources/images/pages/customer_support/ic_layers_alt.svg';
 
 const IndexQuestionCategoryCards = ({
     firstCategoryAndQuestion,
@@ -38,7 +38,7 @@ const IndexQuestionCategoryCards = ({
                     >
                         <div className="categoryNameGroupLeft">
                             <img className="layerIcon" alt="layers" src={layers} />
-                            <Link href={`/customer-support/questions?key=${item.id}`}>
+                            <Link href={`/customer-support/question-list?key=${item.id}`}>
                                 <span className="categoryName">{item.categoryName}</span>
                             </Link>
                         </div>
@@ -46,7 +46,7 @@ const IndexQuestionCategoryCards = ({
                     </div>
                     <Card className="QAcard">
                         {item.questions?.map((i, idx) => (
-                            <Link href={`/customer-support/questions/${i.uuid}`} key={idx}>
+                            <Link href={`/customer-support/${i.uuid}`} key={idx}>
                                 <a className="questionTitle">{i.title}</a>
                             </Link>
                         ))}

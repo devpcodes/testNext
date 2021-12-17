@@ -33,6 +33,13 @@ const SearchInput = ({ className, placeholder, enterButton, onSearch, size, ...p
                         color: #3f5372 !important;
                     }
 
+                    .ant-input-affix-wrapper-focused,
+                    .ant-input-affix-wrapper:focus,
+                    .ant-input-affix-wrapper:hover {
+                        border-color: none;
+                        box-shadow: none;
+                    }
+
                     @media screen and (max-width: 450px) {
                         .input_search {
                             width: inherit !important;

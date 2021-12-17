@@ -38,6 +38,7 @@ import { noCloseBtns } from '../../hooks/useLoginClosBtn';
 import modalCloseIcon from '../../resources/images/components/tradingAccount/acc_close.svg';
 import modalTitleConfirmIcon from '../../resources/images/components/tradingAccount/attention-error.svg';
 import modalTitleConfirmIconSell from '../../resources/images/components/tradingAccount/attention-error-sell.svg';
+import { checkServer } from '../../services/checkServer';
 
 const noVerifyRouters = ['goOrder', 'errPage'];
 
@@ -392,7 +393,6 @@ const Layout = memo(({ children }) => {
         },
         [modal],
     );
-
     return (
         <>
             <Head>
@@ -415,7 +415,11 @@ const Layout = memo(({ children }) => {
             </MyTransition>
             <Header showNav={showNav} />
             {isMobile && showMask && <div onClick={maskClickHandler} className="page__mask"></div>}
-            <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
+            {checkServer() ? (
+                <div className="page__container">{children}</div>
+            ) : (
+                <div className="page__container">{verifySuccess && renderChildren(verifyErrMsg)}</div>
+            )}
             <Footer showNav={showNav} />
             <Modal
                 {...modal}

@@ -1,15 +1,17 @@
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
-const CustomerTab = ({ children, categories, activeKey, onTabsChange, ...props }) => {
+const QuestionTab = ({ children, categories, activeKey, defaultActiveKey, onTabsChange, ...props }) => {
     const { TabPane } = Tabs;
 
     return (
         <Tabs
+            className="question-tab"
             defaultActiveKey={categories && categories[0].id}
             activeKey={activeKey}
-            className="tabs"
             onChange={onTabsChange}
+            categories={categories}
+            key={activeKey}
             {...props}
         >
             {categories &&
@@ -24,11 +26,12 @@ const CustomerTab = ({ children, categories, activeKey, onTabsChange, ...props }
     );
 };
 
-export default CustomerTab;
+export default QuestionTab;
 
-CustomerTab.propTypes = {
+QuestionTab.propTypes = {
     children: PropTypes.node,
     categories: PropTypes.array,
-    activeKey: PropTypes.number,
+    defaultActiveKey: PropTypes.number,
+    activeKey: PropTypes.string,
     onTabsChange: PropTypes.func,
 };

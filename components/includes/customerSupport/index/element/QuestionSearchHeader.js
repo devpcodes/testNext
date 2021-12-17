@@ -4,7 +4,7 @@ import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 
-import bg from '../../../resources/images/pages/customer_support/bg_img.svg';
+import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
 
 const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
     const { Header } = Layout;

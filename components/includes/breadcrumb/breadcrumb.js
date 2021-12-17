@@ -47,7 +47,7 @@ function BreadcrumbLayout({ articleTitle }) {
                 elementNameArr.current.push('搜尋結果');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
                 break;
-            case 'questions':
+            case 'question-list':
                 elementNameArr.current.push('常見問題');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
                 break;
@@ -104,6 +104,10 @@ function BreadcrumbLayout({ articleTitle }) {
                     .site-breadcrumb {
                         display: none;
                     }
+                }
+
+                .ant-breadcrumb-link:hover > a {
+                    color: #daa360;
                 }
             `}</style>
         </>

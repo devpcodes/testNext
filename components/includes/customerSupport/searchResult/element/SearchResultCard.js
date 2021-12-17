@@ -6,7 +6,7 @@ import { Pagination } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import parse from 'html-react-parser';
-import noDataImg from '../../../resources/images/pages/customer_support/img-default.svg';
+import noDataImg from '../../../../../resources/images/pages/customer_support/img-default.svg';
 
 const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQuestion, page, changePage }) => {
     const { Content } = Layout;
@@ -16,7 +16,7 @@ const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQ
 
     const toQuestionPage = questionUUID => {
         router.push({
-            pathname: `/question/${questionUUID}`,
+            pathname: `/customer-support/${questionUUID}`,
         });
     };
 

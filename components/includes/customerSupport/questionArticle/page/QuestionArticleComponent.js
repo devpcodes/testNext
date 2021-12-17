@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useDispatch } from 'react-redux';
 import parse from 'html-react-parser';
 import moment from 'moment';
-import { PageHead } from '../../../components/includes/PageHead';
+import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
-import CustomerButton from '../../../components/includes/customerSupport/CustomerButton';
-import { getCommonQuestionArticle } from '../../../services/components/customerSupport/commonQuestion';
+import CustomerButton from '../../CustomerButton';
+import Relative from '../element/Relative';
+import { getCommonQuestionArticle } from '../../../../../services/components/customerSupport/commonQuestion';
 import { useSelector } from 'react-redux';
 import { LeftOutlined } from '@ant-design/icons';
-import Breadcrumb from '../../../components/includes/breadcrumb/breadcrumb';
+import Breadcrumb from '../../../breadcrumb/breadcrumb';
+import SearchInput from '../../SearchInput';
 
-import SearchInput from '../../../components/includes/customerSupport/SearchInput';
-
-const QuestionArticle = () => {
+const QuestionArticleComponent = () => {
     const { Panel } = Collapse;
     const router = useRouter();
     const { id } = router.query;
@@ -108,30 +107,17 @@ const QuestionArticle = () => {
                                     )}
                             </div>
                         </div>
+
                         <div className="side_section">
                             {clientWidth > 450 && (
-                                <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
+                                <div className="question-article-input-search">
+                                    <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
+                                </div>
                             )}
-
                             <h3 className="qTitle">相關問題</h3>
-
-                            <div className="qSection">
-                                {articleData.related &&
-                                    articleData.related.map(data => {
-                                        return (
-                                            <div key={data.uuid} className="question_block">
-                                                <Link href={`/customer-support/questions/${data.uuid}`}>
-                                                    {data.title}
-                                                </Link>
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-
+                            {articleData.related && <Relative data={articleData.related} />}
                             <div className="ad_block">廣告圖預留區</div>
-
                             <div className="qTitle">相關標籤</div>
-
                             <div className="tag_section">
                                 {articleData.keywords &&
                                     keywords(articleData.keywords).map(keyword => (
@@ -227,6 +213,11 @@ const QuestionArticle = () => {
                     margin: 0 12px 0 0;
                 }
 
+                .category-time-group > span {
+                    font-size: 16px;
+                    color: #3f5372;
+                }
+
                 .side_section {
                     max-width: 346px;
                     width: 346px;
@@ -320,34 +311,6 @@ const QuestionArticle = () => {
                     width: 348px;
                 }
 
-                .question_block {
-                    width: 100%;
-                    padding-bottom: 15px;
-                    font-family: PingFangTC;
-                    font-size: 16px;
-                    font-weight: 500;
-                    font-stretch: normal;
-                    font-style: normal;
-                    letter-spacing: normal;
-                    color: #0d1623;
-                    cursor: pointer;
-                }
-
-                .question_block:hover {
-                    color: #daa360;
-                }
-
-                .question_block:nth-child(2) {
-                    padding: 15px 0 15px;
-                    border-top: solid 1px #d7e0ef;
-                    border-bottom: solid 1px #d7e0ef;
-                }
-
-                .question_block:nth-child(3) {
-                    padding-top: 15px;
-                    padding-bottom: 0;
-                }
-
                 @media screen and (max-width: 450px) {
                     .questionArticleLayout {
                         padding: 20px 0 0;
@@ -429,39 +392,43 @@ const QuestionArticle = () => {
                 .questionArticleWrapper {
                     width: 1172px;
                 }
+
+                .SearchInput_question-article-input-search__3QSct
+                    > .ant-input-wrapper
+                    > .ant-input-search
+                    > .ant-input::placeholder {
+                    font-family: PingFangSC !important;
+                    font-size: 16px !important;
+                    letter-spacing: 0.4px !important;
+                    color: #3f5372 !important;
+                }
+
+                .question-article-input-search .ant-input-group-addon {
+                    width: 80px !important;
+                }
+
+                .question-article-input-search .ant-input-search-button {
+                    width: inherit;
+                    background-color: #c43826 !important;
+                    border-color: #c43826 !important;
+                    font-size: 16px !important;
+                    font-weight: normal !important;
+                    font-stretch: normal !important;
+                    font-style: normal !important;
+                    letter-spacing: 0.4px !important;
+                    text-align: center !important;
+                    color: #fff !important;
+                }
+
+                .question-article-input-search .ant-input-search-button:hover {
+                    background-color: #ea6554 !important;
+                    border-color: #ea6554 !important;
+                }
             `}</style>
 
-            <style jsx global>{`
-                .question_block {
-                    width: 100%;
-                    padding-bottom: 15px;
-                    font-family: PingFangTC;
-                    font-size: 16px;
-                    font-weight: 500;
-                    font-stretch: normal;
-                    font-style: normal;
-                    letter-spacing: normal;
-                    color: #0d1623;
-                    cursor: pointer;
-                }
-
-                .question_block:hover {
-                    color: #daa360;
-                }
-
-                .question_block:nth-child(2) {
-                    padding: 15px 0 15px;
-                    border-top: solid 1px #d7e0ef;
-                    border-bottom: solid 1px #d7e0ef;
-                }
-
-                .question_block:nth-child(3) {
-                    padding-top: 15px;
-                    padding-bottom: 0;
-                }
-            `}</style>
+            <style jsx global>{``}</style>
         </>
     );
 };
 
-export default QuestionArticle;
+export default QuestionArticleComponent;
