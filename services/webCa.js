@@ -265,9 +265,25 @@ export const CAHandler = async function (token, cb) {
                 content: content,
                 async onOk() {
                     modal.destroy();
-                    await caResultDataHandler(checkData.suggestAction, tokenVal.user_id, token, cb, function () {
-                        logout();
-                    });
+                    await caResultDataHandler(
+                        checkData.suggestAction,
+                        tokenVal.user_id,
+                        token,
+                        function () {
+                            logout();
+                            Modal.info({
+                                title: '憑證部署完成，請重新登入',
+                                okText: '確認',
+                            });
+                        },
+                        function () {
+                            logout();
+                            Modal.error({
+                                title: '憑證部署失敗。',
+                                okText: '確認',
+                            });
+                        },
+                    );
                 },
                 okText: '是',
                 cancelText: '否',
@@ -296,12 +312,33 @@ export const CAHandler = async function (token, cb) {
                     cancelText: '否',
                     onOk() {
                         // 清除台網母憑證
-                        window.open(process.env.NEXT_PUBLIC_webca_clear);
+                        // window.open(process.env.NEXT_PUBLIC_webca_clear);
+                        alert('清除台網母憑證開始');
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = process.env.NEXT_PUBLIC_webca_clear;
+                        document.body.appendChild(iframe);
 
                         // 重新部署憑證
-                        caResultDataHandler('ApplyCert', tokenVal.user_id, token, cb, function () {
-                            logout();
-                        });
+                        caResultDataHandler(
+                            'ApplyCert',
+                            tokenVal.user_id,
+                            token,
+                            function () {
+                                logout();
+                                Modal.info({
+                                    title: '憑證部署完成，請重新登入',
+                                    okText: '確認',
+                                });
+                            },
+                            function () {
+                                logout();
+                                Modal.error({
+                                    title: '憑證部署失敗。',
+                                    okText: '確認',
+                                });
+                            },
+                        );
                     },
                     onCancel() {
                         logout();
