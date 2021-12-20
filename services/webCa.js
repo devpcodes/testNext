@@ -312,12 +312,15 @@ export const CAHandler = async function (token, cb) {
                     cancelText: '否',
                     onOk() {
                         // 清除台網母憑證
-                        window.open(process.env.NEXT_PUBLIC_webca_clear);
-                        // alert('清除台網母憑證開始');
-                        // var iframe = document.createElement('iframe');
-                        // iframe.style.display = 'none';
-                        // iframe.src = process.env.NEXT_PUBLIC_webca_clear;
-                        // document.body.appendChild(iframe);
+                        if (document.getElementById('ClearCAIframe')) {
+                            document.getElementById('ClearCAIframe').remove();
+                        } else {
+                            var iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            iframe.id = 'ClearCAIframe';
+                            iframe.src = process.env.NEXT_PUBLIC_webca_clear;
+                            document.body.appendChild(iframe);
+                        }
 
                         // 重新部署憑證
                         caResultDataHandler(
