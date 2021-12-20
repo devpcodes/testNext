@@ -23,9 +23,9 @@ import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 import { setModal } from '../../../store/components/layouts/action';
 import { useOpenAccountUrl } from '../../../hooks/useOpenAccountUrl';
 import { thirdPartyLayout } from '../../../services/components/goOrder/thirdPartyLayout';
-import SvgCaptcha from './SvgCaptcha';
+// import SvgCaptcha from './SvgCaptcha';
 // import ReCaptchaComponent from './ReCaptchaComponent';
-import ReCAPTCHA from 'react-google-recaptcha';
+// import ReCAPTCHA from 'react-google-recaptcha';
 // let udnOpenact = 'https://www.sinotrade.com.tw/openact?strProd=0102&strWeb=0135';
 // let defaultOpenact =
 //     'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_login&strProd=0037&strWeb=0035';
@@ -809,12 +809,12 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             </div>
                             {/* recaptcha V2 */}
                             <div style={{ marginTop: '10px', display: recaptchaVer === '2' ? 'block' : 'none' }}>
-                                <ReCAPTCHA
+                                {/* <ReCAPTCHA
                                     sitekey={process.env.NEXT_PUBLIC_reCAPTCHAV2}
                                     ref={recaptchaRef}
                                     onErrored={recaptchaError}
                                     // onChange={onChange}
-                                />
+                                /> */}
                             </div>
                             <Form.Item label="">
                                 <Button
