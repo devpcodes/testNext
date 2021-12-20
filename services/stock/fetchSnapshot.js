@@ -1,9 +1,16 @@
+// 註解部分待君豪完成後開放
+
 import { Modal } from 'antd';
-import { getZionInstance } from '../myAxios';
+// import { getZionInstance } from '../myAxios';
+import { getA8Instance } from '../myAxios';
 
 export const fetchSnapshot = async codes => {
     try {
-        const res = await getZionInstance(undefined, false).post('/Quotes/Snapshot', {
+        // const res = await getZionInstance(undefined, false).post('/Quotes/Snapshot', {
+        //     codes,
+        // });
+
+        const res = await getA8Instance(undefined, undefined, false).post('/Quotes/Snapshot', {
             codes,
         });
         if (res.data?.success === 'True') {
