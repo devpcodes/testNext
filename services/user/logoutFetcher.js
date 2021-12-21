@@ -12,6 +12,6 @@ export const logout = async function () {
     sessionStorage.removeItem('source'); // 舊站下架後可移除這行
     sessionStorage.removeItem('platform'); // 舊站下架後可移除這行
     sessionStorage.removeItem('newweb_modal');
-    localStorage.setItem('INCB', false);
+    // localStorage.setItem('INCB', false);
     return res;
 };

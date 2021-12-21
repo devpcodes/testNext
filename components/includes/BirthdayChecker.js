@@ -45,7 +45,7 @@ const BirthdayChecker = cb => {
     const check = async function (value, modal) {
         let res = await checkBirthday(getToken(), value);
         if (res.success === 'True') {
-            localStorage.setItem('INCB', false);
+            // localStorage.setItem('INCB', false);
             modal.destroy();
             if (typeof cb === 'function') {
                 cb();

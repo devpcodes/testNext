@@ -147,15 +147,15 @@ const Layout = memo(({ children }) => {
         }, 500);
     }, [overFlow]);
 
-    useEffect(() => {
-        console.log(router);
-        if (isLogin && localStorage.getItem('INCB') === 'true') {
-            BirthdayChecker();
-        }
-        if (localStorage.getItem('INCB') === null) {
-            localStorage.setItem('INCB', true);
-        }
-    }, [router.query]);
+    // useEffect(() => {
+    //     console.log(router);
+    //     if (isLogin && localStorage.getItem('INCB') === 'true') {
+    //         BirthdayChecker();
+    //     }
+    //     if (localStorage.getItem('INCB') === null) {
+    //         localStorage.setItem('INCB', true);
+    //     }
+    // }, [router.query]);
 
     // 不需檢查是否登入的頁面
     const noVerifyRouter = () => {
