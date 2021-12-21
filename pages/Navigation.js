@@ -31,7 +31,7 @@ const Navigation = () => {
             const res = await submit(router.query.otp);
             const result = res.data?.result;
             // 不需要做生日驗證
-            localStorage.setItem('INCB', false);
+            // localStorage.setItem('INCB', false);
             console.log('=================', result);
             if (res.data.success) {
                 if (router.query.platform) {
