@@ -202,7 +202,7 @@ export const applyCert = function (user_idNo, token, callBack) {
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                localStorage.setItem('INCB', false);
+                // localStorage.setItem('INCB', false);
                 resolve({
                     code: applyCertCode,
                     msg: applyCertMsg,
@@ -234,7 +234,7 @@ export const renewCert = function (user_idNo, token, callBack) {
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
-                localStorage.setItem('INCB', false);
+                // localStorage.setItem('INCB', false);
                 resolve({
                     code: applyCertCode,
                     msg: applyCertMsg,
@@ -254,10 +254,7 @@ export const CAHandler = async function (token, cb) {
             const modal = Modal.confirm();
             const content = (
                 <React.Fragment>
-                    <p>
-                        為保障您的電子交易安全，登入時將檢查電子憑證，是否載入憑證? <br />
-                        若暫不載入，系統將於每次登入時，進行出生年月日之身分驗證。
-                    </p>
+                    <p>為保障您的電子交易安全，登入時將檢查電子憑證，是否載入憑證?</p>
                 </React.Fragment>
             );
             modal.update({
@@ -289,8 +286,11 @@ export const CAHandler = async function (token, cb) {
                 cancelText: '否',
                 onCancel() {
                     modal.destroy();
-                    sessionStorage.setItem('deployCA', false);
-                    BirthdayChecker(cb);
+                    logout();
+                    Modal.error({
+                        title: '需先部署憑證才可登入。',
+                        okText: '確認',
+                    });
                 },
             });
         }, 600);
@@ -353,7 +353,7 @@ export const CAHandler = async function (token, cb) {
             }
         } else {
             if (cb != null) {
-                localStorage.setItem('INCB', false);
+                // localStorage.setItem('INCB', false);
                 cb();
             }
         }
