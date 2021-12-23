@@ -165,11 +165,6 @@ const Status = ({ active }) => {
                     {
                         txt: '5. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)',
                     },
-                    {
-                        html:
-                            '<span>6. 送出的圈存申請，為<span style="color: #e46262; margin-bottom: 12px; display: inline-block">借券庫存之圈存申請</span></span>',
-                    },
-                    { txt: '7. 因一位客戶僅能擁有一個借券戶，在[申請帳號]請直接寫死客戶有借券資格的帳號。' },
                 ]}
             />
         </>
