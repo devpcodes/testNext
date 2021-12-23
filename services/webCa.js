@@ -195,6 +195,9 @@ export const applyCert = function (user_idNo, token, callBack) {
         memberNo: token,
     });
     return new Promise((resolve, reject) => {
+        // 清除母憑證
+        ca.clearLS();
+        // 申請新憑證
         ca.applyCert(
             {
                 userID: user_idNo,
@@ -311,14 +314,6 @@ export const CAHandler = async function (token, cb) {
                     okText: '是',
                     cancelText: '否',
                     onOk() {
-                        // 清除台網母憑證
-                        window.open(process.env.NEXT_PUBLIC_webca_clear);
-                        // alert('清除台網母憑證開始');
-                        // var iframe = document.createElement('iframe');
-                        // iframe.style.display = 'none';
-                        // iframe.src = process.env.NEXT_PUBLIC_webca_clear;
-                        // document.body.appendChild(iframe);
-
                         // 重新部署憑證
                         caResultDataHandler(
                             'ApplyCert',
