@@ -6,7 +6,7 @@ import _ from 'lodash';
 // import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-function BreadcrumbLayout({ articleTitle }) {
+function BreadcrumbLayout({ articleTitle, categoryName }) {
     // const routeList = useSelector(state => state.breadcrumb.routeList);
     const levelArr = useRef([]);
     const router = useRouter();
@@ -19,6 +19,10 @@ function BreadcrumbLayout({ articleTitle }) {
         levelArr.current = router.pathname.split('/');
         levelArr.current.splice(0, 1);
         levelHandler();
+        if (categoryName != null && categoryName !== '') {
+            elementNameArr.current.push(categoryName);
+            elementPathArr.current.push('');
+        }
         if (articleTitle != null && articleTitle !== '') {
             elementNameArr.current.push(articleTitle);
             elementPathArr.current.push('');
@@ -26,7 +30,7 @@ function BreadcrumbLayout({ articleTitle }) {
         _.uniq(elementPathArr);
         _.uniq(elementNameArr);
         return elementNameArr.current;
-    }, [router.pathname, articleTitle]);
+    }, [router.pathname, articleTitle, categoryName]);
 
     const levelHandler = () => {
         if (levelArr.current.length > 0) {
@@ -47,8 +51,12 @@ function BreadcrumbLayout({ articleTitle }) {
                 elementNameArr.current.push('搜尋結果');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
                 break;
-            case 'question-list':
+            case 'question':
                 elementNameArr.current.push('常見問題');
+                elementPathArr.current.push(`/${levelArr.current[0]}`);
+                break;
+            case 'financial-product':
+                elementNameArr.current.push('理財商品');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
                 break;
             default:
@@ -100,6 +108,12 @@ function BreadcrumbLayout({ articleTitle }) {
                     letter-spacing: normal;
                 }
 
+                @media screen and (max-width: 1024px) {
+                    .site-breadcrumb {
+                        width: 90%;
+                    }
+                }
+
                 @media screen and (max-width: 768px) {
                     .site-breadcrumb {
                         display: none;
@@ -118,4 +132,5 @@ export default BreadcrumbLayout;
 
 BreadcrumbLayout.propTypes = {
     articleTitle: PropTypes.string,
+    categoryName: PropTypes.string,
 };

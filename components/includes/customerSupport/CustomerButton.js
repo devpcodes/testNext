@@ -59,7 +59,7 @@ const CustomerButton = ({ onClick, children, type, ...props }) => {
                 .default {
                     background-color: #ffffff;
                     color: #0d1623;
-                    border-color: #d7e0ef;
+                    border-color: #e6ebf5;
                 }
 
                 .default:hover {
@@ -122,7 +122,8 @@ const CustomerButton = ({ onClick, children, type, ...props }) => {
 
 CustomerButton.propTypes = {
     onClick: PropTypes.func.isRequired,
-    children: PropTypes.string.isRequired,
+    children: PropTypes.string,
+    // children: PropTypes.string.isRequired,
     type: PropTypes.string,
 };
 

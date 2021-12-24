@@ -38,7 +38,7 @@ const IndexQuestionCategoryCards = ({
                     >
                         <div className="categoryNameGroupLeft">
                             <img className="layerIcon" alt="layers" src={layers} />
-                            <Link href={`/customer-support/question-list?key=${item.id}`}>
+                            <Link href={`/customer-support/question?key=${item.id}`}>
                                 <span className="categoryName">{item.categoryName}</span>
                             </Link>
                         </div>
@@ -46,7 +46,7 @@ const IndexQuestionCategoryCards = ({
                     </div>
                     <Card className="QAcard">
                         {item.questions?.map((i, idx) => (
-                            <Link href={`/customer-support/${i.uuid}`} key={idx}>
+                            <Link href={`/customer-support/question/${i.uuid}`} key={idx}>
                                 <a className="questionTitle">{i.title}</a>
                             </Link>
                         ))}
@@ -102,6 +102,10 @@ const IndexQuestionCategoryCards = ({
                         min-height: 140px;
                         margin-top: 1rem;
                         border: 1px solid #d7e0ef;
+                    }
+
+                    .ant-card-body .questionTitle:hover {
+                        color: #daa360;
                     }
 
                     .rightIcon {

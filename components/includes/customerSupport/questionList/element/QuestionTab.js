@@ -1,9 +1,20 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
+import ProductQuestionTable from '../../../financial-product/FinancialProductArticle/element/ProductQuestionTable';
+import ProductFileTable from '../../../financial-product/FinancialProductArticle/element/ProductFileTable';
 
-const QuestionTab = ({ children, categories, activeKey, defaultActiveKey, onTabsChange, ...props }) => {
+const QuestionTab = ({
+    children,
+    categories,
+    activeKey,
+    onTabsChange,
+    isFinancialProduct,
+    keywords,
+    attachments,
+    ...props
+}) => {
     const { TabPane } = Tabs;
-
     return (
         <Tabs
             className="question-tab"
@@ -22,6 +33,18 @@ const QuestionTab = ({ children, categories, activeKey, defaultActiveKey, onTabs
                         </TabPane>
                     );
                 })}
+            {isFinancialProduct ? (
+                <>
+                    <TabPane tab="常見問題" key="commonQuestion">
+                        <ProductQuestionTable keywords={keywords} />
+                    </TabPane>
+                    <TabPane tab="相關下載" key="fileDownload">
+                        <ProductFileTable dataSource={attachments} />
+                    </TabPane>
+                </>
+            ) : (
+                ''
+            )}
         </Tabs>
     );
 };
@@ -31,7 +54,8 @@ export default QuestionTab;
 QuestionTab.propTypes = {
     children: PropTypes.node,
     categories: PropTypes.array,
-    defaultActiveKey: PropTypes.number,
-    activeKey: PropTypes.string,
     onTabsChange: PropTypes.func,
+    isFinancialProduct: PropTypes.bool,
+    keywords: PropTypes.string,
+    attachments: PropTypes.array,
 };

@@ -1,132 +1,113 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+import Breadcrumb from '../../../../includes/breadcrumb/breadcrumb';
 import parse from 'html-react-parser';
-import moment from 'moment';
+// import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
-import CustomerButton from '../../CustomerButton';
-import Relative from '../element/Relative';
-import { getCommonQuestionArticle } from '../../../../../services/components/customerSupport/commonQuestion';
-import { useSelector } from 'react-redux';
-import { LeftOutlined } from '@ant-design/icons';
-import Breadcrumb from '../../../breadcrumb/breadcrumb';
-import SearchInput from '../../SearchInput';
+import CustomerButton from '../../../customerSupport/CustomerButton';
+import QuestionTab from '../../../customerSupport/questionList/element/QuestionTab';
+// import { LeftOutlined } from '@ant-design/icons';
+import {
+    getFinancialProductDetail,
+    getAnnouncement,
+} from '../../../../../services/components/financialProduct/financialProductServices';
+import OpenAccountButtons from '../element/OpenAccountButtons';
+import Announcement from '../element/Announcement';
 
-const QuestionArticleComponent = () => {
-    const { Panel } = Collapse;
+const FinancialProductArticleComponent = () => {
+    // const clientWidth = useSelector(store => store.layout.winWidth);
     const router = useRouter();
-    const { id } = router.query;
-    const clientWidth = useSelector(store => store.layout.winWidth);
+    const { Panel } = Collapse;
 
+    const [productCode] = useState(router.query.code);
+    const [categoryName] = useState(router.query.category);
     const [articleData, setArticleData] = useState([]);
-    const [articleTitle, setArticleTitle] = useState('');
-    const [articleContent, setArticleContent] = useState();
+    const [articleTabs, setArticleTabs] = useState([]);
+    const [activeTabKey, setActiveTabKey] = useState('0');
+    const [announcement, setAnnouncement] = useState([]);
+
+    const onTabsChange = key => {
+        setActiveTabKey(key);
+    };
 
     useEffect(async () => {
-        const data = await getCommonQuestionArticle(id);
-        setArticleData(data);
-        setArticleTitle(data.title);
-        const content = JSON.parse(data.content);
-        setArticleContent(content);
-    }, [id]);
+        const res = await getFinancialProductDetail(productCode);
+        setArticleData(res);
+        const tabsArray = [];
+        if (res?.tabs?.length) {
+            res.tabs.forEach((i, index) => {
+                tabsArray.push({ categoryName: i.tabName, id: index, articleContent: JSON.parse(i.content) });
+            });
+            setArticleTabs(tabsArray);
+            setActiveTabKey('0');
+        }
 
-    if (!articleData) {
-        return 'loading';
-    }
-
-    const onSearch = searchKeyword => {
-        router.push({
-            pathname: '/customer-support/search-result',
-            query: { keyword: searchKeyword },
-        });
-    };
-
-    const keywords = keywords => {
-        const keywordArr = keywords.split(',');
-        return keywordArr;
-    };
+        const announcementRes = await getAnnouncement(res?.keywords, 3);
+        setAnnouncement(announcementRes);
+    }, [productCode]);
 
     return (
         <>
             <PageHead title={'永豐金理財網'} />
             <Layout className="questionArticleLayout">
                 <div className="questionArticleWrapper">
-                    <Breadcrumb articleTitle={articleTitle} />
+                    <Breadcrumb categoryName={categoryName} articleTitle={articleData?.productName} />
                     <div className="article_wrapper">
                         <div className="article_section">
                             <div className="title_group">
-                                <h1>常見問題</h1>
-                                {clientWidth > 450 ? (
-                                    <CustomerButton type="default" onClick={() => router.back()}>
+                                <h1>{articleData?.productName}</h1>
+                                <div className="product-article-back">
+                                    <CustomerButton type="default" onClick={() => router.push('/financial-product')}>
                                         返回列表
                                     </CustomerButton>
-                                ) : (
-                                    <div className="back_group">
-                                        <CustomerButton type="default" onClick={() => router.back()}>
-                                            <LeftOutlined />
-                                        </CustomerButton>
-                                        <div className="mobile_button">
-                                            <SearchInput
-                                                onSearch={onSearch}
-                                                enterButton="搜尋"
-                                                placeholder="輸入關鍵字"
-                                            />
-                                        </div>
-                                    </div>
-                                )}
+                                </div>
                             </div>
                             <div className="article">
-                                <h1>{articleData.title}</h1>
-                                <div className="category-group">
-                                    <div className="category-question-group">
-                                        <p>問題類別</p>
-                                        <span>{`${articleData.category2nd && articleData.category2nd.categoryName} > ${
-                                            articleData.category3rd && articleData.category3rd.categoryName
-                                        }`}</span>
-                                    </div>
-                                    <div className="category-time-group">
-                                        <p>更新時間</p>
-                                        <span>{moment(articleData.updatedAt).format('Y-M-D')}</span>
-                                    </div>
-                                </div>
-                                <hr />
-                                {articleContent &&
-                                    articleContent.map((item, idx) =>
-                                        item.type === 'toggle' ? (
-                                            <div className="toggle-section" key={idx}>
-                                                <Collapse>
-                                                    <Panel header={item.content.title} key="1">
-                                                        <p>{item.content.content}</p>
-                                                    </Panel>
-                                                </Collapse>
-                                            </div>
-                                        ) : (
-                                            <article key={idx}>{parse(item.content.content)}</article>
-                                        ),
-                                    )}
+                                {articleTabs?.length && (
+                                    <QuestionTab
+                                        className="financial-product-article-tab"
+                                        isFinancialProduct={true}
+                                        categories={articleTabs}
+                                        defaultActiveKey={'0'}
+                                        activeKey={activeTabKey}
+                                        keywords={articleData.keywords}
+                                        attachments={articleData.attachments}
+                                        onChange={onTabsChange}
+                                    >
+                                        {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
+                                            item.type === 'toggle' ? (
+                                                <div className="toggle-section" key={idx}>
+                                                    <Collapse>
+                                                        <Panel header={item.content.title} key="1">
+                                                            <p>{item.content.content}</p>
+                                                        </Panel>
+                                                    </Collapse>
+                                                </div>
+                                            ) : (
+                                                <article key={idx}>{parse(item.content.content)}</article>
+                                            ),
+                                        )}
+                                    </QuestionTab>
+                                )}
                             </div>
                         </div>
 
                         <div className="side_section">
-                            {clientWidth > 450 && (
-                                <div className="question-article-input-search">
-                                    <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
-                                </div>
-                            )}
-                            <h3 className="qTitle">相關問題</h3>
-                            {articleData.related && <Relative data={articleData.related} />}
-                            <div className="ad_block">廣告圖預留區</div>
-                            <div className="qTitle">相關標籤</div>
-                            <div className="tag_section">
-                                {articleData.keywords &&
-                                    keywords(articleData.keywords).map(keyword => (
-                                        <div key={keyword} className="qTag">
-                                            <Link href={`/customer-support/search-result?keyword=${keyword}`}>
-                                                {keyword}
-                                            </Link>
-                                        </div>
-                                    ))}
+                            <OpenAccountButtons
+                                title={articleData?.openTitle}
+                                description={articleData?.openDescription}
+                                image={articleData?.openImagePath}
+                                button1Link={articleData?.openButton1Url}
+                                button1Title={articleData?.openButton1Name}
+                                // button2Link={'http://'}
+                                // button2Title={'芝麻開門'}
+                                button2Link={articleData?.openButton2Url}
+                                button2Title={articleData?.openButton2Name}
+                            />
+                            <div className="open-related">
+                                <h3 className="qTitle">相關公告</h3>
+                                {announcement.length && <Announcement data={announcement} />}
                             </div>
                         </div>
                     </div>
@@ -141,16 +122,21 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article_section {
-                    max-width: 777px;
-                    width: 777px;
+                    min-width: 777px;
+                    width: 66%;
+                    margin-right: 48px;
+                }
+
+                article {
+                    padding: 20px 32px 32px 32px;
                 }
 
                 .article {
-                    padding: 32px 31px;
                     border-radius: 2px;
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
                     width: 100%;
+                    min-width: 600px;
                 }
 
                 .article > h1 {
@@ -219,7 +205,6 @@ const QuestionArticleComponent = () => {
                 }
 
                 .side_section {
-                    max-width: 346px;
                     width: 346px;
                 }
 
@@ -311,7 +296,7 @@ const QuestionArticleComponent = () => {
                     width: 348px;
                 }
 
-                @media screen and (max-width: 450px) {
+                @media screen and (max-width: 1024px) {
                     .questionArticleLayout {
                         padding: 20px 0 0;
                     }
@@ -328,13 +313,19 @@ const QuestionArticleComponent = () => {
 
                     .article_section {
                         width: 100%;
+                        margin: auto;
+                        max-width: auto;
+                        min-width: 0;
                     }
 
                     .title_group {
                         display: flex;
-                        flex-direction: column;
-                        justify-content: flex-start;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        width: 95%;
                         padding: 0 16px;
+                        margin: auto;
+                        margin-bottom: 23px;
                         height: initial;
                     }
 
@@ -345,18 +336,10 @@ const QuestionArticleComponent = () => {
                         margin-bottom: 12px;
                     }
 
-                    .back_group {
-                        display: flex;
-                        justify-content: space-between;
-                    }
-
-                    .back_group > .mobile_button {
-                        margin-left: 16px;
-                    }
-
                     .article {
-                        border-right: 0;
-                        border-left: 0;
+                        width: 92%;
+                        min-width: 0;
+                        margin: auto;
                     }
 
                     .category-group {
@@ -376,21 +359,36 @@ const QuestionArticleComponent = () => {
                     .side_section {
                         width: 100%;
                         max-width: 100vw;
-                        padding: 0 16px 40px;
+                        padding: 0 0 16px 0;
+                    }
+
+                    .side_section .open-related {
+                        display: none;
+                    }
+
+                @media screen and (max-width: 450px) {
+                    .article {
+                        width: 100%;
+                        min-width: 0;
+                    }
+
+                    .questionArticleWrapper {
+                        min-height: 55vh;
                     }
                 }
             `}</style>
             <style jsx global>{`
                 .questionArticleLayout {
+                    position: relative;
+                    width: 100%;
                     display: flex;
                     align-items: center;
-                    min-height: 100vh;
                     padding: 31px 0;
                     background-color: #f9fbff;
                 }
 
                 .questionArticleWrapper {
-                    width: 1172px;
+                    max-width: 1172px;
                 }
 
                 .SearchInput_question-article-input-search__3QSct
@@ -428,6 +426,66 @@ const QuestionArticleComponent = () => {
                 .qTag:hover a {
                     color: #daa360;
                 }
+
+                .ant-tabs-top .ant-tabs-nav {
+                    margin: 0;
+                    padding: 2px 45px 0;
+                    background-color: #fff;
+                }
+
+                .ant-tabs-tab {
+                    font-family: PingFangTC;
+                    font-size: 16px !important;
+                    font-weight: normal;
+                    font-stretch: normal;
+                    font-style: normal;
+                    letter-spacing: 0.4px;
+                    text-align: center;
+                    color: #0d1623 !important;
+                }
+
+                .ant-tabs-tab-active > .ant-tabs-tab-btn {
+                    color: #daa360 !important;
+                }
+
+                .ant-tabs-tab-btn:active,
+                .ant-tabs-tab-btn:focus,
+                .ant-tabs-tab-remove:active,
+                .ant-tabs-tab-remove:focus {
+                    color: #daa360 !important;
+                }
+
+                .ant-tabs-ink-bar {
+                    background: #daa360 !important;
+                    height: 5px !important;
+                }
+
+                @media screen and (max-width: 1024px) {
+                    .questionArticleLayout {
+                        padding-bottom: 0;
+                    }
+
+                    .ant-tabs-mobile {
+                        width: 100vw;
+                    }
+
+                    .ant-tabs-nav {
+                        padding: 0 45px 0 0 !important;
+                    }
+
+                    .ant-tabs-tab {
+                        margin: 0s 16px;
+                    }
+
+                    .ant-tabs-ink-bar {
+                        margin-left: -1px;
+                    }
+
+                    .product-article-back .ant-btn {
+                        height: 40px;
+                        font-size: 16px;
+                    }
+                }
             `}</style>
 
             <style jsx global>{``}</style>
@@ -435,4 +493,4 @@ const QuestionArticleComponent = () => {
     );
 };
 
-export default QuestionArticleComponent;
+export default FinancialProductArticleComponent;

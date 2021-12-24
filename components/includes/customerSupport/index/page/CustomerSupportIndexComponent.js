@@ -8,6 +8,7 @@ import { getCommonQuestionCategories } from '../../../../../services/components/
 import ShortcutFunction from '../element/ShortcutFunction';
 import IndexQuestionCategoryCards from '../element/IndexQuestionCategoryCards';
 import { RightOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 
 //images
 import icon_guideline from '../../../../../resources/images/pages/customer_support/img-service-guideline.svg';
@@ -97,10 +98,12 @@ const CustomerSupportIndexComponent = () => {
                 <ShortcutFunction linkData={iconLink} />
                 <div className="qaBlockTitle">
                     <h2 className="secondTitle">常見問題</h2>
-                    <a href="/newweb/customer-support/question-list">
-                        完整問題
-                        <RightOutlined />
-                    </a>
+                    <div className="secondTitleRight">
+                        <Link href="/customer-support/question">
+                            <a>完整問題</a>
+                        </Link>
+                        <RightOutlined className="fullQuestionRightIcon" />
+                    </div>
                 </div>
                 <IndexQuestionCategoryCards
                     firstCategoryAndQuestion={firstCategoryAndQuestion}
@@ -131,23 +134,6 @@ const CustomerSupportIndexComponent = () => {
                         margin-bottom: 1rem;
                     }
 
-                    .qaBlockTitle > a {
-                        margin-bottom: 0;
-                        font-size: 16px;
-                        font-weight: 600;
-                        cursor: pointer;
-                    }
-
-                    .qaBlockTitle > a:hover {
-                        color: #daa360;
-                    }
-
-                    @media screen and (max-width: 768px) {
-                        .qaBlockTitle > a {
-                            display: none;
-                        }
-                    }
-
                     .secondTitle {
                         padding-left: 16px;
                         margin-bottom: 16px;
@@ -156,11 +142,44 @@ const CustomerSupportIndexComponent = () => {
                         line-height: 2.7rem;
                         font-weight: 600;
                     }
+
+                    .secondTitleRight {
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .secondTitleRight > a {
+                        margin-bottom: 0;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #0d1623;
+                        cursor: pointer;
+                    }
+
+                    .secondTitleRight > a:hover {
+                        color: #daa360;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        .secondTitleRight > a {
+                            display: none;
+                        }
+                    }
                 `}
             </style>
 
             <style jsx global>
-                {``}
+                {`
+                    .fullQuestionRightIcon {
+                        margin-left: 8px;
+                        font-size: 13px;
+                    }
+
+                    .secondTitleRight:hover > span {
+                        color: #daa360;
+                        transition: color 0.5s;
+                    }
+                `}
             </style>
         </Layout>
     );

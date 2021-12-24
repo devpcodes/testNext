@@ -16,7 +16,7 @@ const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQ
 
     const toQuestionPage = questionUUID => {
         router.push({
-            pathname: `/customer-support/${questionUUID}`,
+            pathname: `/customer-support/question/${questionUUID}`,
         });
     };
 

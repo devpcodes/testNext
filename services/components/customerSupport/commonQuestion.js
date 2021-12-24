@@ -1,7 +1,7 @@
 import axios from '../../../services/myAxios';
 import { getCommonQuestionCategories } from './customerSupportService';
 
-export const getCommonQuestion = async (page, pageSize, categoryId) => {
+export const getCommonQuestion = async (page, pageSize, categoryId, keywords) => {
     let id;
 
     if (!categoryId) {
@@ -10,11 +10,14 @@ export const getCommonQuestion = async (page, pageSize, categoryId) => {
     }
 
     const reqUrl = 'https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestions';
-    const params = {
+    let params = {
         page: page,
         pageSize: pageSize,
-        categoryId: categoryId || id,
+        keywords,
     };
+    if (categoryId) {
+        params = { ...params, categoryId: categoryId || id };
+    }
     try {
         const res = await axios.get(reqUrl, { params: params });
         if (res.status === 200) {

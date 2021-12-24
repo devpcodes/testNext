@@ -2,24 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
-const Relative = ({ data }) => {
+const Announcement = ({ data }) => {
+    console.log('dd', data);
     return (
         <>
-            <div className="relative_section">
+            <div className="announcement_section">
                 {data &&
                     data.map(item => {
                         return (
-                            <div key={item.uuid} className="relative_block">
-                                <Link href={`/customer-support/question/${item.uuid}`}>
+                            <div key={item.articleGUID} className="announcement_block">
+                                <Link href={`/AnnouncementPage/?GUID=${item.articleGUID}`}>
                                     <a>{item.title}</a>
                                 </Link>
+                                <p className="announcement-date">{item.postTime}</p>
                             </div>
                         );
                     })}
             </div>
             <style jsx>{`
-                .relative_section {
-                    padding: 32px 31px 34px 32px;
+                .announcement_section {
+                    padding: 32px;
                     border-radius: 2px;
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
@@ -28,7 +30,7 @@ const Relative = ({ data }) => {
             `}</style>
 
             <style jsx global>{`
-                .relative_block {
+                .announcement_block {
                     width: 100%;
                     padding-bottom: 15px;
                     font-family: PingFangTC;
@@ -41,27 +43,41 @@ const Relative = ({ data }) => {
                     cursor: pointer;
                 }
 
-                .relative_block a:hover {
+                .announcement_block > a {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                }
+
+                .announcement_block a:hover {
                     color: #daa360;
                 }
 
-                .relative_block:nth-child(2) {
+                .announcement_block:nth-child(2) {
                     padding: 15px 0 15px;
                     border-top: solid 1px #d7e0ef;
                     border-bottom: solid 1px #d7e0ef;
                 }
 
-                .relative_block:nth-child(3) {
+                .announcement_block:nth-child(3) {
                     padding-top: 15px;
                     padding-bottom: 0;
+                }
+
+                .announcement-date {
+                    margin-bottom: 0;
+                    font-size: 14px;
+                    color: #3f5372;
                 }
             `}</style>
         </>
     );
 };
 
-export default Relative;
+export default Announcement;
 
-Relative.propTypes = {
+Announcement.propTypes = {
     data: PropTypes.array,
 };
