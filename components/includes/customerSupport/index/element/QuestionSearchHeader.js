@@ -54,6 +54,16 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                 }
 
                 @media screen and (max-width: 768px) {
+                    .customerSupportHeader {
+                        height: 160px;
+                    }
+
+                    .customerSupportHeader > h1 {
+                        font-size: 20px;
+                        margin-bottom: 0;
+                        white-space: nowrap;
+                    }
+
                     .backgroundImage {
                         display: none;
                     }

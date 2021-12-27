@@ -25,7 +25,7 @@ const QuestionListComponent = function () {
     // const isMobile = useSelector(store => store.layout.isMobile);
     const clientWidth = useSelector(store => store.layout.winWidth);
     const [categories, setCategories] = useState();
-    const [dataSource, setDataSource] = useState({});
+    const [dataSource, setDataSource] = useState([]);
     const [page, setPage] = useState(1);
     const [activeKey, setActiveKey] = useState(key);
     const [isLoading, setIsLoading] = useState(false);
@@ -112,7 +112,7 @@ const QuestionListComponent = function () {
                         activeKey={activeKey}
                         onChange={onTabsChange}
                     >
-                        {clientWidth > 450 && (
+                        {clientWidth > 768 && (
                             <QuestionTable
                                 dataSource={dataSource}
                                 sub2ndCategories={sub2ndCategories}
@@ -121,10 +121,10 @@ const QuestionListComponent = function () {
                                 onPageChange={onPageChange}
                             />
                         )}
-                        {clientWidth <= 450 && dataSource && (
+                        {clientWidth <= 768 && dataSource && (
                             <div>
-                                <InfiniteScroll dataLength={dataSource.length} next={loadMoreFn} hasMore={true}>
-                                    {clientWidth <= 450 &&
+                                <InfiniteScroll dataLength={dataSource?.length} next={loadMoreFn} hasMore={true}>
+                                    {clientWidth <= 768 &&
                                         dataSource?.dataList &&
                                         dataSource?.dataList.map(data => {
                                             return (
@@ -140,7 +140,7 @@ const QuestionListComponent = function () {
                                 </InfiniteScroll>
                             </div>
                         )}
-                        {clientWidth <= 450 && isLoading ? (
+                        {clientWidth <= 768 && isLoading ? (
                             <div className="loading">
                                 <LoadingOutlined className="loading_icon" />
                                 載入更多中
@@ -152,7 +152,7 @@ const QuestionListComponent = function () {
                 {/* <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}`}
                     title="永豐金證券"
-                    iHeight={isMobile ? 4500 : 1900}
+                    iHeight={isMobile ? 7680 : 1900}
                 /> */}
                 <style jsx>{`
                     .questionIndexWrapper {
@@ -160,26 +160,10 @@ const QuestionListComponent = function () {
                         max-width: 1172px;
                     }
 
-                    .title_group {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 23px;
-                        height: 40px;
-                    }
-
-                    .title_group > h1 {
-                        font-size: 28px;
-                        font-weight: 600;
-                        font-stretch: normal;
-                        font-style: normal;
-                        letter-spacing: 0.7px;
-                        color: #0d1623;
-                        margin: 0;
-                    }
-
-                    .title_group > .question-table-input-search {
-                        width: 348px;
+                    @media screen and (max-width: 768px) {
+                        .questionIndexWrapper {
+                            width: 100%;
+                        }
                     }
 
                     .questionIndexWrapper > .ant-tabs > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list {
@@ -217,17 +201,15 @@ const QuestionListComponent = function () {
                             background-color: #f9fbff;
                         }
 
-                        @media screen and (max-width: 768px) {
-                            .antLayout {
-                                padding: 31px 33px;
-                            }
-
-                            .questionIndexWrapper {
-                                width: 100%;
-                            }
+                        .questionIndexWrapper .title_group > .question-table-input-search {
+                            width: 348px;
                         }
 
-                        @media screen and (max-width: 450px) {
+                        @media screen and (max-width: 768px) {
+                            .questionIndexWrapper .question-tab {
+                                margin-top: 17px;
+                            }
+
                             .antLayout {
                                 padding: 20px 0 0;
                             }
@@ -236,23 +218,24 @@ const QuestionListComponent = function () {
                                 display: none;
                             }
 
-                            .title_group {
+                            .questionIndexWrapper .title_group {
                                 padding: 0 16px;
                                 width: 100%;
                                 display: flex;
                                 flex-direction: column;
-                                justify-content: initial;
-                                align-items: initial;
+                                justify-content: flex-start;
+                                align-items: flex-start;
                                 margin-bottom: 23px;
                                 height: initial;
                             }
 
-                            .title_group > h1 {
+                            .questionIndexWrapper .title_group > h1 {
+                                text-align: left;
                                 margin-bottom: 12px;
                                 font-size: 20px;
                             }
 
-                            .title_group > .question-table-input-search {
+                            .questionIndexWrapper .title_group > .question-table-input-search {
                                 width: 100%;
                             }
 
@@ -388,13 +371,9 @@ const QuestionListComponent = function () {
                             height: 5px !important;
                         }
 
-                        @media screen and (max-width: 450px) {
+                        @media screen and (max-width: 768px) {
                             .ant-tabs-mobile {
                                 width: 100vw;
-                            }
-
-                            .ant-tabs-nav {
-                                padding: 0 45px 0 0 !important;
                             }
 
                             .ant-tabs-tab {
@@ -403,6 +382,10 @@ const QuestionListComponent = function () {
 
                             .ant-tabs-ink-bar {
                                 margin-left: -1px;
+                            }
+
+                            .ant-tabs-top .ant-tabs-nav {
+                                padding: 0 0 0 20px;
                             }
                         }
 

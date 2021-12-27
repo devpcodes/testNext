@@ -28,7 +28,7 @@ const SearchResultComponent = () => {
     const [totalPage, setTotalPage] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
     // const [isLoading, setIsLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(null);
 
     const onInput = e => {
         setNewSearchKeyword(e.target.value);
@@ -88,7 +88,7 @@ const SearchResultComponent = () => {
             pageSize: 15,
         };
         const data = await getCommonQuestions(params);
-        if (totalPage && page > totalPage) {
+        if (totalPage && page >= totalPage) {
             setHasMore(false);
             console.log('no more.');
         } else if (data.dataList && data.dataList.length) {
@@ -106,7 +106,7 @@ const SearchResultComponent = () => {
                     }
                     ele.content = JSON.stringify(ele.content);
                 } catch (error) {
-                    console.log('no editor content');
+                    // console.log('no editor content');
                 }
             });
             if (clientWidth > 768 && !searchResultData.length) {
@@ -206,6 +206,7 @@ const SearchResultComponent = () => {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         /* display: -webkit-box; */
+                        color: #0d1623;
                         font-size: 20px;
                         font-weight: 500;
                         -webkit-box-orient: vertical;

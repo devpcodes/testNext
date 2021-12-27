@@ -10,6 +10,7 @@ const IndexQuestionCategoryCards = ({
     hoverCategoryId,
     toggleSetCategoryHover,
     setNoneCategoryHover,
+    toQuestionList,
 }) => {
     const [currentHoverCategoryId, setCurrentHoverCategoryId] = useState(hoverCategoryId);
 
@@ -43,6 +44,12 @@ const IndexQuestionCategoryCards = ({
                             </Link>
                         </div>
                         {currentHoverCategoryId === item.id ? <RightOutlined className="rightIcon" /> : ''}
+                        <RightOutlined
+                            className="mobileRightIcon"
+                            onClick={() => {
+                                toQuestionList(item.id);
+                            }}
+                        />
                     </div>
                     <Card className="QAcard">
                         {item.questions?.map((i, idx) => (
@@ -78,6 +85,7 @@ const IndexQuestionCategoryCards = ({
 
                     .categoryName {
                         font-size: 20px;
+                        color: #0d1623;
                     }
 
                     @media screen and (max-width: 768px) {
@@ -99,7 +107,8 @@ const IndexQuestionCategoryCards = ({
                     .QAcard {
                         display: flex;
                         justify-content: flex-start;
-                        min-height: 140px;
+                        // min-height: 140px;
+                        min-height: 220px;
                         margin-top: 1rem;
                         border: 1px solid #d7e0ef;
                     }
@@ -108,9 +117,14 @@ const IndexQuestionCategoryCards = ({
                         color: #daa360;
                     }
 
-                    .rightIcon {
+                    .rightIcon,
+                    mobileRightIcon {
                         padding-top: 10px;
                         font-size: 10px;
+                    }
+
+                    .mobileRightIcon {
+                        display: none;
                     }
 
                     .categoryNameGroup:hover > .categoryNameGroupLeft > .categoryName,
@@ -121,6 +135,23 @@ const IndexQuestionCategoryCards = ({
                     /* this svg icon can't just use 'fill' to change color.....so..this way works */
                     .categoryNameGroup:hover > .categoryNameGroupLeft > .layerIcon {
                         filter: invert(75%) sepia(15%) saturate(1298%) hue-rotate(350deg) brightness(89%) contrast(91%);
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        .categoryNameGroupLeft {
+                            display: flex;
+                            justify-content: space-between;
+                        }
+
+                        .rightIcon {
+                            display: none;
+                        }
+
+                        .mobileRightIcon {
+                            display: inline;
+                            margin-top: 4px;
+                            font-size: 16px;
+                        }
                     }
                 `}
             </style>
@@ -135,4 +166,5 @@ IndexQuestionCategoryCards.propTypes = {
     hoverCategoryId: PropTypes.number,
     toggleSetCategoryHover: PropTypes.func,
     setNoneCategoryHover: PropTypes.func,
+    toQuestionList: PropTypes.func,
 };

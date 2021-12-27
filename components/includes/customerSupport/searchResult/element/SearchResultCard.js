@@ -8,12 +8,11 @@ import Highlighter from 'react-highlight-words';
 import parse from 'html-react-parser';
 import noDataImg from '../../../../../resources/images/pages/customer_support/img-default.svg';
 
-const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQuestion, page, changePage }) => {
+const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, totalQuestion, page, changePage }) => {
     const { Content } = Layout;
     const router = useRouter();
     const [data, setData] = useState(searchResultData);
     // const [questionAmount, setQuestionAmount] = useState(totalQuestion)
-
     const toQuestionPage = questionUUID => {
         router.push({
             pathname: `/customer-support/question/${questionUUID}`,
@@ -40,7 +39,7 @@ const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQ
                             autoEscape={true}
                             textToHighlight={item.title}
                         />
-                        <span className="questionContent">{parse(`${item.contentPreview}`)}</span>
+                        <span className="questionContent">{parse(`${item.keywordContent}`)}</span>
                         <div className="secondThirdCategories">
                             <span>{item.category2nd?.categoryName ? item.category2nd?.categoryName : ''}</span>
                             {item.category3rd?.categoryName ? (
@@ -100,7 +99,8 @@ const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQ
 
                 @media screen and (max-width: 768px) {
                     .layoutContent {
-                        width: 98vw;
+                        min-width: 98vw;
+                        width: 100%;
                         margin-top: 0px;
                     }
 
@@ -228,9 +228,9 @@ const CustomerSupport = ({ keyword, searchResultData, fromCount, toCount, totalQ
     );
 };
 
-export default CustomerSupport;
+export default SearchResultCard;
 
-CustomerSupport.propTypes = {
+SearchResultCard.propTypes = {
     keyword: PropTypes.string,
     searchResultData: PropTypes.array,
     fromCount: PropTypes.number,

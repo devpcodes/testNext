@@ -73,6 +73,10 @@ const CustomerSupportIndexComponent = () => {
         setSearchKeyword(e.target.value);
     };
 
+    const toQuestionList = key => {
+        router.push(`/customer-support/question?key=${key}`);
+    };
+
     const onEnterKeyword = () => {
         router.push({
             pathname: '/customer-support/search-result',
@@ -110,6 +114,7 @@ const CustomerSupportIndexComponent = () => {
                     toggleSetCategoryHover={toggleSetCategoryHover}
                     hoverCategoryId={hoverCategoryId}
                     setNoneCategoryHover={setNoneCategoryHover}
+                    toQuestionList={toQuestionList}
                 />
             </Content>
             <style jsx>
@@ -178,6 +183,12 @@ const CustomerSupportIndexComponent = () => {
                     .secondTitleRight:hover > span {
                         color: #daa360;
                         transition: color 0.5s;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        .fullQuestionRightIcon {
+                            display: none;
+                        }
                     }
                 `}
             </style>

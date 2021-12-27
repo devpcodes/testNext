@@ -57,13 +57,19 @@ const QuestionArticleComponent = () => {
                         <div className="article_section">
                             <div className="title_group">
                                 <h1>常見問題</h1>
-                                {clientWidth > 450 ? (
-                                    <CustomerButton type="default" onClick={() => router.back()}>
+                                {clientWidth > 768 ? (
+                                    <CustomerButton
+                                        type="default"
+                                        onClick={() => router.push('/customer-support/question')}
+                                    >
                                         返回列表
                                     </CustomerButton>
                                 ) : (
                                     <div className="back_group">
-                                        <CustomerButton type="default" onClick={() => router.back()}>
+                                        <CustomerButton
+                                            type="default"
+                                            onClick={() => router.push('/customer-support/question')}
+                                        >
                                             <LeftOutlined />
                                         </CustomerButton>
                                         <div className="mobile_button">
@@ -109,7 +115,7 @@ const QuestionArticleComponent = () => {
                         </div>
 
                         <div className="side_section">
-                            {clientWidth > 450 && (
+                            {clientWidth > 768 && (
                                 <div className="question-article-input-search">
                                     <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
                                 </div>
@@ -134,15 +140,18 @@ const QuestionArticleComponent = () => {
             </Layout>
             <style jsx>{`
                 .article_wrapper {
-                    width: 100%;
+                    width: 98vw;
+                    max-width: 100%;
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
+                    margin: auto;
                 }
 
                 .article_section {
-                    max-width: 777px;
-                    width: 777px;
+                    min-width: 777px;
+                    width: 66%;
+                    margin-right: 48px;
                 }
 
                 .article {
@@ -219,7 +228,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .side_section {
-                    max-width: 346px;
+                    /* max-width: 346px; */
                     width: 346px;
                 }
 
@@ -311,11 +320,14 @@ const QuestionArticleComponent = () => {
                     width: 348px;
                 }
 
-                @media screen and (max-width: 450px) {
-                    .questionArticleLayout {
-                        padding: 20px 0 0;
+                @media screen and (max-width: 1024px) {
+                    .article_section {
+                        min-width: 0;
+                        width: 100%;
                     }
+                }
 
+                @media screen and (max-width: 768px) {
                     .questionArticleWrapper {
                         width: 100%;
                     }
@@ -346,6 +358,7 @@ const QuestionArticleComponent = () => {
                     }
 
                     .back_group {
+                        width: 100%;
                         display: flex;
                         justify-content: space-between;
                     }
@@ -376,7 +389,8 @@ const QuestionArticleComponent = () => {
                     .side_section {
                         width: 100%;
                         max-width: 100vw;
-                        padding: 0 16px 40px;
+                        /* padding: 0 16px 40px; */
+                        padding: 0 0 16px 0;
                     }
                 }
             `}</style>
@@ -387,6 +401,12 @@ const QuestionArticleComponent = () => {
                     min-height: 100vh;
                     padding: 31px 0;
                     background-color: #f9fbff;
+                }
+
+                @media screen and (max-width: 768px) {
+                    .questionArticleLayout {
+                        padding: 20px 0;
+                    }
                 }
 
                 .questionArticleWrapper {
@@ -430,7 +450,12 @@ const QuestionArticleComponent = () => {
                 }
             `}</style>
 
-            <style jsx global>{``}</style>
+            <style jsx global>{`
+                .mobile_button .ant-input-search-button {
+                    background-color: #c43826 !important;
+                    border-color: #c43826 !important;
+                }
+            `}</style>
         </>
     );
 };
