@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import { Link } from 'next/link';
-import { useSelector } from 'react-redux';
+import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
+
 import { getCommonQuestion } from '../../../../../services/components/customerSupport/commonQuestion';
 import { useRouter } from 'next/router';
 
@@ -11,10 +12,10 @@ const ProductQuestionTable = function ({ keywords }) {
     const [questionList, setQuestionList] = useState([]);
     // const [currentPage, setCurrentPage] = useState(1);
     const [totalQuestion, setTotalQuestion] = useState(null);
-    const clientWidth = useSelector(store => store.layout.winWidth);
+    const isMobile = useCheckMobile();
 
     const scrollTop = () => {
-        if (clientWidth > 768) {
+        if (isMobile) {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
@@ -78,7 +79,7 @@ const ProductQuestionTable = function ({ keywords }) {
                 rowKey="id"
                 total={totalQuestion}
                 pagination={
-                    clientWidth > 450
+                    isMobile
                         ? {
                               position: ['bottomRight'],
                               defaultPageSize: 15,

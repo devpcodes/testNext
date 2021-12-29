@@ -23,8 +23,8 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     onChange={onInput}
                     onPressEnter={onPressEnter}
                 />
+                <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
             </Header>
-            <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
             <style jsx>{`
                 .customerSupportHeader {
                     position: relative;
@@ -51,6 +51,7 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     width: 300px;
                     height: 246px;
                     background-repeat: no-repeat;
+                    background-size: cover;
                 }
 
                 @media screen and (max-width: 768px) {
@@ -65,7 +66,17 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     }
 
                     .backgroundImage {
-                        display: none;
+                        width: 100px;
+                        height: 160px;
+                    }
+                }
+
+                @media screen and (max-width: 450px) {
+                    .backgroundImage {
+                        top: 0;
+                        right: 0;
+                        width: 80px;
+                        height: 80px;
                     }
                 }
             `}</style>
@@ -77,9 +88,21 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     height: 56px;
                 }
 
+                // search-icon
+                .customerSupportSearchInput span {
+                    padding: 0 4px;
+                    font-size: 20px;
+                    color: #3f5372;
+                }
+
+                .customerSupportSearchInput .ant-input::placeholder {
+                    color: #3f5372;
+                }
+
                 @media screen and (max-width: 768px) {
                     .customerSupportSearchInput {
-                        width: 90vw;
+                        height: 45px;
+                        width: 72vw;
                         min-width: 0;
                     }
                 }

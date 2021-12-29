@@ -80,3 +80,28 @@ export const getCommonQuestionSubcategories = async activeKey => {
         return error.message;
     }
 };
+
+export const putCommonQuestionIsLike = async (uuid, isLike) => {
+    const params = {
+        uuid,
+        isLike,
+    };
+
+    console.log('p', params);
+
+    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestion`;
+
+    try {
+        const res = await axios.put(reqUrl, params);
+        if (res.status === 200) {
+            console.log('res.data', res.data);
+            return res.data.result;
+        } else {
+            console.log('error inside:', res.data.message);
+            return res.data.message;
+        }
+    } catch (error) {
+        console.log('error outside: ', error.message);
+        return error.message;
+    }
+};

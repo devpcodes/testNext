@@ -1,18 +1,18 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import CustomerButton from '../../../customerSupport/CustomerButton';
 
 const ProductFileTable = function ({ dataSource }) {
-    const clientWidth = useSelector(store => store.layout.winWidth);
+    const isMobile = useCheckMobile();
 
     const download = file => {
         window.open(`https://webrd.sinotrade.com.tw/files/${file}`, '_blank');
     };
 
     const scrollTop = () => {
-        if (clientWidth > 768) {
+        if (isMobile) {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
@@ -66,7 +66,7 @@ const ProductFileTable = function ({ dataSource }) {
                 rowKey="index"
                 total={dataSource?.length}
                 pagination={
-                    clientWidth > 450
+                    isMobile
                         ? {
                               position: ['bottomRight'],
                               defaultPageSize: 15,

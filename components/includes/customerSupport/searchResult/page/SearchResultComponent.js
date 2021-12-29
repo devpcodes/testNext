@@ -169,17 +169,20 @@ const SearchResultComponent = () => {
                     <SearchResultCard keyword={keyword} searchResultData={searchResultData} />
                 </InfiniteScroll>
             )}
-            <style jsx>{`
-                .breadcrumbWrapper {
-                    width: 71vw;
-                    margin: auto;
-                }
-            `}</style>
             <style jsx global>
                 {`
+                    .breadcrumbWrapper {
+                        width: 71vw;
+                        margin: auto;
+                    }
+
                     @media screen and (max-width: 768px) {
+                        .breadcrumbWrapper {
+                            display: none;
+                        }
+
                         .layoutContent {
-                            width: 98vw;
+                            width: 100vw;
                             margin-top: 0px;
                         }
                     }
@@ -233,6 +236,12 @@ const SearchResultComponent = () => {
                         font-size: 16px;
                         -webkit-box-orient: vertical;
                         -webkit-line-clamp: 2;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        .questionContent {
+                            margin-bottom: 5px;
+                        }
                     }
 
                     .secondThirdCategories {
@@ -312,10 +321,30 @@ const SearchResultComponent = () => {
                     }
 
                     .noResult > img {
-                        width: 140px;
-                        height: ;
-                        :140px ;
+                        width: 90px;
                         margin-bottom: 16px;
+                    }
+
+                    .ant-pagination-item-active {
+                        border: solid 1px #c43826;
+                        background: #c43826;
+                    }
+
+                    .ant-pagination-item-active:hover {
+                        border: none;
+                        color: white;
+                    }
+
+                    .ant-pagination-item-active > a {
+                        color: white;
+                    }
+
+                    .ant-pagination-item-active:hover > a {
+                        color: white;
+                    }
+
+                    .infinite-scroll-component__outerdiv .infinite-scroll-component {
+                        overflow: hidden !important;
                     }
                 `}
             </style>

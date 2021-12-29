@@ -4,7 +4,7 @@ import Link from 'next/link';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import PropTypes from 'prop-types';
 
-const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange }) {
+const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange, totalCounts }) {
     const columns = [
         {
             title: '項目',
@@ -22,6 +22,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange }) 
             title: '子類別',
             dataIndex: ['category3rd', 'categoryName'],
             width: '15%',
+            onFilter: (value, record) => record.category3rd.categoryName.includes(value),
         },
         {
             title: '標題',
@@ -43,10 +44,9 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange }) 
             <AccountTable
                 dataSource={dataSource?.dataList}
                 columns={columns}
-                key={dataSource?.dataList?.uuid}
                 pagination={{
-                    total: dataSource?.counts,
-                    showTotal: (total, range) => `${range[0]}-${range[1]}則問題 (共${total}則問題)`,
+                    total: totalCounts,
+                    showTotal: (total, range) => `${range[0]}-${range[1]}則問題 (共${totalCounts}則問題)`,
                     defaultPageSize: 15,
                     defaultCurrent: 1,
                     showSizeChanger: false,
@@ -135,7 +135,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange }) 
                         }
 
                         .ant-tabs-nav {
-                            padding: 0 45px 0 0 !important;
+                            padding: 0 45px 0 0;
                         }
 
                         .ant-tabs-tab {
@@ -191,7 +191,6 @@ export default QuestionTable;
 QuestionTable.propTypes = {
     sub2ndCategories: PropTypes.array,
     dataSource: PropTypes.object,
-    fromCount: PropTypes.number,
-    toCount: PropTypes.number,
     onPageChange: PropTypes.func,
+    totalCounts: PropTypes.number,
 };

@@ -69,6 +69,7 @@ const IndexQuestionCategoryCards = ({
                         text-overflow: ellipsis;
                         -webkit-box-orient: vertical;
                         -webkit-line-clamp: 1;
+                        font-size: 16px;
                     }
 
                     .categoryNameGroup {
@@ -80,6 +81,7 @@ const IndexQuestionCategoryCards = ({
                     .layerIcon {
                         width: 23px;
                         margin-right: 9px;
+                        margin-bottom: 3px;
                         padding: 0 0 5px 3px;
                     }
 
@@ -91,6 +93,10 @@ const IndexQuestionCategoryCards = ({
                     @media screen and (max-width: 768px) {
                         .categoryName {
                             font-size: 16px;
+                        }
+
+                        .layerIcon {
+                            margin-bottom: 0;
                         }
                     }
                 `}

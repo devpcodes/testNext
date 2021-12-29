@@ -56,7 +56,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
             ) : (
                 <div className="noResult">
                     <img src={noDataImg} alt="搜尋無結果" />
-                    搜尋無結果
+                    <p>搜尋無結果</p>
                 </div>
             )}
             <div className="countsAndPager">
@@ -124,6 +124,10 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     .card {
                         width: 100%;
                         margin-top: 0;
+                    }
+
+                    .card .ant-card-body {
+                        padding: 12px 16px;
                     }
                 }
 
@@ -212,7 +216,8 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     justify-content: center;
                     align-items: center;
                     width: 100%;
-                    height: 30vh;
+                    min-height: 30vh;
+                    height: auto
                     background-color: #fff;
                     border: 1px solid #d7e0ef;
                 }
@@ -222,6 +227,11 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     height: ;
                     :140px ;
                     margin-bottom: 16px;
+                }
+
+                .noResult > p {
+                    font-size: 16px;
+                    margin-bottom: 30px;
                 }
             `}</style>
         </Content>

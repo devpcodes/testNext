@@ -108,13 +108,21 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                     letter-spacing: normal;
                 }
 
-                @media screen and (max-width: 1024px) {
-                    .site-breadcrumb {
-                        width: 90%;
-                    }
+                .ant-breadcrumb a {
+                    color: #a9b6cb;
                 }
 
-                @media screen and (max-width: 768px) {
+                .ant-breadcrumb span {
+                    color: #3f5372;
+                }
+
+                // @media screen and (max-width: 1024px) {
+                //     .site-breadcrumb {
+                //         width: 90%;
+                //     }
+                // }
+
+                @media screen and (max-width: 450px) {
                     .site-breadcrumb {
                         display: none;
                     }

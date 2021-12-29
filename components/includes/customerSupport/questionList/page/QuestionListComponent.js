@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useSelector } from 'react-redux';
 import { PageHead } from '../../../PageHead';
 import { Layout } from 'antd';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
@@ -22,34 +21,43 @@ const QuestionListComponent = function () {
     const router = useRouter();
     const key = router.query.key;
 
-    // const isMobile = useSelector(store => store.layout.isMobile);
-    const clientWidth = useSelector(store => store.layout.winWidth);
     const [categories, setCategories] = useState();
     const [dataSource, setDataSource] = useState([]);
-    const [page, setPage] = useState(1);
-    const [activeKey, setActiveKey] = useState(key);
+    const [dataList, setDataList] = useState([]);
+    const [currentPage, setPage] = useState(1);
+    const [activeKey, setActiveKey] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [fromCount, setFromCount] = useState();
-    const [toCount, setToCount] = useState();
+    const [totalCounts, setTotalCounts] = useState();
+    const [hasMore, setHasMore] = useState();
     const [sub2ndCategories, setSub2ndCategories] = useState();
 
     useEffect(async () => {
         const data = await getCommonQuestionCategories();
         setCategories(data);
+        await setActiveKey(data[0].id.toString());
+        getQuestionList(data[0].id.toString());
     }, []);
 
-    useEffect(async () => {
-        const data = await getCommonQuestion(page, 15, activeKey);
-        setDataSource(data);
+    const getQuestionList = async newKey => {
+        let data;
 
-        if (data.counts <= 15) {
-            setFromCount(1);
-            setToCount(data.counts);
-        } else if (data.counts >= 15) {
-            setFromCount(15 * (page - 1) + 1);
-            setToCount(page * 15);
+        if (newKey) {
+            data = await getCommonQuestion(currentPage, 15, newKey);
+        } else {
+            data = await getCommonQuestion(currentPage, 15, activeKey);
         }
-    }, [activeKey, page]);
+        console.log('currentPage', currentPage);
+        console.log('activeKey2', activeKey);
+        console.log('newKey', newKey);
+        setDataSource(data);
+        setDataList(data.dataList);
+        setTotalCounts(data.counts);
+        if (data?.dataList?.length < 15) {
+            setHasMore(false);
+        } else {
+            setHasMore(true);
+        }
+    };
 
     useEffect(async () => {
         const data = await getCommonQuestionSubcategories(activeKey);
@@ -71,26 +79,30 @@ const QuestionListComponent = function () {
 
     const onPageChange = page => {
         setPage(page);
+        getQuestionList();
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
         });
     };
 
-    const onTabsChange = Key => {
-        setDataSource([]);
-        setActiveKey(Key);
+    const onTabsChange = newKey => {
+        setDataSource({});
+        setActiveKey(newKey);
+        getQuestionList(newKey);
         setPage(1);
+    };
+
+    const toQuestion = uuid => {
+        router.push(`/customer-support/question/${uuid}`);
     };
 
     const loadMoreFn = async () => {
         setIsLoading(true);
-        setPage(page + 1);
-
-        const data = await getCommonQuestion(page + 1, 15, activeKey);
-        data.dataList.forEach(data => {
-            setDataSource(oldData => [...oldData, data]);
-        });
+        setPage(currentPage + 1);
+        const data = await getCommonQuestion(currentPage + 1, 15, activeKey);
+        setDataSource(data);
+        setDataList(oldData => [...oldData, ...data.dataList]);
         setIsLoading(false);
     };
 
@@ -106,41 +118,55 @@ const QuestionListComponent = function () {
                             <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
                         </div>
                     </div>
+
+                    {activeKey && (
+                        <QuestionTab
+                            className="question-tab-web"
+                            categories={categories}
+                            defaultActiveKey={categories && categories[0].id.toString()}
+                            activeKey={activeKey}
+                            onChange={onTabsChange}
+                        >
+                            <QuestionTable
+                                className="question-list-web"
+                                dataSource={dataSource}
+                                sub2ndCategories={sub2ndCategories}
+                                onPageChange={onPageChange}
+                                totalCounts={totalCounts}
+                            />
+                        </QuestionTab>
+                    )}
+
                     <QuestionTab
+                        className="question-tab-mobile"
                         categories={categories}
                         defaultActiveKey={categories && categories[0].id}
                         activeKey={activeKey}
                         onChange={onTabsChange}
                     >
-                        {clientWidth > 768 && (
-                            <QuestionTable
-                                dataSource={dataSource}
-                                sub2ndCategories={sub2ndCategories}
-                                fromCount={fromCount}
-                                toCount={toCount}
-                                onPageChange={onPageChange}
-                            />
+                        {totalCounts && (
+                            <InfiniteScroll dataLength={totalCounts} next={loadMoreFn} hasMore={hasMore}>
+                                {dataList?.map(data => {
+                                    return (
+                                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                                        <div
+                                            key={data?.uuid}
+                                            className="questionIndexCard"
+                                            onClick={() => {
+                                                toQuestion(data?.uuid);
+                                            }}
+                                        >
+                                            <h3>{data?.title}</h3>
+                                            <div className="breadcrumb_group">
+                                                {data?.category2nd?.categoryName}
+                                                {'>'} {data?.category3rd?.categoryName}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </InfiniteScroll>
                         )}
-                        {clientWidth <= 768 && dataSource && (
-                            <div>
-                                <InfiniteScroll dataLength={dataSource?.length} next={loadMoreFn} hasMore={true}>
-                                    {clientWidth <= 768 &&
-                                        dataSource?.dataList &&
-                                        dataSource?.dataList.map(data => {
-                                            return (
-                                                <div key={data.uuid} className="questionIndexCard">
-                                                    <h3>{data.title}</h3>
-                                                    <div className="breadcrumb_group">
-                                                        {data.category2nd.categoryName}
-                                                        {'>'} {data.category3rd.categoryName}
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                </InfiniteScroll>
-                            </div>
-                        )}
-                        {clientWidth <= 768 && isLoading ? (
+                        {isLoading ? (
                             <div className="loading">
                                 <LoadingOutlined className="loading_icon" />
                                 載入更多中
@@ -155,17 +181,6 @@ const QuestionListComponent = function () {
                     iHeight={isMobile ? 7680 : 1900}
                 /> */}
                 <style jsx>{`
-                    .questionIndexWrapper {
-                        width: 73vw;
-                        max-width: 1172px;
-                    }
-
-                    @media screen and (max-width: 768px) {
-                        .questionIndexWrapper {
-                            width: 100%;
-                        }
-                    }
-
                     .questionIndexWrapper > .ant-tabs > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list {
                         background-color: blueviolet !important;
                     }
@@ -201,11 +216,42 @@ const QuestionListComponent = function () {
                             background-color: #f9fbff;
                         }
 
+                        .questionIndexWrapper {
+                            width: 73vw;
+                            max-width: 1172px;
+                        }
+
                         .questionIndexWrapper .title_group > .question-table-input-search {
                             width: 348px;
                         }
 
+                        .questionIndexWrapper .title_group {
+                            width: 100%;
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 23px;
+                            height: initial;
+                        }
+
+                        .questionIndexWrapper .title_group > h1 {
+                            text-align: left;
+                            margin-bottom: 12px;
+                            font-size: 23px;
+                        }
+
+                        .question-tab-mobile {
+                            display: none;
+                        }
+
+                        .loading {
+                            display: none;
+                        }
+
                         @media screen and (max-width: 768px) {
+                            .questionIndexWrapper {
+                                width: 90vw;
+                            }
+
                             .questionIndexWrapper .question-tab {
                                 margin-top: 17px;
                             }
@@ -214,29 +260,20 @@ const QuestionListComponent = function () {
                                 padding: 20px 0 0;
                             }
 
-                            .breadcrumb {
-                                display: none;
-                            }
-
-                            .questionIndexWrapper .title_group {
-                                padding: 0 16px;
-                                width: 100%;
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: flex-start;
-                                align-items: flex-start;
-                                margin-bottom: 23px;
-                                height: initial;
-                            }
-
-                            .questionIndexWrapper .title_group > h1 {
-                                text-align: left;
-                                margin-bottom: 12px;
-                                font-size: 20px;
-                            }
-
                             .questionIndexWrapper .title_group > .question-table-input-search {
-                                width: 100%;
+                                width: auto;
+                            }
+
+                            .question-tab-web .ant-table-thead {
+                                height: 47px;
+                            }
+
+                            .ant-table .ant-table {
+                                margin-top: -1px;
+                            }
+
+                            .question-tab-web .ant-table-content {
+                                border: 1px solid #d7e0ef;
                             }
 
                             .questionIndexCard {
@@ -255,6 +292,11 @@ const QuestionListComponent = function () {
                                 line-height: 1.63;
                                 letter-spacing: normal;
                                 color: #0d1623;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 2;
                             }
 
                             .breadcrumb_group {
@@ -274,6 +316,7 @@ const QuestionListComponent = function () {
                             }
 
                             .loading {
+                                display: unset;
                                 text-align: center;
                                 font-family: PingFangTC;
                                 font-size: 14px;
@@ -285,7 +328,19 @@ const QuestionListComponent = function () {
                                 color: #3f5372;
                                 padding: 20px 0 20px;
                             }
+
+                            .question-tab-web .ant-pagination {
+                                display: flex;
+                                justify-content: flex-end;
+                            }
+
+                            .question-tab-web .sino__table .ant-pagination-total-text {
+                                margin-top: 0;
+                                margin-right: 10px;
+                            }
                         }
+
+                        // ******** pagination
 
                         .question-list-pagination .ant-pagination-item-active {
                             border: solid 1px #c43826;
@@ -304,6 +359,8 @@ const QuestionListComponent = function () {
                         .question-list-pagination .ant-pagination-item-active:hover > a {
                             color: white;
                         }
+
+                        // ******** search
 
                         .SearchInput_question-table-input-search__3QSct
                             > .ant-input-wrapper
@@ -336,6 +393,15 @@ const QuestionListComponent = function () {
                             background-color: #ea6554 !important;
                             border-color: #ea6554 !important;
                         }
+
+                        // search-input hover border color
+
+                        .question-table-input-search .ant-input-search:hover,
+                        .question-table-input-search .ant-input-search:focus {
+                            border-color: #d7e0ef !important;
+                        }
+
+                        // ******** tabs
 
                         .ant-tabs-top .ant-tabs-nav {
                             margin: 0;
@@ -371,13 +437,23 @@ const QuestionListComponent = function () {
                             height: 5px !important;
                         }
 
+                        @media screen and (max-width: 1024) {
+                            .questionIndexWrapper .site-breadcrumb {
+                                width: 100%;
+                            }
+                        }
+
                         @media screen and (max-width: 768px) {
+                            .questionIndexWrapper .site-breadcrumb {
+                                width: 100%;
+                            }
+
                             .ant-tabs-mobile {
                                 width: 100vw;
                             }
 
                             .ant-tabs-tab {
-                                margin: 0s 16px;
+                                margin: 0 16px;
                             }
 
                             .ant-tabs-ink-bar {
@@ -386,6 +462,73 @@ const QuestionListComponent = function () {
 
                             .ant-tabs-top .ant-tabs-nav {
                                 padding: 0 0 0 20px;
+                            }
+                        }
+                        @media screen and (max-width: 450px) {
+                            .ant-tabs-top .ant-tabs-nav {
+                                padding: 0;
+                            }
+                        }
+
+                        @media screen and (max-width: 450px) {
+                            .breadcrumb {
+                                display: none;
+                            }
+
+                            .questionIndexWrapper {
+                                width: 100%;
+                            }
+
+                            .questionIndexWrapper .title_group {
+                                flex-direction: column;
+                                align-items: flex-start;
+                            }
+
+                            .questionIndexWrapper .title_group > h1 {
+                                text-align: left;
+                                margin-left: 13px;
+                                margin-bottom: 12px;
+                                font-size: 20px;
+                            }
+
+                            .questionIndexWrapper .title_group > .question-table-input-search {
+                                width: 90vw;
+                                margin: auto;
+                            }
+
+                            .question-tab-web {
+                                display: none;
+                            }
+
+                            .question-tab-mobile {
+                                display: flex;
+                                width: 100vw;
+                            }
+
+                            .questionIndexWrapper .title_group {
+                                flex-direction: column;
+                                align-items: flex-start;
+                            }
+
+                            .questionIndexWrapper .title_group > h1 {
+                                text-align: left;
+                                margin-left: 13px;
+                                margin-bottom: 12px;
+                                font-size: 20px;
+                            }
+
+                            .questionIndexWrapper .title_group > .question-table-input-search {
+                                width: 90vw;
+                                margin: auto;
+                            }
+
+                            .question-tab-web {
+                                display: none;
+                            }
+
+                            .question-tab-mobile {
+                                display: flex;
+                                width: 100vw;
                             }
                         }
 

@@ -7,8 +7,11 @@ import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
 import CustomerButton from '../../CustomerButton';
 import Relative from '../element/Relative';
-import { getCommonQuestionArticle } from '../../../../../services/components/customerSupport/commonQuestion';
-import { useSelector } from 'react-redux';
+import {
+    getCommonQuestionArticle,
+    putCommonQuestionIsLike,
+} from '../../../../../services/components/customerSupport/commonQuestion';
+import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import { LeftOutlined } from '@ant-design/icons';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import SearchInput from '../../SearchInput';
@@ -17,11 +20,13 @@ const QuestionArticleComponent = () => {
     const { Panel } = Collapse;
     const router = useRouter();
     const { id } = router.query;
-    const clientWidth = useSelector(store => store.layout.winWidth);
+    const isMobile = useCheckMobile();
 
     const [articleData, setArticleData] = useState([]);
     const [articleTitle, setArticleTitle] = useState('');
     const [articleContent, setArticleContent] = useState();
+    const [isLike, setIsLike] = useState(false);
+    const [isDislike, setIsdislike] = useState(false);
 
     useEffect(async () => {
         const data = await getCommonQuestionArticle(id);
@@ -47,6 +52,11 @@ const QuestionArticleComponent = () => {
         return keywordArr;
     };
 
+    const sendIsHelp = async state => {
+        const res = await putCommonQuestionIsLike(id, state);
+        console.log(res);
+    };
+
     return (
         <>
             <PageHead title={'永豐金理財網'} />
@@ -57,30 +67,24 @@ const QuestionArticleComponent = () => {
                         <div className="article_section">
                             <div className="title_group">
                                 <h1>常見問題</h1>
-                                {clientWidth > 768 ? (
+                                <CustomerButton
+                                    type="default"
+                                    className="web-back-to-list"
+                                    onClick={() => router.push('/customer-support/question')}
+                                >
+                                    返回列表
+                                </CustomerButton>
+                                <div className="back_group">
                                     <CustomerButton
                                         type="default"
                                         onClick={() => router.push('/customer-support/question')}
                                     >
-                                        返回列表
+                                        <LeftOutlined />
                                     </CustomerButton>
-                                ) : (
-                                    <div className="back_group">
-                                        <CustomerButton
-                                            type="default"
-                                            onClick={() => router.push('/customer-support/question')}
-                                        >
-                                            <LeftOutlined />
-                                        </CustomerButton>
-                                        <div className="mobile_button">
-                                            <SearchInput
-                                                onSearch={onSearch}
-                                                enterButton="搜尋"
-                                                placeholder="輸入關鍵字"
-                                            />
-                                        </div>
+                                    <div className="mobile_button">
+                                        <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
                                     </div>
-                                )}
+                                </div>
                             </div>
                             <div className="article">
                                 <h1>{articleData.title}</h1>
@@ -111,15 +115,33 @@ const QuestionArticleComponent = () => {
                                             <article key={idx}>{parse(item.content.content)}</article>
                                         ),
                                     )}
+                                <hr />
+                                <p className="is-helped-title">回答是否有幫助？</p>
+                                <CustomerButton
+                                    type="default"
+                                    className="is-helped-button"
+                                    onClick={() => {
+                                        sendIsHelp(true);
+                                    }}
+                                >
+                                    是
+                                </CustomerButton>
+                                <CustomerButton
+                                    type="default"
+                                    className="is-helped-button"
+                                    onClick={() => {
+                                        sendIsHelp(false);
+                                    }}
+                                >
+                                    否
+                                </CustomerButton>
                             </div>
                         </div>
 
                         <div className="side_section">
-                            {clientWidth > 768 && (
-                                <div className="question-article-input-search">
-                                    <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
-                                </div>
-                            )}
+                            <div className="question-article-input-search">
+                                <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
+                            </div>
                             <h3 className="qTitle">相關問題</h3>
                             {articleData.related && <Relative data={articleData.related} />}
                             <div className="ad_block">廣告圖預留區</div>
@@ -210,10 +232,13 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article > .category-group > .category-question-group > p {
+                    font-size: 14px;
                     margin: 0 12px 0 0;
+                    color: #0d1623;
                 }
 
                 .article > .category-group > .category-question-group > span {
+                    font-size: 14px;
                     margin: 0 24px 0 0;
                     color: #3f5372;
                 }
@@ -223,7 +248,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .category-time-group > span {
-                    font-size: 16px;
+                    font-size: 14px;
                     color: #3f5372;
                 }
 
@@ -276,6 +301,7 @@ const QuestionArticleComponent = () => {
                 .tag_section {
                     display: flex;
                     justify-content: flex-start;
+                    flex-wrap: wrap;
                     align-items: center;
                     flex-direction: row;
                 }
@@ -294,6 +320,7 @@ const QuestionArticleComponent = () => {
                     border: solid 1px #e6ebf5;
                     background-color: #fff;
                     margin-right: 16px;
+                    margin-bottom: 16px;
                     cursor: pointer;
                 }
 
@@ -318,6 +345,14 @@ const QuestionArticleComponent = () => {
 
                 .title_group > .input_search {
                     width: 348px;
+                }
+
+                .input_search .ant-input-affix-wrapper {
+                    border: 1px solid #d7e0ef;
+                }
+
+                .back_group {
+                    display: none;
                 }
 
                 @media screen and (max-width: 1024px) {
@@ -379,7 +414,7 @@ const QuestionArticleComponent = () => {
 
                     .category-question-group {
                         width: 100%;
-                        margin-bottom: 4px;
+                        margin-bottom: 5px;
                     }
 
                     .category-time-group {
@@ -403,6 +438,10 @@ const QuestionArticleComponent = () => {
                     background-color: #f9fbff;
                 }
 
+                .questionArticleWrapper > .site-breadcrumb {
+                    width: 98vw;
+                }
+
                 @media screen and (max-width: 768px) {
                     .questionArticleLayout {
                         padding: 20px 0;
@@ -410,7 +449,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .questionArticleWrapper {
-                    width: 1172px;
+                    max-width: 1172px;
                 }
 
                 .SearchInput_question-article-input-search__3QSct
@@ -445,12 +484,79 @@ const QuestionArticleComponent = () => {
                     border-color: #ea6554 !important;
                 }
 
+                .mobile_button .ant-input-search:hover,
+                .mobile_button .ant-input-search:focus {
+                    border-color: #d7e0ef;
+                }
+
+                .back_group > .default {
+                    margin-left: 16px;
+                    border-color: #d7e0ef;
+                }
+
+                article .image-blot,
+                article .img-container {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                article .img-container > img {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+
+                .toggle-section {
+                    margin: 10px 0;
+                }
+
+                .web-back-to-list {
+                    display: none;
+                }
+
+                .is-helped-title {
+                    color: #3f5372;
+                    font-size: 16px;
+                    margin-top: 20px;
+                }
+
+                .is-helped-button {
+                    min-width: 105px;
+                    min-height: 40px;
+                    margin-right: 16px;
+                }
+
+                .is-helped-button:hover {
+                    background-color: #f3f6fe;
+                    color: #0d1623;
+                    border-color: #d7e0ef;
+                }
+
+                .is-helped-button:focus {
+                    background-color: #d7e0ef;
+                    color: #0d1623;
+                    border-color: #d7e0ef;
+                }
+
+                @media screen and (max-width: 768px) {
+                    .side_section > .question-article-input-search {
+                        display: none;
+                    }
+                }
+
+                @media screen and (max-width: 450px) {
+                    .is-helped-button {
+                        width: 36vw;
+                    }
+
+                    is-helped-button {
+                        margin-right: 0;
+                    }
+                }
+
                 .qTag:hover a {
                     color: #daa360;
                 }
-            `}</style>
 
-            <style jsx global>{`
                 .mobile_button .ant-input-search-button {
                     background-color: #c43826 !important;
                     border-color: #c43826 !important;

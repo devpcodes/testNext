@@ -48,6 +48,8 @@ const ShortcutFunction = ({ linkData }) => {
                 }
 
                 .shortcutFunctionIconText {
+                    color: #0d1623;
+                    font-size: 16px;
                     white-space: nowrap;
                     margin-bottom: 0;
                 }
