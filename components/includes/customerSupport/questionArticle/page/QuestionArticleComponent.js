@@ -231,6 +231,10 @@ const QuestionArticleComponent = () => {
                     flex-direction: row;
                 }
 
+                .article > .category-group > .category-time-group > span {
+                    margin-top: 1px;
+                }
+
                 .article > .category-group > .category-question-group > p {
                     font-size: 14px;
                     margin: 0 12px 0 0;
@@ -269,6 +273,10 @@ const QuestionArticleComponent = () => {
                     letter-spacing: -0.25px;
                     color: #0d1623;
                     margin: 21px 0 16px;
+                }
+
+                .relative_block a {
+                    font-weight: 500;
                 }
 
                 .qSection {
@@ -421,11 +429,25 @@ const QuestionArticleComponent = () => {
                         width: 100%;
                     }
 
+                    .article > .category-group > .category-time-group > span {
+                        margin-top: 0;
+                    }
+
                     .side_section {
                         width: 100%;
                         max-width: 100vw;
                         /* padding: 0 16px 40px; */
                         padding: 0 0 16px 0;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        .qTitle {
+                            margin: 21px 16px 16px;
+                        }
+
+                        .tag_section {
+                            margin: 0 16px;
+                        }
                     }
                 }
             `}</style>
@@ -436,6 +458,22 @@ const QuestionArticleComponent = () => {
                     min-height: 100vh;
                     padding: 31px 0;
                     background-color: #f9fbff;
+                }
+
+                .title_group .web-back-to-list {
+                    height: 40px;
+                }
+
+                .web-back-to-list:hover {
+                    background-color: #f3f6fe;
+                    color: #0d1623;
+                    border-color: #d7e0ef;
+                }
+
+                .web-back-to-list:focus {
+                    background-color: #d7e0ef;
+                    color: #0d1623;
+                    border-color: #d7e0ef;
                 }
 
                 .questionArticleWrapper > .site-breadcrumb {
@@ -505,12 +543,22 @@ const QuestionArticleComponent = () => {
                     height: 100% !important;
                 }
 
-                .toggle-section {
-                    margin: 10px 0;
+                article p {
+                    font-size: 16px;
+                    color: #0d1623;
                 }
 
-                .web-back-to-list {
-                    display: none;
+                // toggle-list content box text color
+                .ant-collapse-content .ant-collapse-content-box p {
+                    color: #0d1623;
+                }
+
+                article h1 {
+                    font-size: 20px;
+                }
+
+                .toggle-section {
+                    margin: 10px 0;
                 }
 
                 .is-helped-title {
@@ -539,6 +587,10 @@ const QuestionArticleComponent = () => {
 
                 @media screen and (max-width: 768px) {
                     .side_section > .question-article-input-search {
+                        display: none;
+                    }
+
+                    .web-back-to-list {
                         display: none;
                     }
                 }

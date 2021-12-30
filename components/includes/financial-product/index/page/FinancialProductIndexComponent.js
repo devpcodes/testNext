@@ -69,7 +69,7 @@ const FinancialProductIndexComponent = () => {
                 </Content>
                 <style jsx>{`
                     .productLayoutContent {
-                        width: 71%;
+                        width: 71vw;
                         min-height: 100vh;
                         margin: auto;
                         margin-top: 20px;
@@ -113,6 +113,8 @@ const FinancialProductIndexComponent = () => {
                         .productLayoutContent {
                             width: 100%;
                             margin-top: 0px;
+                            margin-bottom: 20px;
+                            min-height: 0;
                         }
                     }
 
@@ -126,18 +128,19 @@ const FinancialProductIndexComponent = () => {
 
                     @media screen and (max-width: 800px) {
                         .backgroundImage {
-                            display: none;
+                            width: 173px;
+                            height: 160px;
                         }
                     }
 
                     .productCardContainer {
                         display: flex;
-                        margin: auto;
+                        flex-wrap: wrap;
+                        justify-content: flex-start;
                     }
 
                     @media screen and (max-width: 1024px) {
                         .productCardContainer {
-                            justify-content: space-between;
                             flex-direction: row;
                             flex-wrap: wrap;
                         }
@@ -148,6 +151,12 @@ const FinancialProductIndexComponent = () => {
                             justify-content: space-around;
                             flex-direction: row;
                             flex-wrap: wrap;
+                            margin-top: 17px;
+                            padding: 0 5px;
+                        }
+
+                        .backgroundImage {
+                            display: none;
                         }
                     }
                 `}</style>

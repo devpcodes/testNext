@@ -124,7 +124,7 @@ const FinancialProductArticleComponent = () => {
                 .article_section {
                     min-width: 777px;
                     width: 66%;
-                    margin-right: 48px;
+                    margin-right: 4%;
                 }
 
                 article {
@@ -186,6 +186,10 @@ const FinancialProductArticleComponent = () => {
                     flex-direction: row;
                 }
 
+                .article > .category-group > .category-time-group > span {
+                    margin-top: 1px;
+                }
+
                 .article > .category-group > .category-question-group > p {
                     margin: 0 12px 0 0;
                 }
@@ -205,7 +209,8 @@ const FinancialProductArticleComponent = () => {
                 }
 
                 .side_section {
-                    width: 346px;
+                    min-width: 250px;
+                    width: 30%;
                 }
 
                 .qTitle {
@@ -247,14 +252,6 @@ const FinancialProductArticleComponent = () => {
                     text-align: center;
                     color: #0d1623;
                     margin-bottom: 24px;
-                }
-
-                .tag_section {
-                    display: flex;
-                    justify-content: flex-start;
-                    flex-wrap: wrap;
-                    align-items: center;
-                    flex-direction: row;
                 }
 
                 .qTag {
@@ -303,14 +300,9 @@ const FinancialProductArticleComponent = () => {
                         padding: 20px 0 0;
                     }
 
-                    .questionArticleWrapper {
-                        width: 100%;
-                    }
-
                     .article_wrapper {
                         display: flex;
                         flex-direction: column;
-                        width: 100%;
                     }
 
                     .article_section {
@@ -378,12 +370,16 @@ const FinancialProductArticleComponent = () => {
                     .questionArticleWrapper {
                         min-height: 55vh;
                     }
+
+                    .article > .category-group > .category-time-group > span {
+                        margin-top: 0;
+                    }
                 }
             `}</style>
             <style jsx global>{`
                 .questionArticleLayout {
                     position: relative;
-                    width: 100%;
+                    width: 100vw;
                     display: flex;
                     align-items: center;
                     padding: 31px 0;
@@ -391,7 +387,9 @@ const FinancialProductArticleComponent = () => {
                 }
 
                 .questionArticleWrapper {
+                    width: 98vw;
                     max-width: 1172px;
+                    margin: auto;
                 }
 
                 .questionArticleWrapper > .site-breadcrumb {
@@ -430,9 +428,24 @@ const FinancialProductArticleComponent = () => {
                     border-color: #ea6554 !important;
                 }
 
+                // override article image size
                 article img {
                     width: 100% !important;
                     height: 100% !important;
+                }
+
+                article p {
+                    font-size: 16px;
+                    color: #0d1623;
+                }
+
+                article h1 {
+                    font-size: 20px;
+                }
+
+                // toggle-list content box text color
+                .ant-collapse-content .ant-collapse-content-box p {
+                    color: #0d1623;
                 }
 
                 .qTag:hover a {
@@ -474,7 +487,12 @@ const FinancialProductArticleComponent = () => {
 
                 @media screen and (max-width: 1024px) {
                     .questionArticleLayout {
+                        width: 90vw;
                         padding-bottom: 0;
+                    }
+
+                    .questionArticleWrapper {
+                        width: 100%;
                     }
 
                     .ant-tabs-mobile {
@@ -496,6 +514,12 @@ const FinancialProductArticleComponent = () => {
                     .product-article-back .ant-btn {
                         height: 40px;
                         font-size: 16px;
+                    }
+                }
+
+                @media screen and (max-width: 450px) {
+                    .questionArticleWrapper {
+                        min-height: 55vh;
                     }
                 }
             `}</style>

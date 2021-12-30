@@ -14,27 +14,53 @@ const ProductCard = ({ productCode, categoryName, imagePath, title, description,
 
     return (
         <>
-            <Card
-                className="product-card"
-                hoverable
-                style={{ backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${imagePath})` }}
-                onClick={toLink}
-                {...props}
-            >
-                <div className="product-card-image" />
+            <Card className="product-card" hoverable onClick={toLink} {...props}>
+                <div
+                    className="product-card-image"
+                    style={{ backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${imagePath})` }}
+                />
                 <div className="product-card-text">
                     <h2>{title}</h2>
+                    <div className="yellow-line"></div>
                     <p>{description}</p>
                 </div>
             </Card>
             <style jsx>{`
                 .product-card-image {
-                    width: 100%;
                     padding-top: 54%;
+                    background-size: cover;
+                    background-position: center;
                 }
 
                 .product-card-text {
                     padding: 24px;
+                }
+
+                .product-card-text h2 {
+                    margin-bottom: 8px;
+                    display: -webkit-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                }
+
+                .yellow-line {
+                    width: 40px;
+                    height: 4px;
+                    background: #daa360;
+                }
+
+                .product-card-text p {
+                    min-height: 50px;
+                    margin-top: 16px;
+                    margin-bottom: 0;
+                    font-size: 16px;
+                    display: -webkit-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
                 }
 
                 @media screen and (max-width: 450px) {
@@ -59,35 +85,39 @@ const ProductCard = ({ productCode, categoryName, imagePath, title, description,
                 {`
                     .product-card {
                         bottom: 0;
-                        width: 100%;
-                        width: 240px;
-                        // max-height: 289px;
-                        margin: 17px;
+                        width: 21.4%;
+                        // min-width: 268px;
+                        max-height: 320px;
+                        margin: 1.7%;
                         border: 1px solid #d7e0ef;
                         transition: bottom 0.5s;
                     }
 
-                    @media screen and (max-width: 1024px) {
+                    .product-card .ant-card-body {
+                        padding: 0;
+                    }
+
+                    @media screen and (max-width: 768px) {
                         .product-card {
                             width: 29%;
-                            margin: 14px 7px;
+                            margin: 2%;
                         }
                     }
 
                     @media screen and (max-width: 450px) {
                         .product-card {
-                            width: 43%;
-                            margin: 14px 7px;
+                            width: 43.5%;
+                            margin: 2.5%;
+                        }
+
+                        .yellow-line {
+                            display: none;
                         }
                     }
 
                     .product-card:hover {
                         position: relative;
                         bottom: 1rem;
-                    }
-
-                    .ant-card-body {
-                        padding: 0;
                     }
                 `}
             </style>

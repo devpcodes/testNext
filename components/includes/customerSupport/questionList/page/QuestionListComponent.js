@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // import Link from 'next/link';
 import { useRouter } from 'next/router';
-
+import { useSelector } from 'react-redux';
 import { PageHead } from '../../../PageHead';
 import { Layout } from 'antd';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
@@ -20,6 +20,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 const QuestionListComponent = function () {
     const router = useRouter();
     const key = router.query.key;
+    const clientWidth = useSelector(store => store.layout.winWidth);
 
     const [categories, setCategories] = useState();
     const [dataSource, setDataSource] = useState([]);
@@ -34,21 +35,12 @@ const QuestionListComponent = function () {
     useEffect(async () => {
         const data = await getCommonQuestionCategories();
         setCategories(data);
-        await setActiveKey(data[0].id.toString());
-        getQuestionList(data[0].id.toString());
+        await setActiveKey(key || data[0].id.toString());
+        getQuestionList(key || data[0].id.toString());
     }, []);
 
-    const getQuestionList = async newKey => {
-        let data;
-
-        if (newKey) {
-            data = await getCommonQuestion(currentPage, 15, newKey);
-        } else {
-            data = await getCommonQuestion(currentPage, 15, activeKey);
-        }
-        console.log('currentPage', currentPage);
-        console.log('activeKey2', activeKey);
-        console.log('newKey', newKey);
+    const getQuestionList = async (newKey, newPage) => {
+        const data = await getCommonQuestion(newPage || currentPage, 15, newKey || activeKey);
         setDataSource(data);
         setDataList(data.dataList);
         setTotalCounts(data.counts);
@@ -79,7 +71,7 @@ const QuestionListComponent = function () {
 
     const onPageChange = page => {
         setPage(page);
-        getQuestionList();
+        getQuestionList(null, page);
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -98,12 +90,15 @@ const QuestionListComponent = function () {
     };
 
     const loadMoreFn = async () => {
-        setIsLoading(true);
-        setPage(currentPage + 1);
-        const data = await getCommonQuestion(currentPage + 1, 15, activeKey);
-        setDataSource(data);
-        setDataList(oldData => [...oldData, ...data.dataList]);
-        setIsLoading(false);
+        if (clientWidth <= 450) {
+            console.log('isMobile');
+            setIsLoading(true);
+            setPage(currentPage + 1);
+            const data = await getCommonQuestion(currentPage + 1, 15, activeKey);
+            setDataSource(data);
+            setDataList(oldData => [...oldData, ...data.dataList]);
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -235,8 +230,9 @@ const QuestionListComponent = function () {
 
                         .questionIndexWrapper .title_group > h1 {
                             text-align: left;
-                            margin-bottom: 12px;
+                            margin-bottom: 0;
                             font-size: 23px;
+                            font-weight: 600;
                         }
 
                         .question-tab-mobile {
@@ -245,6 +241,15 @@ const QuestionListComponent = function () {
 
                         .loading {
                             display: none;
+                        }
+
+                        .question-tab-web .ant-table-content .ant-table-tbody .ant-table-cell:first-of-type {
+                            color: #daa360;
+                            text-align: center;
+                        }
+
+                        .ant-table-content .ant-table-tbody .ant-table-cell div {
+                            font-weight: 500;
                         }
 
                         @media screen and (max-width: 768px) {
