@@ -67,6 +67,9 @@ const Apply = ({ active }) => {
                     item.qty = '';
                     return item;
                 });
+                resData = resData.filter(item => {
+                    return item.stock_amount_t1 != 0;
+                });
                 console.log('res data', resData);
                 setStockInventory(resData);
                 stockInventoryData.current = resData;
