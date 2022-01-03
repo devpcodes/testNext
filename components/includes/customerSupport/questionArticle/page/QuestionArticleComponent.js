@@ -349,6 +349,7 @@ const QuestionArticleComponent = () => {
                     letter-spacing: 0.7px;
                     color: #0d1623;
                     margin: 0;
+                    margin-left: 20px;
                 }
 
                 .title_group > .input_search {
@@ -411,8 +412,13 @@ const QuestionArticleComponent = () => {
                     }
 
                     .article {
+                        padding: 16px 16px;
                         border-right: 0;
                         border-left: 0;
+                    }
+
+                    .article > p > img {
+                        width: 100vw !important;
                     }
 
                     .category-group {
@@ -532,6 +538,7 @@ const QuestionArticleComponent = () => {
                     border-color: #d7e0ef;
                 }
 
+                article img,
                 article .image-blot,
                 article .img-container {
                     width: 100%;

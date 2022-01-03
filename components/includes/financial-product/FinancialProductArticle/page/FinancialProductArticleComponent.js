@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RightOutlined } from '@ant-design/icons';
 import Breadcrumb from '../../../../includes/breadcrumb/breadcrumb';
 import parse from 'html-react-parser';
 // import { useSelector } from 'react-redux';
@@ -106,7 +107,13 @@ const FinancialProductArticleComponent = () => {
                                 button2Title={articleData?.openButton2Name}
                             />
                             <div className="open-related">
-                                <h3 className="qTitle">相關公告</h3>
+                                <main className="qTitle-frame">
+                                    <h3 className="qTitle">相關公告</h3>
+                                    <div className="qTitle-more">
+                                        更多 <RightOutlined />
+                                    </div>
+                                </main>
+
                                 {announcement.length && <Announcement data={announcement} />}
                             </div>
                         </div>
@@ -213,6 +220,13 @@ const FinancialProductArticleComponent = () => {
                     width: 30%;
                 }
 
+                .qTitle-frame {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                }
+
                 .qTitle {
                     border-left: 4px solid #daa360;
                     padding-left: 12px;
@@ -225,6 +239,18 @@ const FinancialProductArticleComponent = () => {
                     letter-spacing: -0.25px;
                     color: #0d1623;
                     margin: 21px 0 16px;
+                }
+
+                .qTitle-more {
+                    font-family: PingFangTC;
+                    font-size: 16px;
+                    font-weight: 600;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: normal;
+                    letter-spacing: 0.4px;
+                    color: #0d1623;
+                    cursor: pointer;
                 }
 
                 .qSection {

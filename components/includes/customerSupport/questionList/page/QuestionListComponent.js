@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { PageHead } from '../../../PageHead';
-import { Layout } from 'antd';
+import zhTW from 'antd/lib/locale/zh_TW';
+import { ConfigProvider, Layout } from 'antd';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import {
     getCommonQuestion,
@@ -30,7 +31,8 @@ const QuestionListComponent = function () {
     const [isLoading, setIsLoading] = useState(false);
     const [totalCounts, setTotalCounts] = useState();
     const [hasMore, setHasMore] = useState();
-    const [sub2ndCategories, setSub2ndCategories] = useState();
+    const [sub2ndCategories, setSub2ndCategories] = useState([]);
+    const [sub3rdCategories, setSub3rdCategories] = useState([]);
 
     useEffect(async () => {
         const data = await getCommonQuestionCategories();
@@ -52,11 +54,27 @@ const QuestionListComponent = function () {
     };
 
     useEffect(async () => {
+        console.log('allSub3rd ==>');
         const data = await getCommonQuestionSubcategories(activeKey);
 
         if (data !== null) {
             const sub2nd = data.category2nd.map(t => ({ text: t.categoryName, value: t.categoryName }));
             setSub2ndCategories(sub2nd);
+            console.log('sub2nd ==>', sub2nd);
+            const allSub3rd = [];
+            data.category2nd.map((secondElement, idx) => {
+                secondElement.category3rd.length > 0
+                    ? secondElement.category3rd.map(thirdElement => {
+                          allSub3rd.push({
+                              secondCategories: secondElement.categoryName,
+                              text: thirdElement.categoryName,
+                              value: thirdElement.categoryName,
+                          });
+                      })
+                    : null;
+            });
+            setSub3rdCategories(allSub3rd);
+            console.log('allSub3rd ==>', allSub3rd);
         } else {
             setSub2ndCategories(null);
         }
@@ -102,7 +120,7 @@ const QuestionListComponent = function () {
     };
 
     return (
-        <>
+        <ConfigProvider locale={zhTW}>
             <PageHead title={'永豐金理財網'} />
             <Layout className="antLayout">
                 <div className="questionIndexWrapper">
@@ -126,6 +144,7 @@ const QuestionListComponent = function () {
                                 className="question-list-web"
                                 dataSource={dataSource}
                                 sub2ndCategories={sub2ndCategories}
+                                sub3rdCategories={sub3rdCategories}
                                 onPageChange={onPageChange}
                                 totalCounts={totalCounts}
                             />
@@ -573,7 +592,7 @@ const QuestionListComponent = function () {
                     `}
                 </style>
             </Layout>
-        </>
+        </ConfigProvider>
     );
 };
 

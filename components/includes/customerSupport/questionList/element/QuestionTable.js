@@ -4,7 +4,9 @@ import Link from 'next/link';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import PropTypes from 'prop-types';
 
-const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange, totalCounts }) {
+const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories, onPageChange, totalCounts }) {
+    useEffect(() => {}, [sub3rdCategories]);
+
     const columns = [
         {
             title: '項目',
@@ -22,6 +24,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange, to
             title: '子類別',
             dataIndex: ['category3rd', 'categoryName'],
             width: '15%',
+            filters: sub3rdCategories || false,
             onFilter: (value, record) => record.category3rd.categoryName.includes(value),
         },
         {
@@ -127,6 +130,15 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, onPageChange, to
                     .question-table-input-search .ant-input-search-button:hover {
                         background-color: #ea6554 !important;
                         border-color: #ea6554 !important;
+                    }
+
+                    .ant-table-filter-dropdown-btns > .ant-btn-link {
+                        border-color: #d7e0ea !important;
+                    }
+
+                    .ant-table-filter-dropdown-btns > .ant-btn-primary {
+                        background-color: #c43826 !important;
+                        border-color: #c43826 !important;
                     }
 
                     @media screen and (max-width: 450px) {
