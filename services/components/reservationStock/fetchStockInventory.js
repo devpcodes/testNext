@@ -9,7 +9,7 @@ export const fetchStockInventory = async function (token, branch, account, query
             branch,
             account,
             query_load_type,
-            category: category == null ? '0' : '1',
+            category: category == null ? '' : '1',
         });
         console.log(res.data);
         if (res.data?.success === true) {
