@@ -198,14 +198,7 @@
                                                                             window["lsinopac_quote"].changeRic(entry.ric);
                                                                             $(".tab2Refresh").attr("data-refresh-value", entry.ric)
                                                                         }
-
-                                                                        /* Sensors tracker*/                                                                        
-                                                                        if (typeof parent.subBrokerage.shell.sensorsTrack === 'function') {
-                                                                            var keyword = entry.symbol;
-                                                                            var click_content = entry.symbol + ' ' + entry.exchsect;
-                                                                            parent.subBrokerage.shell.sensorsTrack(keyword, click_content);
-                                                                        }
-                                                                        
+                                                                            
 
                                                                         // Clear the input to end this search completely ;)
                                                                         that.$input.val("").blur();

@@ -59,7 +59,7 @@ var tsmargin = 0;
             this.createCanvas();
         },
         reload: function () {
-            this.createCanvas();
+            this.reloadImage();
         },
         destroy: function () {
             this.element.next().remove();
@@ -155,6 +155,70 @@ var tsmargin = 0;
                     {
                         datatype: "jsonp"
                     });
+        },
+        reloadImage: function() {
+            
+            var that = this;
+            var options = this.options;
+            var code = options.code;
+            var ele = this.element;
+            
+                var height = ele.height() - (options.trend ? tsheight : 0);
+                var width = ele.width();  
+                var ta = options.ta;
+                var span = options.span; 
+                var instrument = options.instrument;                
+                var type = options.type;
+                var caption = options.caption;
+                var ts = new Date().getTime();                
+                var imageOnly = options.imageOnly; 
+                var assettype = options.assettype;
+                var cc = options.cc;                
+                var channel = options.channel;
+                //        var region = options.region;
+                var token = options.token;
+                var period = options.period;
+                
+                var url = rendererSerletURL +
+                        "width=" + width +
+                        "&height=" + height +
+                        "&ta=" + ta +
+                        "&span=" + span +
+                        "&code=" + code +
+                        "&instrument=" + instrument +
+                        "&type=" + type +
+                        "&caption=" + caption +
+                        "&ts=" + ts +
+                        "&imageOnly=" + imageOnly +
+                        "&dp=" + options.dp +
+                        "&element=" + this.element.attr("id") +
+                        "&assettype=" + assettype +
+                        "&cc=" + cc +
+                        //        "&hashId=" + hashId +
+                        "&channel=" + channel +
+                        //         "&region=" + region +
+                        "&token=" + token;
+
+                if (period.indexOf("CUSTOM_INTRADAY") == 0) {
+                    url += "&period=CUSTOM_INTRADAY&from=" + period.split(",")[1].split("-")[0] + "&to=" + period.split(",")[1].split("-")[1];
+                } else if (period.indexOf("CUSTOM") == 0) {
+                    url += "&period=CUSTOM&from=" + period.split(",")[1].split("-")[0] + "&to=" + period.split(",")[1].split("-")[1];
+                } else {
+                    url += "&period=" + period;
+                }
+                url += "&lang=" + LabCI.getLang();
+                if ((width != 0) && (height != 0)) {
+                    $(that).loaddata("tachartdata", url, {}, function (result) {
+                        that._taChartReloadCallbackHandler(result.data);
+                        if (options.trend)
+                            that.createTSCanvas();
+                    },
+                            0,
+                            {
+                                datatype: "jsonp"
+                            });
+                }            
+            
         },
         createCanvas: function () {
             var that = this;
@@ -290,6 +354,29 @@ var tsmargin = 0;
 
 
                 window.open(url);
+            }
+        },
+        _taChartReloadCallbackHandler: function(json){
+            var ele = this.element;
+            var options = this.options;
+            var height = ele.height() - (options.trend ? tsheight : 0);
+            var width = ele.width(); 
+            var span = options.span;
+            var code = options.code;
+            var cc = options.cc; 
+            var assettype = options.assettype; 
+            var channel = options.channel;
+            //    var region = options.region;
+            var token = options.token;            
+            
+            if (json && !jQuery.isEmptyObject(json)) {
+                if (json["errormsg"] != undefined) {
+                    
+                }else{
+                    var uuid = json["uuid"];
+                    $(ele).find("img").attr("src", LabCI.SSDLConf.DATA_PATH + canvasImgURL + "uuid=" + uuid + "&width=" + width + "&height=" + height + "&lang=" + LabCI.getLang() + "&span=" + span + "&code=" + code + "&assettype=" + assettype + "&cc=" + cc + "&channel=" + channel + "&token=" + token);                    
+                }
+
             }
         },
         _taChartCallbackHandler: function (json) {
