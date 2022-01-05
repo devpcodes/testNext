@@ -2,16 +2,17 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { Button, Input, notification, Modal } from 'antd';
 import jwt_decode from 'jwt-decode';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
+import { SELECTED } from '../../../../store/advanceCollection/actionType';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
 import Accounts from '../../advanceCollection/Accounts';
 import ApplyContent from '../../advanceCollection/ApplyContent';
-import SearchBox from './SearchBox';
+import SearchBox from '../../debitDeposit/elements/SearchBox';
 import Msg from '../../advanceCollection/Msg';
 import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
 import { getToken } from '../../../../services/user/accessToken';
 import { sign, signCert, checkSignCA } from '../../../../services/webCa';
 import { postApplyEarmark } from '../../../../services/components/reservationStock/postApplyEarmark';
-import Loading from './Loading';
+import Loading from '../../debitDeposit/elements/Loading';
 const Apply = ({ active, showSearchBox = true }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -32,7 +33,13 @@ const Apply = ({ active, showSearchBox = true }) => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
-        if (active) {
+        if (state.accountsReducer.accounts.length > 0) {
+            dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        }
+    }, [state.accountsReducer.accounts]);
+
+    useEffect(() => {
+        if (active && state.accountsReducer.selected.broker_id) {
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             getInventory(state.accountsReducer.activeType);
         }
@@ -347,7 +354,7 @@ const Apply = ({ active, showSearchBox = true }) => {
             {showSearchBox && <SearchBox showFilter={true} searchClickHandler={searchClickHandler} />}
             <ApplyContent
                 scroll={{ x: 860 }}
-                contenterTitle={'借券圈存申請'}
+                contenterTitle={'現券償還申請'}
                 columns={columns}
                 dataSource={stockInventory}
                 pagination={false}
@@ -372,24 +379,20 @@ const Apply = ({ active, showSearchBox = true }) => {
                 style={{ marginTop: '30px' }}
                 list={[
                     { txt: '「注意事項」' },
-                    { txt: '1. 借券圈存時間為台股交易日8:00~14:30' },
+                    { txt: '1. 線上申請時間為(股票交易日)營業日9:00~14:00，不提供預約' },
                     {
-                        txt: '2. 必須簽署「保管劃撥帳戶契約書」後，才可顯示庫存與進行申請',
-                        color: '#e46262',
+                        txt: '2. 申請送出後，請至查詢頁面確認是否成功',
                     },
                     {
-                        txt:
-                            '3. 逐筆申請：點選[申請]後，請至[借券圈存查詢]點選[查詢]確認已完成此筆股票圈存後，再進行下一筆申請',
-                        color: '#e46262',
+                        txt: '3. 申請成功，如欲取消，請洽所屬分公司',
                     },
                     {
-                        html:
-                            '<span>4. 可圈存股數：昨日<span style="color: #e46262; margin-bottom: 12px; display: inline-block">借券</span>庫存股數 + 今日匯撥/<span style="color: #e46262; margin-bottom: 12px; display: inline-block">借券</span>股數 - 已圈存股數</span>',
+                        html: '<span style="margin-top: -10px">4.	申請標的說明</span>',
                     },
                     {
-                        txt: '5. 網路不提供解圈服務與人工解圈之查詢資訊，請洽所屬分公司辦理及查詢',
+                        html: '<span>&nbsp;&nbsp;&nbsp;(1) 股票須完成交割才可進行線上申請</span>',
                     },
-                    { txt: '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)' },
+                    { html: '<span>&nbsp;&nbsp;&nbsp;(2) 借券庫存優先扣帳</span>' },
                 ]}
             />
             <Loading loading={loading} step={20} />

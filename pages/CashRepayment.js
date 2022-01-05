@@ -4,7 +4,7 @@ import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayo
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
 import { reducers } from '../store/advanceCollection/combineReducer';
 import EarmarkReserve from '../components/includes/advanceCollection/EarmarkReserve';
-import DebitDeposit from '../components/includes/debitDeposit/page/DebitDeposit';
+import CashCouponRepayment from '../components/includes/CashRepayment/page/CashCouponRepayment';
 import { ReducerContext } from '../store/advanceCollection/reducerContext';
 const initState = reducers();
 // export const ReducerContext = createContext();
@@ -24,7 +24,7 @@ const CashRepayment = function () {
     const componentsFactory = useMemo(() => {
         switch (selectOption) {
             case 'cashCouponRepayment':
-                return <DebitDeposit />;
+                return <CashCouponRepayment />;
             default:
                 break;
         }
