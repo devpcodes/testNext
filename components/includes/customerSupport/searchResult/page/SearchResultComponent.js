@@ -88,7 +88,9 @@ const SearchResultComponent = () => {
             pageSize: 15,
         };
         const data = await getCommonQuestions(params);
-        if (totalPage && page >= totalPage) {
+        if (totalPage && page > totalPage) {
+            // console.log('totalPage', totalPage);
+            // console.log('page', page);
             setHasMore(false);
             console.log('no more.');
         } else if (data.dataList && data.dataList.length) {

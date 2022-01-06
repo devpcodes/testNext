@@ -12,6 +12,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
     const { Content } = Layout;
     const router = useRouter();
     const [data, setData] = useState(searchResultData);
+    console.log('searchResultData', searchResultData);
     // const [questionAmount, setQuestionAmount] = useState(totalQuestion)
     const toQuestionPage = questionUUID => {
         router.push({
@@ -19,6 +20,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
         });
     };
 
+    // console.log('searchResultData', searchResultData);
     useEffect(() => {
         setData(searchResultData);
     }, [searchResultData]);
@@ -39,7 +41,15 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                             autoEscape={true}
                             textToHighlight={item.title}
                         />
-                        <span className="questionContent">{parse(`${item.keywordContent}`)}</span>
+                        <Highlighter
+                            className="searchResultContent"
+                            unhighlightClassName="questionContentUnhighlight"
+                            highlightClassName="questionContentHighlight"
+                            searchWords={[keyword]}
+                            autoEscape={false}
+                            textToHighlight={parse(`${item.keywordContent}`)}
+                        />
+                        {/* <span className="questionContent">{parse(`${item.keywordContent}`)}</span> */}
                         <div className="secondThirdCategories">
                             <span>{item.category2nd?.categoryName ? item.category2nd?.categoryName : ''}</span>
                             {item.category3rd?.categoryName ? (
@@ -73,14 +83,15 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 />
             </div>
             <style jsx>{`
-                .questionContent {
+                /* .questionContent {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     display: -webkit-box;
                     font-size: 16px;
                     -webkit-box-orient: vertical;
                     -webkit-line-clamp: 2;
-                }
+                    color: #0d1623;
+                } */
 
                 .secondThirdCategories {
                     color: #3f5372;
@@ -141,6 +152,11 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     -webkit-line-clamp: 1;
                 }
 
+                .questionContentUnhighlight {
+                    font-size: 16px;
+                    color: #0d1623;
+                }
+
                 .questionTitleHighlight {
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -152,6 +168,26 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     font-weight: 500;
                     -webkit-box-orient: vertical;
                     -webkit-line-clamp: 1;
+                }
+
+                .searchResultContent {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: #daa360;
+                    display: -webkit-box;
+                    font-size: 16px;
+                    font-weight: 500;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                }
+
+                .questionContentHighlight {
+                    display: inline-block;
+                    padding: 0;
+                    color: #daa360;
+                    font-size: 16px;
+                    font-weight: 500;
+                    background-color: transparent;
                 }
 
                 .rightIcon {

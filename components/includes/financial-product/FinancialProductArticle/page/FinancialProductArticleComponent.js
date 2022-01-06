@@ -194,7 +194,7 @@ const FinancialProductArticleComponent = () => {
                 }
 
                 .article > .category-group > .category-time-group > span {
-                    margin-top: 1px;
+                    margin-top: 1.5px;
                 }
 
                 .article > .category-group > .category-question-group > p {
@@ -302,7 +302,7 @@ const FinancialProductArticleComponent = () => {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 23px;
+                    margin-bottom: 20px;
                     height: 40px;
                 }
 
@@ -322,10 +322,6 @@ const FinancialProductArticleComponent = () => {
                 }
 
                 @media screen and (max-width: 1024px) {
-                    .questionArticleLayout {
-                        padding: 20px 0 0;
-                    }
-
                     .article_wrapper {
                         display: flex;
                         flex-direction: column;
@@ -345,7 +341,7 @@ const FinancialProductArticleComponent = () => {
                         width: 95%;
                         padding: 0 16px;
                         margin: auto;
-                        margin-bottom: 23px;
+                        margin-bottom: 20px;
                         height: initial;
                     }
 
@@ -353,7 +349,8 @@ const FinancialProductArticleComponent = () => {
                         text-align: left;
                         width: 100%;
                         font-size: 20px;
-                        margin-bottom: 12px;
+                        margin-bottom: 0;
+                        margin-top: 12px;
                     }
 
                     .article {
@@ -389,8 +386,13 @@ const FinancialProductArticleComponent = () => {
 
                 @media screen and (max-width: 450px) {
                     .article {
-                        width: 100%;
+                        width: 98vw;
                         min-width: 0;
+                        transform: translateX(-5vw);
+                    }
+
+                    article {
+                        left: -5vw;
                     }
 
                     .questionArticleWrapper {
@@ -400,26 +402,33 @@ const FinancialProductArticleComponent = () => {
                     .article > .category-group > .category-time-group > span {
                         margin-top: 0;
                     }
+
+                    .title_group {
+                        width: 100%;
+                        padding: 0;
+                    }
                 }
             `}</style>
             <style jsx global>{`
                 .questionArticleLayout {
                     position: relative;
-                    width: 100vw;
+                    width: 100%;
                     display: flex;
                     align-items: center;
                     padding: 31px 0;
+                    margin: auto;
                     background-color: #f9fbff;
+                    overflow-x: hidden;
                 }
 
                 .questionArticleWrapper {
-                    width: 98vw;
+                    width: 97vw;
                     max-width: 1172px;
                     margin: auto;
                 }
 
                 .questionArticleWrapper > .site-breadcrumb {
-                    width: 95vw;
+                    width: 100%;
                 }
 
                 .SearchInput_question-article-input-search__3QSct
@@ -480,8 +489,12 @@ const FinancialProductArticleComponent = () => {
 
                 .ant-tabs-top .ant-tabs-nav {
                     margin: 0;
-                    padding: 2px 45px 0;
+                    padding: 0 0 2px 26px;
                     background-color: #fff;
+                }
+
+                .ant-tabs-nav {
+                    height: 58px;
                 }
 
                 .ant-tabs-tab {
@@ -511,26 +524,32 @@ const FinancialProductArticleComponent = () => {
                     height: 5px !important;
                 }
 
+                .product-article-back .ant-btn {
+                    width: 105px;
+                }
+
                 @media screen and (max-width: 1024px) {
+                    .questionArticleWrapper > .site-breadcrumb {
+                        width: 80vw;
+                    }
+
                     .questionArticleLayout {
-                        width: 90vw;
-                        padding-bottom: 0;
+                        width: 100%;
+                        padding: 20px 0 20px 0;
+                        margin: auto;
                     }
 
                     .questionArticleWrapper {
-                        width: 100%;
-                    }
-
-                    .ant-tabs-mobile {
-                        width: 100vw;
+                        width: 90%;
                     }
 
                     .ant-tabs-nav {
-                        padding: 0 45px 0 0 !important;
+                        // padding: 0 45px 0 0 !important;
+                        padding: 0 !important;
                     }
 
                     .ant-tabs-tab {
-                        margin: 0s 16px;
+                        margin: 0 0 0 21px;
                     }
 
                     .ant-tabs-ink-bar {

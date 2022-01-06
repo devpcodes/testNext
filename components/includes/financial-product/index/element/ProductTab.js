@@ -33,6 +33,16 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                         background-color: #f9fbff;
                     }
 
+                    // the tab bottom line
+                    .product-tabs .ant-tabs-bottom > .ant-tabs-nav:before,
+                    .ant-tabs-bottom > div > .ant-tabs-nav:before,
+                    .ant-tabs-top > .ant-tabs-nav:before,
+                    .ant-tabs-top > div > .ant-tabs-nav:before {
+                        border-bottom: 1px solid #d7e0ef;
+                        width: 96%;
+                        margin: auto;
+                    }
+
                     .product-tabs .ant-tabs-nav-list {
                         margin: auto;
                     }
@@ -40,6 +50,13 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                     @media screen and (max-width: 450px) {
                         .product-tabs {
                             background-color: white;
+                        }
+
+                        .product-tabs .ant-tabs-bottom > .ant-tabs-nav:before,
+                        .ant-tabs-bottom > div > .ant-tabs-nav:before,
+                        .ant-tabs-top > .ant-tabs-nav:before,
+                        .ant-tabs-top > div > .ant-tabs-nav:before {
+                            width: 100%;
                         }
                     }
 
@@ -62,7 +79,7 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                     }
 
                     .ant-tabs-ink-bar {
-                        height: 4px;
+                        height: 4px !important;
                         background: #daa360 !important;
                     }
 

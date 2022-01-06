@@ -34,6 +34,10 @@ const ShortcutFunction = ({ linkData }) => {
                     transition: bottom 0.5s;
                 }
 
+                // .ant-card:hover {
+                //     box-shadow: rgba(108, 123, 148, 0.2);
+                // }
+
                 .customerSupportCard:hover {
                     position: relative;
                     bottom: 1rem;

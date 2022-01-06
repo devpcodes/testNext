@@ -45,7 +45,7 @@ const ProductFileTable = function ({ dataSource }) {
                 return (
                     <CustomerButton
                         type="primary"
-                        style={{ margin: 0, width: '44px', height: '24px' }}
+                        style={{ textAlign: 'center' }}
                         onClick={() => {
                             download(text);
                         }}
@@ -140,6 +140,27 @@ const ProductFileTable = function ({ dataSource }) {
 
                         .product-file-table .ant-pagination {
                             display: none;
+                        }
+
+                        .product-file-table .ant-table-row {
+                            height: 76px;
+                        }
+
+                        .financial-product-article-tab .ant-table-cell:first-of-type {
+                            opacity: 0;
+                        }
+
+                        .financial-product-article-tab .ant-table-cell {
+                            left: -7vw;
+                        }
+
+                        .financial-product-article-tab .ant-table-cell {
+                            left: -7vw;
+                        }
+
+                        .product-file-table > .ant-btn {
+                            width: 60px !important;
+                            height: 44px !important;
                         }
                     }
                 `}

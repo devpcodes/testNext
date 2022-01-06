@@ -192,6 +192,11 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
                         color: #fff !important;
                         height: 30px !important;
                     }
+
+                    .ant-table-container,
+                    .ant-table-container table > thead > tr:first-child th:first-child {
+                        text-align: center;
+                    }
                 `}
             </style>
         </>

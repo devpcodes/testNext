@@ -45,7 +45,7 @@ const OpenAccountButtons = function ({
                 {`
                     .open-account-image {
                         width: 100%;
-                        padding-top: 54%;
+                        padding-top: 50%;
                         margin-bottom: 16px;
                         background-size: cover;
                         background-position: center;
@@ -69,6 +69,10 @@ const OpenAccountButtons = function ({
                         color: #0d1623;
                     }
 
+                    .open-buttons button {
+                        width: 100%;
+                    }
+
                     @media screen and (max-width: 1024px) {
                         .open-account-image {
                             display: none;
@@ -77,9 +81,9 @@ const OpenAccountButtons = function ({
                         .product-open-account-container {
                             display: flex;
                             justify-content: space-between;
-                            width: 100vw;
+                            width: 99vw;
                             position: relative;
-                            left: 0;
+                            left: -5vw;
                             bottom: -16px;
                             border: none;
                             padding: 16px;
@@ -94,6 +98,7 @@ const OpenAccountButtons = function ({
 
                         .open-buttons {
                             width: 40%;
+                            min-width: 100px;
                             display: flex;
                             justify-content: space-around;
                             align-items: center;
@@ -149,6 +154,8 @@ const OpenAccountButtons = function ({
                     @media screen and (max-width: 1024px) {
                         .open-buttons .ant-btn {
                             width: 100%;
+                            min-width: 100px;
+                            margin: 0 2%;
                         }
                     }
 

@@ -41,6 +41,17 @@ const Relative = ({ data }) => {
                     cursor: pointer;
                 }
 
+                .relative_block > a {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    font-size: 16px;
+                    font-weight: 500;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    color: #0d1623;
+                }
+
                 .relative_block a:hover {
                     color: #daa360;
                 }

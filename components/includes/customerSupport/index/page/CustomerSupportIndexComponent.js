@@ -131,6 +131,10 @@ const CustomerSupportIndexComponent = () => {
                         }
                     }
 
+                    .layoutContent h2 {
+                        color: #0d1623;
+                    }
+
                     .qaBlockTitle {
                         display: flex;
                         justify-content: space-between;

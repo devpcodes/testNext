@@ -99,6 +99,10 @@ const ProductQuestionTable = function ({ keywords }) {
                         color: #0d1623;
                     }
 
+                    .product-question-table .ant-table-thead > tr > th {
+                        background: #f2f5fa;
+                    }
+
                     .product-question-table .ant-table-cell {
                         color: #3f5372;
                         font-size: 14px;
@@ -141,6 +145,18 @@ const ProductQuestionTable = function ({ keywords }) {
 
                         .product-question-table .ant-pagination {
                             display: none;
+                        }
+
+                        .product-question-table .ant-table-row {
+                            height: 76px;
+                        }
+
+                        .financial-product-article-tab .ant-table-cell:first-of-type {
+                            opacity: 0;
+                        }
+
+                        .financial-product-article-tab .ant-table-cell:nth-of-type(2) {
+                            left: -7vw;
                         }
                     }
                 `}

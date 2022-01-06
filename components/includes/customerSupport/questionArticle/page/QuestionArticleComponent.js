@@ -232,7 +232,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article > .category-group > .category-time-group > span {
-                    margin-top: 1px;
+                    margin-top: 1.5px;
                 }
 
                 .article > .category-group > .category-question-group > p {
@@ -273,10 +273,6 @@ const QuestionArticleComponent = () => {
                     letter-spacing: -0.25px;
                     color: #0d1623;
                     margin: 21px 0 16px;
-                }
-
-                .relative_block a {
-                    font-weight: 500;
                 }
 
                 .qSection {
@@ -349,7 +345,7 @@ const QuestionArticleComponent = () => {
                     letter-spacing: 0.7px;
                     color: #0d1623;
                     margin: 0;
-                    margin-left: 20px;
+                    /* margin-left: 20px; */
                 }
 
                 .title_group > .input_search {
@@ -399,6 +395,7 @@ const QuestionArticleComponent = () => {
                         width: 100%;
                         font-size: 20px;
                         margin-bottom: 12px;
+                        margin-left: 25px;
                     }
 
                     .back_group {
@@ -455,6 +452,12 @@ const QuestionArticleComponent = () => {
                             margin: 0 16px;
                         }
                     }
+
+                    @media screen and (max-width: 450px) {
+                        .back_group > .mobile_button {
+                            width: 74vw;
+                        }
+                    }
                 }
             `}</style>
             <style jsx global>{`
@@ -467,7 +470,13 @@ const QuestionArticleComponent = () => {
                 }
 
                 .title_group .web-back-to-list {
+                    width: 105px;
                     height: 40px;
+                    border: 1px solid #d7e0ef;
+                }
+
+                .title_group .web-back-to-list > span {
+                    color: #0d1623;
                 }
 
                 .web-back-to-list:hover {
@@ -483,7 +492,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .questionArticleWrapper > .site-breadcrumb {
-                    width: 98vw;
+                    width: 100%;
                 }
 
                 @media screen and (max-width: 768px) {
@@ -526,6 +535,11 @@ const QuestionArticleComponent = () => {
                 .question-article-input-search .ant-input-search-button:hover {
                     background-color: #ea6554 !important;
                     border-color: #ea6554 !important;
+                }
+
+                .question-article-input-search .ant-input-search:hover,
+                .question-article-input-search .ant-input-search:focus {
+                    border-color: #d7e0ef !important;
                 }
 
                 .mobile_button .ant-input-search:hover,
@@ -578,6 +592,8 @@ const QuestionArticleComponent = () => {
                     min-width: 105px;
                     min-height: 40px;
                     margin-right: 16px;
+                    color: #0d1623;
+                    border: 1px solid #d7e0ef;
                 }
 
                 .is-helped-button:hover {
@@ -593,6 +609,10 @@ const QuestionArticleComponent = () => {
                 }
 
                 @media screen and (max-width: 768px) {
+                    .questionArticleWrapper > .site-breadcrumb {
+                        width: 90vw;
+                    }
+
                     .side_section > .question-article-input-search {
                         display: none;
                     }
@@ -603,6 +623,10 @@ const QuestionArticleComponent = () => {
                 }
 
                 @media screen and (max-width: 450px) {
+                    .back_group > .default {
+                        margin-left: 5px;
+                    }
+
                     .is-helped-button {
                         width: 36vw;
                     }
@@ -619,6 +643,11 @@ const QuestionArticleComponent = () => {
                 .mobile_button .ant-input-search-button {
                     background-color: #c43826 !important;
                     border-color: #c43826 !important;
+                }
+
+                .question-article-input-search .ant-input::placeholder,
+                .mobile_button .ant-input::placeholder {
+                    color: #3f5372;
                 }
             `}</style>
         </>

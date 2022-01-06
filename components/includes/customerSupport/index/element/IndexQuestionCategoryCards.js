@@ -123,6 +123,10 @@ const IndexQuestionCategoryCards = ({
                         color: #daa360;
                     }
 
+                    .qaBlock .ant-card-body a {
+                        color: #0d1623;
+                    }
+
                     .rightIcon,
                     mobileRightIcon {
                         padding-top: 10px;

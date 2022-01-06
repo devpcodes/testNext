@@ -418,6 +418,10 @@ const QuestionListComponent = function () {
                             border-color: #ea6554 !important;
                         }
 
+                        .question-table-input-search .ant-input::placeholder {
+                            color: #3f5372;
+                        }
+
                         // search-input hover border color
 
                         .question-table-input-search .ant-input-search:hover,
