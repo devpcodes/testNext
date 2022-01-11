@@ -166,12 +166,12 @@ const Apply = ({ active }) => {
     const validateQty = (value, loadQty, stockAmount) => {
         const regex = /^[0-9]{1,20}$/;
         if (!isNaN(value) && regex.test(value)) {
-            if (value % 1000 !== 0) {
-                Modal.error({
-                    content: '請輸入1000的倍數',
-                });
-                return false;
-            }
+            // if (value % 1000 !== 0) {
+            //     Modal.error({
+            //         content: '請輸入1000的倍數',
+            //     });
+            //     return false;
+            // }
 
             if (Number(value) <= Number(stockAmount)) {
                 return true;
