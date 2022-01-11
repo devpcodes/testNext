@@ -34,7 +34,7 @@ const CashRepayment = function () {
         <>
             <ReducerContext.Provider value={reducer}>
                 <AdvanceCollectionLayout startTime={'09:00'} endTime={'14:00'} type={selectOption}>
-                    <div style={{ maxWidth: '1000px', margin: '0 auto', paddingLeft: '20px' }}>
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', paddingLeft: '20px' }}>
                         <Radio.Group
                             className={'reserve__container'}
                             options={options}

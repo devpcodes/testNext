@@ -33,7 +33,7 @@ const CashCouponRepayment = () => {
             <style jsx>{`
                 .content {
                     margin: 20px auto 0 auto;
-                    max-width: 1000px;
+                    max-width: 1280px;
                     font-size: 0px;
                     padding-left: 20px;
                     padding-right: 20px;

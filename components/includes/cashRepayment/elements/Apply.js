@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import { Button, Input, notification, Modal } from 'antd';
+import moment from 'moment';
 import jwt_decode from 'jwt-decode';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
 import { SELECTED } from '../../../../store/advanceCollection/actionType';
@@ -8,11 +9,13 @@ import Accounts from '../../advanceCollection/Accounts';
 import ApplyContent from '../../advanceCollection/ApplyContent';
 import SearchBox from '../../debitDeposit/elements/SearchBox';
 import Msg from '../../advanceCollection/Msg';
-import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
+// import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
 import { getToken } from '../../../../services/user/accessToken';
 import { sign, signCert, checkSignCA } from '../../../../services/webCa';
 import { postApplyEarmark } from '../../../../services/components/reservationStock/postApplyEarmark';
 import Loading from '../../debitDeposit/elements/Loading';
+import { fetchShortSellingInventory } from '../../../../services/components/cashRepayment/fetchStockInventory';
+import { formatNum } from '../../../../services/formatNum';
 const Apply = ({ active, showSearchBox = true }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -66,7 +69,7 @@ const Apply = ({ active, showSearchBox = true }) => {
     const fetchInventory = async (token, brokerId, account, activeType) => {
         setDataLoading(true);
         try {
-            let resData = await fetchStockInventory(token, brokerId, account, activeType, '1');
+            let resData = await fetchShortSellingInventory(token, brokerId, account, activeType, '1');
             if (Array.isArray(resData)) {
                 resData = resData.map((item, index) => {
                     item.key = String(index);
@@ -201,7 +204,8 @@ const Apply = ({ active, showSearchBox = true }) => {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                index: 6,
+                index: 10,
+                width: '30px',
                 render: (text, record, index) => {
                     return (
                         <Button
@@ -215,71 +219,91 @@ const Apply = ({ active, showSearchBox = true }) => {
                 },
             },
             {
-                title: '股票類別',
-                dataIndex: 'load_type',
-                key: 'load_type',
-                index: 2,
-                sorter: (a, b) => {
-                    const aTypeStr = typeString(a.load_type);
-                    const bTypeStr = typeString(b.load_type);
-                    return sortString(aTypeStr, bTypeStr);
-                },
-                render: (text, record, index) => {
-                    switch (text) {
-                        case '':
-                            return '一般';
-                        case '1':
-                            return '全額管理';
-                        case '2':
-                            return '收足款券';
-                        case '3':
-                            return '處置一二';
-                        default:
-                            break;
-                    }
-                },
-            },
-            {
                 title: '股票代號',
                 dataIndex: 'code',
                 key: 'code',
-                sorter: (a, b) => {
-                    if (String(a.code).trim().length < String(b.code).trim().length) {
-                        return -1;
-                    } else if (String(a.code).trim().length > String(b.code).trim().length) {
-                        return 1;
-                    } else {
-                        return Number(a.code) - Number(b.code);
-                    }
-                },
+                width: '50px',
+                // sorter: (a, b) => {
+                //     if (String(a.code).trim().length < String(b.code).trim().length) {
+                //         return -1;
+                //     } else if (String(a.code).trim().length > String(b.code).trim().length) {
+                //         return 1;
+                //     } else {
+                //         return Number(a.code) - Number(b.code);
+                //     }
+                // },
                 index: 1,
             },
             {
                 title: '股票名稱',
                 dataIndex: 'code_name',
                 key: 'code_name',
-                sorter: (a, b) => {
-                    return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
-                },
+                width: '100px',
+                // sorter: (a, b) => {
+                //     return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
+                // },
                 index: 2,
             },
             {
-                title: '可圈存股數',
-                dataIndex: 'stock_amount_t1',
-                key: 'stock_amount_t1',
+                title: '成交日',
+                dataIndex: 'match_date',
+                key: 'match_date',
+                width: '70px',
                 index: 3,
+                render: text => {
+                    return moment(text).format('yyyy/MM/DD');
+                },
             },
             {
-                title: '已圈存股數',
-                dataIndex: 'load_qty',
-                key: 'load_qty',
+                title: '成交單價',
+                dataIndex: 'match_price',
+                key: 'match_price',
+                width: '70px',
                 index: 4,
             },
             {
-                title: '申請圈存股數',
+                title: '未沖擔保品',
+                dataIndex: 'open_collateral_price',
+                key: 'open_collateral_price',
+                width: '70px',
+                index: 5,
+                render: text => {
+                    return formatNum(text);
+                },
+            },
+            {
+                title: '未沖保證金',
+                dataIndex: 'open_selling_margin_price',
+                key: 'open_selling_margin_price',
+                width: '70px',
+                index: 6,
+                render: text => {
+                    return formatNum(text);
+                },
+            },
+            {
+                title: '維持率',
+                dataIndex: 'margin_ratio',
+                key: 'margin_ratio',
+                width: '50px',
+                index: 7,
+                render: (text, record, index) => {
+                    return `${text}%`;
+                },
+            },
+            {
+                title: '可申請股數',
+                dataIndex: 'open_position_qty',
+                key: 'open_position_qty',
+                width: '70px',
+                index: 8,
+            },
+            {
+                title: '申請股數',
                 dataIndex: 'qty',
                 key: 'qty',
-                index: 5,
+                width: '120px',
+                index: 9,
                 render: (text, record, index) => {
                     return <Input value={text} onChange={inpChangeHandler.bind(null, record, stockInventory)} />;
                 },
@@ -397,12 +421,16 @@ const Apply = ({ active, showSearchBox = true }) => {
             />
             <Loading loading={loading} step={20} />
             <style global jsx>{`
-                .applyBtn.ant-btn {
+                .applyTable__container .ant-table-cell {
                     font-size: 16px;
+                    white-space: nowrap;
+                }
+                .applyBtn.ant-btn {
+                    font-size: 14px;
                     border: none;
                     color: #ffffff;
                     background: #d23749;
-                    line-height: 26px;
+                    line-height: 24px;
                     font-weight: bold;
                     transition: 0.3s;
                     border-radius: 3px;
