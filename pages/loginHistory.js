@@ -3,7 +3,7 @@ import { Table } from 'antd';
 import { fetchLoginLog } from '../services/getLoginLog';
 import { getToken } from '../services/user/accessToken';
 
-function loginLog() {
+function loginHistory() {
     const [dataSource, setDataSource] = useState([]);
     useEffect(async () => {
         const res = await fetchLoginLog(10, getToken());
@@ -73,4 +73,4 @@ function loginLog() {
     );
 }
 
-export default loginLog;
+export default loginHistory;
