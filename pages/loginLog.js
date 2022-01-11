@@ -46,7 +46,7 @@ function loginLog() {
                     你可以在以下列表，查看最近十筆登入永豐金證券各平台的紀錄，若對登入紀錄有任何疑慮，請盡速與客服聯繫 :
                     02-6630-8899 / 0800-038-123
                 </p>
-                <Table dataSource={dataSource} columns={columns} />;
+                <Table dataSource={dataSource} columns={columns} className="logTable" />;
             </div>
 
             <style jsx>{`
@@ -56,11 +56,16 @@ function loginLog() {
                     padding: 20px 15px 22px 15px;
                 }
                 .desc {
-                    font-size: 12px;
+                    font-size: 14px;
                     font-weight: bold;
                 }
                 .title {
-                    font-size: 22px;
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+            `}</style>
+            <style jsx global>{`
+                .ant-table-cell {
                     font-weight: bold;
                 }
             `}</style>
