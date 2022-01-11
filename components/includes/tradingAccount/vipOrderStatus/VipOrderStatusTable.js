@@ -78,9 +78,9 @@ const VipOrderStatusTable = ({ showDelBtn, controlReload, getSearchVal, getPageI
         orderStatusQueryFetcherWithSWR,
         {
             onError: (error, key) => {
-                Modal.error({
-                    title: '伺服器錯誤',
-                });
+                // Modal.error({
+                //     title: '伺服器錯誤',
+                // });
                 setError('伺服器錯誤');
             },
             errorRetryCount: 3,
