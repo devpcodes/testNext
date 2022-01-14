@@ -56,17 +56,19 @@ function loginHistory() {
                     padding: 20px 15px 22px 15px;
                 }
                 .desc {
-                    font-size: 14px;
-                    font-weight: bold;
+                    font-size: 16px;
                 }
                 .title {
-                    font-size: 24px;
+                    font-size: 28px;
                     font-weight: bold;
                 }
             `}</style>
             <style jsx global>{`
                 .ant-table-cell {
-                    font-weight: bold;
+                    font-size: 16px;
+                }
+                .ant-table-thead .ant-table-cell {
+                    min-width: 66px;
                 }
             `}</style>
         </>
