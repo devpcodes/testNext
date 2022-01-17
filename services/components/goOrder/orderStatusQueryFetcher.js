@@ -1,4 +1,7 @@
+import { Modal } from 'antd';
 import { getA8Instance } from '../../myAxios';
+const defaultErrorMsg = '伺服器錯誤，請稍後再試';
+
 export const orderStatusQueryFetcherWithSWR = async function (strObj) {
     return await orderStatusQueryFetcher(JSON.parse(strObj));
 };
@@ -59,6 +62,12 @@ export const orderStatusQueryFetcher = async function ({
             }
         }
     } catch (error) {
+        Modal.error({
+            content:
+                error.response.data.message ||
+                (error.response.data.result.msg && JSON.stringify(error.response.data.result.msg)) ||
+                defaultErrorMsg,
+        });
         throw error;
         return error;
     }
