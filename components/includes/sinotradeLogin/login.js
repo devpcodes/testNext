@@ -394,7 +394,16 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
     //神策傳送成功後 做的事
     const afterSensors = function () {
         // localStorage.setItem('INCB', true);
-
+        if (location.hostname === 'localhost') {
+            redirectHandler();
+            //iframe登入處理(來自舊理財網)
+            if (isIframe) {
+                iframeHandler(location.origin + process.env.NEXT_PUBLIC_SUBPATH);
+            } else {
+                successHandler();
+            }
+            return;
+        }
         CAHandler(getToken(), function () {
             redirectHandler();
             //iframe登入處理(來自舊理財網)
