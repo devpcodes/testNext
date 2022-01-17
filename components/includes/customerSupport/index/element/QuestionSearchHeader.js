@@ -1,10 +1,10 @@
 // import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 
 import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import searchIcon from '../../../../../resources/images/pages/customer_support/edit-search.svg';
 
 const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
     const { Header } = Layout;
@@ -17,7 +17,8 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     className="customerSupportSearchInput"
                     size="large"
                     placeholder="你想解決什麼問題？"
-                    prefix={<SearchOutlined />}
+                    prefix={<img src={searchIcon} alt="search-icon" />}
+                    // prefix={<SearchOutlined />}
                     value={value}
                     defaultValue={defaultValue}
                     onChange={onInput}

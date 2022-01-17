@@ -1,13 +1,30 @@
 import { Layout, Row, Col, Card } from 'antd';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 
 const ShortcutFunction = ({ linkData }) => {
+    const router = useRouter();
+
+    const openLink = (site, link, target) => {
+        if (site === 'inner') {
+            router.push(`${link}`);
+        } else if (site === 'outer') {
+            window.open(link, target);
+        }
+    };
+
     return (
         <Layout>
             <Row gutter={[16, 16]} className="fastLinkButtons">
                 {linkData.map((item, index) => (
                     <Col key={index} className="gutter-row" xs={8} sm={4} md={6} lg={4}>
-                        <Card className="customerSupportCard" hoverable>
+                        <Card
+                            className="customerSupportCard"
+                            hoverable
+                            onClick={() => {
+                                openLink(item.site, item.link, item.target);
+                            }}
+                        >
                             <div className="shortcutFunctionIcon" style={{ backgroundImage: `url(${item.image})` }} />
                             <p className="shortcutFunctionIconText">{item.title}</p>
                         </Card>

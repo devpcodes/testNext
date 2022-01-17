@@ -56,6 +56,12 @@ const CustomerButton = ({ onClick, children, type, ...props }) => {
                     border-color: #ea6554;
                 }
 
+                .primary:focus {
+                    background-color: #c43826;
+                    color: #fff;
+                    border-color: #c43826;
+                }
+
                 .default {
                     background-color: #ffffff;
                     color: #0d1623;
@@ -121,7 +127,8 @@ const CustomerButton = ({ onClick, children, type, ...props }) => {
 };
 
 CustomerButton.propTypes = {
-    onClick: PropTypes.func.isRequired,
+    // onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     children: PropTypes.string,
     // children: PropTypes.string.isRequired,
     type: PropTypes.string,

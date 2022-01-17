@@ -57,7 +57,23 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                 break;
             case 'financial-product':
                 elementNameArr.current.push('理財商品');
-                elementPathArr.current.push(`/${levelArr.current[0]}`);
+                if (router.query.categoryCode) {
+                    elementPathArr.current.push(
+                        `/${levelArr.current[0]}?category=${router.query.category}&categoryCode=${router.query.categoryCode}`,
+                    );
+                } else {
+                    elementPathArr.current.push(`/${levelArr.current[0]}`);
+                }
+                break;
+            case 'trading-platform':
+                elementNameArr.current.push('交易平台');
+                if (router.query.categoryCode) {
+                    elementPathArr.current.push(
+                        `/${levelArr.current[0]}?category=${router.query.category}&categoryCode=${router.query.categoryCode}`,
+                    );
+                } else {
+                    elementPathArr.current.push(`/${levelArr.current[0]}`);
+                }
                 break;
             default:
                 break;

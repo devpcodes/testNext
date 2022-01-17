@@ -1,0 +1,25 @@
+<svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-51.7%" y="-30.7%" width="203.3%" height="161.4%" filterUnits="objectBoundingBox" id="a">
+            <feOffset dx="1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="7.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0.664035499 0 0 0 0 0.714355528 0 0 0 0 0.79609257 0 0 0 0.4 0" in="shadowBlurOuter1" result="shadowMatrixOuter1"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <path d="M6.5 9.74 2.61 5.862 1.084 7.389l6.5 6.5 6.5-6.5-1.527-1.527-3.89 3.878V0H6.5v9.74zm8.667 4.15v2.166H0v-2.167h15.167z" id="b"/>
+    </defs>
+    <g filter="url(#a)" transform="translate(-17 -58)" fill="none" fill-rule="evenodd">
+        <g transform="matrix(1 0 0 -1 22.417 79.473)">
+            <mask id="c" fill="#fff">
+                <use xlink:href="#b"/>
+            </mask>
+            <use fill="#2E3A59" xlink:href="#b"/>
+            <g mask="url(#c)" fill="#FFF">
+                <path d="M-5.417-5.61h26v26h-26z"/>
+            </g>
+        </g>
+    </g>
+</svg>

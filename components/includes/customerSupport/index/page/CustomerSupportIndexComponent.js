@@ -29,32 +29,45 @@ const CustomerSupportIndexComponent = () => {
         {
             title: '新手上路',
             image: icon_guideline,
-            link: '',
+            link: '/opening-account/beginner',
+            site: 'inner',
+            target: '_self',
         },
         {
             title: '開戶進度查詢',
             image: icon_account,
-            link: '',
+            link: 'https://www.sinotrade.com.tw/openact/progress?strProd=0002&strWeb=0001',
+            site: 'outer',
+            target: '_blank',
         },
         {
             title: '密碼專區',
             image: icon_password,
-            link: '',
+            link: 'https://www.sinotrade.com.tw/newweb/Service_ForgetPassword/',
+            site: 'outer',
+            target: '_self',
         },
         {
             title: '查詢營業員',
             image: icon_contact,
-            link: '',
+            link: 'https://www.sinotrade.com.tw/sinotradeSalesQry/Sales.aspx',
+            site: 'outer',
+            target: '_blank',
         },
         {
             title: '簽署中心',
             image: icon_paper,
-            link: '',
+            link:
+                'https://www.sinotrade.com.tw/newweb/Inside_Frame/?URL=https://service.sinotrade.com.tw/signCenter/index/',
+            site: 'outer',
+            target: '_self',
         },
         {
             title: '營業據點',
             image: icon_site,
-            link: '',
+            link: 'https://www.sinotrade.com.tw/newweb/Service_Positions/',
+            site: 'outer',
+            target: '_self',
         },
     ]);
     const [firstCategoryAndQuestion, setFirstCategoryAndQuestion] = useState([]);

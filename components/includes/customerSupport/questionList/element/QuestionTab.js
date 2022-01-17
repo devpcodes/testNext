@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import ProductQuestionTable from '../../../financial-product/FinancialProductArticle/element/ProductQuestionTable';
-import ProductFileTable from '../../../financial-product/FinancialProductArticle/element/ProductFileTable';
+import ProductQuestionTable from '../../../financialProduct/FinancialProductArticle/element/ProductQuestionTable';
+import ProductFileTable from '../../../financialProduct/FinancialProductArticle/element/ProductFileTable';
 
 const QuestionTab = ({
     children,

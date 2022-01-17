@@ -1,5 +1,5 @@
 import React from 'react';
-import FinancialProductArticleComponent from '../../components/includes/financial-product/FinancialProductArticle/page/FinancialProductArticleComponent';
+import FinancialProductArticleComponent from '../../components/includes/financialProduct/FinancialProductArticle/page/FinancialProductArticleComponent';
 
 const FinancialProductArticle = () => {
     return (

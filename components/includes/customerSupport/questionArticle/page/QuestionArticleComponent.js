@@ -11,8 +11,8 @@ import {
     getCommonQuestionArticle,
     putCommonQuestionIsLike,
 } from '../../../../../services/components/customerSupport/commonQuestion';
-import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
-import { LeftOutlined } from '@ant-design/icons';
+// import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
+import { LeftOutlined, FileOutlined } from '@ant-design/icons';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import SearchInput from '../../SearchInput';
 
@@ -20,13 +20,11 @@ const QuestionArticleComponent = () => {
     const { Panel } = Collapse;
     const router = useRouter();
     const { id } = router.query;
-    const isMobile = useCheckMobile();
+    // const isMobile = useCheckMobile();
 
     const [articleData, setArticleData] = useState([]);
     const [articleTitle, setArticleTitle] = useState('');
     const [articleContent, setArticleContent] = useState();
-    const [isLike, setIsLike] = useState(false);
-    const [isDislike, setIsdislike] = useState(false);
 
     useEffect(async () => {
         const data = await getCommonQuestionArticle(id);
@@ -45,6 +43,10 @@ const QuestionArticleComponent = () => {
             pathname: '/customer-support/search-result',
             query: { keyword: searchKeyword },
         });
+    };
+
+    const downloadFile = filename => {
+        window.open(`https://webrd.sinotrade.com.tw/files/${filename}`);
     };
 
     const keywords = keywords => {
@@ -75,10 +77,7 @@ const QuestionArticleComponent = () => {
                                     返回列表
                                 </CustomerButton>
                                 <div className="back_group">
-                                    <CustomerButton
-                                        type="default"
-                                        onClick={() => router.push('/customer-support/question')}
-                                    >
+                                    <CustomerButton type="default" onClick={() => history.back()}>
                                         <LeftOutlined />
                                     </CustomerButton>
                                     <div className="mobile_button">
@@ -115,6 +114,24 @@ const QuestionArticleComponent = () => {
                                             <article key={idx}>{parse(item.content.content)}</article>
                                         ),
                                     )}
+                                {articleData?.attachments?.length
+                                    ? articleData.attachments.map((item, idx) => (
+                                          <div className="question-attachments" key={idx}>
+                                              <div className="question-attachments-left">
+                                                  <FileOutlined />
+                                                  <p>{item.displayName}</p>
+                                              </div>
+                                              <CustomerButton
+                                                  type="primary"
+                                                  onClick={() => {
+                                                      downloadFile(item.filename);
+                                                  }}
+                                              >
+                                                  下載
+                                              </CustomerButton>
+                                          </div>
+                                      ))
+                                    : ''}
                                 <hr />
                                 <p className="is-helped-title">回答是否有幫助？</p>
                                 <CustomerButton
@@ -582,6 +599,45 @@ const QuestionArticleComponent = () => {
                     margin: 10px 0;
                 }
 
+                .question-attachments {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    height: 51px;
+                    padding: 12px 20px;
+                    margin-bottom: 12px;
+                    background-color: #f9fbff;
+                    border: 1px solid #e6ebf5;
+                }
+
+                .question-attachments-left {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                }
+
+                .question-attachments-left svg {
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 5px;
+                }
+
+                .question-attachments-left p {
+                    font-size: 16px;
+                    margin-bottom: 0;
+                }
+
+                .question-attachments .customer-button {
+                    width: 44px;
+                    height: 26px;
+                    padding: 0;
+                }
+
+                .question-attachments .customer-button span {
+                    font-size: 12px;
+                }
+
                 .is-helped-title {
                     color: #3f5372;
                     font-size: 16px;
@@ -628,7 +684,7 @@ const QuestionArticleComponent = () => {
                     }
 
                     .is-helped-button {
-                        width: 36vw;
+                        width: 41vw;
                     }
 
                     is-helped-button {
@@ -648,6 +704,10 @@ const QuestionArticleComponent = () => {
                 .question-article-input-search .ant-input::placeholder,
                 .mobile_button .ant-input::placeholder {
                     color: #3f5372;
+                }
+
+                .question-attachments {
+                    height: 64px;
                 }
             `}</style>
         </>
