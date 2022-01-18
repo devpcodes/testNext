@@ -31,8 +31,8 @@ const ChangePasswordPage = () => {
                     content: `${res}`,
                     onOk: async () => {
                         await logout();
-                        router.replace(router.pathname, `/SinoTrade_login`, { shallow: true });
-                        // window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
+                        // router.replace(router.pathname, `/SinoTrade_login`, { shallow: true });
+                        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
                     },
                 });
             } catch (error) {
