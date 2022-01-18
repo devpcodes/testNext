@@ -17,6 +17,7 @@ export const postPasswordEdit = async function (token, user_id, newPwd, oldPwd) 
             data: bodyFormData,
             headers: { 'Content-Type': 'multipart/form-data' },
         });
+        console.log('-------', res.data.success);
         if (res.data.success === 'True') {
             return '密碼修改成功，請重新登入系統。';
         } else if (res.data.success == 'False') {
@@ -25,9 +26,9 @@ export const postPasswordEdit = async function (token, user_id, newPwd, oldPwd) 
         }
     } catch (error) {
         const msg =
-            error.response.data.result?.detail ||
-            error.response.data.result?.msg ||
-            error.response.data.result?.message ||
+            error?.response?.data?.result?.detail ||
+            error?.response?.data?.result?.msg ||
+            error?.response?.data?.result?.message ||
             error ||
             '伺服器錯誤';
         throw msg;
