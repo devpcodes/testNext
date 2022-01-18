@@ -26,19 +26,12 @@ const ChangePasswordPage = () => {
             const token = getToken();
             try {
                 const res = await postPasswordEdit(token, user_id, newPwd, oldPwd);
-                dispatch(
-                    setModal({
-                        visible: true,
-                        content: `${res}`,
-                        type: 'info',
-                        icon: false,
-                        title: '更改密碼成功',
-                        onOk: async () => {
-                            dispatch(setModal({ visible: false }));
-                            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
-                        },
-                    }),
-                );
+                Modal.success({
+                    content: `${res}`,
+                    onOk: () => {
+                        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
+                    },
+                });
             } catch (error) {
                 dispatch(
                     setModal({
