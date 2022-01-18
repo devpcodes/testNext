@@ -28,6 +28,7 @@ export const postPasswordEdit = async function (token, user_id, newPwd, oldPwd) 
             error.response.data.result?.detail ||
             error.response.data.result?.msg ||
             error.response.data.result?.message ||
+            error ||
             '伺服器錯誤';
         throw msg;
     }
