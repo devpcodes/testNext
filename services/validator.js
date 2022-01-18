@@ -7,6 +7,10 @@ let verify = {
         }
     },
     passwordCheck: (val, otherVal, msg) => {
+        if (val === otherVal) {
+            return Promise.reject(msg || '新舊密碼不得相同');
+        }
+
         let arr = [];
         arr.push(checkLowerEnglish(val));
         arr.push(checkBiggerEnglish(val));

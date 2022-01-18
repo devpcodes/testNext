@@ -29,7 +29,8 @@ const ChangePasswordPage = () => {
                 Modal.success({
                     content: `${res}`,
                     onOk: () => {
-                        window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
+                        router.replace(router.pathname, `/SinoTrade_login`, { shallow: true });
+                        // window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
                     },
                 });
             } catch (error) {
@@ -115,7 +116,7 @@ const ChangePasswordPage = () => {
                                         // } else {
                                         //     return Promise.reject('含錯誤字元');
                                         // }
-                                        return verifyHandler('passwordCheck', value);
+                                        return verifyHandler('passwordCheck', value, form.getFieldValue('oldPassword'));
                                     },
                                 },
                             ]}
