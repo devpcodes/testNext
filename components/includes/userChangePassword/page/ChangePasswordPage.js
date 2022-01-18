@@ -7,6 +7,7 @@ import { verifyHandler } from '../../../../services/validator';
 import { getToken } from '../../../../services/user/accessToken';
 import { postPasswordEdit } from '../../../../services/components/changePasswordPage/postPasswordEdit';
 import { setModal } from '../../../../store/components/layouts/action';
+import { logout } from '../../../../services/user/logoutFetcher';
 const ChangePasswordPage = () => {
     const [form] = Form.useForm();
     const isMobile = useCheckMobile();
@@ -28,7 +29,8 @@ const ChangePasswordPage = () => {
                 const res = await postPasswordEdit(token, user_id, newPwd, oldPwd);
                 Modal.success({
                     content: `${res}`,
-                    onOk: () => {
+                    onOk: async () => {
+                        await logout();
                         router.replace(router.pathname, `/SinoTrade_login`, { shallow: true });
                         // window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
                     },
