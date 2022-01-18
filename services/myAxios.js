@@ -149,6 +149,15 @@ const createLykanInstance = (version = lykanDefaultVersion) =>
         },
     });
 
+const createStInstance = (version = 'v1') => {
+    return axios.create({
+        baseURL: `${process.env.NEXT_PUBLIC_ST_SERVICE}/${version}/`,
+        timeout: 7000,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+};
 export const getLykanInstance = (version = lykanDefaultVersion, modal = true) => {
     const LykanIns = createLykanInstance(version);
 
@@ -158,6 +167,19 @@ export const getLykanInstance = (version = lykanDefaultVersion, modal = true) =>
             return errorHandler(error, modal);
         },
     );
+
+    return LykanIns;
+};
+
+export const getStInstance = (version = lykanDefaultVersion, modal = true) => {
+    const LykanIns = createStInstance(version);
+
+    // LykanIns.interceptors.response.use(
+    //     response => response,
+    //     error => {
+    //         return errorHandler(error, modal);
+    //     },
+    // );
 
     return LykanIns;
 };
