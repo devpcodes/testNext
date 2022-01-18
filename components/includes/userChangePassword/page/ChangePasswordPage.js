@@ -35,7 +35,7 @@ const ChangePasswordPage = () => {
                         title: '更改密碼成功',
                         onOk: async () => {
                             dispatch(setModal({ visible: false }));
-                            router.push(`/SinoTrade_login`);
+                            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}` + '/SinoTrade_login';
                         },
                     }),
                 );
