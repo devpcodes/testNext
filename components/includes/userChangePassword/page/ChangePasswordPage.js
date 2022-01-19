@@ -121,6 +121,11 @@ const ChangePasswordPage = () => {
                                         return verifyHandler('passwordCheck', value, form.getFieldValue('oldPassword'));
                                     },
                                 },
+                                {
+                                    validator: (rule, value) => {
+                                        return verifyHandler('oldPasswordCheck', value);
+                                    },
+                                },
                             ]}
                         >
                             <Input.Password
