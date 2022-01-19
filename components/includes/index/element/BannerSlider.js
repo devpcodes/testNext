@@ -1,43 +1,49 @@
 import { useEffect, useState } from 'react';
 import { Carousel } from 'antd';
 import { getAdSlot } from '../../../../services/components/bannerSlider/AdSlot';
-import bg from '../../../../resources/images/pages/index/banner/banner.png';
+import AnnouncementMarquee from '../element/AnnouncementMarquee';
 
 const BannerSlider = () => {
     const [ads, setAds] = useState([]);
+    const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(true);
 
     const getAds = async () => {
         const data = await getAdSlot('0104');
         setAds(data.ads);
     };
 
-    useEffect(async () => {
+    const onCloseAnnouncement = () => {
+        setIsAnnouncementOpen(false);
+    };
+
+    useEffect(() => {
         getAds();
     }, []);
 
     return (
         <>
             <div className="banner-slider-container">
-                <Carousel dots={{ className: 'dots' }}>
-                    {ads.map((e, i) => (
-                        <div key={i}>
-                            <a href={e.url}>
-                                <h3
-                                    style={{
-                                        backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
-                                    }}
-                                >
-                                    2
-                                </h3>
-                            </a>
-                        </div>
-                    ))}
+                <AnnouncementMarquee isOpen={isAnnouncementOpen} onCloseAnnouncement={onCloseAnnouncement} />
+                <Carousel dots={{ className: 'dots' }} autoplay>
+                    {Array.isArray(ads) &&
+                        ads.map((e, i) => (
+                            <div key={i}>
+                                <a href={e.url}>
+                                    <h3
+                                        style={{
+                                            backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
+                                        }}
+                                    ></h3>
+                                </a>
+                            </div>
+                        ))}
                 </Carousel>
             </div>
             <style jsx global>{`
                 .banner-slider-container {
                     width: 100%;
                     height: 500px;
+                    position: relative;
                 }
 
                 .banner-slider-container h3 {

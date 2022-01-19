@@ -7,7 +7,7 @@ import appBgTablet from '../../../../resources/images/pages/homepage/app_downloa
 import appBgMobile from '../../../../resources/images/pages/homepage/app_download_section/rectangle-copy-mobile.webp';
 import android from '../../../../resources/images/pages/homepage/app_download_section/img-android.svg';
 import ios from '../../../../resources/images/pages/homepage/app_download_section/img-i-os.svg';
-import qrCode from '../../../../resources/images/pages/homepage/app_download_section/download.webp';
+import qrCode from '../../../../resources/images/pages/homepage/app_download_section/codeandborder.svg';
 
 const AppDownloadSection = () => {
     const [isQrCodeShow, setIsQrCodeShow] = useState(false);
@@ -210,6 +210,9 @@ const AppDownloadSection = () => {
                         background-image: url(${qrCode});
                         background-size: cover;
                         background-position: center;
+                        -webkit-box-shadow: 14px 14px 20px -14px rgba(185, 189, 199, 1);
+                        -moz-box-shadow: 14px 14px 20px -14px rgba(185, 189, 199, 1);
+                        box-shadow: 14px 14px 20px -14px rgba(185, 189, 199, 1);
                     }
 
                     // .ant-btn:hover .download-qr-code {

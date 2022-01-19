@@ -38,22 +38,37 @@ function QAshortcut(props) {
                     </div>
                     <ul className="white">
                         <li>
-                            <a href={'/'} target="_blank" style={{ backgroundImage: `url(${icon1})` }}>
+                            <a
+                                href="https://www.sinotrade.com.tw/openact/progress?strProd=0002&strWeb=0001"
+                                target="_blank"
+                                style={{ backgroundImage: `url(${icon1})` }}
+                            >
                                 查開戶進度
                             </a>
                         </li>
                         <li>
-                            <a href={'/'} style={{ backgroundImage: `url(${icon2})` }}>
+                            <a
+                                href="https://www.sinotrade.com.tw/newweb/Service_ForgetPassword/"
+                                style={{ backgroundImage: `url(${icon2})` }}
+                            >
                                 密碼專區
                             </a>
                         </li>
                         <li>
-                            <a href={'/'} target="_blank" style={{ backgroundImage: `url(${icon3})` }}>
+                            <a
+                                href="https://www.sinotrade.com.tw/sinotradeSalesQry/Sales.aspx"
+                                target="_blank"
+                                style={{ backgroundImage: `url(${icon3})` }}
+                            >
                                 查詢營業員
                             </a>
                         </li>
                         <li>
-                            <a href={'/'} target="_blank" style={{ backgroundImage: `url(${icon4})` }}>
+                            <a
+                                href="https://www.sinotrade.com.tw/richclub/dawhotou/campaign/app"
+                                target="_blank"
+                                style={{ backgroundImage: `url(${icon4})` }}
+                            >
                                 下載大戶投
                             </a>
                         </li>
@@ -96,7 +111,7 @@ function QAshortcut(props) {
                         background-color: #c43826;
                         color: #fff;
                         z-index: 11;
-                        border-radius: calc(3.75vw / 2);
+                        border-radius: calc(60px / 2);
                     }
 
                     .QA-shortcut .switch {
@@ -105,7 +120,7 @@ function QAshortcut(props) {
                         height: 24px;
                         left: 50%;
                         transform: translateX(-50%);
-                        top: 0.875vw;
+                        top: 14px;
                         background-position: center;
                         background-size: contain;
                         background-repeat: no-repeat;
@@ -214,10 +229,18 @@ function QAshortcut(props) {
                         background-repeat: no-repeat;
                     }
 
-                    @media screen and (max-width: 768px) {
+                    @media screen and (max-width: 450px) {
+                        .QA-shortcut {
+                            display: none;
+                        }
                     }
                 `}
             </style>
+            <style jsx global>{`
+                html {
+                    scroll-behavior: smooth;
+                }
+            `}</style>
         </div>
     );
 }

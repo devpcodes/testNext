@@ -268,7 +268,16 @@ const QuestionListComponent = function () {
                         }
 
                         .ant-table-content .ant-table-tbody .ant-table-cell div {
+                            font-family: 'PingFangTC-Medium';
                             font-weight: 500;
+                        }
+
+                        .ant-table-content .ant-table-tbody .ant-table-cell div:hover {
+                            color: #daa360;
+                        }
+
+                        .ant-table-tbody > tr.ant-table-row:hover > td {
+                            background: #e6ebf5;
                         }
 
                         @media screen and (max-width: 768px) {
@@ -435,6 +444,7 @@ const QuestionListComponent = function () {
                             margin: 0;
                             padding: 2px 45px 0;
                             border: 1px solid #d7e0ef;
+                            border-bottom: none;
                             background-color: #fff;
                         }
 

@@ -1,11 +1,23 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { Alert } from 'antd';
+import { getAnnounce } from '../../../../services/components/AnnouncementMarquee/announcements';
 import Marquee from 'react-fast-marquee';
 import PropTypes from 'prop-types';
 
 const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
+    const [anous, setAnous] = useState([]);
+
+    const getAnous = async () => {
+        const data = await getAnnounce();
+        setAnous(data);
+    };
+
+    useEffect(() => {
+        getAnous();
+    }, []);
+
     return (
-        <>
+        <div className="anous-box">
             {isOpen ? (
                 <Alert
                     banner
@@ -14,13 +26,32 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                     onClose={onCloseAnnouncement}
                     message={
                         <Marquee gradient={false}>
-                            <p>123</p>
-                            <p>456</p>
-                            <p>789</p>
+                            {Array.isArray(anous) &&
+                                anous.map((e, i) => (
+                                    <p key={i}>
+                                        <a href="https://www.sinotrade.com.tw/m/CSCenter/CSCenter_13_5">{e.title}</a>
+                                    </p>
+                                ))}
                         </Marquee>
                     }
                 />
             ) : null}
+            <style jsx>
+                {`
+                    .anous-box {
+                        position: absolute;
+                        width: 100%;
+                        height: 44px;
+                        z-index: 1;
+                    }
+
+                    @media screen and (max-width: 450px) {
+                        .anous-box {
+                            height: 41px;
+                        }
+                    }
+                `}
+            </style>
             <style jsx global>
                 {`
                     .ant-alert.ant-alert-no-icon {
@@ -32,7 +63,8 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                         background-color: #c43826;
                     }
 
-                    .ant-alert.ant-alert-no-icon p {
+                    .ant-alert.ant-alert-no-icon p a {
+                        display: block;
                         color: white;
                     }
 
@@ -57,12 +89,18 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                     }
 
                     .ant-alert-close-icon svg {
-                        width: 20px;
-                        height: 20px;
+                        width: 24px;
+                        height: 24px;
+                    }
+
+                    @media screen and (max-width: 450px) {
+                        .ant-alert.ant-alert-no-icon {
+                            height: 41px;
+                        }
                     }
                 `}
             </style>
-        </>
+        </div>
     );
 };
 

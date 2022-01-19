@@ -7,17 +7,18 @@ const Announcement = ({ data }) => {
     return (
         <>
             <div className="announcement_section">
-                {data &&
-                    data.map(item => {
-                        return (
-                            <div key={item.articleGUID} className="announcement_block">
-                                <Link href={`/AnnouncementPage/?GUID=${item.articleGUID}`}>
-                                    <a>{item.title}</a>
-                                </Link>
-                                <p className="announcement-date">{item.postTime}</p>
-                            </div>
-                        );
-                    })}
+                {data
+                    ? data.map(item => {
+                          return (
+                              <div key={item.articleGUID} className="announcement_block">
+                                  <Link href={`/AnnouncementPage/?GUID=${item.articleGUID}`}>
+                                      <a>{item.title}</a>
+                                  </Link>
+                                  <p className="announcement-date">{item.postTime}</p>
+                              </div>
+                          );
+                      })
+                    : null}
             </div>
             <style jsx>{`
                 .announcement_section {

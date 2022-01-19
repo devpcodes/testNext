@@ -74,7 +74,7 @@ const ProductFileTable = function ({ dataSource }) {
                               defaultCurrent: 1,
                               pageSize: 15,
                               total: dataSource?.length,
-                              showTotal: (total, range) => `${range[0]}-${range[1]}則問題（共${total}則問題）`,
+                              showTotal: (total, range) => `${range[0]}-${range[1]}則檔案（共${total}則檔案）`,
                               onChange: scrollTop,
                           }
                 }

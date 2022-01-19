@@ -233,19 +233,16 @@ const QuestionArticleComponent = () => {
                     margin: 15.5px 0;
                 }
 
-                .article > .category-group {
-                    display: flex;
-                    flex-direction: row;
-                }
-
                 .article > .category-group > .category-question-group {
                     display: flex;
                     flex-direction: row;
+                    align-items: center;
                 }
 
                 .article > .category-group > .category-time-group {
                     display: flex;
                     flex-direction: row;
+                    align-items: center;
                 }
 
                 .article > .category-group > .category-time-group > span {
@@ -253,13 +250,11 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article > .category-group > .category-question-group > p {
-                    font-size: 14px;
                     margin: 0 12px 0 0;
                     color: #0d1623;
                 }
 
                 .article > .category-group > .category-question-group > span {
-                    font-size: 14px;
                     margin: 0 24px 0 0;
                     color: #3f5372;
                 }
@@ -269,7 +264,6 @@ const QuestionArticleComponent = () => {
                 }
 
                 .category-time-group > span {
-                    font-size: 14px;
                     color: #3f5372;
                 }
 
@@ -437,7 +431,6 @@ const QuestionArticleComponent = () => {
 
                     .category-group {
                         flex-direction: column !important;
-                        font-size: 14px !important;
                     }
 
                     .category-question-group {
@@ -473,6 +466,10 @@ const QuestionArticleComponent = () => {
                     @media screen and (max-width: 450px) {
                         .back_group > .mobile_button {
                             width: 74vw;
+                        }
+
+                        .article > .category-group {
+                            font-size: 14px;
                         }
                     }
                 }

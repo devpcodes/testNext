@@ -1,9 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
+import CountUp from 'react-countup';
+import VisibilitySensor from 'react-visibility-sensor';
 import CustomerButton from '../../../includes/customerSupport/CustomerButton';
 import YellowRedLine from '../element/YellowRedLine';
 import bg from '../../../../resources/images/pages/homepage/second_banner/man-on-target.svg';
 
 const SecondBanner = () => {
+    const [customerActive, setCustomerActive] = useState(true);
+    const [monthActive, setMonthActive] = useState(true);
+    const [productActive, setProductActive] = useState(true);
     const clickButton = () => {
         window.open(
             'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_top&strProd=0037&strWeb=0035',
@@ -20,19 +25,44 @@ const SecondBanner = () => {
                     <YellowRedLine />
                     <div className="second-banner-number-group">
                         <div className="number-group">
-                            <span>120</span>
+                            <VisibilitySensor
+                                partialVisibility
+                                offset={{ bottom: 500 }}
+                                active={customerActive}
+                                onChange={isVisible => isVisible && setCustomerActive(false)}
+                            >
+                                {({ isVisible }) => <span>{isVisible ? <CountUp end={120} duration={3} /> : '0'}</span>}
+                            </VisibilitySensor>
                             <span className="plus">+</span>
                             <span>萬</span>
                             <p>用戶數</p>
                         </div>
                         <div className="number-group">
-                            <span>3771</span>
+                            <VisibilitySensor
+                                partialVisibility
+                                offset={{ bottom: 500 }}
+                                active={monthActive}
+                                onChange={isVisible => isVisible && setMonthActive(false)}
+                            >
+                                {({ isVisible }) => (
+                                    <span>{isVisible ? <CountUp delay={1} end={3771} duration={3} /> : '0'}</span>
+                                )}
+                            </VisibilitySensor>
                             <span className="plus">+</span>
                             <span>億</span>
                             <p>每月交易額</p>
                         </div>
                         <div className="number-group">
-                            <span>46</span>
+                            <VisibilitySensor
+                                partialVisibility
+                                offset={{ bottom: 500 }}
+                                active={productActive}
+                                onChange={isVisible => isVisible && setProductActive(false)}
+                            >
+                                {({ isVisible }) => (
+                                    <span>{isVisible ? <CountUp delay={2} end={46} duration={3} /> : '0'}</span>
+                                )}
+                            </VisibilitySensor>
                             <span>種</span>
                             <p>理財商品</p>
                         </div>
@@ -50,17 +80,17 @@ const SecondBanner = () => {
                         justify-content: center;
                         min-height: 405px;
                         height: auto;
-                        padding: 56px 8%;
+                        padding: 56px 0;
                         background-color: #e6ebf5;
                     }
 
                     .second-banner-texts {
                         z-index: 1;
-                        width: 50%;
+                        width: 36.938vw;
                     }
 
                     h2 {
-                        margin: 0 20px 8px 0;
+                        margin: 0 0 8px 0;
                         font-size: 36px;
                         font-weight: 600;
                         letter-spacing: 0.9px;
@@ -111,30 +141,22 @@ const SecondBanner = () => {
                     }
 
                     .second-banner-image {
-                        width: 30%;
+                        width: 34.813vw;
+                        margin-left: 1.25vw;
                         background-size: contain;
                         background-position: center;
                         background-repeat: no-repeat;
                     }
 
-                    @media screen and (max-width: 1100px) {
-                        .second-banner-texts {
-                            z-index: 1;
-                            width: 60%;
-                        }
-
-                        .second-banner-image {
-                            width: 40%;
-                        }
-                    }
-
-                    @media screen and (max-width: 795px) {
+                    @media screen and (max-width: 1200px) {
                         .second-banner-container {
                             min-height: 405px;
                             position: relative;
+                            padding: 7.292vw 7.292vw 56px;
                         }
 
                         .second-banner-texts {
+                            z-index: 1;
                             width: 100%;
                         }
 
@@ -147,8 +169,16 @@ const SecondBanner = () => {
                             position: absolute;
                             bottom: 0;
                             right: 0;
-                            width: 250px;
-                            height: 230px;
+                            width: 41.667vw;
+                            height: 29.948vw;
+                            margin-left: 0;
+                            background-position: left;
+                        }
+                    }
+
+                    @media screen and (max-width: 820px) {
+                        .second-banner-image {
+                            width: 32.552vw;
                         }
                     }
 
@@ -171,8 +201,8 @@ const SecondBanner = () => {
                         }
 
                         .second-banner-image {
-                            width: 131px;
-                            height: 120px;
+                            width: 34.933vw;
+                            height: 32vw;
                         }
                     }
                 `}

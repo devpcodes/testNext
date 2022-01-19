@@ -129,7 +129,7 @@ const CustomerButton = ({ onClick, children, type, ...props }) => {
 CustomerButton.propTypes = {
     // onClick: PropTypes.func.isRequired,
     onClick: PropTypes.func,
-    children: PropTypes.string,
+    children: PropTypes.any,
     // children: PropTypes.string.isRequired,
     type: PropTypes.string,
 };

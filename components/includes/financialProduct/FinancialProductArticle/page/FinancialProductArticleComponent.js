@@ -57,6 +57,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
             res = await getFinancialProductDetail(productCode);
         }
         setArticleData(res);
+        console.log('reeeess', res);
         const tabsArray = [];
         if (res?.tabs?.length) {
             res.tabs.forEach((i, index) => {
@@ -123,7 +124,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                         categories={articleTabs}
                                         defaultActiveKey={'0'}
                                         activeKey={activeTabKey}
-                                        keywords={articleData.keywords}
+                                        keywords={articleData.commonQuestionKeywords}
                                         attachments={articleData.attachments}
                                         onChange={onTabsChange}
                                     >
@@ -168,7 +169,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                     </div>
                                 </main>
 
-                                {announcement.length && <Announcement data={announcement} />}
+                                {announcement.length ? <Announcement data={announcement} /> : null}
                             </div>
                         </div>
                     </div>

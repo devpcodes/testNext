@@ -4,7 +4,6 @@ import FastLinks from '../element/FastLinks';
 
 import SecondBanner from '../element/SecondBanner';
 import BannerSlider from '../element/BannerSlider';
-import AnnouncementMarquee from '../element/AnnouncementMarquee';
 import ThirdSection from '../element/ThirdSection';
 import AppDownloadSection from '../element/AppDownloadSection';
 import ForthSection from '../element/ForthSection';
@@ -33,8 +32,6 @@ import security from '../../../../resources/images/pages/homepage/safety_section
 
 const IndexPageComponent = () => {
     const { Content } = Layout;
-
-    const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(true);
 
     const [fastLinkData] = useState([
         {
@@ -194,15 +191,10 @@ const IndexPageComponent = () => {
         ],
     });
 
-    const onCloseAnnouncement = () => {
-        setIsAnnouncementOpen(false);
-    };
-
     return (
         <>
             <Layout>
                 <Content>
-                    <AnnouncementMarquee isOpen={isAnnouncementOpen} onCloseAnnouncement={onCloseAnnouncement} />
                     <BannerSlider />
                     <FastLinks data={fastLinkData} key={fastLinkData.index} />
                     <SecondBanner />
