@@ -103,12 +103,12 @@ const ChangePasswordPage = () => {
                                 {
                                     required: true,
                                     min: 8,
-                                    message: '請至少輸入8個字元',
+                                    message: '密碼長度請輸入8~20位',
                                 },
                                 {
                                     required: true,
                                     max: 20,
-                                    message: '輸入字元數超過',
+                                    message: '密碼長度請輸入8~20位',
                                 },
                                 {
                                     validator: (rule, value) => {
@@ -172,14 +172,18 @@ const ChangePasswordPage = () => {
                         </Form.Item>
 
                         <div className="list__container">
-                            <p className="msg">
+                            {/* <p className="msg">
                                 為了保障您的密碼與帳戶的安全，建議您網路交易密碼長度介於 8~20
                                 字元，且四選三以下四種組合， 帳戶密碼應每三個月至少變更一次。
+                            </p> */}
+                            <p className="list">
+                                1. 電子交易密碼長度需為 8~20
+                                字元，且至少包含大寫英文、小寫英文、符號(.!@$*~()`-)、數字，其中三種
                             </p>
-                            <p className="list">1.數字(0~9)</p>
-                            <p className="list">2.小寫英文字嗎(a~z)</p>
-                            <p className="list">3.大寫英文字嗎(A~Z)</p>
-                            <p className="list">4.特殊符號(.!@$*~()`-)</p>
+                            <p className="list">
+                                2.
+                                請妥善保管，不與他人分享您的帳號密碼，針對重要的金融帳號設定不同的專屬密碼，切勿與網路購物密碼相同。
+                            </p>
                         </div>
 
                         <Form.Item label="">

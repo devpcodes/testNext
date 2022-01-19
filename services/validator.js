@@ -1,14 +1,14 @@
 let verify = {
     confirmPassword: (val, otherVal, msg) => {
         if (val !== otherVal) {
-            return Promise.reject(msg || '與原密碼輸入不同');
+            return Promise.reject(msg || '與新密碼輸入不同');
         } else {
             return Promise.resolve();
         }
     },
     passwordCheck: (val, otherVal, msg) => {
         if (val === otherVal) {
-            return Promise.reject(msg || '新舊密碼不得相同');
+            return Promise.reject(msg || '新密碼不得與舊密碼相同');
         }
 
         let arr = [];
@@ -20,7 +20,7 @@ let verify = {
             return item === true;
         });
         if (arr.length < 3) {
-            return Promise.reject(msg || '請至少包含大寫英文、小寫英文、數字、符號(.!@$*~()`-)其中三種');
+            return Promise.reject(msg || '密碼請包含大寫英文、小寫英文、符號(.!@$*~()`-)、數字，其中三種');
         } else {
             return Promise.resolve();
         }
