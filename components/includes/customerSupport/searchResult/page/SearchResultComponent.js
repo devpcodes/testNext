@@ -208,27 +208,13 @@ const SearchResultComponent = () => {
                     }
 
                     .questionTitleUnhighlight {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        /* display: -webkit-box; */
                         color: #0d1623;
-                        font-size: 20px;
-                        font-weight: 500;
-                        -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 1;
                     }
 
                     .questionTitleHighlight {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
                         padding: 0;
                         color: #daa360;
                         background-color: transparent;
-                        /* display: -webkit-box; */
-                        font-size: 20px;
-                        font-weight: 500;
-                        -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 1;
                     }
 
                     .questionContent {
@@ -323,7 +309,6 @@ const SearchResultComponent = () => {
                     }
 
                     .noResult > img {
-                        width: 90px;
                         margin-bottom: 16px;
                     }
 
@@ -347,6 +332,12 @@ const SearchResultComponent = () => {
 
                     .infinite-scroll-component__outerdiv .infinite-scroll-component {
                         overflow: hidden !important;
+                    }
+
+                    @media screen and (max-width: 450px) {
+                        .secondThirdCategories {
+                            margin-top: 4px;
+                        }
                     }
                 `}
             </style>

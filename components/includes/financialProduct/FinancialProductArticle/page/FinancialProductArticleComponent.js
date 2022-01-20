@@ -147,15 +147,17 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                         </div>
 
                         <div className="side_section">
-                            <OpenAccountButtons
-                                title={articleData?.openTitle || articleData?.appName}
-                                description={articleData?.openDescription || articleData?.description}
-                                image={articleData?.openImagePath || articleData?.imagePath}
-                                button1Title={articleData?.openButton1Name || articleData?.button1Name}
-                                button1Link={articleData?.openButton1Url || articleData?.button1Url}
-                                button2Title={articleData?.openButton2Name || articleData?.button2Name}
-                                button2Link={articleData?.openButton2Url || articleData?.button2Url}
-                            />
+                            {articleData?.enableOpenBlock ? (
+                                <OpenAccountButtons
+                                    title={articleData?.openTitle || articleData?.appName}
+                                    description={articleData?.openDescription || articleData?.description}
+                                    image={articleData?.openImagePath || articleData?.imagePath}
+                                    button1Title={articleData?.openButton1Name || articleData?.button1Name}
+                                    button1Link={articleData?.openButton1Url || articleData?.button1Url}
+                                    button2Title={articleData?.openButton2Name || articleData?.button2Name}
+                                    button2Link={articleData?.openButton2Url || articleData?.button2Url}
+                                />
+                            ) : null}
                             <div className="open-related">
                                 <main className="qTitle-frame">
                                     <h3 className="qTitle">相關公告</h3>
@@ -441,7 +443,8 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                 @media screen and (max-width: 450px) {
                     .article {
-                        width: 98vw;
+                        width: 100vw;
+                        margin: 0 auto;
                         min-width: 0;
                         transform: translateX(-5vw);
                     }
@@ -530,6 +533,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     padding: 16px 16px 16px 32px;
                     margin: 0;
                     font-size: 16px;
+                    color: #0d1623;
                 }
 
                 .available-product-tags {

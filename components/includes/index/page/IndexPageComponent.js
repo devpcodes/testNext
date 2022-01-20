@@ -62,10 +62,10 @@ const IndexPageComponent = () => {
         {
             title: '交易平台',
             description: '全球市場交易零時差',
-            site: 'outer',
-            link: 'https://www.sinotrade.com.tw/newweb/SinoTrade_login/?currentPath=%2FgoOrder',
+            site: 'inner',
+            link: '/trading-platform',
             icon: `${stock}`,
-            target: '_blank',
+            target: '_self',
         },
         {
             title: '客戶支援',

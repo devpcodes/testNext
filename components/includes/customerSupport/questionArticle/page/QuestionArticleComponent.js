@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import parse from 'html-react-parser';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { Carousel } from 'antd';
 import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
 import CustomerButton from '../../CustomerButton';
@@ -11,20 +13,21 @@ import {
     getCommonQuestionArticle,
     putCommonQuestionIsLike,
 } from '../../../../../services/components/customerSupport/commonQuestion';
-// import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import { LeftOutlined, FileOutlined } from '@ant-design/icons';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import SearchInput from '../../SearchInput';
+import { getAdSlot } from '../../../../../services/components/bannerSlider/AdSlot';
 
 const QuestionArticleComponent = () => {
     const { Panel } = Collapse;
     const router = useRouter();
     const { id } = router.query;
-    // const isMobile = useCheckMobile();
+    const clientWidth = useSelector(store => store.layout.winWidth);
 
     const [articleData, setArticleData] = useState([]);
     const [articleTitle, setArticleTitle] = useState('');
     const [articleContent, setArticleContent] = useState();
+    const [ads, setAds] = useState([]);
 
     useEffect(async () => {
         const data = await getCommonQuestionArticle(id);
@@ -33,6 +36,15 @@ const QuestionArticleComponent = () => {
         const content = JSON.parse(data.content);
         setArticleContent(content);
     }, [id]);
+
+    useEffect(() => {
+        getAds();
+    }, [id]);
+
+    const getAds = async () => {
+        const data = await getAdSlot('question');
+        setAds(data?.ads);
+    };
 
     if (!articleData) {
         return 'loading';
@@ -134,24 +146,26 @@ const QuestionArticleComponent = () => {
                                     : ''}
                                 <hr />
                                 <p className="is-helped-title">回答是否有幫助？</p>
-                                <CustomerButton
-                                    type="default"
-                                    className="is-helped-button"
-                                    onClick={() => {
-                                        sendIsHelp(true);
-                                    }}
-                                >
-                                    是
-                                </CustomerButton>
-                                <CustomerButton
-                                    type="default"
-                                    className="is-helped-button"
-                                    onClick={() => {
-                                        sendIsHelp(false);
-                                    }}
-                                >
-                                    否
-                                </CustomerButton>
+                                <div className="is-helped-button-group">
+                                    <CustomerButton
+                                        type="default"
+                                        className="is-helped-button"
+                                        onClick={() => {
+                                            sendIsHelp(true);
+                                        }}
+                                    >
+                                        是
+                                    </CustomerButton>
+                                    <CustomerButton
+                                        type="default"
+                                        className="is-helped-button"
+                                        onClick={() => {
+                                            sendIsHelp(false);
+                                        }}
+                                    >
+                                        否
+                                    </CustomerButton>
+                                </div>
                             </div>
                         </div>
 
@@ -161,7 +175,28 @@ const QuestionArticleComponent = () => {
                             </div>
                             <h3 className="qTitle">相關問題</h3>
                             {articleData.related && <Relative data={articleData.related} />}
-                            <div className="ad_block">廣告圖預留區</div>
+                            <div className="slot_block">
+                                <Carousel dots={{ className: 'dots' }} autoplay>
+                                    {Array.isArray(ads) &&
+                                        ads.map((e, i) => (
+                                            <div key={i}>
+                                                <a href={e.url}>
+                                                    <div
+                                                        style={
+                                                            clientWidth > 450
+                                                                ? {
+                                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
+                                                                  }
+                                                                : {
+                                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.mobileImagePath})`,
+                                                                  }
+                                                        }
+                                                    ></div>
+                                                </a>
+                                            </div>
+                                        ))}
+                                </Carousel>
+                            </div>
                             <div className="qTitle">相關標籤</div>
                             <div className="tag_section">
                                 {articleData.keywords &&
@@ -229,7 +264,9 @@ const QuestionArticleComponent = () => {
 
                 .article > hr {
                     height: 1px;
-                    border: solid 1px #d7e0ef;
+                    border: none;
+                    color: #d7e0ef;
+                    background-color: #d7e0ef;
                     margin: 15.5px 0;
                 }
 
@@ -292,25 +329,6 @@ const QuestionArticleComponent = () => {
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
                     margin-bottom: 16px;
-                }
-
-                .ad_block {
-                    width: 100%;
-                    height: 108px;
-                    border-radius: 1px;
-                    background-color: #e6ebf5;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 16px;
-                    font-weight: normal;
-                    font-stretch: normal;
-                    font-style: normal;
-                    line-height: normal;
-                    letter-spacing: 0.4px;
-                    text-align: center;
-                    color: #0d1623;
-                    margin-bottom: 24px;
                 }
 
                 .tag_section {
@@ -406,12 +424,11 @@ const QuestionArticleComponent = () => {
                         width: 100%;
                         font-size: 20px;
                         margin-bottom: 12px;
-                        margin-left: 25px;
                     }
 
                     .back_group {
-                        width: 100%;
                         display: flex;
+                        width: 100%;
                         justify-content: space-between;
                     }
 
@@ -465,11 +482,15 @@ const QuestionArticleComponent = () => {
 
                     @media screen and (max-width: 450px) {
                         .back_group > .mobile_button {
-                            width: 74vw;
+                            width: 76vw;
                         }
 
                         .article > .category-group {
                             font-size: 14px;
+                        }
+
+                        .back_group {
+                            width: auto;
                         }
                     }
                 }
@@ -562,7 +583,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .back_group > .default {
-                    margin-left: 16px;
+                    // margin-left: 16px;
                     border-color: #d7e0ef;
                 }
 
@@ -641,12 +662,21 @@ const QuestionArticleComponent = () => {
                     margin-top: 20px;
                 }
 
+                .is-helped-button-group {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-start;
+                }
+
                 .is-helped-button {
                     min-width: 105px;
                     min-height: 40px;
-                    margin-right: 16px;
                     color: #0d1623;
                     border: 1px solid #d7e0ef;
+                }
+
+                .is-helped-button:first-of-type {
+                    margin-right: 16px;
                 }
 
                 .is-helped-button:hover {
@@ -659,6 +689,51 @@ const QuestionArticleComponent = () => {
                     background-color: #d7e0ef;
                     color: #0d1623;
                     border-color: #d7e0ef;
+                }
+
+                .slot_block {
+                    position: relative;
+                    width: 100%;
+                    height: 108px;
+                }
+
+                .slot_block div {
+                    display: flex;
+                    width: 100%;
+                    height: 100%;
+                    color: #fff;
+                    text-align: center;
+                    background-color: #fff;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center;
+                    margin-bottom: 0;
+                }
+
+                .slot_block .dots li {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    margin: 0 4px;
+                }
+
+                .slot_block .dots li.slick-active {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    margin: 0 4px;
+                }
+
+                .slot_block .dots li button {
+                    background-color: #d7e0ef;
+                    opacity: 1;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                }
+
+                .slot_block .dots li.slick-active button {
+                    background-color: #c43826;
                 }
 
                 @media screen and (max-width: 768px) {
@@ -675,17 +750,22 @@ const QuestionArticleComponent = () => {
                     }
                 }
 
-                @media screen and (max-width: 450px) {
-                    .back_group > .default {
-                        margin-left: 5px;
+                @media screen and (max-width: 768px) {
+                    .is-helped-button-group {
+                        justify-content: space-between;
                     }
 
                     .is-helped-button {
-                        width: 41vw;
+                        width: 50%;
                     }
 
                     is-helped-button {
                         margin-right: 0;
+                    }
+
+                    .slot_block {
+                        width: 100%;
+                        padding: 0 16px;
                     }
                 }
 

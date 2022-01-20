@@ -150,6 +150,10 @@ const ProductFileTable = function ({ dataSource }) {
                         font-size: 12px;
                     }
 
+                    .product-file-table .ant-table-thead > tr > th {
+                        background-color: #f2f5fa;
+                    }
+
                     @media screen and (max-width: 450px) {
                         .product-file-table {
                             display: none;

@@ -62,22 +62,25 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
 
                     .customerSupportHeader > h1 {
                         font-size: 20px;
+                        margin-top: -20px;
                         margin-bottom: 0;
                         white-space: nowrap;
                     }
 
                     .backgroundImage {
-                        width: 100px;
-                        height: 160px;
+                        display: none;
+                        /* width: 100px; */
+                        /* height: 160px; */
                     }
                 }
 
                 @media screen and (max-width: 450px) {
                     .backgroundImage {
-                        top: 0;
+                        display: none;
+                        /* top: 0;
                         right: 0;
                         width: 80px;
-                        height: 80px;
+                        height: 80px; */
                     }
                 }
             `}</style>
@@ -101,9 +104,14 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                 }
 
                 @media screen and (max-width: 768px) {
+                    .customerSupportHeader {
+                        padding: 0 20px;
+                    }
+
                     .customerSupportSearchInput {
                         height: 45px;
-                        width: 72vw;
+                        width: 100%;
+                        margin: 0 auto;
                         min-width: 0;
                     }
                 }

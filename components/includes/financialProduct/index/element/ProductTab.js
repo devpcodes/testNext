@@ -12,6 +12,7 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                 activeKey={activeKey}
                 className="product-tabs"
                 onChange={onTabsChange}
+                centered
                 {...props}
             >
                 {categories &&
@@ -32,6 +33,12 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                     .product-tabs {
                         background-color: #f9fbff;
                     }
+
+                    // the tab dots(...)
+                    // .product-tabs .ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
+                    // .ant-tabs-top>.ant-tabs-nav .ant-tabs-nav-wrap:after {
+                    //     display: none;
+                    // }
 
                     // the tab bottom line
                     .product-tabs .ant-tabs-bottom > .ant-tabs-nav:before,
@@ -87,6 +94,12 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                         .product-tabs {
                             margin-top: 20px;
                         }
+
+                        // the tab dots(...)
+                        // .product-tabs .ant-tabs>.ant-tabs-nav .ant-tabs-nav-more,
+                        // .ant-tabs-top>.ant-tabs-nav .ant-tabs-nav-wrap:after {
+                        //     display: unset;
+                        // }
                     }
 
                     @media screen and (max-width: 450px) {

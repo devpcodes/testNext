@@ -35,6 +35,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 data.map(item => (
                     <Card className="card" key={item.uuid} onClick={() => toQuestionPage(item.uuid)}>
                         <Highlighter
+                            className="ellipsis"
                             unhighlightClassName="questionTitleUnhighlight"
                             highlightClassName="questionTitleHighlight"
                             searchWords={[keyword]}
@@ -101,6 +102,19 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 .secondThirdCategories > div {
                     display: inline-block;
                 }
+
+                @media screen and (max-width: 768px) {
+                    .noResult {
+                        border: none;
+                        min-height: 0;
+                        height: 203px;
+                    }
+
+                    .noResult > img {
+                        width: 84px;
+                        height: 84px;
+                    }
+                }
             `}</style>
             <style jsx global>{`
                 .layoutContent {
@@ -112,7 +126,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     .layoutContent {
                         min-width: 98vw;
                         width: 100%;
-                        margin-top: 0px;
+                        margin-top: -1px;
                     }
 
                     .breadcrumb {
@@ -132,24 +146,25 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 }
 
                 @media screen and (max-width: 768px) {
-                    .card {
-                        width: 100%;
-                        margin-top: 0;
-                    }
 
                     .card .ant-card-body {
                         padding: 12px 16px;
                     }
                 }
 
-                .questionTitleUnhighlight {
+                .ellipsis {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     /* display: -webkit-box; */
                     font-size: 20px;
                     font-weight: 500;
                     -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 1;
+                    -webkit-line-clamp: 2;
+                    display: block;
+                }
+
+                .questionTitleUnhighlight {
+                    margin-bottom: 8px;
                 }
 
                 .questionContentUnhighlight {
@@ -158,22 +173,16 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 }
 
                 .questionTitleHighlight {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
                     padding: 0;
                     color: #daa360;
                     background-color: transparent;
-                    /* display: -webkit-box; */
-                    font-size: 20px;
-                    font-weight: 500;
-                    -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 1;
                 }
 
                 .searchResultContent {
+                    margin-top: 8px;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    color: #daa360;
+                    color: #0d1623;
                     display: -webkit-box;
                     font-size: 16px;
                     font-weight: 500;
@@ -220,7 +229,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 @media screen and (max-width: 768px) {
                     .card {
                         width: 100%;
-                        margin-top: 0;
+                        margin-top: -1px;
                     }
                 }
 
@@ -255,13 +264,23 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     min-height: 30vh;
                     height: auto
                     background-color: #fff;
-                    border: 1px solid #d7e0ef;
+                    border: .5px solid #d7e0ef;
+                }
+
+                @media screen and (max-width: 450px) {
+                    .noResult {
+                        border: none;
+                    }
+
+                    .ellipsis {
+                        height: auto;
+                        max-height: 65px;
+                    }
                 }
 
                 .noResult > img {
                     width: 140px;
-                    height: ;
-                    :140px ;
+                    height: 140px;
                     margin-bottom: 16px;
                 }
 
@@ -269,6 +288,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     font-size: 16px;
                     margin-bottom: 30px;
                 }
+
             `}</style>
         </Content>
     );

@@ -79,15 +79,15 @@ const OpenAccountButtons = function ({
                         }
 
                         .product-open-account-container {
-                            // z-index: 1;
+                            z-index: 1;
                             display: flex;
                             justify-content: space-between;
-                            width: 99vw;
-                            // width: 100vw;
-                            position: relative;
-                            // position: fixed;
+                            // width: 99vw;
+                            width: 100vw;
+                            // position: relative;
+                            position: fixed;
                             left: -5vw;
-                            // left: -0.5vw;
+                            left: -0.5vw;
                             bottom: -16px;
                             // bottom: 0;
                             border: none;
@@ -127,7 +127,8 @@ const OpenAccountButtons = function ({
                     @media screen and (max-width: 450px) {
                         .product-open-account-container {
                             width: 97w;
-                            bottom: -16px;
+                            // bottom: -16px;
+                            bottom: 0px;
                             align-items: center;
                             padding: 16px 8px;
                         }

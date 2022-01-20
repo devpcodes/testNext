@@ -21,6 +21,7 @@ const FastLinks = ({ data }) => {
                     data.map((item, idx) => (
                         <div className="fast-link-item" key={idx}>
                             <div
+                                className="fast-link-main"
                                 onClick={() => {
                                     toLink(item.site, item.target, item.link);
                                 }}
@@ -30,8 +31,8 @@ const FastLinks = ({ data }) => {
                                     <h3>{item.title}</h3>
                                     <p>{item.description}</p>
                                 </div>
-                                <div className="short-grey-line" />
                             </div>
+                            <div className="short-grey-line" />
                         </div>
                     ))}
             </div>
@@ -54,14 +55,18 @@ const FastLinks = ({ data }) => {
                         background-position: center;
                     }
 
-                    .fast-link-item > div {
+                    .fast-link-main {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        max-width: 320px;
+                        width: 20vw;
+                        padding-left: 10%;
+                        // max-width: 320px;
+                        height: auto;
                         min-height: 56px;
                         margin-left: 7%;
                         cursor: pointer;
+                        border-right: 0.5px solid #e6ebf5;
                     }
 
                     .fast-link-texts {
@@ -92,27 +97,23 @@ const FastLinks = ({ data }) => {
                         -webkit-line-clamp: 2;
                     }
 
-                    .short-grey-line {
-                        width: 1px;
-                        border: 0.5px solid #e6ebf5;
-                        height: 56px;
-                    }
-
                     .fast-link-item:last-of-type .short-grey-line {
                         display: none;
                     }
 
                     @media screen and (max-width: 840px) {
-                        .fast-link-item > div {
+                        .fast-link-item {
+                            display: flex;
+                            align-items: center;
+                        }
+
+                        .fast-link-main {
                             flex-direction: column;
                             justify-content: center;
                             align-items: center;
+                            padding-left: 0;
                             height: 207px;
-                            // padding: 2% 3%;
-                        }
-
-                        .short-grey-line {
-                            display: none;
+                            border-right: none;
                         }
 
                         h3 {
@@ -122,16 +123,27 @@ const FastLinks = ({ data }) => {
                         p {
                             text-align: center;
                         }
+
+                        .short-grey-line {
+                            display: inline;
+                            width: 1px;
+                            border: 0.5px solid #e6ebf5;
+                            height: 56px;
+                        }
                     }
 
                     @media screen and (max-width: 450px) {
                         .fast-link-container {
                             overflow-x: scroll;
+                            justify-content: flex-start;
                         }
 
-                        .fast-link-item > div {
+                        .fast-link-main {
+                            width: auto;
+                            min-width: 20vw;
                             height: 134px;
                             padding: 24px 27px;
+                            margin: 0;
                         }
 
                         .fast-link-icon {
@@ -145,14 +157,14 @@ const FastLinks = ({ data }) => {
                         p {
                             display: none;
                         }
+
+                        .fast-link-item > .short-grey-line {
+                            padding: 0;
+                            height: 56px;
+                        }
                     }
                 `}
             </style>
-            {/* <style jsx global>
-        {`
-      
-      `}
-      </style> */}
         </>
     );
 };

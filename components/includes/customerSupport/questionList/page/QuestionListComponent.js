@@ -307,6 +307,7 @@ const QuestionListComponent = function () {
 
                             .question-tab-web .ant-table-content {
                                 border: 1px solid #d7e0ef;
+                                border-top: 0.5px solid #d7e0ef;
                             }
 
                             .questionIndexCard {
@@ -442,7 +443,8 @@ const QuestionListComponent = function () {
 
                         .ant-tabs-top .ant-tabs-nav {
                             margin: 0;
-                            padding: 2px 45px 0;
+                            padding: 0 0 0 45px;
+                            // padding: 2px 45px 0;
                             border: 1px solid #d7e0ef;
                             border-bottom: none;
                             background-color: #fff;
@@ -486,6 +488,10 @@ const QuestionListComponent = function () {
                                 width: 100%;
                             }
 
+                            .ant-tabs-top .ant-tabs-nav {
+                                padding: 0;
+                            }
+
                             .ant-tabs-mobile {
                                 width: 100vw;
                             }
@@ -498,13 +504,8 @@ const QuestionListComponent = function () {
                                 margin-left: -1px;
                             }
 
-                            .ant-tabs-top .ant-tabs-nav {
-                                padding: 0 0 0 20px;
-                            }
-                        }
-                        @media screen and (max-width: 450px) {
-                            .ant-tabs-top .ant-tabs-nav {
-                                padding: 0;
+                            .question-tab-web .sino__table .ant-table-container {
+                                border: none;
                             }
                         }
 

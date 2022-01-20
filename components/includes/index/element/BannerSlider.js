@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Carousel } from 'antd';
 import { getAdSlot } from '../../../../services/components/bannerSlider/AdSlot';
 import AnnouncementMarquee from '../element/AnnouncementMarquee';
+// import { array } from 'prop-types';
 
 const BannerSlider = () => {
+    const clientWidth = useSelector(store => store.layout.winWidth);
     const [ads, setAds] = useState([]);
     const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(true);
 
@@ -30,9 +33,15 @@ const BannerSlider = () => {
                             <div key={i}>
                                 <a href={e.url}>
                                     <h3
-                                        style={{
-                                            backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
-                                        }}
+                                        style={
+                                            clientWidth > 450
+                                                ? {
+                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
+                                                  }
+                                                : {
+                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.mobileImagePath})`,
+                                                  }
+                                        }
                                     ></h3>
                                 </a>
                             </div>

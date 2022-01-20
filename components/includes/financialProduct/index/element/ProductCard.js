@@ -116,6 +116,14 @@ const ProductCard = ({
                         padding: 0;
                     }
 
+                    .product-card:hover {
+                        position: relative;
+                        border: 1px solid #d7e0ef;
+                        bottom: 1rem;
+                        box-shadow: 0 1px 2px -2px rgba(215, 224, 239, 0.56), 0 3px 6px 0 rgba(215, 224, 239, 0.52),
+                            0 5px 12px 4px rgba(215, 224, 239, 0.49);
+                    }
+
                     @media screen and (max-width: 768px) {
                         .product-card {
                             width: 29%;
