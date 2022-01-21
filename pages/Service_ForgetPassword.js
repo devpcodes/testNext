@@ -11,6 +11,7 @@ import unlock from '../resources/images/pages/Service_ForgetPassword/img-psw-01@
 import sendpwdS from '../resources/images/pages/Service_ForgetPassword/img-psw-02@2x.png';
 import sendpwdF from '../resources/images/pages/Service_ForgetPassword/img-psw-03@2x.png';
 import sendpwdL from '../resources/images/pages/Service_ForgetPassword/img-psw-04@2x.png';
+import changePassword from '../resources/images/pages/Service_ForgetPassword/img-psw-05@2x.png';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -79,15 +80,32 @@ function Service_ForgetPassword() {
                     <li className="password__service__item">
                         <a
                             className="password__service__link"
+                            href={`${process.env.NEXT_PUBLIC_SUBPATH}/User_ChangePassword`}
+                        >
+                            <img className="service__img" src={changePassword} />
+                            <div>
+                                <h5 className="service__title one__line">密碼修改</h5>
+                                <p className="service__desc">
+                                    我記得密碼
+                                    <br />
+                                    我要修改我的密碼
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li className="password__service__item">
+                        <a
+                            className="password__service__link"
                             href={process.env.NEXT_PUBLIC_PASSWORD_SECURITIES}
                             target="_blank"
                         >
                             <img className="service__img" src={sendpwdS} />
                             <div>
-                                <h5 className="service__title">
-                                    <span className="cbreak">密碼補發</span>
+                                <h5 className="service__title one__line">
+                                    補發密碼 - 證券戶
+                                    {/* <span className="cbreak">密碼補發</span>
                                     <span className="cdisplay"> - </span>
-                                    <span className="cbreak">永豐金證券客戶</span>
+                                    <span className="cbreak">永豐金證券客戶</span> */}
                                 </h5>
                                 <p className="service__desc">
                                     我已經忘記密碼
@@ -116,10 +134,11 @@ function Service_ForgetPassword() {
                             </Popover>
                             <img className="service__img" src={sendpwdF} />
                             <div>
-                                <h5 className="service__title">
-                                    <span className="cbreak">密碼補發</span>
+                                <h5 className="service__title one__line">
+                                    補發密碼 - 期貨戶
+                                    {/* <span className="cbreak">密碼補發</span>
                                     <span className="cdisplay"> - </span>
-                                    <span className="cbreak">永豐期貨客戶</span>
+                                    <span className="cbreak">永豐期貨客戶</span> */}
                                 </h5>
                                 <p className="service__desc">
                                     我已經忘記密碼
@@ -188,7 +207,7 @@ function Service_ForgetPassword() {
                     height: 150px;
                 }
                 .password__container {
-                    width: 80%;
+                    width: 90%;
                     margin: 0 auto;
                     padding: 150px 0 180px 0;
                 }
@@ -288,29 +307,37 @@ function Service_ForgetPassword() {
                 .cdisplay {
                     display: none;
                 }
-                @media (max-width: 1113px) {
+                @media (max-width: 1245px) {
                     .password__container {
                         padding: 50px 0 50px 0;
                     }
                     .password__service__container {
                         flex-wrap: wrap;
                     }
-                    .password__service__item {
-                        width: 46%;
-                    }
+
                     .password__service__item {
                         margin: 0 0 28px 0;
                     }
                 }
+
+                @media (max-width: 950px) {
+                    .password__service__item {
+                        width: 46%;
+                    }
+                }
+
+                // @media (max-width: 550px) {
+                //     .password__service__item {
+                //         width: 100%;
+                //         margin: 0 0 28px 0;
+                //     }
+                // }
 
                 @media (max-width: 550px) {
                     .password__service__item {
                         width: 100%;
                         margin: 0 0 28px 0;
                     }
-                }
-
-                @media (max-width: 501px) {
                     .password__container {
                         padding: 10px 0 50px 0;
                     }
