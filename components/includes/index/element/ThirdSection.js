@@ -11,6 +11,14 @@ const ThirdSection = ({ data }) => {
         router.push(`${data.readMorePath}`);
     };
 
+    const toLink = (site, target, link) => {
+        if (site === 'outer') {
+            window.open(link, target);
+        } else if (site === 'inner') {
+            router.push(`${link}`);
+        }
+    };
+
     return (
         <div className="third-section-container">
             <h2>{data.title}</h2>
@@ -18,7 +26,13 @@ const ThirdSection = ({ data }) => {
             <YellowRedLine />
             <div className="third-section-card-wrap">
                 {data.cardsData.map((item, idx) => (
-                    <div className="third-section-card" key={idx}>
+                    <div
+                        className="third-section-card"
+                        key={idx}
+                        onClick={() => {
+                            toLink(item.site, item.target, item.link);
+                        }}
+                    >
                         <div className="third-section-card-icon" style={{ backgroundImage: `url(${item.icon})` }} />
                         <h4>{item.title}</h4>
                         <p>{item.description}</p>
@@ -37,8 +51,9 @@ const ThirdSection = ({ data }) => {
                         flex-direction: column;
                         justify-content: center;
                         align-items: center;
-                        padding: 3% 10%;
-                        width: 100%;
+                        padding: 3% 1.5rem;
+                        margin: 0 auto;
+                        width: 80%;
                         background-color: #f9fbff;
                     }
 
@@ -60,23 +75,25 @@ const ThirdSection = ({ data }) => {
                     }
 
                     .third-section-card-wrap {
-                        width: 100%;
+                        width: calc(100% + 0.5625vw * 2);
                         display: flex;
                         justify-content: center;
+                        margin: 0;
                     }
 
                     .third-section-card {
                         display: flex;
                         flex-direction: column;
-                        justify-content: center;
+                        justify-content: flex-start;
                         align-items: center;
                         width: 16%;
-                        max-width: 180px;
+                        // max-width: 180px;
                         min-height: 220px;
-                        margin: 6px;
+                        margin: 0.5625vw;
                         border: solid 1px #e6ebf5;
                         background-color: white;
                         cursor: pointer;
+                        padding: 24px;
                     }
 
                     .third-section-card-icon {
@@ -102,14 +119,14 @@ const ThirdSection = ({ data }) => {
                         letter-spacing: 0.4px;
                         text-align: center;
                         color: #3f5372;
+                        margin-bottom: 0;
                     }
 
                     .third-more-wrap {
                         display: flex;
                         width: 100%;
-                        max-width: 1145px;
+                        // max-width: 1145px;
                         justify-content: flex-end;
-                        margin-top: 16px;
                         cursor: pointer;
                     }
 
@@ -118,6 +135,12 @@ const ThirdSection = ({ data }) => {
                         font-size: 16px;
                         letter-spacing: 0.4px;
                         color: #3f5372;
+                    }
+
+                    @media screen and (max-width: 1250px) {
+                        .third-section-container {
+                            width: 90%;
+                        }
                     }
 
                     @media screen and (max-width: 1050px) {
@@ -130,9 +153,17 @@ const ThirdSection = ({ data }) => {
                         }
 
                         .third-section-card {
-                            width: 31%;
+                            width: calc(100% / 3 - 0.5625vw * 2);
                             padding: 24px;
                             max-width: unset;
+                        }
+                    }
+
+                    @media screen and (max-width: 1024px) {
+                        .third-section-container {
+                            width: calc(100% + 0.5625vw * 2);
+                            padding-left: 3rem;
+                            padding-right: 3rem;
                         }
                     }
 
@@ -176,8 +207,9 @@ const ThirdSection = ({ data }) => {
                         }
 
                         .third-section-card {
-                            width: 45%;
+                            width: calc(50% - 8px * 2);
                             padding: 0;
+                            margin: 8px;
                             max-width: unset;
                             min-height: 118px;
                         }
@@ -202,14 +234,15 @@ const ThirdSection = ({ data }) => {
                     @media screen and (max-width: 1050px) {
                         .third-section-container .yellow-red-line-container {
                             margin-bottom: 32px;
+                        }
                     }
 
                     @media screen and (max-width: 450px) {
                         .third-section-container .yellow-red-line-container {
                             margin-bottom: 10px;
+                        }
                     }
-                }
-            `}
+                `}
             </style>
         </div>
     );

@@ -23,8 +23,8 @@ const QuestionListComponent = function () {
     const key = router.query.key;
     const clientWidth = useSelector(store => store.layout.winWidth);
 
-    const [categories, setCategories] = useState();
-    const [dataSource, setDataSource] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [dataSource, setDataSource] = useState(undefined);
     const [dataList, setDataList] = useState([]);
     const [currentPage, setPage] = useState(1);
     const [activeKey, setActiveKey] = useState();
@@ -36,13 +36,13 @@ const QuestionListComponent = function () {
 
     useEffect(async () => {
         const data = await getCommonQuestionCategories();
-        setCategories(data);
-        await setActiveKey(key || data[0].id.toString());
+        Array.isArray(data) && setCategories(data);
+        setActiveKey(key);
         getQuestionList(key || data[0].id.toString());
     }, []);
 
     const getQuestionList = async (newKey, newPage) => {
-        const data = await getCommonQuestion(newPage || currentPage, 15, newKey || activeKey);
+        const data = await getCommonQuestion(newPage || currentPage, 15, newKey);
         setDataSource(data);
         setDataList(data.dataList);
         setTotalCounts(data.counts);
@@ -89,7 +89,7 @@ const QuestionListComponent = function () {
 
     const onPageChange = page => {
         setPage(page);
-        getQuestionList(null, page);
+        getQuestionList(activeKey, page);
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -97,7 +97,7 @@ const QuestionListComponent = function () {
     };
 
     const onTabsChange = newKey => {
-        setDataSource({});
+        setDataSource(undefined);
         setActiveKey(newKey);
         getQuestionList(newKey);
         setPage(1);
@@ -132,61 +132,51 @@ const QuestionListComponent = function () {
                         </div>
                     </div>
 
-                    {activeKey && (
-                        <QuestionTab
-                            className="question-tab-web"
-                            categories={categories}
-                            defaultActiveKey={categories && categories[0].id.toString()}
-                            activeKey={activeKey}
-                            onChange={onTabsChange}
-                        >
-                            <QuestionTable
-                                className="question-list-web"
-                                dataSource={dataSource}
-                                sub2ndCategories={sub2ndCategories}
-                                sub3rdCategories={sub3rdCategories}
-                                onPageChange={onPageChange}
-                                totalCounts={totalCounts}
-                            />
+                    {categories.length > 0 && (
+                        <QuestionTab categories={categories} activeKey={activeKey} onTabsChange={onTabsChange}>
+                            <div className="question-tab-web">
+                                <QuestionTable
+                                    className="question-list-web"
+                                    dataSource={dataSource}
+                                    sub2ndCategories={sub2ndCategories}
+                                    sub3rdCategories={sub3rdCategories}
+                                    onPageChange={onPageChange}
+                                    totalCounts={totalCounts}
+                                />
+                            </div>
+
+                            <div className="question-tab-mobile">
+                                {totalCounts && (
+                                    <InfiniteScroll dataLength={totalCounts} next={loadMoreFn} hasMore={hasMore}>
+                                        {dataList?.map(data => {
+                                            return (
+                                                // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                                                <div
+                                                    key={data?.uuid}
+                                                    className="questionIndexCard"
+                                                    onClick={() => {
+                                                        toQuestion(data?.uuid);
+                                                    }}
+                                                >
+                                                    <h3>{data?.title}</h3>
+                                                    <div className="breadcrumb_group">
+                                                        {data?.category2nd?.categoryName}
+                                                        {'>'} {data?.category3rd?.categoryName}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </InfiniteScroll>
+                                )}
+                                {isLoading ? (
+                                    <div className="loading">
+                                        <LoadingOutlined className="loading_icon" />
+                                        載入更多中
+                                    </div>
+                                ) : null}
+                            </div>
                         </QuestionTab>
                     )}
-
-                    <QuestionTab
-                        className="question-tab-mobile"
-                        categories={categories}
-                        defaultActiveKey={categories && categories[0].id}
-                        activeKey={activeKey}
-                        onChange={onTabsChange}
-                    >
-                        {totalCounts && (
-                            <InfiniteScroll dataLength={totalCounts} next={loadMoreFn} hasMore={hasMore}>
-                                {dataList?.map(data => {
-                                    return (
-                                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                                        <div
-                                            key={data?.uuid}
-                                            className="questionIndexCard"
-                                            onClick={() => {
-                                                toQuestion(data?.uuid);
-                                            }}
-                                        >
-                                            <h3>{data?.title}</h3>
-                                            <div className="breadcrumb_group">
-                                                {data?.category2nd?.categoryName}
-                                                {'>'} {data?.category3rd?.categoryName}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </InfiniteScroll>
-                        )}
-                        {isLoading ? (
-                            <div className="loading">
-                                <LoadingOutlined className="loading_icon" />
-                                載入更多中
-                            </div>
-                        ) : null}
-                    </QuestionTab>
                 </div>
 
                 {/* <NewWebIframe
@@ -439,6 +429,11 @@ const QuestionListComponent = function () {
                             border-color: #d7e0ef !important;
                         }
 
+                        .question-table-input-search .ant-input-affix-wrapper:hover,
+                        .question-table-input-search .ant-input-affix-wrapper:focus {
+                            border-color: #d7e0ef !important;
+                        }
+
                         // ******** tabs
 
                         .ant-tabs-top .ant-tabs-nav {
@@ -531,7 +526,7 @@ const QuestionListComponent = function () {
                             }
 
                             .questionIndexWrapper .title_group > .question-table-input-search {
-                                width: 90vw;
+                                width: 91.467vw;
                                 margin: auto;
                             }
 
@@ -551,7 +546,7 @@ const QuestionListComponent = function () {
 
                             .questionIndexWrapper .title_group > h1 {
                                 text-align: left;
-                                margin-left: 13px;
+                                margin-left: 16px;
                                 margin-bottom: 12px;
                                 font-size: 20px;
                             }
@@ -566,7 +561,7 @@ const QuestionListComponent = function () {
                             }
 
                             .question-tab-mobile {
-                                display: flex;
+                                display: block;
                                 width: 100vw;
                             }
                         }

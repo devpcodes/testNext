@@ -43,7 +43,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
     ];
 
     return (
-        <>
+        <div className="question-table">
             <AccountTable
                 dataSource={dataSource?.dataList}
                 columns={columns}
@@ -132,6 +132,14 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
                         border-color: #ea6554 !important;
                     }
 
+                    .question-table .ant-table-filter-trigger-container {
+                        position: relative;
+                    }
+
+                    .question-table .sino__table .ant-table-filter-column-title {
+                        flex: unset;
+                    }
+
                     .ant-table-filter-dropdown-btns > .ant-btn-link {
                         border-color: #d7e0ea !important;
                     }
@@ -199,7 +207,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
                     }
                 `}
             </style>
-        </>
+        </div>
     );
 };
 

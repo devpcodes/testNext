@@ -40,7 +40,7 @@ const SafetySection = ({ data }) => {
                     .safety-dark-bg {
                         top: 0;
                         width: 100%;
-                        height: 75%;
+                        height: 439px;
                         background-color: #0d1623;
                     }
 
@@ -64,16 +64,19 @@ const SafetySection = ({ data }) => {
                     .safety-section-card-wrap {
                         position: absolute;
                         display: flex;
-                        width: 100%;
+                        width: calc(80% + 1vw * 2);
+                        padding: 0 1.5rem;
                         justify-content: center;
                         top: 200px;
+                        left: 50%;
+                        transform: translateX(-50%);
                     }
 
                     .safety-section-card {
-                        width: 368px;
-                        max-width: 368px;
+                        // width: 368px;
+                        // max-width: 368px;
                         min-height: 292px;
-                        margin: 0 16px;
+                        margin: 0 1vw;
                         padding: 32px;
                         background-color: #e6ebf5;
                     }
@@ -104,6 +107,19 @@ const SafetySection = ({ data }) => {
                         font-weight: normal;
                         letter-spacing: 0.4px;
                         color: #0d1623;
+                    }
+
+                    @media screen and (max-width: 1250px) {
+                        .safety-section-card-wrap {
+                            width: calc(90% + 1vw * 2);
+                        }
+                    }
+
+                    @media screen and (max-width: 1024px) {
+                        .safety-section-card-wrap {
+                            width: calc(100% + 1vw * 2);
+                            padding: 0 3rem;
+                        }
                     }
 
                     @media screen and (max-width: 840px) {
@@ -139,12 +155,13 @@ const SafetySection = ({ data }) => {
                         .safety-section-card-wrap {
                             flex-wrap: wrap;
                             top: 130px;
+                            padding: 0 24px;
                         }
 
                         .safety-section-card {
-                            width: 90%;
+                            // width: 90%;
                             max-width: unset;
-                            margin-bottom: 16px;
+                            margin: 8px 0;
                         }
                     }
                 `}

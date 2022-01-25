@@ -1,6 +1,6 @@
 import axios from '../../../services/myAxios';
 export const getCommonQuestionCategories = async count => {
-    const reqUrl = 'https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestionCategories';
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestionCategories`;
     const params = {
         questionCount: count,
     };
@@ -19,7 +19,7 @@ export const getCommonQuestionCategories = async count => {
 };
 
 export const getCommonQuestions = async params => {
-    const reqUrl = 'https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestions';
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestions`;
     try {
         const res = await axios.get(reqUrl, { params });
         if (res.status === 200) {

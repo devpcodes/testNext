@@ -9,7 +9,7 @@ export const getCommonQuestion = async (page, pageSize, categoryId, keywords) =>
         id = data[0].id;
     }
 
-    const reqUrl = 'https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestions';
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestions`;
     let params = {
         page: page,
         pageSize: pageSize,
@@ -34,7 +34,7 @@ export const getCommonQuestion = async (page, pageSize, categoryId, keywords) =>
 };
 
 export const getCommonQuestionArticle = async uuid => {
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestion/${uuid}`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestion/${uuid}`;
     const params = {
         uuid,
     };
@@ -60,7 +60,7 @@ export const getCommonQuestionSubcategories = async activeKey => {
         id = data[0].id;
     }
 
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestionSubcategories`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestionSubcategories`;
 
     const params = {
         categoryId: activeKey || id,
@@ -89,7 +89,7 @@ export const putCommonQuestionIsLike = async (uuid, isLike) => {
 
     console.log('p', params);
 
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/commonQuestion`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestion`;
 
     try {
         const res = await axios.put(reqUrl, params);

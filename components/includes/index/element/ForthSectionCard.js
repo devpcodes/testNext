@@ -15,10 +15,11 @@ const ForthSectionCard = ({ data }) => {
             <style jsx>
                 {`
                     .forth-cards-card-wrap {
-                        width: 277px;
-                        max-height: 286px;
+                        // width: 277px;
+                        // max-height: 286px;
+                        height: fit-content;
                         padding: 2%;
-                        margin: 0 10px;
+                        margin: 0 0.625vw;
                         border: solid 1px #e6ebf5;
                         background: white;
                     }
@@ -60,10 +61,10 @@ const ForthSectionCard = ({ data }) => {
 
                     @media screen and (max-width: 1050px) {
                         .forth-cards-card-wrap {
-                            width: 45%;
+                            width: calc(50% - 0.625vw * 2);
                             margin-bottom: 16px;
-                            max-width: 344px;
-                            max-height: 313px;
+                            // max-width: 344px;
+                            // max-height: 313px;
                         }
                     }
                 `}

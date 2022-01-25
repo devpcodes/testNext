@@ -36,10 +36,10 @@ const BannerSlider = () => {
                                         style={
                                             clientWidth > 450
                                                 ? {
-                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
+                                                      backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.desktopImagePath})`,
                                                   }
                                                 : {
-                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.mobileImagePath})`,
+                                                      backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath})`,
                                                   }
                                         }
                                     ></h3>

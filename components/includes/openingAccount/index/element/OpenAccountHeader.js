@@ -14,25 +14,33 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
             <Header className="open-account-header">
                 <div className="header-box">
                     <h1>全新客戶永豐金證券線上開戶</h1>
-                    <h2>開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件</h2>
-                    <Space className="open-account-header-btn">
-                        <CustomerButton
-                            type="primary"
-                            onClick={() => window.open('https://www.sinotrade.com.tw/openact?strProd=0002&strWeb=0001')}
-                        >
-                            開證券帳戶
-                        </CustomerButton>
-                        <CustomerButton
-                            onClick={() =>
-                                window.open('https://www.sinotrade.com.tw/openact/progress?strProd=0002&strWeb=0001')
-                            }
-                        >
-                            進度查詢
-                        </CustomerButton>
-                    </Space>
-                    <a className="open-dawho" href="https://dawho.tw/hot/dawhotou/" target="_blank">
-                        開銀行大戶 <RightOutlined />
-                    </a>
+                    <h2>
+                        開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件
+                    </h2>
+                    <div className="open-account-header-btn-box">
+                        <Space className="open-account-header-btn">
+                            <CustomerButton
+                                type="primary"
+                                onClick={() =>
+                                    window.open('https://www.sinotrade.com.tw/openact?strProd=0002&strWeb=0001')
+                                }
+                            >
+                                開證券帳戶
+                            </CustomerButton>
+                            <CustomerButton
+                                onClick={() =>
+                                    window.open(
+                                        'https://www.sinotrade.com.tw/openact/progress?strProd=0002&strWeb=0001',
+                                    )
+                                }
+                            >
+                                進度查詢
+                            </CustomerButton>
+                        </Space>
+                        <a className="open-dawho" href="https://dawho.tw/hot/dawhotou/" target="_blank">
+                            開銀行大戶 <RightOutlined />
+                        </a>
+                    </div>
                 </div>
                 <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
             </Header>
@@ -71,7 +79,7 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
 
                 .open-account-header > .header-box > h2 {
                     z-index: 1;
-                    text-align: center;
+                    text-align: left;
                     font-size: 16px;
                     font-weight: normal;
                     color: white;
@@ -80,7 +88,12 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                     margin-bottom: 32px;
                 }
 
+                .open-account-header-btn-box {
+                    position: relative;
+                }
+
                 .open-account-header > .header-box .open-dawho {
+                    position: absolute;
                     width: 103px;
                     height: 22px;
                     margin: 0;
@@ -94,7 +107,7 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                     color: #d7e0ef;
                     position: absolute;
                     right: 0;
-                    bottom: 70px;
+                    bottom: -38px;
                 }
 
                 .backgroundImage {
@@ -106,21 +119,17 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                     background-size: cover;
                 }
 
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 820px) {
                     .backgroundImage {
                         width: 0px;
                         height: 0px;
-                    }
-
-                    .open-account-header > .header-box .open-dawho {
-                        bottom: 36px;
                     }
                 }
 
                 @media screen and (max-width: 450px) {
                     .open-account-header {
                         padding: 0 16px;
-                        height: 77.867vw;
+                        height: 292px;
                     }
 
                     .open-account-header > .header-box {
@@ -138,11 +147,6 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                         font-size: 16px;
                         letter-spacing: 1px;
                         margin-bottom: 24px;
-                    }
-
-                    .open-account-header > .header-box > span {
-                        right: 0;
-                        bottom: 36px;
                     }
                 }
             `}</style>

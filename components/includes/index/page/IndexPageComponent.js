@@ -84,8 +84,9 @@ const IndexPageComponent = () => {
             {
                 title: '豐存股',
                 description: '台股、美股線上輕鬆存股',
-                site: '',
-                link: '',
+                site: 'outer',
+                link:
+                    'https://aiinvest.sinotrade.com.tw/?utm_campaign=AIIN_inchannel&utm_source=newweb&utm_medium=button_0427&strProd=0055&strWeb=0035',
                 icon: `${pig}`,
                 target: '_blank',
             },
@@ -93,7 +94,7 @@ const IndexPageComponent = () => {
                 title: '股票申購',
                 description: '申購零門檻，備足資金抽起來',
                 site: 'outer',
-                link: '',
+                link: 'https://www.sinotrade.com.tw/newweb/Subscription/',
                 icon: `${stockSubs}`,
                 target: '_self',
             },
@@ -101,7 +102,8 @@ const IndexPageComponent = () => {
                 title: 'Python API',
                 description: '程式交易就是要簡單快速',
                 site: 'outer',
-                link: '',
+                link:
+                    'https://www.sinotrade.com.tw/ec/20191125/Main/index.aspx?utm_campaign=PTAPI_inchannel&utm_source=newweb&utm_medium=button_0427',
                 icon: `${python}`,
                 target: '_blank',
             },
@@ -109,7 +111,7 @@ const IndexPageComponent = () => {
                 title: '自然人借券',
                 description: '出借庫存股票，低風險、生好息',
                 site: 'outer',
-                link: '',
+                link: 'https://www.sinotrade.com.tw/SS/Main/LendMenu.aspx',
                 icon: `${borrow}`,
                 target: '_blank',
             },
@@ -117,7 +119,7 @@ const IndexPageComponent = () => {
                 title: '預收款券',
                 description: '處置股、注意股交易超便利',
                 site: 'inner',
-                link: '/customer-support',
+                link: 'https://www.sinotrade.com.tw/newweb/AdvanceCollection/',
                 icon: `${receipt}`,
                 target: '_self',
             },
@@ -125,7 +127,8 @@ const IndexPageComponent = () => {
                 title: '不限用途借貸',
                 description: '隨時借隨時還，撥款超快速',
                 site: 'inner',
-                link: '',
+                link:
+                    'https://www.sinotrade.com.tw/newweb/Inside_Frame/?URL=https://service.sinotrade.com.tw/loan/accountDetail/',
                 icon: `${noLimit}`,
                 target: '_self',
             },
@@ -197,12 +200,14 @@ const IndexPageComponent = () => {
                 <Content>
                     <BannerSlider />
                     <FastLinks data={fastLinkData} key={fastLinkData.index} />
-                    <SecondBanner />
-                    <ThirdSection data={thirdSectionData} />
-                    <AppDownloadSection />
-                    <ForthSection data={forthSectionData} />
-                    <SafetySection data={SafetySectionData} />
-                    <ContactSection />
+                    <main className="main-content">
+                        <SecondBanner />
+                        <ThirdSection data={thirdSectionData} />
+                        <AppDownloadSection />
+                        <ForthSection data={forthSectionData} />
+                        <SafetySection data={SafetySectionData} />
+                        <ContactSection />
+                    </main>
                 </Content>
                 <QAShortcut />
             </Layout>
@@ -216,6 +221,10 @@ const IndexPageComponent = () => {
 
                     .ant-layout-content {
                         width: 100%;
+                    }
+
+                    .main-content {
+                        background-color: #f9fbff;
                     }
                 `}
             </style>

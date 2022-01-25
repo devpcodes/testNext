@@ -122,11 +122,11 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                         className="financial-product-article-tab"
                                         isFinancialProduct={true}
                                         categories={articleTabs}
-                                        defaultActiveKey={'0'}
+                                        // defaultActiveKey={'0'}
                                         activeKey={activeTabKey}
                                         keywords={articleData.commonQuestionKeywords}
                                         attachments={articleData.attachments}
-                                        onChange={onTabsChange}
+                                        onTabsChange={onTabsChange}
                                     >
                                         {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
                                             item.type === 'toggle' ? (
@@ -147,7 +147,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                         </div>
 
                         <div className="side_section">
-                            {articleData?.enableOpenBlock ? (
+                            {isTradingPlatform || articleData?.enableOpenBlock ? (
                                 <OpenAccountButtons
                                     title={articleData?.openTitle || articleData?.appName}
                                     description={articleData?.openDescription || articleData?.description}
@@ -186,7 +186,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .article_section {
-                    min-width: 777px;
+                    /* min-width: 777px; */
                     width: 66%;
                     margin-right: 4%;
                 }
@@ -200,7 +200,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
                     width: 100%;
-                    min-width: 600px;
+                    /* min-width: 600px; */
                 }
 
                 .article > h1 {
@@ -273,8 +273,8 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .side_section {
-                    min-width: 250px;
                     width: 30%;
+                    max-width: 346px;
                 }
 
                 .qTitle-frame {
@@ -285,7 +285,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .qTitle {
-                    border-left: 4px solid #daa360;
+                    position: relative;
                     padding-left: 12px;
                     font-family: PingFangTC;
                     font-size: 20px;
@@ -295,10 +295,22 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     line-height: 1.7;
                     letter-spacing: -0.25px;
                     color: #0d1623;
-                    margin: 21px 0 16px;
+                    margin: 0 0 16px 0;
+                }
+
+                .qTitle:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    width: 4px;
+                    height: 20px;
+                    margin: 7px 12px 7px 0;
+                    background-color: #daa360;
                 }
 
                 .qTitle-more {
+                    padding-bottom: 16px;
                     font-family: PingFangTC;
                     font-size: 16px;
                     font-weight: 600;
@@ -379,6 +391,21 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 @media screen and (max-width: 1024px) {
+                    .questionArticleWrapper {
+                        width: 92%;
+                    }
+
+                    .article_section {
+                        min-width: 0;
+                        width: 100%;
+                    }
+
+                    .article {
+                        min-width: ;
+                    }
+                }
+
+                @media screen and (max-width: 768px) {
                     .article_wrapper {
                         display: flex;
                         flex-direction: column;
@@ -395,7 +422,6 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                         display: flex;
                         flex-direction: row;
                         justify-content: space-between;
-                        /* width: 95%; */
                         padding: 0;
                         margin: auto;
                         margin-bottom: 20px;
@@ -405,7 +431,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     .title_group > h1 {
                         text-align: left;
                         width: 100%;
-                        font-size: 20px;
+                        font-size: 28px;
                         margin-bottom: 0;
                         margin-top: 12px;
                     }
@@ -464,6 +490,10 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     .title_group {
                         width: 100%;
                         padding: 0;
+                    }
+
+                    .title_group > h1 {
+                        font-size: 20px;
                     }
                 }
             `}</style>
@@ -615,7 +645,12 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     width: 105px;
                 }
 
-                @media screen and (max-width: 1024px) {
+                .side_section .product-open-account-container {
+                    min-height: 110px;
+                    bottom: 0;
+                }
+
+                @media screen and (max-width: 768px) {
                     .questionArticleWrapper > .site-breadcrumb {
                         width: 90vw;
                     }
@@ -647,7 +682,6 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                         height: 40px;
                         font-size: 16px;
                     }
-                }
 
                 @media screen and (max-width: 450px) {
                     .questionArticleWrapper {
@@ -664,8 +698,6 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     }
                 }
             `}</style>
-
-            <style jsx global>{``}</style>
         </>
     );
 };

@@ -175,7 +175,7 @@ function BeginnerComponent(props) {
                 bottom: tmpHeight,
             });
         }
-        console.log('contentArray ==>', contentArray);
+        // console.log('contentArray ==>', contentArray);
         setStepAry(contentArray);
     };
 
@@ -189,7 +189,7 @@ function BeginnerComponent(props) {
                     for (let i = 0; i < stepAry.length; i++) {
                         let content = stepAry[i];
                         if (scrollTop >= content.top && scrollTop < content.bottom) {
-                            console.log('current -->', current);
+                            // console.log('current -->', current);
                             setCurrent(content.current);
                             break;
                         }
@@ -226,7 +226,7 @@ function BeginnerComponent(props) {
             <Affix offsetTop={70} onChange={affixed => setScrolled(affixed)}>
                 <div ref={stepsBar} className={['beginner-steps-bar-box', scrolled && 'scroll'].join(' ')}>
                     <Steps
-                        responsive={false}
+                        responsive="false"
                         className="beginner-steps-bar"
                         current={current}
                         progressDot

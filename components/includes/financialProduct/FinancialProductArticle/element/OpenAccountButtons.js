@@ -28,7 +28,7 @@ const OpenAccountButtons = function ({
                 {/* <div className="open-account-image" style={{ backgroundImage: `url(https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png)` }}/> */}
                 <div
                     className="open-account-image"
-                    style={{ backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${image})` }}
+                    style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${image})` }}
                 />
                 <div className="open-title-description">
                     <p className="open-title">{title}</p>
@@ -54,6 +54,7 @@ const OpenAccountButtons = function ({
                     .product-open-account-container {
                         width: 100%;
                         padding: 32px 32px 16px 32px;
+                        margin-bottom: 16px;
                         border: 1px solid #d7e0ef;
                         background-color: #ffffff;
                     }
@@ -73,7 +74,7 @@ const OpenAccountButtons = function ({
                         width: 100%;
                     }
 
-                    @media screen and (max-width: 1024px) {
+                    @media screen and (max-width: 768px) {
                         .open-account-image {
                             display: none;
                         }
@@ -88,22 +89,22 @@ const OpenAccountButtons = function ({
                             position: fixed;
                             left: -5vw;
                             left: -0.5vw;
-                            bottom: -16px;
-                            // bottom: 0;
+                            bottom: 0;
+                            margin-bottom: 0;
                             border: none;
-                            padding: 16px;
+                            padding: 16px 24px;
                             background-color: #0d1623;
                         }
 
                         .open-title-description {
                             display: flex;
                             flex-direction: column;
-                            width: 55%;
+                            // width: 55%;
                         }
 
                         .open-buttons {
-                            width: 40%;
-                            min-width: 100px;
+                            width: fit-content;
+                            // min-width: 150px;
                             display: flex;
                             justify-content: space-around;
                             align-items: center;
@@ -152,23 +153,34 @@ const OpenAccountButtons = function ({
             </style>
             <style jsx global>
                 {`
+                    .open-buttons {
+                        // margin: 0 0 16px 20px;
+                    }
+
                     .open-buttons .ant-btn {
                         width: 100%;
                         margin-bottom: 16px;
                     }
 
-                    @media screen and (max-width: 1024px) {
+                    @media screen and (max-width: 768px) {
                         .open-buttons .ant-btn {
-                            width: 100%;
-                            min-width: 100px;
-                            margin: 0 2%;
+                            width: fit-content;
+                            margin-bottom: 0;
+                        }
+
+                        .open-buttons .ant-btn:nth-of-type(2) {
+                            margin-left: 16px;
                         }
                     }
 
                     @media screen and (max-width: 450px) {
+                        .open-buttons {
+                            margin: 0;
+                            align-items: space-between;
+                        }
+
                         .open-buttons .ant-btn {
                             width: 100%;
-                            min-width: 150px;
                             margin: 0 8px;
                         }
                     }

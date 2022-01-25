@@ -29,7 +29,7 @@ const IndexQuestionCategoryCards = ({
     return (
         <Row gutter={[16, 16]} className="qaBlock">
             {firstCategoryAndQuestion.map((item, index) => (
-                <Col key={index} className="gutter-row" xs={24} sm={8} lg={8}>
+                <Col key={index} className="gutter-row" xs={24} sm={12} lg={8}>
                     <div
                         className="categoryNameGroup"
                         onMouseEnter={() => {
@@ -75,6 +75,8 @@ const IndexQuestionCategoryCards = ({
                     .categoryNameGroup {
                         display: flex;
                         justify-content: space-between;
+                        height: 25px;
+                        overflow: hidden;
                         cursor: pointer;
                     }
 

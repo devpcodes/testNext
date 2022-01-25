@@ -17,7 +17,7 @@ const SecondBanner = () => {
     };
 
     return (
-        <>
+        <div className="second-banner-container-box">
             <div className="second-banner-container">
                 <div className="second-banner-texts">
                     <h2>一站式投資全球，證券交易的領航者</h2>
@@ -75,18 +75,23 @@ const SecondBanner = () => {
             </div>
             <style jsx>
                 {`
+                    .second-banner-container-box {
+                        background-color: #e6ebf5;
+                    }
+
                     .second-banner-container {
                         display: flex;
                         justify-content: center;
                         min-height: 405px;
                         height: auto;
-                        padding: 56px 0;
-                        background-color: #e6ebf5;
+                        padding: 56px 1.5rem;
+                        width: 80%;
+                        margin: 0 auto;
                     }
 
                     .second-banner-texts {
                         z-index: 1;
-                        width: 36.938vw;
+                        width: 50%;
                     }
 
                     h2 {
@@ -141,18 +146,20 @@ const SecondBanner = () => {
                     }
 
                     .second-banner-image {
-                        width: 34.813vw;
+                        width: 50%;
                         margin-left: 1.25vw;
                         background-size: contain;
                         background-position: center;
                         background-repeat: no-repeat;
                     }
 
-                    @media screen and (max-width: 1200px) {
+                    @media screen and (max-width: 1250px) {
                         .second-banner-container {
+                            width: 90%;
                             min-height: 405px;
                             position: relative;
-                            padding: 7.292vw 7.292vw 56px;
+                            padding-top: 7.292vw;
+                            padding-bottom: 56px;
                         }
 
                         .second-banner-texts {
@@ -172,7 +179,7 @@ const SecondBanner = () => {
                             width: 41.667vw;
                             height: 29.948vw;
                             margin-left: 0;
-                            background-position: left;
+                            background-position: right;
                         }
                     }
 
@@ -185,6 +192,7 @@ const SecondBanner = () => {
                     @media screen and (max-width: 450px) {
                         .second-banner-container {
                             padding: 24px;
+                            width: 100%;
                         }
 
                         h2 {
@@ -220,7 +228,7 @@ const SecondBanner = () => {
                     }
                 }
             `}</style>
-        </>
+        </div>
     );
 };
 

@@ -8,7 +8,7 @@ const ProductFileTable = function ({ dataSource }) {
     const clientWidth = useSelector(store => store.layout.winWidth);
 
     const download = file => {
-        window.open(`https://webrd.sinotrade.com.tw/files/${file}`, '_blank');
+        window.open(`${process.env.NEXT_PUBLIC_FILE}/${file}`, '_blank');
     };
 
     const scrollTop = () => {
@@ -80,21 +80,22 @@ const ProductFileTable = function ({ dataSource }) {
                 }
             />
             <div className="file-table-mobile">
-                {dataSource?.length &&
-                    dataSource?.map((file, idx) => (
-                        <div key={idx}>
-                            <p>{file.displayName}</p>
-                            <CustomerButton
-                                type="primary"
-                                style={{ textAlign: 'center' }}
-                                onClick={() => {
-                                    download(file.filename);
-                                }}
-                            >
-                                下載
-                            </CustomerButton>
-                        </div>
-                    ))}
+                {dataSource?.length
+                    ? dataSource?.map((file, idx) => (
+                          <div key={idx}>
+                              <p>{file.displayName}</p>
+                              <CustomerButton
+                                  type="primary"
+                                  style={{ textAlign: 'center' }}
+                                  onClick={() => {
+                                      download(file.filename);
+                                  }}
+                              >
+                                  下載
+                              </CustomerButton>
+                          </div>
+                      ))
+                    : null}
             </div>
             <style jsx global>
                 {`

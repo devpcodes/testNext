@@ -46,7 +46,7 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                     .ant-tabs-top > .ant-tabs-nav:before,
                     .ant-tabs-top > div > .ant-tabs-nav:before {
                         border-bottom: 1px solid #d7e0ef;
-                        width: 96%;
+                        width: 100%;
                         margin: auto;
                     }
 
@@ -71,10 +71,6 @@ const ProductTab = ({ children, categories, activeKey, defaultActiveKey, onTabsC
                         font-size: 20px;
                         font-weight: normal;
                         color: #0d1623;
-                    }
-
-                    .product-tabs .ant-tabs-tab {
-                        margin: 0 25px;
                     }
 
                     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {

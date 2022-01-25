@@ -58,7 +58,7 @@ const QuestionArticleComponent = () => {
     };
 
     const downloadFile = filename => {
-        window.open(`https://webrd.sinotrade.com.tw/files/${filename}`);
+        window.open(`${process.env.NEXT_PUBLIC_FILE}/${filename}`);
     };
 
     const keywords = keywords => {
@@ -108,7 +108,7 @@ const QuestionArticleComponent = () => {
                                     </div>
                                     <div className="category-time-group">
                                         <p>更新時間</p>
-                                        <span>{moment(articleData.updatedAt).format('Y-M-D')}</span>
+                                        <span>{moment(articleData.updatedAt).format('Y.M.D')}</span>
                                     </div>
                                 </div>
                                 <hr />
@@ -185,10 +185,10 @@ const QuestionArticleComponent = () => {
                                                         style={
                                                             clientWidth > 450
                                                                 ? {
-                                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.desktopImagePath})`,
+                                                                      backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.desktopImagePath})`,
                                                                   }
                                                                 : {
-                                                                      backgroundImage: `url(https://webrd.sinotrade.com.tw/files/images/${e.mobileImagePath})`,
+                                                                      backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath})`,
                                                                   }
                                                         }
                                                     ></div>
@@ -214,16 +214,17 @@ const QuestionArticleComponent = () => {
             </Layout>
             <style jsx>{`
                 .article_wrapper {
-                    width: 98vw;
+                    width: 100%;
                     max-width: 100%;
                     display: flex;
                     flex-direction: row;
-                    justify-content: space-between;
+                    justify-content: center;
                     margin: auto;
                 }
 
                 .article_section {
-                    min-width: 777px;
+                    /* min-width: 777px; */
+                    min-width: 600px;
                     width: 66%;
                     margin-right: 48px;
                 }
@@ -305,12 +306,12 @@ const QuestionArticleComponent = () => {
                 }
 
                 .side_section {
-                    /* max-width: 346px; */
-                    width: 346px;
+                    width: 30%;
+                    max-width: 346px;
                 }
 
                 .qTitle {
-                    border-left: 4px solid #daa360;
+                    position: relative;
                     padding-left: 12px;
                     font-family: PingFangTC;
                     font-size: 20px;
@@ -321,6 +322,17 @@ const QuestionArticleComponent = () => {
                     letter-spacing: -0.25px;
                     color: #0d1623;
                     margin: 21px 0 16px;
+                }
+
+                .qTitle:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    width:4px;
+                    height: 20px;
+                    margin: 7px 12px 7px 0;
+                    background-color: #daa360;
                 }
 
                 .qSection {
@@ -404,7 +416,7 @@ const QuestionArticleComponent = () => {
                     .article_wrapper {
                         display: flex;
                         flex-direction: column;
-                        width: 100%;
+                        width: 91.6vw;
                     }
 
                     .article_section {
@@ -415,48 +427,28 @@ const QuestionArticleComponent = () => {
                         display: flex;
                         flex-direction: column;
                         justify-content: flex-start;
-                        padding: 0 16px;
                         height: initial;
+                        width: 91.6vw;
+                        margin: 0 auto 20px auto;
                     }
 
                     .title_group > h1 {
                         text-align: left;
                         width: 100%;
-                        font-size: 20px;
-                        margin-bottom: 12px;
+                        font-size: 28px;
                     }
 
                     .back_group {
                         display: flex;
-                        width: 100%;
-                        justify-content: space-between;
-                    }
-
-                    .back_group > .mobile_button {
-                        margin-left: 16px;
-                    }
-
-                    .article {
-                        padding: 16px 16px;
-                        border-right: 0;
-                        border-left: 0;
+                        justify-content: flex-end;
                     }
 
                     .article > p > img {
                         width: 100vw !important;
                     }
 
-                    .category-group {
-                        flex-direction: column !important;
-                    }
-
                     .category-question-group {
-                        width: 100%;
                         margin-bottom: 5px;
-                    }
-
-                    .category-time-group {
-                        width: 100%;
                     }
 
                     .article > .category-group > .category-time-group > span {
@@ -471,8 +463,16 @@ const QuestionArticleComponent = () => {
                     }
 
                     @media screen and (max-width: 768px) {
+                        .back_group > .mobile_button {
+                            width: 76vw;
+                        }
+
+                        .article > .category-group {
+                            justify-content: flex-start;
+                        }
+
                         .qTitle {
-                            margin: 21px 16px 16px;
+                            margin: 32px 16px 16px 0;
                         }
 
                         .tag_section {
@@ -481,17 +481,65 @@ const QuestionArticleComponent = () => {
                     }
 
                     @media screen and (max-width: 450px) {
-                        .back_group > .mobile_button {
-                            width: 76vw;
+                        .article_wrapper {
+                            display: flex;
+                            flex-direction: column;
+                            width: 100vw;
+                        }
+                        
+                        .back_group {
+                            width: 100%;
+                        }
+
+                        .back_group > .customer-button {
+                            margin-right: 10%;
                         }
 
                         .article > .category-group {
                             font-size: 14px;
                         }
 
-                        .back_group {
-                            width: auto;
+
+                        .category-group {
+                            flex-direction: column;
                         }
+
+
+                        .category-question-group {
+                            width: 100%;
+                            margin-bottom: 5px;
+                        }
+
+                        .category-time-group {
+                            width: 100%;
+                        }
+
+                        .title_group > h1 {
+                            text-align: left;
+                            width: 100%;
+                            font-size: 20px;
+                            margin-bottom: 12px;
+                        }
+
+                        .article {
+                            /* padding: 16px 16px; */
+                            border-right: 0;
+                            border-left: 0;
+                        }
+
+                        .is-helped-button-group {
+                            justify-content: space-between;
+                        }
+
+                        is-helped-button {
+                            margin-right: 0;
+                        }
+
+
+                        .qTitle {
+                            margin: 32px 16px 16px 16px;
+                        }
+                    }
                     }
                 }
             `}</style>
@@ -537,7 +585,14 @@ const QuestionArticleComponent = () => {
                 }
 
                 .questionArticleWrapper {
+                    width: 100%;
                     max-width: 1172px;
+                }
+
+                @media screen and (max-width: 1172px) {
+                    .questionArticleWrapper {
+                        width: 92%;
+                    }
                 }
 
                 .SearchInput_question-article-input-search__3QSct
@@ -694,7 +749,9 @@ const QuestionArticleComponent = () => {
                 .slot_block {
                     position: relative;
                     width: 100%;
-                    height: 108px;
+                    max-width: 1600px;
+                    height: 10vw;
+                    max-height: 500px;
                 }
 
                 .slot_block div {
@@ -736,9 +793,13 @@ const QuestionArticleComponent = () => {
                     background-color: #c43826;
                 }
 
+                .slot_block .ant-carousel .slick-dots-bottom {
+                    bottom: 0;
+                }
+
                 @media screen and (max-width: 768px) {
                     .questionArticleWrapper > .site-breadcrumb {
-                        width: 90vw;
+                        width: 91.6vw;
                     }
 
                     .side_section > .question-article-input-search {
@@ -748,24 +809,53 @@ const QuestionArticleComponent = () => {
                     .web-back-to-list {
                         display: none;
                     }
+
+                    .title_group {
+                        position: relative;
+                    }
+
+                    .back_group {
+                        width: 45vw;
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                    }
+
+                    .back_group > .customer-button {
+                        display: none;
+                    }
+
+                    .slot_block {
+                        position: relative;
+                        width: 100%;
+                        max-width: 1125px;
+                        height: 50vw;
+                        max-height: 750px;
+                    }
+
+                    .slot_block div {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
 
-                @media screen and (max-width: 768px) {
-                    .is-helped-button-group {
-                        justify-content: space-between;
+                @media screen and (max-width: 450px) {
+                    .back_group > .customer-button {
+                        display: block;
+                        margin-right: 5%;
                     }
 
                     .is-helped-button {
                         width: 50%;
                     }
 
-                    is-helped-button {
-                        margin-right: 0;
+                    .back_group {
+                        position: relative;
                     }
 
                     .slot_block {
-                        width: 100%;
-                        padding: 0 16px;
+                        width: 92vw;
+                        margin: 15.5px auto 24px auto;
                     }
                 }
 

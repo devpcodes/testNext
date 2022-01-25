@@ -39,15 +39,17 @@ const AppDownloadSection = () => {
                         <div className="v-line" />
                         <img src={ios} alt="ios" />
                     </div>
-                    <CustomerButton
-                        type="default"
-                        className="web-download"
-                        onMouseEnter={setQrCodeShow}
-                        onMouseLeave={setQrCodeHide}
-                    >
-                        立即下載
-                    </CustomerButton>
-                    {isQrCodeShow ? <div className="download-qr-code"></div> : null}
+                    <div className="btn-box">
+                        <CustomerButton
+                            type="default"
+                            className="web-download"
+                            onMouseEnter={setQrCodeShow}
+                            onMouseLeave={setQrCodeHide}
+                        >
+                            立即下載
+                        </CustomerButton>
+                        {isQrCodeShow ? <div className="download-qr-code"></div> : null}
+                    </div>
                     <CustomerButton className="mobile-download" onClick={download}>
                         立即下載
                     </CustomerButton>
@@ -57,17 +59,19 @@ const AppDownloadSection = () => {
                 {`
                     .app-download-container {
                         width: 100%;
-                        height: 407px;
+                        height: fit-content;
                         background-image: url(${appBgWeb});
                         background-size: cover;
                         background-position: center;
                     }
 
                     .app-download-left {
-                        width: 70%;
-                        height: 407px;
+                        width: 80%;
+                        height: fit-content;
                         padding-top: 4%;
-                        margin: 0 0 0 10%;
+                        padding-left: 1.5rem;
+                        padding-right: 1.5rem;
+                        margin: 0 auto;
                     }
 
                     h3 {
@@ -111,6 +115,24 @@ const AppDownloadSection = () => {
                         border: 0.5px solid white;
                     }
 
+                    @media screen and (max-width: 1250px) {
+                        .app-download-left {
+                            width: 90%;
+                        }
+
+                        .description {
+                            width: 47.52vw;
+                        }
+                    }
+
+                    @media screen and (max-width: 1024px) {
+                        .app-download-left {
+                            width: 100%;
+                            padding-left: 3rem;
+                            padding-right: 3rem;
+                        }
+                    }
+
                     @media screen and (max-width: 768px) {
                         .app-download-container {
                             width: 100%;
@@ -119,18 +141,14 @@ const AppDownloadSection = () => {
                         }
 
                         .app-download-left {
-                            margin: 0 0 0 8%;
+                            // margin: 0 0 0 8%;
                             padding-top: 7%;
-                        }
-
-                        .description {
-                            width: 80%;
                         }
                     }
 
                     @media screen and (max-width: 600px) {
                         .app-download-left {
-                            margin: 0 0 0 5%;
+                            // margin: 0 0 0 5%;
                             padding-top: 5%;
                         }
 
@@ -149,7 +167,7 @@ const AppDownloadSection = () => {
                         .app-download-left {
                             width: 100%;
                             margin: 0;
-                            padding-top: 0;
+                            padding: 0;
                             height: 318px;
                         }
 
@@ -194,10 +212,18 @@ const AppDownloadSection = () => {
                         height: 48px;
                     }
 
+                    .app-download-left .ant-btn {
+                        margin-bottom: 56px;
+                    }
+
                     .app-download-left .ant-btn:focus,
                     .app-download-left .ant-btn:hover {
                         color: rgba(0, 0, 0, 0.65);
                         border-color: transparent;
+                    }
+
+                    .btn-box {
+                        position: relative;
                     }
 
                     .download-qr-code {
@@ -213,6 +239,8 @@ const AppDownloadSection = () => {
                         -webkit-box-shadow: 14px 14px 20px -14px rgba(185, 189, 199, 1);
                         -moz-box-shadow: 14px 14px 20px -14px rgba(185, 189, 199, 1);
                         box-shadow: 14px 14px 20px -14px rgba(185, 189, 199, 1);
+                        bottom: -187px;
+                        left: -40px;
                     }
 
                     // .ant-btn:hover .download-qr-code {

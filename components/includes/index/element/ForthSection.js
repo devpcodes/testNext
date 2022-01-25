@@ -30,9 +30,12 @@ const ForthSection = ({ data }) => {
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    padding: 3% 10%;
-                    width: 100%;
+                    padding: 3% 1.5rem;
+                    width: 80%;
+                    padding-left: 1.5rem;
+                    padding-right: 1.5rem;
                     background-color: #f9fbff;
+                    margin: 0 auto;
                 }
 
                 .forth-section-container > h2 {
@@ -53,7 +56,7 @@ const ForthSection = ({ data }) => {
                 }
 
                 .forth-section-card-wrap {
-                    width: 100%;
+                    width: calc(100% + 0.625vw * 2);
                     display: flex;
                     justify-content: center;
                     margin-top: 32px;
@@ -62,7 +65,7 @@ const ForthSection = ({ data }) => {
                 .forth-more-wrap {
                     display: flex;
                     width: 100%;
-                    max-width: 1163px;
+                    // max-width: 1163px;
                     justify-content: flex-end;
                     margin-top: 16px;
                     cursor: pointer;
@@ -75,23 +78,40 @@ const ForthSection = ({ data }) => {
                     color: #3f5372;
                 }
 
-                @media screen and (max-width: 1050px) {
+                @media screen and (max-width: 1250px) {
                     .forth-section-container {
-                        padding: 56px 1% 30px 1%;
+                        width: 90%;
                     }
+                }
 
+                @media screen and (max-width: 1050px) {
                     .forth-section-card-wrap {
                         flex-wrap: wrap;
                     }
 
                     .forth-more-wrap {
-                        width: 90%;
+                        margin-top: 0;
+                        width: calc(100% - 0.625vw * 2);
+                    }
+                }
+
+                @media screen and (max-width: 1024px) {
+                    .forth-section-container {
+                        width: 100%;
+                        padding: 56px 3rem 30px;
+                    }
+                }
+
+                @media screen and (max-width: 768px) {
+                    .forth-section-card-wrap {
+                        width: calc(100% + 10px * 2);
                     }
                 }
 
                 @media screen and (max-width: 450px) {
                     .forth-section-container {
-                        padding: 24px 1% 24px 1%;
+                        width: 100%;
+                        padding: 24px 16px 24px;
                     }
 
                     .forth-section-container > h2 {
@@ -114,19 +134,11 @@ const ForthSection = ({ data }) => {
             `}</style>
             <style jsx global>
                 {`
-                    @media screen and (max-width: 1050px) {
+                    @media screen and (max-width: 768px) {
                         .forth-section-card-wrap .forth-cards-card-wrap {
-                            width: 47%;
+                            width: calc(50% - 8px * 2);
                             max-height: unset;
-                            margin: 10px;
-                        }
-                    }
-
-                    @media screen and (max-width: 700px) {
-                        .forth-section-card-wrap .forth-cards-card-wrap {
-                            width: 45%;
-                            max-height: unset;
-                            margin: 10px;
+                            margin: 8px;
                             padding: 3%;
                         }
                     }
@@ -135,7 +147,7 @@ const ForthSection = ({ data }) => {
                         .forth-section-card-wrap .forth-cards-card-wrap {
                             width: 93%;
                             max-height: unset;
-                            margin: 8px auto;
+                            margin: 8px 0;
                             padding: 24px;
                         }
                     }

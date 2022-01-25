@@ -1,7 +1,7 @@
 const Version = function () {
     return (
         <div>
-            <p>version: 2022-01-19 17:48:00</p>
+            <p>version: 2022-01-24 18:07:00</p>
         </div>
     );
 };

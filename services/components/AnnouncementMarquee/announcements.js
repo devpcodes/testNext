@@ -1,7 +1,7 @@
 import axios from '../../myAxios';
 
 export const getAnnounce = async slotCode => {
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/announcements`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/announcements`;
     try {
         const res = await axios.get(reqUrl);
         if (res.status === 200) {

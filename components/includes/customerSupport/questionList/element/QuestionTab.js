@@ -4,35 +4,21 @@ import { Tabs } from 'antd';
 import ProductQuestionTable from '../../../financialProduct/FinancialProductArticle/element/ProductQuestionTable';
 import ProductFileTable from '../../../financialProduct/FinancialProductArticle/element/ProductFileTable';
 
-const QuestionTab = ({
-    children,
-    categories,
-    activeKey,
-    onTabsChange,
-    isFinancialProduct,
-    keywords,
-    attachments,
-    ...props
-}) => {
+const QuestionTab = ({ children, categories, activeKey, onTabsChange, isFinancialProduct, keywords, attachments }) => {
     const { TabPane } = Tabs;
     return (
         <Tabs
             className="question-tab"
-            defaultActiveKey={categories && categories[0].id}
+            defaultActiveKey={categories[0].id}
             activeKey={activeKey}
             onChange={onTabsChange}
-            categories={categories}
-            key={activeKey}
-            {...props}
         >
-            {categories &&
-                categories.map(category => {
-                    return (
-                        <TabPane tab={category.categoryName} key={category.id}>
-                            {children}
-                        </TabPane>
-                    );
-                })}
+            {categories.map((category, i) => (
+                <TabPane tab={category.categoryName} key={category.id}>
+                    {children}
+                </TabPane>
+            ))}
+
             {isFinancialProduct ? (
                 <>
                     <TabPane tab="常見問題" key="commonQuestion">

@@ -20,15 +20,14 @@ const SearchResultComponent = () => {
     const router = useRouter();
     const keyword = router.query.keyword;
     const clientWidth = useSelector(store => store.layout.winWidth);
-    const [page, setPage] = useState(1);
+    const [currentPageWeb, setCurrentPageWeb] = useState(1);
+    const [currentPageMobile, setCurrentPageMobile] = useState(1);
     const [newSearchKeyword, setNewSearchKeyword] = useState(keyword);
-    const [searchResultData, setSearchResultData] = useState([]);
-    const [fromCount, setFromCount] = useState(0);
-    const [toCount, setToCount] = useState(0);
-    const [totalPage, setTotalPage] = useState(null);
+    const [searchResultDataWeb, setSearchResultDataWeb] = useState([]);
+    const [searchResultDataMobile, setSearchResultDataMobile] = useState([]);
     const [totalQuestion, setTotalQuestion] = useState(null);
-    // const [isLoading, setIsLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(null);
+    const [totalPage, setTotalPage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const onInput = e => {
         setNewSearchKeyword(e.target.value);
@@ -41,8 +40,10 @@ const SearchResultComponent = () => {
                 pathname: '/customer-support',
             });
         } else if (newSearchKeyword) {
-            setSearchResultData([]);
-            setPage(1);
+            setSearchResultDataWeb([]);
+            setSearchResultDataMobile([]);
+            setCurrentPageWeb(1);
+            setCurrentPageMobile(1);
             router.push({
                 pathname: '/customer-support/search-result',
                 query: { keyword: newSearchKeyword },
@@ -57,87 +58,46 @@ const SearchResultComponent = () => {
                 behavior: 'smooth',
             });
         }
-        setPage(page);
+        setCurrentPageWeb(page);
         const params = {
             keywords: keyword,
             page,
             pageSize: 15,
         };
         const data = await getCommonQuestions(params);
-        setSearchResultData(data.dataList);
-        if (totalQuestion.counts <= 15) {
-            setFromCount(1);
-            setToCount(totalQuestion);
-            // 有2頁以上 第2頁 = 16~30
-        } else if (totalQuestion >= 15) {
-            setFromCount(15 * (page - 1) + 1);
-            setToCount(page * 15);
-        }
+        setSearchResultDataWeb(data.dataList);
     };
 
     const loadMoreData = async () => {
-        // setIsLoading(true);
-        setPage(page + 1);
-        // setIsLoading(false);
+        setIsLoading(true);
+        const params = {
+            keywords: keyword,
+            page: currentPageMobile + 1,
+            pageSize: 15,
+        };
+        setCurrentPageMobile(old => old + 1);
+        const data = await getCommonQuestions(params);
+        setSearchResultDataMobile(oldData => [...oldData, ...data.dataList]);
+        setIsLoading(false);
     };
 
     useEffect(async () => {
         const params = {
             keywords: keyword,
-            page,
+            page: 1,
             pageSize: 15,
         };
         const data = await getCommonQuestions(params);
-        if (totalPage && page > totalPage) {
-            // console.log('totalPage', totalPage);
-            // console.log('page', page);
-            setHasMore(false);
-            console.log('no more.');
-        } else if (data.dataList && data.dataList.length) {
+        if (data.dataList?.length) {
+            setCurrentPageWeb(1);
+            setCurrentPageMobile(1);
             setTotalQuestion(data.counts);
-            setTotalPage(Math.round(data.counts / 15));
-            // 把type === editor的content獨立出來
-            data.dataList.forEach(ele => {
-                try {
-                    ele.content = JSON.parse(ele.content);
-                    if (typeof ele.content === 'object') {
-                        let index = ele.content.findIndex(e => e.type === 'editor');
-                        if (index >= 0) {
-                            ele.contentPreview = ele.content[index].content.content;
-                        }
-                    }
-                    ele.content = JSON.stringify(ele.content);
-                } catch (error) {
-                    // console.log('no editor content');
-                }
-            });
-            if (clientWidth > 768 && !searchResultData.length) {
-                setSearchResultData(data.dataList);
-            } else if (clientWidth <= 768) {
-                if (searchResultData.length) {
-                    setSearchResultData([...searchResultData, ...data.dataList]);
-                } else {
-                    setSearchResultData(data.dataList);
-                }
-            }
-            // only第一頁 1~總問題數
-            if (data.counts <= 15) {
-                setFromCount(1);
-                setToCount(data.counts);
-                // 有2頁以上 第2頁 = 16~30
-            } else if (data.counts >= 15) {
-                setFromCount(15 * (page - 1) + 1);
-                setToCount(page * 15);
-            }
-            // no data
-        } else {
-            setHasMore(false);
-            setPage(1);
-            setTotalQuestion(0);
-            setFromCount(0);
-            setToCount(0);
+            const allPage = Math.ceil(data.counts / 15);
+            setTotalPage(allPage);
+            setSearchResultDataWeb(data.dataList);
+            setSearchResultDataMobile(data.dataList);
         }
-    }, [keyword, page]);
+    }, [keyword]);
 
     return (
         <Layout>
@@ -148,29 +108,29 @@ const SearchResultComponent = () => {
             {clientWidth > 768 && (
                 <SearchResultCard
                     keyword={keyword}
-                    searchResultData={searchResultData}
-                    fromCount={fromCount}
-                    toCount={toCount}
+                    searchResultData={searchResultDataWeb}
+                    currentPage={currentPageWeb}
                     totalQuestion={totalQuestion}
-                    page={page}
                     changePage={onPageChange}
                 />
             )}
-            {clientWidth <= 768 && searchResultData && (
-                <InfiniteScroll
-                    dataLength={searchResultData.length}
-                    next={loadMoreData}
-                    hasMore={hasMore}
-                    loader={
-                        <div className="loadingArea">
-                            <LoadingOutlined className="loadingIcon" />
-                            載入更多中
-                        </div>
-                    }
-                >
-                    <SearchResultCard keyword={keyword} searchResultData={searchResultData} />
+            {clientWidth <= 768 && searchResultDataMobile && (
+                <InfiniteScroll dataLength={totalQuestion} next={loadMoreData} hasMore={currentPageMobile < totalPage}>
+                    <SearchResultCard
+                        keyword={keyword}
+                        searchResultData={searchResultDataMobile}
+                        currentPage={currentPageMobile}
+                    />
                 </InfiniteScroll>
             )}
+
+            {isLoading ? (
+                <div className="loadingArea">
+                    <LoadingOutlined className="loadingIcon" />
+                    載入更多中
+                </div>
+            ) : null}
+
             <style jsx global>
                 {`
                     .breadcrumbWrapper {
@@ -179,6 +139,13 @@ const SearchResultComponent = () => {
                     }
 
                     @media screen and (max-width: 768px) {
+                        .breadcrumbWrapper {
+                            width: 91vw;
+                            margin: auto;
+                        }
+                    }
+
+                    @media screen and (max-width: 450px) {
                         .breadcrumbWrapper {
                             display: none;
                         }
@@ -200,13 +167,6 @@ const SearchResultComponent = () => {
                         cursor: pointer;
                     }
 
-                    @media screen and (max-width: 768px) {
-                        .card {
-                            width: 100%;
-                            margin-top: 0;
-                        }
-                    }
-
                     .questionTitleUnhighlight {
                         color: #0d1623;
                     }
@@ -226,7 +186,7 @@ const SearchResultComponent = () => {
                         -webkit-line-clamp: 2;
                     }
 
-                    @media screen and (max-width: 768px) {
+                    @media screen and (max-width: 450px) {
                         .questionContent {
                             margin-bottom: 5px;
                         }
@@ -268,7 +228,7 @@ const SearchResultComponent = () => {
                         font-weight: normal;
                     }
 
-                    @media screen and (max-width: 768px) {
+                    @media screen and (max-width: 450px) {
                         .card {
                             width: 100%;
                             margin-top: 0;
@@ -312,9 +272,14 @@ const SearchResultComponent = () => {
                         margin-bottom: 16px;
                     }
 
+                    .ant-pagination-item-active:focus,
                     .ant-pagination-item-active {
                         border: solid 1px #c43826;
                         background: #c43826;
+                    }
+
+                    .ant-pagination-item-active:focus a {
+                        color: white;
                     }
 
                     .ant-pagination-item-active:hover {
@@ -328,6 +293,18 @@ const SearchResultComponent = () => {
 
                     .ant-pagination-item-active:hover > a {
                         color: white;
+                    }
+
+                    .ant-pagination-prev:hover .ant-pagination-item-link,
+                    .ant-pagination-next:hover .ant-pagination-item-link,
+                    .ant-pagination-item:hover {
+                        border-color: #d9d9d9;
+                    }
+
+                    .ant-pagination-prev:hover .ant-pagination-item-link,
+                    .ant-pagination-next:hover .ant-pagination-item-link,
+                    .ant-pagination-item a:hover {
+                        color: rgba(0, 0, 0, 0.65);
                     }
 
                     .infinite-scroll-component__outerdiv .infinite-scroll-component {

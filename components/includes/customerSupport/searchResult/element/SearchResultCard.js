@@ -8,19 +8,16 @@ import Highlighter from 'react-highlight-words';
 import parse from 'html-react-parser';
 import noDataImg from '../../../../../resources/images/pages/customer_support/img-default.svg';
 
-const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, totalQuestion, page, changePage }) => {
+const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPage, changePage }) => {
     const { Content } = Layout;
     const router = useRouter();
     const [data, setData] = useState(searchResultData);
-    console.log('searchResultData', searchResultData);
-    // const [questionAmount, setQuestionAmount] = useState(totalQuestion)
     const toQuestionPage = questionUUID => {
         router.push({
             pathname: `/customer-support/question/${questionUUID}`,
         });
     };
 
-    // console.log('searchResultData', searchResultData);
     useEffect(() => {
         setData(searchResultData);
     }, [searchResultData]);
@@ -50,7 +47,6 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                             autoEscape={false}
                             textToHighlight={parse(`${item.keywordContent}`)}
                         />
-                        {/* <span className="questionContent">{parse(`${item.keywordContent}`)}</span> */}
                         <div className="secondThirdCategories">
                             <span>{item.category2nd?.categoryName ? item.category2nd?.categoryName : ''}</span>
                             {item.category3rd?.categoryName ? (
@@ -71,16 +67,13 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 </div>
             )}
             <div className="countsAndPager">
-                <span>
-                    {fromCount}-{toCount} 則問題 ( 共 {totalQuestion} 則問題 )
-                </span>
                 <Pagination
                     className="pager"
-                    defaultCurrent={1}
-                    current={page}
+                    current={currentPage}
                     pageSize={15}
                     total={totalQuestion}
                     onChange={onPageChange}
+                    showTotal={(total, range) => `${range[0]}-${range[1]}則問題 (共${totalQuestion}則問題)`}
                 />
             </div>
             <style jsx>{`
@@ -103,7 +96,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     display: inline-block;
                 }
 
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 450px) {
                     .noResult {
                         border: none;
                         min-height: 0;
@@ -119,10 +112,18 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
             <style jsx global>{`
                 .layoutContent {
                     width: 71vw;
-                    margin: auto;
+                    margin: 0 auto;
                 }
 
                 @media screen and (max-width: 768px) {
+                    .layoutContent {
+                        width: 91vw;
+                        margin: 0 auto;
+                        margin-bottom: 68px;
+                    }
+                }
+
+                @media screen and (max-width: 450px) {
                     .layoutContent {
                         min-width: 98vw;
                         width: 100%;
@@ -146,8 +147,14 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                 }
 
                 @media screen and (max-width: 768px) {
+                    .card:first-of-type {
+                        margin-top: 0px;
+                    }
+                }
 
+                @media screen and (max-width: 450px) {
                     .card .ant-card-body {
+                        margin-top: -1px;
                         padding: 12px 16px;
                     }
                 }
@@ -226,7 +233,7 @@ const SearchResultCard = ({ keyword, searchResultData, fromCount, toCount, total
                     font-weight: normal;
                 }
 
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 450px) {
                     .card {
                         width: 100%;
                         margin-top: -1px;

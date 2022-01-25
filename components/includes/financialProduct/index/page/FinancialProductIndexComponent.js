@@ -91,13 +91,13 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                     />
                     <div className="productCardContainer">
                         {currentProductList?.length &&
-                            currentProductList.map(i => (
+                            currentProductList.map((e, i) => (
                                 <ProductCard
-                                    key={i.categoryCode}
-                                    title={i.productName || i.appName}
-                                    description={i.description}
-                                    imagePath={i.imagePath}
-                                    productCode={i.productCode || i.appCode}
+                                    key={i}
+                                    title={e.productName || e.appName}
+                                    description={e.description}
+                                    imagePath={e.imagePath}
+                                    productCode={e.productCode || e.appCode}
                                     categoryName={currentCategoryName}
                                     categoryCode={activeKey}
                                     isTradingPlatform={isTradingPlatform}
@@ -107,7 +107,8 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                 </Content>
                 <style jsx>{`
                     .productLayoutContent {
-                        width: 71vw;
+                        width: 80%;
+                        padding: 0 1.5rem;
                         min-height: 100vh;
                         margin: auto;
                         margin-top: 20px;
@@ -140,16 +141,30 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                         }
                     }
 
-                    @media screen and (max-width: 1024px) {
+                    @media screen and (max-width: 1250px) {
                         .productLayoutContent {
                             width: 90%;
+                        }
+                    }
+
+                    @media screen and (max-width: 1024px) {
+                        .productLayoutContent {
+                            width: 100%;
                             margin 0 auto;
+                            padding: 0 3rem;
+                        }
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        .productLayoutContent {
+                            width: calc(100% - 64px);
+                            padding: 0;
                         }
                     }
 
                     @media screen and (max-width: 450px) {
                         .productLayoutContent {
-                            width: 100%;
+                            width: calc(100% - 4.27vw * 2);
                             margin-top: 0px;
                             margin-bottom: 20px;
                             min-height: 0;
@@ -175,6 +190,9 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                         display: flex;
                         flex-wrap: wrap;
                         justify-content: flex-start;
+                        margin-bottom: 50px;
+                        margin-left: calc(-2.0625vw / 2);
+                        margin-right: calc(-2.0625vw / 2);
                     }
 
                     @media screen and (max-width: 1024px) {
@@ -184,13 +202,19 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                         }
                     }
 
+                    @media screen and (max-width: 820px) {
+                        .productCardContainer {
+                            margin-left: -1.041vw;
+                            margin-right: -1.041vw;
+                        }
+                    }
+
                     @media screen and (max-width: 450px) {
                         .productCardContainer {
                             justify-content: flex-start;
                             flex-direction: row;
                             flex-wrap: wrap;
-                            margin: 17px auto 0 auto;
-                            padding: 0 5px;
+                            margin: 17px calc(-4.27vw / 2) 0;
                         }
 
                         .backgroundImage {

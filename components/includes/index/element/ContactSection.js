@@ -59,8 +59,10 @@ const ContactSection = () => {
                         flex-direction: column;
                         justify-content: center;
                         align-items: center;
-                        padding-bottom: 56px;
                         background-color: #f9fbff;
+                        width: calc(80% + 1vw * 2);
+                        padding: 0 1.5rem 56px;
+                        margin: 0 auto;
                     }
 
                     h2 {
@@ -89,9 +91,9 @@ const ContactSection = () => {
 
                     .contact-section-card-wrap {
                         display: flex;
-                        justify-content: center;
                         width: 100%;
-                        margin-top: 23px;
+                        justify-content: center;
+                        margin-top: 30px;
                     }
 
                     .contact-section-card {
@@ -99,12 +101,13 @@ const ContactSection = () => {
                         justify-content: center;
                         align-items: center;
                         /* width: 45%; */
-                        margin: 0 16px;
-                        width: 568px;
+                        margin: 0 1vw;
+                        // width: 568px;
                         min-height: 153px;
                         padding: 32px;
                         border: solid 1px #d7e0ef;
                         background-color: white;
+                        width: 50%;
                     }
 
                     .contact-section-icon {
@@ -145,8 +148,8 @@ const ContactSection = () => {
 
                     .contact-more-wrap {
                         display: flex;
-                        width: 100%;
-                        max-width: 1169px;
+                        width: calc(100% - 1vw * 2);
+                        // max-width: 1169px;
                         justify-content: flex-end;
                         margin-top: 16px;
                         cursor: pointer;
@@ -182,14 +185,22 @@ const ContactSection = () => {
                         }
                     }
 
+                    @media screen and (max-width: 1250px) {
+                        .contact-section-container {
+                            width: calc(90% + 1vw * 2);
+                        }
+                    }
+
                     @media screen and (max-width: 1024px) {
                         .contact-section-container {
+                            width: 100%;
                             padding: 32px;
                         }
 
                         .contact-section-card-wrap {
                             width: 100%;
                             flex-wrap: wrap;
+                            margin-top: 15px;
                         }
 
                         .contact-section-card {
@@ -201,6 +212,11 @@ const ContactSection = () => {
                         .phone-number {
                             flex-direction: row;
                         }
+
+                        .contact-more-wrap {
+                            width: 100%;
+                            margin-top: 0;
+                        }
                     }
 
                     @media screen and (max-width: 523px) {
@@ -211,7 +227,7 @@ const ContactSection = () => {
 
                     @media screen and (max-width: 450px) {
                         .contact-section-container {
-                            padding: 495px 16px 24px 16px;
+                            padding: 510px 16px 24px 16px;
                         }
 
                         h2 {
@@ -234,7 +250,7 @@ const ContactSection = () => {
 
                         @media screen and (max-width: 365px) {
                             .contact-section-container {
-                                padding: 520px 16px 24px 16px;
+                                padding: 520px 24px 24px;
                             }
                         }
                     }

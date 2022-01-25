@@ -17,7 +17,7 @@ const ShortcutFunction = ({ linkData }) => {
         <Layout>
             <Row gutter={[16, 16]} className="fastLinkButtons">
                 {linkData.map((item, index) => (
-                    <Col key={index} className="gutter-row" xs={8} sm={4} md={6} lg={4}>
+                    <Col key={index} className="gutter-row" xs={8} sm={6} md={6} lg={4}>
                         <Card
                             className="customerSupportCard"
                             hoverable
@@ -26,7 +26,14 @@ const ShortcutFunction = ({ linkData }) => {
                             }}
                         >
                             <div className="shortcutFunctionIcon" style={{ backgroundImage: `url(${item.image})` }} />
-                            <p className="shortcutFunctionIconText">{item.title}</p>
+                            {index === 1 ? (
+                                <p className="shortcutFunctionIconText">
+                                    <span className="pc-show">{item.title}</span>
+                                    <span className="mobile-show">開戶查詢</span>
+                                </p>
+                            ) : (
+                                <p className="shortcutFunctionIconText">{item.title}</p>
+                            )}
                         </Card>
                     </Col>
                 ))}
@@ -35,7 +42,7 @@ const ShortcutFunction = ({ linkData }) => {
                 .fastLinkButtons {
                     width: 100%;
                     display: flex;
-                    justify-content: center;
+                    justify-content: flex-start;
                     flex-wrap: wrap;
                     align-items: flex-start;
                     margin-top: 16px;
@@ -76,6 +83,37 @@ const ShortcutFunction = ({ linkData }) => {
                     font-size: 16px;
                     white-space: nowrap;
                     margin-bottom: 0;
+                }
+
+                .pc-show {
+                    display: block;
+                }
+
+                .mobile-show {
+                    display: none;
+                }
+
+                @media screen and (max-width: 450px) {
+                    .fastLinkButtons {
+                        width: calc(100% + 16px);
+                    }
+
+                    .fastLinkButtons .customerSupportCard {
+                        padding: 12px 18px 8px;
+                        min-heigh: 90px;
+                    }
+
+                    .fastLinkButtons .ant-card-body {
+                        padding: 0;
+                    }
+
+                    .pc-show {
+                        display: none;
+                    }
+
+                    .mobile-show {
+                        display: block;
+                    }
                 }
             `}</style>
         </Layout>

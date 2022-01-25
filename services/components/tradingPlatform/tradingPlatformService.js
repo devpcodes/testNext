@@ -1,7 +1,7 @@
 import axios from '../../myAxios';
 
 export const getTradingAppCategories = async () => {
-    const reqUrl = 'https://servicerd.sinotrade.com.tw/lykan/api/v1/service/tradingAppCategories';
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/tradingAppCategories`;
     try {
         const res = await axios.get(reqUrl);
         if (res.status === 200) {
@@ -17,7 +17,7 @@ export const getTradingAppCategories = async () => {
 };
 
 export const getTradingAppCategoriesAndProduct = async categoryCode => {
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/tradingAppCategory/${categoryCode}`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/tradingAppCategory/${categoryCode}`;
     const params = {
         categoryCode,
     };
@@ -36,7 +36,7 @@ export const getTradingAppCategoriesAndProduct = async categoryCode => {
 };
 
 export const getTradingAppDetail = async appCode => {
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/tradingApp/${appCode}`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/tradingApp/${appCode}`;
     const params = {
         appCode: appCode,
     };
@@ -55,7 +55,7 @@ export const getTradingAppDetail = async appCode => {
 };
 
 export const getAnnouncement = async (keywords, counts) => {
-    const reqUrl = `https://servicerd.sinotrade.com.tw/lykan/api/v1/service/announcements`;
+    const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/announcements`;
     const params = {
         keywords,
         counts,

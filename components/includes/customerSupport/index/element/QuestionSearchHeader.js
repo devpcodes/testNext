@@ -18,7 +18,6 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     size="large"
                     placeholder="你想解決什麼問題？"
                     prefix={<img src={searchIcon} alt="search-icon" />}
-                    // prefix={<SearchOutlined />}
                     value={value}
                     defaultValue={defaultValue}
                     onChange={onInput}
@@ -105,14 +104,24 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
 
                 @media screen and (max-width: 768px) {
                     .customerSupportHeader {
-                        padding: 0 20px;
+                        padding: 0;
                     }
 
                     .customerSupportSearchInput {
                         height: 45px;
-                        width: 100%;
+                        width: 66.4vw;
                         margin: 0 auto;
                         min-width: 0;
+                    }
+                }
+
+                @media screen and (max-width: 450px) {
+                    .customerSupportHeader {
+                        padding: 0 20px;
+                    }
+
+                    .customerSupportSearchInput {
+                        width: 100%;
                     }
                 }
             `}</style>
