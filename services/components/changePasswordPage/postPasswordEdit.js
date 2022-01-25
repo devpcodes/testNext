@@ -1,4 +1,4 @@
-import { getStInstance } from '../../myAxios';
+import { getA8Instance } from '../../myAxios';
 
 export const postPasswordEdit = async function (token, user_id, newPwd, oldPwd) {
     var url = `/password/edit`;
@@ -8,7 +8,7 @@ export const postPasswordEdit = async function (token, user_id, newPwd, oldPwd) 
     bodyFormData.append('newPwd', newPwd);
     bodyFormData.append('oldPwd', oldPwd);
     try {
-        const res = await getStInstance(
+        const res = await getA8Instance(
             'v1',
             true,
         )({
