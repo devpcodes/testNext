@@ -771,7 +771,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             <Form.Item
                                 hasFeedback
                                 name="password"
-                                label="密碼"
+                                label=""
                                 validateFirst
                                 rules={[
                                     {
@@ -790,7 +790,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 ]}
                             >
                                 <Input.Password
-                                    placeholder=""
+                                    placeholder="密碼"
                                     style={{
                                         width: '100%',
                                         height: isIframe ? '34px' : '54px',
