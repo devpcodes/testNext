@@ -771,7 +771,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                             <Form.Item
                                 hasFeedback
                                 name="password"
-                                label=""
+                                label="密碼"
                                 validateFirst
                                 rules={[
                                     {
