@@ -133,14 +133,15 @@ const QuestionArticleComponent = () => {
                                                   <FileOutlined />
                                                   <p>{item.displayName}</p>
                                               </div>
-                                              <CustomerButton
-                                                  type="primary"
+                                              <div
+                                                  className="primary-button"
+                                                  style={{ textAlign: 'center' }}
                                                   onClick={() => {
                                                       downloadFile(item.filename);
                                                   }}
                                               >
                                                   下載
-                                              </CustomerButton>
+                                              </div>
                                           </div>
                                       ))
                                     : ''}
@@ -329,7 +330,7 @@ const QuestionArticleComponent = () => {
                     display: block;
                     position: absolute;
                     left: 0;
-                    width:4px;
+                    width: 4px;
                     height: 20px;
                     margin: 7px 12px 7px 0;
                     background-color: #daa360;
@@ -399,6 +400,24 @@ const QuestionArticleComponent = () => {
 
                 .back_group {
                     display: none;
+                }
+
+                .primary-button {
+                    width: 44px;
+                    height: 24px;
+                    padding: 4px 4px 3px 5px;
+                    color: #fff;
+                    border-color: #c43826;
+                    border-radius: 2px;
+                    background-color: #c43826;
+                    font-size: 12px;
+                    cursor: pointer;
+                }
+
+                .primary-button:hover {
+                    background-color: #ea6554;
+                    color: #fff;
+                    border-color: #ea6554;
                 }
 
                 @media screen and (max-width: 1024px) {
@@ -486,7 +505,7 @@ const QuestionArticleComponent = () => {
                             flex-direction: column;
                             width: 100vw;
                         }
-                        
+
                         .back_group {
                             width: 100%;
                         }
@@ -497,13 +516,8 @@ const QuestionArticleComponent = () => {
 
                         .article > .category-group {
                             font-size: 14px;
-                        }
-
-
-                        .category-group {
                             flex-direction: column;
                         }
-
 
                         .category-question-group {
                             width: 100%;
@@ -535,11 +549,9 @@ const QuestionArticleComponent = () => {
                             margin-right: 0;
                         }
 
-
                         .qTitle {
                             margin: 32px 16px 16px 16px;
                         }
-                    }
                     }
                 }
             `}</style>

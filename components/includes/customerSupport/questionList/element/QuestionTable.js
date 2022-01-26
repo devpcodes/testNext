@@ -31,6 +31,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
             title: '標題',
             dataIndex: 'title',
             width: '55%',
+            ellipsis: true,
             render(text, record, idx) {
                 const s = dataSource.dataList.filter((d, index) => index === idx);
                 return (
@@ -132,12 +133,19 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
                         border-color: #ea6554 !important;
                     }
 
-                    .question-table .ant-table-filter-trigger-container {
+                    .ant-table-filter-column {
+                        justify-content: flex-start;
+                    }
+
+                    .question-table .ant-table-filter-trigger-container,
+                    .question-table .ant-table-filter-trigger {
                         position: relative;
                     }
 
-                    .question-table .sino__table .ant-table-filter-column-title {
+                    .question-table .sino__table .ant-table-filter-column-title,
+                    .question-table .sino__table .ant-table-column-title {
                         flex: unset;
+                        padding-right: 0em;
                     }
 
                     .ant-table-filter-dropdown-btns > .ant-btn-link {
@@ -204,6 +212,13 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
                     .ant-table-container,
                     .ant-table-container table > thead > tr:first-child th:first-child {
                         text-align: center;
+                    }
+
+                    .question-table .ant-table-cell-ellipsis > div {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 1;
                     }
                 `}
             </style>

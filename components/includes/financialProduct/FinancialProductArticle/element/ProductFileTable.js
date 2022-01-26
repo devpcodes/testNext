@@ -43,15 +43,15 @@ const ProductFileTable = function ({ dataSource }) {
             width: '15%',
             render(text) {
                 return (
-                    <CustomerButton
-                        type="primary"
+                    <div
+                        className="primary-button"
                         style={{ textAlign: 'center' }}
                         onClick={() => {
                             download(text);
                         }}
                     >
                         下載
-                    </CustomerButton>
+                    </div>
                 );
             },
         },
@@ -84,19 +84,40 @@ const ProductFileTable = function ({ dataSource }) {
                     ? dataSource?.map((file, idx) => (
                           <div key={idx}>
                               <p>{file.displayName}</p>
-                              <CustomerButton
-                                  type="primary"
+                              <div
+                                  className="primary-button"
                                   style={{ textAlign: 'center' }}
                                   onClick={() => {
-                                      download(file.filename);
+                                      download(text);
                                   }}
                               >
                                   下載
-                              </CustomerButton>
+                              </div>
                           </div>
                       ))
                     : null}
             </div>
+            <style>
+                {`
+                        .primary-button {
+                            width: 44px;
+                            height: 24px;
+                            padding: 4px 4px 3px 5px;
+                            color: #fff;
+                            border-color: #c43826;
+                            border-radius: 2px;
+                            background-color: #c43826;
+                            font-size: 12px;
+                            cursor: pointer;
+                        }
+        
+                        .primary-button:hover {
+                            background-color: #ea6554;
+                            color: #fff;
+                            border-color: #ea6554;
+                        }
+                `}
+            </style>
             <style jsx global>
                 {`
                     .file-table-mobile {

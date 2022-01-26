@@ -94,6 +94,7 @@ const ThirdSection = ({ data }) => {
                         background-color: white;
                         cursor: pointer;
                         padding: 24px;
+                        box-sizing: border-box;
                     }
 
                     .third-section-card-icon {
@@ -127,6 +128,7 @@ const ThirdSection = ({ data }) => {
                         width: 100%;
                         // max-width: 1145px;
                         justify-content: flex-end;
+                        margin-top: 16px;
                         cursor: pointer;
                     }
 
@@ -149,19 +151,21 @@ const ThirdSection = ({ data }) => {
                         }
 
                         .third-section-card-wrap {
+                            width: calc(100% + 1.042vw * 2);
                             flex-wrap: wrap;
                         }
 
                         .third-section-card {
-                            width: calc(100% / 3 - 0.5625vw * 2);
+                            width: calc(100% / 3 - 1.042vw * 2);
                             padding: 24px;
                             max-width: unset;
+                            margin: 1.042vw;
                         }
                     }
 
                     @media screen and (max-width: 1024px) {
                         .third-section-container {
-                            width: calc(100% + 0.5625vw * 2);
+                            width: 100%;
                             padding-left: 3rem;
                             padding-right: 3rem;
                         }
@@ -169,17 +173,17 @@ const ThirdSection = ({ data }) => {
 
                     @media screen and (max-width: 768px) {
                         .third-section-container {
-                            padding: 56px 10px 30px 10px;
+                            padding-top: 56px;
+                            padding-bottom: 30px;
                         }
 
                         .third-section-card {
-                            width: 30%;
                             padding: 24px;
-                            max-width: 224px;
                         }
 
                         .third-more-wrap {
-                            width: 95%;
+                            padding-top: 8px;
+                            width: 100%;
                         }
                     }
 
