@@ -1,6 +1,7 @@
 import { Form, Input, Button, Checkbox, Modal } from 'antd';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import MD5 from 'crypto-js/md5';
+import jwt_decode from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { verifyHandler } from '../../../../services/validator';
@@ -11,9 +12,9 @@ import { logout } from '../../../../services/user/logoutFetcher';
 const ChangePasswordPage = () => {
     const [form] = Form.useForm();
     const isMobile = useCheckMobile();
-    const currentAccount = useSelector(store => store.user.currentAccount);
+    // const currentAccount = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
-    const router = useRouter();
+    // const router = useRouter();
 
     const finishHandler = async function () {
         var errors = form.getFieldsError();
@@ -23,8 +24,11 @@ const ChangePasswordPage = () => {
         if (errors.length === 0) {
             const newPwd = MD5(form.getFieldValue('newPassword')).toString();
             const oldPwd = MD5(form.getFieldValue('oldPassword')).toString();
-            const user_id = currentAccount.idno;
+            // const user_id = currentAccount.idno;
             const token = getToken();
+            let data = jwt_decode(token);
+            // console.log('data', data);
+            const user_id = data.user_id;
             try {
                 const res = await postPasswordEdit(token, user_id, newPwd, oldPwd);
                 Modal.success({
