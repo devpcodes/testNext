@@ -10,6 +10,7 @@ export const postPasswordEdit = async function (token, user_id, newPwd, oldPwd) 
     try {
         const res = await getA8Instance(
             'v1',
+            undefined,
             true,
         )({
             method: 'post',
