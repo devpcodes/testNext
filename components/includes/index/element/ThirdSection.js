@@ -82,6 +82,7 @@ const ThirdSection = ({ data }) => {
                     }
 
                     .third-section-card {
+                        position: relative;
                         display: flex;
                         flex-direction: column;
                         justify-content: flex-start;
@@ -95,6 +96,13 @@ const ThirdSection = ({ data }) => {
                         cursor: pointer;
                         padding: 24px;
                         box-sizing: border-box;
+                        bottom: 0;
+                        transition: bottom 0.5s;
+                    }
+
+                    .third-section-card:hover {
+                        position: relative;
+                        bottom: 1rem;
                     }
 
                     .third-section-card-icon {

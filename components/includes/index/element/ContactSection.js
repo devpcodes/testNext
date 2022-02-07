@@ -82,32 +82,43 @@ const ContactSection = () => {
                     }
 
                     /* .contact-section-card-and-more {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-        } */
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            } */
 
                     .contact-section-card-wrap {
                         display: flex;
                         width: 100%;
                         justify-content: center;
-                        margin-top: 30px;
                     }
 
                     .contact-section-card {
+                        position: relative;
                         display: flex;
                         justify-content: center;
                         align-items: center;
                         /* width: 45%; */
-                        margin: 0 1vw;
+                        margin: 1rem 1vw 0 1vw;
                         // width: 568px;
                         min-height: 153px;
                         padding: 32px;
                         border: solid 1px #d7e0ef;
                         background-color: white;
                         width: 50%;
+                    }
+
+                    .contact-section-card:last-of-type {
+                        bottom: 0;
+                        transition: bottom 0.5s;
+                    }
+
+                    .contact-section-card:last-of-type:hover {
+                        position: relative;
+                        bottom: 1rem;
+                        cursor: pointer;
                     }
 
                     .contact-section-icon {
@@ -152,7 +163,6 @@ const ContactSection = () => {
                         // max-width: 1169px;
                         justify-content: flex-end;
                         margin-top: 16px;
-                        cursor: pointer;
                     }
 
                     .contact-more-wrap > p {
@@ -160,6 +170,7 @@ const ContactSection = () => {
                         font-size: 16px;
                         letter-spacing: 0.4px;
                         color: #3f5372;
+                        cursor: pointer;
                     }
 
                     .phone-number {

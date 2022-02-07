@@ -15,6 +15,7 @@ const ForthSectionCard = ({ data }) => {
             <style jsx>
                 {`
                     .forth-cards-card-wrap {
+                        position: relative;
                         // width: 277px;
                         // max-height: 286px;
                         height: fit-content;
@@ -22,6 +23,14 @@ const ForthSectionCard = ({ data }) => {
                         margin: 0 0.625vw;
                         border: solid 1px #e6ebf5;
                         background: white;
+                        bottom: 0;
+                        transition: bottom 0.5s;
+                    }
+
+                    .forth-cards-card-wrap:hover {
+                        position: relative;
+                        bottom: 1rem;
+                        cursor: pointer;
                     }
 
                     .forth-card-image {
