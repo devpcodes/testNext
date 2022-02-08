@@ -780,7 +780,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                     },
                                     {
                                         validator: (rule, value) => {
-                                            if (value.length >= 1 && value.length <= 12) {
+                                            if (value.length >= 1 && value.length <= 20) {
                                                 return Promise.resolve();
                                             } else {
                                                 return Promise.reject('輸入字數錯誤');
@@ -790,7 +790,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 ]}
                             >
                                 <Input.Password
-                                    placeholder="密碼(7-12位元)"
+                                    placeholder="密碼"
                                     style={{
                                         width: '100%',
                                         height: isIframe ? '34px' : '54px',
