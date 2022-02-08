@@ -1002,6 +1002,8 @@
                     function (result) {
                         // Prep the data
                         //    var si = LabCI.WP.SUPPORTED_FX[_dataopts.fx];
+                        
+                        
                         var dp = 2;
 
                         var _DS = that.chart.chartframeobj.data(_dataopts._datatype, _dataopts.fx, '\n' + result, {decimalPlace: dp});
