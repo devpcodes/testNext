@@ -48,7 +48,7 @@ function QAshortcut(props) {
                         </li>
                         <li>
                             <a
-                                href="https://www.sinotrade.com.tw/newweb/Service_ForgetPassword/"
+                                href={`${process.env.NEXT_PUBLIC_SUBPATH}/Service_ForgetPassword/`}
                                 style={{ backgroundImage: `url(${icon2})` }}
                             >
                                 密碼專區

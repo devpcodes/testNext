@@ -121,6 +121,10 @@ const IndexQuestionCategoryCards = ({
                         border: 1px solid #d7e0ef;
                     }
 
+                    .QAcard .ant-card-body {
+                        width: 100%;
+                    }
+
                     .ant-card-body .questionTitle:hover {
                         color: #daa360;
                     }

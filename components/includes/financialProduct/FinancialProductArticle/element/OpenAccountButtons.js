@@ -5,6 +5,7 @@ import CustomerButton from '../../../customerSupport/CustomerButton';
 
 const OpenAccountButtons = function ({
     title,
+    categoryName,
     description,
     image,
     button1Title,
@@ -32,6 +33,7 @@ const OpenAccountButtons = function ({
                 />
                 <div className="open-title-description">
                     <p className="open-title">{title}</p>
+                    <p className="open-category">{categoryName}</p>
                     <p className="open-description">{description}</p>
                 </div>
                 <div className="open-buttons">
@@ -60,12 +62,21 @@ const OpenAccountButtons = function ({
                     }
 
                     .open-title {
-                        margin-bottom: 9px;
+                        margin-bottom: 0;
                         font-size: 20px;
                         color: #0d1623;
                     }
 
+                    .open-category {
+                        font-family: PingFangTC;
+                        font-size: 14px;
+                        font-weight: normal;
+                        letter-spacing: -0.18px;
+                        color: #3f5372;
+                    }
+
                     .open-description {
+                        margin-top: -3px;
                         font-size: 16px;
                         color: #0d1623;
                     }
@@ -194,6 +205,7 @@ export default OpenAccountButtons;
 
 OpenAccountButtons.propTypes = {
     title: PropTypes.string,
+    categoryName: PropTypes.string,
     description: PropTypes.string,
     button1Title: PropTypes.string,
     button1Link: PropTypes.string,

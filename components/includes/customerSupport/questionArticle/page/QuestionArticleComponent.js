@@ -68,7 +68,6 @@ const QuestionArticleComponent = () => {
 
     const sendIsHelp = async state => {
         const res = await putCommonQuestionIsLike(id, state);
-        console.log(res);
     };
 
     return (

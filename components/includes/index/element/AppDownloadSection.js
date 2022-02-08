@@ -243,6 +243,11 @@ const AppDownloadSection = () => {
                         left: -40px;
                     }
 
+                    .web-download > span,
+                    .mobile-download > span {
+                        font-size: 16px;
+                    }
+
                     // .ant-btn:hover .download-qr-code {
                     //     opacity: 1;
                     //     display: block;

@@ -54,13 +54,13 @@ const QuestionListComponent = function () {
     };
 
     useEffect(async () => {
-        console.log('allSub3rd ==>');
+        // console.log('allSub3rd ==>');
         const data = await getCommonQuestionSubcategories(activeKey);
 
         if (data !== null) {
             const sub2nd = data.category2nd.map(t => ({ text: t.categoryName, value: t.categoryName }));
             setSub2ndCategories(sub2nd);
-            console.log('sub2nd ==>', sub2nd);
+            // console.log('sub2nd ==>', sub2nd);
             const allSub3rd = [];
             data.category2nd.map((secondElement, idx) => {
                 secondElement.category3rd.length > 0
@@ -74,7 +74,7 @@ const QuestionListComponent = function () {
                     : null;
             });
             setSub3rdCategories(allSub3rd);
-            console.log('allSub3rd ==>', allSub3rd);
+            // console.log('allSub3rd ==>', allSub3rd);
         } else {
             setSub2ndCategories(null);
         }
@@ -109,7 +109,6 @@ const QuestionListComponent = function () {
 
     const loadMoreFn = async () => {
         if (clientWidth <= 450) {
-            console.log('isMobile');
             setIsLoading(true);
             setPage(currentPage + 1);
             const data = await getCommonQuestion(currentPage + 1, 15, activeKey);
@@ -133,7 +132,12 @@ const QuestionListComponent = function () {
                     </div>
 
                     {categories.length > 0 && (
-                        <QuestionTab categories={categories} activeKey={activeKey} onTabsChange={onTabsChange}>
+                        <QuestionTab
+                            key={categories.id}
+                            categories={categories}
+                            activeKey={activeKey}
+                            onTabsChange={onTabsChange}
+                        >
                             <div className="question-tab-web">
                                 <QuestionTable
                                     className="question-list-web"

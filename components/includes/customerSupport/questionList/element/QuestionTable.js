@@ -48,6 +48,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
             <AccountTable
                 dataSource={dataSource?.dataList}
                 columns={columns}
+                rowKey={record => record.id}
                 pagination={{
                     total: totalCounts,
                     showTotal: (total, range) => `${range[0]}-${range[1]}則問題 (共${totalCounts}則問題)`,

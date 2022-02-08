@@ -99,7 +99,7 @@ const ProductQuestionTable = function ({ keywords }) {
                 total={totalQuestion}
                 pagination={
                     clientWidth <= 450
-                        ? false
+                        ? null
                         : {
                               position: ['bottomRight'],
                               defaultPageSize: 15,
@@ -114,12 +114,13 @@ const ProductQuestionTable = function ({ keywords }) {
             />
             <InfiniteScroll dataLength={totalQuestion} next={mobileNextPage} hasMore={mobileCurrentPage < totalPages}>
                 <div className="question-table-mobile">
-                    {mobileQuestionList.length &&
-                        mobileQuestionList.map((question, idx) => (
-                            <div key={idx} onClick={() => toQuestion(question.uuid)}>
-                                <p>{question.title}</p>
-                            </div>
-                        ))}
+                    {mobileQuestionList.length
+                        ? mobileQuestionList.map((question, idx) => (
+                              <div key={idx} onClick={() => toQuestion(question.uuid)}>
+                                  <p>{question.title}</p>
+                              </div>
+                          ))
+                        : null}
                 </div>
             </InfiniteScroll>
             {isLoading ? (
@@ -133,7 +134,7 @@ const ProductQuestionTable = function ({ keywords }) {
                     @media screen and (max-width: 450px) {
                         .question-table-mobile {
                             display: block;
-                            width: 100%;
+                            // width: 100%;
                         }
 
                         .question-table-mobile > div {

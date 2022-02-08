@@ -93,6 +93,7 @@ const ContactSection = () => {
                         display: flex;
                         width: 100%;
                         justify-content: center;
+                        margin-top: 1.40625vw;
                     }
 
                     .contact-section-card {
@@ -133,6 +134,7 @@ const ContactSection = () => {
 
                     .contact-texts-wrap > p:first-of-type {
                         margin: 0;
+                        font-family: PingFangTC-Medium;
                         font-size: 20px;
                         font-weight: 500;
                         letter-spacing: 0.5px;
@@ -251,12 +253,20 @@ const ContactSection = () => {
                             margin-bottom: 50px;
                         }
 
-                        .contact-section-card-wrap {
-                            margin-top: 0;
-                        }
-
                         .contact-more-wrap {
                             justify-content: center;
+                        }
+
+                        .phone-number > p {
+                            font-size: 20px;
+                        }
+
+                        .contact-texts-wrap > p:nth-of-type(2) {
+                            font-size: 20px;
+                        }
+
+                        .contact-texts-wrap > p:last-of-type {
+                            font-size: 16px;
                         }
 
                         @media screen and (max-width: 365px) {

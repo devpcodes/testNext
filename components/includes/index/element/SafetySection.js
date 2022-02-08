@@ -75,6 +75,7 @@ const SafetySection = ({ data }) => {
                     .safety-section-card {
                         // width: 368px;
                         // max-width: 368px;
+                        width: calc(100% / 3 - 1vw * 2);
                         min-height: 292px;
                         margin: 0 1vw;
                         padding: 32px;
@@ -159,7 +160,7 @@ const SafetySection = ({ data }) => {
                         }
 
                         .safety-section-card {
-                            // width: 90%;
+                            width: 100%;
                             max-width: unset;
                             margin: 8px 0;
                         }

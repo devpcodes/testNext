@@ -13,7 +13,7 @@ const QuestionTab = ({ children, categories, activeKey, onTabsChange, isFinancia
             activeKey={activeKey}
             onChange={onTabsChange}
         >
-            {categories.map((category, i) => (
+            {categories.map(category => (
                 <TabPane tab={category.categoryName} key={category.id}>
                     {children}
                 </TabPane>

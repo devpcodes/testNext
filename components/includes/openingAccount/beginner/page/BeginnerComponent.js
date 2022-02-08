@@ -53,7 +53,7 @@ function BeginnerComponent(props) {
             des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
             btnName: '立即前往',
             image: icon2,
-            link: 'https://www.sinotrade.com.tw/newweb/',
+            link: `${process.env.NEXT_PUBLIC_SUBPATH}`,
         },
         {
             title: '好神通PLUS',
@@ -271,7 +271,7 @@ function BeginnerComponent(props) {
                                 </Space>
                                 <a
                                     className="open-account"
-                                    href="https://www.sinotrade.com.tw/newweb/Service_Positions/"
+                                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/Service_Positions/`}
                                 >
                                     查詢營業據點去臨櫃開戶 <RightOutlined />
                                 </a>

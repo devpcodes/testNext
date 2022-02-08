@@ -43,7 +43,7 @@ const CustomerSupportIndexComponent = () => {
         {
             title: '密碼專區',
             image: icon_password,
-            link: 'https://www.sinotrade.com.tw/newweb/Service_ForgetPassword/',
+            link: `${process.env.NEXT_PUBLIC_SUBPATH}/Service_ForgetPassword/`,
             site: 'outer',
             target: '_self',
         },
@@ -57,15 +57,14 @@ const CustomerSupportIndexComponent = () => {
         {
             title: '簽署中心',
             image: icon_paper,
-            link:
-                'https://www.sinotrade.com.tw/newweb/Inside_Frame/?URL=https://service.sinotrade.com.tw/signCenter/index/',
+            link: `${process.env.NEXT_PUBLIC_SUBPATH}/Inside_Frame/?URL=https://service.sinotrade.com.tw/signCenter/index/`,
             site: 'outer',
             target: '_self',
         },
         {
             title: '營業據點',
             image: icon_site,
-            link: 'https://www.sinotrade.com.tw/newweb/Service_Positions/',
+            link: `${process.env.NEXT_PUBLIC_SUBPATH}/Service_Positions/`,
             site: 'outer',
             target: '_self',
         },

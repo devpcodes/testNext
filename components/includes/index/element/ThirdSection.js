@@ -224,6 +224,7 @@ const ThirdSection = ({ data }) => {
                             margin: 8px;
                             max-width: unset;
                             min-height: 118px;
+                            justify-content: center;
                         }
 
                         .third-section-card-icon {

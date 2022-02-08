@@ -57,7 +57,6 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
             res = await getFinancialProductDetail(productCode);
         }
         setArticleData(res);
-        console.log('reeeess', res);
         const tabsArray = [];
         if (res?.tabs?.length) {
             res.tabs.forEach((i, index) => {
@@ -113,9 +112,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                         ))}
                                     </div>
                                 </div>
-                            ) : (
-                                ''
-                            )}
+                            ) : null}
                             <div className="article">
                                 {articleTabs?.length && (
                                     <QuestionTab
@@ -150,6 +147,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                             {isTradingPlatform || articleData?.enableOpenBlock ? (
                                 <OpenAccountButtons
                                     title={articleData?.openTitle || articleData?.appName}
+                                    categoryName={isTradingPlatform ? categoryName : null}
                                     description={articleData?.openDescription || articleData?.description}
                                     image={articleData?.openImagePath || articleData?.imagePath}
                                     button1Title={articleData?.openButton1Name || articleData?.button1Name}
@@ -469,10 +467,10 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                 @media screen and (max-width: 450px) {
                     .article {
-                        width: 100vw;
+                        width: 102vw;
                         margin: 0 auto;
                         min-width: 0;
-                        transform: translateX(-5vw);
+                        transform: translateX(-5.5%);
                     }
 
                     article {
@@ -689,8 +687,8 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     }
 
                     .trading-available-product {
-                        width: 100vw;
-                        transform: translateX(-5vw);
+                        width: 102vw;
+                        transform: translateX(-5.5%);
                     }
 
                     .available-product-tags .customer-button {
