@@ -29,8 +29,8 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [outerLinkPop, setOuterLinkPop] = useState(false); 
     const [indexGUID, setIndexGUID] = useState(''); 
     const [dimensions, setDimensions] = useState({ 
-        height: window.innerHeight,
-        width: window.innerWidth
+        height: 720,
+        width: 1220
       })
     const { Search } = Input;
     const onSearch = value => {
