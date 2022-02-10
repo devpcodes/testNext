@@ -14,6 +14,8 @@
         <meta name="keywords" content=""/> 
         <link rel="stylesheet" href="../css/combined/combine-ext-2.0.0.min.css"/> 
         <script src="../js/lib/combined/combine-ext-2.0.0.min.js"></script>
+        <script src="../js/lib/moment/moment.min.js"></script>
+        <script src="../js/lib/moment/moment-timezone-with-data-1970-2030.min.js"></script>
         <!--TEST 
         <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js" integrity="sha256-EgPuQS+2I8bm2u3b3r1dJUEiO56a/xeZGXiTnNTvYZM=" crossorigin="anonymous"></script>
         -->
@@ -54,6 +56,9 @@
                     $.loadScript("/js/constant.js");
                     $.loadCSS("css/common_1.0.3.css");
                 }
+                
+                if (typeof (LabCI.WDSSTREAMING) === "undefined")
+                    $.loadScript("js/lib/wdsstreaming/WDSStreaming.js");                
 
                 if (typeof (LabCI.WP.AppUtils) === "undefined")
                     $.loadScript("js/apputils.js");
@@ -483,7 +488,7 @@
                    <div class="col-4 text-align-right align-self-end"><div id="psbox"></div></div>
                </div>
             -->
-            <div class="row stockinfopanel">
+            <div class="row stockinfopanel" streamric="">
                 <div class="col-md-8 col-md-auto" style="max-width:500px;">
                     <div class="row">
                         <div class="col-6 text-nowrap name">-</div>
@@ -493,11 +498,11 @@
                         </div>                        
                     </div>
                     <div class="row">
-                        <div class="col-6 price">-</div>
-                        <div class="col-6 change text-left"><span class="netchange">-</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pctchange">-</span></div>
+                        <div class="col-6 price" streamdata="last" streamtype="price">-</div>
+                        <div class="col-6 change text-left"><span class="netchange" streamdata="netchange" streamtype="change">-</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pctchange" streamdata="pctchange" streamtype="pctchange" dp="2">-</span></div>
                     </div> 
                     <div class="row">
-                        <div class="col note"><span class="note1">-</span><span class="note2">-</span></div>
+                        <div class="col note"><span class="note1">-</span><span class="note2" streamdata="datetime">-</span></div>
                     </div>
 
                 </div>
@@ -641,58 +646,58 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-6 itemlabel lblopen">Open</div>
-                                    <div class="col-6 itemvalue opdata">-</div>
+                                    <div class="col-6 itemvalue opdata" streamdata="open" streamtype="price">-</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 itemlabel lblhigh">High</div>
-                                    <div class="col-6 itemvalue hidata">-</div>
+                                    <div class="col-6 itemvalue hidata" streamdata="high" streamtype="price">-</div>
                                 </div> 
                                 <div class="row">
                                     <div class="col-6 itemlabel lbllow">Low</div>
-                                    <div class="col-6 itemvalue lodata">-</div>
+                                    <div class="col-6 itemvalue lodata" streamdata="low" streamtype="price">-</div>
                                 </div>
                                 <div class="row vwaprow">
                                     <div class="col-6 itemlabel lblvwap">VWAP</div>
-                                    <div class="col-6 itemvalue vwapdata">-</div>
+                                    <div class="col-6 itemvalue vwapdata" streamdata="vwap" streamtype="price">-</div>
                                 </div>
                                 <div class="row yrhighrow">
                                     <div class="col-6 itemlabel lblwk52high">52W High</div>
-                                    <div class="col-6 itemvalue wk52highdata">-</div>
+                                    <div class="col-6 itemvalue wk52highdata" streamdata="52WHigh" streamtype="price">-</div>
                                 </div> 
                                 <div class="row yrlowrow">
                                     <div class="col-6 itemlabel lblwk52low">52W Low</div>
-                                    <div class="col-6 itemvalue wk52lowdata">-</div>
+                                    <div class="col-6 itemvalue wk52lowdata" streamdata="52WLow" streamtype="price">-</div>
                                 </div> 
                                 <div class="row marketcaprow">
                                     <div class="col-6 itemlabel lblmarketcap">Market Cap</div>
-                                    <div class="col-6 itemvalue marketcapdata">-</div>
+                                    <div class="col-6 itemvalue marketcapdata" streamdata="marketcap">-</div>
                                 </div> 
                                 <div class="row d-none d-md-block datablockend"></div>                            
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-6 itemlabel lblbid">Bid</div>
-                                    <div class="col-6 itemvalue biddata">-</div>
+                                    <div class="col-6 itemvalue biddata" streamdata="biddata">-</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 itemlabel lblask">Ask</div>
-                                    <div class="col-6 itemvalue askdata">-</div>
+                                    <div class="col-6 itemvalue askdata" streamdata="askdata">-</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 itemlabel lblpc">Previous Close</div>
-                                    <div class="col-6 itemvalue hcdata">-</div>
+                                    <div class="col-6 itemvalue hcdata "streamdata="hstclose" streamtype="price">-</div>
                                 </div>
                                 <div class="row epsrow">
                                     <div class="col-6 itemlabel lbleps">EPS (TTM)</div>
-                                    <div class="col-6 itemvalue epsdata">-</div>
+                                    <div class="col-6 itemvalue epsdata" streamdata="34" streamtype="number">-</div>
                                 </div>
                                 <div class="row perrow">
                                     <div class="col-6 itemlabel lblper">PER (TTM)</div>
-                                    <div class="col-6 itemvalue perdata">-</div>
+                                    <div class="col-6 itemvalue perdata" streamdata="36" streamtype="ratio">-</div>
                                 </div>
                                 <div class="row pbrrow">
                                     <div class="col-6 itemlabel lblpbr">PBR (LFY)</div>
-                                    <div class="col-6 itemvalue pbrdata">-</div>
+                                    <div class="col-6 itemvalue pbrdata" streamdata="354" streamtype="ratio">-</div>
                                 </div> 
                                 <div class="row lotsizerow">
                                     <div class="col-6 itemlabel lbllotsize">Lot Size</div>
@@ -703,27 +708,27 @@
                             <div class="col-md-4">
                                 <div class="row dividendrow">
                                     <div class="col-6 itemlabel lbldividend">Dividend</div>
-                                    <div class="col-6 itemvalue lastrow dividenddata">-</div>
+                                    <div class="col-6 itemvalue lastrow dividenddata" streamdata="dividend">-</div>
                                 </div> 
                                 <div class="row yieldrow">
                                     <div class="col-6 itemlabel lbldividendyield">Dividend Yield</div>
-                                    <div class="col-6 itemvalue lastrow yielddata">-</div>
+                                    <div class="col-6 itemvalue lastrow yielddata" streamdata="35" streamtype="pct">-</div>
                                 </div>  
                                 <div class="row exdaterow">
                                     <div class="col-6 itemlabel lbldividendexdate">Dividend Ex Date</div>
-                                    <div class="col-6 itemvalue lastrow dividendexdatedata">-</div>
+                                    <div class="col-6 itemvalue lastrow dividendexdatedata"streamdata="39" streamtype="date" dateformat="DD/MM/YYYY">-</div>
                                 </div> 
                                 <div class="row paydaterow">
                                     <div class="col-6 itemlabel lbldividendpaydate">Dividend Pay Date</div>
-                                    <div class="col-6 itemvalue lastrow dividendpaydatedata">-</div>
+                                    <div class="col-6 itemvalue lastrow dividendpaydatedata" streamdata="38" streamtype="date" dateformat="DD/MM/YYYY">-</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 itemlabel lblvolume">Volume</div>
-                                    <div class="col-6 itemvalue lastrow volumedata">-</div>
+                                    <div class="col-6 itemvalue lastrow volumedata" streamdata="volume" streamtype="number">-</div>
                                 </div> 
                                 <div class="row turnoverrow">
                                     <div class="col-6 itemlabel lblturnover">Turnover</div>
-                                    <div class="col-6 itemvalue lastrow turnoverdata">-</div>
+                                    <div class="col-6 itemvalue lastrow turnoverdata" streamdata="turnover">-</div>
                                 </div>
                                 <div class="datablockend"></div>                               
                             </div>                        

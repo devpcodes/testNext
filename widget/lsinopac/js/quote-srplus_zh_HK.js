@@ -16,7 +16,7 @@ LabCI.WP.QuoteSRPlusPageObj.PAGEOBJ_RESOURCEBUNDLE.zh_HK = {
         oneMago: "1月前",
         oneWago: "1週前",
         current: "現在",
-        brokerrating: "路孚特經紀評級",
+        brokerrating: "湯森路透經紀評級",
         ratingboxlengend: "分析師評級平均值",
         ratingnegative: "負面",
         ratingneutralnegative: "中性<br>至負面",

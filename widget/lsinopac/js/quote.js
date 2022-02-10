@@ -55,7 +55,11 @@
         currentsection: "summary",
         mode: "desktop",
         breakpoint: null,
-        streamingTimer: null,
+        streaming: {
+            lastValue: {},
+            lastValueParsed: {isClosungRun: false}
+        },
+        sessionInfo: null,
         initImpl: function () {
             // Get ready
             var that = this;
@@ -71,12 +75,24 @@
                 that.$sectionbox.find(".sectionboxitem").removeClass("selected");
                 $(this).addClass("selected");
                 if ($(this).attr("mode") == "chart") {
+                    // Piwik code
+                    try {
+                        window.top._paq.push(['trackEvent', 'widget', 'sub_figure']);
+                    } catch (err) {
+                    }
+
                     that.currentsection = "chart";
                     that._loadChartWidget();
                 } else if ($(this).attr("mode") == "summary") {
                     that.currentsection = "summary";
                     that._loadSummaryWidget();
                 } else if ($(this).attr("mode") == "srplus") {
+                    // Piwik code
+                    try {
+                        window.top._paq.push(['trackEvent', 'widget', 'sub_report']);
+                    } catch (err) {
+                    }
+
                     that.currentsection = "srplus";
                     that._loadSRPlusWidget();
                 } else if ($(this).attr("mode") == "financial") {
@@ -104,6 +120,12 @@
             });
 
             this.$pageobj.find(".buybutton2").on("click", function () {
+                // Piwik code
+                try {
+                    window.top._paq.push(['trackEvent', 'order', 'sub_order']);
+                } catch (err) {
+                }
+
                 if (that.currentSymbol != null && that.currentExchange != null) {
                     LabCI.WP.AppUtils.buysellIntegration(that.currentSymbol, that.currentExchange, that.currentPrice, 'B');
                 }
@@ -122,6 +144,11 @@
              });
              */
             this.$pageobj.find(".watchlistbutton").on("click", function () {
+                // Piwik code
+                try {
+                    window.top._paq.push(['trackEvent', 'widget', 'sub_addself']);
+                } catch (err) {
+                }
                 if (that.currentSymbol != null && that.currentExchange != null) {
                     LabCI.WP.AppUtils.addFavourIntegration(that.currentSymbol, that.currentExchange);
                 }
@@ -277,11 +304,10 @@
              */
         },
         changeRic: function (ric) {
-            var that = this;
-
-            if (that.streamingTimer && that.streamingTimer !== null) {
-                clearInterval(that.streamingTimer);
-                that.streamingTimer = null;
+            //close existing streaming connection
+            if (LabCI.WDSSTREAMING.sock) {
+                LabCI.WDSSTREAMING.cancel();
+                LabCI.WDSSTREAMING.close();
             }
             this._loadQuoteData(ric);
 
@@ -296,6 +322,8 @@
         },
         _resetQuoteDate: function () {
             var that = this;
+            that.$stockinfopanel.removeAttr("streamric");
+            that.$stockinfopanel.removeAttr("dp");
             that.$stockinfopanel.find(".name").html("-");
             that.$stockinfopanel.find(".price").html("-");
             that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").html("-");
@@ -303,6 +331,8 @@
             that.$stockinfopanel.find(".note1").html("-");
             that.$stockinfopanel.find(".note2").html("-");
 
+            that.$stockinfopanel.removeAttr("streamric");
+            that.$stockinfopanel.removeAttr("dp");
             that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").html("-");
             that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").html("-");
             that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").html("-");
@@ -324,31 +354,42 @@
             that.$quotedetail.find(".turnoverdata").html("-");
             that.$quotedetail.find(".lotsizedata").html("-");
         },
-        _fillIndividualQuoteDate: function (obj, data, isStreaming) {
+        _fillIndividualQuoteDate: function (obj, data) {
             if (obj) {
                 if (obj.html() !== data) {
-                    if (isStreaming) {
-                        obj.stop().animate({backgroundColor: '#fadadd'}, 1000).animate({backgroundColor: 'none'}, 1000);
-                    }
                     obj.html(data);
                 }
             }
         },
-        _fillQuoteDate: function (result, isStreaming) {
+        _fillQuoteDate: function (result) {
             var that = this;
+            that.$stockinfopanel.attr("streamric", that.currentquoteric);
+            that.$quotedetail.attr("streamric", that.currentquoteric);
+
+            var dp = result.data.datalist[0].dp;
+            if (result.data.datalist[0].asset_type && result.data.datalist[0].asset_type == "EQTYIDX") {
+                dp = 2;
+            }
+
+            if (result.data.datalist[0].cc && result.data.datalist[0].cc == "USA") {
+                dp = 2;
+            }
+            that.$quotedetail.attr("dp", dp);
+            that.$stockinfopanel.attr("dp", dp);
+
             var updownclass = getUpDownClass(result.data.datalist[0].nc);
             that.$stockinfopanel.find(".name").html(result.data.datalist[0].nm + " (" + result.data.datalist[0].symbol + ")");
-            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".price"), result.data.datalist[0].ls, isStreaming);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".price"), result.data.datalist[0].ls);
             //    that.$stockinfopanel.find(".price").html(result.data.datalist[0].ls);
 
             var netChange = setValue(result.data.datalist[0].nc, null, false, "-", result.data.datalist[0].ls);
             that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".netchange"), netChange, isStreaming);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".netchange"), netChange);
             //    that.$stockinfopanel.find(".netchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].nc, null, false, "-", result.data.datalist[0].ls);
 
             var pctChange = setValue(result.data.datalist[0].pc, "%", false, "-", result.data.datalist[0].ls);
             that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".pctchange"), pctChange, isStreaming);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".pctchange"), pctChange);
 
 
             //    that.$stockinfopanel.find(".pctchange").removeClass("upval").removeClass("downval").addClass(updownclass).setValue(result.data.datalist[0].pc, "%", false, "-", result.data.datalist[0].ls);
@@ -356,7 +397,7 @@
             var quoteNote2 = formatShortTime(result.data.datalist[0].tm) + " " + formatShortDate(result.data.datalist[0].td);
 
             that.$stockinfopanel.find(".note1").html(quoteNote1);
-            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".note2"), quoteNote2, isStreaming);
+            that._fillIndividualQuoteDate(that.$stockinfopanel.find(".note2"), quoteNote2);
 
             that.currentSymbol = result.data.datalist[0].symbol;
             that.currentExchange = result.data.datalist[0].exchsect;
@@ -369,67 +410,67 @@
             updownclass = that._getRefUpDownClass(ricData.op, ricData.refprice);
             //    that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.op);
             that.$quotedetail.find(".opdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".opdata"), ricData.op, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".opdata"), ricData.op);
 
             updownclass = that._getRefUpDownClass(ricData.hi, ricData.refprice);
             //    that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hi);
             that.$quotedetail.find(".hidata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".hidata"), ricData.hi, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".hidata"), ricData.hi);
 
             updownclass = that._getRefUpDownClass(ricData.lo, ricData.refprice);
             //    that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.lo);
             that.$quotedetail.find(".lodata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".lodata"), ricData.lo, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".lodata"), ricData.lo);
 
             updownclass = that._getRefUpDownClass(ricData.vwap, ricData.refprice);
             //    that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.vwap);
             that.$quotedetail.find(".vwapdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".vwapdata"), ricData.vwap, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".vwapdata"), ricData.vwap);
 
             updownclass = that._getRefUpDownClass(ricData.yh, ricData.refprice);
             //    that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yh);
             that.$quotedetail.find(".wk52highdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".wk52highdata"), ricData.yh, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".wk52highdata"), ricData.yh);
 
             updownclass = that._getRefUpDownClass(ricData.yl, ricData.refprice);
             //    that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.yl);
             that.$quotedetail.find(".wk52lowdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".wk52lowdata"), ricData.yl, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".wk52lowdata"), ricData.yl);
 
             if (ricData.bd && ricData.bd != "-") {
                 updownclass = that._getRefUpDownClass(ricData.bd, ricData.refprice);
                 //   that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.bd + " x " + ricData.bdsize);
                 that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".biddata"), ricData.bd + " x " + ricData.bdsize, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".biddata"), ricData.bd + " x " + ricData.bdsize);
             } else {
                 //    that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
                 that.$quotedetail.find(".biddata").removeClass("upval").removeClass("downval").addClass(updownclass);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".biddata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".biddata"), "-");
             }
 
             if (ricData.as && ricData.as != "-") {
                 updownclass = that._getRefUpDownClass(ricData.as, ricData.refprice);
                 //    that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.as + " x " + ricData.assize);
                 that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".askdata"), ricData.as + " x " + ricData.assize, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".askdata"), ricData.as + " x " + ricData.assize);
             } else {
                 //    that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass).html("-");
                 that.$quotedetail.find(".askdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".askdata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".askdata"), "-");
             }
 
             updownclass = that._getRefUpDownClass(ricData.hc, ricData.refprice);
             //    that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").addClass(updownclass).html(ricData.hc);
             that.$quotedetail.find(".hcdata").removeClass("upval").removeClass("downval").addClass(updownclass);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".hcdata"), ricData.hc, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".hcdata"), ricData.hc);
 
             if (ricData.eps != null) {
                 //    that.$quotedetail.find(".epsdata").html(ricData.eps);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".epsdata"), ricData.eps, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".epsdata"), ricData.eps);
             }
             if (ricData.per != null) {
                 //    that.$quotedetail.find(".perdata").html(ricData.per);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".perdata"), ricData.per, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".perdata"), ricData.per);
             }
 
             if (ricData.cc == "USA") {
@@ -457,39 +498,39 @@
                 that.$quotedetail.find(".paydaterow").show();
                 that.$quotedetail.find(".turnoverrow").show();
                 //    that.$quotedetail.find(".pbrdata").html(ricData.pbr);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".pbrdata"), ricData.pbr, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".pbrdata"), ricData.pbr);
             }
 
             if (ricData.div) {
                 //   that.$quotedetail.find(".dividenddata").html(ricData.div + " " + ricData.currency);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividenddata"), ricData.div + " " + ricData.currency, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividenddata"), ricData.div + " " + ricData.currency);
             } else {
                 //     that.$quotedetail.find(".dividenddata").html("-");
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividenddata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividenddata"), "-");
             }
 
             if (ricData.yield) {
                 //    that.$quotedetail.find(".yielddata").html(ricData.yield + '%');
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".yielddata"), ricData.yield + '%', isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".yielddata"), ricData.yield + '%');
             } else {
                 //    that.$quotedetail.find(".yielddata").html("-");
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".yielddata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".yielddata"), "-");
             }
 
             if (ricData.exdate != null && ricData.exdate != undefined && ricData.exdate != "-") {
                 //        that.$quotedetail.find(".dividendexdatedata").html(formatLongDate(ricData.exdate));
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendexdatedata"), formatLongDate(ricData.exdate), isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendexdatedata"), formatLongDate(ricData.exdate));
             } else {
                 //        that.$quotedetail.find(".dividendexdatedata").html("-");
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendexdatedata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendexdatedata"), "-");
             }
 
             if (ricData.paydate != null && ricData.paydate != undefined && ricData.paydate != "-") {
                 //        that.$quotedetail.find(".dividendpaydatedata").html(formatLongDate(ricData.paydate));
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendpaydatedata"), formatLongDate(ricData.paydate), isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendpaydatedata"), formatLongDate(ricData.paydate));
             } else {
                 //        that.$quotedetail.find(".dividendpaydatedata").html("-");
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendpaydatedata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".dividendpaydatedata"), "-");
             }
 
 
@@ -499,28 +540,28 @@
                 that.$quotedetail.find(".marketcaprow").show();
                 if (ricData.mktvalue && ricData.mktvalue != "-") {
                     //        that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
-                    that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), ricData.mktvalue + " " + ricData.currency, isStreaming);
+                    that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), ricData.mktvalue + " " + ricData.currency);
                 } else {
                     //        that.$quotedetail.find(".marketcapdata").html("-");
-                    that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), "-", isStreaming);
+                    that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), "-");
                 }
             }
             /*         if (ricData.mktvalue && ricData.mktvalue != "-") {
              //        that.$quotedetail.find(".marketcapdata").html(ricData.mktvalue + " " + ricData.currency);
-             that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), ricData.mktvalue + " " + ricData.currency, isStreaming);
+             that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), ricData.mktvalue + " " + ricData.currency);
              } else {
              //        that.$quotedetail.find(".marketcapdata").html("-");
-             that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), "-", isStreaming);
+             that._fillIndividualQuoteDate(that.$quotedetail.find(".marketcapdata"), "-");
              }
              */
             //    that.$quotedetail.find(".volumedata").html(ricData.vo);
-            that._fillIndividualQuoteDate(that.$quotedetail.find(".volumedata"), ricData.vo, isStreaming);
+            that._fillIndividualQuoteDate(that.$quotedetail.find(".volumedata"), ricData.vo);
             if (ricData.am && ricData.am != "-") {
                 //        that.$quotedetail.find(".turnoverdata").html(ricData.am + " " + ricData.currency);
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".turnoverdata"), ricData.am + " " + ricData.currency, isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".turnoverdata"), ricData.am + " " + ricData.currency);
             } else {
                 //        that.$quotedetail.find(".turnoverdata").html("-");
-                that._fillIndividualQuoteDate(that.$quotedetail.find(".turnoverdata"), "-", isStreaming);
+                that._fillIndividualQuoteDate(that.$quotedetail.find(".turnoverdata"), "-");
             }
             if (ricData.cc == "USA") {
                 that.$quotedetail.find(".lotsizerow").hide();
@@ -579,10 +620,27 @@
                                 that.$pageobj.find(".chartbox").show();
 
                                 that._loadRelatedStockData(1);
+
                                 if (result.data.datalist[0].dc === 'realStream') {
-                                    that.streamingTimer = setInterval(function () {
-                                        that._loadStreamData(ric)
-                                    }, 3000);
+                                    var RETRY_LIMIT = 3;
+                                    var tryCount = 0;
+                                    LabCI.WDSSTREAMING.init(APP_CONFIG.WDS_PROVISION_URL, APP_CONFIG.WDS_USER,
+                                            '-1,6,3372,79,1465,21,11,56,19,12,13,32,100,16,18,3854,3404,3265,3266,34,36,354,4043,380,90,91,22,30,25,31,71,35,2150,32742,71,35,39,38,15,2744',
+                                            APP_CONFIG.WDS_MAX_IDLE_TIME,
+                                            function (ric, fields) {
+                                                that.onReceiveStream(ric, fields);
+                                            },
+                                            function (err) {
+                                                console.log(err);
+                                                if (tryCount < RETRY_LIMIT) {
+                                                    that.connectStreaming([ric]);
+                                                    ++tryCount;
+                                                    console.log('Retry count: ' + tryCount);
+                                                }
+                                            }
+                                    );
+
+                                    that.connectStreaming([ric]);
                                 }
 
                             }
@@ -614,31 +672,346 @@
                     });
 
         },
-        _loadStreamData: function (ric) {
-            var that = this;
+        msToTime: function (s) {
+            // Pad to 2 or 3 digits, default is 2
+            function pad(n, z) {
+                z = z || 2;
+                return ('00' + n).slice(-z);
+            }
 
-            this.$pageobj.loaddata("quotedata", "/data/getquote",
+            var ms = s % 1000;
+            s = (s - ms) / 1000;
+            var secs = s % 60;
+            s = (s - secs) / 60;
+            var mins = s % 60;
+            var hrs = (s - mins) / 60;
+
+            return pad(hrs) + pad(mins);
+        },
+        getTimeZone: function (exchangeCode) {
+            if (exchangeCode === 'SHZ' || exchangeCode === 'SHH') {
+                return 'Asia/Shanghai';
+            } else if (exchangeCode === 'HKG') {
+                return 'Asia/Hong_Kong';
+            } else if (exchangeCode === 'NBA' || exchangeCode === 'NBN' || exchangeCode === 'NXB') {
+                return 'America/New_York';
+            }
+            return 'Asia/Taipei';
+        },
+        connectStreaming: function (ricArray) {
+            this.$pageobj.loaddata("wdstoken", "/data/getwdstoken",
                     {
-                        ric: ric,
-                        token: encodeURIComponent(LabCI.getToken()),
-                        lang: this.lang
+                        token: encodeURIComponent(LabCI.getToken())
                     },
                     function (result) {
-                        if (result && result.data && result.data.responseCode !== "F" && result.data.datalist[0].status == 0) {
-                            //            that._resetQuoteDate();
-                            that._fillQuoteDate(result, true);
-
-                            //add or update tick in 
-                            if (window["lsinopac_quote-chart"]) {
-                                window["lsinopac_quote-chart"].pollData();
-                            }
+                        if (result && result.data && result.data.t) {
+                            var wdsToken = result.data.t;
+                            //    wdsToken = 'ZukkYNWg0UiC70BGZi22O8duIw5oiaF73abEx81twTDxDRDm9Oz7HqcCKbv5s4d7';
+                            LabCI.WDSSTREAMING.setToken(wdsToken);
+                            LabCI.WDSSTREAMING.getProvision(ricArray,
+                                    function (result) {
+                                        if (result && result.ticketList && result.ticketList.length > 0) {
+                                            LabCI.WDSSTREAMING.connect(result.ticketList[0]);
+                                            //currently support singel connect only
+                                            //    for (var i = 0; i < result.ticketList.length; ++i) {
+                                            //        LabCI.WDSSTREAMING.connect(result.ticketList[i]);
+                                            //    }
+                                        }
+                                    });
                         }
                     },
                     0,
                     {
                         datatype: "jsonp"
                     });
+        },
+        onReceiveStream: function (ric, fields) {
+            var that = this;
+            if (this.currentquoteric && this.currentquoteric !== null && this.currentquoteric === ric) {
+                this.streaming.lastValue = $.extend(this.streaming.lastValue, fields);
+                //    console.log(fields);
+                var is_OFF_CLOSE = false;
+                var hcval = null;
+                //for Trade Price
+                if (fields['6'] !== undefined && fields['6'] !== '') {
+                    this.streaming.lastValueParsed.last = Number(fields['6']);
+                }
+                //for Official Close Handling
+                if (this.currentExchange === 'SHH' ||
+                        this.currentExchange === 'TAI' || this.currentExchange === 'TWO' || this.currentExchange === '.TWII' ||
+                        this.currentExchange === 'NBA' || this.currentExchange === 'NBN' || this.currentExchange === 'NXB') {
+                    if (fields['3372'] !== undefined && fields['3372'] !== '' && fields['3372'] !== '0') {
+                        this.streaming.lastValueParsed.last = Number(fields['3372']);
+                        is_OFF_CLOSE = true;
+                    }
+                }
 
+                if (this.streaming.lastValue['6']) {
+                    this.streaming.lastValueParsed.isClosungRun = false;
+                } else {
+                    this.streaming.lastValueParsed.isClosungRun = true;
+                }
+
+                //for Historical Closing Date
+                if (fields['79'] !== undefined && fields['79'] !== '') {
+                    this.streaming.lastValueParsed.historicalCloseDate = moment(fields['79'], 'DD MMM YYYY').toDate();
+                }
+
+                //for historical Close
+                if (fields['21'] !== undefined && fields['21'] !== '') {
+                    this.streaming.lastValueParsed.historicalClose = Number(fields['21']);
+                }
+                //for Adjusted Close Handling
+                if (this.currentExchange === 'SHH' || this.currentExchange === 'SHZ' ||
+                        this.currentExchange === 'TAI' || this.currentExchange === 'TWO' || this.currentExchange === '.TWII') {
+                    if (fields['1465'] !== undefined && fields['1465'] !== '' && fields['1465'] !== '0') {
+                        this.streaming.lastValueParsed.historicalClose = Number(fields['1465']);
+                        if (is_OFF_CLOSE) {
+                            hcval = this.streaming.lastValueParsed.historicalClose;
+                        }
+                    }
+                }
+                if (fields['1465'] !== undefined && fields['1465'] !== '' && fields['1465'] !== '0') {
+                    this.streaming.lastValueParsed.adjustedClose = Number(fields['1465']);
+                }
+
+                if (this.streaming.lastValueParsed.isClosungRun) {
+                    //closing run...no updates
+                    //     console.log('Closing run...');
+                    if (this.streaming.lastValueParsed.historicalClose) {
+                        this.streaming.lastValueParsed.last = this.streaming.lastValueParsed.historicalClose;
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'last', this.streaming.lastValueParsed.last);
+                    }
+                    if (this.streaming.lastValueParsed.historicalCloseDate) {
+                        this.streaming.lastValueParsed.dateTimeLocal = moment(this.streaming.lastValueParsed.historicalCloseDate);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'datetime', moment(this.streaming.lastValueParsed.historicalCloseDate).format('- DD/MM'));
+                        //LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'last', this.streaming.lastValueParsed.last);                        
+                    }
+                    //    delete this.streaming.lastValueParsed.last;
+                    //    delete this.streaming.lastValueParsed.dateTimeLocal;
+                    delete this.streaming.lastValueParsed.open;
+                    delete this.streaming.lastValueParsed.high;
+                    delete this.streaming.lastValueParsed.low;
+                    delete this.streaming.lastValueParsed.acVol;
+                    delete this.streaming.lastValueParsed.turnover;
+
+
+
+                } else {
+                    //last
+                    if (fields['6'] || fields['3372']) {
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'last', this.streaming.lastValueParsed.last);
+                    }
+
+                    // Specific when official close is used, manually calculate netchange and %change
+                    if (is_OFF_CLOSE && this.streaming.lastValueParsed.last && this.streaming.lastValueParsed.historicalClose) {
+                        if (fields['3372'] && fields['1465']) {
+                            var ncval = this.streaming.lastValueParsed.last - this.streaming.lastValueParsed.historicalClose;
+                            var pctval = ncval / this.streaming.lastValueParsed.historicalClose * 100;
+                            LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'netchange', ncval);
+                            LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'pctchange', pctval);
+                        }
+                    } else {
+                        //netchange
+                        if (fields['11']) {
+                            LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'netchange', fields['11']);
+                        }
+                        //pct change
+                        if (fields['56']) {
+                            LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'pctchange', fields['56']);
+                        }
+                    }
+
+                    //hst close
+                    if (fields['21'] || fields['1465']) {
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'hstclose', this.streaming.lastValueParsed.historicalClose);
+                    }
+
+                    //for Open Price
+                    if (fields['19']) {
+                        this.streaming.lastValueParsed.open = Number(this.streaming.lastValue['19']);
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['19'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'open', fields['19'], upDownClass);
+
+                        //  this.streaming.lastValueParsed.adjustedClose.... format color...
+                    }
+
+                    //for High Price
+                    if (fields['12']) {
+                        this.streaming.lastValueParsed.high = Number(this.streaming.lastValue['12']);
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['12'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'high', fields['12'], upDownClass);
+                    }
+
+                    //for Low Price
+                    if (fields['13']) {
+                        this.streaming.lastValueParsed.low = Number(this.streaming.lastValue['13']);
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['13'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'low', fields['13'], upDownClass);
+                    }
+
+                    //for Accumlated Volume
+                    if (fields['32']) {
+                        var vol = LabCI.WDSSTREAMING.scaleUpAmountByUnit(fields['32'], this.streaming.lastValue['4043']);
+                        this.streaming.lastValueParsed.acVol = Number(vol);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'volume', vol);
+                    }
+
+                    //for turnover
+                    if (fields['100']) {
+                        var turnover = LabCI.WDSSTREAMING.scaleUpAmountByUnit(fields['100'], this.streaming.lastValue['380']);
+                        this.streaming.lastValueParsed.turnover = Number(turnover);
+                        var numFormatted = LabCI.WDSSTREAMING.replaceNumberWithCommas(LabCI.WDSSTREAMING.numberFormatter(turnover, 2, this.lang));
+                        if (this.streaming.lastValue['15']) {
+                            numFormatted = numFormatted + ' ' + this.streaming.lastValue['15'];
+                        }
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'turnover', numFormatted);
+                    }
+
+                    //datetime...
+                    if (this.currentExchange === 'NBA' || this.currentExchange === 'NBN' || this.currentExchange === 'NXB') {
+                        //for NB ric
+                        if ((fields['16'] && fields['16'] !== '') || (fields['3854'] && fields['3854'] !== '')) {
+                            var timeStr = this.streaming.lastValue['16'] + " " + this.msToTime(this.streaming.lastValue['3854']);
+                            var momentDate = moment.tz(timeStr, 'DD MMM YYYY HH:mm', 'GMT').tz(this.getTimeZone(this.currentExchange));
+                            var d = momentDate.format('YYYY-MM-DD HH:mm:ss');
+                            this.streaming.lastValueParsed.dateTimeLocal = new Date(d);
+                            LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'datetime', momentDate.format('HH:mm DD/MM'));
+                        }
+                    } else {
+                        if ((fields['16'] && fields['16'] !== '') || (fields['18'] && fields['18'] !== '')) {
+                            var timeStr = this.streaming.lastValue['16'] + " " + this.streaming.lastValue['18'];
+                            var momentDate = moment.tz(timeStr, 'DD MMM YYYY HH:mm:ss', 'GMT').tz(this.getTimeZone(this.currentExchange));
+                            var d = momentDate.format('YYYY-MM-DD HH:mm:ss');
+                            this.streaming.lastValueParsed.dateTimeLocal = new Date(d);
+                            LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'datetime', momentDate.format('HH:mm DD/MM'));
+                        }
+                    }
+
+                }
+
+                //bid
+                if ((fields['22'] && fields['22'] !== '') || (fields['30'] && fields['30'] !== '')) {
+                    var bid = this.streaming.lastValue['22'];
+                    var bidSize = this.streaming.lastValue['30'];
+                    var dp = $('[streamric="' + ric + '"]').attr('dp');
+                    var displayData = LabCI.WDSSTREAMING.formatDate(bid, 'price', {dp: dp}) + ' x ' + bidSize;
+                    var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(bid, this.streaming.lastValueParsed.adjustedClose);
+                    LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'biddata', displayData, upDownClass);
+                }
+
+                //ask
+                if ((fields['25'] && fields['25'] !== '') || (fields['31'] && fields['31'] !== '')) {
+                    var ask = this.streaming.lastValue['25'];
+                    var askSize = this.streaming.lastValue['31'];
+                    var dp = $('[streamric="' + ric + '"]').attr('dp');
+                    var displayData = LabCI.WDSSTREAMING.formatDate(ask, 'price', {dp: dp}) + ' x ' + askSize;
+                    var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(ask, this.streaming.lastValueParsed.adjustedClose);
+                    LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'askdata', displayData, upDownClass);
+                }
+
+                //vwap
+                if (fields['3404'] && fields['3404'] !== '') {
+                    var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['3404'], this.streaming.lastValueParsed.adjustedClose);
+                    LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'vwap', fields['3404'], upDownClass);
+                }
+
+                //52Wk High
+                if (this.currentExchange === 'TAI' || this.currentExchange === 'TWO' || this.currentExchange === '.TWII') {
+                    if (fields['90'] && fields['90'] !== '') {
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['90'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, '52WHigh', fields['90'], upDownClass);
+                    }
+                } else {
+                    if (fields['3265'] && fields['3265'] !== '') {
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['3265'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, '52WHigh', fields['3265'], upDownClass);
+                    }
+                }
+
+                //52Wk Low
+                if (this.currentExchange === 'TAI' || this.currentExchange === 'TWO' || this.currentExchange === '.TWII') {
+                    if (fields['91'] && fields['91'] !== '') {
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['91'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, '52WLow', fields['91'], upDownClass);
+                    }
+                } else {
+                    if (fields['3266'] && fields['3266'] !== '') {
+                        var upDownClass = LabCI.WDSSTREAMING.getUpDownClassCompare(fields['3266'], this.streaming.lastValueParsed.adjustedClose);
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, '52WLow', fields['3266'], upDownClass);
+                    }
+                }
+
+                //mkt Cap
+                if (this.currentExchange === 'TAI' || this.currentExchange === 'TWO' || this.currentExchange === '.TWII') {
+                    if (fields['2744']) {
+                        var mktCap = fields['2744'] * 1000000;
+                        var numFormatted = LabCI.WDSSTREAMING.replaceNumberWithCommas(LabCI.WDSSTREAMING.numberFormatter(mktCap, 2, this.lang));
+                        if (this.streaming.lastValue['15']) {
+                            numFormatted = numFormatted + ' ' + this.streaming.lastValue['15'];
+                        }
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'marketcap', numFormatted);
+                    }
+                } else if (this.currentExchange === 'HKG') {
+                    if (fields['2150']) {
+                        var numFormatted = LabCI.WDSSTREAMING.replaceNumberWithCommas(LabCI.WDSSTREAMING.numberFormatter(fields['2150'], 2, this.lang));
+                        if (this.streaming.lastValue['15']) {
+                            numFormatted = numFormatted + ' ' + this.streaming.lastValue['15'];
+                        }
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'marketcap', numFormatted);
+                    }
+                } else if (this.currentExchange === 'SHZ' || this.currentExchange === 'SHH') {
+                    if (fields['32742']) {
+                        var numFormatted = LabCI.WDSSTREAMING.replaceNumberWithCommas(LabCI.WDSSTREAMING.numberFormatter(fields['32742'], 2, this.lang));
+                        if (this.streaming.lastValue['15']) {
+                            numFormatted = numFormatted + ' ' + this.streaming.lastValue['15'];
+                        }
+                        LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'marketcap', numFormatted);
+                    }
+                }
+
+                //dividend
+                if (fields['71'] && fields['71'] !== '') {
+                    var dividendText = fields['71'];
+                    if (this.streaming.lastValue['15']) {
+                        dividendText = dividendText + ' ' + this.streaming.lastValue['15'];
+                    }
+                    LabCI.WDSSTREAMING.updateUI(this.currentquoteric, 'dividend', dividendText);
+                }
+
+                //remaining date...
+                $.each(fields, function (key, val) {
+                    LabCI.WDSSTREAMING.updateUI(that.currentquoteric, key, val);
+                });
+
+
+
+                //no need to update chart when closing run.....
+                if (!this.streaming.lastValueParsed.isClosungRun && LabCI.WP["createquotesummarypageobj"]) {
+                //    this.streaming.lastValueParsed.dateTimeLocal = moment('2021-11-13 09:30').toDate();
+                //    this.streaming.lastValueParsed.open = 1103.3100;
+                //    this.streaming.lastValueParsed.high = 1104.7800;
+                //    this.streaming.lastValueParsed.low = 1091.1391;
+                //    this.streaming.lastValueParsed.last = 1091.7500;
+                //    this.streaming.lastValueParsed.acVol = 354415;
+                    //    this.streaming.lastValueParsed.turnover = 354415;
+                    LabCI.WDSSTREAMING.updateChartTick(window["lsinopac-quote-summary-chart"].chart, this.streaming.lastValueParsed, LabCI.WP.QuotePageObj.sessionInfo);
+                }
+                if (!this.streaming.lastValueParsed.isClosungRun && LabCI.WP["createquotechartpageobj"]) {
+                    if (LabCI.WP.AppUtils.getMobileOrDesktop() == "DESKTOP") {
+                        //for large desktop chart
+                        if (window["lsinopac_chartframe"]) {
+                            var sendObj = {data: this.streaming.lastValueParsed, ric: this.currentquoteric, t: encodeURIComponent(LabCI.getToken())};
+                            window["lsinopac_chartframe"].contentWindow.postMessage(sendObj, APP_CONFIG.DataAPIPath);
+                        }
+                    } else {
+                        //for large mobile chart
+                        if (window["lsinopac_quote-chart"] && window["lsinopac_quote-chart"].chart && window["lsinopac_quote-chart"].chart.mainchartobj) {                          
+                            LabCI.WDSSTREAMING.updateChartTick(window["lsinopac_quote-chart"].chart, this.streaming.lastValueParsed, LabCI.WP.QuotePageObj.sessionInfo);
+                        }
+                    }
+                }
+            }
         },
         _getRefUpDownClass: function (price, refPrice) {
             if (price && refPrice) {

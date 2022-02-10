@@ -5,7 +5,7 @@
 //################################################################################
 // The LabCI object for Generic Widget Package
 // LabCI = { WP: { ... } }
-    var strategy_number = 0;
+
     if (typeof (LabCI) === "undefined")
         LabCI = {WP: {}};
     else if (typeof (LabCI.WP) === "undefined")
@@ -2466,31 +2466,6 @@
             this.savedStrategy[num].used = "1";
             localStorage["lsinopac_screener_strategy"] = JSON.stringify(this.savedStrategy);
 
-            var selectedName = $('.tosave .savedlabel').eq(0).text();
-            var add = true;
-            $.each($('.dropdown-menu .savedlabel'), function(key, val){
-                if($(val).text() === selectedName){
-                    add = false;
-                }
-            })
-            if(add){
-                sensors.track('StrategyEdit', {
-                    edit: '增加',
-                    is_login: true,
-                    page_url: window.location.href,
-                    page_title: '海外股票 - 永豐金證券',
-                    page_url_path: window.location.pathname
-                });
-                sensors.setProfile({strategy_number: strategy_number += 1});
-            } else {
-                sensors.track('StrategyEdit', {
-                    edit: '修改',
-                    is_login: true,
-                    page_url: window.location.href,
-                    page_title: '海外股票 - 永豐金證券',
-                    page_url_path: window.location.pathname
-                });
-            }
             this._loadSavedStrategy();
 
         },
