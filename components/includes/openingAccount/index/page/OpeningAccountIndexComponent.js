@@ -130,6 +130,7 @@ function OpeningAccountIndexComponent(props) {
                         }
 
                         .secondTitle {
+                            font-size: 20px;
                             border-left: 5px solid #daa360;
                         }
                     }

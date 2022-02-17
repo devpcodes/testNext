@@ -127,7 +127,7 @@ const AppointmentOpenAccount = ({ linkData }) => {
 
                     .appointmentOpnAcctBtn .shortcutFunctionIconText {
                         margin-top: 16px;
-                        font-size: 14px;
+                        font-size: 16px;
                         font-stretch: normal;
                         font-style: normal;
                         line-height: normal;

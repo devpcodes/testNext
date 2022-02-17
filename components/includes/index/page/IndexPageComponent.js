@@ -118,7 +118,7 @@ const IndexPageComponent = () => {
             {
                 title: '預收款券',
                 description: '處置股、注意股交易超便利',
-                site: 'inner',
+                site: 'outer',
                 link: `${process.env.NEXT_PUBLIC_SUBPATH}/AdvanceCollection/`,
                 icon: `${receipt}`,
                 target: '_self',

@@ -66,16 +66,18 @@ const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPag
                     <p>搜尋無結果</p>
                 </div>
             )}
-            <div className="countsAndPager">
-                <Pagination
-                    className="pager"
-                    current={currentPage}
-                    pageSize={15}
-                    total={totalQuestion}
-                    onChange={onPageChange}
-                    showTotal={(total, range) => `${range[0]}-${range[1]}則問題 (共${totalQuestion}則問題)`}
-                />
-            </div>
+            {data.length ? (
+                <div className="countsAndPager">
+                    <Pagination
+                        className="pager"
+                        current={currentPage}
+                        pageSize={15}
+                        total={totalQuestion}
+                        onChange={onPageChange}
+                        showTotal={(total, range) => `${range[0]}-${range[1]}則問題 (共${totalQuestion}則問題)`}
+                    />
+                </div>
+            ) : null}
             <style jsx>{`
                 /* .questionContent {
                     overflow: hidden;
@@ -100,7 +102,7 @@ const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPag
                     .noResult {
                         border: none;
                         min-height: 0;
-                        height: 203px;
+                        height: 500px;
                     }
 
                     .noResult > img {
@@ -128,6 +130,7 @@ const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPag
                         min-width: 98vw;
                         width: 100%;
                         margin-top: -1px;
+                        margin-bottom: 0;
                     }
 
                     .breadcrumb {
@@ -269,14 +272,25 @@ const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPag
                     align-items: center;
                     width: 100%;
                     min-height: 30vh;
-                    height: auto
+                    height: auto;
+                    margin-bottom: 50px;
                     background-color: #fff;
-                    border: .5px solid #d7e0ef;
+                    border: 0.5px solid #d7e0ef;
+                }
+
+                .noResult p {
+                    font-family: PingFangTC;
+                    font-size: 16px;
+                    font-weight: normal;
+                    letter-spacing: 0.4px;
+                    color: #3f5372;
                 }
 
                 @media screen and (max-width: 450px) {
                     .noResult {
+                        height: 100%;
                         border: none;
+                        margin-bottom: 0;
                     }
 
                     .ellipsis {
@@ -295,7 +309,6 @@ const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPag
                     font-size: 16px;
                     margin-bottom: 30px;
                 }
-
             `}</style>
         </Content>
     );

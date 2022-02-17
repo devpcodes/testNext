@@ -135,7 +135,7 @@ const SearchResultComponent = () => {
                 {`
                     .breadcrumbWrapper {
                         width: 71vw;
-                        margin: auto;
+                        margin: 14px auto 0 auto;
                     }
 
                     @media screen and (max-width: 768px) {

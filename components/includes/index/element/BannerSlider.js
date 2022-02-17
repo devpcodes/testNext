@@ -32,7 +32,7 @@ const BannerSlider = () => {
                         ads.map((e, i) => (
                             <div key={i}>
                                 <a href={e.url}>
-                                    <h3
+                                    {/* <h3
                                         style={
                                             clientWidth > 450
                                                 ? {
@@ -42,7 +42,21 @@ const BannerSlider = () => {
                                                       backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath})`,
                                                   }
                                         }
-                                    ></h3>
+                                    ></h3> */}
+                                    {clientWidth > 450 ? (
+                                        <img
+                                            width="100%"
+                                            height="auto"
+                                            src={`${process.env.NEXT_PUBLIC_FILE}/images/${e.desktopImagePath}`}
+                                            alt=""
+                                        />
+                                    ) : (
+                                        <h3
+                                            style={{
+                                                backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath})`,
+                                            }}
+                                        ></h3>
+                                    )}
                                 </a>
                             </div>
                         ))}
@@ -51,7 +65,8 @@ const BannerSlider = () => {
             <style jsx global>{`
                 .banner-slider-container {
                     width: 100%;
-                    height: 500px;
+                    // height: 500px;
+                    height: auto;
                     position: relative;
                 }
 
@@ -66,6 +81,10 @@ const BannerSlider = () => {
                     background-size: cover;
                     background-position: center;
                     margin-bottom: 0;
+                }
+
+                .banner-slider-container img {
+                    display: flex;
                 }
 
                 .banner-slider-container .dots li {

@@ -190,16 +190,6 @@ function QAshortcut(props) {
                         border-top-right-radius: 2px;
                     }
 
-                    .QA-room .black input::placeholder {
-                        font-size: 16px;
-                        font-weight: normal;
-                        font-stretch: normal;
-                        font-style: normal;
-                        line-height: normal;
-                        letter-spacing: 0.4px;
-                        color: #3f5372 !important;
-                    }
-
                     .QA-room .white {
                         display: flex;
                         flex-wrap: wrap;
@@ -239,6 +229,17 @@ function QAshortcut(props) {
             <style jsx global>{`
                 html {
                     scroll-behavior: smooth;
+                }
+
+                .QA-room .black input.ant-input::placeholder {
+                    font-size: 16px;
+                    font-family: PingFangSC;
+                    font-weight: normal;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: normal;
+                    letter-spacing: 0.4px;
+                    color: #3f5372;
                 }
             `}</style>
         </div>

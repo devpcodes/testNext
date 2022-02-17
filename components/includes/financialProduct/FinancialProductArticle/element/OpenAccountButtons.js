@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CustomerButton from '../../../customerSupport/CustomerButton';
+import { useSelector } from 'react-redux';
 // import { useRouter } from 'next/router';
 
 const OpenAccountButtons = function ({
+    isTradingPlatform,
     title,
     categoryName,
     description,
@@ -14,6 +16,8 @@ const OpenAccountButtons = function ({
     button2Link,
 }) {
     // const router = useRouter();
+
+    const clientWidth = useSelector(store => store.layout.winWidth);
 
     const toButton1Link = () => {
         window.open(button1Link);
@@ -33,8 +37,18 @@ const OpenAccountButtons = function ({
                 />
                 <div className="open-title-description">
                     <p className="open-title">{title}</p>
-                    <p className="open-category">{categoryName}</p>
-                    <p className="open-description">{description}</p>
+                    <p
+                        className="open-category"
+                        style={{ marginLeft: isTradingPlatform && clientWidth <= 768 ? '8px' : '0' }}
+                    >
+                        {categoryName}
+                    </p>
+                    <p
+                        className="open-description"
+                        style={{ display: isTradingPlatform && clientWidth <= 768 ? 'none' : 'unset' }}
+                    >
+                        {description}
+                    </p>
                 </div>
                 <div className="open-buttons">
                     <CustomerButton type="primary" onClick={toButton1Link}>
@@ -138,7 +152,7 @@ const OpenAccountButtons = function ({
 
                     @media screen and (max-width: 450px) {
                         .product-open-account-container {
-                            width: 97w;
+                            width: 97vw;
                             // bottom: -16px;
                             bottom: 0px;
                             align-items: center;
@@ -204,6 +218,7 @@ const OpenAccountButtons = function ({
 export default OpenAccountButtons;
 
 OpenAccountButtons.propTypes = {
+    isTradingPlatform: PropTypes.bool,
     title: PropTypes.string,
     categoryName: PropTypes.string,
     description: PropTypes.string,

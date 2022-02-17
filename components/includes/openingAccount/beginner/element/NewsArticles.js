@@ -60,6 +60,8 @@ function NewsArticles({ linkData }) {
                     .news-articles-card:hover {
                         position: relative;
                         bottom: 1rem;
+                        box-shadow: 0 1px 2px -2px rgb(169 182 203 / 40%), 0 3px 6px 0 rgb(169 182 203 / 40%),
+                            0 5px 12px 4px rgb(169 182 203 / 40%);
                     }
 
                     .news-articles-card .icon {
@@ -158,6 +160,12 @@ function NewsArticles({ linkData }) {
                         margin-right: 16px;
                     }
 
+                    .card-container > .ant-tabs-card .ant-tabs-tab:hover {
+                        background: transparent;
+                        border-color: transparent;
+                        background-color: #0d1623;
+                    }
+
                     .card-container > .ant-tabs-card .ant-tabs-tab-active {
                         background: transparent;
                         border-color: transparent;
@@ -172,6 +180,10 @@ function NewsArticles({ linkData }) {
                     .card-container > .ant-tabs-card .ant-tabs-tab-active .ant-tabs-tab-btn {
                         color: #fff;
                         font-weight: 600;
+                    }
+
+                    .card-container > .ant-tabs-card .ant-tabs-tab:hover .ant-tabs-tab-btn {
+                        color: #fff !important;
                     }
 
                     .news-articles-layout.ant-layout .open-account {
@@ -236,6 +248,25 @@ function NewsArticles({ linkData }) {
 
                         .card-container > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
                             padding: 16px 0 0;
+                        }
+
+                        .card-container .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab:not(:last-of-type),
+                        .card-container
+                            .ant-tabs-card.ant-tabs-bottom
+                            > div
+                            > .ant-tabs-nav
+                            .ant-tabs-tab:not(:last-of-type),
+                        .card-container .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab:not(:last-of-type),
+                        .card-container
+                            .ant-tabs-card.ant-tabs-top
+                            > div
+                            > .ant-tabs-nav
+                            .ant-tabs-tab:not(:last-of-type) {
+                            margin-right: 17px;
+                        }
+
+                        .card-container .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab:nth-of-type(3) {
+                            margin-right: 0px;
                         }
                     }
                 `}

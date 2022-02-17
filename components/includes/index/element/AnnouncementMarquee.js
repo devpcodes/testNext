@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'antd';
 import { getAnnounce } from '../../../../services/components/AnnouncementMarquee/announcements';
-import Marquee from 'react-fast-marquee';
+// import Marquee from 'react-fast-marquee';
+import { TextLoop } from 'react-text-loop-next';
 import PropTypes from 'prop-types';
 
 const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
@@ -25,14 +26,23 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                     closable={true}
                     onClose={onCloseAnnouncement}
                     message={
-                        <Marquee gradient={false}>
-                            {Array.isArray(anous) &&
-                                anous.map((e, i) => (
+                        anous.length && (
+                            <TextLoop>
+                                {anous.map((e, i) => (
                                     <p key={i}>
                                         <a href="https://www.sinotrade.com.tw/m/CSCenter/CSCenter_13_5">{e.title}</a>
                                     </p>
                                 ))}
-                        </Marquee>
+                            </TextLoop>
+                        )
+                        // <Marquee gradient={false}>
+                        //     {Array.isArray(anous) &&
+                        //         anous.map((e, i) => (
+                        //             <p key={i}>
+                        //                 <a href="https://www.sinotrade.com.tw/m/CSCenter/CSCenter_13_5">{e.title}</a>
+                        //             </p>
+                        //         ))}
+                        // </Marquee>
                     }
                 />
             ) : null}
@@ -68,8 +78,8 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                         color: white;
                     }
 
-                    .marquee-container p {
-                        margin: 10px auto 10px auto;
+                    .ant-alert-message p {
+                        margin: 10px auto 10px 16px;
                     }
 
                     .ant-alert-close-icon {

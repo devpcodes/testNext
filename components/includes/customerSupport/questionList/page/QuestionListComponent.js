@@ -24,7 +24,7 @@ const QuestionListComponent = function () {
     const clientWidth = useSelector(store => store.layout.winWidth);
 
     const [categories, setCategories] = useState([]);
-    const [dataSource, setDataSource] = useState(undefined);
+    const [dataSource, setDataSource] = useState([]);
     const [dataList, setDataList] = useState([]);
     const [currentPage, setPage] = useState(1);
     const [activeKey, setActiveKey] = useState();
@@ -33,34 +33,46 @@ const QuestionListComponent = function () {
     const [hasMore, setHasMore] = useState();
     const [sub2ndCategories, setSub2ndCategories] = useState([]);
     const [sub3rdCategories, setSub3rdCategories] = useState([]);
+    const [secondFilterSelect, setSecondFilterSelect] = useState(false);
+    const [thirdFilterSelect, setThirdFilterSelect] = useState(false);
 
     useEffect(async () => {
         const data = await getCommonQuestionCategories();
         Array.isArray(data) && setCategories(data);
-        setActiveKey(key);
-        getQuestionList(key || data[0].id.toString());
+        if (key) {
+            setActiveKey(key);
+            getQuestionSubcategories(key);
+            console.log('setActiveKey(key);', key);
+            getQuestionList(key, currentPage);
+        }
     }, []);
 
-    const getQuestionList = async (newKey, newPage) => {
-        const data = await getCommonQuestion(newPage || currentPage, 15, newKey);
-        setDataSource(data);
-        setDataList(data.dataList);
-        setTotalCounts(data.counts);
-        if (data?.dataList?.length < 15) {
-            setHasMore(false);
-        } else {
-            setHasMore(true);
+    useEffect(async () => {
+        if (secondFilterSelect) {
+            console.log('secondFilterSelect', secondFilterSelect);
+            const data = await getCommonQuestion(activeKey, null, currentPage, 99999);
+            setDataSource(data.dataList);
+            console.log('secondFilterSelect => data', data.dataList);
+            //設null的話才不會讓filter後的資料吃到api的總頁數
+            //讓ant自己算
+            setTotalCounts(null);
         }
-    };
+    }, [secondFilterSelect]);
 
     useEffect(async () => {
-        // console.log('allSub3rd ==>');
-        const data = await getCommonQuestionSubcategories(activeKey);
+        if (thirdFilterSelect) {
+            console.log('secondFilterSelect', secondFilterSelect);
+            const data = await getCommonQuestion(activeKey, null, currentPage, 99999);
+            setDataSource(data.dataList);
+            setTotalCounts(null);
+        }
+    }, [thirdFilterSelect]);
 
+    const getQuestionSubcategories = async activeKey => {
+        const data = await getCommonQuestionSubcategories(activeKey);
         if (data !== null) {
-            const sub2nd = data.category2nd.map(t => ({ text: t.categoryName, value: t.categoryName }));
+            const sub2nd = data.category2nd.map(t => ({ id: t.id, text: t.categoryName, value: t.categoryName }));
             setSub2ndCategories(sub2nd);
-            // console.log('sub2nd ==>', sub2nd);
             const allSub3rd = [];
             data.category2nd.map((secondElement, idx) => {
                 secondElement.category3rd.length > 0
@@ -74,11 +86,68 @@ const QuestionListComponent = function () {
                     : null;
             });
             setSub3rdCategories(allSub3rd);
-            // console.log('allSub3rd ==>', allSub3rd);
         } else {
             setSub2ndCategories(null);
         }
-    }, [activeKey]);
+    };
+
+    const getQuestionList = async (newTabKey, newPage) => {
+        const data = await await getCommonQuestion(newTabKey, null, newPage || currentPage, 15);
+        setDataSource(data?.dataList);
+        setDataList(data?.dataList);
+        setTotalCounts(data?.counts);
+        if (data?.dataList?.length < 15) {
+            setHasMore(false);
+        } else {
+            setHasMore(true);
+        }
+    };
+
+    const testuti = () => {
+        console.log(secondFilterSelect);
+    };
+
+    const handleSelectSecondFilter = categoryName => {
+        if (categoryName) {
+            setSecondFilterSelect(true);
+        } else {
+            setSecondFilterSelect(false);
+        }
+        //console.log(sub2ndCategories);
+        // const found = sub2ndCategories.find(e => e.text === categoryName);
+        // console.log(found.id);
+        /* const selectArry = [...secondFilterSelect];
+        console.log(selectArry);
+        if (selectArry.indexOf(found.id) < 0) {
+            console.log(selectArry.indexOf(found.id));
+            //setSecondFilterSelect(oldArray => [...oldArray, found.id]);
+        }*/
+        // setSecondFilterSelect(filterArray);
+    };
+
+    const handleSelectThirdFilter = async categoryName => {
+        if (categoryName) {
+            setThirdFilterSelect(true);
+        } else {
+            setThirdFilterSelect(false);
+        }
+        /*if (categoryName) {
+            const found = sub3rdCategories.find(e => e.text === categoryName);
+            if (found) {
+                setThirdFilterSelect(found.value);
+                getQuestionList(activeKey);
+                const data = await getCommonQuestion(activeKey, null, currentPage, 15, secondFilterSelect, found.value);
+                if (data.length) {
+                    setDataSource(data.dataList);
+                    setDataList(data.dataList);
+                }
+            }
+            // no filter
+        } else if (!categoryName) {
+            setThirdFilterSelect('');
+            getQuestionList();
+        }*/
+    };
 
     const onSearch = searchKeyword => {
         router.push({
@@ -87,20 +156,25 @@ const QuestionListComponent = function () {
         });
     };
 
-    const onPageChange = page => {
-        setPage(page);
-        getQuestionList(activeKey, page);
+    const onPageChange = changedData => {
+        setPage(changedData.current);
+        getQuestionList(activeKey, changedData.current);
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
         });
+        console.log('change Page:', changedData.current);
     };
 
     const onTabsChange = newKey => {
-        setDataSource(undefined);
+        setDataSource([]);
         setActiveKey(newKey);
-        getQuestionList(newKey);
+        getQuestionSubcategories(newKey);
+        setSecondFilterSelect('');
+        setThirdFilterSelect('');
+        setTotalCounts(dataSource.counts);
         setPage(1);
+        getQuestionList(newKey, 1);
     };
 
     const toQuestion = uuid => {
@@ -111,9 +185,16 @@ const QuestionListComponent = function () {
         if (clientWidth <= 450) {
             setIsLoading(true);
             setPage(currentPage + 1);
-            const data = await getCommonQuestion(currentPage + 1, 15, activeKey);
-            setDataSource(data);
-            setDataList(oldData => [...oldData, ...data.dataList]);
+            const data = await getCommonQuestion(activeKey, null, currentPage + 1, 15);
+            if (data.dataList.length) {
+                setTotalCounts(data.counts);
+                setDataList(oldData => [...oldData, ...data.dataList]);
+            }
+            if (data?.dataList?.length < 15) {
+                setHasMore(false);
+            } else {
+                setHasMore(true);
+            }
             setIsLoading(false);
         }
     };
@@ -126,6 +207,7 @@ const QuestionListComponent = function () {
                     <Breadcrumb />
                     <div className="title_group">
                         <h1>常見問題</h1>
+                        {/* <h1 onClick={testuti}>常見問題</h1> */}
                         <div className="question-table-input-search">
                             <SearchInput onSearch={onSearch} enterButton="搜尋" placeholder="輸入關鍵字" />
                         </div>
@@ -145,7 +227,10 @@ const QuestionListComponent = function () {
                                     sub2ndCategories={sub2ndCategories}
                                     sub3rdCategories={sub3rdCategories}
                                     onPageChange={onPageChange}
+                                    currentPage={currentPage}
                                     totalCounts={totalCounts}
+                                    handleSelectSecondFilter={handleSelectSecondFilter}
+                                    handleSelectThirdFilter={handleSelectThirdFilter}
                                 />
                             </div>
 
@@ -164,8 +249,8 @@ const QuestionListComponent = function () {
                                                 >
                                                     <h3>{data?.title}</h3>
                                                     <div className="breadcrumb_group">
-                                                        {data?.category2nd?.categoryName}
-                                                        {'>'} {data?.category3rd?.categoryName}
+                                                        {data?.category2nd}
+                                                        {' >'} {data?.category3rd}
                                                     </div>
                                                 </div>
                                             );

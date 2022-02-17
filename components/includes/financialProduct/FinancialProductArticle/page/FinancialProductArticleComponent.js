@@ -6,6 +6,7 @@ import parse from 'html-react-parser';
 import { useRouter } from 'next/router';
 import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
+import { PlusSquareFilled, CloseSquareFilled } from '@ant-design/icons';
 import CustomerButton from '../../../customerSupport/CustomerButton';
 import QuestionTab from '../../../customerSupport/questionList/element/QuestionTab';
 import {
@@ -64,6 +65,8 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
             });
             setArticleTabs(tabsArray);
             setActiveTabKey('0');
+        } else if (!res?.tabs?.length) {
+            setActiveTabKey('commonQuestion');
         }
         const announcementRes = await getAnnouncement(res?.keywords, 3);
         setAnnouncement(announcementRes);
@@ -86,6 +89,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                 <div className="product-article-back">
                                     <CustomerButton
                                         type="default"
+                                        className="web-back-to-list"
                                         onClick={() => {
                                             backToList();
                                         }}
@@ -114,38 +118,45 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                 </div>
                             ) : null}
                             <div className="article">
-                                {articleTabs?.length && (
-                                    <QuestionTab
-                                        className="financial-product-article-tab"
-                                        isFinancialProduct={true}
-                                        categories={articleTabs}
-                                        // defaultActiveKey={'0'}
-                                        activeKey={activeTabKey}
-                                        keywords={articleData.commonQuestionKeywords}
-                                        attachments={articleData.attachments}
-                                        onTabsChange={onTabsChange}
-                                    >
-                                        {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
-                                            item.type === 'toggle' ? (
-                                                <div className="toggle-section" key={idx}>
-                                                    <Collapse>
-                                                        <Panel header={item.content.title} key="1">
-                                                            <p>{item.content.content}</p>
-                                                        </Panel>
-                                                    </Collapse>
-                                                </div>
-                                            ) : (
-                                                <article key={idx}>{parse(item.content.content)}</article>
-                                            ),
-                                        )}
-                                    </QuestionTab>
-                                )}
+                                <QuestionTab
+                                    className="financial-product-article-tab"
+                                    isFinancialProduct={true}
+                                    categories={articleTabs}
+                                    activeKey={activeTabKey}
+                                    keywords={articleData.commonQuestionKeywords}
+                                    attachments={articleData.attachments}
+                                    onTabsChange={onTabsChange}
+                                >
+                                    {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
+                                        item.type === 'toggle' ? (
+                                            <div className="toggle-section" key={idx}>
+                                                <Collapse
+                                                    expandIconPosition="right"
+                                                    expandIcon={({ isActive }) =>
+                                                        isActive ? (
+                                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
+                                                        ) : (
+                                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
+                                                        )
+                                                    }
+                                                >
+                                                    <Panel header={item.content.title} key="1">
+                                                        <p>{item.content.content}</p>
+                                                    </Panel>
+                                                </Collapse>
+                                            </div>
+                                        ) : (
+                                            <article key={idx}>{parse(item.content.content)}</article>
+                                        ),
+                                    )}
+                                </QuestionTab>
                             </div>
                         </div>
 
                         <div className="side_section">
                             {isTradingPlatform || articleData?.enableOpenBlock ? (
                                 <OpenAccountButtons
+                                    isTradingPlatform={isTradingPlatform}
                                     title={articleData?.openTitle || articleData?.appName}
                                     categoryName={isTradingPlatform ? categoryName : null}
                                     description={articleData?.openDescription || articleData?.description}
@@ -190,7 +201,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 article {
-                    padding: 20px 32px 32px 32px;
+                    padding: 20px 32px 0px 32px;
                 }
 
                 .article {
@@ -507,6 +518,28 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     overflow-x: hidden;
                 }
 
+                .title_group .web-back-to-list {
+                    width: 105px;
+                    height: 40px;
+                    border: 1px solid #d7e0ef;
+                }
+
+                .title_group .web-back-to-list > span {
+                    color: #0d1623;
+                }
+
+                .web-back-to-list:hover {
+                    background-color: #f3f6fe;
+                    color: #0d1623;
+                    border-color: #d7e0ef;
+                }
+
+                .web-back-to-list:focus {
+                    background-color: #d7e0ef;
+                    color: #0d1623;
+                    border-color: #d7e0ef;
+                }
+
                 .questionArticleWrapper {
                     width: 97vw;
                     max-width: 1172px;
@@ -576,17 +609,44 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                 // override article image size
                 article img {
-                    width: 100% !important;
+                    max-width: 100% !important;
                     height: 100% !important;
                 }
 
                 article p {
                     font-size: 16px;
                     color: #0d1623;
+                    margin-bottom: 1rem;
                 }
 
                 article h1 {
-                    font-size: 20px;
+                    font-size: 28px;
+                    font-weight: 600;
+                }
+
+                article h1::before {
+                    content: '';
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    margin: 10px 12px 8px 0;
+                    background-color: #c43826;
+                }
+
+                article h2 {
+                    font-size: 22px;
+                    font-weight: 600;
+                }
+
+                article ul,
+                article ol {
+                    margin-bottom: 1rem;
+                }
+
+                article ul > li,
+                article ol > li {
+                    color: #0d1623;
+                    font-size: 16px;
                 }
 
                 .toggle-section {
@@ -637,6 +697,10 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 .ant-tabs-ink-bar {
                     background: #daa360 !important;
                     height: 5px !important;
+                }
+
+                .ant-tabs-content-holder {
+                    padding-bottom: 30px;
                 }
 
                 .product-article-back .ant-btn {
@@ -693,6 +757,11 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                     .available-product-tags .customer-button {
                         min-width: 45%;
+                    }
+
+                    .side_section .product-open-account-container {
+                        min-height: unset;
+                        max-height: 76px;
                     }
                 }
             `}</style>

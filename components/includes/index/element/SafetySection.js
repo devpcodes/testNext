@@ -89,7 +89,7 @@ const SafetySection = ({ data }) => {
 
                     .safety-hr-line {
                         width: 100%;
-                        height: 2px;
+                        height: 1px;
                         margin: 32px 0;
                         background-color: #a9b6cb;
                     }

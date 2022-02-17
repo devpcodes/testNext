@@ -1,31 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import { Pagination } from 'antd';
 import Link from 'next/link';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import PropTypes from 'prop-types';
 
-const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories, onPageChange, totalCounts }) {
-    useEffect(() => {}, [sub3rdCategories]);
-
+const QuestionTable = function ({
+    dataSource,
+    sub2ndCategories,
+    sub3rdCategories,
+    onPageChange,
+    currentPage,
+    totalCounts,
+    handleSelectSecondFilter,
+    handleSelectThirdFilter,
+}) {
     const columns = [
         {
             title: '項目',
-            dataIndex: 'id',
             width: '10%',
+            render(text, record, idx) {
+                return <p style={{ marginBottom: '0' }}>{dataSource?.indexOf(record) + 1 + 15 * (currentPage - 1)}</p>;
+            },
         },
         {
             title: '主類別',
-            dataIndex: ['category2nd', 'categoryName'],
+            dataIndex: 'category2nd',
             width: '15%',
-            filters: sub2ndCategories || false,
-            onFilter: (value, record) => record.category2nd.categoryName.includes(value),
+            ellipsis: 'true',
+            filters: sub2ndCategories,
+            onFilter(value, record) {
+                handleSelectSecondFilter(value);
+                return record.category2nd === value;
+            },
         },
         {
             title: '子類別',
-            dataIndex: ['category3rd', 'categoryName'],
+            dataIndex: 'category3rd',
             width: '15%',
             filters: sub3rdCategories || false,
-            onFilter: (value, record) => record.category3rd.categoryName.includes(value),
+            onFilter(value, record) {
+                handleSelectThirdFilter(value);
+                return record.category3rd === value;
+            },
         },
         {
             title: '標題',
@@ -33,7 +48,7 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
             width: '55%',
             ellipsis: true,
             render(text, record, idx) {
-                const s = dataSource.dataList.filter((d, index) => index === idx);
+                const s = dataSource.filter((d, index) => index === idx);
                 return (
                     <Link href={`/customer-support/question/${s[0].uuid}`}>
                         <div style={{ cursor: 'pointer' }}>{text}</div>
@@ -46,18 +61,21 @@ const QuestionTable = function ({ dataSource, sub2ndCategories, sub3rdCategories
     return (
         <div className="question-table">
             <AccountTable
-                dataSource={dataSource?.dataList}
+                dataSource={dataSource}
                 columns={columns}
                 rowKey={record => record.id}
+                onChange={onPageChange}
                 pagination={{
+                    //total不用totalCounts的話 no-filter的時候會只有一頁
+                    //反之加上去的話 filter後頁數會錯誤
+                    //因為filter後的total是要讓ant自己算的?
                     total: totalCounts,
-                    showTotal: (total, range) => `${range[0]}-${range[1]}則問題 (共${totalCounts}則問題)`,
+                    showTotal: (total, range) => `${range[0]}-${range[1]}則問題 (共${total}則問題)`,
                     defaultPageSize: 15,
                     defaultCurrent: 1,
+                    current: currentPage,
                     showSizeChanger: false,
-                    onChange: page => onPageChange(page),
                     responsive: true,
-                    // current: currentPage,
                 }}
             />
             <style jsx>{`
@@ -231,7 +249,10 @@ export default QuestionTable;
 
 QuestionTable.propTypes = {
     sub2ndCategories: PropTypes.array,
-    dataSource: PropTypes.object,
+    dataSource: PropTypes.array,
     onPageChange: PropTypes.func,
     totalCounts: PropTypes.number,
+    currentPage: PropTypes.number,
+    handleSelectSecondFilter: PropTypes.func,
+    handleSelectThirdFilter: PropTypes.func,
 };

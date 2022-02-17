@@ -715,7 +715,14 @@ function BeginnerComponent(props) {
                 
                 .beginner-steps-bar .ant-steps-item-container[role='button']:hover .ant-steps-item-title,
                 .beginner-steps-bar .ant-steps .ant-steps-item:not(.ant-steps-item-active) > .ant-steps-item-container[role="button"]:hover .ant-steps-item-title,.beginner-steps-bar.ant-steps .ant-steps-item:not(.ant-steps-item-active) > .ant-steps-item-container[role="button"]:hover .ant-steps-item-title {
-                  color: #000 ;
+                  color: #fff;
+                }
+
+                /* 滑過節點時的效果 */
+                .beginner-steps-bar .ant-steps-item-container[role='button']:hover .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+                .beginner-steps-bar .ant-steps .ant-steps-item:not(.ant-steps-item-active) > .ant-steps-item-container[role="button"]:hover .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,.beginner-steps-bar.ant-steps .ant-steps-item:not(.ant-steps-item-active) > .ant-steps-item-container[role="button"]:hover .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+                    border-color: #daa360;
+                    background: #daa360;
                 }
 
                 .beginner-steps-bar .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
@@ -741,6 +748,12 @@ function BeginnerComponent(props) {
                 }
 
                 .beginner-steps-bar .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description {
+                    color: #daa360;
+                }
+
+                /* 滑過節點時的效果 */
+                .beginner-steps-bar .ant-steps-item-container[role='button']:hover .ant-steps-item-description,
+                .beginner-steps-bar .ant-steps .ant-steps-item:not(.ant-steps-item-active) > .ant-steps-item-container[role="button"]:hover .ant-steps-item-description,.beginner-steps-bar.ant-steps .ant-steps-item:not(.ant-steps-item-active) > .ant-steps-item-container[role="button"]:hover .ant-steps-item-description {
                     color: #daa360;
                 }
 

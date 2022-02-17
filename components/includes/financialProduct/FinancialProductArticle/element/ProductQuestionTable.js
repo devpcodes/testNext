@@ -181,6 +181,14 @@ const ProductQuestionTable = function ({ keywords }) {
                         text-align: center;
                     }
 
+                    .product-question-table .ant-table-tbody .ant-table-cell p:hover {
+                        color: #daa360;
+                    }
+
+                    .product-question-table .ant-table-tbody > tr.ant-table-row:hover > td {
+                        background: rgba(230, 235, 245, 0.3);
+                    }
+
                     .ant-pagination-item-active {
                         border: solid 1px #c43826;
                         background: #c43826;

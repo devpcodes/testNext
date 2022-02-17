@@ -7,16 +7,18 @@ import { useSelector } from 'react-redux';
 import { Carousel } from 'antd';
 import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
+import { PlusSquareFilled, CloseSquareFilled } from '@ant-design/icons';
 import CustomerButton from '../../CustomerButton';
 import Relative from '../element/Relative';
 import {
     getCommonQuestionArticle,
     putCommonQuestionIsLike,
 } from '../../../../../services/components/customerSupport/commonQuestion';
-import { LeftOutlined, FileOutlined } from '@ant-design/icons';
+import { LeftOutlined, FileOutlined, RightOutlined } from '@ant-design/icons';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import SearchInput from '../../SearchInput';
 import { getAdSlot } from '../../../../../services/components/bannerSlider/AdSlot';
+import { logout } from '../../../../../services/user/logoutFetcher';
 
 const QuestionArticleComponent = () => {
     const { Panel } = Collapse;
@@ -28,10 +30,12 @@ const QuestionArticleComponent = () => {
     const [articleTitle, setArticleTitle] = useState('');
     const [articleContent, setArticleContent] = useState();
     const [ads, setAds] = useState([]);
+    const [fromCategory, setFromCategory] = useState(0);
 
     useEffect(async () => {
         const data = await getCommonQuestionArticle(id);
         setArticleData(data);
+        setFromCategory(data?.category?.id);
         setArticleTitle(data.title);
         const content = JSON.parse(data.content);
         setArticleContent(content);
@@ -83,7 +87,7 @@ const QuestionArticleComponent = () => {
                                 <CustomerButton
                                     type="default"
                                     className="web-back-to-list"
-                                    onClick={() => router.push('/customer-support/question')}
+                                    onClick={() => router.push(`/customer-support/question?key=${fromCategory}`)}
                                 >
                                     返回列表
                                 </CustomerButton>
@@ -101,13 +105,19 @@ const QuestionArticleComponent = () => {
                                 <div className="category-group">
                                     <div className="category-question-group">
                                         <p>問題類別</p>
-                                        <span>{`${articleData.category2nd && articleData.category2nd.categoryName} > ${
-                                            articleData.category3rd && articleData.category3rd.categoryName
-                                        }`}</span>
+                                        <div>
+                                            <span>
+                                                {articleData.category2nd && articleData.category2nd.categoryName}
+                                            </span>
+                                            <RightOutlined className="rightIcon" />
+                                            <span>
+                                                {articleData.category3rd && articleData.category3rd.categoryName}
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className="category-time-group">
                                         <p>更新時間</p>
-                                        <span>{moment(articleData.updatedAt).format('Y.M.D')}</span>
+                                        <span>{moment(articleData.updatedAt).format('Y.MM.DD')}</span>
                                     </div>
                                 </div>
                                 <hr />
@@ -115,7 +125,16 @@ const QuestionArticleComponent = () => {
                                     articleContent.map((item, idx) =>
                                         item.type === 'toggle' ? (
                                             <div className="toggle-section" key={idx}>
-                                                <Collapse>
+                                                <Collapse
+                                                    expandIconPosition="right"
+                                                    expandIcon={({ isActive }) =>
+                                                        isActive ? (
+                                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
+                                                        ) : (
+                                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
+                                                        )
+                                                    }
+                                                >
                                                     <Panel header={item.content.title} key="1">
                                                         <p>{item.content.content}</p>
                                                     </Panel>
@@ -283,7 +302,7 @@ const QuestionArticleComponent = () => {
                     align-items: center;
                 }
 
-                .article > .category-group > .category-time-group > span {
+                .article > .category-group > .category-time-group > div {
                     margin-top: 1.5px;
                 }
 
@@ -292,7 +311,11 @@ const QuestionArticleComponent = () => {
                     color: #0d1623;
                 }
 
-                .article > .category-group > .category-question-group > span {
+                .article > .category-group > .category-question-group span {
+                    color: #3f5372;
+                }
+
+                .article > .category-group > .category-question-group span:last-of-type {
                     margin: 0 24px 0 0;
                     color: #3f5372;
                 }
@@ -589,6 +612,10 @@ const QuestionArticleComponent = () => {
                     width: 100%;
                 }
 
+                .ant-tabs-content-holder {
+                    padding-bottom: 30px;
+                }
+
                 @media screen and (max-width: 768px) {
                     .questionArticleLayout {
                         padding: 20px 0;
@@ -653,10 +680,20 @@ const QuestionArticleComponent = () => {
                     border-color: #d7e0ef;
                 }
 
+                .article > .category-group > .category-question-group .rightIcon {
+                    font-size: 10px;
+                    margin: 0 4px 0 4px;
+                    color: #3f5372;
+                }
+
+                .article > .category-group > .category-question-group .rightIcon svg {
+                    margin-bottom: 1px;
+                }
+
                 article img,
                 article .image-blot,
                 article .img-container {
-                    width: 100%;
+                    max-width: 100%;
                     height: 100%;
                 }
 
@@ -668,6 +705,7 @@ const QuestionArticleComponent = () => {
                 article p {
                     font-size: 16px;
                     color: #0d1623;
+                    margin-bottom: 1rem;
                 }
 
                 // toggle-list content box text color
@@ -676,7 +714,33 @@ const QuestionArticleComponent = () => {
                 }
 
                 article h1 {
-                    font-size: 20px;
+                    font-size: 28px;
+                    font-weight: 600;
+                }
+
+                article h1::before {
+                    content: '';
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    margin: 10px 12px 8px 0;
+                    background-color: #c43826;
+                }
+
+                article h2 {
+                    font-size: 22px;
+                    font-weight: 600;
+                }
+
+                article ul,
+                article ol {
+                    margin-bottom: 1rem;
+                }
+
+                article ul > li,
+                article ol > li {
+                    color: #0d1623;
+                    font-size: 16px;
                 }
 
                 .toggle-section {

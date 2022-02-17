@@ -9,7 +9,7 @@ const QuestionTab = ({ children, categories, activeKey, onTabsChange, isFinancia
     return (
         <Tabs
             className="question-tab"
-            defaultActiveKey={categories[0].id}
+            defaultActiveKey={categories[0]?.id}
             activeKey={activeKey}
             onChange={onTabsChange}
         >

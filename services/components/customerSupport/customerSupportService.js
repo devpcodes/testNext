@@ -19,6 +19,7 @@ export const getCommonQuestionCategories = async count => {
 };
 
 export const getCommonQuestions = async params => {
+    console.log('params', params);
     const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestions`;
     try {
         const res = await axios.get(reqUrl, { params });

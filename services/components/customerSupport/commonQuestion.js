@@ -1,28 +1,42 @@
 import axios from '../../../services/myAxios';
 import { getCommonQuestionCategories } from './customerSupportService';
 
-export const getCommonQuestion = async (page, pageSize, categoryId, keywords) => {
-    let id;
+export const getCommonQuestion = async (categoryId, keywords, page, pageSize, category2ndIds, category3rdIds) => {
+    /* let id;
 
     if (!categoryId) {
         const data = await getCommonQuestionCategories();
         id = data[0].id;
-    }
+    } */
 
     const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestions`;
     let params = {
-        page: page,
-        pageSize: pageSize,
+        categoryId,
         keywords,
+        page,
+        pageSize: pageSize,
+        category2ndIds,
+        category3rdIds,
     };
+    console.log('params', params);
     if (categoryId) {
-        params = { ...params, categoryId: categoryId || id };
+        params = { ...params, categoryId: categoryId /* || id */ };
     }
     try {
         const res = await axios.get(reqUrl, { params: params });
         if (res.status === 200) {
+            let data = res.data.result;
             console.log('res.data', res.data.result);
-            return res.data.result;
+            data.dataList.forEach(ele => {
+                ele.categoryId = ele.category.id;
+                ele.category2ndId = ele.category2nd.id;
+                ele.category3rdId = ele.category3rd.id;
+                ele.category = ele.category.categoryName;
+                ele.category2nd = ele.category2nd.categoryName;
+                ele.category3rd = ele.category3rd.categoryName;
+            });
+
+            return data;
         } else {
             console.log('error inside:', res.data.message);
             return res.data.message;
@@ -53,17 +67,17 @@ export const getCommonQuestionArticle = async uuid => {
 };
 
 export const getCommonQuestionSubcategories = async activeKey => {
-    let id;
+    /* let id;
 
     if (!activeKey) {
         const data = await getCommonQuestionCategories();
         id = data[0].id;
-    }
+    } */
 
     const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestionSubcategories`;
 
     const params = {
-        categoryId: activeKey || id,
+        categoryId: activeKey,
     };
 
     try {
@@ -86,8 +100,6 @@ export const putCommonQuestionIsLike = async (uuid, isLike) => {
         uuid,
         isLike,
     };
-
-    console.log('p', params);
 
     const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestion`;
 

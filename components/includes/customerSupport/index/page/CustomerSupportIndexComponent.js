@@ -115,9 +115,9 @@ const CustomerSupportIndexComponent = () => {
                 <div className="qaBlockTitle">
                     <h2 className="secondTitle">常見問題</h2>
                     <div className="secondTitleRight">
-                        <Link href="/customer-support/question">
-                            <a>完整問題</a>
-                        </Link>
+                        {/* <Link href="/customer-support/question"> */}
+                        <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_2">完整問題</a>
+                        {/* </Link> */}
                         <RightOutlined className="fullQuestionRightIcon" />
                     </div>
                 </div>
