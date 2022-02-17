@@ -309,7 +309,7 @@ export const CAHandler = async function (token, cb) {
             console.log(res);
             if (res.msg.split('||')[0].split('=')[1] === '8020') {
                 Modal.confirm({
-                    title: '憑證已註銷，是否重新部署憑證 ? 。',
+                    title: '憑證已失效，是否重新部署憑證 ? 。',
                     content: res.msg,
                     okText: '是',
                     cancelText: '否',
