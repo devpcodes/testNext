@@ -29,7 +29,10 @@ const OpenAccountButtons = function ({
 
     return (
         <>
-            <main className="product-open-account-container">
+            <main
+                className="product-open-account-container"
+                style={{ minHeight: !isTradingPlatform && clientWidth <= 768 && clientWidth >= 450 ? '106px' : '' }}
+            >
                 {/* <div className="open-account-image" style={{ backgroundImage: `url(https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png)` }}/> */}
                 <div
                     className="open-account-image"
@@ -39,7 +42,10 @@ const OpenAccountButtons = function ({
                     <p className="open-title">{title}</p>
                     <p
                         className="open-category"
-                        style={{ marginLeft: isTradingPlatform && clientWidth <= 768 ? '8px' : '0' }}
+                        style={{
+                            marginLeft: isTradingPlatform && clientWidth <= 768 ? '8px' : '0',
+                            display: !isTradingPlatform && clientWidth <= 768 ? 'none' : '',
+                        }}
                     >
                         {categoryName}
                     </p>
@@ -121,10 +127,13 @@ const OpenAccountButtons = function ({
                             background-color: #0d1623;
                         }
 
+                        .open-category {
+                            color: #d7e0ef;
+                        }
+
                         .open-title-description {
                             display: flex;
                             flex-direction: column;
-                            // width: 55%;
                         }
 
                         .open-buttons {
@@ -138,7 +147,7 @@ const OpenAccountButtons = function ({
                         .open-title {
                             margin-bottom: 9px;
                             font-size: 20px;
-                            margin: 0 8px 8px 8px;
+                            margin: 0 8px 4px 8px;
                             color: #ffffff;
                             font-size: 16px;
                         }
@@ -147,12 +156,17 @@ const OpenAccountButtons = function ({
                             font-size: 16px;
                             margin: 0 8px;
                             color: #d7e0ef;
+                            display: -webkit-box;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 2;
                         }
                     }
 
                     @media screen and (max-width: 450px) {
                         .product-open-account-container {
-                            width: 97vw;
+                            width: 99vw;
                             // bottom: -16px;
                             bottom: 0px;
                             align-items: center;
@@ -187,10 +201,18 @@ const OpenAccountButtons = function ({
                         margin-bottom: 16px;
                     }
 
+                    .open-buttons .ant-btn:first-of-type {
+                        margin-top: 24px;
+                    }
+
                     @media screen and (max-width: 768px) {
                         .open-buttons .ant-btn {
                             width: fit-content;
                             margin-bottom: 0;
+                        }
+
+                        .open-buttons .ant-btn:first-of-type {
+                            margin-top: 0;
                         }
 
                         .open-buttons .ant-btn:nth-of-type(2) {

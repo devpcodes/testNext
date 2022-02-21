@@ -136,7 +136,7 @@ const ThirdSection = ({ data }) => {
                         width: 100%;
                         // max-width: 1145px;
                         justify-content: flex-end;
-                        margin-top: 16px;
+                        margin-top: 8px;
                         cursor: pointer;
                     }
 
@@ -159,15 +159,15 @@ const ThirdSection = ({ data }) => {
                         }
 
                         .third-section-card-wrap {
-                            width: calc(100% + 1.042vw * 2);
+                            width: calc(100% + 8px * 2);
                             flex-wrap: wrap;
                         }
 
                         .third-section-card {
-                            width: calc(100% / 3 - 1.042vw * 2);
+                            width: calc(100% / 3 - 8px * 2);
                             padding: 24px;
                             max-width: unset;
-                            margin: 1.042vw;
+                            margin: 8px;
                         }
                     }
 
@@ -181,16 +181,11 @@ const ThirdSection = ({ data }) => {
 
                     @media screen and (max-width: 768px) {
                         .third-section-container {
-                            padding-top: 56px;
                             padding-bottom: 30px;
                         }
 
-                        .third-section-card {
-                            padding: 24px;
-                        }
-
                         .third-more-wrap {
-                            padding-top: 8px;
+                            margin-top: 0;
                             width: 100%;
                         }
                     }

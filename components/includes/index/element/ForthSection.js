@@ -86,6 +86,7 @@ const ForthSection = ({ data }) => {
 
                 @media screen and (max-width: 1050px) {
                     .forth-section-card-wrap {
+                        width: calc(100% + 8px * 2);
                         flex-wrap: wrap;
                     }
 
@@ -134,12 +135,23 @@ const ForthSection = ({ data }) => {
             `}</style>
             <style jsx global>
                 {`
+                    @media screen and (max-width: 1050px) {
+                        .forth-section-card-wrap .forth-cards-card-wrap {
+                            width: calc(50% - 8px * 2);
+                            margin-bottom: 16px;
+                            margin-left: 8px;
+                            margin-right: 8px;
+                            padding: 24px;
+                            // max-width: 344px;
+                            // max-height: 313px;
+                        }
+                    }
+
                     @media screen and (max-width: 768px) {
                         .forth-section-card-wrap .forth-cards-card-wrap {
                             width: calc(50% - 8px * 2);
                             max-height: unset;
                             margin: 8px;
-                            padding: 3%;
                         }
                     }
 

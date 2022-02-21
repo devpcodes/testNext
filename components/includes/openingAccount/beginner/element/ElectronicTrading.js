@@ -45,7 +45,7 @@ function ElectronicTrading({ linkData }) {
                     .ant-layout.E-trading-layout {
                         position: relative;
                         background-color: #f9fbff;
-                        padding-bottom: 38px;
+                        padding-bottom: 6px;
                     }
 
                     .E-trading-card {
@@ -131,6 +131,10 @@ function ElectronicTrading({ linkData }) {
                     }
 
                     @media screen and (max-width: 768px) {
+                        .ant-layout.E-trading-layout {
+                            padding-bottom: 22px;
+                        }
+
                         .ant-layout.E-trading-layout .ant-col:nth-of-type(3) {
                             display: none;
                         }
@@ -161,6 +165,10 @@ function ElectronicTrading({ linkData }) {
                     }
 
                     @media screen and (max-width: 450px) {
+                        .ant-layout.E-trading-layout {
+                            padding-bottom: 16px;
+                        }
+
                         .ant-layout.E-trading-layout .ant-col:nth-of-type(3) {
                             display: block;
                         }

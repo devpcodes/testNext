@@ -129,9 +129,17 @@ const ProductFileTable = function ({ dataSource }) {
                         color: #0d1623;
                     }
 
+                    .product-file-table .ant-table-tbody > tr.ant-table-row:hover > td {
+                        background: rgba(230, 235, 245, 0.3);
+                    }
+
                     .product-file-table .ant-table-cell {
                         color: #3f5372;
                         font-size: 14px;
+                    }
+
+                    .product-file-table .ant-table-content .ant-table-tbody .ant-table-cell:hover {
+                        color: #daa360;
                     }
 
                     .product-file-table .ant-table-cell:first-of-type {

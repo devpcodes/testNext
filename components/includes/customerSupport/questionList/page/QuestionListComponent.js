@@ -15,8 +15,10 @@ import { getCommonQuestionCategories } from '../../../../../services/components/
 import SearchInput from '../../SearchInput';
 import QuestionTab from '../element/QuestionTab';
 import QuestionTable from '../element/QuestionTable';
+import QuestionTestTable from '../element/QuestionTestTable';
 import { LoadingOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { logout } from '../../../../../services/user/logoutFetcher';
 
 const QuestionListComponent = function () {
     const router = useRouter();
@@ -33,45 +35,30 @@ const QuestionListComponent = function () {
     const [hasMore, setHasMore] = useState();
     const [sub2ndCategories, setSub2ndCategories] = useState([]);
     const [sub3rdCategories, setSub3rdCategories] = useState([]);
-    const [secondFilterSelect, setSecondFilterSelect] = useState(false);
-    const [thirdFilterSelect, setThirdFilterSelect] = useState(false);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [selectedSecondFilter, setSelectedSecondFilter] = useState([]);
+    const [selectedThirdFilter, setSelectedThirdFilter] = useState([]);
 
     useEffect(async () => {
+        setIsSelecting(false);
         const data = await getCommonQuestionCategories();
         Array.isArray(data) && setCategories(data);
-        if (key) {
+        if (key && selectedSecondFilter) {
             setActiveKey(key);
             getQuestionSubcategories(key);
-            console.log('setActiveKey(key);', key);
-            getQuestionList(key, currentPage);
+            getQuestionList(key, currentPage, null, null);
         }
-    }, []);
-
-    useEffect(async () => {
-        if (secondFilterSelect) {
-            console.log('secondFilterSelect', secondFilterSelect);
-            const data = await getCommonQuestion(activeKey, null, currentPage, 99999);
-            setDataSource(data.dataList);
-            console.log('secondFilterSelect => data', data.dataList);
-            //設null的話才不會讓filter後的資料吃到api的總頁數
-            //讓ant自己算
-            setTotalCounts(null);
+        if (key && !selectedSecondFilter) {
+            setActiveKey(key);
+            getQuestionSubcategories(key);
+            getQuestionList(key, currentPage, selectedSecondFilter, selectedThirdFilter);
         }
-    }, [secondFilterSelect]);
-
-    useEffect(async () => {
-        if (thirdFilterSelect) {
-            console.log('secondFilterSelect', secondFilterSelect);
-            const data = await getCommonQuestion(activeKey, null, currentPage, 99999);
-            setDataSource(data.dataList);
-            setTotalCounts(null);
-        }
-    }, [thirdFilterSelect]);
+    }, [key]);
 
     const getQuestionSubcategories = async activeKey => {
         const data = await getCommonQuestionSubcategories(activeKey);
         if (data !== null) {
-            const sub2nd = data.category2nd.map(t => ({ id: t.id, text: t.categoryName, value: t.categoryName }));
+            const sub2nd = data.category2nd.map(t => ({ id: t.id, text: t.categoryName, value: t.id }));
             setSub2ndCategories(sub2nd);
             const allSub3rd = [];
             data.category2nd.map((secondElement, idx) => {
@@ -80,7 +67,7 @@ const QuestionListComponent = function () {
                           allSub3rd.push({
                               secondCategories: secondElement.categoryName,
                               text: thirdElement.categoryName,
-                              value: thirdElement.categoryName,
+                              value: thirdElement.id,
                           });
                       })
                     : null;
@@ -91,8 +78,16 @@ const QuestionListComponent = function () {
         }
     };
 
-    const getQuestionList = async (newTabKey, newPage) => {
-        const data = await await getCommonQuestion(newTabKey, null, newPage || currentPage, 15);
+    const getQuestionList = async (newTabKey, newPage, new2nd, new3rd) => {
+        // const getQuestionList = async (newTabKey, newPage) => {
+        const data = await await getCommonQuestion(
+            newTabKey || activeKey,
+            null,
+            newPage || currentPage,
+            15,
+            new2nd || selectedSecondFilter,
+            new3rd || selectedThirdFilter,
+        );
         setDataSource(data?.dataList);
         setDataList(data?.dataList);
         setTotalCounts(data?.counts);
@@ -103,51 +98,100 @@ const QuestionListComponent = function () {
         }
     };
 
-    const testuti = () => {
-        console.log(secondFilterSelect);
-    };
-
-    const handleSelectSecondFilter = categoryName => {
-        if (categoryName) {
-            setSecondFilterSelect(true);
-        } else {
-            setSecondFilterSelect(false);
-        }
-        //console.log(sub2ndCategories);
-        // const found = sub2ndCategories.find(e => e.text === categoryName);
-        // console.log(found.id);
-        /* const selectArry = [...secondFilterSelect];
-        console.log(selectArry);
-        if (selectArry.indexOf(found.id) < 0) {
-            console.log(selectArry.indexOf(found.id));
-            //setSecondFilterSelect(oldArray => [...oldArray, found.id]);
-        }*/
-        // setSecondFilterSelect(filterArray);
-    };
-
-    const handleSelectThirdFilter = async categoryName => {
-        if (categoryName) {
-            setThirdFilterSelect(true);
-        } else {
-            setThirdFilterSelect(false);
-        }
-        /*if (categoryName) {
-            const found = sub3rdCategories.find(e => e.text === categoryName);
-            if (found) {
-                setThirdFilterSelect(found.value);
-                getQuestionList(activeKey);
-                const data = await getCommonQuestion(activeKey, null, currentPage, 15, secondFilterSelect, found.value);
-                if (data.length) {
-                    setDataSource(data.dataList);
-                    setDataList(data.dataList);
-                }
-            }
-            // no filter
-        } else if (!categoryName) {
-            setThirdFilterSelect('');
+    const onSubmit2nd = async val => {
+        const selected2 = val.join();
+        if (!val.length) {
+            // 勾勾手動取消的狀況
+            setSelectedSecondFilter([]);
+            setIsSelecting(false);
             getQuestionList();
-        }*/
+        } else if (val.length) {
+            setIsSelecting(true);
+            console.log('submit2', val);
+            setSelectedSecondFilter(val);
+            const data = await getCommonQuestion(activeKey, null, currentPage, 15, selected2);
+            if (data) {
+                setDataSource(data?.dataList);
+                console.log('secondFilterSelect => data', data.dataList);
+                setTotalCounts(data.counts);
+            }
+        }
     };
+
+    const onSubmit3rd = async val => {
+        const selected3 = val.join();
+        if (!val.length) {
+            // 勾勾手動取消的狀況
+            setSelectedThirdFilter([]);
+            setIsSelecting(false);
+            getQuestionList();
+        } else if (val.length) {
+            console.log('submit3', val);
+            setIsSelecting(true);
+            setSelectedThirdFilter(val);
+            const data = await getCommonQuestion(activeKey, null, currentPage, 15, selectedSecondFilter, selected3);
+            if (data) {
+                setDataSource(data?.dataList);
+                console.log('thirdFilterSelect => data', data.dataList);
+                setTotalCounts(data.counts);
+            }
+        }
+    };
+
+    const onResetFilter = level => {
+        // 按重置的狀況
+        if (level === 'second') {
+            setIsSelecting(false);
+            setSelectedSecondFilter([]);
+        } else {
+            setIsSelecting(false);
+            setSelectedThirdFilter([]);
+        }
+    };
+
+    // const testuti = () => {
+    //     console.log(secondFilterSelect);
+    // };
+
+    // const handleSelectSecondFilter = categoryName => {
+    //     if (categoryName) {
+    //         setSecondFilterSelect(true);
+    //     } else {
+    //         setSecondFilterSelect(false);
+    //     }
+    //     const found = sub2ndCategories.find(e => e.text === categoryName);
+    //     const selectArry = [...secondFilterSelect];
+    //     console.log(selectArry);
+    //     if (selectArry.indexOf(found.id) < 0) {
+    //         console.log(selectArry.indexOf(found.id));
+    //         setSecondFilterSelect(oldArray => [...oldArray, found.id]);
+    //     }
+    //     setSecondFilterSelect(filterArray);
+    // };
+
+    // const handleSelectThirdFilter = async categoryName => {
+    //     if (categoryName) {
+    //         setThirdFilterSelect(true);
+    //     } else {
+    //         setThirdFilterSelect(false);
+    //     }
+    //     if (categoryName) {
+    //         const found = sub3rdCategories.find(e => e.text === categoryName);
+    //         if (found) {
+    //             setThirdFilterSelect(found.value);
+    //             getQuestionList(activeKey);
+    //             const data = await getCommonQuestion(activeKey, null, currentPage, 15, secondFilterSelect, found.value);
+    //             if (data.length) {
+    //                 setDataSource(data.dataList);
+    //                 setDataList(data.dataList);
+    //             }
+    //         }
+    //         // no filter
+    //     } else if (!categoryName) {
+    //         setThirdFilterSelect('');
+    //         getQuestionList();
+    //     }
+    // };
 
     const onSearch = searchKeyword => {
         router.push({
@@ -167,11 +211,12 @@ const QuestionListComponent = function () {
     };
 
     const onTabsChange = newKey => {
+        router.push(`/customer-support/question?key=${newKey}`);
         setDataSource([]);
         setActiveKey(newKey);
+        setSelectedSecondFilter([]);
+        setSelectedThirdFilter([]);
         getQuestionSubcategories(newKey);
-        setSecondFilterSelect('');
-        setThirdFilterSelect('');
         setTotalCounts(dataSource.counts);
         setPage(1);
         getQuestionList(newKey, 1);
@@ -221,7 +266,7 @@ const QuestionListComponent = function () {
                             onTabsChange={onTabsChange}
                         >
                             <div className="question-tab-web">
-                                <QuestionTable
+                                {/* <QuestionTable
                                     className="question-list-web"
                                     dataSource={dataSource}
                                     sub2ndCategories={sub2ndCategories}
@@ -231,6 +276,18 @@ const QuestionListComponent = function () {
                                     totalCounts={totalCounts}
                                     handleSelectSecondFilter={handleSelectSecondFilter}
                                     handleSelectThirdFilter={handleSelectThirdFilter}
+                                /> */}
+                                <QuestionTestTable
+                                    className="question-list-web"
+                                    dataSource={dataSource}
+                                    sub2ndCategories={sub2ndCategories}
+                                    sub3rdCategories={sub3rdCategories}
+                                    onPageChange={onPageChange}
+                                    currentPage={currentPage}
+                                    totalCounts={totalCounts}
+                                    onSubmit2nd={onSubmit2nd}
+                                    onSubmit3rd={onSubmit3rd}
+                                    onResetFilter={onResetFilter}
                                 />
                             </div>
 
@@ -356,7 +413,7 @@ const QuestionListComponent = function () {
                         }
 
                         .ant-table-tbody > tr.ant-table-row:hover > td {
-                            background: #e6ebf5;
+                            background: rgba(230, 235, 245, 0.3);
                         }
 
                         @media screen and (max-width: 768px) {

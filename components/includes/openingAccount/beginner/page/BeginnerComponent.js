@@ -388,7 +388,7 @@ function BeginnerComponent(props) {
                     }
 
                     .content {
-                        width: 71%;
+                        width: 944px;
                         margin: 0 auto;
                         padding: 40px 0;
                     }
@@ -434,6 +434,10 @@ function BeginnerComponent(props) {
                     .layoutContent ul li:nth-of-type(3) .content,
                     .layoutContent ul li:nth-of-type(4) .content {
                         flex-direction: column;
+                    }
+
+                    .layoutContent ul li:nth-of-type(4) .content {
+                        padding-top: 0px;
                     }
 
                     .stepTitle h2 {

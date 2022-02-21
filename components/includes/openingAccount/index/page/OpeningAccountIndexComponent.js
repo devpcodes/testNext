@@ -97,7 +97,7 @@ function OpeningAccountIndexComponent(props) {
             <style jsx>
                 {`
                     .layoutContent {
-                        width: 71%;
+                        width: calc(944px + 32px);
                         margin: auto;
                         margin-top: 40px;
                     }

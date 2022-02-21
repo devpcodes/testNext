@@ -57,7 +57,9 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
         } else {
             res = await getFinancialProductDetail(productCode);
         }
-        setArticleData(res);
+        if (res) {
+            setArticleData(res);
+        }
         const tabsArray = [];
         if (res?.tabs?.length) {
             res.tabs.forEach((i, index) => {
@@ -70,7 +72,6 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
         }
         const announcementRes = await getAnnouncement(res?.keywords, 3);
         setAnnouncement(announcementRes);
-        console.log('announcementRes', announcementRes);
     }, [productCode]);
 
     return (
@@ -123,8 +124,8 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                     isFinancialProduct={true}
                                     categories={articleTabs}
                                     activeKey={activeTabKey}
-                                    keywords={articleData.commonQuestionKeywords}
-                                    attachments={articleData.attachments}
+                                    keywords={articleData?.commonQuestionKeywords}
+                                    attachments={articleData?.attachments}
                                     onTabsChange={onTabsChange}
                                 >
                                     {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
@@ -401,7 +402,23 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                 @media screen and (max-width: 1024px) {
                     .questionArticleWrapper {
-                        width: 92%;
+                        width: calc(100% - 64px);
+                    }
+
+                    .trading-available-product > div > p {
+                        padding: 16px;
+                    }
+
+                    .available-product-tags {
+                        padding: 24px 24px 9px;
+                    }
+
+                    .questionArticleLayout .ant-tabs-tab {
+                        margin: 0 0 0 16px;
+                    }
+
+                    article {
+                        padding: 24px;
                     }
 
                     .article_section {
@@ -478,18 +495,16 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                 @media screen and (max-width: 450px) {
                     .article {
-                        width: 102vw;
-                        margin: 0 auto;
-                        min-width: 0;
-                        transform: translateX(-5.5%);
+                        width: 100%;
                     }
 
                     article {
-                        left: -5vw;
+                        padding: 25px 16px 24px;
                     }
 
                     .questionArticleWrapper {
                         min-height: 55vh;
+                        width: 100%;
                     }
 
                     .article > .category-group > .category-time-group > span {
@@ -498,11 +513,13 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                     .title_group {
                         width: 100%;
-                        padding: 0;
+                        padding: 0 16px;
+                        margin-bottom: 12px;
                     }
 
                     .title_group > h1 {
                         font-size: 20px;
+                        margin-top: 0px;
                     }
                 }
             `}</style>
@@ -653,6 +670,19 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     padding: 10px 32px;
                 }
 
+                .toggle-section .ant-collapse {
+                    border-color: #e6ebf5;
+                    background-color: #f9fbff;
+                }
+
+                .toggle-section .ant-collapse > .ant-collapse-item {
+                    border-color: #e6ebf5;
+                }
+
+                .toggle-section .ant-collapse-content {
+                    border-color: #e6ebf5;
+                }
+
                 // toggle-list content box text color
                 .ant-collapse-content .ant-collapse-content-box p {
                     color: #0d1623;
@@ -712,6 +742,13 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     bottom: 0;
                 }
 
+                @media screen and (max-width: 1024px) {                 
+                    .questionArticleLayout .ant-tabs-top .ant-tabs-nav {
+                        padding: 0 0 0 16px;
+                    }
+                }
+
+
                 @media screen and (max-width: 768px) {
                     .questionArticleWrapper > .site-breadcrumb {
                         width: 90vw;
@@ -723,17 +760,9 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                         margin: auto;
                     }
 
-                    .questionArticleWrapper {
-                        width: 90%;
-                    }
-
                     .ant-tabs-nav {
                         // padding: 0 45px 0 0 !important;
-                        padding: 0 !important;
-                    }
-
-                    .ant-tabs-tab {
-                        margin: 0 0 0 21px;
+                        padding: 0;
                     }
 
                     .ant-tabs-ink-bar {
@@ -745,14 +774,23 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                         font-size: 16px;
                     }
 
+                    .side_section .product-open-account-container {
+                        height: 82px;
+                        min-height: unset;
+                        max-height: 106px;
+                    }
+
                 @media screen and (max-width: 450px) {
+                    .questionArticleLayout {
+                        padding-top: 12px;
+                    }
+
                     .questionArticleWrapper {
                         min-height: 55vh;
                     }
 
                     .trading-available-product {
-                        width: 102vw;
-                        transform: translateX(-5.5%);
+                        width: 100%;
                     }
 
                     .available-product-tags .customer-button {
@@ -762,6 +800,19 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     .side_section .product-open-account-container {
                         min-height: unset;
                         max-height: 76px;
+                    }
+
+                    .questionArticleLayout .available-product-tags {
+                        padding: 24px 1px 9px 16px;
+                        width: 100%;
+                    }
+
+                    .available-product-tags .customer-button {
+                        min-width: calc(50% - 15px);
+                    }
+
+                    .toggle-section {
+                        padding: 10px 16px;
                     }
                 }
             `}</style>

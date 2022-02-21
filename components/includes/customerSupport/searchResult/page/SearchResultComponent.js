@@ -34,7 +34,6 @@ const SearchResultComponent = () => {
     };
 
     const searchNewKeyword = () => {
-        // 若輸入空值回常見問題首頁
         if (!newSearchKeyword) {
             router.push({
                 pathname: '/customer-support',
@@ -95,6 +94,7 @@ const SearchResultComponent = () => {
             const allPage = Math.ceil(data.counts / 15);
             setTotalPage(allPage);
             setSearchResultDataWeb(data.dataList);
+            console.log(data.dataList);
             setSearchResultDataMobile(data.dataList);
         }
     }, [keyword]);
@@ -270,6 +270,10 @@ const SearchResultComponent = () => {
 
                     .noResult > img {
                         margin-bottom: 16px;
+                    }
+
+                    .ant-pagination-item a {
+                        color: #0d1623;
                     }
 
                     .ant-pagination-item-active:focus,

@@ -28,7 +28,7 @@ const ProductQuestionTable = function ({ keywords }) {
     };
 
     useEffect(async () => {
-        const res = await getCommonQuestion(1, 1000, null, keywords);
+        const res = await getCommonQuestion(null, keywords, 1, 1000, null);
         setTotalQuestion(res.counts);
         setTotalPages(res.counts / 2);
         if (res.dataList.length) {
@@ -38,7 +38,7 @@ const ProductQuestionTable = function ({ keywords }) {
 
     useEffect(async () => {
         // for mobile
-        const res = await getCommonQuestion(mobileCurrentPage, 2, null, keywords);
+        const res = await getCommonQuestion(null, keywords, mobileCurrentPage, 2, null);
         if (res.dataList.length) {
             setMobileQuestionList(res.dataList);
         }
@@ -47,7 +47,7 @@ const ProductQuestionTable = function ({ keywords }) {
     const mobileNextPage = async () => {
         setIsLoading(true);
         setMobileCurrentPage(mobileCurrentPage + 1);
-        const res = await getCommonQuestion(mobileCurrentPage + 1, 2, null, keywords);
+        const res = await getCommonQuestion(null, keywords, mobileCurrentPage + 1, 2, null);
         if (res.dataList.length) {
             setMobileQuestionList(oldData => [...oldData, ...res.dataList]);
             setIsLoading(false);

@@ -116,7 +116,9 @@ const CustomerSupportIndexComponent = () => {
                     <h2 className="secondTitle">常見問題</h2>
                     <div className="secondTitleRight">
                         {/* <Link href="/customer-support/question"> */}
-                        <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_2">完整問題</a>
+                        <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_2" target="_blank">
+                            完整問題
+                        </a>
                         {/* </Link> */}
                         <RightOutlined className="fullQuestionRightIcon" />
                     </div>
@@ -184,6 +186,12 @@ const CustomerSupportIndexComponent = () => {
                     @media screen and (max-width: 768px) {
                         .secondTitleRight > a {
                             display: none;
+                        }
+                    }
+
+                    @media screen and (max-width: 450px) {
+                        .qaBlockTitle {
+                            margin-top: 24px;
                         }
                     }
                 `}

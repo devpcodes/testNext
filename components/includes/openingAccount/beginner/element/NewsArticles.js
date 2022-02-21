@@ -46,7 +46,7 @@ function NewsArticles({ linkData }) {
                         position: relative;
                         padding-top: 9px;
                         background-color: #f9fbff;
-                        padding-bottom: 38px;
+                        padding-bottom: 0px;
                     }
 
                     .news-articles-card {
@@ -60,8 +60,7 @@ function NewsArticles({ linkData }) {
                     .news-articles-card:hover {
                         position: relative;
                         bottom: 1rem;
-                        box-shadow: 0 1px 2px -2px rgb(169 182 203 / 40%), 0 3px 6px 0 rgb(169 182 203 / 40%),
-                            0 5px 12px 4px rgb(169 182 203 / 40%);
+                        box-shadow: 1px 1px 15px 0 rgba(169, 182, 203, 0.4);
                     }
 
                     .news-articles-card .icon {
@@ -121,7 +120,7 @@ function NewsArticles({ linkData }) {
                     }
 
                     .card-container > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
-                        padding: 32px 0 0;
+                        padding: 32px 0 8px;
                     }
 
                     .card-container > .ant-tabs-card > .ant-tabs-nav::before {
@@ -227,13 +226,17 @@ function NewsArticles({ linkData }) {
                         }
 
                         .card-container > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
-                            padding: 24px 0 0;
+                            padding: 24px 0 24px;
                         }
                     }
 
                     @media screen and (max-width: 450px) {
                         .ant-layout.news-articles-layout .ant-col:nth-of-type(3) {
                             display: block;
+                        }
+
+                        .news-articles-card .icon {
+                            min-height: 154px;
                         }
 
                         .news-articles-layout.ant-layout {
@@ -247,7 +250,7 @@ function NewsArticles({ linkData }) {
                         }
 
                         .card-container > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
-                            padding: 16px 0 0;
+                            padding: 16px 0 16px;
                         }
 
                         .card-container .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab:not(:last-of-type),

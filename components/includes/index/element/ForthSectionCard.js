@@ -67,15 +67,6 @@ const ForthSectionCard = ({ data }) => {
                         font-weight: 500;
                         color: #6c7b94;
                     }
-
-                    @media screen and (max-width: 1050px) {
-                        .forth-cards-card-wrap {
-                            width: calc(50% - 0.625vw * 2);
-                            margin-bottom: 16px;
-                            // max-width: 344px;
-                            // max-height: 313px;
-                        }
-                    }
                 `}
             </style>
         </>

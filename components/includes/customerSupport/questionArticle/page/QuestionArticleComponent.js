@@ -747,6 +747,19 @@ const QuestionArticleComponent = () => {
                     margin: 10px 0;
                 }
 
+                .toggle-section .ant-collapse {
+                    border-color: #e6ebf5;
+                    background-color: #f9fbff;
+                }
+
+                .toggle-section .ant-collapse > .ant-collapse-item {
+                    border-color: #e6ebf5;
+                }
+
+                .toggle-section .ant-collapse-content {
+                    border-color: #e6ebf5;
+                }
+
                 .question-attachments {
                     display: flex;
                     justify-content: space-between;
