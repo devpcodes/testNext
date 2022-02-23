@@ -63,6 +63,7 @@ const AppointmentOpenAccount = ({ linkData }) => {
                 .appointmentOpnAcctBtn .open-account-card:hover {
                     position: relative;
                     bottom: 1rem;
+                    box-shadow: 1px 1px 15px 0 rgba(169, 182, 203, 0.4);
                 }
 
                 .appointmentOpnAcctBtn .shortcutFunctionIcon {

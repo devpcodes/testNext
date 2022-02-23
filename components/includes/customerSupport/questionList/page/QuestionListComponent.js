@@ -15,7 +15,7 @@ import { getCommonQuestionCategories } from '../../../../../services/components/
 import SearchInput from '../../SearchInput';
 import QuestionTab from '../element/QuestionTab';
 import QuestionTable from '../element/QuestionTable';
-import QuestionTestTable from '../element/QuestionTestTable';
+// import QuestionTestTable from '../element/QuestionTestTable';
 import { LoadingOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { logout } from '../../../../../services/user/logoutFetcher';
@@ -266,18 +266,7 @@ const QuestionListComponent = function () {
                             onTabsChange={onTabsChange}
                         >
                             <div className="question-tab-web">
-                                {/* <QuestionTable
-                                    className="question-list-web"
-                                    dataSource={dataSource}
-                                    sub2ndCategories={sub2ndCategories}
-                                    sub3rdCategories={sub3rdCategories}
-                                    onPageChange={onPageChange}
-                                    currentPage={currentPage}
-                                    totalCounts={totalCounts}
-                                    handleSelectSecondFilter={handleSelectSecondFilter}
-                                    handleSelectThirdFilter={handleSelectThirdFilter}
-                                /> */}
-                                <QuestionTestTable
+                                <QuestionTable
                                     className="question-list-web"
                                     dataSource={dataSource}
                                     sub2ndCategories={sub2ndCategories}
@@ -288,6 +277,7 @@ const QuestionListComponent = function () {
                                     onSubmit2nd={onSubmit2nd}
                                     onSubmit3rd={onSubmit3rd}
                                     onResetFilter={onResetFilter}
+                                    isSelecting={isSelecting}
                                 />
                             </div>
 

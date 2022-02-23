@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
+import DropfilterCheckBox from '../../../tradingAccount/vipInventory/DropfilterCheckBox';
 import PropTypes from 'prop-types';
 
 const QuestionTable = function ({
@@ -10,9 +11,58 @@ const QuestionTable = function ({
     onPageChange,
     currentPage,
     totalCounts,
-    handleSelectSecondFilter,
-    handleSelectThirdFilter,
+    onSubmit2nd,
+    onSubmit3rd,
+    onResetFilter,
+    isSelecting,
 }) {
+    const [searchColumns, setSearchColumns] = useState([]);
+    const [searchTType, setSearchTType] = useState([]);
+    const [searchThirdType, setSearchThirdType] = useState([]);
+
+    useEffect(() => {
+        if (!isSelecting) {
+            onReset();
+        }
+    }, [isSelecting]);
+
+    const onReset = level => {
+        if (level === 'second') {
+            setSearchTType([]);
+            onResetFilter(level);
+        } else if (level === 'third') {
+            setSearchThirdType([]);
+            onResetFilter(level);
+        } else {
+            setSearchTType([]);
+            setSearchThirdType([]);
+        }
+    };
+
+    const getColumnSearchProps = dataIndex => {
+        return {
+            filterDropdown: ({ confirm }) => (
+                <div>
+                    <DropfilterCheckBox
+                        type={''}
+                        onSubmit={dataIndex === 'ttype' ? onSubmit2nd : onSubmit3rd}
+                        onReset={
+                            dataIndex === 'ttype'
+                                ? () => {
+                                      onReset('second');
+                                  }
+                                : () => {
+                                      onReset('third');
+                                  }
+                        }
+                        value={dataIndex === 'ttype' ? searchTType : searchThirdType}
+                        data={dataIndex === 'ttype' ? sub2ndCategories : sub3rdCategories}
+                    />
+                </div>
+            ),
+        };
+    };
+
     const columns = [
         {
             title: '項目',
@@ -26,21 +76,13 @@ const QuestionTable = function ({
             dataIndex: 'category2nd',
             width: '15%',
             ellipsis: 'true',
-            filters: sub2ndCategories,
-            onFilter(value, record) {
-                handleSelectSecondFilter(value);
-                return record.category2nd === value;
-            },
+            ...getColumnSearchProps('ttype'),
         },
         {
             title: '子類別',
             dataIndex: 'category3rd',
             width: '15%',
-            filters: sub3rdCategories || false,
-            onFilter(value, record) {
-                handleSelectThirdFilter(value);
-                return record.category3rd === value;
-            },
+            ...getColumnSearchProps(''),
         },
         {
             title: '標題',
@@ -65,10 +107,8 @@ const QuestionTable = function ({
                 columns={columns}
                 rowKey={record => record.id}
                 onChange={onPageChange}
+                filterColumns={searchColumns}
                 pagination={{
-                    //total不用totalCounts的話 no-filter的時候會只有一頁
-                    //反之加上去的話 filter後頁數會錯誤
-                    //因為filter後的total是要讓ant自己算的?
                     total: totalCounts,
                     showTotal: (total, range) => `${range[0]}-${range[1]}則問題 (共${total}則問題)`,
                     defaultPageSize: 15,
@@ -254,6 +294,8 @@ QuestionTable.propTypes = {
     onPageChange: PropTypes.func,
     totalCounts: PropTypes.number,
     currentPage: PropTypes.number,
-    handleSelectSecondFilter: PropTypes.func,
-    handleSelectThirdFilter: PropTypes.func,
+    onSubmit2nd: PropTypes.func,
+    onSubmit3rd: PropTypes.func,
+    onResetFilter: PropTypes.func,
+    isSelecting: PropTypes.bool,
 };
