@@ -45,7 +45,12 @@ const reLoginAndStopFetchHandler = async () => {
 const errorHandler = (error, modal = true) => {
     const isServer = checkServer();
     const defaultErrorMsg = '伺服器錯誤，請稍後再試';
-
+    if (error.message.includes('timeout')) {
+        Modal.error({
+            content: '伺服器忙碌中，請稍後再試',
+        });
+        return Promise.reject('伺服器忙碌中，請稍後再試');
+    }
     if (error.response) {
         if (!isServer) {
             switch (error.response.status) {
