@@ -38,7 +38,8 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         {
             title: '商品',
             dataIndex: 'name',
-            width: '15%',
+            width: 170,
+            fixed: 'left',
             render: data => (
                 <a href={data.link} className="stock__name" target="_blank">
                     {data.text}
@@ -48,6 +49,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         {
             title: '成交價',
             width: 92,
+            fixed: 'left',
             dataIndex: 'close',
             align: 'right',
             render: data => (
@@ -164,6 +166,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         {
             title: '交易',
             width: 140,
+            fixed: 'right',
             dataIndex: 'action',
             render: (text, record, index) => (
                 <>
@@ -189,6 +192,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         {
             title: '刪除',
             width: 60,
+            fixed: 'right',
             dataIndex: 'del',
             render: (text, record, index) =>
                 tabKey === '0' ? (
@@ -202,6 +206,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         {
             title: '移動',
             width: 60,
+            fixed: 'right',
             dataIndex: 'move',
             render: (text, record, index) =>
                 tabKey === '0' ? (
@@ -472,6 +477,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
                     pagination={false}
                     dataSource={selfSelectList}
                     locale={locale}
+                    scroll={{ x: 1300 }}
                     loading={{
                         indicator: (
                             <div
