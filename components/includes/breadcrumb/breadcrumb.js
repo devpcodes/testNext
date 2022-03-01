@@ -1,17 +1,20 @@
 // import React from 'react';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from 'antd';
 import _ from 'lodash';
 // import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import { getCommonQuestionCategories } from '../../../services/components/customerSupport/customerSupportService';
+
 function BreadcrumbLayout({ articleTitle, categoryName }) {
     // const routeList = useSelector(state => state.breadcrumb.routeList);
     const levelArr = useRef([]);
     const router = useRouter();
     const elementNameArr = useRef([]);
     const elementPathArr = useRef([]);
+    const [firstTabId, setFirstTabId] = useState([]);
 
     const BreadcrumbItemHandler = useCallback(() => {
         elementNameArr.current = [];
@@ -41,6 +44,11 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
         return elementNameArr.current;
     };
 
+    useEffect(async () => {
+        const data = await getCommonQuestionCategories();
+        setFirstTabId(data[0].id);
+    }, []);
+
     const pathHandler = str => {
         switch (str) {
             case 'customer-support':
@@ -53,7 +61,7 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                 break;
             case 'question':
                 elementNameArr.current.push('常見問題');
-                elementPathArr.current.push(`/${levelArr.current[0]}`);
+                elementPathArr.current.push(`/${levelArr.current[0]}?key=${firstTabId}`);
                 break;
             case 'financial-product':
                 elementNameArr.current.push('理財商品');

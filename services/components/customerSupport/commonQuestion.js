@@ -1,14 +1,6 @@
 import axios from '../../../services/myAxios';
-import { getCommonQuestionCategories } from './customerSupportService';
 
 export const getCommonQuestion = async (categoryId, keywords, page, pageSize, category2ndIds, category3rdIds) => {
-    /* let id;
-
-    if (!categoryId) {
-        const data = await getCommonQuestionCategories();
-        id = data[0].id;
-    } */
-
     const reqUrl = `${process.env.NEXT_PUBLIC_LYKAN}/v1/service/commonQuestions`;
     let params = {
         categoryId,

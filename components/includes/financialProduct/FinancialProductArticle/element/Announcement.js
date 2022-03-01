@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const Announcement = ({ data }) => {
-    // console.log('dd', data);
     return (
         <>
             <div className="announcement_section">

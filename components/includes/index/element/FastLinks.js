@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
 const FastLinks = ({ data }) => {
-    // console.log('data', data);
     const router = useRouter();
 
     const toLink = (site, target, link) => {

@@ -73,7 +73,7 @@ function ElectronicTrading({ linkData }) {
                     .E-trading-card h3 {
                         margin: 12px 0 4px;
                         font-size: 20px;
-                        font-weight: 500;
+                        font-weight: 700;
                         font-stretch: normal;
                         font-style: normal;
                         line-height: 1.3;

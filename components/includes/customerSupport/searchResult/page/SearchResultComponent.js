@@ -64,7 +64,9 @@ const SearchResultComponent = () => {
             pageSize: 15,
         };
         const data = await getCommonQuestions(params);
-        setSearchResultDataWeb(data.dataList);
+        if (data?.dataList?.length) {
+            setSearchResultDataWeb(data.dataList);
+        }
     };
 
     const loadMoreData = async () => {
@@ -76,8 +78,10 @@ const SearchResultComponent = () => {
         };
         setCurrentPageMobile(old => old + 1);
         const data = await getCommonQuestions(params);
-        setSearchResultDataMobile(oldData => [...oldData, ...data.dataList]);
-        setIsLoading(false);
+        if (data?.dataList?.length) {
+            setSearchResultDataMobile(oldData => [...oldData, ...data.dataList]);
+            setIsLoading(false);
+        }
     };
 
     useEffect(async () => {
@@ -94,7 +98,6 @@ const SearchResultComponent = () => {
             const allPage = Math.ceil(data.counts / 15);
             setTotalPage(allPage);
             setSearchResultDataWeb(data.dataList);
-            console.log(data.dataList);
             setSearchResultDataMobile(data.dataList);
         }
     }, [keyword]);
