@@ -477,7 +477,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
                     pagination={false}
                     dataSource={selfSelectList}
                     locale={locale}
-                    scroll={{ x: 1300, y: 240 }}
+                    scroll={{ x: 1300, y: 600 }}
                     loading={{
                         indicator: (
                             <div
