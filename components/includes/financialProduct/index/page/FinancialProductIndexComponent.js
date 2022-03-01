@@ -129,6 +129,7 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                         margin-bottom: 0;
                         font-size: 28px;
                         color: white;
+                        font-weight: 700;
                     }
 
                     @media screen and (max-width: 450px) {

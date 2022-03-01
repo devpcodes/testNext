@@ -108,7 +108,7 @@ function OpeningAccountIndexComponent(props) {
                         border-left: 4px solid #daa360;
                         font-size: 24px;
                         line-height: 2.7rem;
-                        font-weight: 600;
+                        font-weight: 700;
                     }
 
                     @media screen and (max-width: 768px) {

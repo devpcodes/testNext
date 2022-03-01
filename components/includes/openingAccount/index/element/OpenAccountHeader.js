@@ -70,7 +70,7 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                     z-index: 1;
                     text-align: center;
                     font-size: 28px;
-                    font-weight: bold;
+                    font-weight: 700;
                     color: white;
                     line-height: normal;
                     letter-spacing: 0.7px;

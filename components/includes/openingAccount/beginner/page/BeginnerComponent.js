@@ -348,7 +348,7 @@ function BeginnerComponent(props) {
                         z-index: 1;
                         text-align: center;
                         font-size: 28px;
-                        font-weight: bold;
+                        font-weight: 700;
                         color: white;
                         line-height: normal;
                         letter-spacing: 0.7px;
@@ -445,7 +445,7 @@ function BeginnerComponent(props) {
                         border-left: 4px solid #daa360;
                         font-size: 24px;
                         line-height: 2.7rem;
-                        font-weight: 600;
+                        font-weight: 700;
                         display: flex;
                         flex-direction: column;
                         justify-content: center;

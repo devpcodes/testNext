@@ -14,6 +14,8 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
             <Header className="customerSupportHeader">
                 <h1>歡迎使用，永豐客戶支援</h1>
                 <Input
+                    type="search"
+                    name="search"
                     className="customerSupportSearchInput"
                     size="large"
                     placeholder="你想解決什麼問題？"

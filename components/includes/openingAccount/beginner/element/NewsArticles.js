@@ -75,7 +75,7 @@ function NewsArticles({ linkData }) {
                     .news-articles-card article {
                         margin: 12px 0 16px;
                         font-size: 18px;
-                        font-weight: 500;
+                        font-weight: 700;
                         font-stretch: normal;
                         font-style: normal;
                         line-height: 1.44;

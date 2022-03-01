@@ -18,7 +18,6 @@ import QuestionTable from '../element/QuestionTable';
 // import QuestionTestTable from '../element/QuestionTestTable';
 import { LoadingOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { logout } from '../../../../../services/user/logoutFetcher';
 
 const QuestionListComponent = function () {
     const router = useRouter();
@@ -43,6 +42,12 @@ const QuestionListComponent = function () {
         setIsSelecting(false);
         const data = await getCommonQuestionCategories();
         Array.isArray(data) && setCategories(data);
+        if (!key) {
+            let id;
+            const data = await getCommonQuestionCategories();
+            id = data[0].id;
+            router.push(`/customer-support/question?key=${id}`);
+        }
         if (key && selectedSecondFilter) {
             setActiveKey(key);
             getQuestionSubcategories(key);
@@ -104,7 +109,7 @@ const QuestionListComponent = function () {
             // 勾勾手動取消的狀況
             setSelectedSecondFilter([]);
             setIsSelecting(false);
-            getQuestionList();
+            getQuestionList(null, null, [], selectedThirdFilter);
         } else if (val.length) {
             setIsSelecting(true);
             console.log('submit2', val);
@@ -124,7 +129,8 @@ const QuestionListComponent = function () {
             // 勾勾手動取消的狀況
             setSelectedThirdFilter([]);
             setIsSelecting(false);
-            getQuestionList();
+            // getQuestionList();
+            getQuestionList(null, null, selectedSecondFilter, []);
         } else if (val.length) {
             console.log('submit3', val);
             setIsSelecting(true);
@@ -207,7 +213,6 @@ const QuestionListComponent = function () {
             top: 0,
             behavior: 'smooth',
         });
-        console.log('change Page:', changedData.current);
     };
 
     const onTabsChange = newKey => {

@@ -45,7 +45,10 @@ const QuestionTable = function ({
                 <div>
                     <DropfilterCheckBox
                         type={''}
-                        onSubmit={dataIndex === 'ttype' ? onSubmit2nd : onSubmit3rd}
+                        onSubmit={val => {
+                            dataIndex === 'ttype' ? onSubmit2nd(val) : onSubmit3rd(val);
+                            confirm({ closeDropdown: false });
+                        }}
                         onReset={
                             dataIndex === 'ttype'
                                 ? () => {
