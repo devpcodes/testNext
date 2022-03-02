@@ -315,7 +315,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     left: 0;
                     width: 4px;
                     height: 20px;
-                    margin: 7px 12px 7px 0;
+                    margin: 7px 12px 5px 0;
                     background-color: #daa360;
                 }
 
@@ -637,7 +637,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 article h1 {
-                    font-size: 28px;
+                    font-size: 20px;
                     font-weight: 600;
                 }
 
@@ -651,7 +651,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 article h2 {
-                    font-size: 22px;
+                    font-size: 16px;
                     font-weight: 600;
                 }
 
