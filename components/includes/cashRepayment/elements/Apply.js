@@ -113,7 +113,7 @@ const Apply = ({ active, showSearchBox = true }) => {
     };
 
     const submitHandler = (text, record) => {
-        if (validateQty(record.qty, record.load_qty, record.stock_amount_t1)) {
+        if (validateQty(record.qty, record.open_position_qty)) {
             console.log(text, record);
             // console.log(jwt_decode(getToken()));
             submitData(record);
