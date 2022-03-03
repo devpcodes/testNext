@@ -1,9 +1,9 @@
-import { getLykanInstance } from '../myAxios';
+import { getDivoInstance } from '../myAxios';
 
 export const fetchSBUnRealPrtlosFetcher = async function ({ market, stock_id, hasData, token }, modal = true) {
     try {
         const url = `/assets/querySubBrokerageUnrealizedPrtLos`;
-        const res = await getLykanInstance(undefined, modal).post(url, {
+        const res = await getDivoInstance(undefined, modal).post(url, {
             market,
             stock_id,
             hasData,
