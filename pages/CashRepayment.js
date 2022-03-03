@@ -4,7 +4,7 @@ import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayo
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
 import { reducers } from '../store/advanceCollection/combineReducer';
 // import EarmarkReserve from '../components/includes/advanceCollection/EarmarkReserve';
-import CashCouponRepayment from '../components/includes/CashRepayment/page/CashCouponRepayment';
+import CashCouponRepayment from '../components/includes/cashRepayment/page/CouponRepayment';
 import { ReducerContext } from '../store/advanceCollection/reducerContext';
 const initState = reducers();
 // export const ReducerContext = createContext();
