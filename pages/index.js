@@ -3,6 +3,7 @@ import { setNavItems } from '../store/components/layouts/action';
 import NewWebIframe from '../components/includes/NewWebIframe';
 import { useSelector } from 'react-redux';
 import { PageHead } from '../components/includes/PageHead';
+// import IndexPageComponent from '../components/includes/index/page/IndexPageComponent';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
@@ -13,6 +14,7 @@ const Home = function () {
     return (
         <div>
             <PageHead title={'永豐金理財網'} />
+            {/* <IndexPageComponent /> */}
             <div>
                 <NewWebIframe
                     iframeSrc={`/${process.env.NEXT_PUBLIC_NEWWEB}`}

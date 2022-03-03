@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300px" height="240px" viewBox="0 0 300 240" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="data:image/png;base64,">
+    <title>bg_img</title>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="layout/header" transform="translate(-1301.000000, 0.000000)">
+            <g id="bg_img" transform="translate(1301.000000, 0.000000)">
+                <rect id="Rectangle" fill="#99A4B8" x="239.189189" y="0" width="59.7972973" height="60"></rect>
+                <polygon id="Rectangle-Copy-49" fill="#99A4B8" opacity="0.102970567" transform="translate(89.695946, 150.000000) rotate(-180.000000) translate(-89.695946, -150.000000) " points="59.7972973 120 119.594595 120 119.594595 180"></polygon>
+                <rect id="Rectangle-Copy-27" fill="#99A4B8" opacity="0.298124092" x="179.391892" y="60" width="59.7972973" height="60"></rect>
+                <rect id="Rectangle-Copy-51" fill="#99A4B8" opacity="0.298124092" x="119.594595" y="121.016949" width="59.7972973" height="60"></rect>
+                <rect id="Rectangle-Copy-42" fill="#99A4B8" opacity="0.298124092" x="59.7972973" y="0" width="59.7972973" height="60"></rect>
+                <rect id="Rectangle-Copy-43" fill="#FFFFFF" x="59.7972973" y="60" width="59.7972973" height="60"></rect>
+                <polygon id="Rectangle-Copy-28" fill="#99A4B8" points="119.594595 60 179.391892 60 179.391892 120"></polygon>
+                <polygon id="Rectangle-Copy-40" fill="#99A4B8" opacity="0.371457122" transform="translate(209.290541, 30.000000) rotate(-360.000000) translate(-209.290541, -30.000000) " points="179.391892 0 239.189189 0 239.189189 60"></polygon>
+                <polygon id="Rectangle-Copy-45" fill="#99A4B8" opacity="0.371457122" transform="translate(29.898649, 90.000000) rotate(-360.000000) translate(-29.898649, -90.000000) " points="0 60 59.7972973 60 59.7972973 120"></polygon>
+                <polygon id="Rectangle-Copy-41" fill="#FFFFFF" transform="translate(270.101351, 150.000000) rotate(-360.000000) translate(-270.101351, -150.000000) " points="240.202703 120 300 120 300 180"></polygon>
+                <polygon id="Rectangle-Copy-44" fill="#99A4B8" transform="translate(89.695946, 150.000000) rotate(-360.000000) translate(-89.695946, -150.000000) " points="59.7972973 120 119.594595 120 119.594595 180"></polygon>
+                <polygon id="Rectangle-Copy-50" fill="#99A4B8" transform="translate(270.101351, 210.000000) rotate(-360.000000) translate(-270.101351, -210.000000) " points="240.202703 180 300 180 300 240"></polygon>
+                <ellipse id="Oval" fill="#FFFFFF" cx="149.493243" cy="30" rx="29.8986486" ry="30"></ellipse>
+                <g id="Group-17" transform="translate(179.898649, 179.491525) rotate(-270.000000) translate(-179.898649, -179.491525) translate(120.608108, 120.000000)">
+                    <ellipse id="Oval-Copy-3" fill="#FFFFFF" cx="59.2905405" cy="59.4915254" rx="59.2905405" ry="59.4915254"></ellipse>
+                    <path d="M118.561985,61.016333 C117.755844,93.167912 91.5277319,118.983051 59.2905405,118.983051 C27.0533492,118.983051 0.825236801,93.167912 0.01909562,61.016333 Z" id="Combined-Shape-Copy-2" fill="#99A4B8"></path>
+                </g>
+                <ellipse id="Oval-Copy-2" fill="#99A4B8" cx="269.087838" cy="90" rx="29.8986486" ry="30"></ellipse>
+                <ellipse id="Oval-Copy-4" fill="#99A4B8" cx="29.8986486" cy="30" rx="29.8986486" ry="30"></ellipse>
+                <path d="M179.391886,30.5087881 C179.066459,46.852115 165.804991,60 149.493243,60 C133.181496,60 119.920027,46.852115 119.594601,30.5087881 Z" id="Combined-Shape" fill="#C9D0DD"></path>
+                <path d="M298.98648,90.5087881 C298.661054,106.852115 285.399585,120 269.087838,120 C252.776091,120 239.514622,106.852115 239.189195,90.5087881 Z" id="Combined-Shape-Copy" fill="#C9D0DD"></path>
+                <path d="M59.7972911,30.5087881 C59.4718645,46.852115 46.210396,60 29.8986486,60 C13.5869013,60 0.325432786,46.852115 6.24204669e-06,30.5087881 Z" id="Combined-Shape-Copy-3" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
