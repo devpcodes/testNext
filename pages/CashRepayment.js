@@ -3,7 +3,7 @@ import { Select, Radio } from 'antd';
 import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayout';
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
 import { reducers } from '../store/advanceCollection/combineReducer';
-import EarmarkReserve from '../components/includes/advanceCollection/EarmarkReserve';
+// import EarmarkReserve from '../components/includes/advanceCollection/EarmarkReserve';
 import CashCouponRepayment from '../components/includes/CashRepayment/page/CashCouponRepayment';
 import { ReducerContext } from '../store/advanceCollection/reducerContext';
 const initState = reducers();
