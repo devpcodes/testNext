@@ -2,7 +2,7 @@ import { getA8StpInstance } from '../../myAxios';
 
 export const fetchShortSellingInventory = async function (token, branch, account, query_load_type, category) {
     try {
-        const url = `/stp/api/queryShortSellingInventory`; // api/queryShortSellingInventory
+        const url = `/stp/api/queryShortSellingInventory`;
         // const baseUrl = 'https://servicerd.sinotrade.com.tw';
         const res = await getA8StpInstance(true).post(url, {
             token,

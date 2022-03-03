@@ -16,6 +16,7 @@ import { postApplyEarmark } from '../../../../services/components/reservationSto
 import Loading from '../../debitDeposit/elements/Loading';
 import { fetchShortSellingInventory } from '../../../../services/components/cashRepayment/fetchStockInventory';
 import { formatNum } from '../../../../services/formatNum';
+import { postSecuritiesRedemptions } from '../../../../services/components/cashRepayment/postSecuritiesRedemptions';
 const Apply = ({ active, showSearchBox = true }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -124,17 +125,6 @@ const Apply = ({ active, showSearchBox = true }) => {
         //token, branch, account, symbol, qty, category
         const token = getToken();
         let data = getAccountsDetail(token);
-        //驗憑證(1)
-        // let caContent = await signCert(
-        //     {
-        //         idno: data.idno,
-        //         broker_id: data.broker_id,
-        //         account: data.account,
-        //     },
-        //     true,
-        //     token,
-        // );
-
         //驗憑證(2)
         let caContent = sign(
             {
@@ -146,22 +136,22 @@ const Apply = ({ active, showSearchBox = true }) => {
             token,
             isWebView.current,
         );
-        // console.log('newCaContent', caContent);
+        // console.log('newCaContent', caContent); //checkSignCA(caContent)
         if (checkSignCA(caContent)) {
-            //checkSignCA(caContent)
             setLoading(true);
             // percentHandler();
-            const resData = await postApplyEarmark(
+            const resData = await postSecuritiesRedemptions({
+                branch: data.broker_id,
+                account: data.account,
+                symbol: record.code,
+                qty: String(record.qty),
+                match_date: record.match_date,
+                order_no: record.order_no,
+                match_price: record.match_price,
                 token,
-                data.broker_id,
-                data.account,
-                record.code,
-                String(record.qty),
-                '1',
                 caContent,
-            );
+            });
             setLoading(false);
-            // submitSuccess();
             if (resData) {
                 Modal.success({
                     content: resData,
@@ -173,10 +163,11 @@ const Apply = ({ active, showSearchBox = true }) => {
         }
     };
 
-    const validateQty = (value, loadQty, stockAmount) => {
+    const validateQty = (value, loadQty) => {
         const regex = /^[0-9]{1,20}$/;
+        console.log(value, loadQty);
         if (!isNaN(value) && regex.test(value)) {
-            if (Number(value) <= Number(stockAmount)) {
+            if (Number(value) <= Number(loadQty)) {
                 return true;
             } else {
                 Modal.error({
