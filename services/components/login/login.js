@@ -16,25 +16,25 @@ export const submit = async function (account, password, reCAPTCHAToken, version
     // if (captcha != null) {
     //     data['captcha'] = captcha;
     // }
-    const url = '/auth/login';
-    const res = await getLykanInstance().post(url, {
-        user_id: account,
-        password,
-        'g-recaptcha-response': reCAPTCHAToken,
-        platform: 'newweb',
-        reCAPTCHA_ver: version,
-    });
-    // const res = await axios({
-    //     method: 'post',
-    //     url: '/lykan/api/v1/auth/login',
-    //     data: {
-    //         user_id: account,
-    //         password,
-    //         'g-recaptcha-response': reCAPTCHAToken,
-    //         platform: 'newweb',
-    //         reCAPTCHA_ver: version,
-    //     },
+    // const url = '/auth/login';
+    // const res = await getLykanInstance().post(url, {
+    //     user_id: account,
+    //     password,
+    //     'g-recaptcha-response': reCAPTCHAToken,
+    //     platform: 'newweb',
+    //     reCAPTCHA_ver: version,
     // });
+    const res = await axios({
+        method: 'post',
+        url: '/lykan/api/v1/auth/login',
+        data: {
+            user_id: account,
+            password,
+            'g-recaptcha-response': reCAPTCHAToken,
+            platform: 'newweb',
+            reCAPTCHA_ver: version,
+        },
+    });
     // 儲存 token 在 localStorage
     if (res.data?.result?.token) {
         setToken(res.data.result.token);
