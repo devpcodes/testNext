@@ -1,5 +1,6 @@
 // import axios from '../../myAxios';
-import { getLykanInstance } from '../../myAxios';
+// import { getLykanInstance } from '../../myAxios';
+import axios from '../../myAxios';
 import { setToken } from '../../user/accessToken';
 
 export const submit = async function (account, password, reCAPTCHAToken, version) {
