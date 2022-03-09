@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import jwt_decode from 'jwt-decode';
+import { Modal } from 'antd';
 import moment from 'moment';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
@@ -8,6 +9,7 @@ import ApplyContent from '../../advanceCollection/ApplyContent';
 import Msg from '../../advanceCollection/Msg';
 import { getToken } from '../../../../services/user/accessToken';
 import { fetchEarmarkStatus } from '../../../../services/components/reservationStock/fetchEarmarkStatus';
+import { fetchQuerySecuritiesRedemptionsStatus } from '../../../../services/components/cashRepayment/fetchQuerySecuritiesRedemptionsStatus';
 const Status = ({ active }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -26,7 +28,7 @@ const Status = ({ active }) => {
         if (token) {
             let data = getAccountsDetail(token);
             setDataLoading(true);
-            let resData = await fetchEarmarkStatus(token, data.broker_id, data.account, '1');
+            let resData = await fetchQuerySecuritiesRedemptionsStatus(token, data.broker_id, data.account, '1');
             if (Array.isArray(resData)) {
                 resData = resData.map((item, index) => {
                     item.key = String(index);
@@ -81,22 +83,43 @@ const Status = ({ active }) => {
                 index: 4,
             },
             {
-                title: '圈存股數',
+                title: '成交日',
+                dataIndex: 'match_date',
+                key: 'match_date',
+                index: 5,
+                render: (text, record, index) => {
+                    return moment(text).format('yyyy/MM/DD');
+                },
+            },
+            {
+                title: '成交單價',
+                dataIndex: 'match_price',
+                key: 'match_price',
+                index: 6,
+            },
+            {
+                title: '申請股數',
                 dataIndex: 'apply_amount',
                 key: 'apply_amount',
-                index: 5,
+                index: 7,
             },
+            // {
+            //     title: '退還金額',
+            //     dataIndex: 'order_status_description',
+            //     key: 'order_status_description',
+            //     index: 8,
+            // },
             {
                 title: '狀態',
                 dataIndex: 'order_status_msg',
                 key: 'order_status_msg',
-                index: 6,
+                index: 9,
             },
             {
                 title: '狀態說明',
                 dataIndex: 'order_status_description',
                 key: 'order_status_description',
-                index: 7,
+                index: 10,
             },
         ]);
     }, [statusData]);
@@ -127,7 +150,7 @@ const Status = ({ active }) => {
             <Accounts key="1" style={{ marginTop: '35px' }} value={defaultValue} />
             <ApplyContent
                 scroll={{ x: 860 }}
-                contenterTitle={'借券圈存查詢'}
+                contenterTitle={'現券償還查詢'}
                 columns={columns}
                 dataSource={statusData}
                 pagination={false}
