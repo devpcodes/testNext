@@ -137,7 +137,7 @@ const Apply = ({ active, showSearchBox = true }) => {
             isWebView.current,
         );
         // console.log('newCaContent', caContent); //checkSignCA(caContent)
-        if (checkSignCA(caContent)) {
+        if (true) {
             setLoading(true);
             // percentHandler();
             const resData = await postSecuritiesRedemptions({
@@ -163,16 +163,35 @@ const Apply = ({ active, showSearchBox = true }) => {
         }
     };
 
+    const checkNum = (value, loadQty) => {
+        if (Number(value) <= Number(loadQty)) {
+            return true;
+        } else {
+            Modal.error({
+                content: '超過可申請股數',
+            });
+            return false;
+        }
+    };
+
+    const checkUnit = value => {
+        if (Number(value) % 1000 === 0) {
+            return true;
+        } else {
+            Modal.error({
+                content: '申請股數須以1000為單位',
+            });
+            return false;
+        }
+    };
+
     const validateQty = (value, loadQty) => {
         const regex = /^[0-9]{1,20}$/;
         console.log(value, loadQty);
         if (!isNaN(value) && regex.test(value)) {
-            if (Number(value) <= Number(loadQty)) {
+            if (checkNum(value, loadQty) && checkUnit(value)) {
                 return true;
             } else {
-                Modal.error({
-                    content: '超過可申請股數',
-                });
                 return false;
             }
         }
