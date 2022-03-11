@@ -85,6 +85,9 @@ const DropfilterCheckBox = ({ type, onSubmit, onReset, value, data }) => {
                     width: 148px;
                     /* height: 217px; */
                     padding-top: 15px;
+                    overflow-y: auto;
+                    max-height: 248px;
+                    overflow-x: hidden;
                 }
                 .checkbox__container .ant-checkbox-inner {
                     width: 20px;

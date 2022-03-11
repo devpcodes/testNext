@@ -145,6 +145,10 @@ const QuestionTable = function ({
 
             <style jsx global>
                 {`
+                    // .ant-dropdown {
+                    //     height: 300px;
+                    //     overflow: auto;
+                    // }
                     .ant-pagination-item-active {
                         border: solid 1px #c43826;
                         background: #c43826;
