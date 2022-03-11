@@ -283,7 +283,7 @@ const FinancialProductArticleComponent = ({
                                         更多 <RightOutlined />
                                     </div>
                                 </main>
-                                {checkServer() && announcementServerRes.length ? (
+                                {checkServer() && announcementServerRes?.length ? (
                                     <Announcement data={announcementServerRes} />
                                 ) : null}
                                 {!checkServer() && announcement.length ? <Announcement data={announcement} /> : null}
