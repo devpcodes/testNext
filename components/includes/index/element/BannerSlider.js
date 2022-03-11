@@ -51,11 +51,12 @@ const BannerSlider = () => {
                                             alt=""
                                         />
                                     ) : (
-                                        <h3
-                                            style={{
-                                                backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath})`,
-                                            }}
-                                        ></h3>
+                                        <img
+                                            width="100%"
+                                            height="auto"
+                                            src={`${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath}`}
+                                            alt=""
+                                        />
                                     )}
                                 </a>
                             </div>
@@ -116,7 +117,7 @@ const BannerSlider = () => {
                 @media screen and (max-width: 450px) {
                     .banner-slider-container {
                         width: 100%;
-                        height: 250px;
+                        // height: 250px;
                     }
 
                     .banner-slider-container h3 {

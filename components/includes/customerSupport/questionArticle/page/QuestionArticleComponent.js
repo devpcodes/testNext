@@ -743,6 +743,11 @@ const QuestionArticleComponent = () => {
                     font-size: 16px;
                 }
 
+                article a,
+                article a:hover {
+                    color: #daa360;
+                }
+
                 .toggle-section {
                     margin: 10px 0;
                 }
