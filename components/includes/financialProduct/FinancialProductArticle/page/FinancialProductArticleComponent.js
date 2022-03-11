@@ -629,6 +629,9 @@ const FinancialProductArticleComponent = ({
                 }
             `}</style>
             <style jsx global>{`
+                .ant-tabs-content-holder {
+                    padding: 32px;
+                }
                 .questionArticleLayout {
                     position: relative;
                     width: 100%;
@@ -835,7 +838,8 @@ const FinancialProductArticleComponent = ({
                 }
 
                 .ant-tabs-content-holder {
-                    padding-bottom: 30px;
+                    // padding-bottom: 30px;
+                    padding: 32px;
                 }
 
                 .product-article-back .ant-btn {
@@ -855,6 +859,11 @@ const FinancialProductArticleComponent = ({
 
 
                 @media screen and (max-width: 768px) {
+                    .ant-tabs-content-holder {
+                        // padding-bottom: 30px;
+                        padding: 24px;
+                    }
+
                     .questionArticleWrapper > .site-breadcrumb {
                         width: 90vw;
                     }
@@ -886,6 +895,9 @@ const FinancialProductArticleComponent = ({
                     }
 
                 @media screen and (max-width: 450px) {
+                    .ant-tabs-content-holder {
+                        padding: 16px;
+                    }
                     .questionArticleLayout {
                         padding-top: 12px;
                     }

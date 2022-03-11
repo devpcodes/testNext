@@ -90,15 +90,21 @@ const IndexQuestionCategoryCards = ({
                     .categoryName {
                         font-size: 20px;
                         color: #0d1623;
+                        font-weight: 700;
                     }
 
                     @media screen and (max-width: 768px) {
                         .categoryName {
-                            font-size: 16px;
+                            font-size: 20px;
                         }
 
                         .layerIcon {
                             margin-bottom: 0;
+                        }
+                    }
+                    @media screen and (max-width: 450px) {
+                        .categoryName {
+                            font-size: 16px;
                         }
                     }
                 `}

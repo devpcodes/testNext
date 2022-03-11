@@ -116,7 +116,7 @@ const ThirdSection = ({ data }) => {
                     .third-section-card > h4 {
                         margin: 10px 0 8.4px;
                         font-size: 20px;
-                        font-weight: 500;
+                        font-weight: 700;
                         letter-spacing: 0.5px;
                         text-align: center;
                         white-space: nowrap;

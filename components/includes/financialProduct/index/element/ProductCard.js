@@ -55,7 +55,7 @@ const ProductCard = ({
 
                 .product-card-text {
                     height: 9.25 vw;
-                    padding: 24px 32px;
+                    padding: 24px;
                     box-sizing: border-box;
                 }
 

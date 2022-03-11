@@ -629,7 +629,7 @@ const QuestionListComponent = function () {
                             }
 
                             .ant-tabs-mobile {
-                                width: 100vw;
+                                //width: 100vw;
                             }
 
                             .ant-tabs-tab {

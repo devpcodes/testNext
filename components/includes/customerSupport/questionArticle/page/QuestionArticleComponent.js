@@ -280,7 +280,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article {
-                    padding: 32px 31px;
+                    padding: 32px;
                     border-radius: 2px;
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
@@ -550,6 +550,9 @@ const QuestionArticleComponent = () => {
                         .tag_section {
                             margin: 0 16px;
                         }
+                        .article {
+                            padding: 24px;
+                        }
                     }
 
                     @media screen and (max-width: 450px) {
@@ -589,9 +592,12 @@ const QuestionArticleComponent = () => {
                         }
 
                         .article {
-                            /* padding: 16px 16px; */
+                            padding: 16px 16px;
                             border-right: 0;
                             border-left: 0;
+                        }
+                        .article > h1 {
+                            font-size: 20px;
                         }
 
                         .is-helped-button-group {

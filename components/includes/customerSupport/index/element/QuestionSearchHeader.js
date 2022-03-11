@@ -43,7 +43,7 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     z-index: 1;
                     text-align: center;
                     font-size: 28px;
-                    font-weight: normal;
+                    font-weight: 700;
                     color: white;
                 }
 
@@ -62,7 +62,7 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     }
 
                     .customerSupportHeader > h1 {
-                        font-size: 20px;
+                        font-size: 28px;
                         margin-top: -20px;
                         margin-bottom: 0;
                         white-space: nowrap;
@@ -82,6 +82,9 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                         right: 0;
                         width: 80px;
                         height: 80px; */
+                    }
+                    .customerSupportHeader > h1 {
+                        font-size: 20px;
                     }
                 }
             `}</style>

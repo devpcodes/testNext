@@ -45,7 +45,7 @@ const ForthSectionCard = ({ data }) => {
                     h4 {
                         margin-top: 12px;
                         font-size: 18px;
-                        font-weight: 500;
+                        font-weight: 700;
                         line-height: 1.44;
                         color: #0d1623;
                         display: -webkit-box;
