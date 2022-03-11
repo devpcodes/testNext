@@ -12,8 +12,9 @@ import { getTradingAppCategories } from '../../../../../services/components/trad
 import { getFinancialProductCategoriesAndProduct } from '../../../../../services/components/financialProduct/financialProductServices';
 import { getTradingAppCategoriesAndProduct } from '../../../../../services/components/tradingPlatform/tradingPlatformService';
 import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import { checkServer } from '../../../../../services/checkServer';
 
-const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
+const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, serverProducts }) => {
     const { Header, Content } = Layout;
     const router = useRouter();
     const [categories, setCategories] = useState([]);
@@ -49,7 +50,8 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
     useEffect(async () => {
         let res;
         if (isTradingPlatform) {
-            res = await getTradingAppCategories();
+            //res = await getTradingAppCategories();
+            res = serverCategories;
         } else {
             res = await getFinancialProductCategories();
         }
@@ -82,28 +84,57 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                 </Header>
                 <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
                 <Content className="productLayoutContent">
-                    <ProductTab
-                        categories={categories}
-                        defaultActiveKey={categories && categories[0]?.categoryCode}
-                        activeKey={activeKey}
-                        className="product-tabs"
-                        onChange={onTabsChange}
-                    />
-                    <div className="productCardContainer">
-                        {currentProductList?.length &&
-                            currentProductList.map((e, i) => (
-                                <ProductCard
-                                    key={i}
-                                    title={e.productName || e.appName}
-                                    description={e.description}
-                                    imagePath={e.imagePath}
-                                    productCode={e.productCode || e.appCode}
-                                    categoryName={currentCategoryName}
-                                    categoryCode={activeKey}
-                                    isTradingPlatform={isTradingPlatform}
-                                />
-                            ))}
-                    </div>
+                    {checkServer() ? (
+                        <>
+                            <ProductTab
+                                categories={serverCategories}
+                                defaultActiveKey={serverCategories && serverCategories[0]?.categoryCode}
+                                activeKey={activeKey}
+                                className="product-tabs"
+                                onChange={onTabsChange}
+                            />
+                            <div className="productCardContainer">
+                                {serverProducts?.apps?.length &&
+                                    serverProducts?.apps?.map((e, i) => (
+                                        <ProductCard
+                                            key={i}
+                                            title={e.productName || e.appName}
+                                            description={e.description}
+                                            imagePath={e.imagePath}
+                                            productCode={e.productCode || e.appCode}
+                                            categoryName={currentCategoryName}
+                                            categoryCode={activeKey}
+                                            isTradingPlatform={isTradingPlatform}
+                                        />
+                                    ))}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <ProductTab
+                                categories={categories}
+                                defaultActiveKey={categories && categories[0]?.categoryCode}
+                                activeKey={activeKey}
+                                className="product-tabs"
+                                onChange={onTabsChange}
+                            />
+                            <div className="productCardContainer">
+                                {currentProductList?.length &&
+                                    currentProductList.map((e, i) => (
+                                        <ProductCard
+                                            key={i}
+                                            title={e.productName || e.appName}
+                                            description={e.description}
+                                            imagePath={e.imagePath}
+                                            productCode={e.productCode || e.appCode}
+                                            categoryName={currentCategoryName}
+                                            categoryCode={activeKey}
+                                            isTradingPlatform={isTradingPlatform}
+                                        />
+                                    ))}
+                            </div>
+                        </>
+                    )}
                 </Content>
                 <style jsx>{`
                     .productLayoutContent {
@@ -158,17 +189,25 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
 
                     @media screen and (max-width: 768px) {
                         .productLayoutContent {
-                            width: calc(100% - 64px);
+                            /* width: calc(100% - 64px); */
+                            width: 100%;
                             padding: 0;
+                            padding-left: 32px;
+                            padding-right: 32px;
                         }
                     }
 
                     @media screen and (max-width: 450px) {
                         .productLayoutContent {
-                            width: calc(100% - 4.27vw * 2);
+                            /* width: calc(100% - 4.27vw * 2); */
                             margin-top: 0px;
                             margin-bottom: 20px;
                             min-height: 0;
+                            padding: 0;
+                        }
+                        .productCardContainer{
+                            padding-left: 16px;
+                            padding-right: 16px;
                         }
                     }
 
@@ -225,7 +264,13 @@ const FinancialProductIndexComponent = ({ isTradingPlatform }) => {
                 `}</style>
 
                 <style jsx global>
-                    {``}
+                    {`
+                        @media screen and (max-width: 380px) {
+                            .ant-tabs > .ant-tabs-nav .ant-tabs-nav-list {
+                                margin-left: 16px;
+                            }
+                        }
+                    `}
                 </style>
             </Layout>
         </>

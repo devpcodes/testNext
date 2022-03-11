@@ -279,7 +279,7 @@ const SearchResultCard = ({ keyword, searchResultData, totalQuestion, currentPag
                 }
 
                 .noResult p {
-                    font-family: PingFangTC;
+                    // font-family: PingFangTC;
                     font-size: 16px;
                     font-weight: normal;
                     letter-spacing: 0.4px;

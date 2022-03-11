@@ -16,8 +16,14 @@ import {
 import { getTradingAppDetail } from '../../../../../services/components/tradingPlatform/tradingPlatformService';
 import OpenAccountButtons from '../element/OpenAccountButtons';
 import Announcement from '../element/Announcement';
+import { checkServer } from '../../../../../services/checkServer';
 
-const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
+const FinancialProductArticleComponent = ({
+    isTradingPlatform,
+    serverProducts,
+    serverTabsArray,
+    announcementServerRes,
+}) => {
     // const clientWidth = useSelector(store => store.layout.winWidth);
     const router = useRouter();
     const { Panel } = Collapse;
@@ -50,6 +56,136 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
         window.open('https://www.sinotrade.com.tw/CSCenter/CSCenter_13_5', '_blank');
     };
 
+    const renderProducts = () => {
+        return isTradingPlatform && articleData?.products?.length ? (
+            <div className="trading-available-product">
+                <div>
+                    <p>可交易商品</p>
+                </div>
+                <div className="available-product-tags">
+                    {articleData?.products?.map(product => (
+                        <CustomerButton
+                            key={product.productCode}
+                            onClick={() => {
+                                toProduct(product.productCode);
+                            }}
+                        >
+                            {product.productName}
+                        </CustomerButton>
+                    ))}
+                </div>
+            </div>
+        ) : null;
+    };
+
+    const serverRender = () => {
+        return (
+            serverTabsArray?.length && (
+                <QuestionTab
+                    className="financial-product-article-tab"
+                    isFinancialProduct={true}
+                    categories={serverTabsArray}
+                    activeKey={activeTabKey}
+                    keywords={serverProducts.commonQuestionKeywords}
+                    attachments={serverProducts.attachments}
+                    onTabsChange={onTabsChange}
+                >
+                    {serverTabsArray[activeTabKey]?.articleContent?.map((item, idx) =>
+                        item.type === 'toggle' ? (
+                            <div className="toggle-section" key={idx}>
+                                <Collapse
+                                    expandIconPosition="right"
+                                    expandIcon={({ isActive }) =>
+                                        isActive ? (
+                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
+                                        ) : (
+                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
+                                        )
+                                    }
+                                >
+                                    <Panel header={item.content.title} key="1">
+                                        <p>{item.content.content}</p>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        ) : (
+                            <article key={idx}>{parse(item.content.content)}</article>
+                        ),
+                    )}
+                </QuestionTab>
+            )
+        );
+    };
+
+    const clientRender = () => {
+        return (
+            articleTabs?.length && (
+                <QuestionTab
+                    className="financial-product-article-tab"
+                    isFinancialProduct={true}
+                    categories={articleTabs}
+                    activeKey={activeTabKey}
+                    keywords={articleData.commonQuestionKeywords}
+                    attachments={articleData.attachments}
+                    onTabsChange={onTabsChange}
+                >
+                    {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
+                        item.type === 'toggle' ? (
+                            <div className="toggle-section" key={idx}>
+                                <Collapse
+                                    expandIconPosition="right"
+                                    expandIcon={({ isActive }) =>
+                                        isActive ? (
+                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
+                                        ) : (
+                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
+                                        )
+                                    }
+                                >
+                                    <Panel header={item.content.title} key="1">
+                                        <p>{item.content.content}</p>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        ) : (
+                            <article key={idx}>{parse(item.content.content)}</article>
+                        ),
+                    )}
+                </QuestionTab>
+            )
+        );
+    };
+
+    const openAccountButtonSsr = () => {
+        return isTradingPlatform || serverProducts?.enableOpenBlock ? (
+            <OpenAccountButtons
+                title={serverProducts?.openTitle || serverProducts?.appName}
+                categoryName={isTradingPlatform ? categoryName : null}
+                description={serverProducts?.openDescription || serverProducts?.description}
+                image={serverProducts?.openImagePath || serverProducts?.imagePath}
+                button1Title={serverProducts?.openButton1Name || serverProducts?.button1Name}
+                button1Link={serverProducts?.openButton1Url || serverProducts?.button1Url}
+                button2Title={serverProducts?.openButton2Name || serverProducts?.button2Name}
+                button2Link={serverProducts?.openButton2Url || serverProducts?.button2Url}
+            />
+        ) : null;
+    };
+
+    const openAccountButtonClir = () => {
+        return isTradingPlatform || articleData?.enableOpenBlock ? (
+            <OpenAccountButtons
+                title={articleData?.openTitle || articleData?.appName}
+                categoryName={isTradingPlatform ? categoryName : null}
+                description={articleData?.openDescription || articleData?.description}
+                image={articleData?.openImagePath || articleData?.imagePath}
+                button1Title={articleData?.openButton1Name || articleData?.button1Name}
+                button1Link={articleData?.openButton1Url || articleData?.button1Url}
+                button2Title={articleData?.openButton2Name || articleData?.button2Name}
+                button2Link={articleData?.openButton2Url || articleData?.button2Url}
+            />
+        ) : null;
+    };
+
     useEffect(async () => {
         let res;
         if (isTradingPlatform) {
@@ -73,20 +209,32 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
         const announcementRes = await getAnnouncement(res?.keywords, 3);
         setAnnouncement(announcementRes);
     }, [productCode]);
-
     return (
         <>
             <PageHead title={'永豐金理財網'} />
             <Layout className="questionArticleLayout">
                 <div className="questionArticleWrapper">
-                    <Breadcrumb
-                        categoryName={categoryName}
-                        articleTitle={articleData?.productName || articleData?.appName}
-                    />
+                    {checkServer() ? (
+                        <Breadcrumb
+                            categoryName={categoryName}
+                            articleTitle={serverProducts?.productName || serverProducts?.appName}
+                        />
+                    ) : (
+                        <Breadcrumb
+                            categoryName={categoryName}
+                            articleTitle={articleData?.productName || articleData?.appName}
+                        />
+                    )}
+
                     <div className="article_wrapper">
                         <div className="article_section">
                             <div className="title_group">
-                                <h1>{articleData?.productName || articleData?.appName}</h1>
+                                {checkServer() ? (
+                                    <h1>{serverProducts?.productName || serverProducts?.appName}</h1>
+                                ) : (
+                                    <h1>{articleData?.productName || articleData?.appName}</h1>
+                                )}
+
                                 <div className="product-article-back">
                                     <CustomerButton
                                         type="default"
@@ -99,13 +247,13 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                     </CustomerButton>
                                 </div>
                             </div>
-                            {isTradingPlatform && articleData?.products?.length ? (
+                            {checkServer() ? (
                                 <div className="trading-available-product">
                                     <div>
                                         <p>可交易商品</p>
                                     </div>
                                     <div className="available-product-tags">
-                                        {articleData?.products?.map(product => (
+                                        {serverProducts?.products?.map(product => (
                                             <CustomerButton
                                                 key={product.productCode}
                                                 onClick={() => {
@@ -118,56 +266,11 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                     </div>
                                 </div>
                             ) : null}
-                            <div className="article">
-                                <QuestionTab
-                                    className="financial-product-article-tab"
-                                    isFinancialProduct={true}
-                                    categories={articleTabs}
-                                    activeKey={activeTabKey}
-                                    keywords={articleData?.commonQuestionKeywords}
-                                    attachments={articleData?.attachments}
-                                    onTabsChange={onTabsChange}
-                                >
-                                    {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
-                                        item.type === 'toggle' ? (
-                                            <div className="toggle-section" key={idx}>
-                                                <Collapse
-                                                    expandIconPosition="right"
-                                                    expandIcon={({ isActive }) =>
-                                                        isActive ? (
-                                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
-                                                        ) : (
-                                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
-                                                        )
-                                                    }
-                                                >
-                                                    <Panel header={item.content.title} key="1">
-                                                        <p>{item.content.content}</p>
-                                                    </Panel>
-                                                </Collapse>
-                                            </div>
-                                        ) : (
-                                            <article key={idx}>{parse(item.content.content)}</article>
-                                        ),
-                                    )}
-                                </QuestionTab>
-                            </div>
+                            <div className="article">{checkServer() ? serverRender() : clientRender()}</div>
                         </div>
 
                         <div className="side_section">
-                            {isTradingPlatform || articleData?.enableOpenBlock ? (
-                                <OpenAccountButtons
-                                    isTradingPlatform={isTradingPlatform}
-                                    title={articleData?.openTitle || articleData?.appName}
-                                    categoryName={isTradingPlatform ? categoryName : null}
-                                    description={articleData?.openDescription || articleData?.description}
-                                    image={articleData?.openImagePath || articleData?.imagePath}
-                                    button1Title={articleData?.openButton1Name || articleData?.button1Name}
-                                    button1Link={articleData?.openButton1Url || articleData?.button1Url}
-                                    button2Title={articleData?.openButton2Name || articleData?.button2Name}
-                                    button2Link={articleData?.openButton2Url || articleData?.button2Url}
-                                />
-                            ) : null}
+                            {checkServer() ? openAccountButtonSsr() : openAccountButtonClir()}
                             <div className="open-related">
                                 <main className="qTitle-frame">
                                     <h3 className="qTitle">相關公告</h3>
@@ -180,8 +283,10 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                                         更多 <RightOutlined />
                                     </div>
                                 </main>
-
-                                {announcement.length ? <Announcement data={announcement} /> : null}
+                                {checkServer() && announcementServerRes.length ? (
+                                    <Announcement data={announcementServerRes} />
+                                ) : null}
+                                {!checkServer() && announcement.length ? <Announcement data={announcement} /> : null}
                             </div>
                         </div>
                     </div>
@@ -214,7 +319,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .article > h1 {
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 24px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -226,7 +331,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .article > .category-group {
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 16px;
                     font-weight: normal;
                     font-stretch: normal;
@@ -297,7 +402,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 .qTitle {
                     position: relative;
                     padding-left: 12px;
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 20px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -321,7 +426,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
 
                 .qTitle-more {
                     padding-bottom: 16px;
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 16px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -386,7 +491,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .title_group > h1 {
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 28px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -571,7 +676,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                     > .ant-input-wrapper
                     > .ant-input-search
                     > .ant-input::placeholder {
-                    font-family: PingFangSC !important;
+                    // font-family: PingFangSC !important;
                     font-size: 16px !important;
                     letter-spacing: 0.4px !important;
                     color: #3f5372 !important;
@@ -703,7 +808,7 @@ const FinancialProductArticleComponent = ({ isTradingPlatform }) => {
                 }
 
                 .ant-tabs-tab {
-                    font-family: PingFangTC;
+                    // font-family: PingFangTC;
                     font-size: 16px !important;
                     font-weight: normal;
                     font-stretch: normal;

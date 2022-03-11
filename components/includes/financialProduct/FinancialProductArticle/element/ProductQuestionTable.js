@@ -234,7 +234,7 @@ const ProductQuestionTable = function ({ keywords }) {
                             display: flex;
                             justify-content: center;
                             align-items: center;
-                            font-family: PingFangTC;
+                            // font-family: PingFangTC;
                             font-size: 14px;
                             font-weight: normal;
                             font-stretch: normal;

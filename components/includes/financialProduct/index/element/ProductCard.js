@@ -66,7 +66,7 @@ const ProductCard = ({
                     text-overflow: ellipsis;
                     -webkit-box-orient: vertical;
                     -webkit-line-clamp: 1;
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 20px;
                     font-weight: 700;
                     font-stretch: normal;

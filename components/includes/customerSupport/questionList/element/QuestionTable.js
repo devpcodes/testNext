@@ -132,7 +132,7 @@ const QuestionTable = function ({
 
                 .countsNPage > span {
                     margin-right: 20px;
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 14px;
                     font-weight: normal;
                     font-stretch: normal;
@@ -167,7 +167,7 @@ const QuestionTable = function ({
                         > .ant-input-wrapper
                         > .ant-input-search
                         > .ant-input::placeholder {
-                        font-family: PingFangSC !important;
+                        // font-family: PingFangSC !important;
                         font-size: 16px !important;
                         letter-spacing: 0.4px !important;
                         color: #3f5372 !important;

@@ -1,45 +1,163 @@
-import { Layout, Row, Col, Card } from 'antd';
+import { useState, useEffect } from 'react';
+import { Card } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/router';
 import { Tabs } from 'antd';
-
-function NewsArticles({ linkData }) {
+import moment from 'moment';
+import { checkServer } from '../../../../../services/checkServer';
+import { postArticleList } from '../../../../../services/pages/index/postArticleList';
+const richTabs = ['台股', '美股', '存股'];
+function NewsArticles({ richClubNews, activeTab }) {
+    const [data, setData] = useState([]);
+    const [currKey, setCurrKey] = useState(activeTab);
     const { TabPane } = Tabs;
-
+    useEffect(() => {
+        getData(currKey);
+    }, [currKey]);
+    useEffect(() => {
+        if (richClubNews?.length > 0) {
+            setData(richClubNews);
+        }
+    }, [richClubNews]);
+    const changeHandler = key => {
+        setCurrKey(key);
+    };
+    const getData = async currKey => {
+        try {
+            const news = await postArticleList(3, currKey);
+            console.log('news', news);
+            setData(news);
+        } catch (error) {}
+    };
     return (
-        <Layout className="news-articles-layout">
+        <>
             <div className="card-container">
-                <Tabs type="card">
-                    {linkData.map((item, index) => (
-                        <TabPane tab={item.type} key={index}>
-                            <Row
-                                gutter={[
-                                    { xs: 0, sm: 0, md: 16, lg: 32 },
-                                    { xs: 16, sm: 16, md: 16, lg: 32 },
-                                ]}
-                                className="news-articles"
-                            >
-                                {item.value.map((e, i) => (
-                                    <Col key={i} className="gutter-row" xs={24} sm={24} md={12} lg={8}>
-                                        <a href={e.link}>
+                <Tabs type="card" onChange={changeHandler}>
+                    {richTabs.map((tab, tabIndex) => {
+                        return checkServer() ? (
+                            <TabPane tab={tab} key={tab} active={activeTab}>
+                                <div className="card__container">
+                                    {richClubNews?.map((item, index) => (
+                                        <a href={item.originUrl} target="_blank" className="card" key={index}>
                                             <Card className="news-articles-card" hoverable>
-                                                <div className="icon" style={{ backgroundImage: `url(${e.image})` }} />
-                                                <article>{e.text}</article>
+                                                <div
+                                                    className="icon"
+                                                    style={{ backgroundImage: `url(${item.image})` }}
+                                                />
+                                                <article>{item.title}</article>
                                                 <small>
-                                                    {e.date}｜{e.news}
+                                                    {moment(Number(item.createdAt)).format('YYYY-MM-DD')}｜
+                                                    {item.channel.name.CN}
                                                 </small>
                                             </Card>
                                         </a>
-                                    </Col>
-                                ))}
-                            </Row>
-                        </TabPane>
-                    ))}
+                                    ))}
+                                </div>
+                            </TabPane>
+                        ) : (
+                            <TabPane tab={tab} key={tab} active={activeTab}>
+                                <div className="card__container">
+                                    {data?.map((item, index) => (
+                                        <a href={item.originUrl} target="_blank" className="card" key={index}>
+                                            <Card className="news-articles-card" hoverable>
+                                                <div
+                                                    className="icon"
+                                                    style={{ backgroundImage: `url(${item.image})` }}
+                                                />
+                                                <article>{item.title}</article>
+                                                <small>
+                                                    {moment(Number(item.createdAt)).format('YYYY-MM-DD')}｜
+                                                    {item.channel.name.CN}
+                                                </small>
+                                            </Card>
+                                        </a>
+                                    ))}
+                                </div>
+                            </TabPane>
+                        );
+                    })}
                 </Tabs>
             </div>
-            <a className="open-account" href="https://www.sinotrade.com.tw/richclub/" target="_blank">
+            <a className="open-account--rich" href="https://www.sinotrade.com.tw/richclub/" target="_blank">
                 更多豐雲學堂文章 <RightOutlined />
             </a>
+            <style jsx>{`
+                .card__container {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                    /* flex-flow:row wrap; */
+                }
+                .card {
+                    flex: 1;
+                    margin-left: 32px;
+                    margin-right: 32px;
+                }
+
+                .card:first-child {
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+                .card:last-child {
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+
+                .open-account--rich {
+                    position: absolute;
+                    width: 152px;
+                    right: 0;
+                    bottom: -20px;
+                    height: 22px;
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: normal;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: normal;
+                    -webkit-letter-spacing: 0.4px;
+                    -moz-letter-spacing: 0.4px;
+                    -ms-letter-spacing: 0.4px;
+                    letter-spacing: 0.4px;
+                    color: #3f5372;
+                }
+                .card__wrapper {
+                    margin-bottom: 40px;
+                }
+                @media screen and (max-width: 990px) {
+                    .card__container {
+                        flex-wrap: wrap;
+                    }
+                    .card {
+                        flex: 0 0 48.7%;
+                        margin-left: 0;
+                        margin-right: 0;
+                    }
+                    .card:first-child {
+                        margin-right: 1.3%;
+                        margin-bottom: 2.6%;
+                    }
+                }
+                @media screen and (max-width: 767px) {
+                    .card__container {
+                        flex-wrap: wrap;
+                    }
+                    .card {
+                        flex: 0 0 100%;
+                        margin-left: 0;
+                        margin-right: 0;
+                        margin-bottom: 2.6%;
+                    }
+                    .card:first-child {
+                        /* margin-right: 1.3%; */
+                        margin-bottom: 2.6%;
+                    }
+                    .open-account--rich {
+                        position: absolute;
+                        right: 30px;
+                        bottom: -15px;
+                    }
+                }
+            `}</style>
             <style jsx global>
                 {`
                     .news-articles-layout.ant-layout {
@@ -109,7 +227,9 @@ function NewsArticles({ linkData }) {
                         margin-bottom: 10px;
                         background-color: #daa360;
                     }
-
+                    .card-container {
+                        width: 100%;
+                    }
                     .card-container p {
                         margin: 0;
                     }
@@ -147,7 +267,9 @@ function NewsArticles({ linkData }) {
                         text-align: center;
                         color: #3f5372;
                     }
-
+                    .card-container .ant-tabs-card {
+                        width: 100%;
+                    }
                     .card-container .ant-tabs-card.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-tab:not(:last-of-type),
                     .card-container
                         .ant-tabs-card.ant-tabs-bottom
@@ -274,7 +396,7 @@ function NewsArticles({ linkData }) {
                     }
                 `}
             </style>
-        </Layout>
+        </>
     );
 }
 

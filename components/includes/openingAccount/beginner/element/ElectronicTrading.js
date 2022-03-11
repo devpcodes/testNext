@@ -102,6 +102,7 @@ function ElectronicTrading({ linkData }) {
                         line-height: 1.63;
                         letter-spacing: -0.2px;
                         color: #0d1623;
+                        height: 105px;
                     }
 
                     .E-trading-card .text:hover {

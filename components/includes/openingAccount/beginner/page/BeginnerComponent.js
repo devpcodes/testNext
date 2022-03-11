@@ -13,7 +13,7 @@ import icon2 from '../../../../../resources/images/pages/beginner/icon2.png';
 import icon3 from '../../../../../resources/images/pages/beginner/icon3.png';
 import img1 from '../../../../../resources/images/pages/beginner/img1.png';
 
-function BeginnerComponent(props) {
+function BeginnerComponent({ richClubNews, activeTab }) {
     const { Header, Content } = Layout;
     const { Step } = Steps;
 
@@ -42,7 +42,7 @@ function BeginnerComponent(props) {
         {
             title: '大戶投APP',
             version: '手機版',
-            des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
+            des: '大戶投獨家AI幫你顧以及贏家選文的產業動態市場分析，讓您輕鬆投資如虎添翼！',
             btnName: '下載App',
             image: icon1,
             link: 'https://www.sinotrade.com.tw/richclub/dawhotou/campaign/app',
@@ -50,15 +50,15 @@ function BeginnerComponent(props) {
         {
             title: '理財網',
             version: '網頁版',
-            des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
+            des: '最佳體驗的產品設計與最專業的內容經營，在不同的理財階段服務投資者更聰明便捷的體驗。',
             btnName: '立即前往',
             image: icon2,
-            link: `${process.env.NEXT_PUBLIC_SUBPATH}`,
+            link: `/`,
         },
         {
             title: '好神通PLUS',
             version: '電腦版',
-            des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
+            des: '透過即時財經資料庫與強大的資訊分析能力，搭配下單功能，讓您投資更無往不利！',
             btnName: '下載安裝',
             image: icon3,
             link: 'https://www.sinotrade.com.tw/Tradecenter/Tradecenter_2_2',
@@ -327,13 +327,16 @@ function BeginnerComponent(props) {
                                     <span>如何開始第一筆交易</span>
                                 </h2>
                             </div>
-                            <NewsArticles linkData={articles} />
+                            <NewsArticles linkData={articles} richClubNews={richClubNews} activeTab={activeTab} />
                         </div>
                     </li>
                 </ul>
             </Content>
             <style jsx>
                 {`
+                    .content:last-child {
+                        margin-bottom: 60px;
+                    }
                     .beginner-header {
                         position: relative;
                         display: flex;
@@ -701,7 +704,7 @@ function BeginnerComponent(props) {
                 }
 
                 .beginner-steps-bar .ant-steps-item-title {
-                    font-family: 'Barlow', sans-serif;
+                    // font-family: 'Barlow', sans-serif;
                     font-size: 20px;
                     font-weight: normal;
                     font-stretch: normal;

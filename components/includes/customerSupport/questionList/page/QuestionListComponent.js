@@ -340,7 +340,7 @@ const QuestionListComponent = function () {
 
                     .countsNPage > span {
                         margin-right: 20px;
-                        font-family: PingFangTC;
+                        /* font-family: PingFangTC; */
                         font-size: 14px;
                         font-weight: normal;
                         font-stretch: normal;
@@ -399,7 +399,7 @@ const QuestionListComponent = function () {
                         }
 
                         .ant-table-content .ant-table-tbody .ant-table-cell div {
-                            font-family: 'PingFangTC-Medium';
+                            // font-family: 'PingFangTC-Medium';
                             font-weight: 500;
                         }
 
@@ -483,7 +483,7 @@ const QuestionListComponent = function () {
                             .loading {
                                 display: unset;
                                 text-align: center;
-                                font-family: PingFangTC;
+                                // font-family: PingFangTC;
                                 font-size: 14px;
                                 font-weight: normal;
                                 font-stretch: normal;
@@ -531,7 +531,7 @@ const QuestionListComponent = function () {
                             > .ant-input-wrapper
                             > .ant-input-search
                             > .ant-input::placeholder {
-                            font-family: PingFangSC !important;
+                            // font-family: PingFangSC !important;
                             font-size: 16px !important;
                             letter-spacing: 0.4px !important;
                             color: #3f5372 !important;
@@ -587,7 +587,7 @@ const QuestionListComponent = function () {
                         }
 
                         .ant-tabs-tab {
-                            font-family: PingFangTC;
+                            // font-family: PingFangTC;
                             font-size: 16px !important;
                             font-weight: normal;
                             font-stretch: normal;

@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 const ForthSectionCard = ({ data }) => {
     return (
         <>
-            <div className="forth-cards-card-wrap">
+            <a className="forth-cards-card-wrap" href={data.url} target="_blank">
                 <div className="forth-card-image" style={{ backgroundImage: `url(${data.image})` }} />
                 <h4>{data.title}</h4>
                 <div className="yellow-line" />
                 <p className="forth-card-info">
                     {data.time} | {data.writer}
                 </p>
-            </div>
+            </a>
             <style jsx>
                 {`
                     .forth-cards-card-wrap {
@@ -25,6 +25,7 @@ const ForthSectionCard = ({ data }) => {
                         background: white;
                         bottom: 0;
                         transition: bottom 0.5s;
+                        flex: 1;
                     }
 
                     .forth-cards-card-wrap:hover {
@@ -52,6 +53,7 @@ const ForthSectionCard = ({ data }) => {
                         text-overflow: ellipsis;
                         -webkit-box-orient: vertical;
                         -webkit-line-clamp: 2;
+                        height: 52px;
                     }
 
                     .yellow-line {
@@ -66,6 +68,16 @@ const ForthSectionCard = ({ data }) => {
                         font-size: 12px;
                         font-weight: 500;
                         color: #6c7b94;
+                    }
+
+                    @media screen and (max-width: 1050px) {
+                        .forth-cards-card-wrap {
+                            width: calc(50% - 0.625vw * 2);
+                            margin-bottom: 16px;
+                            flex: none;
+                            // max-width: 344px;
+                            // max-height: 313px;
+                        }
                     }
                 `}
             </style>

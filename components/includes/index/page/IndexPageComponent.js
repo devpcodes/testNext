@@ -29,8 +29,9 @@ import SafetySection from '../element/SafetySection';
 import gov from '../../../../resources/images/pages/homepage/safety_section/img-service-trade-control.svg';
 import safe from '../../../../resources/images/pages/homepage/safety_section/img-service-data-safe.svg';
 import security from '../../../../resources/images/pages/homepage/safety_section/img-service-trade-security.svg';
+import RichClub from '../element/RichClub';
 
-const IndexPageComponent = () => {
+const IndexPageComponent = ({ richClubNews }) => {
     const { Content } = Layout;
 
     const [fastLinkData] = useState([
@@ -187,8 +188,7 @@ const IndexPageComponent = () => {
             {
                 icon: `${security}`,
                 title: '交易加密',
-                description:
-                    '描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述...',
+                description: '透過嚴密的數據加密與驗證機制，保護雙方資料傳輸的安全性，提供客戶安全且穩定的交易過程。',
             },
         ],
     });
@@ -199,14 +199,13 @@ const IndexPageComponent = () => {
                 <Content>
                     <BannerSlider />
                     <FastLinks data={fastLinkData} key={fastLinkData.index} />
-                    <main className="main-content">
-                        <SecondBanner />
-                        <ThirdSection data={thirdSectionData} />
-                        <AppDownloadSection />
-                        <ForthSection data={forthSectionData} />
-                        <SafetySection data={SafetySectionData} />
-                        <ContactSection />
-                    </main>
+                    <SecondBanner />
+                    <ThirdSection data={thirdSectionData} />
+                    <AppDownloadSection />
+                    <RichClub richClubNews={richClubNews} />
+                    {/* <ForthSection data={forthSectionData} /> */}
+                    <SafetySection data={SafetySectionData} />
+                    <ContactSection />
                 </Content>
                 <QAShortcut />
             </Layout>

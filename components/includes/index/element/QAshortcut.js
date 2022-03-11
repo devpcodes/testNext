@@ -233,7 +233,7 @@ function QAshortcut(props) {
 
                 .QA-room .black input.ant-input::placeholder {
                     font-size: 16px;
-                    font-family: PingFangSC;
+                    // font-family: PingFangSC;
                     font-weight: normal;
                     font-stretch: normal;
                     font-style: normal;
