@@ -394,26 +394,31 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
                         parseFloat(solaceData[selectData.code].BidPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData[selectData.code].BidPrice[0]).toFixed(2);
-                    selectData.buyPrice.class = (() => {
-                        return getClass(
-                            solaceData[selectData.code],
-                            solaceData[selectData.code].BidPrice[0],
-                            true,
-                            false,
-                        );
-                    })();
+                    selectData.buyPrice.class = solaceData[selectData.code].BidPrice[0]
+                        ? parseFloat(solaceData[selectData.code].BidPrice[0]) - parseFloat(selectData.reference.text) <
+                          0
+                            ? 'lower'
+                            : parseFloat(solaceData[selectData.code].BidPrice[0]) -
+                                  parseFloat(selectData.reference.text) >
+                              0
+                            ? 'upper'
+                            : ''
+                        : '';
+
                     selectData.sellPrice.text =
                         parseFloat(solaceData[selectData.code].AskPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData[selectData.code].AskPrice[0]).toFixed(2);
-                    selectData.sellPrice.class = (() => {
-                        return getClass(
-                            solaceData[selectData.code],
-                            solaceData[selectData.code].AskPrice[0],
-                            true,
-                            false,
-                        );
-                    })();
+                    selectData.sellPrice.class = solaceData[selectData.code].AskPrice[0]
+                        ? parseFloat(solaceData[selectData.code].AskPrice[0]) - parseFloat(selectData.reference.text) <
+                          0
+                            ? 'lower'
+                            : parseFloat(solaceData[selectData.code].AskPrice[0]) -
+                                  parseFloat(selectData.reference.text) >
+                              0
+                            ? 'upper'
+                            : ''
+                        : '';
                 }
                 if (solaceData[selectData.code].AvgPrice) {
                     selectData.averagePrice.text =
