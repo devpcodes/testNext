@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Table, Radio, Modal } from 'antd';
 import { fetchLoginLog } from '../services/getLoginLog';
+import { getLoginAlertSettings } from '../services/user/getLoginAlert';
+import { setLoginAlertSettings } from '../services/user/setLoginAlert';
 import { getToken } from '../services/user/accessToken';
 import { setModal } from '../store/components/layouts/action';
 import { useDispatch } from 'react-redux';
 
 function loginHistory() {
     const [dataSource, setDataSource] = useState([]);
-    const [emailStates, setEmailStates] = useState('open');
+    const [emailStates, setEmailStates] = useState('');
     const dispatch = useDispatch();
+
+    useEffect(async () => {
+        const res = await getLoginAlertSettings(getToken());
+        setEmailStates(res.isEnabled);
+    }, []);
 
     useEffect(async () => {
         const res = await fetchLoginLog(10, getToken());
@@ -44,12 +51,12 @@ function loginHistory() {
     ];
 
     const options = [
-        { label: '開啟E-mail通知', value: 'open' },
-        { label: '關閉E-mail通知', value: 'close' },
+        { label: '開啟E-mail通知', value: true },
+        { label: '關閉E-mail通知', value: false },
     ];
 
     const changeHandler = val => {
-        if (val.target.value === 'close') {
+        if (val.target.value === false) {
             dispatch(
                 setModal({
                     title: '關閉登入通知',
@@ -64,12 +71,14 @@ function loginHistory() {
                             }),
                         );
                         setEmailStates(val.target.value);
+                        setLoginAlertSettings(val.target.value, getToken());
                     },
                 }),
             );
         } else {
             // call API
             setEmailStates(val.target.value);
+            setLoginAlertSettings(val.target.value, getToken());
         }
     };
 
