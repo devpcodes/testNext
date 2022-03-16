@@ -219,6 +219,7 @@ const IndexPageComponent = ({ richClubNews }) => {
 
                     .ant-layout-content {
                         width: 100%;
+                        background-color: #f9fbff;
                     }
 
                     .main-content {

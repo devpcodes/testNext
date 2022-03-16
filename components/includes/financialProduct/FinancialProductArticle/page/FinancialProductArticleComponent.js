@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { RightOutlined } from '@ant-design/icons';
 import Breadcrumb from '../../../../includes/breadcrumb/breadcrumb';
@@ -28,13 +29,18 @@ const FinancialProductArticleComponent = ({
     const router = useRouter();
     const { Panel } = Collapse;
 
-    const [productCode] = useState(router.query.code);
+    const [productCode, setProductCode] = useState(router.query.code);
     const [categoryName] = useState(router.query.category);
     const [articleData, setArticleData] = useState([]);
     const [articleTabs, setArticleTabs] = useState([]);
     const [activeTabKey, setActiveTabKey] = useState('0');
     const [announcement, setAnnouncement] = useState([]);
-
+    const clientWidth = useSelector(store => store.layout.winWidth);
+    // useEffect(() => {
+    //     if(router.query.categoryCode){
+    //         setProductCode(router.query.categoryCode)
+    //     }
+    // }, [router.query.categoryCode])
     const onTabsChange = key => {
         setActiveTabKey(key);
     };
@@ -57,7 +63,7 @@ const FinancialProductArticleComponent = ({
     };
 
     const renderProducts = () => {
-        return isTradingPlatform && articleData?.products?.length ? (
+        return isTradingPlatform ? (
             <div className="trading-available-product">
                 <div>
                     <p>可交易商品</p>
@@ -148,12 +154,26 @@ const FinancialProductArticleComponent = ({
                                 </Collapse>
                             </div>
                         ) : (
-                            <article key={idx}>{parse(item.content.content)}</article>
+                            <article style={{ padding: styleObjectHandler() }} key={idx}>
+                                {parse(item.content.content)}
+                            </article>
                         ),
                     )}
                 </QuestionTab>
             )
         );
+    };
+
+    const styleObjectHandler = () => {
+        if (clientWidth > 768) {
+            return '32px';
+        }
+        if (clientWidth <= 768 && clientWidth > 450) {
+            return '24px';
+        }
+        if (clientWidth <= 450) {
+            return '16px';
+        }
     };
 
     const openAccountButtonSsr = () => {
@@ -194,6 +214,7 @@ const FinancialProductArticleComponent = ({
             res = await getFinancialProductDetail(productCode);
         }
         if (res) {
+            console.log('res....................', res);
             setArticleData(res);
         }
         const tabsArray = [];
@@ -265,7 +286,9 @@ const FinancialProductArticleComponent = ({
                                         ))}
                                     </div>
                                 </div>
-                            ) : null}
+                            ) : (
+                                renderProducts()
+                            )}
                             <div className="article">{checkServer() ? serverRender() : clientRender()}</div>
                         </div>
 
@@ -505,6 +528,10 @@ const FinancialProductArticleComponent = ({
                     width: 348px;
                 }
 
+                .t1 {
+                    padding: 32px;
+                }
+
                 @media screen and (max-width: 1024px) {
                     .questionArticleWrapper {
                         width: calc(100% - 64px);
@@ -596,6 +623,9 @@ const FinancialProductArticleComponent = ({
                     .side_section .open-related {
                         display: none;
                     }
+                    .t1 {
+                        padding: 24px !important;
+                    }
                 }
 
                 @media screen and (max-width: 450px) {
@@ -626,11 +656,14 @@ const FinancialProductArticleComponent = ({
                         font-size: 20px;
                         margin-top: 0px;
                     }
+                    .t1 {
+                        padding: 16px;
+                    }
                 }
             `}</style>
             <style jsx global>{`
                 .ant-tabs-content-holder {
-                    padding: 32px;
+                    padding: 0;
                 }
                 .questionArticleLayout {
                     position: relative;
@@ -837,10 +870,10 @@ const FinancialProductArticleComponent = ({
                     height: 5px !important;
                 }
 
-                .ant-tabs-content-holder {
-                    // padding-bottom: 30px;
-                    padding: 32px;
-                }
+                // .ant-tabs-content-holder {
+                //     // padding-bottom: 30px;
+                //     padding: 32px;
+                // }
 
                 .product-article-back .ant-btn {
                     width: 105px;
@@ -859,10 +892,10 @@ const FinancialProductArticleComponent = ({
 
 
                 @media screen and (max-width: 768px) {
-                    .ant-tabs-content-holder {
-                        // padding-bottom: 30px;
-                        padding: 24px;
-                    }
+                    // .ant-tabs-content-holder {
+                    //     // padding-bottom: 30px;
+                    //     padding: 24px;
+                    // }
 
                     .questionArticleWrapper > .site-breadcrumb {
                         width: 90vw;
@@ -895,9 +928,9 @@ const FinancialProductArticleComponent = ({
                     }
 
                 @media screen and (max-width: 450px) {
-                    .ant-tabs-content-holder {
-                        padding: 16px;
-                    }
+                    // .ant-tabs-content-holder {
+                    //     padding: 16px;
+                    // }
                     .questionArticleLayout {
                         padding-top: 12px;
                     }

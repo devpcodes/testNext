@@ -53,7 +53,8 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
             //res = await getTradingAppCategories();
             res = serverCategories;
         } else {
-            res = await getFinancialProductCategories();
+            // res = await getFinancialProductCategories();
+            res = serverCategories;
         }
         setCategories(res);
         if (router.query.category && router.query.categoryCode) {
@@ -72,7 +73,9 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
             setCurrentProductList(res?.apps);
         } else {
             res = await getFinancialProductCategoriesAndProduct(activeKey);
-            setCurrentProductList(res?.products);
+            if (res?.products) {
+                setCurrentProductList(res?.products);
+            }
         }
     }, [activeKey]);
 

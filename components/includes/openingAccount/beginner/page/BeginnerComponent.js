@@ -393,7 +393,7 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                     .content {
                         width: 944px;
                         margin: 0 auto;
-                        padding: 40px 0;
+                        padding: 40px 0 16px 0;
                     }
 
                     .layoutContent ul {
@@ -459,7 +459,7 @@ function BeginnerComponent({ richClubNews, activeTab }) {
 
                     .stepTitle h2 span:nth-of-type(1) {
                         font-size: 16px;
-                        font-weight: 600;
+                        font-weight: 700;
                         font-stretch: normal;
                         font-style: normal;
                         line-height: normal;
@@ -546,7 +546,7 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                           border-left: 5px solid #daa360;
                           font-size: 20px;
                           line-height: normal;
-                          font-weight: 600;
+                          font-weight: 700;
                           letter-spacing: 0.5px
                           margin-bottom: 12px;
                       }

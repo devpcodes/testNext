@@ -76,7 +76,7 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '查詢營業據點',
             image: icon2,
-            link: `${process.env.NEXT_PUBLIC_SUBPATH}/Service_Positions/`,
+            link: `/Service_Positions/`,
         },
         {
             title: '臨櫃進度查詢',

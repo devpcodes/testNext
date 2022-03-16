@@ -76,10 +76,11 @@ function NewsArticles({ richClubNews, activeTab }) {
                         );
                     })}
                 </Tabs>
+                <a className="open-account--rich" href="https://www.sinotrade.com.tw/richclub/" target="_blank">
+                    更多豐雲學堂文章 <RightOutlined />
+                </a>
             </div>
-            <a className="open-account--rich" href="https://www.sinotrade.com.tw/richclub/" target="_blank">
-                更多豐雲學堂文章 <RightOutlined />
-            </a>
+
             <style jsx>{`
                 .card__container {
                     display: flex;
@@ -154,7 +155,14 @@ function NewsArticles({ richClubNews, activeTab }) {
                     .open-account--rich {
                         position: absolute;
                         right: 30px;
-                        bottom: -15px;
+                        bottom: 32px;
+                    }
+                }
+                @media screen and (max-width: 450px) {
+                    .open-account--rich {
+                        position: absolute;
+                        right: 3%;
+                        bottom: 16px;
                     }
                 }
             `}</style>
@@ -240,7 +248,7 @@ function NewsArticles({ richClubNews, activeTab }) {
                     }
 
                     .card-container > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
-                        padding: 32px 0 8px;
+                        padding: 32px 0 0px;
                     }
 
                     .card-container > .ant-tabs-card > .ant-tabs-nav::before {
