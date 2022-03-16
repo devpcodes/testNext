@@ -103,12 +103,12 @@ const Status = ({ active }) => {
                 key: 'apply_amount',
                 index: 7,
             },
-            // {
-            //     title: '退還金額',
-            //     dataIndex: 'order_status_description',
-            //     key: 'order_status_description',
-            //     index: 8,
-            // },
+            {
+                title: '退還金額',
+                dataIndex: 'total_refund_price',
+                key: 'total_refund_price',
+                index: 8,
+            },
             {
                 title: '狀態',
                 dataIndex: 'order_status_msg',
