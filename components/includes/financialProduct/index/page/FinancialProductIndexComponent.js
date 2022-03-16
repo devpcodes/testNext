@@ -50,11 +50,11 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
     useEffect(async () => {
         let res;
         if (isTradingPlatform) {
-            //res = await getTradingAppCategories();
-            res = serverCategories;
+            res = await getTradingAppCategories();
+            // res = serverCategories;
         } else {
-            // res = await getFinancialProductCategories();
-            res = serverCategories;
+            res = await getFinancialProductCategories();
+            // res = serverCategories;
         }
         setCategories(res);
         if (router.query.category && router.query.categoryCode) {
