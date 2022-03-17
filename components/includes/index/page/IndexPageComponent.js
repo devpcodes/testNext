@@ -94,8 +94,8 @@ const IndexPageComponent = ({ richClubNews }) => {
             {
                 title: '股票申購',
                 description: '申購零門檻，備足資金抽起來',
-                site: 'outer',
-                link: `${process.env.NEXT_PUBLIC_SUBPATH}/Subscription/`,
+                site: 'inner',
+                link: `/Subscription`,
                 icon: `${stockSubs}`,
                 target: '_self',
             },
@@ -119,8 +119,8 @@ const IndexPageComponent = ({ richClubNews }) => {
             {
                 title: '預收款券',
                 description: '處置股、注意股交易超便利',
-                site: 'outer',
-                link: `${process.env.NEXT_PUBLIC_SUBPATH}/AdvanceCollection/`,
+                site: 'inner',
+                link: `/AdvanceCollection`,
                 icon: `${receipt}`,
                 target: '_self',
             },
