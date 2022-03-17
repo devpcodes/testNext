@@ -501,7 +501,11 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                     .layoutContent ul li:nth-of-type(1) .open-account {
                         width: 201px;
                     }
-
+                    @media screen and (max-width: 980px) {
+                        .content {
+                            width: 91%;
+                        }
+                    }
                     @media screen and (max-width: 768px) {
                       .backgroundImage {
                           right: 0;
@@ -525,6 +529,12 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                           width: 100%;
                           margin: 0;
                           padding: 32px;
+                          margin-bottom: 32px !important;
+                          padding-bottom: 0;
+                      }
+
+                      .content:last-child {
+                          padding-top: 32px !important;
                       }
 
                       .layoutContent ul li .content figure {
@@ -585,6 +595,10 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                       .content {
                           padding: 24px 16px;
                       }
+                      .content {
+                            margin-bottom: 24px !important;
+                            padding-bottom: 0;
+                        }
 
                       .layoutContent ul {
                           padding: 0;

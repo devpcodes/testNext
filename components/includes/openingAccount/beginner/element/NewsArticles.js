@@ -155,14 +155,14 @@ function NewsArticles({ richClubNews, activeTab }) {
                     .open-account--rich {
                         position: absolute;
                         right: 30px;
-                        bottom: 32px;
+                        bottom: 0px;
                     }
                 }
                 @media screen and (max-width: 450px) {
                     .open-account--rich {
                         position: absolute;
                         right: 3%;
-                        bottom: 16px;
+                        bottom: -5px;
                     }
                 }
             `}</style>
