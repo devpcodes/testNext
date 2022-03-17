@@ -85,79 +85,103 @@ const FinancialProductArticleComponent = ({
     };
 
     const serverRender = () => {
-        return (
-            <QuestionTab
-                className="financial-product-article-tab"
-                isFinancialProduct={true}
-                categories={serverTabsArray}
-                activeKey={activeTabKey}
-                keywords={serverProducts.commonQuestionKeywords}
-                attachments={serverProducts.attachments}
-                onTabsChange={onTabsChange}
-            >
-                {serverTabsArray[activeTabKey]?.articleContent?.map((item, idx) =>
-                    item.type === 'toggle' ? (
-                        <div className="toggle-section" key={idx}>
-                            <Collapse
-                                expandIconPosition="right"
-                                expandIcon={({ isActive }) =>
-                                    isActive ? (
-                                        <CloseSquareFilled style={{ fontSize: '150%' }} />
-                                    ) : (
-                                        <PlusSquareFilled style={{ fontSize: '150%' }} />
-                                    )
-                                }
-                            >
-                                <Panel header={item.content.title} key="1">
-                                    <p>{item.content.content}</p>
-                                </Panel>
-                            </Collapse>
-                        </div>
-                    ) : (
-                        <article key={idx}>{parse(item.content.content)}</article>
-                    ),
-                )}
-            </QuestionTab>
-        );
+        if (serverTabsArray?.length > 0) {
+            return (
+                <QuestionTab
+                    className="financial-product-article-tab"
+                    isFinancialProduct={true}
+                    categories={serverTabsArray}
+                    activeKey={activeTabKey}
+                    keywords={serverProducts?.commonQuestionKeywords}
+                    attachments={serverProducts?.attachments}
+                    onTabsChange={onTabsChange}
+                >
+                    {serverTabsArray[activeTabKey]?.articleContent?.map((item, idx) =>
+                        item.type === 'toggle' ? (
+                            <div className="toggle-section" key={idx}>
+                                <Collapse
+                                    expandIconPosition="right"
+                                    expandIcon={({ isActive }) =>
+                                        isActive ? (
+                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
+                                        ) : (
+                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
+                                        )
+                                    }
+                                >
+                                    <Panel header={item.content.title} key="1">
+                                        <p>{item.content.content}</p>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        ) : (
+                            <article key={idx}>{parse(item.content.content)}</article>
+                        ),
+                    )}
+                </QuestionTab>
+            );
+        } else {
+            return (
+                <QuestionTab
+                    className="financial-product-article-tab"
+                    isFinancialProduct={true}
+                    categories={[]}
+                    activeKey={activeTabKey}
+                    onTabsChange={onTabsChange}
+                ></QuestionTab>
+            );
+        }
     };
 
     const clientRender = () => {
-        return (
-            <QuestionTab
-                className="financial-product-article-tab"
-                isFinancialProduct={true}
-                categories={articleTabs}
-                activeKey={activeTabKey}
-                keywords={articleData.commonQuestionKeywords}
-                attachments={articleData.attachments}
-                onTabsChange={onTabsChange}
-            >
-                {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
-                    item.type === 'toggle' ? (
-                        <div className="toggle-section" key={idx}>
-                            <Collapse
-                                expandIconPosition="right"
-                                expandIcon={({ isActive }) =>
-                                    isActive ? (
-                                        <CloseSquareFilled style={{ fontSize: '150%' }} />
-                                    ) : (
-                                        <PlusSquareFilled style={{ fontSize: '150%' }} />
-                                    )
-                                }
-                            >
-                                <Panel header={item.content.title} key="1">
-                                    <p>{item.content.content}</p>
-                                </Panel>
-                            </Collapse>
-                        </div>
-                    ) : (
-                        <article style={{ padding: styleObjectHandler() }} key={idx}>
-                            {parse(item.content.content)}
-                        </article>
-                    ),
-                )}
-            </QuestionTab>
-        );
+        if (articleTabs?.length > 0) {
+            return (
+                <QuestionTab
+                    className="financial-product-article-tab"
+                    isFinancialProduct={true}
+                    categories={articleTabs}
+                    activeKey={activeTabKey}
+                    keywords={articleData?.commonQuestionKeywords}
+                    attachments={articleData?.attachments}
+                    onTabsChange={onTabsChange}
+                >
+                    {articleTabs[activeTabKey]?.articleContent?.map((item, idx) =>
+                        item.type === 'toggle' ? (
+                            <div className="toggle-section" key={idx}>
+                                <Collapse
+                                    expandIconPosition="right"
+                                    expandIcon={({ isActive }) =>
+                                        isActive ? (
+                                            <CloseSquareFilled style={{ fontSize: '150%' }} />
+                                        ) : (
+                                            <PlusSquareFilled style={{ fontSize: '150%' }} />
+                                        )
+                                    }
+                                >
+                                    <Panel header={item.content.title} key="1">
+                                        <p>{item.content.content}</p>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        ) : (
+                            <article style={{ padding: styleObjectHandler() }} key={idx}>
+                                {parse(item.content.content)}
+                            </article>
+                        ),
+                    )}
+                </QuestionTab>
+            );
+        } else {
+            return (
+                <QuestionTab
+                    className="financial-product-article-tab"
+                    isFinancialProduct={true}
+                    categories={[]}
+                    activeKey={activeTabKey}
+                    onTabsChange={onTabsChange}
+                ></QuestionTab>
+            );
+        }
     };
 
     const styleObjectHandler = () => {
