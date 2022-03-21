@@ -39,6 +39,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
             title: '商品',
             dataIndex: 'name',
             width: '15%',
+            fixed: 'left',
             render: data => (
                 <a href={data.link} className="stock__name" target="_blank">
                     {data.text}
@@ -120,7 +121,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
             ),
         },
         {
-            title: '成交量',
+            title: '總量',
             width: 100,
             dataIndex: 'totalVolume',
             align: 'right',
@@ -163,8 +164,8 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         },
         {
             title: '交易',
-            width: 140,
             dataIndex: 'action',
+            fixed: 'right',
             render: (text, record, index) => (
                 <>
                     <button
@@ -188,7 +189,6 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         },
         {
             title: '刪除',
-            width: 60,
             dataIndex: 'del',
             render: (text, record, index) =>
                 tabKey === '0' ? (
@@ -201,7 +201,6 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
         },
         {
             title: '移動',
-            width: 60,
             dataIndex: 'move',
             render: (text, record, index) =>
                 tabKey === '0' ? (
@@ -395,26 +394,31 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
                         parseFloat(solaceData[selectData.code].BidPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData[selectData.code].BidPrice[0]).toFixed(2);
-                    selectData.buyPrice.class = (() => {
-                        return getClass(
-                            solaceData[selectData.code],
-                            solaceData[selectData.code].BidPrice[0],
-                            true,
-                            false,
-                        );
-                    })();
+                    selectData.buyPrice.class = solaceData[selectData.code].BidPrice[0]
+                        ? parseFloat(solaceData[selectData.code].BidPrice[0]) - parseFloat(selectData.reference.text) <
+                          0
+                            ? 'lower'
+                            : parseFloat(solaceData[selectData.code].BidPrice[0]) -
+                                  parseFloat(selectData.reference.text) >
+                              0
+                            ? 'upper'
+                            : ''
+                        : '';
+
                     selectData.sellPrice.text =
                         parseFloat(solaceData[selectData.code].AskPrice[0]).toFixed(2) === 0
                             ? '--'
                             : parseFloat(solaceData[selectData.code].AskPrice[0]).toFixed(2);
-                    selectData.sellPrice.class = (() => {
-                        return getClass(
-                            solaceData[selectData.code],
-                            solaceData[selectData.code].AskPrice[0],
-                            true,
-                            false,
-                        );
-                    })();
+                    selectData.sellPrice.class = solaceData[selectData.code].AskPrice[0]
+                        ? parseFloat(solaceData[selectData.code].AskPrice[0]) - parseFloat(selectData.reference.text) <
+                          0
+                            ? 'lower'
+                            : parseFloat(solaceData[selectData.code].AskPrice[0]) -
+                                  parseFloat(selectData.reference.text) >
+                              0
+                            ? 'upper'
+                            : ''
+                        : '';
                 }
                 if (solaceData[selectData.code].AvgPrice) {
                     selectData.averagePrice.text =
