@@ -2,7 +2,7 @@ import { useCallback, useState, memo } from 'react';
 import { Tabs } from 'antd';
 import doughnut from '../../../resources/images/pages/asset/chart-doughnut-chart@2x.png';
 import doughnutActive from '../../../resources/images/pages/asset/chart-doughnut-chart-active@2x.png';
-import DountChartContainer from './DountChartContainer';
+import DountChartContainer from './dountChartContainer';
 
 const { TabPane } = Tabs;
 

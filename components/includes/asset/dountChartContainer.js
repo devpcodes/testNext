@@ -1,8 +1,8 @@
 import { useCallback, useState, memo } from 'react';
 import dynamic from 'next/dynamic';
-const DountChartContainer = memo(({}) => {
-    const DountChart = dynamic(() => import('./dountChart'), { ssr: false });
+const DountChart = dynamic(() => import('./dountChart'), { ssr: false });
 
+const DountChartContainer = memo(({}) => {
     return (
         <>
             <div className="dountchart__container">
