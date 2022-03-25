@@ -48,7 +48,7 @@ const SecondBanner = () => {
                             >
                                 {({ isVisible }) => (
                                     <span className="num1">
-                                        {isVisible ? <CountUp delay={1} end={4865} duration={3} /> : '0'}
+                                        {isVisible ? <CountUp delay={1} end={4865} duration={2} /> : '0'}
                                     </span>
                                 )}
                             </VisibilitySensor>
@@ -65,7 +65,7 @@ const SecondBanner = () => {
                             >
                                 {({ isVisible }) => (
                                     <span className="num2">
-                                        {isVisible ? <CountUp delay={2} end={31} duration={3} /> : '0'}
+                                        {isVisible ? <CountUp delay={2} end={31} duration={1.5} /> : '0'}
                                     </span>
                                 )}
                             </VisibilitySensor>
