@@ -16,9 +16,7 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
             <Header className="open-account-header">
                 <div className="header-box">
                     <h1>永豐金證券線上開戶</h1>
-                    <h2>
-                        描述文案改：新朋友線上開戶須為年滿20歲之本國籍自然人，只要備妥雙證件及永豐銀行帳戶，便可立即線上開戶。
-                    </h2>
+                    <h2>新朋友線上開戶須為年滿20歲之本國籍自然人，只要備妥雙證件及永豐銀行帳戶，便可立即線上開戶。</h2>
                     <div className="open-account-header-btn-box">
                         <Space className="open-account-header-btn">
                             <CustomerButton
