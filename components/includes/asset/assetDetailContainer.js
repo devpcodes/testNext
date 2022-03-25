@@ -3,7 +3,7 @@ import { Tabs, Card } from 'antd';
 
 const { TabPane } = Tabs;
 
-const AssetChartOverview = memo(({}) => {
+const assetDetailContainer = memo(({}) => {
     const [activeTab, setActiveTab] = useState('1');
     const changeChartOverviewGroup = key => {
         setActiveTab(key);
@@ -118,4 +118,4 @@ const AssetChartOverview = memo(({}) => {
     );
 });
 
-export default AssetChartOverview;
+export default assetDetailContainer;

@@ -2,7 +2,7 @@ import { useCallback, useState, memo } from 'react';
 import AssetHeader from '../asset/header';
 import AssetChartOverview from '../asset/chartOverview';
 import AssetCarouselOverview from '../asset/assetCarouselOverview';
-import AssetDetailContainer from '../asset/AssetDetailContainer';
+import AssetDetailContainer from '../asset/assetDetailContainer';
 const AssetMain = memo(({}) => {
     return (
         <>
