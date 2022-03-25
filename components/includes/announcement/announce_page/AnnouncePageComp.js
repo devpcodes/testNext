@@ -115,7 +115,7 @@ const addKw = (e,x) => {
                             )
                         }
                     </div>
-                    <div className="ad_box for_pc">你被葉配了B-)</div>
+                    {/* <div className="ad_box for_pc">你被葉配了B-)</div> */}
                     <div className="link_tag">相關標籤</div>
                     <div className="tag_box">
                         {
@@ -125,7 +125,7 @@ const addKw = (e,x) => {
 
                         }
                     </div>
-                    <div className="ad_box for_m">你被葉配了B-)</div>
+                    {/* <div className="ad_box for_m">你被葉配了B-)</div> */}
                 </div>
             </div>
             <style jsx>
