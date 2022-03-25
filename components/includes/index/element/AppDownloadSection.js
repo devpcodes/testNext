@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import CustomerButton from '../../customerSupport/CustomerButton';
 import YellowRedLine from './YellowRedLine';
 
-import appBgWeb from '../../../../resources/images/pages/homepage/app_download_section/rectangle-copy-33.webp';
-import appBgTablet from '../../../../resources/images/pages/homepage/app_download_section/rectangle-copy-tablet.webp';
-import appBgMobile from '../../../../resources/images/pages/homepage/app_download_section/rectangle-copy-mobile.webp';
+import appBgWeb from '../../../../resources/images/pages/homepage/app_download_section/a1-d-02.jpg';
+import appBgTablet from '../../../../resources/images/pages/homepage/app_download_section/a1-t-02.jpg';
+import appBgMobile from '../../../../resources/images/pages/homepage/app_download_section/a1-m-02.jpg';
 import android from '../../../../resources/images/pages/homepage/app_download_section/img-android.svg';
 import ios from '../../../../resources/images/pages/homepage/app_download_section/img-i-os.svg';
 import qrCode from '../../../../resources/images/pages/homepage/app_download_section/codeandborder.svg';

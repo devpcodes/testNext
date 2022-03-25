@@ -4,7 +4,9 @@ import { Layout, Space } from 'antd';
 import CustomerButton from '../../../customerSupport/CustomerButton';
 import { RightOutlined } from '@ant-design/icons';
 
-import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import bgd from '../../../../../resources/images/pages/customer_support/a41-d-01.jpg';
+import bgt from '../../../../../resources/images/pages/customer_support/a41-t-01.jpg';
+import bgm from '../../../../../resources/images/pages/customer_support/a41-m-01.jpg';
 
 const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
     const { Header } = Layout;
@@ -13,9 +15,9 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
         <>
             <Header className="open-account-header">
                 <div className="header-box">
-                    <h1>全新客戶永豐金證券線上開戶</h1>
+                    <h1>永豐金證券線上開戶</h1>
                     <h2>
-                        開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件開戶條件
+                        描述文案改：新朋友線上開戶須為年滿20歲之本國籍自然人，只要備妥雙證件及永豐銀行帳戶，便可立即線上開戶。
                     </h2>
                     <div className="open-account-header-btn-box">
                         <Space className="open-account-header-btn">
@@ -25,7 +27,7 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                                     window.open('https://www.sinotrade.com.tw/openact?strProd=0002&strWeb=0001')
                                 }
                             >
-                                開證券帳戶
+                                立即開戶
                             </CustomerButton>
                             <CustomerButton
                                 onClick={() =>
@@ -42,7 +44,7 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                         </a>
                     </div>
                 </div>
-                <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
+                {/* <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} /> */}
             </Header>
             <style jsx>{`
                 .open-account-header {
@@ -53,6 +55,8 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                     align-items: center;
                     height: 347px;
                     background-color: #3f5372;
+                    background-image: url(${bgd});
+                    background-size: cover;
                 }
 
                 .open-account-header > .header-box {
@@ -126,10 +130,17 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                     }
                 }
 
+                @media screen and (max-width: 768px) {
+                    .open-account-header {
+                        background-image: url(${bgt});
+                    }
+                }
+
                 @media screen and (max-width: 450px) {
                     .open-account-header {
                         padding: 0 16px;
                         height: 292px;
+                        background-image: url(${bgm});
                     }
 
                     .open-account-header > .header-box {

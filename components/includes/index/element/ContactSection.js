@@ -15,7 +15,7 @@ const ContactSection = () => {
     return (
         <div className="contact-section-container">
             <h2>聯繫客服</h2>
-            <p>交易全程加密，受託金管監理</p>
+            <p>線上客服即時解決交易的大小事</p>
             <YellowRedLine />
 
             {/* <div className='contact-section-card-and-more'> */}
@@ -28,7 +28,7 @@ const ContactSection = () => {
                             <p>0800-038-123 /</p>
                             <p>02-6630-8899</p>
                         </div>
-                        <p>台股營業日 07:30-10:00</p>
+                        <p>台股營業日 AM 8:00~PM 9:00</p>
                     </div>
                 </div>
 

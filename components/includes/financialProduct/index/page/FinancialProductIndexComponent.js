@@ -11,7 +11,12 @@ import { getFinancialProductCategories } from '../../../../../services/component
 import { getTradingAppCategories } from '../../../../../services/components/tradingPlatform/tradingPlatformService';
 import { getFinancialProductCategoriesAndProduct } from '../../../../../services/components/financialProduct/financialProductServices';
 import { getTradingAppCategoriesAndProduct } from '../../../../../services/components/tradingPlatform/tradingPlatformService';
-import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import bgd from '../../../../../resources/images/pages/customer_support/a2-d-01.jpg';
+import bgt from '../../../../../resources/images/pages/customer_support/a2-t-01.jpg';
+import bgm from '../../../../../resources/images/pages/customer_support/a2-m-01.jpg';
+import bg2d from '../../../../../resources/images/pages/customer_support/a3-d-01.jpg';
+import bg2t from '../../../../../resources/images/pages/customer_support/a3-t-01.jpg';
+import bg2m from '../../../../../resources/images/pages/customer_support/a3-m-01.jpg';
 import { checkServer } from '../../../../../services/checkServer';
 
 const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, serverProducts }) => {
@@ -85,7 +90,7 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
                 <Header className="financialProductHeader">
                     <h1>{isTradingPlatform ? '交易平台' : '理財商品'}</h1>
                 </Header>
-                <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
+                {/* <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} /> */}
                 <Content className="productLayoutContent">
                     {checkServer() ? (
                         <>
@@ -157,6 +162,8 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
                         align-items: center;
                         height: 160px;
                         background-color: #3f5372;
+                        background-image: url(${isTradingPlatform ? bgd : bg2d});
+                        background-size: cover;
                     }
 
                     .financialProductHeader > h1 {
@@ -198,6 +205,9 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
                             padding-left: 32px;
                             padding-right: 32px;
                         }
+                        .financialProductHeader {
+                            background-image: url(${isTradingPlatform ? bgt : bg2t});
+                        }
                     }
 
                     @media screen and (max-width: 450px) {
@@ -211,6 +221,9 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
                         .productCardContainer{
                             padding-left: 16px;
                             padding-right: 16px;
+                        }
+                        .financialProductHeader {
+                            background-image: url(${isTradingPlatform ? bgm : bg2m});
                         }
                     }
 

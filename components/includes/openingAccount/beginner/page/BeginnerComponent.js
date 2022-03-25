@@ -5,7 +5,9 @@ import { RightOutlined } from '@ant-design/icons';
 import ElectronicTrading from '../element/ElectronicTrading.js';
 import NewsArticles from '../element/NewsArticles.js';
 
-import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import bgd from '../../../../../resources/images/pages/beginner/a42-d-01.jpg';
+import bgt from '../../../../../resources/images/pages/beginner/a42-m-01.jpg';
+import bgm from '../../../../../resources/images/pages/beginner/a42-t-01.jpg';
 import pic1 from '../../../../../resources/images/pages/beginner/img-card.svg';
 import pic2 from '../../../../../resources/images/pages/beginner/img-card-2.svg';
 import icon1 from '../../../../../resources/images/pages/beginner/icon1.png';
@@ -220,7 +222,7 @@ function BeginnerComponent({ richClubNews, activeTab }) {
         <Layout>
             <Header className="beginner-header">
                 <h1>新手上路</h1>
-                <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
+                {/* <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} /> */}
             </Header>
             <div className="space"></div>
             <Affix offsetTop={70} onChange={affixed => setScrolled(affixed)}>
@@ -345,6 +347,8 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                         align-items: center;
                         height: 160px;
                         background-color: #3f5372;
+                        background-image: url(${bgd});
+                        background-size: cover;
                     }
 
                     .beginner-header h1 {
@@ -507,6 +511,9 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                         }
                     }
                     @media screen and (max-width: 768px) {
+                        .beginner-header {
+                            background-image: url(${bgt});
+                        }
                       .backgroundImage {
                           right: 0;
                           width: 175px;
@@ -570,6 +577,7 @@ function BeginnerComponent({ richClubNews, activeTab }) {
                     @media screen and (max-width: 450px) {
                       .beginner-header {
                           height: 100px;
+                          background-image: url(${bgm});
                       }
       
                       .beginner-header h1 {

@@ -3,7 +3,7 @@ import CountUp from 'react-countup';
 import VisibilitySensor from 'react-visibility-sensor';
 import CustomerButton from '../../../includes/customerSupport/CustomerButton';
 import YellowRedLine from '../element/YellowRedLine';
-import bg from '../../../../resources/images/pages/homepage/second_banner/man-on-target.svg';
+import bg from '../../../../resources/images/pages/homepage/second_banner/map.svg';
 
 const SecondBanner = () => {
     const [customerActive, setCustomerActive] = useState(true);
@@ -32,7 +32,7 @@ const SecondBanner = () => {
                                 onChange={isVisible => isVisible && setCustomerActive(false)}
                             >
                                 {({ isVisible }) => (
-                                    <span className="num0">{isVisible ? <CountUp end={120} duration={3} /> : '0'}</span>
+                                    <span className="num0">{isVisible ? <CountUp end={147} duration={3} /> : '0'}</span>
                                 )}
                             </VisibilitySensor>
                             <span className="plus plus1">+</span>
@@ -48,7 +48,7 @@ const SecondBanner = () => {
                             >
                                 {({ isVisible }) => (
                                     <span className="num1">
-                                        {isVisible ? <CountUp delay={1} end={3771} duration={3} /> : '0'}
+                                        {isVisible ? <CountUp delay={1} end={4865} duration={3} /> : '0'}
                                     </span>
                                 )}
                             </VisibilitySensor>
@@ -65,7 +65,7 @@ const SecondBanner = () => {
                             >
                                 {({ isVisible }) => (
                                     <span className="num2">
-                                        {isVisible ? <CountUp delay={2} end={46} duration={3} /> : '0'}
+                                        {isVisible ? <CountUp delay={2} end={31} duration={3} /> : '0'}
                                     </span>
                                 )}
                             </VisibilitySensor>
@@ -82,7 +82,7 @@ const SecondBanner = () => {
             <style jsx>
                 {`
                     .second-banner-container-box {
-                        background-color: #e6ebf5;
+                        background-color: #e5eeff;
                     }
 
                     .second-banner-container {
