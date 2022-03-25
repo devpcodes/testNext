@@ -149,7 +149,7 @@ const Apply = ({ active, showSearchBox = true }) => {
                 order_no: record.order_no,
                 match_price: record.match_price,
                 token,
-                caContent,
+                ca_content: caContent,
             });
             setLoading(false);
             if (resData) {
