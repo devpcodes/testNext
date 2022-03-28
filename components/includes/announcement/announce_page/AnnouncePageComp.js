@@ -131,7 +131,7 @@ const addKw = (e,x) => {
             <style jsx>
                 {`
                     .announce__container .search_box {text-align:right;margin-bottom:29px;}
-                    .announce__container {padding-left: 10%; padding-right: 10%;padding-top: 30px; }
+                    .announce__container {padding: 30px 10%;}
                     @media (max-width: 1250px) {
                         .announce__container { padding-left: 5%;padding-right: 5%;}
                     }
@@ -143,7 +143,7 @@ const addKw = (e,x) => {
                     .announce__container .btn_back{padding:0px 18px;border: solid 1px #e6ebf5;background-color:#FFF;font:16px PingFangTC;height:40px;line-height:40px;}
                     .announce__container .control__container { position: relative;}
                     .announce__container .content_area { display: flex;margin-bottom:50px;}
-                    .announce__container .content_area .content_box{width: 100%;margin-right: 47px;}
+                    .announce__container .content_area .content_box{width: 100%;margin-right: 47px;min-height:600px;}
                     .announce__container .content_area .content_box .content_box_inside{ background-color: #FFF;padding: 32px; border-radius: 2px;min-height: calc(100% - 64px);
                         border: solid 1px #e6ebf5;}
                     .announce__container .content_area .content_box .content_title{color: #0d1623;line-height: 1.4;letter-spacing: -0.3px;font:24px bold PingFangTC;
