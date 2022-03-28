@@ -322,7 +322,8 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
 
     const recaptchaV2Handler = () => {
         const recaptchaValue = recaptchaRef.current.getValue();
-        if (recaptchaValue && reCAPTCHAToken != null) {
+        // console.log('--------', recaptchaValue);
+        if (recaptchaValue && recaptchaValue != null) {
             submitHandler(recaptchaValue, '2');
         } else {
             notification.error({
