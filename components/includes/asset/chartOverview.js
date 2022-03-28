@@ -52,6 +52,8 @@ const AssetChartOverview = memo(({}) => {
                 .total__pl {
                     display: none;
                     padding: 19px 16px;
+                    margin-bottom: 20px;
+                    border-bottom: solid 1px #d7e0ef;
                 }
 
                 .total__pl > h6 {
@@ -67,7 +69,7 @@ const AssetChartOverview = memo(({}) => {
                     margin: 0;
                 }
 
-                @media (max-width: 520px) {
+                @media (max-width: 768px) {
                     .total__pl {
                         display: flex;
                         justify-content: space-between;
@@ -108,6 +110,9 @@ const AssetChartOverview = memo(({}) => {
                 .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
                     background: #daa360;
                     height: 3px;
+                }
+                .ant-tabs-content {
+                    padding: 40px 0;
                 }
             `}</style>
         </>

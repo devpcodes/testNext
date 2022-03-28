@@ -153,7 +153,7 @@ const DountChartContainer = memo(({}) => {
                     }
                 }
 
-                @media (max-width: 800px) {
+                @media (max-width: 768px) {
                     .dount__desc__amount,
                     .dount__desc > .dount__desc__pl {
                         display: none;
