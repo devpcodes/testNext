@@ -23,7 +23,7 @@ const SearchInput = ({ className, placeholder, enterButton, onSearch, size, ...p
                     }
 
                     .input_search > .ant-input {
-                        font-family: PingFangSC;
+                        // font-family: PingFangSC;
                         font-size: 16px !important;
                         font-weight: normal;
                         font-stretch: normal;

@@ -88,7 +88,7 @@ const OpenAccountButtons = function ({
                     }
 
                     .open-category {
-                        font-family: PingFangTC;
+                        // font-family: PingFangTC;
                         font-size: 14px;
                         font-weight: normal;
                         letter-spacing: -0.18px;
@@ -118,13 +118,14 @@ const OpenAccountButtons = function ({
                             width: 100vw;
                             // position: relative;
                             position: fixed;
-                            left: -5vw;
-                            left: -0.5vw;
+                            // left: -5vw;
+                            left: 0vw;
                             bottom: 0;
                             margin-bottom: 0;
                             border: none;
                             padding: 16px 24px;
                             background-color: #0d1623;
+                            width: 100%;
                         }
 
                         .open-category {
@@ -166,7 +167,7 @@ const OpenAccountButtons = function ({
 
                     @media screen and (max-width: 450px) {
                         .product-open-account-container {
-                            width: 99vw;
+                            // width: 99vw;
                             // bottom: -16px;
                             bottom: 0px;
                             align-items: center;

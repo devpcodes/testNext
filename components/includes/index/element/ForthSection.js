@@ -3,10 +3,18 @@ import YellowRedLine from './YellowRedLine';
 import PropTypes from 'prop-types';
 import ForthSectionCard from '../element/ForthSectionCard';
 import { RightOutlined } from '@ant-design/icons';
-
+import { useRouter } from 'next/router';
 const ForthSection = ({ data }) => {
+    const router = useRouter();
     const toMore = () => {
         window.open(`${data.readMorePath}`);
+    };
+
+    const cardClickHandler = id => {
+        router.push({
+            pathname: `/RichClub_News_Article/`,
+            query: { newsId: id },
+        });
     };
 
     return (
@@ -16,7 +24,7 @@ const ForthSection = ({ data }) => {
             <YellowRedLine />
             <div className="forth-section-card-wrap">
                 {data.cardsData.map((item, idx) => (
-                    <ForthSectionCard key={idx} data={item} />
+                    <ForthSectionCard key={idx} data={item} onClick={cardClickHandler.bind(null, item?._id)} />
                 ))}
             </div>
             <div className="forth-more-wrap" onClick={toMore}>

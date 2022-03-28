@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Alert } from 'antd';
 import { getAnnounce } from '../../../../services/components/AnnouncementMarquee/announcements';
 // import Marquee from 'react-fast-marquee';
@@ -30,7 +31,9 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                             <TextLoop>
                                 {anous.map((e, i) => (
                                     <p key={i}>
-                                        <a href="https://www.sinotrade.com.tw/m/CSCenter/CSCenter_13_5">{e.title}</a>
+                                        <Link href={'/Announcement'}>
+                                            <a href="#">{e.title}</a>
+                                        </Link>
                                     </p>
                                 ))}
                             </TextLoop>

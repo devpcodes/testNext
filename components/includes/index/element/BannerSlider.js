@@ -8,8 +8,9 @@ import AnnouncementMarquee from '../element/AnnouncementMarquee';
 const BannerSlider = () => {
     const clientWidth = useSelector(store => store.layout.winWidth);
     const [ads, setAds] = useState([]);
+    const [banner, setBanner] = useState(true);
     const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(true);
-
+    const showMask = useSelector(store => store.layout.showMask);
     const getAds = async () => {
         const data = await getAdSlot('0104');
         setAds(data.ads);
@@ -22,6 +23,16 @@ const BannerSlider = () => {
     useEffect(() => {
         getAds();
     }, []);
+
+    useEffect(() => {
+        if (showMask) {
+            setBanner(false);
+        } else {
+            setTimeout(() => {
+                setBanner(true);
+            }, 1000);
+        }
+    }, [showMask]);
 
     return (
         <>
@@ -51,11 +62,12 @@ const BannerSlider = () => {
                                             alt=""
                                         />
                                     ) : (
-                                        <h3
-                                            style={{
-                                                backgroundImage: `url(${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath})`,
-                                            }}
-                                        ></h3>
+                                        <img
+                                            width="100%"
+                                            height="auto"
+                                            src={`${process.env.NEXT_PUBLIC_FILE}/images/${e.mobileImagePath}`}
+                                            alt=""
+                                        />
                                     )}
                                 </a>
                             </div>
@@ -116,7 +128,7 @@ const BannerSlider = () => {
                 @media screen and (max-width: 450px) {
                     .banner-slider-container {
                         width: 100%;
-                        height: 250px;
+                        // height: 250px;
                     }
 
                     .banner-slider-container h3 {

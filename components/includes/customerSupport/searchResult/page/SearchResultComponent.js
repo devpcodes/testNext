@@ -172,6 +172,7 @@ const SearchResultComponent = () => {
 
                     .questionTitleUnhighlight {
                         color: #0d1623;
+                        font-weight: 700;
                     }
 
                     .questionTitleHighlight {

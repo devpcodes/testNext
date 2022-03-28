@@ -42,6 +42,7 @@ export const getFinancialProductDetail = async productCode => {
     };
     try {
         const res = await axios.get(reqUrl, { params });
+        console.log('res', res);
         if (res.status === 200) {
             return res.data.result;
         } else {

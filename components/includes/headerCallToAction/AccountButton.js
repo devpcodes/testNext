@@ -41,7 +41,7 @@ export const AccountButton = () => {
                 dispatch(setMaskVisible(false));
             }
         }
-    }, [personalAreaVisible]);
+    }, [personalAreaVisible, showMenu]);
 
     useEffect(() => {
         dispatch(setPersonalAreaVisible(false));

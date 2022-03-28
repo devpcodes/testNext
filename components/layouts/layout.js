@@ -475,7 +475,7 @@ const Layout = memo(({ children }) => {
             `}</style>
             <style jsx global>{`
                 * {
-                    font-family: 'PingFangTC', 'Roboto', Arial, '儷黑 Pro', 'LiHei Pro', '微軟正黑體',
+                    font-family: 'Roboto', Arial, '儷黑 Pro', 'PingFang TC', 'LiHei Pro', '微軟正黑體',
                         'Microsoft JhengHei', sans-serif;
                 }
                 .grecaptcha-badge {

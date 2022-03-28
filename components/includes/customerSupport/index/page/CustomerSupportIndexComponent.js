@@ -193,6 +193,9 @@ const CustomerSupportIndexComponent = () => {
                         .qaBlockTitle {
                             margin-top: 24px;
                         }
+                        .secondTitle {
+                            font-size: 20px;
+                        }
                     }
                 `}
             </style>
