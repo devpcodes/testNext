@@ -682,6 +682,9 @@ const FinancialProductArticleComponent = ({
                 }
             `}</style>
             <style jsx global>{`
+                .ant-tabs-content a {
+                    color: #DAA360 !important;
+                }
                 .ant-tabs-content-holder {
                     padding: 0;
                 }
