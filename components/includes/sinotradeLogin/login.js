@@ -309,6 +309,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                     if (reCAPTCHAToken && reCAPTCHAToken != null) {
                         submitHandler(reCAPTCHAToken, '3');
                     } else {
+                        setIsLoading(false);
                         notification.error({
                             placement: 'topRight',
                             message: '驗證失敗，請重新整理後再試',
@@ -326,6 +327,7 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
         if (recaptchaValue && recaptchaValue != null) {
             submitHandler(recaptchaValue, '2');
         } else {
+            setIsLoading(false);
             notification.error({
                 placement: 'topRight',
                 message: '驗證失敗，請重新整理後再試',
