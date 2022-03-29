@@ -1,4 +1,5 @@
 import { wrapper } from '../store/store';
+import { useEffect, useState } from 'react';
 import { setNavItems } from '../store/components/layouts/action';
 // import { useSelector } from 'react-redux';
 import { PageHead } from '../components/includes/PageHead';
@@ -8,15 +9,25 @@ import { postArticleList } from '../services/pages/index/postArticleList';
 // export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 //     await store.dispatch(setNavItems());
 // });
-export const getStaticProps = wrapper.getServerSideProps(async ({ store }) => {
+export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
-    const richClubNews = await postArticleList();
-    return {
-        props: { richClubNews },
-    };
+
+    // return {
+    //     props: { richClubNews },
+    // };
 });
 
-const Home = function ({ richClubNews }) {
+const Home = function () {
+    const [richClubNews, setRichClubNews] = useState([]);
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getData = async () => {
+        const res = await postArticleList();
+        setRichClubNews(res);
+    };
     // const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div>
