@@ -14,13 +14,14 @@ import icon1 from '../../../../../resources/images/pages/beginner/icon1.png';
 import icon2 from '../../../../../resources/images/pages/beginner/icon2.png';
 import icon3 from '../../../../../resources/images/pages/beginner/icon3.png';
 import img1 from '../../../../../resources/images/pages/beginner/img1.png';
+import { postArticleList } from '../../../../../services/pages/index/postArticleList';
 
-function BeginnerComponent({ richClubNews, activeTab }) {
+function BeginnerComponent() {
     const { Header, Content } = Layout;
     const { Step } = Steps;
-
+    const [richClubNews, setRichClubNews] = useState([]);
     const [scrolled, setScrolled] = useState(false);
-
+    const activeTab = '台股';
     const steps = [
         {
             title: '1',
@@ -212,7 +213,14 @@ function BeginnerComponent({ richClubNews, activeTab }) {
 
     useEffect(() => {
         prepare();
+        getData();
     }, []);
+
+    const getData = async () => {
+        // activeTab = '台股';
+        const res = await postArticleList(3, activeTab);
+        setRichClubNews(res);
+    };
 
     useEffect(() => {
         document.addEventListener('scroll', update);
