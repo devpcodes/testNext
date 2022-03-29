@@ -33,7 +33,7 @@ const Announcement = ({ data }) => {
                 .announcement_block {
                     width: 100%;
                     padding-bottom: 15px;
-                    font-family: PingFangTC;
+                    // font-family: PingFangTC;
                     font-size: 16px;
                     font-weight: 500;
                     font-stretch: normal;

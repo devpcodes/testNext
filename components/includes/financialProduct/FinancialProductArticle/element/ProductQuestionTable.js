@@ -177,8 +177,8 @@ const ProductQuestionTable = function ({ keywords }) {
                         font-size: 14px;
                     }
 
-                    .product-question-table .ant-table-cell:first-of-type {
-                        text-align: center;
+                    .ant-table-container table > thead > tr:first-child th:first-child {
+                        white-space: nowrap;
                     }
 
                     .product-question-table .ant-table-tbody .ant-table-cell p:hover {
@@ -218,6 +218,9 @@ const ProductQuestionTable = function ({ keywords }) {
                     .question-table-mobile {
                         display: none;
                     }
+                    .product-question-table .ant-table-cell:first-of-type {
+                        text-align: center;
+                    }
 
                     @media screen and (max-width: 450px) {
                         .product-question-table {
@@ -234,7 +237,7 @@ const ProductQuestionTable = function ({ keywords }) {
                             display: flex;
                             justify-content: center;
                             align-items: center;
-                            font-family: PingFangTC;
+                            // font-family: PingFangTC;
                             font-size: 14px;
                             font-weight: normal;
                             font-stretch: normal;

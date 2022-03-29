@@ -78,7 +78,7 @@ const FastLinks = ({ data }) => {
                     h3 {
                         margin: 0;
                         font-size: 20px;
-                        font-weight: 500;
+                        font-weight: 700;
                         letter-spacing: 0.5px;
                         color: #0d1623;
                         white-space: nowrap;

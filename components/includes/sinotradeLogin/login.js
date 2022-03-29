@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Checkbox, Modal } from 'antd';
+import { Form, Input, Button, Checkbox, Modal, notification } from 'antd';
 import logo from '../../../resources/images/logo/logo-icon.svg';
 import check from '../../../resources/images/components/login/ic-check.png';
 import close from '../../../resources/images/components/login/ic-closemenu.png';
@@ -306,15 +306,36 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                 .execute(process.env.NEXT_PUBLIC_reCAPTCHA, { action: 'submit' })
                 .then(async reCAPTCHAToken => {
                     // console.log('ttttt', reCAPTCHAToken);
-                    submitHandler(reCAPTCHAToken, '3');
+                    if (reCAPTCHAToken && reCAPTCHAToken != null) {
+                        submitHandler(reCAPTCHAToken, '3');
+                    } else {
+                        setIsLoading(false);
+                        notification.error({
+                            placement: 'topRight',
+                            message: '驗證失敗，請重新整理後再試',
+                            duration: 3,
+                            top: 70,
+                        });
+                    }
                 });
         });
     };
 
     const recaptchaV2Handler = () => {
         const recaptchaValue = recaptchaRef.current.getValue();
+        // console.log('--------', recaptchaValue);
+        if (recaptchaValue && recaptchaValue != null) {
+            submitHandler(recaptchaValue, '2');
+        } else {
+            setIsLoading(false);
+            notification.error({
+                placement: 'topRight',
+                message: '驗證失敗，請重新整理後再試',
+                duration: 3,
+                top: 70,
+            });
+        }
         // console.log('recaptcha token ===============', recaptchaValue);
-        submitHandler(recaptchaValue, '2');
     };
 
     const recaptchaError = () => {

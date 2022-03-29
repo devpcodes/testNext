@@ -4,7 +4,7 @@ import Link from 'next/link';
 import parse from 'html-react-parser';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { Carousel } from 'antd';
+import { Carousel, message } from 'antd';
 import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
 import { PlusSquareFilled, CloseSquareFilled } from '@ant-design/icons';
@@ -31,7 +31,7 @@ const QuestionArticleComponent = () => {
     const [articleContent, setArticleContent] = useState();
     const [ads, setAds] = useState([]);
     const [fromCategory, setFromCategory] = useState(0);
-
+    const [haveAnswer, setHaveAnswer] = useState(false);
     useEffect(async () => {
         const data = await getCommonQuestionArticle(id);
         setArticleData(data);
@@ -39,6 +39,11 @@ const QuestionArticleComponent = () => {
         setArticleTitle(data.title);
         const content = JSON.parse(data.content);
         setArticleContent(content);
+        if (checkHaveId(id)) {
+            setHaveAnswer(true);
+        } else {
+            setHaveAnswer(false);
+        }
     }, [id]);
 
     useEffect(() => {
@@ -71,7 +76,31 @@ const QuestionArticleComponent = () => {
     };
 
     const sendIsHelp = async state => {
-        const res = await putCommonQuestionIsLike(id, state);
+        if (!checkHaveId(id)) {
+            const res = await putCommonQuestionIsLike(id, state);
+            if (res) {
+                message.success('感謝您的意見反應');
+                let idArr = JSON.parse(localStorage.getItem('QuestionArticle')) || [];
+                idArr.push({ id: id });
+                localStorage.setItem('QuestionArticle', JSON.stringify(idArr));
+                setHaveAnswer(true);
+            }
+        }
+    };
+
+    const checkHaveId = nowId => {
+        let idArr = JSON.parse(localStorage.getItem('QuestionArticle')) || [];
+        let haveId;
+        if (idArr.length > 0) {
+            haveId = idArr.find(item => {
+                return item.id === nowId;
+            });
+        }
+        if (haveId == null) {
+            return false;
+        } else {
+            return true;
+        }
     };
 
     return (
@@ -172,6 +201,7 @@ const QuestionArticleComponent = () => {
                                         onClick={() => {
                                             sendIsHelp(true);
                                         }}
+                                        disabled={haveAnswer}
                                     >
                                         是
                                     </CustomerButton>
@@ -181,6 +211,7 @@ const QuestionArticleComponent = () => {
                                         onClick={() => {
                                             sendIsHelp(false);
                                         }}
+                                        disabled={haveAnswer}
                                     >
                                         否
                                     </CustomerButton>
@@ -249,7 +280,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article {
-                    padding: 32px 31px;
+                    padding: 32px;
                     border-radius: 2px;
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
@@ -257,7 +288,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article > h1 {
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 24px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -269,7 +300,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .article > .category-group {
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 16px;
                     font-weight: normal;
                     font-stretch: normal;
@@ -336,7 +367,7 @@ const QuestionArticleComponent = () => {
                 .qTitle {
                     position: relative;
                     padding-left: 12px;
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 20px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -401,7 +432,7 @@ const QuestionArticleComponent = () => {
                 }
 
                 .title_group > h1 {
-                    font-family: PingFangTC;
+                    /* font-family: PingFangTC; */
                     font-size: 28px;
                     font-weight: 600;
                     font-stretch: normal;
@@ -519,6 +550,9 @@ const QuestionArticleComponent = () => {
                         .tag_section {
                             margin: 0 16px;
                         }
+                        .article {
+                            padding: 24px;
+                        }
                     }
 
                     @media screen and (max-width: 450px) {
@@ -558,9 +592,12 @@ const QuestionArticleComponent = () => {
                         }
 
                         .article {
-                            /* padding: 16px 16px; */
+                            padding: 16px 16px;
                             border-right: 0;
                             border-left: 0;
+                        }
+                        .article > h1 {
+                            font-size: 20px;
                         }
 
                         .is-helped-button-group {
@@ -637,7 +674,7 @@ const QuestionArticleComponent = () => {
                     > .ant-input-wrapper
                     > .ant-input-search
                     > .ant-input::placeholder {
-                    font-family: PingFangSC !important;
+                    // font-family: PingFangSC !important;
                     font-size: 16px !important;
                     letter-spacing: 0.4px !important;
                     color: #3f5372 !important;
@@ -741,6 +778,11 @@ const QuestionArticleComponent = () => {
                 article ol > li {
                     color: #0d1623;
                     font-size: 16px;
+                }
+
+                article a,
+                article a:hover {
+                    color: #daa360;
                 }
 
                 .toggle-section {

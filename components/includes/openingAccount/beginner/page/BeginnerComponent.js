@@ -5,7 +5,9 @@ import { RightOutlined } from '@ant-design/icons';
 import ElectronicTrading from '../element/ElectronicTrading.js';
 import NewsArticles from '../element/NewsArticles.js';
 
-import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import bgd from '../../../../../resources/images/pages/beginner/a42-d-01.jpg';
+import bgt from '../../../../../resources/images/pages/beginner/a42-m-01.jpg';
+import bgm from '../../../../../resources/images/pages/beginner/a42-t-01.jpg';
 import pic1 from '../../../../../resources/images/pages/beginner/img-card.svg';
 import pic2 from '../../../../../resources/images/pages/beginner/img-card-2.svg';
 import icon1 from '../../../../../resources/images/pages/beginner/icon1.png';
@@ -13,7 +15,7 @@ import icon2 from '../../../../../resources/images/pages/beginner/icon2.png';
 import icon3 from '../../../../../resources/images/pages/beginner/icon3.png';
 import img1 from '../../../../../resources/images/pages/beginner/img1.png';
 
-function BeginnerComponent(props) {
+function BeginnerComponent({ richClubNews, activeTab }) {
     const { Header, Content } = Layout;
     const { Step } = Steps;
 
@@ -42,7 +44,7 @@ function BeginnerComponent(props) {
         {
             title: '大戶投APP',
             version: '手機版',
-            des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
+            des: '大戶投獨家AI幫你顧以及贏家選文的產業動態市場分析，讓您輕鬆投資如虎添翼！',
             btnName: '下載App',
             image: icon1,
             link: 'https://www.sinotrade.com.tw/richclub/dawhotou/campaign/app',
@@ -50,15 +52,15 @@ function BeginnerComponent(props) {
         {
             title: '理財網',
             version: '網頁版',
-            des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
+            des: '最佳體驗的產品設計與最專業的內容經營，在不同的理財階段服務投資者更聰明便捷的體驗。',
             btnName: '立即前往',
             image: icon2,
-            link: `${process.env.NEXT_PUBLIC_SUBPATH}`,
+            link: `/`,
         },
         {
             title: '好神通PLUS',
             version: '電腦版',
-            des: '平台說明平台說明平台說明平台說明平台說明平台說明平台說明',
+            des: '透過即時財經資料庫與強大的資訊分析能力，搭配下單功能，讓您投資更無往不利！',
             btnName: '下載安裝',
             image: icon3,
             link: 'https://www.sinotrade.com.tw/Tradecenter/Tradecenter_2_2',
@@ -220,7 +222,7 @@ function BeginnerComponent(props) {
         <Layout>
             <Header className="beginner-header">
                 <h1>新手上路</h1>
-                <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
+                {/* <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} /> */}
             </Header>
             <div className="space"></div>
             <Affix offsetTop={70} onChange={affixed => setScrolled(affixed)}>
@@ -327,13 +329,16 @@ function BeginnerComponent(props) {
                                     <span>如何開始第一筆交易</span>
                                 </h2>
                             </div>
-                            <NewsArticles linkData={articles} />
+                            <NewsArticles linkData={articles} richClubNews={richClubNews} activeTab={activeTab} />
                         </div>
                     </li>
                 </ul>
             </Content>
             <style jsx>
                 {`
+                    .content:last-child {
+                        margin-bottom: 60px;
+                    }
                     .beginner-header {
                         position: relative;
                         display: flex;
@@ -342,6 +347,8 @@ function BeginnerComponent(props) {
                         align-items: center;
                         height: 160px;
                         background-color: #3f5372;
+                        background-image: url(${bgd});
+                        background-size: cover;
                     }
 
                     .beginner-header h1 {
@@ -390,7 +397,7 @@ function BeginnerComponent(props) {
                     .content {
                         width: 944px;
                         margin: 0 auto;
-                        padding: 40px 0;
+                        padding: 40px 0 16px 0;
                     }
 
                     .layoutContent ul {
@@ -456,7 +463,7 @@ function BeginnerComponent(props) {
 
                     .stepTitle h2 span:nth-of-type(1) {
                         font-size: 16px;
-                        font-weight: 600;
+                        font-weight: 700;
                         font-stretch: normal;
                         font-style: normal;
                         line-height: normal;
@@ -498,8 +505,15 @@ function BeginnerComponent(props) {
                     .layoutContent ul li:nth-of-type(1) .open-account {
                         width: 201px;
                     }
-
+                    @media screen and (max-width: 980px) {
+                        .content {
+                            width: 91%;
+                        }
+                    }
                     @media screen and (max-width: 768px) {
+                        .beginner-header {
+                            background-image: url(${bgt});
+                        }
                       .backgroundImage {
                           right: 0;
                           width: 175px;
@@ -522,6 +536,12 @@ function BeginnerComponent(props) {
                           width: 100%;
                           margin: 0;
                           padding: 32px;
+                          margin-bottom: 32px !important;
+                          padding-bottom: 0;
+                      }
+
+                      .content:last-child {
+                          padding-top: 32px !important;
                       }
 
                       .layoutContent ul li .content figure {
@@ -543,7 +563,7 @@ function BeginnerComponent(props) {
                           border-left: 5px solid #daa360;
                           font-size: 20px;
                           line-height: normal;
-                          font-weight: 600;
+                          font-weight: 700;
                           letter-spacing: 0.5px
                           margin-bottom: 12px;
                       }
@@ -557,6 +577,7 @@ function BeginnerComponent(props) {
                     @media screen and (max-width: 450px) {
                       .beginner-header {
                           height: 100px;
+                          background-image: url(${bgm});
                       }
       
                       .beginner-header h1 {
@@ -582,6 +603,10 @@ function BeginnerComponent(props) {
                       .content {
                           padding: 24px 16px;
                       }
+                      .content {
+                            margin-bottom: 24px !important;
+                            padding-bottom: 0;
+                        }
 
                       .layoutContent ul {
                           padding: 0;
@@ -701,7 +726,7 @@ function BeginnerComponent(props) {
                 }
 
                 .beginner-steps-bar .ant-steps-item-title {
-                    font-family: 'Barlow', sans-serif;
+                    // font-family: 'Barlow', sans-serif;
                     font-size: 20px;
                     font-weight: normal;
                     font-stretch: normal;

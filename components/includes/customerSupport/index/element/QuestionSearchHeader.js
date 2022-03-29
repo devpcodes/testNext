@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { Layout } from 'antd';
 
-import bg from '../../../../../resources/images/pages/customer_support/bg_img.svg';
+import bgd from '../../../../../resources/images/pages/customer_support/a5-d-01.jpg';
+import bgt from '../../../../../resources/images/pages/customer_support/a5-t-01.jpg';
+import bgm from '../../../../../resources/images/pages/customer_support/a5-m-01.jpg';
 import searchIcon from '../../../../../resources/images/pages/customer_support/edit-search.svg';
 
 const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
@@ -25,7 +27,7 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     onChange={onInput}
                     onPressEnter={onPressEnter}
                 />
-                <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} />
+                {/* <div className="backgroundImage" style={{ backgroundImage: `url(${bg})` }} /> */}
             </Header>
             <style jsx>{`
                 .customerSupportHeader {
@@ -37,13 +39,15 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                     align-items: center;
                     height: 246px;
                     background-color: #3f5372;
+                    background-image: url(${bgd});
+                    background-size: cover;
                 }
 
                 .customerSupportHeader > h1 {
                     z-index: 1;
                     text-align: center;
                     font-size: 28px;
-                    font-weight: normal;
+                    font-weight: 700;
                     color: white;
                 }
 
@@ -59,10 +63,11 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                 @media screen and (max-width: 768px) {
                     .customerSupportHeader {
                         height: 160px;
+                        background-image: url(${bgt});
                     }
 
                     .customerSupportHeader > h1 {
-                        font-size: 20px;
+                        font-size: 28px;
                         margin-top: -20px;
                         margin-bottom: 0;
                         white-space: nowrap;
@@ -82,6 +87,12 @@ const QuestionSearchHeader = ({ defaultValue, value, onInput, onPressEnter }) =>
                         right: 0;
                         width: 80px;
                         height: 80px; */
+                    }
+                    .customerSupportHeader > h1 {
+                        font-size: 20px;
+                    }
+                    .customerSupportHeader {
+                        background-image: url(${bgm});
                     }
                 }
             `}</style>
