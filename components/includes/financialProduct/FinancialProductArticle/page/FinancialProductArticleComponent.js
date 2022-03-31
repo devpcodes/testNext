@@ -14,7 +14,10 @@ import {
     getFinancialProductDetail,
     getAnnouncement,
 } from '../../../../../services/components/financialProduct/financialProductServices';
-import { getTradingAppDetail } from '../../../../../services/components/tradingPlatform/tradingPlatformService';
+import {
+    getTradingAppDetail,
+    getTradingAppCategoriesAndProduct,
+} from '../../../../../services/components/tradingPlatform/tradingPlatformService';
 import OpenAccountButtons from '../element/OpenAccountButtons';
 import Announcement from '../element/Announcement';
 import { checkServer } from '../../../../../services/checkServer';
@@ -36,13 +39,23 @@ const FinancialProductArticleComponent = ({
     const [activeTabKey, setActiveTabKey] = useState('0');
     const [announcement, setAnnouncement] = useState([]);
     const clientWidth = useSelector(store => store.layout.winWidth);
-    // useEffect(() => {
-    //     if(router.query.categoryCode){
-    //         setProductCode(router.query.categoryCode)
-    //     }
-    // }, [router.query.categoryCode])
+    useEffect(() => {
+        if (router.query.categoryCode) {
+            // setProductCode(router.query.categoryCode)
+            getAppCode(router.query.categoryCode);
+        }
+    }, [router.query.categoryCode]);
+
     const onTabsChange = key => {
         setActiveTabKey(key);
+    };
+
+    const getAppCode = async categoryCode => {
+        const res = await getTradingAppCategoriesAndProduct(categoryCode);
+        if (res?.apps[0]?.appCode) {
+            console.log('appCode', res.apps[0].appCode);
+            setProductCode(res.apps[0].appCode);
+        }
     };
 
     const toProduct = code => {
@@ -234,7 +247,6 @@ const FinancialProductArticleComponent = ({
             res = await getFinancialProductDetail(productCode);
         }
         if (res) {
-            console.log('res....................', res);
             setArticleData(res);
         }
         const tabsArray = [];
