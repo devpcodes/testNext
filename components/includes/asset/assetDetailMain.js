@@ -1,18 +1,18 @@
 import { useCallback, useState, memo } from 'react';
 import AssetHeader from '../asset/header';
-import AssetChartOverview from '../asset/chartOverview';
-import AssetCarouselOverview from '../asset/assetCarouselOverview';
-import AssetDetailContainer from '../asset/assetDetailContainer';
 import { useSelector } from 'react-redux';
-const AssetMain = memo(({}) => {
+import AssetDetailOverview from '../asset/assetDetailOverview';
+import AssetDetailTable from '../asset/assetDetailTable';
+
+const AssetDetailMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
+
     return (
         <>
             <div className="asset__container">
-                <AssetHeader title="資產總覽" />
-                <AssetChartOverview />
-                {!isMobile ? <AssetCarouselOverview /> : <></>}
-                <AssetDetailContainer />
+                <AssetHeader title="台股庫存總市值" />
+                <AssetDetailOverview />
+                <AssetDetailTable />
             </div>
 
             <style jsx>{`
@@ -32,4 +32,4 @@ const AssetMain = memo(({}) => {
     );
 });
 
-export default AssetMain;
+export default AssetDetailMain;

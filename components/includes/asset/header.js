@@ -3,12 +3,12 @@ import { Button } from 'antd';
 import refresh from '../../../resources/images/pages/asset/basic-refresh-02.svg';
 import hide from '../../../resources/images/pages/asset/ic-hide.svg';
 
-const AssetHeader = memo(({}) => {
+const AssetHeader = memo(({ title }) => {
     return (
         <>
             <div className="asset__toolbar">
                 <div className="asset__toolbar__left">
-                    <h2>資產總覽</h2>
+                    <h2>{title}</h2>
                 </div>
                 <div className="asset__toolbar__right">
                     <span className="time">最後更新時間 : 2022.02.18 15:36</span>
