@@ -464,6 +464,8 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
 
     const dragProps = {
         async onDragEnd(fromIndex, toIndex) {
+            fromIndex = fromIndex - 1;
+            toIndex = toIndex - 1;
             const data = JSON.parse(JSON.stringify(selfSelectList));
             const item = data.splice(fromIndex, 1)[0];
             data.splice(toIndex, 0, item);
