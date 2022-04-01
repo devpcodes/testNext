@@ -20,7 +20,7 @@ export const PageHead = ({ title }) => {
             />
             <meta property="og:url" content={'https://www.sinotrade.com.tw' + process.env.NEXT_PUBLIC_SUBPATH} />
             <meta property="og:site_name" content="永豐金證券" />
-            <meta property="og:image" content="/head/OG_sinopac_securities.jpg" />
+            <meta property="og:image" content={process.env.NEXT_PUBLIC_SUBPATH + '/head/OG_sinopac_securities.jpg'} />
             <title>{title}</title>
         </Head>
     );
