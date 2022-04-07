@@ -57,7 +57,7 @@ const [columns, setColumns] = useState([]);
                     cursor: pointer;
                 }
                 .sino__table {
-                    margin-bottom: 20px;
+                    margin-bottom: 20px; max-width:100%;
                 }
                 .sino__table .ant-table table {
                     // border: solid 1px #d7e0ef;
