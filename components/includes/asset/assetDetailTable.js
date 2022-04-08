@@ -1,30 +1,342 @@
 import { useCallback, useState, memo } from 'react';
 import { useSelector } from 'react-redux';
-import { Tabs, Modal } from 'antd';
+import { Tabs, Modal, Table } from 'antd';
 import AccountTable from '../tradingAccount/vipInventory/AccountTable';
 import noData from '../../../resources/images/pages/Self_select/img-default.svg';
-
+import AssetDetailModal from './assetDetailModal';
 const { TabPane } = Tabs;
 
 const AssetDetailTable = memo(({}) => {
-    const [tableData, setTableData] = useState([]);
+    const isMobile = useSelector(store => store.layout.isMobile);
+    const [isAssetDetailModalVisitable, setAssetDetailModalVisitable] = useState(true);
+    const closeModal = useCallback(() => {
+        setAssetDetailModalVisitable(false);
+    }, []);
+
+    const openModal = useCallback(() => {
+        setAssetDetailModalVisitable(true);
+    }, []);
+
+    const [modalData, setModalData] = useState([]);
+    const [tableData, setTableData] = useState([
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+        {
+            name: '台積電',
+            close: '111',
+            aaa: 'aaa',
+            bbb: 'bbb',
+            ccc: 'ccc',
+            eee: 'eee',
+            fff: 'ffff',
+            ggg: 'gggggg',
+            hhh: 'hhhhh',
+            iii: 'iiiii',
+            jjj: 'jjjjjj',
+        },
+    ]);
 
     const columns = [
         {
-            title: '商品',
+            title: '商品(手機)',
             dataIndex: 'name',
         },
         {
-            title: '成交價',
+            title: '成交價(手機)',
             dataIndex: 'close',
         },
         {
-            title: '測試1',
-            dataIndex: '111',
+            title: '測試1(手機)',
+            dataIndex: 'aaa',
         },
         {
-            title: '測試2',
-            dataIndex: '222',
+            title: '測試2(手機)',
+            dataIndex: 'bbb',
+        },
+        {
+            title: '測試3',
+            dataIndex: 'ccc',
+            responsive: ['md'],
+        },
+        {
+            title: '測試4',
+            dataIndex: 'ddd',
+            responsive: ['md'],
+        },
+        {
+            title: '測試5',
+            dataIndex: 'eee',
+            responsive: ['md'],
+        },
+        {
+            title: '測試6',
+            dataIndex: 'fff',
+            responsive: ['md'],
+        },
+        {
+            title: '測試7',
+            dataIndex: 'ggg',
+            responsive: ['md'],
+        },
+        {
+            title: '測試8',
+            dataIndex: 'hhh',
+            responsive: ['md'],
+        },
+        {
+            title: '測試7',
+            dataIndex: 'iii',
+            responsive: ['md'],
+        },
+        {
+            title: '測試8',
+            dataIndex: 'jjj',
+            responsive: ['md'],
         },
     ];
 
@@ -52,25 +364,71 @@ const AssetDetailTable = memo(({}) => {
                             pagination={false}
                             dataSource={tableData}
                             locale={locale}
-                            // loading={{
-                            //     indicator: (
-                            //         <div
-                            //             style={{
-                            //                 marginTop: '20px',
-                            //                 color: 'black',
-                            //                 fontSize: '1.6rem',
-                            //                 width: '100%',
-                            //                 transform: 'translateX(-49%) translateY(-54px)',
-                            //             }}
-                            //         >
-                            //             資料加載中...
-                            //         </div>
-                            //     ),
-                            //     // spinning: isDataLoading,
-                            // }}
+                            scroll={{ x: isMobile ? 360 : 1300, y: 500 }}
+                            onRow={(record, rowIndex) => {
+                                return {
+                                    onClick: event => {
+                                        if (isMobile) {
+                                            setModalData(tableData[rowIndex]);
+                                            openModal();
+                                        }
+                                    },
+                                };
+                            }}
+                        />
+                    </TabPane>
+                    <TabPane tab={<span>測試測試222</span>} key="2">
+                        <AccountTable
+                            className="drag__Table"
+                            columns={columns}
+                            pagination={false}
+                            dataSource={tableData}
+                            locale={locale}
+                        />
+                    </TabPane>
+                    <TabPane tab={<span>測試測試333</span>} key="3">
+                        <AccountTable
+                            className="drag__Table"
+                            columns={columns}
+                            pagination={false}
+                            dataSource={tableData}
+                            locale={locale}
+                        />
+                    </TabPane>
+                    <TabPane tab={<span>測試測試4444</span>} key="4">
+                        <AccountTable
+                            className="drag__Table"
+                            columns={columns}
+                            pagination={false}
+                            dataSource={tableData}
+                            locale={locale}
+                        />
+                    </TabPane>
+                    <TabPane tab={<span>測試測試555</span>} key="5">
+                        <AccountTable
+                            className="drag__Table"
+                            columns={columns}
+                            pagination={false}
+                            dataSource={tableData}
+                            locale={locale}
+                        />
+                    </TabPane>
+                    <TabPane tab={<span>測試測試6666</span>} key="6">
+                        <AccountTable
+                            className="drag__Table"
+                            columns={columns}
+                            pagination={false}
+                            dataSource={tableData}
+                            locale={locale}
                         />
                     </TabPane>
                 </Tabs>
+
+                <AssetDetailModal
+                    isVisible={isMobile ? isAssetDetailModalVisitable : false}
+                    data={modalData}
+                    closeHandler={closeModal}
+                />
             </div>
 
             <style jsx>{`
@@ -79,6 +437,12 @@ const AssetDetailTable = memo(({}) => {
                     border: solid 1px #e6ebf5;
                     background: #fff;
                     margin-top: 30px;
+                    margin-bottom: 30px;
+                }
+                @media (max-width: 768px) {
+                    .asset__detail__overview__tab {
+                        margin-bottom: 0;
+                    }
                 }
             `}</style>
             <style jsx global>{`
