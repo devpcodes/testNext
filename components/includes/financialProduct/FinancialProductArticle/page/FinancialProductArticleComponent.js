@@ -341,7 +341,9 @@ const FinancialProductArticleComponent = ({
                                 {checkServer() && announcementServerRes?.length ? (
                                     <Announcement data={announcementServerRes} />
                                 ) : null}
-                                {!checkServer() && announcement.length ? <Announcement data={announcement} /> : null}
+                                {!checkServer() && announcement?.length >= 0 ? (
+                                    <Announcement data={announcement} />
+                                ) : null}
                             </div>
                         </div>
                     </div>
@@ -695,7 +697,10 @@ const FinancialProductArticleComponent = ({
             `}</style>
             <style jsx global>{`
                 .ant-tabs-content a {
-                    color: #DAA360 !important;
+                    color: #DAA360;
+                }
+                .ant-pagination-item.ant-pagination-item-2 a {
+                    color: rgba(0,0,0,.65);
                 }
                 .ant-tabs-content-holder {
                     padding: 0;

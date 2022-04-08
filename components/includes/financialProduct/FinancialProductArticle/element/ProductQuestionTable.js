@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, ConfigProvider } from 'antd';
 import { Link } from 'next/link';
 import { useSelector } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getCommonQuestion } from '../../../../../services/components/customerSupport/commonQuestion';
 import { useRouter } from 'next/router';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import noDataImg from '../../../../../resources/images/components/productQuestion/img-404.svg';
 
 const ProductQuestionTable = function ({ keywords }) {
     const router = useRouter();
@@ -89,29 +90,38 @@ const ProductQuestionTable = function ({ keywords }) {
         },
     ];
 
+    const customizeRenderEmpty = () => (
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <img src={noDataImg}></img>
+            <p style={{ color: '#6c7b94', marginTop: '12px', fontSize: '16px', fontWeight: 'bold' }}>{'暫無資訊'}</p>
+        </div>
+    );
+
     return (
         <>
-            <Table
-                className="product-question-table"
-                columns={columns}
-                dataSource={questionList}
-                rowKey="id"
-                total={totalQuestion}
-                pagination={
-                    clientWidth <= 450
-                        ? null
-                        : {
-                              position: ['bottomRight'],
-                              defaultPageSize: 15,
-                              defaultCurrent: 1,
-                              pageSize: 15,
-                              showSizeChanger: false,
-                              total: questionList.length,
-                              showTotal: (total, range) => `${range[0]}-${range[1]}則問題（共${total}則問題）`,
-                              onChange: scrollTop,
-                          }
-                }
-            />
+            <ConfigProvider renderEmpty={customizeRenderEmpty}>
+                <Table
+                    className="product-question-table"
+                    columns={columns}
+                    dataSource={questionList}
+                    rowKey="id"
+                    total={totalQuestion}
+                    pagination={
+                        clientWidth <= 450
+                            ? null
+                            : {
+                                  position: ['bottomRight'],
+                                  defaultPageSize: 15,
+                                  defaultCurrent: 1,
+                                  pageSize: 15,
+                                  showSizeChanger: false,
+                                  total: questionList.length,
+                                  showTotal: (total, range) => `${range[0]}-${range[1]}則問題（共${total}則問題）`,
+                                  onChange: scrollTop,
+                              }
+                    }
+                />
+            </ConfigProvider>
             <InfiniteScroll dataLength={totalQuestion} next={mobileNextPage} hasMore={mobileCurrentPage < totalPages}>
                 <div className="question-table-mobile">
                     {mobileQuestionList.length
