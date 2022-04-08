@@ -8,7 +8,7 @@ const { TabPane } = Tabs;
 
 const AssetDetailTable = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
-    const [isAssetDetailModalVisitable, setAssetDetailModalVisitable] = useState(true);
+    const [isAssetDetailModalVisitable, setAssetDetailModalVisitable] = useState(false);
     const closeModal = useCallback(() => {
         setAssetDetailModalVisitable(false);
     }, []);
