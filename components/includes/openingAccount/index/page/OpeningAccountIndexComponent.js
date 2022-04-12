@@ -44,11 +44,11 @@ function OpeningAccountIndexComponent(props) {
             image: icon_manager_trust,
             link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_1?dirtype=99&strProd=0002&strWeb=0001',
         },
-        {
-            title: '財管人工戶',
-            image: icon_management,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_5?dirtype=99&strProd=0002&strWeb=0001',
-        },
+        // {
+        //     title: '財管人工戶',
+        //     image: icon_management,
+        //     link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_5?dirtype=99&strProd=0002&strWeb=0001',
+        // },
         {
             title: '借券戶',
             image: icon_borrow,

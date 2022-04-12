@@ -24,7 +24,7 @@ const SecuritiesAccountMenu = ({ linkData }) => {
                 .securitiesAcctMenuBtn {
                     width: 100%;
                     display: flex;
-                    justify-content: center;
+                    justify-content: flex-start;
                     flex-wrap: wrap;
                     align-items: flex-start;
                     margin-top: 16px;
