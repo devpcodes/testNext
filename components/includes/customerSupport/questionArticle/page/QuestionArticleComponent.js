@@ -230,7 +230,7 @@ const QuestionArticleComponent = () => {
                                     {Array.isArray(ads) &&
                                         ads.map((e, i) => (
                                             <div key={i}>
-                                                <a href={e.url}>
+                                                <a href={e.url} rel="noreferrer noopener">
                                                     <div
                                                         style={
                                                             clientWidth > 450
