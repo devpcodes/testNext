@@ -219,6 +219,7 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
                 .trading__container {
                     display: inline-block;
                     margin-right: 12px;
+                    width: 100%;
                 }
                 .account__container {
                     position: relative;

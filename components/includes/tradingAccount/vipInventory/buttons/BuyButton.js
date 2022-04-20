@@ -24,7 +24,7 @@ const BuyButton = ({ text, width, height, fontSize, color, ...props }) => {
                 .ant-btn[disabled]:active,
                 .ant-btn[disabled]:focus,
                 .ant-btn[disabled]:hover {
-                    background: #b7b7b7 !important;
+                    background: '#e6ebf5' !important;
                 }
             `}</style>
         </>

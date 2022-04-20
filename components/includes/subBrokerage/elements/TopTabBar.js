@@ -2,7 +2,7 @@ import { Menu, Tabs } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
 
-const TopTabBar = ({ current, menuList, onClick }) => {
+const TopTabBar = ({ current, menuList, onClick, ...props }) => {
     const [state, setState] = useState({ current: 'all' });
     const { TabPane } = Tabs;
     const handleClick = key => {
@@ -15,7 +15,7 @@ const TopTabBar = ({ current, menuList, onClick }) => {
     return (
         <>
             <div className="tab_box subBrokerage">
-                <Tabs defaultActiveKey="all" onChange={handleClick}>
+                <Tabs defaultActiveKey="all" onChange={handleClick} {...props}>
                     {menuList.map(x => {
                         return <TabPane tab={x.title} key={x.key}></TabPane>;
                     })}
