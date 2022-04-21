@@ -95,6 +95,7 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
                     label="預估利息"
                     num={interest || '--'}
                     unit="元"
+                    tooltipText="預估利息=可貸款額度 * 利率 ( 貸款天數/365 )"
                 />
                 <LoanCalculationItem
                     style={{ marginBottom: '12px' }}

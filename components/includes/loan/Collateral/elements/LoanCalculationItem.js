@@ -1,7 +1,24 @@
-const LoanCalculationItem = ({ label, num, unit, style }) => {
+import { Tooltip } from 'antd';
+import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
+const LoanCalculationItem = ({ label, num, unit, style, tooltipText }) => {
     return (
         <div className="calculationItem__container" style={style}>
-            <span className="calculationItem__label">{label}</span>
+            <span className="calculationItem__label">
+                {label}
+                {tooltipText && (
+                    <Tooltip placement="bottom" title={tooltipText} zIndex={10001}>
+                        <img
+                            src={cricleIcon}
+                            style={{
+                                marginTop: '-3px',
+                                marginLeft: '2px',
+                                filter: 'opacity(0.7)',
+                                cursor: 'pointer',
+                            }}
+                        />
+                    </Tooltip>
+                )}
+            </span>
             <span className="calculationItem__num">
                 {num} {unit}
             </span>

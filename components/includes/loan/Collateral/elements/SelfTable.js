@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { InputNumber } from 'antd';
+import { InputNumber, Tooltip } from 'antd';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUser } from '../../../../../hooks/useUser';
@@ -7,7 +7,7 @@ import { fetchApplyInfo } from '../../../../../services/components/loznZone/calc
 import { getToken } from '../../../../../services/user/accessToken';
 import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
-
+import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
 const SelfTable = ({ currentKey, setCurrentData, reset }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -213,7 +213,33 @@ const SelfTable = ({ currentKey, setCurrentData, reset }) => {
                 },
             },
             {
-                title: '內部人',
+                title: (
+                    <span
+                        style={{
+                            marginRight: '7px',
+                            display: 'inline-block',
+                        }}
+                    >
+                        內部人
+                        <Tooltip
+                            placement="bottom"
+                            title={
+                                '本人/配偶/未成年子女為上市/上櫃公司之董事/監察人/經理人或持有該公司之股份超過股份總額百分之十之股東'
+                            }
+                        >
+                            <img
+                                style={{
+                                    display: 'inline-block',
+                                    marginLeft: '2px',
+                                    marginTop: '-2px',
+                                    filter: 'opacity(0.7)',
+                                    cursor: 'pointer',
+                                }}
+                                src={cricleIcon}
+                            />
+                        </Tooltip>
+                    </span>
+                ),
                 width: 70,
                 dataIndex: 'insider',
                 key: 'insider',
