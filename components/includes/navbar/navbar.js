@@ -86,7 +86,7 @@ const Navbar = memo(() => {
 
     const goSignUp = () => {
         return window.open(
-            'https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035&utm_campaign=NewWeb&utm_source=NewWeb&utm_medium=未登入選單開戶按鈕',
+            'https://www.sinotrade.com.tw/richclub/dawhotou/campaign?strProd=0037&strWeb=0035&utm_campaign=newweb_topbar_op&utm_source=newweb&utm_medium=button',
         );
     };
 
