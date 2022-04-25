@@ -28,7 +28,9 @@ const CollateralComponent = () => {
     const [hasStockAcc, setHasStockAcc] = useState(false);
     const [loanDays, setLoanDays] = useState('');
     const inputLoanDays = useRef('');
-    const submitData = useRef([]);
+    // const submitData = useRef([]);
+    const [submitData, setSubmitData] = useState([]);
+
     const [allLoanMoney, setAllLoanMoney] = useState('--');
     const [interest, setInterest] = useState('--');
     const [handlingFee, setHandlingFee] = useState('100');
@@ -80,7 +82,8 @@ const CollateralComponent = () => {
     // 設定現在勾選的資料
     const currentDataHandler = data => {
         console.log('now Data', data);
-        submitData.current = data;
+        // submitData.current = data;
+        setSubmitData(data);
     };
 
     const tabClickHandler = currentKey => {
@@ -126,7 +129,7 @@ const CollateralComponent = () => {
     //取借款總額
     const getAllLoanHandler = () => {
         let allMoney = 0;
-        submitData.current.forEach(item => {
+        submitData.forEach(item => {
             allMoney += Number(item.canLoanMoney);
         });
         setAllLoanMoney(allMoney);
@@ -141,7 +144,7 @@ const CollateralComponent = () => {
 
     const getQtyHandler = () => {
         let allQty = 0;
-        submitData.current.forEach(item => {
+        submitData.forEach(item => {
             allQty += Number(item.expectedCollateralShare);
         });
         setQty(allQty);
@@ -254,6 +257,7 @@ const CollateralComponent = () => {
                             handlingFee={handlingFee}
                             qty={qty}
                             currentKey={current}
+                            submitData={submitData}
                         />
                     </div>
                 ) : null}
@@ -272,6 +276,7 @@ const CollateralComponent = () => {
                             handlingFee={handlingFee}
                             qty={qty}
                             currentKey={current}
+                            submitData={submitData}
                         />
                     </Modal>
                 )}
@@ -290,6 +295,7 @@ const CollateralComponent = () => {
                             handlingFee={handlingFee}
                             qty={qty}
                             currentKey={current}
+                            submitData={submitData}
                         />
                     </Drawer>
                 )}

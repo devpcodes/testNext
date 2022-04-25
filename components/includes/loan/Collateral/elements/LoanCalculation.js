@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { message } from 'antd';
+import moment from 'moment';
 import jwt_decode from 'jwt-decode';
 import { useUser } from '../../../../../hooks/useUser';
 import { fetchAccountStatus } from '../../../../../services/components/loznZone/calculation/fetchAccountStatus';
@@ -10,12 +12,14 @@ import LoanCalculationItem from './LoanCalculationItem';
 import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
 import SinoBtn from './SinoBtn';
+import { fetchApplyStatus } from '../../../../../services/components/loznZone/calculation/fetchApplyStatus';
 // import arrow from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy.svg'
-const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, currentKey }) => {
+const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, currentKey, submitData }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     // const [hasSubmitAccount, setHasSubmitAccount] = useState(false);
     const { isLogin, accounts } = useUser();
     const [loanIdno, setLoanIdno] = useState('');
+    const accountError = useRef(false);
     // const loanIdno = useRef('');
     const dispatch = useDispatch();
 
@@ -25,6 +29,10 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
         }
     }, [isLogin]);
 
+    useEffect(() => {
+        checkAccountError();
+    }, [currentAccount]);
+
     const getAccountStatus = async () => {
         const res = await fetchAccountStatus(getToken());
         if (res.success) {
@@ -32,15 +40,47 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
             // loanIdno.current = jwt_decode(getToken()).user_id;
             setLoanIdno(jwt_decode(getToken()).user_id);
         }
+        checkAccountError(res.result[0]);
     };
 
-    const submitHandler = () => {
+    const checkAccountError = async res => {
+        if (res != null) {
+            if (res.status !== 'A') {
+                accountError.current = true;
+            }
+            return;
+        }
+        const result = await fetchAccountStatus(getToken());
+        if (result.result[0].status !== 'A') {
+            accountError.current = true;
+        }
+    };
+
+    const submitHandler = async () => {
         if (!isLogin) {
             console.log(isLogin);
             dispatch(showLoginHandler(true));
             return;
         }
         // console.log('------', loanIdno.current, currentAccount?.idno)
+        if (allLoanMoney === '--' || submitData.length === 0 || loanDays === '--' || loanDays == null) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'info',
+                    title: '提醒',
+                    content: (
+                        <>
+                            <p>請確認您的資料欄位及試算結果</p>
+                        </>
+                    ),
+                    okText: '確認',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                }),
+            );
+            return;
+        }
         if (loanIdno === '') {
             dispatch(
                 setModal({
@@ -72,9 +112,140 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
             );
             return;
         }
+        if (accountError.current) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'info',
+                    title: '提醒',
+                    content: '噯呀糟糕！目前您的不限用途借貸帳戶狀態異常，請洽您的營業員。02-12345678',
+                    okText: '確認',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                }),
+            );
+            return;
+        }
+        //判斷當日有無借款
+        const status = await checkApplyStatus();
+        //判斷是否為內部人
+        const notInsider = checkInsider(submitData);
+        //判斷授信額度
+        const quota = await checkQuota(submitData[0].totalFinancing, allLoanMoney);
+        console.log('quota', quota);
+        if (status && notInsider && quota) {
+            alert('submit');
+        }
 
-        alert('submit');
         //'歡迎您使用永豐金證券不限用途款項借貸服務，請先申辦借貸戶加入不限用途的行列。'
+    };
+
+    const checkQuota = (totalFinancing, allLoanMoney) => {
+        if (allLoanMoney > totalFinancing) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'info',
+                    title: '提醒',
+                    content: (
+                        <>
+                            <p>噯呀糟糕！您的可借款額度已達您當初所申請的授信上限。</p>
+                            <p>
+                                (您可至不限用途帳戶總覽查看您的授信額度，若要調高授信上限請洽您的所屬業務員。02-12345678
+                                )
+                            </p>
+                        </>
+                    ),
+                    okText: '確認',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                }),
+            );
+            return false;
+        }
+        return true;
+    };
+
+    const checkInsider = data => {
+        const newData = data.filter(element => {
+            if (element.insider === 'Y') {
+                return true;
+            }
+        });
+        console.log('insider', newData);
+        if (newData.length > 0) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'info',
+                    title: '提醒',
+                    content: (
+                        <>
+                            <p>
+                                提醒您，公司內部人之股票借款須至臨櫃設質後辦理。請取消勾選畫面中您為內部人之股票，再進行線上借貸。
+                            </p>
+                            <p>若您的內部人身分已異動，請洽您的所屬業務員。02-12345678</p>
+                        </>
+                    ),
+                    okText: '確認',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                }),
+            );
+            return false;
+        }
+        return true;
+    };
+
+    const checkCanLoan = data => {
+        const newData = data.filter(element => {
+            if (element.status !== '2' && element.status !== '4') {
+                return true;
+            }
+        });
+        if (newData.length > 0) {
+            return false;
+        }
+        return true;
+    };
+    const checkApplyStatus = async () => {
+        try {
+            const res = await fetchApplyStatus(
+                getToken(),
+                currentAccount.broker_id,
+                currentAccount.account,
+                moment().format('YYYYMMDD'),
+                moment().format('YYYYMMDD'),
+            );
+            if (res.length === 0) {
+                return true;
+            } else {
+                const canLoan = checkCanLoan(res);
+                if (canLoan) {
+                    return true;
+                }
+                dispatch(
+                    setModal({
+                        visible: true,
+                        type: 'info',
+                        title: '提醒',
+                        content: (
+                            <>
+                                <p>噯呀糟糕！您的借貸申請次數已達當日上限，請勿重複申請。</p>
+                                <p>若有調整借款需求，請至借貸明細 > 在途中進行編輯。或洽您的所屬業務員。02-12345678</p>
+                            </>
+                        ),
+                        okText: '確認',
+                        noCloseIcon: true,
+                        noTitleIcon: true,
+                    }),
+                );
+                return;
+            }
+        } catch (error) {
+            message.error(error);
+        }
+        return false;
     };
     // console.log('---------...........', isLogin, loanIdno.current,  loanIdnoa);
     return (
