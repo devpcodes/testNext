@@ -239,4 +239,28 @@ export const getZionInstance = (version = zionDefaultVersion, modal = true) => {
     return ZionIns;
 };
 
+// subscription instance：設置 call subscription server 的最低配置
+const createSubscriptionInstance = () =>
+    axios.create({
+        baseURL: `${process.env.NEXT_PUBLIC_SUBSCRIPTION}`,
+        timeout: 7000,
+        withCredentials: true,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getSubscriptionInstance = () => {
+    const SubscriptionIns = createSubscriptionInstance();
+
+    SubscriptionIns.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, modal);
+        },
+    );
+
+    return SubscriptionIns;
+};
+
 export default axios;
