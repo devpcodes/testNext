@@ -891,12 +891,20 @@ const Login = function ({ popup, isPC, onClose, successHandler }) {
                                 }}
                             >
                                 此頁面受到 Google reCAPTCHA 保護，以確認您不是機器人，進一步了解
-                                <a href="https://policies.google.com/privacy" style={{ color: '#3d7699' }}>
+                                <a
+                                    href="https://policies.google.com/privacy"
+                                    style={{ color: '#3d7699' }}
+                                    rel="noreferrer noopener"
+                                >
                                     {' '}
                                     《隱私權聲明》{' '}
                                 </a>{' '}
                                 與
-                                <a href="https://policies.google.com/terms" style={{ color: '#3d7699' }}>
+                                <a
+                                    href="https://policies.google.com/terms"
+                                    style={{ color: '#3d7699' }}
+                                    rel="noreferrer noopener"
+                                >
                                     {' '}
                                     《服務條款》{' '}
                                 </a>{' '}
