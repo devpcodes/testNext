@@ -62,7 +62,7 @@ export const HeaderCallToAction = () => {
 
     const goSignUp = useCallback(() => {
         return window.open(
-            'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_top&strProd=0037&strWeb=0035',
+            'https://www.sinotrade.com.tw/richclub/dawhotou/campaign?strProd=0037&strWeb=0035&utm_campaign=newweb_topbar_op&utm_source=newweb&utm_medium=button',
         );
     }, []);
 
