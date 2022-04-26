@@ -37,7 +37,13 @@ function NewsArticles({ richClubNews, activeTab }) {
                             <TabPane tab={tab} key={tab} active={activeTab}>
                                 <div className="card__container">
                                     {richClubNews?.map((item, index) => (
-                                        <a href={item.originUrl} target="_blank" className="card" key={index}>
+                                        <a
+                                            href={item.originUrl}
+                                            target="_blank"
+                                            className="card"
+                                            key={index}
+                                            rel="noreferrer noopener"
+                                        >
                                             <Card className="news-articles-card" hoverable>
                                                 <div
                                                     className="icon"
@@ -57,7 +63,13 @@ function NewsArticles({ richClubNews, activeTab }) {
                             <TabPane tab={tab} key={tab} active={activeTab}>
                                 <div className="card__container">
                                     {data?.map((item, index) => (
-                                        <a href={item.originUrl} target="_blank" className="card" key={index}>
+                                        <a
+                                            href={item.originUrl}
+                                            target="_blank"
+                                            className="card"
+                                            key={index}
+                                            rel="noreferrer noopener"
+                                        >
                                             <Card className="news-articles-card" hoverable>
                                                 <div
                                                     className="icon"

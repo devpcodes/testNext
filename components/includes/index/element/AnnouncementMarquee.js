@@ -32,7 +32,9 @@ const AnnouncementMarquee = ({ isOpen, onCloseAnnouncement }) => {
                                 {anous.map((e, i) => (
                                     <p key={i}>
                                         <Link href={'/Announcement'}>
-                                            <a href="#">{e.title}</a>
+                                            <a href="#" rel="noreferrer noopener">
+                                                {e.title}
+                                            </a>
                                         </Link>
                                     </p>
                                 ))}

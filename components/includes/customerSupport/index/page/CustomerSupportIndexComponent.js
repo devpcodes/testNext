@@ -116,7 +116,11 @@ const CustomerSupportIndexComponent = () => {
                     <h2 className="secondTitle">常見問題</h2>
                     <div className="secondTitleRight">
                         {/* <Link href="/customer-support/question"> */}
-                        <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_2" target="_blank">
+                        <a
+                            href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_2"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                        >
                             完整問題
                         </a>
                         {/* </Link> */}
