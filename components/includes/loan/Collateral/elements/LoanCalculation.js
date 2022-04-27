@@ -13,8 +13,18 @@ import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
 import SinoBtn from './SinoBtn';
 import { fetchApplyStatus } from '../../../../../services/components/loznZone/calculation/fetchApplyStatus';
+import { debounce } from '../../../../../services/throttle';
 // import arrow from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy.svg'
-const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, currentKey, submitData }) => {
+const LoanCalculation = ({
+    loanDays,
+    allLoanMoney,
+    interest,
+    handlingFee,
+    qty,
+    currentKey,
+    submitData,
+    goLoanHandler,
+}) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     // const [hasSubmitAccount, setHasSubmitAccount] = useState(false);
     const { isLogin, accounts } = useUser();
@@ -30,7 +40,7 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
     }, [isLogin]);
 
     useEffect(() => {
-        checkAccountError();
+        debounce(checkAccountError, 500);
     }, [currentAccount]);
 
     const getAccountStatus = async () => {
@@ -38,9 +48,9 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
         if (res.success) {
             // setHasSubmitAccount(true)
             // loanIdno.current = jwt_decode(getToken()).user_id;
+            checkAccountError(res.result[0]);
             setLoanIdno(jwt_decode(getToken()).user_id);
         }
-        checkAccountError(res.result[0]);
     };
 
     const checkAccountError = async res => {
@@ -50,10 +60,14 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
             }
             return;
         }
+        // debounce()
         const result = await fetchAccountStatus(getToken());
-        if (result.result[0].status !== 'A') {
+        console.log('++++++', result);
+        if (result?.result[0]?.status !== 'A') {
             accountError.current = true;
+            return;
         }
+        accountError.current = false;
     };
 
     const submitHandler = async () => {
@@ -112,6 +126,7 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
             );
             return;
         }
+        console.log('accountError', accountError.current);
         if (accountError.current) {
             dispatch(
                 setModal({
@@ -134,7 +149,7 @@ const LoanCalculation = ({ loanDays, allLoanMoney, interest, handlingFee, qty, c
         const quota = await checkQuota(submitData[0].totalFinancing, allLoanMoney);
         console.log('quota', quota);
         if (status && notInsider && quota) {
-            alert('submit');
+            goLoanHandler();
         }
 
         //'歡迎您使用永豐金證券不限用途款項借貸服務，請先申辦借貸戶加入不限用途的行列。'

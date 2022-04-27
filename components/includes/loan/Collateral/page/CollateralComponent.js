@@ -2,7 +2,7 @@ import { Drawer } from 'antd';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useUser } from '../../../../../hooks/useUser';
-import { setMaskVisible, showLoginHandler } from '../../../../../store/components/layouts/action';
+import { setMaskVisible, setModal, showLoginHandler } from '../../../../../store/components/layouts/action';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import { AccountDropdown } from '../../../personalArea/accountDropdown/AccountDropdown';
 import TopTabBar from '../../../subBrokerage/elements/TopTabBar';
@@ -13,6 +13,7 @@ import SearchStock from '../elements/SearchStock';
 import SelfTable from '../elements/SelfTable';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-big (1).svg';
 import Modal from 'antd/lib/modal/Modal';
+import GoLoan from '../elements/GoLoan';
 const CollateralComponent = () => {
     const menuList = [
         { key: 'self', title: '自選試算' },
@@ -38,6 +39,7 @@ const CollateralComponent = () => {
     const [reset, setReset] = useState(false);
     const [visible, setVisible] = useState(false);
     const [tabletCalculationShow, setTabletCalculationShow] = useState(false);
+    const [goLoanVisible, setGoLoanVisible] = useState(false);
     useEffect(() => {
         if (isLogin) {
             setCurrent('inventory');
@@ -158,6 +160,15 @@ const CollateralComponent = () => {
         setTabletCalculationShow(false);
     };
 
+    const goLoanHandler = () => {
+        setTabletCalculationShow(false);
+        setGoLoanVisible(true);
+    };
+
+    const goLoanClose = () => {
+        setGoLoanVisible(false);
+    };
+
     return (
         <div className="collateral__container">
             {winWidth > 530 && <Breadcrumb />}
@@ -258,6 +269,7 @@ const CollateralComponent = () => {
                             qty={qty}
                             currentKey={current}
                             submitData={submitData}
+                            goLoanHandler={goLoanHandler}
                         />
                     </div>
                 ) : null}
@@ -277,6 +289,7 @@ const CollateralComponent = () => {
                             qty={qty}
                             currentKey={current}
                             submitData={submitData}
+                            goLoanHandler={goLoanHandler}
                         />
                     </Modal>
                 )}
@@ -296,9 +309,11 @@ const CollateralComponent = () => {
                             qty={qty}
                             currentKey={current}
                             submitData={submitData}
+                            goLoanHandler={goLoanHandler}
                         />
                     </Drawer>
                 )}
+                <GoLoan visible={goLoanVisible} goLoanClose={goLoanClose} allLoanMoney={allLoanMoney} />
             </div>
 
             <style jsx>{`
