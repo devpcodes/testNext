@@ -41,7 +41,7 @@ const StockDragTable = memo(({ tableData, tabKey, token, isSocalLogin, snapshotD
             width: 170,
             fixed: 'left',
             render: data => (
-                <a href={data.link} className="stock__name" target="_blank">
+                <a href={data.link} className="stock__name" target="_blank" rel="noreferrer noopener">
                     {data.text}
                 </a>
             ),

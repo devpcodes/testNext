@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback ,useMemo} from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { Modal } from 'antd';
-import { Input, Space  } from 'antd';
+import { Input, Space } from 'antd';
 import { GetArticleData } from '../../../../services/components/announcement/announceList';
 import { getParamFromQueryString } from '../../../../services/getParamFromQueryString';
 import icArrowLeft from '../../../../resources/images/components/announcement/ic-arrow-left.svg';
@@ -11,119 +11,137 @@ const { Search } = Input;
 const onSearch = value => console.log(value);
 
 const AnnouncePageComp = () => {
-const [data, setData] = useState({}); 
-const [tag, setTag] = useState([]); 
-const [refRows, setRefRows] = useState([]); 
-const [refresh, setRefresh] = useState(''); 
-const keyWord  = useSelector(store => store.announcement.keyWord);
-const dispatch = useDispatch();
-useEffect(() =>{ 
-    const GetNewData = async()=>{
-        try {
-            let id = getParamFromQueryString('GUID'); //GUID
-            let count =  '3'; //相關公告筆數
-            getData(id, count)
-            .then(res=>{
-                setData(res)  
-                setTag(res.keyWord)
-                setRefRows(res.refRows)
-            })
-            } catch(error) {
-            console.log('[error]',error)
+    const [data, setData] = useState({});
+    const [tag, setTag] = useState([]);
+    const [refRows, setRefRows] = useState([]);
+    const [refresh, setRefresh] = useState('');
+    const keyWord = useSelector(store => store.announcement.keyWord);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const GetNewData = async () => {
+            try {
+                let id = getParamFromQueryString('GUID'); //GUID
+                let count = '3'; //相關公告筆數
+                getData(id, count).then(res => {
+                    setData(res);
+                    setTag(res.keyWord);
+                    setRefRows(res.refRows);
+                });
+            } catch (error) {
+                console.log('[error]', error);
             }
-        }  
-    GetNewData()  
-},[refresh])
+        };
+        GetNewData();
+    }, [refresh]);
 
-const getData = async (id, count) => {
-    try{
-        const result = await GetArticleData(id, count)
-        return result 
-    } catch(err) {
-        console.log('[ERROR]',err)
-        Modal.error({
-            title: '伺服器錯誤',
+    const getData = async (id, count) => {
+        try {
+            const result = await GetArticleData(id, count);
+            return result;
+        } catch (err) {
+            console.log('[ERROR]', err);
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
+    };
+    const addKw = (e, x) => {
+        //e.preventDefault();
+        dispatch({
+            type: 'CHANGE_ITEM',
+            payload: { itemNew: x },
         });
-    }
-}
-const addKw = (e,x) => {
-    //e.preventDefault();
-    dispatch({
-        type: "CHANGE_ITEM",
-        payload: {itemNew:x}
-    }); 
-}
+    };
 
     return (
         <div className="announce__container">
             <div className="content_area">
                 <div className="content_box">
-                <div className="title">
-                <h2><span>最新公告</span></h2>
-                <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Announcement`} className="btn_back for_pc">返回列表</a>
-                </div>
-                <div className="search_box for_m">
-                    <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Announcement`} className="btn_back for_m">
-                        <img src={icArrowLeft}></img>
-                    </a>
-                    <Space direction="vertical">
-                    <Search 
-                    placeholder="輸入關鍵字"  
-                    allowClear  
-                    enterButton="搜尋"
-                    size="large" 
-                    onSearch={onSearch}
-                    />
-                    </Space>
-                    </div> 
-                <div className="content_box_inside">
-                    <div className="content_title">{data.title}</div>
-                    <div className="content_class">
-                        <div className="class_tag">發布日期<span>2021.05.24</span></div>
-                        <div className="class_tag">商品類別<span className="orange">{data.category1+' '+data.category2}</span></div>
-                        <div className="class_tag">公告類別<span className="orange">{data.type}</span></div>
+                    <div className="title">
+                        <h2>
+                            <span>最新公告</span>
+                        </h2>
+                        <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/Announcement`} className="btn_back for_pc">
+                            返回列表
+                        </a>
                     </div>
-                    <div className="content_detail" dangerouslySetInnerHTML={{__html:data.contents}}></div>                    
-                </div>
+                    <div className="search_box for_m">
+                        <a
+                            href={`${process.env.NEXT_PUBLIC_SUBPATH}/Announcement`}
+                            className="btn_back for_m"
+                            rel="noreferrer noopener"
+                        >
+                            <img src={icArrowLeft}></img>
+                        </a>
+                        <Space direction="vertical">
+                            <Search
+                                placeholder="輸入關鍵字"
+                                allowClear
+                                enterButton="搜尋"
+                                size="large"
+                                onSearch={onSearch}
+                            />
+                        </Space>
+                    </div>
+                    <div className="content_box_inside">
+                        <div className="content_title">{data.title}</div>
+                        <div className="content_class">
+                            <div className="class_tag">
+                                發布日期<span>2021.05.24</span>
+                            </div>
+                            <div className="class_tag">
+                                商品類別<span className="orange">{data.category1 + ' ' + data.category2}</span>
+                            </div>
+                            <div className="class_tag">
+                                公告類別<span className="orange">{data.type}</span>
+                            </div>
+                        </div>
+                        <div className="content_detail" dangerouslySetInnerHTML={{ __html: data.contents }}></div>
+                    </div>
                 </div>
                 <div className="link_box">
-                <div className="search_box for_pc">
-                    <Space direction="vertical">
-                    <Search 
-                    placeholder="輸入關鍵字"  
-                    allowClear  
-                    enterButton="搜尋"
-                    size="large" 
-                    onSearch={onSearch}
-                    />
-                    </Space>
-                    </div>                        
+                    <div className="search_box for_pc">
+                        <Space direction="vertical">
+                            <Search
+                                placeholder="輸入關鍵字"
+                                allowClear
+                                enterButton="搜尋"
+                                size="large"
+                                onSearch={onSearch}
+                            />
+                        </Space>
+                    </div>
                     <div className="link_tag">相關公告</div>
                     <div className="link_list">
-                        {
-                            refRows.length>0 ? (
-                                refRows.map(x => {
-                                    let pt = x.postTime.replace(/[/]/g,'.')
-                                    return (
-                                        <div key={x.articleGUID}><a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${x.articleGUID}`}>{x.title}</a>
+                        {refRows.length > 0 ? (
+                            refRows.map(x => {
+                                let pt = x.postTime.replace(/[/]/g, '.');
+                                return (
+                                    <div key={x.articleGUID}>
+                                        <a
+                                            href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${x.articleGUID}`}
+                                            rel="noreferrer noopener"
+                                        >
+                                            {x.title}
+                                        </a>
                                         <div className="announce_date">{pt}</div>
-                                        </div>
-                                        )
-                                })
-                            ):(
-                            <div className="noData">無相關公告</div> 
-                            )
-                        }
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="noData">無相關公告</div>
+                        )}
                     </div>
                     {/* <div className="ad_box for_pc">你被葉配了B-)</div> */}
                     <div className="link_tag">相關標籤</div>
                     <div className="tag_box">
-                        {
-                            tag.map(x => {
-                                return <Link href="/Announcement" key={x}><a onClick={e=>addKw(e,x)}>{x}</a></Link>
-                            })
-
-                        }
+                        {tag.map(x => {
+                            return (
+                                <Link href="/Announcement" key={x}>
+                                    <a onClick={e => addKw(e, x)}>{x}</a>
+                                </Link>
+                            );
+                        })}
                     </div>
                     {/* <div className="ad_box for_m">你被葉配了B-)</div> */}
                 </div>
@@ -200,12 +218,19 @@ const addKw = (e,x) => {
             </style>
             <style jsx global>
                 {`
-                .announce__container .content_area .content_box .content_box_inside a{color:blue;text-decoration: underline;}
-                .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
-                .announce__container .search_box .ant-space-vertical { width:100%; }
+                    .announce__container .content_area .content_box .content_box_inside a {
+                        color: blue;
+                        text-decoration: underline;
+                    }
+                    .announce__container .search_box .ant-input-search-button {
+                        background-color: #c43826;
+                        border: #c43826;
+                    }
+                    .announce__container .search_box .ant-space-vertical {
+                        width: 100%;
+                    }
                 `}
             </style>
-
         </div>
     );
 };

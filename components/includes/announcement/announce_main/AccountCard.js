@@ -4,8 +4,8 @@ import theme from '../../../../resources/styles/theme';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
 
-const AccountTable = ({ filterColumns,getData, ...props }) => {
-const [columns, setColumns] = useState([]);
+const AccountTable = ({ filterColumns, getData, ...props }) => {
+    const [columns, setColumns] = useState([]);
 
     const checkActiveHandler = (dataIndex, filterColumns) => {
         let active = false;
@@ -16,41 +16,77 @@ const [columns, setColumns] = useState([]);
         });
         return active;
     };
-  
+
     return (
         <div>
             <div className="sino__table">
                 <ul className="list_card">
-                {
-                    props.dataSource.map( data => {
-                       return (
-                       <li key={data.articleGUID}>
-                            <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${data.articleGUID}`}><div className="title_box">{data.title}</div></a>
-                            <div className="sub_box">
-                                <div>{data.postTime.replace(/[/]/g,'.')}</div>
-                                <div>{data.category1}</div>
-                                <div>{data.category2}</div>
-                            </div>
-                        </li>
-                        )
-                    })
-                }  
+                    {props.dataSource.map(data => {
+                        return (
+                            <li key={data.articleGUID}>
+                                <a
+                                    rel="noreferrer noopener"
+                                    href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${data.articleGUID}`}
+                                >
+                                    <div className="title_box">{data.title}</div>
+                                </a>
+                                <div className="sub_box">
+                                    <div>{data.postTime.replace(/[/]/g, '.')}</div>
+                                    <div>{data.category1}</div>
+                                    <div>{data.category2}</div>
+                                </div>
+                            </li>
+                        );
+                    })}
                 </ul>
                 <div className="pagination">
-                    <Pagination {...props.pagination}/>
+                    <Pagination {...props.pagination} />
                 </div>
-                
             </div>
             <style jsx>{`
-                .list_card {list-style: none;padding: 0;margin: 0;background-color: #FFF;margin-bottom:16px;}
-                .list_card li {padding: 12px 16px;}
-                .list_card li {border-bottom:1px solid #e6ebf5;}
-                .list_card li .title_box{width:100%;font: 16px PingFangTC;color: #0d1623;text-align:justify;font-weight:700;
-                   overflow:hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;}
-                .list_card li .sub_box{display: flex;align-items:flex-end;margin-top:1em;}
-                .list_card li .sub_box>div{font-size: 14px;color: #3f5372;margin-left:0.8em;}
-                .list_card li .sub_box>div:first-child{min-width: 5em;margin-left:0;}
-                .pagination{text-align:center;padding:0 16px;}
+                .list_card {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    background-color: #fff;
+                    margin-bottom: 16px;
+                }
+                .list_card li {
+                    padding: 12px 16px;
+                }
+                .list_card li {
+                    border-bottom: 1px solid #e6ebf5;
+                }
+                .list_card li .title_box {
+                    width: 100%;
+                    font: 16px PingFangTC;
+                    color: #0d1623;
+                    text-align: justify;
+                    font-weight: 700;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+                .list_card li .sub_box {
+                    display: flex;
+                    align-items: flex-end;
+                    margin-top: 1em;
+                }
+                .list_card li .sub_box > div {
+                    font-size: 14px;
+                    color: #3f5372;
+                    margin-left: 0.8em;
+                }
+                .list_card li .sub_box > div:first-child {
+                    min-width: 5em;
+                    margin-left: 0;
+                }
+                .pagination {
+                    text-align: center;
+                    padding: 0 16px;
+                }
             `}</style>
             <style jsx global>{`
                 .filterBtn {
@@ -91,9 +127,15 @@ const [columns, setColumns] = useState([]);
                     padding-left: 12px;
                     padding-right: 12px;
                 }
-                .sino__table .ant-table-thead > tr > th:nth-child(2) { width:7.5em;}
-                .sino__table .ant-table-thead > tr > th:nth-child(3) { width:5.5em;}
-                .sino__table .ant-table-thead > tr > th:last-child {  width:10em;   }
+                .sino__table .ant-table-thead > tr > th:nth-child(2) {
+                    width: 7.5em;
+                }
+                .sino__table .ant-table-thead > tr > th:nth-child(3) {
+                    width: 5.5em;
+                }
+                .sino__table .ant-table-thead > tr > th:last-child {
+                    width: 10em;
+                }
                 .sino__table .ant-table-tbody > tr > td {
                     border-bottom: solid 1px #e6ebf5;
                     font-size: 1.6rem;
@@ -101,12 +143,12 @@ const [columns, setColumns] = useState([]);
                     white-space: nowrap;
                 }
                 .sino__table .ant-table-thead > tr > th:nth-child(4),
-                .sino__table .ant-table-tbody > tr > td:nth-child(4){
+                .sino__table .ant-table-tbody > tr > td:nth-child(4) {
                     width: 60%;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
-                    max-width:0px;
+                    max-width: 0px;
                 }
                 .sino__table .ant-pagination-disabled .ant-pagination-item-link {
                     border-color: #d7e0ef;

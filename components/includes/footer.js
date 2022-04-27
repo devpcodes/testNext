@@ -168,12 +168,17 @@ const Footer = memo(({ showNav }) => {
                             <a
                                 href="http://www.sinopac.com/footer/20170512111026126000000000000863.html"
                                 target="_blank"
+                                rel="noreferrer noopener"
                             >
                                 客戶資料保密措施
                             </a>
                         </li>
                         <li>
-                            <a href={process.env.NEXT_PUBLIC_SUBPATH + '/index_privacy'} target="_blank">
+                            <a
+                                href={process.env.NEXT_PUBLIC_SUBPATH + '/index_privacy'}
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
                                 隱私權保護聲明
                             </a>
                         </li>
@@ -181,24 +186,44 @@ const Footer = memo(({ showNav }) => {
                             <a
                                 href="https://securities.sinopac.com/footer/list15d1c4072970000085d381a2b549a2dc.html"
                                 target="_blank"
+                                rel="noreferrer noopener"
                             >
                                 共同行銷商品契約
                             </a>
                         </li>
                         <li>
-                            <a href={process.env.NEXT_PUBLIC_SUBPATH + '/index_disclaimer'} target="_blank">
+                            <a
+                                href={process.env.NEXT_PUBLIC_SUBPATH + '/index_disclaimer'}
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
                                 網站免責聲明
                             </a>
                         </li>
                     </ul>
                     <div className="down__social">
-                        <a href="https://www.youtube.com/user/SinoEC" target="_blank" className="btn__youtube">
+                        <a
+                            href="https://www.youtube.com/user/SinoEC"
+                            target="_blank"
+                            className="btn__youtube"
+                            rel="noreferrer noopener"
+                        >
                             Youtube
                         </a>
-                        <a href="https://www.facebook.com/SinoPacSecurities/" target="_blank" className="btn__fb">
+                        <a
+                            href="https://www.facebook.com/SinoPacSecurities/"
+                            target="_blank"
+                            className="btn__fb"
+                            rel="noreferrer noopener"
+                        >
                             Facebook
                         </a>
-                        <a href="https://line.me/R/ti/p/@dhq6620j" target="_blank" className="btn__line">
+                        <a
+                            href="https://line.me/R/ti/p/@dhq6620j"
+                            target="_blank"
+                            className="btn__line"
+                            rel="noreferrer noopener"
+                        >
                             Line
                         </a>
                     </div>
