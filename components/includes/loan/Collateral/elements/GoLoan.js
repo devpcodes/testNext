@@ -173,7 +173,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
             const res = await postApply({
                 branch: currentAccount.broker_id,
                 account: currentAccount.account,
-                applyFinancing: form.getFieldValue('loanMoney'),
+                applyFinancing: String(form.getFieldValue('loanMoney')),
                 purpose: form.getFieldValue('loanSelect'),
                 collaterals: data,
                 ca_content,
@@ -186,7 +186,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
         const newData = data.map(element => {
             return {
                 stockId: element.stockId,
-                collateralQty: Number(element.expectedCollateralShare),
+                collateralQty: String(element.expectedCollateralShare),
             };
         });
         return newData;
