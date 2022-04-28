@@ -31,7 +31,7 @@ const CollateralComponent = () => {
     const inputLoanDays = useRef('');
     // const submitData = useRef([]);
     const [submitData, setSubmitData] = useState([]);
-
+    const submitDataCurr = useRef([]);
     const [allLoanMoney, setAllLoanMoney] = useState('--');
     const [interest, setInterest] = useState('--');
     const [handlingFee, setHandlingFee] = useState('100');
@@ -86,6 +86,10 @@ const CollateralComponent = () => {
         console.log('now Data', data);
         // submitData.current = data;
         setSubmitData(data);
+
+        //避免有人不按試算
+        submitDataCurr.current = data;
+        submitHandler(data);
     };
 
     const tabClickHandler = currentKey => {
@@ -102,9 +106,9 @@ const CollateralComponent = () => {
 
     const submitHandler = () => {
         setLoanDays(inputLoanDays.current);
-        const allMoney = getAllLoanHandler();
+        const allMoney = getAllLoanHandler(submitDataCurr.current);
         getInterestHandler(allMoney, inputLoanDays.current);
-        getQtyHandler();
+        getQtyHandler(submitDataCurr.current);
 
         if (winWidth <= 920) {
             setTabletCalculationShow(true);
@@ -129,7 +133,7 @@ const CollateralComponent = () => {
     };
 
     //取借款總額
-    const getAllLoanHandler = () => {
+    const getAllLoanHandler = submitData => {
         let allMoney = 0;
         submitData.forEach(item => {
             allMoney += Number(item.canLoanMoney);
@@ -144,7 +148,7 @@ const CollateralComponent = () => {
         setInterest(nowInterest);
     };
 
-    const getQtyHandler = () => {
+    const getQtyHandler = submitData => {
         let allQty = 0;
         submitData.forEach(item => {
             allQty += Number(item.expectedCollateralShare);
@@ -313,7 +317,12 @@ const CollateralComponent = () => {
                         />
                     </Drawer>
                 )}
-                <GoLoan visible={goLoanVisible} goLoanClose={goLoanClose} allLoanMoney={allLoanMoney} />
+                <GoLoan
+                    visible={goLoanVisible}
+                    goLoanClose={goLoanClose}
+                    allLoanMoney={allLoanMoney}
+                    goSubmitData={submitData}
+                />
             </div>
 
             <style jsx>{`

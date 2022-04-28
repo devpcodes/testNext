@@ -8,7 +8,7 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
-const SelfTable = ({ currentKey, setCurrentData, reset }) => {
+const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);

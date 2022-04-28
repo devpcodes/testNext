@@ -77,7 +77,8 @@ const LoanCalculation = ({
             return;
         }
         // console.log('------', loanIdno.current, currentAccount?.idno)
-        if (allLoanMoney === '--' || submitData.length === 0 || loanDays === '--' || loanDays == null) {
+        console.log('allLoanMoney', allLoanMoney);
+        if (allLoanMoney === '--' || submitData.length === 0 || allLoanMoney == 0) {
             dispatch(
                 setModal({
                     visible: true,
@@ -85,7 +86,7 @@ const LoanCalculation = ({
                     title: '提醒',
                     content: (
                         <>
-                            <p>請確認您的資料欄位及試算結果</p>
+                            <p>請勾選單保品後進行試算</p>
                         </>
                     ),
                     okText: '確認',
