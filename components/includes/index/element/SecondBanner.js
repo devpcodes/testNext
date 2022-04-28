@@ -243,6 +243,15 @@ const SecondBanner = () => {
                         }
                     }
 
+                    @media screen and (max-width: 768px) {
+                        .second-banner-image {
+                            display: none;
+                        }
+                        .second-banner-container-box {
+                            background-color: #e5eeff;
+                        }
+                    }
+
                     @media screen and (max-width: 550px) {
                         .number-group > span:first-of-type,
                         .plus {
@@ -278,6 +287,7 @@ const SecondBanner = () => {
                         .second-banner-container {
                             padding: 24px;
                             width: 100%;
+                            min-height: 310px;
                         }
 
                         h2 {
@@ -326,6 +336,14 @@ const SecondBanner = () => {
                     width: 160px;
                     height: 48px;
                     margin-top: 37px;
+                }
+
+                @media screen and (max-width: 768px) {
+                    .second-banner-container .ant-btn {
+                        margin: 0 auto;
+                        display: block;
+                        margin-top: 21px;
+                    }
                 }
 
                 @media screen and (max-width: 450px) {

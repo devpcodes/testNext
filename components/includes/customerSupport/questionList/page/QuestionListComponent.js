@@ -37,7 +37,7 @@ const QuestionListComponent = function () {
     const [isSelecting, setIsSelecting] = useState(false);
     const [selectedSecondFilter, setSelectedSecondFilter] = useState([]);
     const [selectedThirdFilter, setSelectedThirdFilter] = useState([]);
-
+    const [subData, setSubData] = useState([]);
     useEffect(async () => {
         setIsSelecting(false);
         const data = await getCommonQuestionCategories();
@@ -77,6 +77,7 @@ const QuestionListComponent = function () {
                       })
                     : null;
             });
+            setSubData(data);
             setSub3rdCategories(allSub3rd);
         } else {
             setSub2ndCategories(null);
@@ -104,6 +105,7 @@ const QuestionListComponent = function () {
     };
 
     const onSubmit2nd = async val => {
+        console.log('2nd-----', val);
         const selected2 = val.join();
         if (!val.length) {
             // 勾勾手動取消的狀況
@@ -113,6 +115,7 @@ const QuestionListComponent = function () {
         } else if (val.length) {
             setIsSelecting(true);
             console.log('submit2', val);
+            getSub3rdHandler(subData, val);
             setSelectedSecondFilter(val);
             const data = await getCommonQuestion(activeKey, null, currentPage, 15, selected2);
             if (data) {
@@ -121,6 +124,28 @@ const QuestionListComponent = function () {
                 setTotalCounts(data.counts);
             }
         }
+    };
+
+    const getSub3rdHandler = (subData, idArr) => {
+        let rd3 = [];
+        rd3 = subData?.category2nd.filter(item => {
+            for (const element of idArr) {
+                if (element === item.id) {
+                    return true;
+                }
+            }
+        });
+        const newArr = [];
+        rd3.forEach(element => {
+            element?.category3rd?.forEach(newEle => {
+                newArr.push({
+                    secondCategories: newEle.categoryName,
+                    text: newEle.categoryName,
+                    value: newEle.id,
+                });
+            });
+        });
+        setSub3rdCategories(newArr);
     };
 
     const onSubmit3rd = async val => {

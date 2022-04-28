@@ -240,7 +240,7 @@ const ContactSection = () => {
 
                     @media screen and (max-width: 450px) {
                         .contact-section-container {
-                            padding: 510px 16px 24px 16px;
+                            padding: 27px 16px 24px 16px;
                         }
 
                         h2 {
@@ -268,11 +268,20 @@ const ContactSection = () => {
                         .contact-texts-wrap > p:last-of-type {
                             font-size: 16px;
                         }
-
-                        @media screen and (max-width: 365px) {
-                            .contact-section-container {
-                                padding: 520px 24px 24px;
-                            }
+                    }
+                    @media screen and (max-width: 415px) {
+                        .contact-section-container {
+                            padding: 70px 24px 24px;
+                        }
+                    }
+                    @media screen and (max-width: 343px) {
+                        .contact-section-container {
+                            padding: 90px 24px 24px;
+                        }
+                    }
+                    @media screen and (max-width: 327px) {
+                        .contact-section-container {
+                            padding: 110px 24px 24px;
                         }
                     }
                 `}
