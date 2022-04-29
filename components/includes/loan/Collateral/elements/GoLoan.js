@@ -61,7 +61,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 showNotInsinder();
             }, 200);
         } catch (error) {
-            alert(false);
+            // alert(false);
         }
     };
 
