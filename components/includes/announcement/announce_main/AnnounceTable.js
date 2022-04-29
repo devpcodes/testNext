@@ -24,13 +24,12 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [searchColumn, setSearchColumn] = useState([]);
     const [searchColumn2, setSearchColumn2] = useState([]);
     const [searchWords, setSearchWords] = useState('');
-    //const [current, setCurrent] = useState(''); 
     const [filterColumns, setFilterColumns] = useState([]); 
     const [outerLinkPop, setOuterLinkPop] = useState(false); 
     const [indexGUID, setIndexGUID] = useState(''); 
     const [dimensions, setDimensions] = useState({ 
-        height: 720,
-        width: 1220
+        height: window.innerHeight,
+        width: window.innerWidth
       })
     const { Search } = Input;
     const onSearch = value => {
