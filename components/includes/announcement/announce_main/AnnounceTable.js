@@ -27,9 +27,10 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [filterColumns, setFilterColumns] = useState([]); 
     const [outerLinkPop, setOuterLinkPop] = useState(false); 
     const [indexGUID, setIndexGUID] = useState(''); 
+    const isMobile = useSelector(store => store.layout.isMobile);
     const [dimensions, setDimensions] = useState({ 
-        height: window.innerHeight,
-        width: window.innerWidth
+        height: 720,
+        width: 1220
       })
     const { Search } = Input;
     const onSearch = value => {
@@ -105,13 +106,13 @@ useEffect(() => {
 },[currentPage,searchColumn,searchColumn2,dataType,searchWords]) 
 
 useEffect(() => { 
-    function handleResize() {
-        setDimensions({
-          height: window.innerHeight,
-          width: window.innerWidth
-        })
-  }
-  window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', handleResize)
+    function handleResize  (){
+    setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth
+    })
+    }
 })
 
 useEffect(() => {  //filter icon color
@@ -299,7 +300,22 @@ const getColumnSearchProps = (data,idx) => {
                  mobleType = {dimensions.width>=768?false:true}
               />
             { 
-            dimensions.width>=768?(
+            isMobile?(
+                <AccountCard
+                dataSource = {rows}
+                columns = {columns}
+                filterColumns = {filterColumns}
+                pagination={{
+                    total: total,
+                    showTotal: (total, range) => {
+                        return `${range[0]}-${range[1]} 則公告 (共${total}則公告)`;
+                    },
+                    onChange: pageChangeHandler,
+                    current: currentPage,
+                    pageSize: pageSize,
+                }} 
+                />  
+            ):(
                 <AccountTable
                 dataSource = {rows}
                 columns = {columns}
@@ -314,21 +330,6 @@ const getColumnSearchProps = (data,idx) => {
                     showSizeChanger: false,
                     onChange: pageChangeHandler,
                     responsive: true,
-                    current: currentPage,
-                    pageSize: pageSize,
-                }} 
-                />  
-            ):(
-                <AccountCard
-                dataSource = {rows}
-                columns = {columns}
-                filterColumns = {filterColumns}
-                pagination={{
-                    total: total,
-                    showTotal: (total, range) => {
-                        return `${range[0]}-${range[1]} 則公告 (共${total}則公告)`;
-                    },
-                    onChange: pageChangeHandler,
                     current: currentPage,
                     pageSize: pageSize,
                 }} 
