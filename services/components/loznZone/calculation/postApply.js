@@ -19,11 +19,11 @@ export const postApply = async function ({ branch, account, applyFinancing, purp
         );
         console.log('res', res.data);
         if (res.data.success) {
-            return res.data.result;
+            return res.data.result.moneyTime;
         } else {
-            throw '伺服器錯誤';
+            throw res.data.message || '伺服器錯誤';
         }
     } catch (error) {
-        throw error.response.data.message || error;
+        throw error?.response?.data?.message || error;
     }
 };

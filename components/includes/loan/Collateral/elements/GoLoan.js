@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Input, Cascader } from 'antd';
+import { Form, Input, Collapse, message, Table } from 'antd';
+import moment from 'moment';
 import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
 import SinoSelect from './SinoSelect';
@@ -9,9 +10,12 @@ import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import { checkSignCA, sign } from '../../../../../services/webCa';
 import { getToken } from '../../../../../services/user/accessToken';
 import { postApply } from '../../../../../services/components/loznZone/calculation/postApply';
+import icon from '../../../../../resources/images/components/loanZone/basic-help-circle (1).svg';
+import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const { Panel } = Collapse;
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [loading, setLoading] = useState(false);
@@ -25,6 +29,11 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 noTitleIcon: true,
                 onCancel: () => {
                     goLoanClose();
+                    setTimeout(() => {
+                        form.setFieldsValue({
+                            loanMoney: allLoanMoney,
+                        });
+                    }, 300);
                     // dispatch(setModal({ visible: false }));
                 },
                 okButtonProps: {
@@ -41,11 +50,6 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 centered: isMobile ? true : false,
             }),
         );
-        setTimeout(() => {
-            form.setFieldsValue({
-                loanMoney: allLoanMoney,
-            });
-        }, 300);
     }, [visible, allLoanMoney]);
 
     const submitHandler = async () => {
@@ -148,38 +152,220 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
     };
 
     const submitData = async () => {
-        // const ca_content = {
-        //     certSN: '6066B3BD',
-        //     plainText: 'MCCAFIGAGI1625208998835',
-        //     signature:
-        //         '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',
-        //     type: 'web',
-        // };
-
         const data = submitDataHandler(goSubmitData);
         const token = getToken();
-        console.log('submitdata', data);
-        let ca_content = sign(
-            {
-                idno: currentAccount.idno,
-                broker_id: currentAccount.broker_id,
-                account: currentAccount.account,
-            },
-            true,
-            token,
-            true,
-        );
-        if (checkSignCA(ca_content)) {
-            const res = await postApply({
-                branch: currentAccount.broker_id,
-                account: currentAccount.account,
-                applyFinancing: String(form.getFieldValue('loanMoney')),
-                purpose: form.getFieldValue('loanSelect'),
-                collaterals: data,
-                ca_content,
+
+        // if (checkSignCA(ca_content)) {
+        //     const res = await postApply({
+        //         branch: currentAccount.broker_id,
+        //         account: currentAccount.account,
+        //         applyFinancing: String(form.getFieldValue('loanMoney')),
+        //         purpose: form.getFieldValue('loanSelect'),
+        //         collaterals: data,
+        //         ca_content,
+        //         token,
+        //     });
+        // }
+        try {
+            let ca_content = sign(
+                {
+                    idno: currentAccount.idno,
+                    broker_id: currentAccount.broker_id,
+                    account: currentAccount.account,
+                },
+                true,
                 token,
-            });
+                true,
+            );
+            if (checkSignCA(ca_content)) {
+                const moneyTime = await postApply({
+                    branch: currentAccount.broker_id,
+                    account: currentAccount.account,
+                    applyFinancing: String(form.getFieldValue('loanMoney')),
+                    purpose: form.getFieldValue('loanSelect'),
+                    collaterals: data,
+                    ca_content,
+                    token,
+                });
+                goLoanClose();
+                dispatch(setModal({ visible: false }));
+                showLoanSuccessModal(moneyTime);
+            }
+            // const moneyTime = await postApply({
+            //     branch: currentAccount.broker_id,
+            //     account: currentAccount.account,
+            //     applyFinancing: String(form.getFieldValue('loanMoney')),
+            //     purpose: form.getFieldValue('loanSelect'),
+            //     collaterals: data,
+            //     ca_content: null,
+            //     token,
+            // });
+        } catch (error) {
+            // console.log('error',error)
+            goLoanClose();
+            dispatch(setModal({ visible: false }));
+
+            setTimeout(() => {
+                message.error(error);
+                // showLoanSuccessModal('20220429143000');
+            }, 500);
         }
+    };
+    const replacer = (match, p1, p2, p3, p4, p5, offset, string) => {
+        // p1 is nondigits, p2 digits, and p3 non-alphanumerics
+        return p1 + '/' + p2 + '/' + p3 + ' ' + p4 + ':' + p5;
+    };
+    const showLoanSuccessModal = moneyTime => {
+        // console.log('moneyTime', moneyTime, moment(Number(moneyTime)).format('YYYY/MM/DD'));
+        moneyTime = moneyTime.substr(0, 12).replace(/([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})/, replacer);
+        dispatch(
+            setModal({
+                visible: true,
+                title: '借貸申請送出',
+                type: 'confirm',
+                noCloseIcon: true,
+                noTitleIcon: true,
+                centered: isMobile ? true : false,
+                cancelText: '查看明細',
+                okButtonProps: {
+                    style: {
+                        background: '#c43826',
+                    },
+                },
+                cancelButtonProps: {
+                    style: {
+                        paddingLeft: '11px',
+                    },
+                },
+                onOk: () => {
+                    goLoanClose();
+                    dispatch(setModal({ visible: false }));
+                },
+                content: (
+                    <>
+                        <p>您的借貸申請已送出，款項如匯入完成將以簡訊或電子郵件進行通知。</p>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginBottom: 5,
+                            }}
+                        >
+                            <span
+                                style={{
+                                    color: '#3f5372',
+                                    fontSize: '16px',
+                                }}
+                            >
+                                借款金額
+                            </span>
+                            <span
+                                style={{
+                                    color: '#0d1623',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {formatNum(form.getFieldValue('loanMoney')) + ' ' + '元'}
+                            </span>
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
+                        >
+                            <Collapse
+                                style={{
+                                    fontSize: '16px',
+                                    color: '#3f5372',
+                                    position: 'relative',
+                                    width: '100%',
+                                }}
+                                bordered={false}
+                                ghost={true}
+                                expandIconPosition={'right'}
+                                expandIcon={() => {
+                                    return (
+                                        <>
+                                            <img
+                                                src={icon}
+                                                style={{
+                                                    position: 'absolute',
+                                                    left: 100,
+                                                    top: 5,
+                                                }}
+                                            />
+                                            <span
+                                                style={{
+                                                    color: '#0d1623',
+                                                    fontSize: '16px',
+                                                    float: 'right',
+                                                }}
+                                            >
+                                                {moneyTime} 後
+                                            </span>
+                                        </>
+                                    );
+                                }}
+                            >
+                                <Panel
+                                    header="預估撥款時間"
+                                    style={{
+                                        color: '#3f5372',
+                                        fontSize: '16px',
+                                    }}
+                                >
+                                    {renderTimeTable()}
+                                </Panel>
+                            </Collapse>
+                        </div>
+                    </>
+                ),
+            }),
+        );
+    };
+    const renderTimeTable = () => {
+        const columns = [
+            {
+                title: '申請時間',
+                width: 100,
+                dataIndex: 'applyTime',
+                key: 'applyTime',
+                align: 'center',
+            },
+            {
+                title: '擔保品撥轉',
+                width: 100,
+                dataIndex: 'collateral',
+                key: 'collateral',
+                align: 'center',
+            },
+            {
+                title: '撥款時間',
+                width: 100,
+                dataIndex: 'time',
+                key: 'time',
+                align: 'center',
+            },
+        ];
+        const data = [
+            { applyTime: '12:00 前', collateral: '當日下午', time: '當日下午14:30' },
+            { applyTime: '12:00至14:00', collateral: '當日下午', time: '次日上午10:00' },
+            { applyTime: '14:00至次日12:00', collateral: '次日下午', time: '次日下午14:30' },
+        ];
+        return (
+            <div style={{ marginBottom: 10 }}>
+                <Table
+                    className="time__des"
+                    columns={columns}
+                    dataSource={data}
+                    style={{ border: 'solid 1px #d7e0ef', marginTop: '10px' }}
+                    pagination={false}
+                    scroll={{ x: 330 }}
+                />
+            </div>
+        );
     };
 
     const submitDataHandler = data => {
@@ -193,6 +379,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
     };
 
     const verifyLoanMoney = async loanMoney => {
+        console.log('----loanMoney', loanMoney);
         var errors = form.getFieldsError();
         errors = errors.filter(val => {
             return val.errors.length !== 0;
@@ -462,6 +649,30 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 }
                 #goLoan_loanMoney,
                 .ant-input-affix-wrapper > input.ant-input {
+                    color: #0d1623;
+                    font-size: 16px;
+                }
+
+                .ant-collapse > .ant-collapse-item > .ant-collapse-heade {
+                    color: '#3f5372';
+                }
+                .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+                    padding: 0;
+                }
+                .ant-collapse-borderless > .ant-collapse-item:last-child .ant-collapse-header {
+                    padding: 0;
+                    color: #3f5372;
+                    font-size: 16px;
+                }
+
+                .time__des .ant-table-thead > tr > th {
+                    padding: 6px;
+                    background: #f2f5fa;
+                    color: #3f5372;
+                    font-size: 16px;
+                }
+                .time__des .ant-table-tbody > tr > td {
+                    padding: 9px;
                     color: #0d1623;
                     font-size: 16px;
                 }
