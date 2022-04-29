@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Collapse, message, Table } from 'antd';
 import moment from 'moment';
@@ -18,6 +18,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
     const { Panel } = Collapse;
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
+    const submitMoney = useRef(allLoanMoney);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         dispatch(
@@ -29,11 +30,11 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 noTitleIcon: true,
                 onCancel: () => {
                     goLoanClose();
-                    setTimeout(() => {
-                        form.setFieldsValue({
-                            loanMoney: allLoanMoney,
-                        });
-                    }, 300);
+                    // setTimeout(() => {
+                    //     form.setFieldsValue({
+                    //         loanMoney: allLoanMoney,
+                    //     });
+                    // }, 300);
                     // dispatch(setModal({ visible: false }));
                 },
                 okButtonProps: {
@@ -45,16 +46,22 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                     padding: '16px 24px',
                 },
                 onOk: () => {
-                    submitHandler();
+                    submitMoney.current = form.getFieldValue('loanMoney');
+                    submitHandler(submitMoney.current);
                 },
                 centered: isMobile ? true : false,
             }),
         );
+        setTimeout(() => {
+            form.setFieldsValue({
+                loanMoney: allLoanMoney,
+            });
+        }, 500);
     }, [visible, allLoanMoney]);
 
-    const submitHandler = async () => {
+    const submitHandler = async money => {
         try {
-            const validate = await verifyLoanMoney(form.getFieldValue('loanMoney'));
+            const validate = await verifyLoanMoney(money);
             goLoanClose();
             dispatch(setModal({ visible: false }));
             setTimeout(() => {
@@ -181,7 +188,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 const moneyTime = await postApply({
                     branch: currentAccount.broker_id,
                     account: currentAccount.account,
-                    applyFinancing: String(form.getFieldValue('loanMoney')),
+                    applyFinancing: String(submitMoney.current),
                     purpose: form.getFieldValue('loanSelect'),
                     collaterals: data,
                     ca_content,
