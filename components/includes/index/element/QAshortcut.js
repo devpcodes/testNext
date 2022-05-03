@@ -219,11 +219,11 @@ function QAshortcut(props) {
                         background-repeat: no-repeat;
                     }
 
-                    @media screen and (max-width: 450px) {
-                        .QA-shortcut {
-                            display: none;
-                        }
-                    }
+                    // @media screen and (max-width: 320px) {
+                    //     .QA-shortcut {
+                    //         display: none;
+                    //     }
+                    // }
                 `}
             </style>
             <style jsx global>{`

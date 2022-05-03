@@ -13,9 +13,15 @@ const SafetySection = ({ data }) => {
                 <div className="safety-section-card-wrap">
                     {data.cardsData.map((item, idx) => (
                         <div className="safety-section-card" key={idx}>
-                            <div className="third-section-card-icon" style={{ backgroundImage: `url(${item.icon})` }} />
-                            <div className="safety-hr-line" />
-                            <h4>{item.title}</h4>
+                            <div className="third__section__card--head">
+                                <div
+                                    className="third-section-card-icon"
+                                    style={{ backgroundImage: `url(${item.icon})` }}
+                                />
+                                <h4>{item.title}</h4>
+                            </div>
+                            {/* <div className="safety-hr-line" /> */}
+
                             <p>{item.description}</p>
                         </div>
                     ))}
@@ -23,10 +29,23 @@ const SafetySection = ({ data }) => {
             </div>
             <style jsx>
                 {`
+                    .third__section__card--head {
+                        display: flex;
+                    }
+                    .third__section__card--head h4 {
+                        font-size: 24px;
+                        font-weight: bold;
+                        padding-left: 16px;
+                        line-height: 60px;
+                    }
+                    .third__section__card--head .third-section-card-icon {
+                        display: inline-block;
+                        background-size: contain;
+                    }
                     .safety-section-container {
                         position: relative;
                         width: 100%;
-                        height: 560px;
+                        height: 464px;
                         background-color: #f9fbff;
                     }
 
@@ -40,7 +59,7 @@ const SafetySection = ({ data }) => {
                     .safety-dark-bg {
                         top: 0;
                         width: 100%;
-                        height: 439px;
+                        height: 385px;
                         background-color: #0d1623;
                     }
 
@@ -76,7 +95,7 @@ const SafetySection = ({ data }) => {
                         // width: 368px;
                         // max-width: 368px;
                         width: calc(100% / 3 - 1vw * 2);
-                        min-height: 292px;
+                        min-height: 206px;
                         margin: 0 1vw;
                         padding: 32px;
                         background-color: #e6ebf5;
@@ -110,6 +129,18 @@ const SafetySection = ({ data }) => {
                         color: #0d1623;
                     }
 
+                    @media screen and (max-width: 1391px) {
+                        .safety-section-card-wrap {
+                            width: calc(90% + 1vw * 2);
+                        }
+                        .safety-section-container {
+                            height: 483px;
+                        }
+                        // .safety-dark-bg {
+                        //     height: 400px;
+                        // }
+                    }
+
                     @media screen and (max-width: 1250px) {
                         .safety-section-card-wrap {
                             width: calc(90% + 1vw * 2);
@@ -133,6 +164,35 @@ const SafetySection = ({ data }) => {
                         }
                     }
 
+                    @media screen and (max-width: 768px) {
+                        .third__section__card--head .third-section-card-icon {
+                            width: 40px;
+                            height: 40px;
+                        }
+                        .third__section__card--head h4 {
+                            font-size: 20px;
+                            line-height: 40px;
+                            padding-left: 8px;
+                        }
+                        .safety-section-container {
+                            height: 429px;
+                        }
+                    }
+
+                    @media screen and (max-width: 748px) {
+                        .safety-section-container {
+                            height: 459px;
+                        }
+                    }
+
+                    @media screen and (max-width: 600px) {
+                        .third__section__card--head h4 {
+                            font-size: 20px;
+                            line-height: 40px;
+                            padding-left: 0px;
+                        }
+                    }
+
                     @media screen and (max-width: 664px) {
                         .safety-section-card > p {
                             display: -webkit-box;
@@ -143,9 +203,13 @@ const SafetySection = ({ data }) => {
                         }
                     }
 
-                    @media screen and (max-width: 450px) {
+                    @media screen and (max-width: 560px) {
+                        .safety-section-container {
+                            height: 645px;
+                        }
+
                         .safety-dark-bg {
-                            height: 320px;
+                            height: 567px;
                         }
 
                         h2 {
@@ -156,13 +220,35 @@ const SafetySection = ({ data }) => {
                         .safety-section-card-wrap {
                             flex-wrap: wrap;
                             top: 130px;
-                            padding: 0 24px;
+                            padding: 0 32px;
                         }
 
                         .safety-section-card {
                             width: 100%;
                             max-width: unset;
                             margin: 8px 0;
+                            min-height: 150px;
+                        }
+
+                        .third__section__card--head h4 {
+                            font-size: 18px;
+                            padding-left: 10px;
+                        }
+                    }
+                    @media screen and (max-width: 450px) {
+                        .safety-section-card-wrap {
+                            padding: 0 24px;
+                        }
+                    }
+
+                    @media screen and (max-width: 400px) {
+                        .safety-dark-bg {
+                            height: 611px;
+                        }
+                    }
+                    @media screen and (max-width: 350px) {
+                        .safety-dark-bg {
+                            height: 640px;
                         }
                     }
                 `}

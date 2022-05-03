@@ -31,7 +31,7 @@ const Home = function () {
     // const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div>
-            <PageHead title={'永豐金理財網'} />
+            <PageHead title={'永豐金證券 SinoPac Securities'} />
             <IndexPageComponent richClubNews={richClubNews} />
         </div>
     );

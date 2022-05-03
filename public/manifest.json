@@ -1,11 +1,12 @@
 {
     "name": "永豐金證券",
-    "short_name": "永豐金證券",
+    "short_name": "SinoPac Securities",
     "start_url": "/newweb/",
     "display": "standalone",
     "orientation": "portrait",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
+    "description": "永豐金證券數位服務，透過最佳體驗的產品設計與最專業的內容經營，在不同階段的理財旅程服務投資者更聰明便捷的體驗。",
     "icons": [
         {
             "src": "images/icons/36.png",
