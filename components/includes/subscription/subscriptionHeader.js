@@ -1,9 +1,45 @@
-import { useCallback, useState, memo } from 'react';
-import { Button } from 'antd';
+import { useCallback, useState, useEffect, memo } from 'react';
+import { Button, Select } from 'antd';
+import { useSelector } from 'react-redux';
 import info from '../../../resources/images/pages/subscription/ic-info.svg';
 import Link from 'next/link';
+import AccountSelect from './AccountSelect';
 
-const SubscriptionHeader = memo(() => {
+const SubscriptionHeader = memo(({ onSelect }) => {
+    console.log(onSelect);
+    const { Option } = Select;
+    const accounts = useSelector(store => store.user.accounts);
+    const idno = useSelector(store => store.user.currentAccount.idno);
+    const [activeAccount, setActiveAccount] = useState('');
+    const [selectedValue, setSelectedValue] = useState('');
+
+    let subscriptionAccount = [];
+    let value = '';
+
+    if (accounts) {
+        let isFirstOptions = true;
+        accounts.map((accountData, accountIndex) => {
+            if (accountData.accttype === 'S' && accountData.idno === idno) {
+                subscriptionAccount.push(accountData);
+                console.log(accountData);
+                if (isFirstOptions) {
+                    value = `${accountData.broker_id}-${accountData.account}`;
+                }
+                isFirstOptions = false;
+            }
+        });
+    }
+
+    useEffect(() => {
+        selectHandler(value);
+        onSelect(value);
+    }, [value]);
+
+    const selectHandler = val => {
+        setSelectedValue(val);
+        onSelect(val);
+    };
+
     return (
         <>
             <div className="subscription__header">
@@ -18,6 +54,18 @@ const SubscriptionHeader = memo(() => {
                             </Link>
                         </div>
                         <div className="subscription__toolbar__right">
+                            <Select style={{ width: 300 }} value={selectedValue} onSelect={selectHandler}>
+                                {!!subscriptionAccount &&
+                                    subscriptionAccount.map((accountData, accountIndex) => {
+                                        return (
+                                            <Option
+                                                key={accountData.datacount}
+                                                value={`${accountData.broker_id}-${accountData.account}`}
+                                            >{`${accountData.broker_id}-${accountData.account}`}</Option>
+                                        );
+                                    })}
+                            </Select>
+
                             <Button className="subscription__description__btn">
                                 <img src={info} /> 申購說明
                             </Button>

@@ -1,27 +1,75 @@
+import { Modal } from 'antd';
 import { useCallback, useState, useEffect, memo } from 'react';
 import SubscriptionHeader from '../subscription/subscriptionHeader';
 import SubscriptionCards from '../subscription/subscriptionCards';
 import SubscriptionAdv from '../subscription/subscriptionAdv';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubscriptionList } from '../../../services/components/subscription/getSubscriptionList';
+import { fetchLoginSubscriptionList } from '../../../services/components/subscription/getLoginSubscriptionList';
+import { getToken } from '../../../services/user/accessToken';
+import { setModal } from '../../../store/components/layouts/action';
 
 const SubscriptionMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [subscriptionData, setSubscriptionData] = useState([]);
+    const isLogin = useSelector(store => store.user.isLogin);
+    const accounts = useSelector(store => store.user.accounts);
+    const [activeAccount, setActiveAccount] = useState('');
+    const dispatch = useDispatch();
+
     useEffect(async () => {
-        const response = await fetchSubscriptionList();
-        if (response.success && response.message === 'OK') {
-            setSubscriptionData(response.result);
+        console.log('==============================================================');
+        console.log(isLogin);
+        console.log(activeAccount);
+        console.log('==============================================================');
+        if (!isLogin) {
+            const response = await fetchSubscriptionList();
+            if (response.success && response.message === 'OK') {
+                setSubscriptionData(response.result);
+            }
         }
     }, []);
+
+    useEffect(async () => {
+        console.log('=====0000000000000000000000000000=============');
+        console.log(isLogin);
+        console.log(activeAccount);
+        console.log('=======0000000000000000000000000=====================');
+        if (isLogin) {
+            const branch = activeAccount.split('-')[0];
+            const account = activeAccount.split('-')[1];
+            const token = getToken();
+            const response = await fetchLoginSubscriptionList(token, branch, account);
+            if (response.success && response.message === 'OK') {
+                setSubscriptionData(response.result);
+            }
+        }
+    }, [activeAccount]);
+
+    const selectHandler = useCallback(val => {
+        console.log(val);
+        setActiveAccount(val);
+    }, []);
+
+    const onTest = useCallback(async type => {
+        dispatch(setModal({ visible: true, content: type, type: 'info', title: '系統訊息' }));
+    });
+
+    useEffect(async () => {
+        console.log('00000000000000000000000000000000000000000000000000000000');
+        console.log(activeAccount);
+        console.log('00000000000000000000000000000000000000000000000000000000');
+    }, [activeAccount]);
 
     return (
         <>
             <div className="subscriptionMain__container">
-                <SubscriptionHeader title="申購專區" />
+                <SubscriptionHeader onSelect={selectHandler} />
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
-                        subscriptionData.map((stockData, stockIndex) => <SubscriptionCards stockData={stockData} />)}
+                        subscriptionData.map((stockData, stockIndex) => (
+                            <SubscriptionCards stockData={stockData} onActionClick={onTest} />
+                        ))}
                     <SubscriptionAdv />
                 </div>
             </div>

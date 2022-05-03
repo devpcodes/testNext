@@ -1,8 +1,17 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
-const SubscriptionCards = memo(({ stockData }) => {
+const SubscriptionCards = memo(({ stockData, onActionClick }) => {
     console.log(stockData);
+
+    const formatDate = date => {
+        return `${date.slice(4, 6)}/${date.slice(6, 8)}`;
+    };
+
+    const formatAmount = amount => {
+        return (amount + '').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+    };
+
     return (
         <>
             <div className="subscriptionCards">
@@ -22,7 +31,7 @@ const SubscriptionCards = memo(({ stockData }) => {
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">總申購張數</div>
-                            <div className="info__cell__amount">{stockData.share}</div>
+                            <div className="info__cell__amount">{formatAmount(stockData.share)}</div>
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">市價</div>
@@ -30,52 +39,56 @@ const SubscriptionCards = memo(({ stockData }) => {
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">申購張數</div>
-                            <div className="info__cell__amount">{stockData.applyShare}</div>
+                            <div className="info__cell__amount">{formatAmount(stockData.applyShare)}</div>
                         </div>
                     </div>
-                    <div className="price__difference up">
+                    <div className={stockData.diffPrice > 0 ? 'price__difference up' : 'price__difference down'}>
                         <span>價差</span>
                         <span className="price">{stockData.diffPrice}</span>
                         <span>元</span>
-                        <span className="percent">(+{stockData.diffRatio}%)</span>
+                        <span className="percent">
+                            {stockData.diffRatio > 0 ? `(+${stockData.diffRatio}%)` : `(${stockData.diffRatio})%`}
+                        </span>
                     </div>
                     <div className="time__block">
                         <div className="time__course">
                             <div className="step"> 開始 </div>
                             <div className="point"></div>
-                            <div className="date"> {stockData.beginDate} </div>
+                            <div className="date"> {formatDate(stockData.beginDate)} </div>
                         </div>
                         <div className="time__course">
                             <div className="step"> 截止 </div>
                             <div className="point"></div>
-                            <div className="date"> {stockData.endDate} </div>
+                            <div className="date"> {formatDate(stockData.endDate)} </div>
                         </div>
                         <div className="time__course">
                             <div className="step"> 扣款 </div>
                             <div className="point"></div>
-                            <div className="date"> {stockData.feeDate} </div>
+                            <div className="date"> {formatDate(stockData.feeDate)} </div>
                         </div>
                         <div className="time__course">
                             <div className="step"> 抽籤 </div>
                             <div className="point"></div>
-                            <div className="date"> {stockData.lotDate} </div>
+                            <div className="date"> {formatDate(stockData.lotDate)} </div>
                         </div>
                         <div className="time__course">
                             <div className="step"> 退款 </div>
                             <div className="point"></div>
-                            <div className="date"> {stockData.moneyDate} </div>
+                            <div className="date"> {formatDate(stockData.moneyDate)} </div>
                         </div>
                         <div className="time__course">
                             <div className="step"> 撥券 </div>
                             <div className="point"></div>
-                            <div className="date"> {stockData.stkDate} </div>
+                            <div className="date"> {formatDate(stockData.stkDate)} </div>
                         </div>
                         <hr className="time__line" />
                     </div>
                 </div>
 
                 <div className="subscriptionCards__footer">
-                    <button className="action__btn buy">立即申購</button>
+                    <button className="action__btn buy" onClick={() => onActionClick('subscription')}>
+                        立即申購
+                    </button>
                 </div>
             </div>
 
@@ -90,6 +103,9 @@ const SubscriptionCards = memo(({ stockData }) => {
                     min-height: 400px;
                     margin-bottom: 20px;
                     margin-right: 5%;
+                }
+                .subscriptionCards:nth-child(3n) {
+                    margin-right: 0;
                 }
                 .subscriptionCards__header {
                     position: relative;
@@ -119,6 +135,10 @@ const SubscriptionCards = memo(({ stockData }) => {
                 .price__difference.up {
                     background: #feefee;
                     color: #f45a4c;
+                }
+                .price__difference.down {
+                    background: #def1ea;
+                    color: #22a16f;
                 }
                 .time__block {
                     display: flex;
@@ -168,8 +188,6 @@ const SubscriptionCards = memo(({ stockData }) => {
                 }
                 .status {
                     position: absolute;
-                    width: 58px;
-                    height: 26px;
                     background-color: #d7e0ef;
                     color: #254a91;
                     font-size: 1.4rem;
@@ -179,6 +197,7 @@ const SubscriptionCards = memo(({ stockData }) => {
                     align-items: center;
                     top: 0;
                     right: 0;
+                    padding: 3px 7px;
                 }
                 .info {
                     display: flex;
