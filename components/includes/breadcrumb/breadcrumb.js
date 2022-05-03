@@ -51,6 +51,18 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
 
     const pathHandler = str => {
         switch (str) {
+            case 'subscriptionArea':
+                elementNameArr.current.push('申購專區');
+                elementPathArr.current.push(`/${levelArr.current[0]}/Subscription`);
+                break;
+            case 'MySubscription':
+                elementNameArr.current.push('我的申購');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
+            case 'Subscription':
+                elementNameArr.current.push('新股申購');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
             case 'customer-support':
                 elementNameArr.current.push('客戶支援');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);

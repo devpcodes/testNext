@@ -1,6 +1,5 @@
-import { PageHead } from '../components/includes/PageHead';
-import SubscriptionMain from '../components/includes/subscription/subscriptionMain';
-import Breadcrumb from '../components/includes/breadcrumb/breadcrumb';
+import { PageHead } from '../../components/includes/PageHead';
+import SubscriptionMain from '../../components/includes/subscription/subscriptionMain';
 function Subscription() {
     return (
         <>
