@@ -8,7 +8,7 @@ import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
 import Modal from 'antd/lib/modal/Modal';
 import { GetArticleData } from '../../../../services/components/announcement/announceList';
-
+import topTag from '../../../../resources/images/components/announcement/top-tag.svg';
 const AnnounceTable = ({ listData, getList, getData }) => {
     const keyWord  = useSelector(store => store.announcement.keyWord);
     const [columns, setColumns] = useState([]);
@@ -155,14 +155,17 @@ const newColumsUpdate = (d1, d2)=>{
             key: 'title',
             width:'55%',
             render: (x,i) => {
+                
+                let tag = (i.isTop==1)?(<img className="topTag" src={topTag}></img>):''
+
                 if(i.outLinkVal==="0"){
                     if(i.articleType==="0"){
-                        return <a className="title_a aa" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{x}</a>
+                        return <a className="title_a aa" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{tag}{x}</a>
                     }else{
-                        return <a className="title_a bb" onClick={e=>showOuterLinkPop(e,false,i.articleGUID)}>{x}</a>
+                        return <a className="title_a bb" onClick={e=>showOuterLinkPop(e,false,i.articleGUID)}>{tag}{x}</a>
                     }
                 }else{
-                        return <a className="title_a cc" onClick={e=>showOuterLinkPop(e,true,i.articleGUID)}>{x}</a>
+                        return <a className="title_a cc" onClick={e=>showOuterLinkPop(e,true,i.articleGUID)}>{tag}{x}</a>
                 }
             }
         },
@@ -347,12 +350,14 @@ const getColumnSearchProps = (data,idx) => {
                 您若同意繼續進入該網站，請點選「確認」，不同意請點選「取消」，謝謝！</p>
             </Modal>
             <style jsx>{`
-                .search_box {position:absolute;right:0;top:20px;display:inline-block;}
+                
+                .search_box {position:absolute;right:0;top:70px;display:inline-block;}
                 @media (max-width: 768px) {
                     .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
                 }
             `}</style>
             <style global jsx>{`
+                .announce__container .topTag {width:29px; vertical-align: text-bottom; margin:0 5px 1px 0;}
                 .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
                 .announce__container .ant-table-filter-trigger{margin:0}
                 .announce__container .ant-input {  border: 1px solid #e6ebf5; }

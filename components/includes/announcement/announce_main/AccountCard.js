@@ -3,6 +3,7 @@ import { Table, Pagination } from 'antd';
 import theme from '../../../../resources/styles/theme';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
+import topTag from '../../../../resources/images/components/announcement/top-tag.svg';
 
 const AccountTable = ({ filterColumns,getData, ...props }) => {
 const [columns, setColumns] = useState([]);
@@ -25,7 +26,9 @@ const [columns, setColumns] = useState([]);
                     props.dataSource.map( data => {
                        return (
                        <li key={data.articleGUID}>
-                            <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${data.articleGUID}`}><div className="title_box">{data.title}</div></a>
+                            <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/AnnouncementPage?GUID=${data.articleGUID}`}><div className="title_box">
+                                {(data.isTop==1)?(<img className="topTag" src={topTag}></img>):''}
+                                {data.title}</div></a>
                             <div className="sub_box">
                                 <div>{data.postTime.replace(/[/]/g,'.')}</div>
                                 <div>{data.category1}</div>
