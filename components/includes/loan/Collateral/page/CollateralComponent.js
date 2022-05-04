@@ -93,7 +93,7 @@ const CollateralComponent = () => {
 
         //避免有人不按試算
         submitDataCurr.current = data;
-        submitHandler(data);
+        submitHandler();
     };
 
     const tabClickHandler = currentKey => {
@@ -114,7 +114,7 @@ const CollateralComponent = () => {
         getInterestHandler(allMoney, inputLoanDays.current);
         getQtyHandler(submitDataCurr.current);
 
-        if (winWidth <= 920) {
+        if (winWidth <= 920 && click === 'click') {
             setTabletCalculationShow(true);
             // setMaskShow(true);
             // setVisible(true);
