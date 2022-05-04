@@ -6,23 +6,23 @@ import SubscriptionAdv from '../subscription/subscriptionAdv';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubscriptionList } from '../../../services/components/subscription/getSubscriptionList';
 import { fetchLoginSubscriptionList } from '../../../services/components/subscription/getLoginSubscriptionList';
+import { applySubscription } from '../../../services/components/subscription/applySubscription';
 import { getToken } from '../../../services/user/accessToken';
 import { setModal } from '../../../store/components/layouts/action';
 import Breadcrumb from '../breadcrumb/breadcrumb';
+import { checkSignCA, sign, signCert } from '../../../services/webCa';
 
 const SubscriptionMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const [subscriptionData, setSubscriptionData] = useState([]);
     const isLogin = useSelector(store => store.user.isLogin);
-    const accounts = useSelector(store => store.user.accounts);
-    const [activeAccount, setActiveAccount] = useState('');
+    const currentAccount = useSelector(store => store.user.currentAccount.account);
+    const currentBrokerID = useSelector(store => store.user.currentAccount.broker_id);
+    const idno = useSelector(store => store.user.currentAccount.idno);
+    const userName = useSelector(store => store.user.currentAccount.username);
     const dispatch = useDispatch();
 
     useEffect(async () => {
-        console.log('==============================================================');
-        console.log(isLogin);
-        console.log(activeAccount);
-        console.log('==============================================================');
         if (!isLogin) {
             const response = await fetchSubscriptionList();
             if (response.success && response.message === 'OK') {
@@ -32,44 +32,58 @@ const SubscriptionMain = memo(({}) => {
     }, []);
 
     useEffect(async () => {
-        console.log('=====0000000000000000000000000000=============');
-        console.log(isLogin);
-        console.log(activeAccount);
-        console.log('=======0000000000000000000000000=====================');
         if (isLogin) {
-            const branch = activeAccount.split('-')[0];
-            const account = activeAccount.split('-')[1];
+            const branch = currentBrokerID;
+            const account = currentAccount;
             const token = getToken();
             const response = await fetchLoginSubscriptionList(token, branch, account);
             if (response.success && response.message === 'OK') {
                 setSubscriptionData(response.result);
             }
         }
-    }, [activeAccount]);
+    }, [currentAccount, currentBrokerID]);
 
-    const selectHandler = useCallback(val => {
-        console.log(val);
-        setActiveAccount(val);
-    }, []);
-
-    const onTest = useCallback(async type => {
-        dispatch(setModal({ visible: true, content: type, type: 'info', title: '系統訊息' }));
+    const submitSubscription = useCallback(async (name, id, price) => {
+        const branch = currentBrokerID;
+        const account = currentAccount;
+        const token = getToken();
+        dispatch(
+            setModal({
+                visible: true,
+                title: '申購確認',
+                content: (
+                    <div>
+                        <p>
+                            帳號：{currentBrokerID}-{currentAccount} {userName} <br />
+                            商品：{id} {name} <br />
+                            申購扣款金額： {price} 元 <br />
+                            <br />
+                            <span className="notice">
+                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
+                            </span>
+                        </p>
+                    </div>
+                ),
+                type: 'confirm',
+                onOk: async () => {
+                    const cert = await signCert({ idno: idno }, true, getToken());
+                    alert(JSON.stringify(cert));
+                    const response = await applySubscription(token, branch, account, id, '0.0.0.0', cert);
+                    dispatch(setModal({ visible: false }));
+                },
+            }),
+        );
     });
 
-    useEffect(async () => {
-        console.log('00000000000000000000000000000000000000000000000000000000');
-        console.log(activeAccount);
-        console.log('00000000000000000000000000000000000000000000000000000000');
-    }, [activeAccount]);
     return (
         <>
             <div className="subscriptionMain__container">
                 <Breadcrumb />
-                <SubscriptionHeader onSelect={selectHandler} />
+                <SubscriptionHeader />
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
-                            <SubscriptionCards stockData={stockData} onActionClick={onTest} />
+                            <SubscriptionCards stockData={stockData} onActionClick={submitSubscription} />
                         ))}
                     <SubscriptionAdv />
                 </div>
@@ -86,11 +100,17 @@ const SubscriptionMain = memo(({}) => {
                     justify-content: flex-start;
                     flex-wrap: wrap;
                 }
+
                 @media (max-width: 768px) {
                     .subscriptionMain__container {
                         padding-left: 0;
                         padding-right: 0;
                     }
+                }
+            `}</style>
+            <style jsx global>{`
+                .notice {
+                    color: #c43826;
                 }
             `}</style>
         </>
