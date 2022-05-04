@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import SearchAutoComplete from '../../../tradingAccount/vipInventory/SearchAutoComplete';
 import SinoBtn from './SinoBtn';
-const SearchStock = ({ btnName }) => {
+const SearchStock = ({ btnName, onClick }) => {
     const [selected, setSelected] = useState('');
     const [width, setWidth] = useState('237px');
     const winWidth = useSelector(store => store.layout.winWidth);
+    const currentVal = useRef('');
     useEffect(() => {
         if (winWidth > 920) {
             setWidth('237px');
@@ -31,6 +32,16 @@ const SearchStock = ({ btnName }) => {
     const selectHandler = (val, options) => {
         console.log('val', val);
         setSelected(val !== '');
+        // setVal(val);
+        currentVal.current = val;
+        // if(!selected){
+        //     onClick(currentVal.current);
+        // }
+    };
+    const clickHandler = () => {
+        if (selected) {
+            onClick(currentVal.current);
+        }
     };
     return (
         <div className="search__container">
@@ -40,6 +51,7 @@ const SearchStock = ({ btnName }) => {
                 selectedHandler={selectedHandler}
                 onChange={onChangeHandler}
                 selectHandler={selectHandler}
+                onPressEnter={clickHandler}
             />
             <SinoBtn
                 parentClass={'search__container'}
@@ -57,6 +69,7 @@ const SearchStock = ({ btnName }) => {
                     color: !selected ? 'color: rgb(169, 182, 203)' : 'white',
                     verticalAlign: 'top',
                 }}
+                onClick={clickHandler}
             />
             <style jsx>{`
                 .search__container {

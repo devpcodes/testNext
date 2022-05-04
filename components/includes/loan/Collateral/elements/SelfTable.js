@@ -4,11 +4,13 @@ import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUser } from '../../../../../hooks/useUser';
 import { fetchApplyInfo } from '../../../../../services/components/loznZone/calculation/fetchApplyInfo';
+import { fetchPopularStocks } from '../../../../../services/components/loznZone/calculation/fetchPopularStocks';
 import { getToken } from '../../../../../services/user/accessToken';
 import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
-const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
+import { debounce } from '../../../../../services/throttle';
+const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -18,9 +20,22 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
     const { isLogin } = useUser();
 
     useEffect(() => {
+        if (stockData.stockId != null && currentKey === 'self') {
+            const cloneData = [...data];
+            cloneData.push(stockData);
+            sortSelfData(cloneData);
+            setData(cloneData);
+        }
+    }, [stockData]);
+    useEffect(() => {
         if (isLogin && currentKey === 'inventory') {
-            getAccountOverview();
-            setOverviewTable(true);
+            setTimeout(() => {
+                getAccountOverview();
+                setOverviewTable(true);
+            }, 200);
+        }
+        if (currentKey === 'self') {
+            getPopularStocks();
         }
     }, [isLogin, currentKey, currentAccount]);
 
@@ -89,11 +104,11 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
             {
                 title: '利率',
                 width: 60,
-                dataIndex: 'loanYearRate',
-                key: 'loanYearRate',
+                dataIndex: 'groupRate',
+                key: 'groupRate',
                 align: 'right',
                 render: text => {
-                    return Number(text) * 100 + '%';
+                    return text != null ? Number(text) * 100 + '%' : '--';
                 },
             },
             {
@@ -109,11 +124,11 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
             {
                 title: '可貸款成數',
                 width: 70,
-                dataIndex: 'stockPercent',
-                key: 'stockPercent',
+                dataIndex: 'loanRate',
+                key: 'loanRate',
                 align: 'right',
                 render: text => {
-                    return Number(text) * 10 + '成';
+                    return text != null ? Number(text) * 10 + '成' : '--';
                 },
             },
             {
@@ -158,7 +173,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
                 width: 90,
                 align: 'right',
                 render: (text, record) => {
-                    return Number(text);
+                    return text != null ? Number(text) : '--';
                 },
             },
             {
@@ -185,7 +200,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
                 key: 'loanYearRate',
                 align: 'right',
                 render: text => {
-                    return Number(text) * 100 + '%';
+                    return text != null ? Number(text) * 100 + '%' : '--';
                 },
             },
             {
@@ -209,7 +224,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
                 key: 'stockPercent',
                 align: 'right',
                 render: text => {
-                    return Number(text) * 10 + '成';
+                    return text != null ? Number(text) * 10 + '成' : '--';
                 },
             },
             {
@@ -251,6 +266,46 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
         ];
 
         setColumns(newColumns);
+    };
+
+    const getPopularStocks = async () => {
+        try {
+            setLoading(true);
+            const res = await fetchPopularStocks();
+            setLoading(false);
+            sortSelfData(res);
+            // const selectedKeys = [];
+            // res.forEach((item, index) => {
+            //     item.key = index;
+            //     item.expectedCollateralShare = 1;
+            //     item.closePrice = item.reference;
+            //     item.stockPercent = item.loanRate;
+            //     item.canLoanMoney = canLoanMoneyHandler(item);
+            //     // console.log(Number(item.closePrice), Number(item.stockQty), Number(item.loanRate));
+            //     selectedKeys.push(item.key);
+            // });
+            // setSelectedRowKeys(selectedKeys);
+            setData(res);
+        } catch (error) {
+            setSelectedRowKeys([]);
+            setData([]);
+            setLoading(false);
+        }
+    };
+
+    const sortSelfData = nowData => {
+        const selectedKeys = [];
+        nowData = nowData.forEach((item, index) => {
+            item.key = index;
+            item.expectedCollateralShare = 1;
+            item.closePrice = item.reference;
+            item.stockPercent = item.loanRate;
+            item.canLoanMoney = canLoanMoneyHandler(item);
+            // console.log(Number(item.closePrice), Number(item.stockQty), Number(item.loanRate));
+            selectedKeys.push(item.key);
+        });
+        setSelectedRowKeys(selectedKeys);
+        return nowData;
     };
 
     const getAccountOverview = async () => {
@@ -339,7 +394,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, tableData }) => {
                     onChange: changeSelectedHandler,
                     selectedRowKeys,
                 }}
-                scroll={{ x: 650 }}
+                scroll={{ x: 650, y: 600 }}
                 loading={{
                     indicator: (
                         <div

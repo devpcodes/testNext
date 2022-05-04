@@ -14,6 +14,7 @@ import SelfTable from '../elements/SelfTable';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-big (1).svg';
 import Modal from 'antd/lib/modal/Modal';
 import GoLoan from '../elements/GoLoan';
+import { fetchGreenChannel } from '../../../../../services/components/loznZone/calculation/fetchGreenChannel';
 const CollateralComponent = () => {
     const menuList = [
         { key: 'self', title: '自選試算' },
@@ -40,6 +41,7 @@ const CollateralComponent = () => {
     const [visible, setVisible] = useState(false);
     const [tabletCalculationShow, setTabletCalculationShow] = useState(false);
     const [goLoanVisible, setGoLoanVisible] = useState(false);
+    const [stockData, setStockData] = useState({});
     useEffect(() => {
         if (isLogin) {
             setCurrent('inventory');
@@ -78,7 +80,9 @@ const CollateralComponent = () => {
 
     const renderTable = current => {
         console.log('current', current);
-        return <SelfTable currentKey={current} setCurrentData={currentDataHandler} reset={reset} />;
+        return (
+            <SelfTable currentKey={current} setCurrentData={currentDataHandler} reset={reset} stockData={stockData} />
+        );
     };
 
     // 設定現在勾選的資料
@@ -104,7 +108,7 @@ const CollateralComponent = () => {
         inputLoanDays.current = val;
     };
 
-    const submitHandler = () => {
+    const submitHandler = click => {
         setLoanDays(inputLoanDays.current);
         const allMoney = getAllLoanHandler(submitDataCurr.current);
         getInterestHandler(allMoney, inputLoanDays.current);
@@ -115,7 +119,7 @@ const CollateralComponent = () => {
             // setMaskShow(true);
             // setVisible(true);
         }
-        if (winWidth <= 450 && !visible) {
+        if (winWidth <= 450 && !visible && click === 'click') {
             setVisible(true);
         }
     };
@@ -173,6 +177,30 @@ const CollateralComponent = () => {
         setGoLoanVisible(false);
     };
 
+    const searchStockHandler = async val => {
+        const stockId = val.split(' ')[0];
+        // alert(stockId);
+        try {
+            const res = await fetchGreenChannel(stockId);
+            setStockData(res);
+            console.log('----------', res);
+        } catch (error) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    title: '系統訊息',
+                    content: error,
+                    type: 'info',
+                    buttonProps: {
+                        style: {
+                            background: '#c43826',
+                        },
+                    },
+                }),
+            );
+        }
+    };
+
     return (
         <div className="collateral__container">
             {winWidth > 530 && <Breadcrumb />}
@@ -182,13 +210,15 @@ const CollateralComponent = () => {
                     <div className="collateral__head--left">
                         <h1>擔保品試算</h1>
                         {/* 自選試算 PC版 */}
-                        {!showAccount && winWidth > 920 && <SearchStock btnName="新增擔保品" />}
+                        {!showAccount && winWidth > 920 && (
+                            <SearchStock btnName="新增擔保品" onClick={searchStockHandler} />
+                        )}
 
                         {/* 自選試算 tab版 */}
                         {winWidth <= 920 && winWidth > 530 && !showAccount && (
                             <div className="tablet__self">
                                 <div className="tablet__dropdown">
-                                    <SearchStock btnName="新增擔保品" />
+                                    <SearchStock btnName="新增擔保品" onClick={searchStockHandler} />
                                 </div>
                                 <div className="tablet__desc--self">
                                     <CalculationDescription />
@@ -199,7 +229,7 @@ const CollateralComponent = () => {
                         {winWidth <= 530 && !showAccount && (
                             <>
                                 <CalculationDescription />
-                                <SearchStock btnName="新增擔保品" />
+                                <SearchStock btnName="新增擔保品" onClick={searchStockHandler} />
                             </>
                         )}
 
@@ -245,7 +275,7 @@ const CollateralComponent = () => {
                         <button className="btn__reset" onClick={resetHandler}>
                             {isMobile ? '清除' : '清除重置'}
                         </button>
-                        <button className="btn__calculation" onClick={submitHandler}>
+                        <button className="btn__calculation" onClick={submitHandler.bind(null, 'click')}>
                             立即試算
                         </button>
                     </div>
