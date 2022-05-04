@@ -6,7 +6,7 @@ import SubscriptionAdv from '../subscription/subscriptionAdv';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubscriptionList } from '../../../services/components/subscription/fetchSubscriptionList';
 import { fetchLoginSubscriptionList } from '../../../services/components/subscription/fetchLoginSubscriptionList';
-import { applySubscription } from '../../../services/components/subscription/applySubscription';
+import { fetchApplySubscription } from '../../../services/components/subscription/fetchApplySubscription';
 import { getToken } from '../../../services/user/accessToken';
 import { setModal } from '../../../store/components/layouts/action';
 import Breadcrumb from '../breadcrumb/breadcrumb';
@@ -68,7 +68,7 @@ const SubscriptionMain = memo(({}) => {
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
                     alert(JSON.stringify(cert));
-                    const response = await applySubscription(token, branch, account, id, '0.0.0.0', cert);
+                    const response = await fetchApplySubscription(token, branch, account, id, '0.0.0.0', cert);
                     dispatch(setModal({ visible: false }));
                 },
             }),
