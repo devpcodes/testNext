@@ -5,13 +5,13 @@ const MoneyBox = ({ title, data, style }) => {
             <div className="money__content">
                 {data.map((element, index) => {
                     return (
-                        <>
+                        <React.Fragment key={index}>
                             <div className="money__item">
                                 <p className="money__label">{element.label}</p>
                                 <p className="money__val">{element.val}</p>
                             </div>
                             {index !== data.length - 1 && <div className="money__line"></div>}
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </div>

@@ -1,6 +1,7 @@
 import SubscriptionHeader from '../../subscription/subscriptionHeader';
-import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
+// import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import MoneyBox from '../elements/MoneyBox';
+import MySubscriptionTable from '../elements/MySubscriptionTable';
 
 const MySubscriptionPage = () => {
     return (
@@ -32,7 +33,7 @@ const MySubscriptionPage = () => {
                     ]}
                 />
             </div>
-            <AccountTable pagination={true} />
+            <MySubscriptionTable />
             <style>{`
                 .moneyBox__container {
                     display: flex;
