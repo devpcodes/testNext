@@ -4,8 +4,8 @@ export const fetchApplySubscription = async function (token, branch, account, st
     try {
         const reqUrl = '/order';
         const res = await getSubscriptionInstance().post(reqUrl, {
-            headers: { token },
             params: {
+                token,
                 branch,
                 account,
                 stockId,
