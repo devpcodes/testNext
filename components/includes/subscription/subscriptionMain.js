@@ -67,9 +67,15 @@ const SubscriptionMain = memo(({}) => {
                 type: 'confirm',
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
-                    alert(JSON.stringify(cert));
                     const response = await fetchApplySubscription(token, branch, account, id, '0.0.0.0', cert);
-                    dispatch(setModal({ visible: false }));
+                    dispatch(
+                        setModal({
+                            visible: true,
+                            content: `${response.message}`,
+                            type: 'info',
+                            title: '系統訊息',
+                        }),
+                    );
                 },
             }),
         );
