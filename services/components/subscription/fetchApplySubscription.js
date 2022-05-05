@@ -3,7 +3,7 @@ import { getSubscriptionInstance } from '../../myAxios';
 export const fetchApplySubscription = async function (token, branch, account, stockId, clientIP, ca_content) {
     try {
         const reqUrl = '/order';
-        const res = await getSubscriptionInstance().get(reqUrl, {
+        const res = await getSubscriptionInstance().post(reqUrl, {
             headers: { token },
             params: {
                 branch,
