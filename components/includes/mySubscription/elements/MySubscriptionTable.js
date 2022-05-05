@@ -6,7 +6,7 @@ import { fetchListWithOrderStatus } from '../../../../services/components/mySubs
 import { getToken } from '../../../../services/user/accessToken';
 import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import { formatNum } from '../../../../services/formatNum';
-
+import TimeLine from './TimeLine';
 const MySubscriptionTable = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -99,22 +99,40 @@ const MySubscriptionTable = () => {
         const token = getToken();
         if (token) {
             const res = await fetchListWithOrderStatus(token, currentAccount.broker_id, currentAccount.account);
-            const newData = res?.map((element, index) => {
-                element.key = index;
-                return element;
-            });
-            setData(newData);
+            if (res.length > 0) {
+                const newData = res?.map((element, index) => {
+                    element.key = index;
+                    return element;
+                });
+                setData(newData);
+            }
         }
     };
+
+    const expandRender = record => {
+        return (
+            <TimeLine
+                style={{
+                    marginLeft: '16.5%',
+                    width: '344px',
+                    marginTop: '5px',
+                    marginBottom: '5px',
+                }}
+                data={record}
+            />
+        );
+    };
+
     return (
         <AccountTable
             pagination={true}
             columns={columns}
             dataSource={data}
             expandable={{
-                expandedRowRender: record => <p style={{ margin: 0 }}>{'123456'}</p>,
+                expandedRowRender: expandRender,
                 rowExpandable: record => record.name !== 'Not Expandable',
             }}
+            scroll={{ x: 780 }}
         />
     );
 };
