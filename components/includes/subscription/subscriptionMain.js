@@ -68,6 +68,7 @@ const SubscriptionMain = memo(({}) => {
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
                     const response = await fetchApplySubscription(token, branch, account, id, '0.0.0.0', cert);
+                    alert(JSON.stringify(response));
                     dispatch(
                         setModal({
                             visible: true,
