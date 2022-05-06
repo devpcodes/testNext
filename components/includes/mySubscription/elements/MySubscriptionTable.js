@@ -7,10 +7,13 @@ import { getToken } from '../../../../services/user/accessToken';
 import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import { formatNum } from '../../../../services/formatNum';
 import TimeLine from './TimeLine';
+import DropfilterCheckBox from '../../tradingAccount/vipInventory/DropfilterCheckBox';
 const MySubscriptionTable = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
+    const [statusFilterValue, setStatusFilterValue] = useState('');
+    const [searchColumns, setSearchColumns] = useState([]);
     useEffect(() => {
         getOrderStatus();
     }, [currentAccount]);
@@ -30,6 +33,7 @@ const MySubscriptionTable = () => {
                 width: '100px',
                 dataIndex: 'status',
                 key: 'status',
+                ...getColumnSearchProps('status'),
                 render(text, record, idx) {
                     return text;
                 },
@@ -49,6 +53,9 @@ const MySubscriptionTable = () => {
                 dataIndex: 'orderAmount',
                 key: 'orderAmount',
                 align: 'right',
+                sorter: (a, b) => {
+                    return Number(a.orderAmount) - Number(b.orderAmount);
+                },
                 render(text, record, idx) {
                     return formatNum(text);
                 },
@@ -94,7 +101,63 @@ const MySubscriptionTable = () => {
             },
         ];
         setColumns(myColumns);
-    }, [data]);
+    }, [data, searchColumns, statusFilterValue]);
+
+    const getColumnSearchProps = dataIndex => {
+        if (dataIndex === 'status') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'radio'}
+                        onSubmit={onStatusFilterSubmit.bind(null, confirm)}
+                        onReset={onStatusFilterReset.bind(null, confirm)}
+                        // value={searchStatus}
+                        data={[
+                            { text: '全部', value: 'ALL' },
+                            { text: '委託預約中', value: '申購期間已過' },
+                            { text: '委託處理中', value: '委託處理中' },
+                            { text: '委託已送出', value: '委託已送出' },
+                            { text: '未中籤', value: '未中籤' },
+                            { text: '已中籤', value: '已中籤' },
+                        ]}
+                    />
+                ),
+                filteredValue: [statusFilterValue] || null,
+                onFilter: (value, record) => {
+                    console.log('===', value);
+                    if (value === 'ALL' || value === '') {
+                        return true;
+                    } else {
+                        return record['status'].includes(value);
+                    }
+                },
+            };
+        }
+    };
+
+    const onStatusFilterSubmit = (confirm, val) => {
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('status')) {
+                columns.push('status');
+            }
+            return columns;
+        });
+        setStatusFilterValue(val[0]);
+    };
+
+    const onStatusFilterReset = (confirm, val) => {
+        confirm();
+        if (searchColumns.indexOf('status') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('status');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setStatusFilterValue('');
+        }
+    };
+
     const getOrderStatus = async () => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
@@ -125,6 +188,7 @@ const MySubscriptionTable = () => {
 
     return (
         <AccountTable
+            filterColumns={searchColumns}
             pagination={true}
             columns={columns}
             dataSource={data}

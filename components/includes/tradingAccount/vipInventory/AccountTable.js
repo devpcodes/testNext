@@ -185,6 +185,15 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
                     color: #6c7b94;
                     margin-right: 16px;
                 }
+                .sino__table .ant-table-column-sorters {
+                    padding: 0;
+                }
+                .sino__table .ant-table-column-sorter-down.active {
+                    color: black;
+                }
+                .sino__table .ant-table-column-sorter-up.active {
+                    color: black;
+                }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .sino__table .ant-table-thead > tr > th:first-child {
                         // padding-left: ${props.dataSource?.length > 0 ? '3%' : '5px'};

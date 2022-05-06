@@ -8,20 +8,20 @@ const TimeLine = ({ style, data }) => {
     return (
         <div style={style}>
             <div className="line1__box">
-                <span className="line1__item">扣款 {moment(data.feeDate).format('MM/DD')}</span>
-                <span className="line1__item">抽籤 {moment(data.lotDate).format('MM/DD')}</span>
+                <span className="line1__item disabled">扣款 {moment(data.feeDate).format('MM/DD')}</span>
+                <span className="line1__item active">抽籤 {moment(data.lotDate).format('MM/DD')}</span>
                 <span className="line1__item">撥券 03/20</span>
             </div>
             <div className="line2__box">
-                <span className="line2__item"></span>
+                <span className="line2__item disabled"></span>
                 <span className="line"></span>
-                <span className="line2__item"></span>
+                <span className="line2__item active"></span>
                 <span className="line"></span>
                 <span className="line2__item"></span>
             </div>
             <div className="line3__box">
                 <span
-                    className="line3__item"
+                    className="line3__item disabled"
                     style={{
                         display: 'inline-block',
                         fontSize: '14px',
@@ -30,7 +30,7 @@ const TimeLine = ({ style, data }) => {
                     扣款 40,070
                 </span>
                 <span
-                    className="line3__item"
+                    className="line3__item active"
                     style={{
                         marginLeft: '23%',
                         width: '40px',
@@ -58,6 +58,28 @@ const TimeLine = ({ style, data }) => {
                 <a>【 抵押低利借款方案 】</a>
             </p>
             <style jsx>{`
+                .line1__item.disabled {
+                    color: #6c7b94;
+                }
+                .line2__item.disabled {
+                    background-color: #6c7b94;
+                    box-shadow: 0px 0px 3px 1px #6c7b94;
+                }
+                .line3__item.disabled {
+                    color: #6c7b94;
+                }
+
+                .line1__item.active {
+                    color: #c43826;
+                }
+                .line2__item.active {
+                    background-color: #c43826;
+                    box-shadow: 0px 0px 3px 1px #c43826;
+                }
+                .line3__item.active {
+                    color: #c43826;
+                }
+
                 .line1__box {
                     display: flex;
                     justify-content: space-between;

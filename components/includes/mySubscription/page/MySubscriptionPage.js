@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useUser } from '../../../../hooks/useUser';
+import { showLoginHandler } from '../../../../store/components/layouts/action';
 import Breadcrumb from '../../breadcrumb/breadcrumb';
 import SubscriptionHeader from '../../subscription/subscriptionHeader';
 // import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
@@ -5,6 +9,13 @@ import MoneyContainer from '../elements/MoneyContainer';
 import MySubscriptionTable from '../elements/MySubscriptionTable';
 
 const MySubscriptionPage = () => {
+    const { isLogin } = useUser();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (!isLogin) {
+            dispatch(showLoginHandler(true));
+        }
+    }, [isLogin]);
     return (
         <div>
             <div className="subscription__head">
