@@ -97,7 +97,7 @@ const MySubscriptionTable = () => {
     }, [data]);
     const getOrderStatus = async () => {
         const token = getToken();
-        if (token) {
+        if (token && currentAccount.broker_id) {
             const res = await fetchListWithOrderStatus(token, currentAccount.broker_id, currentAccount.account);
             if (res.length > 0) {
                 const newData = res?.map((element, index) => {
