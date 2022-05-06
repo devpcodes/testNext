@@ -68,15 +68,18 @@ const SubscriptionMain = memo(({}) => {
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
                     const response = await fetchApplySubscription(token, branch, account, id, '0.0.0.0', cert);
-                    alert(JSON.stringify(response));
                     dispatch(
                         setModal({
                             visible: true,
-                            content: `${response.message}`,
+                            content: response.success && response.message === 'OK' ? `申購成功` : `${response.message}`,
                             type: 'info',
                             title: '系統訊息',
                         }),
                     );
+                    const listResponse = await fetchLoginSubscriptionList(token, branch, account);
+                    if (listResponse.success && relistResponsesponse.message === 'OK') {
+                        setSubscriptionData(resplistResponseonse.result);
+                    }
                 },
             }),
         );
