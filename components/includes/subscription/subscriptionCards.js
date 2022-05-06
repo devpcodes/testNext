@@ -14,7 +14,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
 
     return (
         <>
-            <div className="subscriptionCards">
+            <div>
                 <div className="subscriptionCards__header">
                     <div className="subscriptionCards__title">
                         <div className="name">{stockData.stockName}</div>
@@ -86,30 +86,22 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                 </div>
 
                 <div className="subscriptionCards__footer">
-                    <button
-                        className="action__btn buy"
-                        onClick={() => onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
-                    >
-                        立即申購
-                    </button>
+                    {stockData.canOrder ? (
+                        <button
+                            className="action__btn buy"
+                            onClick={() => onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
+                        >
+                            立即申購
+                        </button>
+                    ) : (
+                        <button disabled className="action__btn disabled">
+                            {stockData.status}
+                        </button>
+                    )}
                 </div>
             </div>
 
             <style jsx>{`
-                .subscriptionCards {
-                    border: solid 1px #d7e0ef;
-                    padding: 24px;
-                    width: 30%;
-                    margin-top: 24px;
-                    height: 400px;
-                    max-height: 400px;
-                    min-height: 400px;
-                    margin-bottom: 20px;
-                    margin-right: 5%;
-                }
-                .subscriptionCards:nth-child(3n) {
-                    margin-right: 0;
-                }
                 .subscriptionCards__header {
                     position: relative;
                     border-bottom: solid 1px #d7e0ef;

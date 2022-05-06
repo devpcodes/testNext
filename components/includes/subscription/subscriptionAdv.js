@@ -13,15 +13,6 @@ const SubscriptionAdv = memo(({}) => {
 
             <style jsx>{`
                 .subscriptionAdv {
-                    border: solid 1px #d7e0ef;
-                    padding: 24px 70px;
-                    width: 30%;
-                    margin-top: 24px;
-                    height: 400px;
-                    max-height: 400px;
-                    min-height: 400px;
-                    margin-bottom: 20px;
-                    margin-right: 5%;
                     text-align: center;
                 }
                 .pic {

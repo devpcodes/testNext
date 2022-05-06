@@ -90,9 +90,13 @@ const SubscriptionMain = memo(({}) => {
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
-                            <SubscriptionCards stockData={stockData} onActionClick={submitSubscription} />
+                            <div className="subscriptionCards">
+                                <SubscriptionCards stockData={stockData} onActionClick={submitSubscription} />
+                            </div>
                         ))}
-                    <SubscriptionAdv />
+                    <div className="subscriptionCards">
+                        <SubscriptionAdv />
+                    </div>
                 </div>
             </div>
 
@@ -107,7 +111,48 @@ const SubscriptionMain = memo(({}) => {
                     justify-content: flex-start;
                     flex-wrap: wrap;
                 }
+                .subscriptionCards {
+                    border: solid 1px #d7e0ef;
+                    padding: 24px;
+                    width: 30%;
+                    margin-top: 24px;
+                    height: 400px;
+                    max-height: 400px;
+                    min-height: 400px;
+                    margin-bottom: 20px;
+                    margin-right: 5%;
+                }
+                .subscriptionCards:nth-child(3n) {
+                    margin-right: 0;
+                }
+                @media (max-width: 1600px) {
+                    .subscriptionCards {
+                        width: 48%;
+                        margin-right: 2%;
+                    }
 
+                    .subscriptionCards:nth-child(3n) {
+                        margin-right: 2%;
+                    }
+
+                    .subscriptionCards:nth-child(2n) {
+                        margin-right: 0;
+                    }
+                }
+                @media (max-width: 1000px) {
+                    .subscriptionCards {
+                        width: 100%;
+                        margin-right: 0%;
+                    }
+
+                    .subscriptionCards:nth-child(3n) {
+                        margin-right: 0%;
+                    }
+
+                    .subscriptionCards:nth-child(2n) {
+                        margin-right: 0;
+                    }
+                }
                 @media (max-width: 768px) {
                     .subscriptionMain__container {
                         padding-left: 0;
