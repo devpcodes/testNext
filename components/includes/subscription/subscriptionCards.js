@@ -86,7 +86,10 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                 </div>
 
                 <div className="subscriptionCards__footer">
-                    <button className="action__btn buy" onClick={() => onActionClick('subscription')}>
+                    <button
+                        className="action__btn buy"
+                        onClick={() => onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
+                    >
                         立即申購
                     </button>
                 </div>
