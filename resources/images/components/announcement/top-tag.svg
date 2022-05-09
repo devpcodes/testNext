@@ -1,0 +1,8 @@
+<svg width="29" height="17" viewBox="0 0 29 17" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" fill-rule="evenodd">
+        <rect fill="#C43826" width="29" height="17" rx="2"/>
+        <text font-family="PingFangTC-Regular, PingFang TC" font-size="10" letter-spacing=".25" fill="#FFF">
+                        <tspan x="4.75" y="12">置頂</tspan>
+                    </text>
+    </g>
+</svg>

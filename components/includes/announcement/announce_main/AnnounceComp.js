@@ -71,6 +71,7 @@ const getKeyWord = () => {
     return (
         <div className="announce__container">
             <div className="control__container">
+                <div className="topLink"><a href="/newweb">首頁 / </a>最新公告</div>
                 <h2 className="title">最新公告</h2>
             </div>
               <AnnounceTable
@@ -80,6 +81,8 @@ const getKeyWord = () => {
             />
             <style jsx>
                 {`
+               .announce__container .topLink{font-size:14px;color:#3f5372;margin-bottom:10px;}
+               .announce__container .topLink a{color:#a9b6cb;}
                .announce__container  h2.title{position:relative;}
                .announce__container{position:relative;width:80%;margin:0 auto;padding-top:50px;}
                @media (max-width:1250px){
@@ -88,11 +91,12 @@ const getKeyWord = () => {
                @media (max-width:1111px){
                  .announce__container{width:calc(100%-40px)}
                }
-               .announce__container .title{font-size:2.8rem;color:#0d1623;margin-top:-30px;margin-bottom:20px;}
+               .announce__container .title{font-size:2.8rem;color:#0d1623;margin-top:0px;margin-bottom:20px;}
                .announce__container .control__container{position:relative;}
                 @media (max-width: 768px) {
+                 .announce__container{width:100%;padding-left:0;padding-right:0;margin 30px auto 0;}
+                 .announce__container .topLink{display:none;}
                  .announce__container h2.title{font-size:20px;margin-bottom:5px;}
-                 .announce__container{width:100%;padding-left:0;padding-right:0;}
                  .announce__container .control__container{padding-left:20px;padding-right:20px;}
                  .announce__container .title{font-size:2rem;font-weight:bold;margin-top:-36px;margin-bottom:10px;}
                 }
