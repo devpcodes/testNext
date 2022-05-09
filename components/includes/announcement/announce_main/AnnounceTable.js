@@ -40,7 +40,7 @@ const AnnounceTable = ({ listData, getList, getData }) => {
 
 useEffect(() => {  //選單初始值
         getList().then(res=>{ 
-            console.log(res)
+           // console.log(res)
                 setList(res) 
                 setListMain(res.category1List)
                 setListSub(res.category2List)
@@ -57,7 +57,7 @@ useEffect(() => { //子選單變更
     let arr = []
     let list_ = []
     searchColumn.map(x=>{
-        console.log('x',x)
+      //  console.log('x',x)
         arr = arr.concat(list.List_lib[x])
     })
     let arr_ = arr.filter((item, index, arr) => {
@@ -79,10 +79,10 @@ useEffect(() => {
 useEffect(() => {  
         const GetNewData = async()=>{
             try {
-                console.log(searchColumn)
+              //  console.log(searchColumn)
                 getData(currentPage, pageSize, dataType , searchColumn, searchColumn2, searchWords)
                 .then(res=>{
-                    console.log(res.rows)
+                   // console.log(res.rows)
                     if(res.rows.length>0){
                     let keyMatch = res.rows.map(x=>{
                         x.key=x.articleGUID
