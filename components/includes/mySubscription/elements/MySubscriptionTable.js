@@ -12,8 +12,11 @@ const MySubscriptionTable = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
-    const [statusFilterValue, setStatusFilterValue] = useState('');
     const [searchColumns, setSearchColumns] = useState([]);
+
+    const [statusFilterValue, setStatusFilterValue] = useState('');
+    const [orderAmountSorter, setOrderAmountSorter] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
         getOrderStatus();
     }, [currentAccount]);
@@ -53,9 +56,7 @@ const MySubscriptionTable = () => {
                 dataIndex: 'orderAmount',
                 key: 'orderAmount',
                 align: 'right',
-                sorter: (a, b) => {
-                    return Number(a.orderAmount) - Number(b.orderAmount);
-                },
+                sorter: true,
                 render(text, record, idx) {
                     return formatNum(text);
                 },
@@ -103,6 +104,10 @@ const MySubscriptionTable = () => {
         setColumns(myColumns);
     }, [data, searchColumns, statusFilterValue]);
 
+    useEffect(() => {
+        console.log(currentPage, orderAmountSorter, statusFilterValue);
+    }, [currentPage, orderAmountSorter, statusFilterValue]);
+
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'status') {
             return {
@@ -123,14 +128,15 @@ const MySubscriptionTable = () => {
                     />
                 ),
                 filteredValue: [statusFilterValue] || null,
-                onFilter: (value, record) => {
-                    console.log('===', value);
-                    if (value === 'ALL' || value === '') {
-                        return true;
-                    } else {
-                        return record['status'].includes(value);
-                    }
-                },
+                // onFilter: (value, record) => {
+                //     console.log('===', value);
+                //     // handleTableChange(record, value);
+                //     if (value === 'ALL' || value === '') {
+                //         return true;
+                //     } else {
+                //         return record['status'].includes(value);
+                //     }
+                // },
             };
         }
     };
@@ -156,6 +162,18 @@ const MySubscriptionTable = () => {
             });
             setStatusFilterValue('');
         }
+    };
+
+    const handleTableChange = (pagination, filters, sorter) => {
+        console.log('-------------', pagination, statusFilterValue, sorter);
+        if (sorter.columnKey === 'orderAmount') {
+            setOrderAmountSorter(sorter.order);
+        }
+    };
+
+    const pageChangeHandler = val => {
+        console.log('vvv', val);
+        setCurrentPage(val);
     };
 
     const getOrderStatus = async () => {
@@ -189,7 +207,12 @@ const MySubscriptionTable = () => {
     return (
         <AccountTable
             filterColumns={searchColumns}
-            pagination={true}
+            pagination={{
+                onChange: pageChangeHandler,
+                responsive: true,
+                defaultPageSize: 10,
+                current: currentPage,
+            }}
             columns={columns}
             dataSource={data}
             expandable={{
@@ -197,6 +220,7 @@ const MySubscriptionTable = () => {
                 rowExpandable: record => record.name !== 'Not Expandable',
             }}
             scroll={{ x: 780 }}
+            onChange={handleTableChange}
         />
     );
 };
