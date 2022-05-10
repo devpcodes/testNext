@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { fetchListWithOrderStatus } from '../../../../services/components/mySubscription/fetchListWithOrderStatus';
+import { fetchOrderStatus } from '../../../../services/components/mySubscription/fetchOrderStatus';
 // import { fetchLoginSubscriptionList } from '../../../../services/components/subscription/getLoginSubScriptionList';
 import { getToken } from '../../../../services/user/accessToken';
 import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import { formatNum } from '../../../../services/formatNum';
 import TimeLine from './TimeLine';
 import DropfilterCheckBox from '../../tradingAccount/vipInventory/DropfilterCheckBox';
-const MySubscriptionTable = () => {
+import { message } from 'antd';
+import { debounce } from '../../../../services/throttle';
+const MySubscriptionTable = ({ refresh }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -17,9 +19,19 @@ const MySubscriptionTable = () => {
     const [statusFilterValue, setStatusFilterValue] = useState('');
     const [orderAmountSorter, setOrderAmountSorter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
-        getOrderStatus();
+        if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
+            // alert('0')
+            debounce(getOrderStatus, 500);
+            // getOrderStatus();
+        }
     }, [currentAccount]);
+    useEffect(() => {
+        if (refresh) {
+            getOrderStatus();
+        }
+    }, [refresh]);
     useEffect(() => {
         const myColumns = [
             {
@@ -34,8 +46,8 @@ const MySubscriptionTable = () => {
             {
                 title: '申購狀態',
                 width: '100px',
-                dataIndex: 'status',
-                key: 'status',
+                dataIndex: 'statusMessage',
+                key: 'statusMessage',
                 ...getColumnSearchProps('status'),
                 render(text, record, idx) {
                     return text;
@@ -179,13 +191,21 @@ const MySubscriptionTable = () => {
     const getOrderStatus = async () => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
-            const res = await fetchListWithOrderStatus(token, currentAccount.broker_id, currentAccount.account);
-            if (res.length > 0) {
-                const newData = res?.map((element, index) => {
-                    element.key = index;
-                    return element;
-                });
-                setData(newData);
+            setLoading(true);
+            try {
+                const res = await fetchOrderStatus(token, currentAccount.broker_id, currentAccount.account);
+                setLoading(false);
+                if (res.length >= 0) {
+                    const newData = res?.map((element, index) => {
+                        element.key = index;
+                        element.currentDate = '20220310';
+                        return element;
+                    });
+                    setData(newData);
+                }
+            } catch (error) {
+                setLoading(false);
+                message.error(error);
             }
         }
     };
@@ -221,6 +241,22 @@ const MySubscriptionTable = () => {
             }}
             scroll={{ x: 780 }}
             onChange={handleTableChange}
+            loading={{
+                indicator: (
+                    <div
+                        style={{
+                            marginTop: '20px',
+                            color: 'black',
+                            fontSize: '1.6rem',
+                            width: '100%',
+                            transform: 'translateX(-49%) translateY(-54px)',
+                        }}
+                    >
+                        資料加載中...
+                    </div>
+                ),
+                spinning: loading,
+            }}
         />
     );
 };

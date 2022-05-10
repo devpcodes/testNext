@@ -12,7 +12,7 @@ import MyTransition from '../../myTransition';
 import theme from '../../../../resources/styles/theme';
 import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
-export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type }) => {
+export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type, style }) => {
     const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
     const currentAccountList = useRef([]);
@@ -108,7 +108,7 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
         return null;
 
     return (
-        <div className={containerCalssName()}>
+        <div className={containerCalssName()} style={style}>
             {isMobile && tradingLayout !== true ? (
                 <>
                     <div className="account__container--mobile currentAccount__container">

@@ -1,27 +1,64 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import icon from '../../../../resources/images/components/mySubscription/attention-error (1).svg';
 
 const TimeLine = ({ style, data }) => {
-    useEffect(() => {}, [data]);
-    console.log('data', data);
+    const feeDataItem1Dom = useRef(null);
+    const feeDataItem2Dom = useRef(null);
+    const feeDataItem3Dom = useRef(null);
+    const [text, setText] = useState('');
+    const [link, setLink] = useState('');
+    useEffect(() => {
+        console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
+        textHandler(data);
+
+        if (moment(data.currentDate).isSame(moment(data.feeDate))) {
+            feeDataItem1Dom.current.classList.add('active');
+            feeDataItem2Dom.current.classList.add('active');
+            feeDataItem3Dom.current.classList.add('active');
+        }
+        if (moment(data.currentDate).isAfter(moment(data.feeDate))) {
+            feeDataItem1Dom.current.classList.add('disabled');
+            feeDataItem2Dom.current.classList.add('disabled');
+            feeDataItem3Dom.current.classList.add('disabled');
+        }
+    }, [data]);
+    console.log('data', data); //disabled // active //【 抵押低利借款方案 】
+    const textHandler = () => {
+        if (moment(data.currentDate).isBefore(moment(data.feeDate)) && data.canCancel) {
+            setText(`記得截止日${moment(data.feeDate).format('MM/DD')}前將款項備足待扣喲!`);
+            return;
+        }
+        if (
+            data.statusMessage !== '委託預約中' &&
+            data.statusMessage !== '委託處理中' &&
+            data.statusMessage !== '委託已送出' &&
+            data.statusMessage !== '未中籤' &&
+            data.statusMessage !== '已中籤'
+        ) {
+            setText(data.statusMessage);
+        }
+    };
     return (
         <div style={style}>
             <div className="line1__box">
-                <span className="line1__item disabled">扣款 {moment(data.feeDate).format('MM/DD')}</span>
-                <span className="line1__item active">抽籤 {moment(data.lotDate).format('MM/DD')}</span>
+                <span ref={feeDataItem1Dom} className="line1__item ">
+                    扣款 {moment(data.feeDate).format('MM/DD')}
+                </span>
+                <span className="line1__item">抽籤 {moment(data.lotDate).format('MM/DD')}</span>
                 <span className="line1__item">撥券 03/20</span>
             </div>
             <div className="line2__box">
-                <span className="line2__item disabled"></span>
+                <span ref={feeDataItem2Dom} className="line2__item"></span>
                 <span className="line"></span>
-                <span className="line2__item active"></span>
+                <span className="line2__item"></span>
                 <span className="line"></span>
                 <span className="line2__item"></span>
             </div>
             <div className="line3__box">
                 <span
-                    className="line3__item disabled"
+                    ref={feeDataItem3Dom}
+                    className="line3__item"
                     style={{
                         display: 'inline-block',
                         fontSize: '14px',
@@ -30,7 +67,7 @@ const TimeLine = ({ style, data }) => {
                     扣款 40,070
                 </span>
                 <span
-                    className="line3__item active"
+                    className="line3__item"
                     style={{
                         marginLeft: '23%',
                         width: '40px',
@@ -53,9 +90,9 @@ const TimeLine = ({ style, data }) => {
                 </span>
             </div>
             <p className="time__desc">
-                <img className="time__icon" src={icon} />
-                <span>恭喜您中籤啦！若有資金需求除了賣股變現，另外提供您股票</span>
-                <a>【 抵押低利借款方案 】</a>
+                {text && <img className="time__icon" src={icon} />}
+                <span>{text}</span>
+                <a>{link}</a>
             </p>
             <style jsx>{`
                 .line1__item.disabled {
@@ -67,6 +104,9 @@ const TimeLine = ({ style, data }) => {
                 }
                 .line3__item.disabled {
                     color: #6c7b94;
+                }
+                .none {
+                    display: none;
                 }
 
                 .line1__item.active {

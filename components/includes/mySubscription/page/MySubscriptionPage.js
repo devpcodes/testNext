@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useUser } from '../../../../hooks/useUser';
 import { showLoginHandler } from '../../../../store/components/layouts/action';
@@ -11,19 +11,26 @@ import MySubscriptionTable from '../elements/MySubscriptionTable';
 const MySubscriptionPage = () => {
     const { isLogin } = useUser();
     const dispatch = useDispatch();
+    const [refresh, setRefresh] = useState(false);
     useEffect(() => {
         if (!isLogin) {
             dispatch(showLoginHandler(true));
         }
     }, [isLogin]);
+    const onRefresh = () => {
+        setRefresh(true);
+        setTimeout(() => {
+            setRefresh(false);
+        }, 500);
+    };
     return (
         <div>
             <div className="subscription__head">
                 <Breadcrumb />
-                <SubscriptionHeader onSelect={() => {}} />
+                <SubscriptionHeader onSelect={() => {}} onRefresh={onRefresh} />
             </div>
             <MoneyContainer />
-            <MySubscriptionTable />
+            <MySubscriptionTable refresh={refresh} />
             <style jsx>{`
                 @media (max-width: 768px) {
                     .subscription__head {
