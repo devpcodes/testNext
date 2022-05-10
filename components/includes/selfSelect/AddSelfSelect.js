@@ -14,6 +14,7 @@ const AddSelfSelect = memo(
         width = '219px',
         marketType = ['S', 'SB', 'F', 'O'],
         className = '',
+        isOrder = false,
     }) => {
         const [inputVal, setInputVal] = useState('');
         const [searchData, setSearchData] = useState(null);
@@ -75,6 +76,7 @@ const AddSelfSelect = memo(
                         width={width}
                         className={className}
                         onPressEnter={onPressEnter}
+                        isOrder={isOrder}
                     />
                     <button
                         className="add__stock__btn"

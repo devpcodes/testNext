@@ -40,6 +40,7 @@ const FinancialProductArticleComponent = ({
     const [announcement, setAnnouncement] = useState([]);
     const clientWidth = useSelector(store => store.layout.winWidth);
     useEffect(() => {
+        console.log('------------', router.query.categoryCode);
         if (router.query.categoryCode) {
             // setProductCode(router.query.categoryCode)
             getAppCode(router.query.categoryCode);
@@ -52,10 +53,18 @@ const FinancialProductArticleComponent = ({
 
     const getAppCode = async categoryCode => {
         const res = await getTradingAppCategoriesAndProduct(categoryCode);
-        if (res?.apps[0]?.appCode) {
-            console.log('appCode', res.apps[0].appCode);
-            setProductCode(res.apps[0].appCode);
-        }
+        //console.log('fffffff', res?.apps[0]?.appCode, router.query.code)
+        // if(res?.apps){
+        //     const data = res?.apps;
+        //     const newData = data.filter((element) => {
+
+        //     })
+        // }
+        // if (res?.apps[0]?.appCode) {
+        //     console.log('appCode', res.apps[0].appCode);
+        //     setProductCode(res.apps[0].appCode);
+        // }
+        setProductCode(router.query.code);
     };
 
     const toProduct = code => {
