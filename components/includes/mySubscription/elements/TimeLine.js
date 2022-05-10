@@ -9,12 +9,13 @@ const TimeLine = ({ style, data }) => {
     const endDataItem1Dom = useRef(null);
     const endDataItem2Dom = useRef(null);
     const endDataItem3Dom = useRef(null);
+    const endDataItem2LineDom = useRef(null);
     const [text, setText] = useState('');
     const [link, setLink] = useState('');
     useEffect(() => {
         console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
         textHandler(data);
-
+        visible3Handler(data);
         if (moment(data.currentDate).isSame(moment(data.feeDate))) {
             feeDataItem1Dom.current.classList.add('active');
             feeDataItem2Dom.current.classList.add('active');
@@ -42,22 +43,42 @@ const TimeLine = ({ style, data }) => {
             setText(data.statusMessage);
         }
     };
+    const visible3Handler = data => {
+        if (data.statusMessage !== '未中籤' && data.statusMessage !== '中籤') {
+            endDataItem1Dom.current.classList.add('none');
+            endDataItem2Dom.current.classList.add('none');
+            endDataItem3Dom.current.classList.add('none');
+            endDataItem2LineDom.current.classList.add('none');
+        }
+    };
     return (
         <div style={style}>
             <div className="line1__box">
                 <span ref={feeDataItem1Dom} className="line1__item ">
                     扣款 {moment(data.feeDate).format('MM/DD')}
                 </span>
-                <span className="line1__item">抽籤 {moment(data.lotDate).format('MM/DD')}</span>
+                <span
+                    style={{
+                        marginRight: data.statusMessage !== '未中籤' && data.statusMessage !== '中籤' ? 97 : 0,
+                    }}
+                    className="line1__item"
+                >
+                    抽籤 {moment(data.lotDate).format('MM/DD')}
+                </span>
                 <span ref={endDataItem1Dom} className="line1__item">
                     撥券 03/20
                 </span>
             </div>
-            <div className="line2__box">
+            <div
+                className="line2__box"
+                style={{
+                    width: data.statusMessage !== '未中籤' && data.statusMessage !== '中籤' ? 211 : 'auto',
+                }}
+            >
                 <span ref={feeDataItem2Dom} className="line2__item"></span>
                 <span className="line"></span>
                 <span className="line2__item"></span>
-                <span className="line"></span>
+                <span ref={endDataItem2LineDom} className="line"></span>
                 <span ref={endDataItem2Dom} className="line2__item"></span>
             </div>
             <div className="line3__box">
@@ -74,7 +95,7 @@ const TimeLine = ({ style, data }) => {
                 <span
                     className="line3__item"
                     style={{
-                        marginLeft: '23%',
+                        marginLeft: data.statusMessage !== '未中籤' && data.statusMessage !== '中籤' ? '33%' : '23%',
                         width: '40px',
                         display: 'inline-block',
                         textAlign: 'center',
@@ -112,7 +133,7 @@ const TimeLine = ({ style, data }) => {
                     color: #6c7b94;
                 }
                 .none {
-                    display: none;
+                    display: none !important;
                 }
 
                 .line1__item.active {
