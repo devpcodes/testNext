@@ -6,6 +6,9 @@ const TimeLine = ({ style, data }) => {
     const feeDataItem1Dom = useRef(null);
     const feeDataItem2Dom = useRef(null);
     const feeDataItem3Dom = useRef(null);
+    const endDataItem1Dom = useRef(null);
+    const endDataItem2Dom = useRef(null);
+    const endDataItem3Dom = useRef(null);
     const [text, setText] = useState('');
     const [link, setLink] = useState('');
     useEffect(() => {
@@ -25,7 +28,7 @@ const TimeLine = ({ style, data }) => {
     }, [data]);
     console.log('data', data); //disabled // active //【 抵押低利借款方案 】
     const textHandler = () => {
-        if (moment(data.currentDate).isBefore(moment(data.feeDate)) && data.canCancel) {
+        if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
             setText(`記得截止日${moment(data.feeDate).format('MM/DD')}前將款項備足待扣喲!`);
             return;
         }
@@ -46,14 +49,16 @@ const TimeLine = ({ style, data }) => {
                     扣款 {moment(data.feeDate).format('MM/DD')}
                 </span>
                 <span className="line1__item">抽籤 {moment(data.lotDate).format('MM/DD')}</span>
-                <span className="line1__item">撥券 03/20</span>
+                <span ref={endDataItem1Dom} className="line1__item">
+                    撥券 03/20
+                </span>
             </div>
             <div className="line2__box">
                 <span ref={feeDataItem2Dom} className="line2__item"></span>
                 <span className="line"></span>
                 <span className="line2__item"></span>
                 <span className="line"></span>
-                <span className="line2__item"></span>
+                <span ref={endDataItem2Dom} className="line2__item"></span>
             </div>
             <div className="line3__box">
                 <span
@@ -80,6 +85,7 @@ const TimeLine = ({ style, data }) => {
                 </span>
                 <span
                     className="line3__item"
+                    ref={endDataItem3Dom}
                     style={{
                         display: 'inline-block',
                         marginLeft: '24%',
