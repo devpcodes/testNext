@@ -7,6 +7,7 @@ import { useAutoSelectAccount } from '../hooks/useAutoSelectAccount';
 import ActiveReturn from '../components/includes/ActiveReturn';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
+import { message } from 'antd';
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
@@ -17,22 +18,26 @@ function SubBrokerageNew() {
     const hasAccount = useAutoSelectAccount('H');
     useEffect(() => {
         if (!hasAccount) {
-            dispatch(
-                setModal({
-                    visible: true,
-                    type: 'confirm',
-                    content: '無可交易帳號',
-                    title: '系統訊息',
-                    onOk: () => {
-                        router.push('/');
-                        dispatch(setModal({ visible: false }));
-                    },
-                    onCancel: () => {
-                        router.push('/');
-                        dispatch(setModal({ visible: false }));
-                    },
-                }),
-            );
+            setTimeout(() => {
+                router.push('/');
+            }, 300);
+            message.error('無可交易帳號');
+            // dispatch(
+            //     setModal({
+            //         visible: true,
+            //         type: 'confirm',
+            //         content: '無可交易帳號',
+            //         title: '系統訊息',
+            //         onOk: () => {
+            //             router.push('/');
+            //             dispatch(setModal({ visible: false }));
+            //         },
+            //         onCancel: () => {
+            //             router.push('/');
+            //             dispatch(setModal({ visible: false }));
+            //         },
+            //     }),
+            // );
         }
     }, [hasAccount]);
     return (
