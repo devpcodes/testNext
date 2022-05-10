@@ -8,7 +8,7 @@ import TopTagBar  from './TopTagBar';
 import DropFilterCheckBoxM  from './DropFilterCheckBoxM';
 import Modal from 'antd/lib/modal/Modal';
 import { GetArticleData } from '../../../../services/components/announcement/announceList';
-
+import topTag from '../../../../resources/images/components/announcement/top-tag.svg';
 const AnnounceTable = ({ listData, getList, getData }) => {
     const keyWord  = useSelector(store => store.announcement.keyWord);
     const [columns, setColumns] = useState([]);
@@ -24,10 +24,10 @@ const AnnounceTable = ({ listData, getList, getData }) => {
     const [searchColumn, setSearchColumn] = useState([]);
     const [searchColumn2, setSearchColumn2] = useState([]);
     const [searchWords, setSearchWords] = useState('');
-    //const [current, setCurrent] = useState(''); 
     const [filterColumns, setFilterColumns] = useState([]); 
     const [outerLinkPop, setOuterLinkPop] = useState(false); 
     const [indexGUID, setIndexGUID] = useState(''); 
+    const isMobile = useSelector(store => store.layout.isMobile);
     const [dimensions, setDimensions] = useState({ 
         height: 720,
         width: 1220
@@ -40,7 +40,7 @@ const AnnounceTable = ({ listData, getList, getData }) => {
 
 useEffect(() => {  //選單初始值
         getList().then(res=>{ 
-            console.log(res)
+           // console.log(res)
                 setList(res) 
                 setListMain(res.category1List)
                 setListSub(res.category2List)
@@ -57,7 +57,7 @@ useEffect(() => { //子選單變更
     let arr = []
     let list_ = []
     searchColumn.map(x=>{
-        console.log('x',x)
+      //  console.log('x',x)
         arr = arr.concat(list.List_lib[x])
     })
     let arr_ = arr.filter((item, index, arr) => {
@@ -79,10 +79,10 @@ useEffect(() => {
 useEffect(() => {  
         const GetNewData = async()=>{
             try {
-                console.log(searchColumn)
+              //  console.log(searchColumn)
                 getData(currentPage, pageSize, dataType , searchColumn, searchColumn2, searchWords)
                 .then(res=>{
-                    console.log(res.rows)
+                   // console.log(res.rows)
                     if(res.rows.length>0){
                     let keyMatch = res.rows.map(x=>{
                         x.key=x.articleGUID
@@ -106,13 +106,13 @@ useEffect(() => {
 },[currentPage,searchColumn,searchColumn2,dataType,searchWords]) 
 
 useEffect(() => { 
-    function handleResize() {
-        setDimensions({
-          height: window.innerHeight,
-          width: window.innerWidth
-        })
-  }
-  window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', handleResize)
+    function handleResize  (){
+    setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth
+    })
+    }
 })
 
 useEffect(() => {  //filter icon color
@@ -155,14 +155,17 @@ const newColumsUpdate = (d1, d2)=>{
             key: 'title',
             width:'55%',
             render: (x,i) => {
+                
+                let tag = (i.isTop==1)?(<img className="topTag" src={topTag}></img>):''
+
                 if(i.outLinkVal==="0"){
                     if(i.articleType==="0"){
-                        return <a className="title_a aa" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{x}</a>
+                        return <a className="title_a aa" href={process.env.NEXT_PUBLIC_SUBPATH+'/AnnouncementPage?GUID='+i.articleGUID}>{tag}{x}</a>
                     }else{
-                        return <a className="title_a bb" onClick={e=>showOuterLinkPop(e,false,i.articleGUID)}>{x}</a>
+                        return <a className="title_a bb" onClick={e=>showOuterLinkPop(e,false,i.articleGUID)}>{tag}{x}</a>
                     }
                 }else{
-                        return <a className="title_a cc" onClick={e=>showOuterLinkPop(e,true,i.articleGUID)}>{x}</a>
+                        return <a className="title_a cc" onClick={e=>showOuterLinkPop(e,true,i.articleGUID)}>{tag}{x}</a>
                 }
             }
         },
@@ -300,7 +303,22 @@ const getColumnSearchProps = (data,idx) => {
                  mobleType = {dimensions.width>=768?false:true}
               />
             { 
-            dimensions.width>=768?(
+            isMobile?(
+                <AccountCard
+                dataSource = {rows}
+                columns = {columns}
+                filterColumns = {filterColumns}
+                pagination={{
+                    total: total,
+                    showTotal: (total, range) => {
+                        return `${range[0]}-${range[1]} 則公告 (共${total}則公告)`;
+                    },
+                    onChange: pageChangeHandler,
+                    current: currentPage,
+                    pageSize: pageSize,
+                }} 
+                />  
+            ):(
                 <AccountTable
                 dataSource = {rows}
                 columns = {columns}
@@ -319,21 +337,6 @@ const getColumnSearchProps = (data,idx) => {
                     pageSize: pageSize,
                 }} 
                 />  
-            ):(
-                <AccountCard
-                dataSource = {rows}
-                columns = {columns}
-                filterColumns = {filterColumns}
-                pagination={{
-                    total: total,
-                    showTotal: (total, range) => {
-                        return `${range[0]}-${range[1]} 則公告 (共${total}則公告)`;
-                    },
-                    onChange: pageChangeHandler,
-                    current: currentPage,
-                    pageSize: pageSize,
-                }} 
-                />  
             )
             }
             <Modal
@@ -347,12 +350,14 @@ const getColumnSearchProps = (data,idx) => {
                 您若同意繼續進入該網站，請點選「確認」，不同意請點選「取消」，謝謝！</p>
             </Modal>
             <style jsx>{`
-                .search_box {position:absolute;right:0;top:20px;display:inline-block;}
+                
+                .search_box {position:absolute;right:0;top:70px;display:inline-block;}
                 @media (max-width: 768px) {
                     .search_box {position:relative;top:0;margin-bottom:16px;padding:0 16px;display:flex; justify-content: space-between;}  
                 }
             `}</style>
             <style global jsx>{`
+                .announce__container .topTag {width:29px; vertical-align: text-bottom; margin:0 5px 1px 0;}
                 .announce__container .search_box .ant-input-search-button { background-color: #c43826; border: #c43826; }
                 .announce__container .ant-table-filter-trigger{margin:0}
                 .announce__container .ant-input {  border: 1px solid #e6ebf5; }
