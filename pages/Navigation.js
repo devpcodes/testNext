@@ -51,31 +51,27 @@ const Navigation = () => {
         const result = res.data?.result;
         // 不需要做生日驗證
         // localStorage.setItem('INCB', false);
-        console.log('=================', result);
         if (res.data.success) {
-            console.log(111111111111111111111111111111111111111111111111111111);
             const tokenVal = jwt_decode(getToken());
-            console.log(tokenVal);
             const checkData = checkCert(tokenVal.user_id);
-            console.log(checkData);
             if (checkData.suggestAction == 'None') {
                 // 有憑證送驗章
                 const cert = await signCert({ idno: tokenVal.user_id }, true, tokenVal);
-                console.log('cert', cert);
                 const validateRes = await caValidator(getToken(), {
                     signature: cert.signature,
                     plainText: cert.plainText,
                     certSN: cert.certSN,
                     type: 'web',
                 });
-                console.log(validateRes);
                 if (validateRes.msg !== '驗章成功') {
-                    console.log('清除憑證');
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
                         clearCert();
-                        console.log('清除成功');
                         caResultDataHandler('ApplyCert', tokenVal.user_id, getToken(), redirect, function () {
-                            alert('部屬失敗');
+                            Modal.error({
+                                content: '部屬失敗，請返回上一頁',
+                                // onOk() {
+                                // },
+                            });
                         });
                     }
                 }
