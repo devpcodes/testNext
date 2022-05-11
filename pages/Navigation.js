@@ -9,7 +9,7 @@ import { getToken } from '../services/user/accessToken';
 import { caValidator } from '../services/caValidator';
 import CaHead from '../components/includes/CaHead';
 import { checkCert, clearCert, signCert, caResultDataHandler } from '../services/webCa';
-
+import redirectPic from '../resources/images/pages/navigation/finance-analytics-two-color@3x.png';
 const Navigation = () => {
     const router = useRouter();
     const [, setPlatform] = useSessionStorage('newweb_platform', 'newweb'); // 因為沒用到，忽略陣列解構的第一個回傳值，只取 setPlatform
@@ -113,6 +113,29 @@ const Navigation = () => {
     return (
         <>
             <CaHead />
+            <div className="picBlock">
+                <img src={redirectPic} className="redirectPic" />
+                <p className="desc">頁面跳轉中 ... </p>
+            </div>
+            <style jsx>{`
+                .picBlock {
+                    width: 260px;
+                    height: 184px;
+                    margin: 78px auto 0;
+                }
+                .picBlock img {
+                    height: 100%;
+                    width: 100%;
+                }
+                .desc {
+                    font-size: 16px;
+                    font-weight: bold;
+                    letter-spacing: 0.4px;
+                    text-align: center;
+                    color: #6c7b94;
+                    margin-top: 16px;
+                }
+            `}</style>
         </>
     );
 };
