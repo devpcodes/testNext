@@ -74,7 +74,7 @@ const Navigation = () => {
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
                         clearCert();
                         console.log('清除成功');
-                        caResultDataHandler('ApplyCert', tokenVal.user_id, tokenVal, redirect, function () {
+                        caResultDataHandler('ApplyCert', tokenVal.user_id, getToken(), redirect, function () {
                             alert('部屬失敗');
                         });
                     }
