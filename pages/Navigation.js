@@ -77,7 +77,11 @@ const Navigation = () => {
                         caResultDataHandler('ApplyCert', tokenVal.user_id, getToken(), redirect, function () {
                             alert('部屬失敗');
                         });
+                    } else {
+                        redirect();
                     }
+                } else {
+                    redirect();
                 }
             } else {
                 redirect();
