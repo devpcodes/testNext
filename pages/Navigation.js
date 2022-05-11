@@ -30,6 +30,22 @@ const Navigation = () => {
             }
         };
 
+        const redirect = async () => {
+            if (router.query.platform) {
+                // 新站一律使用 newweb_platform 作為 key，不與舊站 `platform` 與 `source` 兩個 key 混用，以保證舊站未來可安全下架
+                setPlatform(router.query.platform.toLowerCase());
+                // 為保持與舊站的相容，trust login 進站時，也要設定 sessionStorage `platform`，直到舊站下架才移除下面這行
+                sessionStorage.setItem('platform', router.query.platform);
+            }
+
+            // http:// || https:// 開頭 全部直接幫忙轉到外部網址
+            if (/(^http(s?)):\/\//i.test(router.query.page)) {
+                location.href = router.query.page;
+            } else {
+                router.push(`/${router.query.page || ''}${getQueryStr()}`);
+            }
+        };
+
         // try {
         const res = await submit(router.query.otp);
         const result = res.data?.result;
@@ -58,22 +74,17 @@ const Navigation = () => {
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
                         clearCert();
                         console.log('清除成功');
+                        ca.applyCert(
+                            {
+                                userID: tokenVal.user_id,
+                                memberNo: tokenVal,
+                            },
+                            redirect(),
+                        );
                     }
                 }
-            }
-
-            if (router.query.platform) {
-                // 新站一律使用 newweb_platform 作為 key，不與舊站 `platform` 與 `source` 兩個 key 混用，以保證舊站未來可安全下架
-                setPlatform(router.query.platform.toLowerCase());
-                // 為保持與舊站的相容，trust login 進站時，也要設定 sessionStorage `platform`，直到舊站下架才移除下面這行
-                sessionStorage.setItem('platform', router.query.platform);
-            }
-
-            // http:// || https:// 開頭 全部直接幫忙轉到外部網址
-            if (/(^http(s?)):\/\//i.test(router.query.page)) {
-                location.href = router.query.page;
             } else {
-                router.push(`/${router.query.page || ''}${getQueryStr()}`);
+                redirect();
             }
         } else {
             if (result.isOpenAccount) {
