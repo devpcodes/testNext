@@ -8,7 +8,7 @@ import { useSessionStorage } from '../hooks/useSessionStorage';
 import { getToken } from '../services/user/accessToken';
 import { caValidator } from '../services/caValidator';
 import CaHead from '../components/includes/CaHead';
-import { checkCert, clearCert, signCert } from '../services/webCa';
+import { checkCert, clearCert, signCert, caResultDataHandler } from '../services/webCa';
 
 const Navigation = () => {
     const router = useRouter();
@@ -74,13 +74,9 @@ const Navigation = () => {
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
                         clearCert();
                         console.log('清除成功');
-                        ca.applyCert(
-                            {
-                                userID: tokenVal.user_id,
-                                memberNo: tokenVal,
-                            },
-                            redirect(),
-                        );
+                        caResultDataHandler('ApplyCert', tokenVal.user_id, tokenVal, redirect, function () {
+                            alert('部屬失敗');
+                        });
                     }
                 }
             } else {
