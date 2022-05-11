@@ -176,6 +176,22 @@ export const checkCert = function (userIdNo) {
     return checkData;
 };
 
+export const clearCert = function () {
+    let DM;
+    if (process.env.NEXT_PUBLIC_DM === 'false') {
+        DM = false;
+    } else {
+        DM = true;
+    }
+    const ca = new CA_Component({
+        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+        DM: DM,
+    });
+    ca.clearLS();
+};
+
 // 安裝憑證
 export const applyCert = function (user_idNo, token, callBack) {
     let DM;

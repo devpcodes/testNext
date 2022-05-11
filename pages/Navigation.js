@@ -1,11 +1,14 @@
 import { useRouter } from 'next/router';
 import { Modal } from 'antd';
 import { useEffect } from 'react';
-
+import jwt_decode from 'jwt-decode';
 import { submit } from '../services/components/login/trustLogin';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
-
 import { useSessionStorage } from '../hooks/useSessionStorage';
+import { getToken } from '../services/user/accessToken';
+import { caValidator } from '../services/caValidator';
+
+import { checkCert, clearCert } from '../services/webCa';
 
 const Navigation = () => {
     const router = useRouter();
@@ -34,6 +37,28 @@ const Navigation = () => {
             // localStorage.setItem('INCB', false);
             console.log('=================', result);
             if (res.data.success) {
+                const tokenVal = jwt_decode(getToken());
+                const checkData = checkCert(tokenVal.user_id);
+                console.log(tokenVal, checkData);
+                if (checkData.suggestAction != 'None') {
+                    // 有憑證送驗章
+                    const cert = await signCert({ idno: tokenVal.user_id }, true, token);
+                    const validateRes = await caValidator(getToken(), {
+                        signature: cert.signature,
+                        plainText: cert.plainText,
+                        certSN: cert.certSN,
+                        type: 'web',
+                    });
+                    console.log(validateRes);
+                    if (validateRes.msg !== '驗章成功') {
+                        console.log('清除憑證');
+                        if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
+                            clearCert();
+                            console.log('清除成功');
+                        }
+                    }
+                }
+
                 if (router.query.platform) {
                     // 新站一律使用 newweb_platform 作為 key，不與舊站 `platform` 與 `source` 兩個 key 混用，以保證舊站未來可安全下架
                     setPlatform(router.query.platform.toLowerCase());
