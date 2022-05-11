@@ -19,7 +19,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
     const [newBtnActive, setNewBtnActive] = useState('');
     const [myBtnActive, setMyBtnActive] = useState('');
     const isMobile = useCheckMobile();
-    useLayoutEffect(() => {
+    useEffect(() => {
         console.log('---', router.pathname);
         if (router.pathname === newSubscriptionUrl) {
             setNewBtnActive(true);

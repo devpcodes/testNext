@@ -198,7 +198,7 @@ const MySubscriptionTable = ({ refresh }) => {
                 if (res.length >= 0) {
                     const newData = res?.map((element, index) => {
                         element.key = index;
-                        element.currentDate = '20220310';
+                        element.currentDate = '20220314';
                         return element;
                     });
                     setData(newData);
