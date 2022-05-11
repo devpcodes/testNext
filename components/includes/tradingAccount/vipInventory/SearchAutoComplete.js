@@ -14,6 +14,7 @@ const SearchAutoComplete = ({
     height = '38px',
     placeholder = '請輸入股號或商品名稱',
     className = '',
+    isOrder = false,
 }) => {
     const [value, setValue] = useState('');
     const [products, setProducts] = useState([]);
@@ -31,7 +32,7 @@ const SearchAutoComplete = ({
             query: value,
             marketType: marketType,
             limit: 15,
-            isOrder: false,
+            isOrder,
         };
         try {
             const { result } = await fetchProducts(data);
