@@ -5,8 +5,11 @@ import { formatNum } from '../../../../services/formatNum';
 
 const TimeLine = ({ style, data }) => {
     const feeDataItem1Dom = useRef(null);
+    const [feeDataItem01Dom, setfeeDataItem01Dom] = useState('line1__item');
     const feeDataItem2Dom = useRef(null);
+    const [feeDataItem02Dom, setfeeDataItem02Dom] = useState('line2__item');
     const feeDataItem3Dom = useRef(null);
+    const [feeDataItem03Dom, setfeeDataItem03Dom] = useState('line3__item');
     const resultDataItem1Dom = useRef(null);
     const resultDataItem2Dom = useRef(null);
     const resultDataItem3Dom = useRef(null);
@@ -25,23 +28,31 @@ const TimeLine = ({ style, data }) => {
         visible3Handler(data);
 
         if (moment(data.currentDate).isSame(moment(data.feeDate))) {
-            feeDataItem1Dom.current.classList.add('active');
-            feeDataItem2Dom.current.classList.add('active');
-            feeDataItem3Dom.current.classList.add('active');
+            // feeDataItem1Dom.current.classList.add('active');
+            setfeeDataItem01Dom('line1__item active');
+            // feeDataItem2Dom.current.classList.add('active');
+            setfeeDataItem02Dom('line2__item active');
+            // feeDataItem3Dom.current.classList.add('active');
+            setfeeDataItem03Dom('line3__item active');
         }
         if (moment(data.currentDate).isAfter(moment(data.feeDate))) {
-            feeDataItem1Dom.current.classList.add('disabled');
-            feeDataItem2Dom.current.classList.add('disabled');
-            feeDataItem3Dom.current.classList.add('disabled');
+            // feeDataItem1Dom.current.classList.add('disabled');
+            setfeeDataItem01Dom('line1__item disabled');
+            // feeDataItem2Dom.current.classList.add('disabled');
+            setfeeDataItem02Dom('line2__item disabled');
+            // feeDataItem3Dom.current.classList.add('disabled');
+            setfeeDataItem03Dom('line3__item disabled');
         }
 
         if (moment(data.currentDate).isSame(moment(data.lotDate))) {
             resultDataItem1Dom.current.classList.add('active');
+            // setfeeDataItem01Dom('line1__item active');
             resultDataItem2Dom.current.classList.add('active');
             resultDataItem3Dom.current.classList.add('active');
         }
         if (moment(data.currentDate).isAfter(moment(data.lotDate))) {
             resultDataItem1Dom.current.classList.add('disabled');
+            // setfeeDataItem01Dom('line1__item disabled');
             resultDataItem2Dom.current.classList.add('disabled');
             resultDataItem3Dom.current.classList.add('disabled');
         }
@@ -107,11 +118,10 @@ const TimeLine = ({ style, data }) => {
             }
         }
     };
-
     return (
         <div style={style}>
             <div className="line1__box">
-                <span ref={feeDataItem1Dom} className="line1__item ">
+                <span ref={feeDataItem1Dom} className={feeDataItem01Dom}>
                     扣款 {moment(data.feeDate).format('MM/DD')}
                 </span>
                 <span
@@ -133,7 +143,7 @@ const TimeLine = ({ style, data }) => {
                     width: data.status !== 'N1' && data.status !== 'W1' ? 211 : 'auto',
                 }}
             >
-                <span ref={feeDataItem2Dom} className="line2__item"></span>
+                <span ref={feeDataItem2Dom} className={feeDataItem02Dom}></span>
                 <span
                     className="line"
                     style={{
@@ -147,7 +157,7 @@ const TimeLine = ({ style, data }) => {
             <div className="line3__box">
                 <span
                     ref={feeDataItem3Dom}
-                    className="line3__item"
+                    className={feeDataItem03Dom}
                     style={{
                         display: 'inline-block',
                         fontSize: '14px',

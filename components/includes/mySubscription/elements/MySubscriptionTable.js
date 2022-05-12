@@ -177,7 +177,7 @@ const MySubscriptionTable = ({ refresh }) => {
     };
 
     const handleTableChange = (pagination, filters, sorter) => {
-        console.log('-------------', pagination, statusFilterValue, sorter);
+        console.log('------------.-', pagination, statusFilterValue, sorter);
         if (sorter.columnKey === 'orderAmount') {
             setOrderAmountSorter(sorter.order);
         }
@@ -198,7 +198,7 @@ const MySubscriptionTable = ({ refresh }) => {
                 if (res.length >= 0) {
                     const newData = res?.map((element, index) => {
                         element.key = index;
-                        element.currentDate = '20220314';
+                        element.currentDate = '20220311';
                         return element;
                     });
                     setData(newData);
