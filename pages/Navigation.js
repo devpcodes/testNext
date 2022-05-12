@@ -121,6 +121,7 @@ const Navigation = () => {
                 <img src={redirectPic} className="redirectPic" />
                 <p className="desc">頁面跳轉中 ... </p>
             </div>
+            <iframe src="https://catest.sinotrade.com.tw/WebCA/clearLS.html"></iframe>
             <style jsx>{`
                 .picBlock {
                     width: 260px;
