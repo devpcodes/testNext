@@ -54,29 +54,22 @@ const Navigation = () => {
         // localStorage.setItem('INCB', false);
         console.log('=================', result);
         if (res.data.success) {
-            console.log(111111111111111111111111111111111111111111111111111111);
             const tokenVal = jwt_decode(getToken());
-            console.log(tokenVal);
             const checkData = checkCert(tokenVal.user_id);
-            console.log(checkData);
             if (checkData.suggestAction == 'None') {
                 // 有憑證送驗章
                 const cert = await signCert({ idno: tokenVal.user_id }, true, tokenVal);
-                console.log('cert', cert);
                 const validateRes = await caValidator(getToken(), {
                     signature: cert.signature,
                     plainText: cert.plainText,
                     certSN: cert.certSN,
                     type: 'web',
                 });
-                console.log(validateRes);
                 if (validateRes.msg !== '驗章成功') {
-                    console.log('清除憑證');
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
                         setClearCA(true);
-                        console.log('清除成功');
                         caResultDataHandler('ApplyCert', tokenVal.user_id, getToken(), redirect, function () {
-                            alert('部屬失敗');
+                            alert('部屬失敗，請關閉此頁面或回到上一頁重新登入');
                         });
                     } else {
                         redirect();
@@ -123,7 +116,14 @@ const Navigation = () => {
                 <p className="desc">頁面跳轉中 ... </p>
             </div>
             {clearCA && (
-                <iframe src="https://catest.sinotrade.com.tw/WebCA/clearLS.html" className="clearCAIframe"></iframe>
+                <iframe
+                    src={
+                        process.env.NEXT_PUBLIC_DM === 'false'
+                            ? 'https://ca.sinotrade.com.tw/WebCA/clearLS.html'
+                            : 'https://catest.sinotrade.com.tw/WebCA/clearLS.html'
+                    }
+                    className="clearCAIframe"
+                ></iframe>
             )}
             <style jsx>{`
                 .picBlock {
@@ -144,7 +144,7 @@ const Navigation = () => {
                     margin-top: 16px;
                 }
                 .clearCAIframe {
-                    display: block;
+                    display: none;
                 }
             `}</style>
         </>
