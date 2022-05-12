@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useUser } from '../../../../hooks/useUser';
 import { showLoginHandler } from '../../../../store/components/layouts/action';
 import Breadcrumb from '../../breadcrumb/breadcrumb';
-import SubscriptionHeader from '../../subscription/subscriptionHeader';
+import SubscriptionHeader from '../elements/subscriptionHeader';
 // import AccountTable from '../../tradingAccount/vipInventory/AccountTable';
 import MoneyContainer from '../elements/MoneyContainer';
 import MySubscriptionTable from '../elements/MySubscriptionTable';
