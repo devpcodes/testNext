@@ -27,7 +27,7 @@ const MySubscriptionPage = () => {
         <div>
             <div className="subscription__head">
                 <Breadcrumb />
-                <SubscriptionHeader onSelect={() => {}} onRefresh={onRefresh} />
+                <SubscriptionHeader onRefresh={onRefresh} />
             </div>
             <MoneyContainer />
             <MySubscriptionTable refresh={refresh} />

@@ -11,12 +11,19 @@ const TimeLine = ({ style, data }) => {
     const feeDataItem3Dom = useRef(null);
     const [feeDataItem03Dom, setfeeDataItem03Dom] = useState('line3__item');
     const resultDataItem1Dom = useRef(null);
+    const [resultDataItem01Dom, setResultDataItem01Dom] = useState('line1__item');
     const resultDataItem2Dom = useRef(null);
+    const [resultDataItem02Dom, setResultDataItem02Dom] = useState('line2__item');
     const resultDataItem3Dom = useRef(null);
+    const [resultDataItem03Dom, setResultDataItem03Dom] = useState('line3__item');
     const endDataItem1Dom = useRef(null);
+    const [endDataItem01Dom, setEndDataItem01Dom] = useState('line1__item');
     const endDataItem2Dom = useRef(null);
+    const [endDataItem02Dom, setEndDataItem02Dom] = useState('line2__item');
     const endDataItem3Dom = useRef(null);
+    const [endDataItem03Dom, setEndDataItem03Dom] = useState('line3__item');
     const endDataItem2LineDom = useRef(null);
+    const [endDataItem02LineDom, setEndDataItem02LineDom] = useState('line');
     const [text, setText] = useState('');
     const [label2Text, setLabel2Text] = useState('待抽籤');
     const [link, setLink] = useState('');
@@ -24,51 +31,62 @@ const TimeLine = ({ style, data }) => {
     const [label3TextDown, setLabel3TextDown] = useState('');
     useEffect(() => {
         console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
-        textHandler(data);
-        visible3Handler(data);
+        resetHandler();
 
+        console.log('---=-=-=-', data.status);
         if (moment(data.currentDate).isSame(moment(data.feeDate))) {
-            // feeDataItem1Dom.current.classList.add('active');
             setfeeDataItem01Dom('line1__item active');
-            // feeDataItem2Dom.current.classList.add('active');
             setfeeDataItem02Dom('line2__item active');
-            // feeDataItem3Dom.current.classList.add('active');
             setfeeDataItem03Dom('line3__item active');
         }
         if (moment(data.currentDate).isAfter(moment(data.feeDate))) {
-            // feeDataItem1Dom.current.classList.add('disabled');
             setfeeDataItem01Dom('line1__item disabled');
-            // feeDataItem2Dom.current.classList.add('disabled');
             setfeeDataItem02Dom('line2__item disabled');
-            // feeDataItem3Dom.current.classList.add('disabled');
             setfeeDataItem03Dom('line3__item disabled');
         }
 
         if (moment(data.currentDate).isSame(moment(data.lotDate))) {
-            resultDataItem1Dom.current.classList.add('active');
-            // setfeeDataItem01Dom('line1__item active');
-            resultDataItem2Dom.current.classList.add('active');
-            resultDataItem3Dom.current.classList.add('active');
+            setResultDataItem01Dom('line1__item active');
+            setResultDataItem02Dom('line2__item active');
+            setResultDataItem03Dom('line3__item active');
         }
         if (moment(data.currentDate).isAfter(moment(data.lotDate))) {
-            resultDataItem1Dom.current.classList.add('disabled');
-            // setfeeDataItem01Dom('line1__item disabled');
-            resultDataItem2Dom.current.classList.add('disabled');
-            resultDataItem3Dom.current.classList.add('disabled');
+            setResultDataItem01Dom('line1__item disabled');
+            setResultDataItem02Dom('line2__item disabled');
+            setResultDataItem03Dom('line3__item disabled');
         }
 
         if (moment(data.currentDate).isSame(moment(data.stkDate))) {
-            endDataItem1Dom.current.classList.add('active');
-            endDataItem2Dom.current.classList.add('active');
-            endDataItem3Dom.current.classList.add('active');
+            setEndDataItem01Dom('line1__item active');
+            setEndDataItem02Dom('line2__item active');
+            setEndDataItem03Dom('line3__item active');
         }
         if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
-            endDataItem1Dom.current.classList.add('disabled');
-            endDataItem2Dom.current.classList.add('disabled');
-            endDataItem3Dom.current.classList.add('disabled');
+            setEndDataItem01Dom('line1__item disabled');
+            setEndDataItem02Dom('line2__item disabled');
+            setEndDataItem03Dom('line3__item disabled');
         }
+        textHandler(data);
+        visible3Handler(data);
     }, [data]);
     console.log('data', data); //disabled // active //【 抵押低利借款方案 】
+    const resetHandler = () => {
+        setfeeDataItem01Dom('line1__item');
+        setfeeDataItem02Dom('line2__item');
+        setfeeDataItem03Dom('line3__item');
+        setResultDataItem01Dom('line1__item');
+        setResultDataItem02Dom('line2__item');
+        setResultDataItem03Dom('line3__item');
+        setEndDataItem01Dom('line1__item');
+        setEndDataItem02Dom('line2__item');
+        setEndDataItem03Dom('line3__item');
+        setEndDataItem02LineDom('line');
+        setText('');
+        setLabel2Text('待抽籤');
+        setLink('');
+        setLabel3TextUp('');
+        setLabel3TextDown('');
+    };
     const textHandler = () => {
         if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
             setText(`記得截止日${moment(data.feeDate).format('MM/DD')}前將款項備足待扣喲!`);
@@ -87,11 +105,17 @@ const TimeLine = ({ style, data }) => {
     // 中籤 未中籤 ui設定
     const visible3Handler = data => {
         if (data.status !== 'N1' && data.status !== 'W1') {
-            endDataItem1Dom.current.classList.add('none');
-            endDataItem2Dom.current.classList.add('none');
-            endDataItem3Dom.current.classList.add('none');
-            endDataItem2LineDom.current.classList.add('none');
+            setEndDataItem01Dom('line1__item none');
+            setEndDataItem02Dom('line2__item none');
+            setEndDataItem03Dom('line3__item none');
+            setEndDataItem02LineDom('line none');
         }
+        // if (data.status === 'N1' || data.status === 'W1') {
+        //     setEndDataItem01Dom('line1__item');
+        //     setEndDataItem02Dom('line2__item');
+        //     setEndDataItem03Dom('line3__item');
+        //     setEndDataItem02LineDom('line')
+        // }
         console.log('1231231231235555');
         if (data.status === 'N1' || data.status === 'W1') {
             if (data.status === 'N1') {
@@ -104,7 +128,11 @@ const TimeLine = ({ style, data }) => {
                 setLabel2Text('中籤');
                 setLabel3TextUp(`撥券 ${moment(data.stkDate).format('MM/DD')}`);
                 setLabel3TextDown(`${data.stockId + ' ' + data.stockName}  匯入${Number(data.share) / 1000}張`);
-                if (moment(data.currentDate).isSame(moment(data.lotDate))) {
+                if (
+                    moment(data.currentDate).isSame(moment(data.lotDate)) ||
+                    (moment(data.currentDate).isAfter(moment(data.lotDate)) &&
+                        moment(data.currentDate).isBefore(moment(data.stkDate)))
+                ) {
                     setText('恭喜您中籤啦！若有資金需求除了賣股變現外另提供您股票');
                     setLink('【 抵押低利借款方案 】');
                 }
@@ -128,12 +156,12 @@ const TimeLine = ({ style, data }) => {
                     style={{
                         marginRight: data.status !== 'N1' && data.status !== 'W1' ? 97 : 0,
                     }}
-                    className="line1__item"
+                    className={resultDataItem01Dom}
                     ref={resultDataItem1Dom}
                 >
                     抽籤 {moment(data.lotDate).format('MM/DD')}
                 </span>
-                <span ref={endDataItem1Dom} className="line1__item">
+                <span ref={endDataItem1Dom} className={endDataItem01Dom}>
                     {label3TextUp}
                 </span>
             </div>
@@ -150,9 +178,9 @@ const TimeLine = ({ style, data }) => {
                         width: data.status !== 'N1' && data.status !== 'W1' ? '60%' : '30%',
                     }}
                 ></span>
-                <span ref={resultDataItem2Dom} className="line2__item"></span>
-                <span ref={endDataItem2LineDom} className="line"></span>
-                <span ref={endDataItem2Dom} className="line2__item"></span>
+                <span className={resultDataItem02Dom}></span>
+                <span ref={endDataItem2LineDom} className={endDataItem02LineDom}></span>
+                <span className={endDataItem02Dom}></span>
             </div>
             <div className="line3__box">
                 <span
@@ -166,7 +194,7 @@ const TimeLine = ({ style, data }) => {
                     扣款 {formatNum(data.orderAmount)}
                 </span>
                 <span
-                    className="line3__item"
+                    className={resultDataItem03Dom}
                     style={{
                         marginLeft: data.status !== 'N1' && data.status !== 'W1' ? '33%' : '23%',
                         width: '40px',
@@ -179,7 +207,7 @@ const TimeLine = ({ style, data }) => {
                     {label2Text}
                 </span>
                 <span
-                    className="line3__item"
+                    className={endDataItem03Dom}
                     ref={endDataItem3Dom}
                     style={{
                         display: 'inline-block',

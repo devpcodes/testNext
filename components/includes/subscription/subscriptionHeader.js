@@ -1,4 +1,5 @@
-import { useCallback, useState, useEffect, memo, useLayoutEffect } from 'react';
+import { useCallback, useState, useEffect, memo } from 'react';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,6 +19,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
     const idno = useSelector(store => store.user.currentAccount.idno);
     const [newBtnActive, setNewBtnActive] = useState('');
     const [myBtnActive, setMyBtnActive] = useState('');
+    const [currentTime, setCurrentTime] = useState(moment().format('YYYY.MM.DD HH:mm'));
     const isMobile = useCheckMobile();
     useEffect(() => {
         console.log('---', router.pathname);
@@ -31,6 +33,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
         }
     }, [router.pathname]);
     const refreshClickHandler = () => {
+        setCurrentTime(moment().format('YYYY.MM.DD HH:mm'));
         onRefresh();
     };
     const showDescription = () => {
@@ -93,7 +96,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
                         </div>
                         <div className="subscription__toolbar__right">
                             {myBtnActive && !isMobile && (
-                                <span className="desc__update">{'最後更新時間：2022.02.18 15:36'}</span>
+                                <span className="desc__update">{'最後更新時間：' + currentTime}</span>
                             )}
                             {myBtnActive && (
                                 <IconBtn

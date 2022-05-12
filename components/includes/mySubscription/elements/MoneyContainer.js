@@ -1,7 +1,9 @@
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
+import { useSelector } from 'react-redux';
 import MoneyBox from './MoneyBox';
 const MoneyContainer = () => {
     const isMobile = useCheckMobile();
+    const currentAccount = useSelector(store => store.user.currentAccount);
     return (
         <div className="moneyBox__container">
             {isMobile ? (
@@ -19,7 +21,7 @@ const MoneyContainer = () => {
                     ]}
                     data={[
                         {
-                            label: '帳號 1800-1809-1631',
+                            label: '帳號 ' + currentAccount.broker_id + '-' + currentAccount.account,
                             val: '$135,000',
                             style: { flex: '1 0 0' },
                             showLine: true,
@@ -44,7 +46,7 @@ const MoneyContainer = () => {
                         title={[{ val: '銀行交割餘額' }]}
                         data={[
                             {
-                                label: '交割帳號 1800-1809-1631',
+                                label: '交割帳號 ' + currentAccount.broker_id + '-' + currentAccount.account,
                                 val: '$135,000',
                             },
                         ]}

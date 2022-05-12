@@ -10,6 +10,10 @@ import TimeLine from './TimeLine';
 import DropfilterCheckBox from '../../tradingAccount/vipInventory/DropfilterCheckBox';
 import { message } from 'antd';
 import { debounce } from '../../../../services/throttle';
+import SubscriptionBtn from './SubscriptionBtn';
+import { checkSignCA, sign } from '../../../../services/webCa';
+import { postCancel } from '../../../../services/components/goOrder/postCancel';
+import { getCookie } from '../../../../services/components/layouts/cookieController';
 const MySubscriptionTable = ({ refresh }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -40,7 +44,18 @@ const MySubscriptionTable = ({ refresh }) => {
                 dataIndex: 'action',
                 key: 'action',
                 render(text, record, idx) {
-                    return '';
+                    return (
+                        <>
+                            {/* <SubscriptionBtn text="賣出" colorType="green" width={'49%'} style={{marginRight: 10}}/>
+                            <SubscriptionBtn text="抵押" colorType="yellow" width={'49%'}/> */}
+                            <SubscriptionBtn
+                                text="取消申購"
+                                colorType="blue"
+                                width={'100%'}
+                                onClick={clickHandler.bind(null, record, 'cancel')}
+                            />
+                        </>
+                    );
                 },
             },
             {
@@ -98,6 +113,7 @@ const MySubscriptionTable = ({ refresh }) => {
                 width: '100px',
                 dataIndex: 'lotDate',
                 key: 'lotDate',
+                sorter: true,
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
@@ -119,6 +135,36 @@ const MySubscriptionTable = ({ refresh }) => {
     useEffect(() => {
         console.log(currentPage, orderAmountSorter, statusFilterValue);
     }, [currentPage, orderAmountSorter, statusFilterValue]);
+
+    const clickHandler = (record, type) => {
+        console.log(record, type);
+        if (type === 'cancel') cancelHandler(record);
+    };
+
+    const cancelHandler = async record => {
+        const token = getToken();
+        const ca_content = sign(
+            {
+                idno: currentAccount.idno,
+                broker_id: currentAccount.broker_id,
+                account: currentAccount.account,
+            },
+            true,
+            token,
+        );
+        //branch, account, stockId, status, ca_content, client_ip
+        if (checkSignCA(ca_content)) {
+            const res = await postCancel({
+                branch: currentAccount.broker_id,
+                account: currentAccount.account,
+                stockId: record.stockId,
+                status: record.status,
+                ca_content,
+                client_ip: getCookie('client_ip'),
+                token,
+            });
+        }
+    };
 
     const getColumnSearchProps = dataIndex => {
         if (dataIndex === 'status') {
@@ -198,7 +244,7 @@ const MySubscriptionTable = ({ refresh }) => {
                 if (res.length >= 0) {
                     const newData = res?.map((element, index) => {
                         element.key = index;
-                        element.currentDate = '20220311';
+                        element.currentDate = '20220308';
                         return element;
                     });
                     setData(newData);
