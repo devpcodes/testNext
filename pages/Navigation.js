@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { Modal } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { submit } from '../services/components/login/trustLogin';
 import { objectToQueryHandler } from '../services/objectToQueryHandler';
@@ -13,6 +13,7 @@ import redirectPic from '../resources/images/pages/navigation/finance-analytics-
 const Navigation = () => {
     const router = useRouter();
     const [, setPlatform] = useSessionStorage('newweb_platform', 'newweb'); // 因為沒用到，忽略陣列解構的第一個回傳值，只取 setPlatform
+    const [clearCA, setClearCA] = useState(false);
 
     const doLogin = async () => {
         const getQueryStr = () => {
@@ -72,7 +73,7 @@ const Navigation = () => {
                 if (validateRes.msg !== '驗章成功') {
                     console.log('清除憑證');
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
-                        clearCert();
+                        setClearCA(true);
                         console.log('清除成功');
                         caResultDataHandler('ApplyCert', tokenVal.user_id, getToken(), redirect, function () {
                             alert('部屬失敗');
@@ -121,7 +122,9 @@ const Navigation = () => {
                 <img src={redirectPic} className="redirectPic" />
                 <p className="desc">頁面跳轉中 ... </p>
             </div>
-            <iframe src="https://catest.sinotrade.com.tw/WebCA/clearLS.html"></iframe>
+            {clearCA && (
+                <iframe src="https://catest.sinotrade.com.tw/WebCA/clearLS.html" className="clearCAIframe"></iframe>
+            )}
             <style jsx>{`
                 .picBlock {
                     width: 260px;
@@ -139,6 +142,9 @@ const Navigation = () => {
                     text-align: center;
                     color: #6c7b94;
                     margin-top: 16px;
+                }
+                .clearCAIframe {
+                    display: block;
                 }
             `}</style>
         </>
