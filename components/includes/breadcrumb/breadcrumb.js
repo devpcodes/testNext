@@ -15,7 +15,6 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
     const elementNameArr = useRef([]);
     const elementPathArr = useRef([]);
     const [firstTabId, setFirstTabId] = useState([]);
-
     const BreadcrumbItemHandler = useCallback(() => {
         elementNameArr.current = [];
         elementPathArr.current = [];
@@ -95,6 +94,15 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                     elementPathArr.current.push(`/${levelArr.current[0]}`);
                 }
                 break;
+            case 'loan':
+                elementNameArr.current.push('首頁');
+                elementPathArr.current.push(`/${levelArr.current[0]}`);
+            case 'loan-zone':
+                elementNameArr.current.push('借貸專區');
+                elementPathArr.current.push(`/${levelArr.current[0]}`);
+            case 'Collateral':
+                elementNameArr.current.push('擔保品試算');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
             default:
                 break;
         }
@@ -103,7 +111,7 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
     return (
         <>
             <Breadcrumb className="site-breadcrumb">
-                {BreadcrumbItemHandler().map((item, index) => {
+                {_.uniq(BreadcrumbItemHandler()).map((item, index) => {
                     if (index !== BreadcrumbItemHandler().length - 1) {
                         let pathArr = _.clone(elementPathArr.current);
                         pathArr.splice(index + 1);

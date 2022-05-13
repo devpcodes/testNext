@@ -435,14 +435,20 @@ const Layout = memo(({ children }) => {
                 {...modal}
                 title={
                     <>
-                        <img src={getModalIconHandler(modal.type, modal.bs)} />
-                        <span>{modal.title}</span>
+                        {modal.noTitleIcon ? <></> : <img src={getModalIconHandler(modal.type, modal.bs)} />}
+                        <span
+                            style={{
+                                marginLeft: modal.noTitleIcon ? 0 : '5px',
+                            }}
+                        >
+                            {modal.title}
+                        </span>
                     </>
                 }
                 className="confirm__container"
                 okText={modal.okText || '確定'}
-                cancelText="取消"
-                closeIcon={<img src={modalCloseIcon} />}
+                cancelText={modal.cancelText || '取消'}
+                closeIcon={modal.noCloseIcon ? <></> : <img src={modalCloseIcon} />}
                 onCancel={
                     modal.onCancel != null
                         ? modal.onCancel

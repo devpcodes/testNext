@@ -15,7 +15,7 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
         if (noDataSetting != undefined) {
             setNoDataSetting(noDataSetting);
         }
-    }, []);
+    }, [noDataSetting]);
     useEffect(() => {
         let newColumns = [];
         if (props.columns?.length > 0) {
@@ -42,12 +42,15 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
     }, [props.columns, filterColumns]);
 
     //no Data customize
-    const customizeRenderEmpty = () => (
-        <div style={{ textAlign: 'center' }}>
-            <img src={noData.imgSrc || noDataImg}></img>
-            <p style={noData.tStyle || { color: '#3f5372', marginTop: '12px' }}>{noData.text || '目前暫無資料'}</p>
-        </div>
-    );
+    const customizeRenderEmpty = () => {
+        console.log('empty', noData.text);
+        return (
+            <div style={{ textAlign: 'center' }}>
+                <img src={noData.imgSrc || noDataImg}></img>
+                <p style={noData.tStyle || { color: '#3f5372', marginTop: '12px' }}>{noData.text || '目前暫無資料'}</p>
+            </div>
+        );
+    };
 
     const checkActiveHandler = (dataIndex, filterColumns) => {
         let active = false;
@@ -81,6 +84,10 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
 
                 .sino__table .ant-table-row-expand-icon:before {
                     top: 8px;
+                }
+
+                .ant-table-column-sorters {
+                    padding: 0;
                 }
 
                 .filterBtn {
@@ -193,6 +200,10 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
                 }
                 .sino__table .ant-table-column-sorter-up.active {
                     color: black;
+                }
+                .ant-table-column-sorter-down.active,
+                .ant-table-column-sorter-up.active {
+                    color: #343434;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .sino__table .ant-table-thead > tr > th:first-child {

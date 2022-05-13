@@ -12,7 +12,14 @@ import MyTransition from '../../myTransition';
 import theme from '../../../../resources/styles/theme';
 import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
-export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type, style }) => {
+export const AccountDropdown = ({
+    personalAreaVisible,
+    tradingLayout,
+    width,
+    type,
+    style,
+    tradingContainerWidth = 'auto',
+}) => {
     const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
     const currentAccountList = useRef([]);
@@ -219,6 +226,7 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
                 .trading__container {
                     display: inline-block;
                     margin-right: 12px;
+                    width: ${tradingContainerWidth};
                 }
                 .account__container {
                     position: relative;

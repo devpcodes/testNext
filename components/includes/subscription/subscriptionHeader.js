@@ -74,6 +74,13 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
                 ),
                 okText: '我知道了',
                 width: 600,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                bodyStyle: {
+                    padding: '16px 24px',
+                    height: 400,
+                    overflow: 'auto',
+                },
             }),
         );
     };
@@ -195,6 +202,8 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
                     .subscription__icon {
                         display: inline-block;
                         margin-top: -2px;
+                        height: 20px;
+                        margin-top: 6px;
                     }
                     .subscription__title {
                         display: flex;
