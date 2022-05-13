@@ -14,7 +14,8 @@ import SubscriptionBtn from './SubscriptionBtn';
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { postCancel } from '../../../../services/components/goOrder/postCancel';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
-const MySubscriptionTable = ({ refresh }) => {
+const MySubscriptionTable = ({ refresh, payableHandler }) => {
+    const pageSize = 5;
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -22,8 +23,10 @@ const MySubscriptionTable = ({ refresh }) => {
 
     const [statusFilterValue, setStatusFilterValue] = useState('');
     const [orderAmountSorter, setOrderAmountSorter] = useState('');
+    const [lotDateSorter, setLotDateSorter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [total, setTotal] = useState(0);
     useEffect(() => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
@@ -63,7 +66,7 @@ const MySubscriptionTable = ({ refresh }) => {
                 width: '100px',
                 dataIndex: 'statusMessage',
                 key: 'statusMessage',
-                ...getColumnSearchProps('status'),
+                ...getColumnSearchProps('statusMessage'),
                 render(text, record, idx) {
                     return text;
                 },
@@ -167,25 +170,25 @@ const MySubscriptionTable = ({ refresh }) => {
     };
 
     const getColumnSearchProps = dataIndex => {
-        if (dataIndex === 'status') {
+        if (dataIndex === 'statusMessage') {
             return {
                 filterDropdown: ({ confirm }) => (
                     <DropfilterCheckBox
-                        type={'radio'}
+                        type={'checkbox'}
                         onSubmit={onStatusFilterSubmit.bind(null, confirm)}
                         onReset={onStatusFilterReset.bind(null, confirm)}
                         // value={searchStatus}
                         data={[
-                            { text: '全部', value: 'ALL' },
-                            { text: '委託預約中', value: '申購期間已過' },
-                            { text: '委託處理中', value: '委託處理中' },
-                            { text: '委託已送出', value: '委託已送出' },
-                            { text: '未中籤', value: '未中籤' },
-                            { text: '已中籤', value: '已中籤' },
+                            { text: '委託預約中', value: 'S1' },
+                            { text: '委託處理中', value: 'S2' },
+                            { text: '委託已送出', value: 'Y' },
+                            { text: '不合格件', value: 'N' },
+                            { text: '未中籤', value: 'N1' },
+                            { text: '已中籤', value: 'W1' },
                         ]}
                     />
                 ),
-                filteredValue: [statusFilterValue] || null,
+                // filteredValue: [statusFilterValue] || null,
                 // onFilter: (value, record) => {
                 //     console.log('===', value);
                 //     // handleTableChange(record, value);
@@ -202,19 +205,20 @@ const MySubscriptionTable = ({ refresh }) => {
     const onStatusFilterSubmit = (confirm, val) => {
         confirm();
         setSearchColumns(columns => {
-            if (!columns.includes('status')) {
-                columns.push('status');
+            if (!columns.includes('statusMessage')) {
+                columns.push('statusMessage');
             }
             return columns;
         });
-        setStatusFilterValue(val[0]);
+
+        setStatusFilterValue(val.toString());
     };
 
     const onStatusFilterReset = (confirm, val) => {
         confirm();
-        if (searchColumns.indexOf('status') !== -1) {
+        if (searchColumns.indexOf('statusMessage') !== -1) {
             setSearchColumns(columns => {
-                const index = searchColumns.indexOf('status');
+                const index = searchColumns.indexOf('statusMessage');
                 columns.splice(index, 1);
                 return columns;
             });
@@ -225,7 +229,20 @@ const MySubscriptionTable = ({ refresh }) => {
     const handleTableChange = (pagination, filters, sorter) => {
         console.log('------------.-', pagination, statusFilterValue, sorter);
         if (sorter.columnKey === 'orderAmount') {
-            setOrderAmountSorter(sorter.order);
+            setLotDateSorter('');
+            if (sorter.order == null) {
+                setOrderAmountSorter('');
+                return;
+            }
+            setOrderAmountSorter(sorter.order === 'ascend' ? '1' : '2');
+        }
+        if (sorter.columnKey === 'lotDate') {
+            setOrderAmountSorter('');
+            if (sorter.order == null) {
+                setLotDateSorter('');
+                return;
+            }
+            setLotDateSorter(sorter.order === 'ascend' ? '1' : '2');
         }
     };
 
@@ -234,24 +251,40 @@ const MySubscriptionTable = ({ refresh }) => {
         setCurrentPage(val);
     };
 
+    useEffect(() => {
+        // console.log('************', orderAmountSorter)
+        debounce(getOrderStatus, 500);
+    }, [statusFilterValue, currentPage, orderAmountSorter, lotDateSorter]);
+
     const getOrderStatus = async () => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
             setLoading(true);
             try {
-                const res = await fetchOrderStatus(token, currentAccount.broker_id, currentAccount.account);
+                const res = await fetchOrderStatus({
+                    token,
+                    branch: currentAccount.broker_id,
+                    account: currentAccount.account,
+                    page: currentPage,
+                    pageSize,
+                    statusFilter: statusFilterValue,
+                    orderAmountSort: orderAmountSorter,
+                    lotDateSort: lotDateSorter,
+                });
                 setLoading(false);
-                if (res.length >= 0) {
-                    const newData = res?.map((element, index) => {
+                setTotal(res.count);
+                payableHandler(res.payable, res.receivable);
+                if (res?.dataList?.length >= 0) {
+                    const newData = res?.dataList?.map((element, index) => {
                         element.key = index;
-                        element.currentDate = '20220308';
+                        element.currentDate != null ? element.currentDate : moment().format('YYYYMMDD');
                         return element;
                     });
                     setData(newData);
                 }
             } catch (error) {
                 setLoading(false);
-                message.error(error);
+                message.error('伺服器錯誤');
             }
         }
     };
@@ -276,8 +309,9 @@ const MySubscriptionTable = ({ refresh }) => {
             pagination={{
                 onChange: pageChangeHandler,
                 responsive: true,
-                defaultPageSize: 10,
+                defaultPageSize: pageSize,
                 current: currentPage,
+                total,
             }}
             columns={columns}
             dataSource={data}

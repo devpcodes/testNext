@@ -1,7 +1,8 @@
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useSelector } from 'react-redux';
 import MoneyBox from './MoneyBox';
-const MoneyContainer = () => {
+import { formatNum } from '../../../../services/formatNum';
+const MoneyContainer = ({ payable, receivable }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     return (
@@ -22,19 +23,19 @@ const MoneyContainer = () => {
                     data={[
                         {
                             label: '帳號 ' + currentAccount.broker_id + '-' + currentAccount.account,
-                            val: '$135,000',
+                            val: `$135,000`,
                             style: { flex: '1 0 0' },
                             showLine: true,
                         },
                         {
                             label: '應扣申購款',
-                            val: '$35,070',
+                            val: `$${formatNum(payable)}`,
                             style: { flex: '0.75 0 0' },
                             showLine: false,
                         },
                         {
                             label: '應退申購款',
-                            val: '$189,070',
+                            val: `$${formatNum(receivable)}`,
                             style: { flex: '0.75 0 0' },
                             showLine: false,
                         },
@@ -58,12 +59,12 @@ const MoneyContainer = () => {
                         data={[
                             {
                                 label: '應扣申購款',
-                                val: '$35,070',
+                                val: `$${formatNum(payable)}`,
                                 showLine: true,
                             },
                             {
                                 label: '應退申購款',
-                                val: '$189,070',
+                                val: `$${formatNum(receivable)}`,
                                 showLine: false,
                             },
                         ]}

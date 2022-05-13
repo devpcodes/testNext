@@ -1,14 +1,38 @@
 import { getSubscriptionInstance } from '../../myAxios';
 
-export const fetchOrderStatus = async function (token, branch, account) {
+export const fetchOrderStatus = async function ({
+    token,
+    branch,
+    account,
+    page,
+    pageSize,
+    statusFilter,
+    orderAmountSort,
+    lotDateSort,
+}) {
+    const params = {
+        branch,
+        account,
+        page,
+        pageSize,
+        statusFilter,
+        orderAmountSort,
+        lotDateSort,
+    };
+    if (!statusFilter) {
+        delete params.statusFilter;
+    }
+    if (!orderAmountSort || orderAmountSort == null) {
+        delete params.orderAmountSort;
+    }
+    if (!lotDateSort || lotDateSort == null) {
+        delete params.lotDateSort;
+    }
     try {
         const reqUrl = '/orderStatus';
         const res = await getSubscriptionInstance().get(reqUrl, {
             headers: { token },
-            params: {
-                branch,
-                account,
-            },
+            params,
         });
 
         if (res.data.success != null && res.data.success === true) {

@@ -59,6 +59,7 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
                 active = true;
             }
         });
+        console.log('active', filterColumns);
         return active;
     };
 
