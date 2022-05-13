@@ -123,7 +123,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
                                     type={'S'}
                                     personalAreaVisible={false}
                                     tradingLayout={true}
-                                    width={'243px'}
+                                    width={'187px'}
                                 />
                             )}
                         </div>
