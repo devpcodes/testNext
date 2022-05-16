@@ -22,7 +22,8 @@ const MoneyContainer = ({ payable, receivable }) => {
                     ]}
                     data={[
                         {
-                            label: '帳號 ' + currentAccount.broker_id + '-' + currentAccount.account,
+                            label:
+                                '帳號 ' + (currentAccount.broker_id || '--') + '-' + (currentAccount.account || '--'),
                             val: `$135,000`,
                             style: { flex: '1 0 0' },
                             showLine: true,
@@ -47,7 +48,11 @@ const MoneyContainer = ({ payable, receivable }) => {
                         title={[{ val: '銀行交割餘額' }]}
                         data={[
                             {
-                                label: '交割帳號 ' + currentAccount.broker_id + '-' + currentAccount.account,
+                                label:
+                                    '交割帳號 ' +
+                                    (currentAccount.broker_id || '--') +
+                                    '-' +
+                                    (currentAccount.account || '--'),
                                 val: '$135,000',
                             },
                         ]}

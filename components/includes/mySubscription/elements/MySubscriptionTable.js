@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import moment from 'moment';
 import { fetchOrderStatus } from '../../../../services/components/mySubscription/fetchOrderStatus';
 // import { fetchLoginSubscriptionList } from '../../../../services/components/subscription/getLoginSubScriptionList';
@@ -14,19 +15,25 @@ import SubscriptionBtn from './SubscriptionBtn';
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
 import { postCancel } from '../../../../services/components/mySubscription/postCancel';
+import { openGoOrder } from '../../../../services/openGoOrder';
+import { useCheckMobile } from '../../../../hooks/useCheckMobile';
+import { WindowsOutlined } from '@ant-design/icons';
 const MySubscriptionTable = ({ refresh, payableHandler }) => {
-    const pageSize = 5;
+    const pageSize = 10;
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
 
     const [statusFilterValue, setStatusFilterValue] = useState('');
+    const [cancelLoading, setCancelLoading] = useState(false);
     const [orderAmountSorter, setOrderAmountSorter] = useState('');
     const [lotDateSorter, setLotDateSorter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
+    const isMobile = useCheckMobile();
+    const router = useRouter();
     useEffect(() => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
@@ -47,16 +54,51 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                 dataIndex: 'action',
                 key: 'action',
                 render(text, record, idx) {
+                    const btnsArr = activeHandler(record);
+                    console.log('btnsArr', btnsArr);
                     return (
                         <>
+                            {btnsArr.map((element, index) => {
+                                return (
+                                    <React.Fragment key={index}>
+                                        {element === 'canCancelOrder' && (
+                                            <SubscriptionBtn
+                                                text="取消申購"
+                                                colorType="blue"
+                                                width={100 / btnsArr.length - 1 + '%'}
+                                                onClick={clickHandler.bind(null, record, 'canCancelOrder')}
+                                                loading={cancelLoading}
+                                            />
+                                        )}
+                                        {element === 'canSellStock' && (
+                                            <SubscriptionBtn
+                                                text="賣出"
+                                                colorType="green"
+                                                width={100 / btnsArr.length - 1 + '%'}
+                                                style={{ marginRight: 10 }}
+                                                onClick={clickHandler.bind(null, record, 'canSellStock')}
+                                            />
+                                        )}
+                                        {element === 'canMortgage' && (
+                                            <SubscriptionBtn
+                                                text="抵押"
+                                                colorType="yellow"
+                                                width={100 / btnsArr.length - 1 + '%'}
+                                                style={{ marginRight: 10 }}
+                                                onClick={clickHandler.bind(null, record, 'canMortgage')}
+                                            />
+                                        )}
+                                    </React.Fragment>
+                                );
+                            })}
                             {/* <SubscriptionBtn text="賣出" colorType="green" width={'49%'} style={{marginRight: 10}}/>
                             <SubscriptionBtn text="抵押" colorType="yellow" width={'49%'}/> */}
-                            <SubscriptionBtn
+                            {/* <SubscriptionBtn
                                 text="取消申購"
                                 colorType="blue"
                                 width={'100%'}
                                 onClick={clickHandler.bind(null, record, 'cancel')}
-                            />
+                            /> */}
                         </>
                     );
                 },
@@ -133,7 +175,7 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
             },
         ];
         setColumns(myColumns);
-    }, [data, searchColumns, statusFilterValue]);
+    }, [data, searchColumns, statusFilterValue, cancelLoading]);
 
     useEffect(() => {
         console.log(currentPage, orderAmountSorter, statusFilterValue);
@@ -141,7 +183,43 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
 
     const clickHandler = (record, type) => {
         console.log(record, type);
-        if (type === 'cancel') cancelHandler(record);
+        if (type === 'canCancelOrder') cancelHandler(record);
+        if (type === 'canSellStock') sellHandler(record);
+        if (type === 'canMortgage') mortgageHandler(record);
+    };
+
+    const sellHandler = record => {
+        openGoOrder(
+            {
+                stockid: record.stockId,
+                bs: 'S',
+            },
+            isMobile,
+            router,
+        );
+    };
+
+    const mortgageHandler = () => {
+        const url =
+            location.protocol + '//' + location.host + `${process.env.NEXT_PUBLIC_SUBPATH}` + '/loan-zone/Collateral/';
+        window.open(url);
+    };
+
+    const activeHandler = record => {
+        const btnsArr = [];
+        if (record.canCancelOrder) {
+            btnsArr.push('canCancelOrder');
+        }
+        if (record.canCancelAppropriation) {
+            btnsArr.push('canCancelAppropriation');
+        }
+        if (record.canSellStock) {
+            btnsArr.push('canSellStock');
+        }
+        if (record.canMortgage) {
+            btnsArr.push('canMortgage');
+        }
+        return btnsArr;
     };
 
     const cancelHandler = async record => {
@@ -157,15 +235,23 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
         );
         //branch, account, stockId, status, ca_content, client_ip
         if (checkSignCA(ca_content)) {
-            const res = await postCancel({
-                branch: currentAccount.broker_id,
-                account: currentAccount.account,
-                stockId: record.stockId,
-                status: record.status,
-                ca_content,
-                client_ip: getCookie('client_ip'),
-                token,
-            });
+            setCancelLoading(true);
+            try {
+                const res = await postCancel({
+                    branch: currentAccount.broker_id,
+                    account: currentAccount.account,
+                    stockId: record.stockId,
+                    status: record.status,
+                    ca_content,
+                    client_ip: getCookie('client_ip'),
+                    token,
+                });
+                message.success('取消申購已送出');
+                setCancelLoading(false);
+            } catch (error) {
+                message.error(error);
+                setCancelLoading(false);
+            }
         }
     };
 
@@ -277,6 +363,9 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                 if (res?.dataList?.length >= 0) {
                     const newData = res?.dataList?.map((element, index) => {
                         element.key = index;
+                        // element.canSellStock = true;
+                        // element.canMortgage = true;
+                        // element.canCancelOrder = true;
                         element.currentDate != null ? element.currentDate : moment().format('YYYYMMDD');
                         return element;
                     });

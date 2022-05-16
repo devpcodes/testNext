@@ -17,12 +17,15 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
     const router = useRouter();
     const accounts = useSelector(store => store.user.accounts);
     const idno = useSelector(store => store.user.currentAccount.idno);
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const [newBtnActive, setNewBtnActive] = useState('');
     const [myBtnActive, setMyBtnActive] = useState('');
     const [currentTime, setCurrentTime] = useState(moment().format('YYYY.MM.DD HH:mm'));
     const isMobile = useCheckMobile();
     useEffect(() => {
-        console.log('---', router.pathname);
+        console.log('currentAccount', currentAccount);
+    }, [currentAccount]);
+    useEffect(() => {
         if (router.pathname === newSubscriptionUrl) {
             setNewBtnActive(true);
             setMyBtnActive(false);

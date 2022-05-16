@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-const SubscriptionBtn = ({ text, width, colorType, onClick, style }) => {
+const SubscriptionBtn = ({ text, width, colorType, onClick, style, loading }) => {
     const [myStyle, setMyStyle] = useState({});
     useEffect(() => {
         if (colorType === 'blue') {
@@ -44,7 +44,7 @@ const SubscriptionBtn = ({ text, width, colorType, onClick, style }) => {
     }, [colorType]);
     return (
         <>
-            <button style={myStyle} className="subscription__btn" onClick={onClick}>
+            <button style={myStyle} className="subscription__btn" onClick={onClick} disabled={loading}>
                 {text}
             </button>
             <style jsx>
