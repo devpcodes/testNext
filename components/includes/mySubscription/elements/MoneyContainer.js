@@ -1,10 +1,26 @@
+import { useEffect } from 'react';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useSelector } from 'react-redux';
 import MoneyBox from './MoneyBox';
 import { formatNum } from '../../../../services/formatNum';
+import { postBankAccountBalance } from '../../../../services/components/mySubscription/postBankAccountBalance';
+import { getToken } from '../../../../services/user/accessToken';
 const MoneyContainer = ({ payable, receivable }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
+    useEffect(() => {
+        getBalance();
+    }, [currentAccount]);
+    const getBalance = async () => {
+        const token = getToken();
+
+        const res = await postBankAccountBalance({
+            token,
+            broker_id: currentAccount.broker_id,
+            account: currentAccount.account,
+        });
+        console.log('res', res);
+    };
     return (
         <div className="moneyBox__container">
             {isMobile ? (
