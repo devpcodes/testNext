@@ -12,8 +12,8 @@ import { message } from 'antd';
 import { debounce } from '../../../../services/throttle';
 import SubscriptionBtn from './SubscriptionBtn';
 import { checkSignCA, sign } from '../../../../services/webCa';
-import { postCancel } from '../../../../services/components/goOrder/postCancel';
 import { getCookie } from '../../../../services/components/layouts/cookieController';
+import { postCancel } from '../../../../services/components/mySubscription/postCancel';
 const MySubscriptionTable = ({ refresh, payableHandler }) => {
     const pageSize = 5;
     const currentAccount = useSelector(store => store.user.currentAccount);
