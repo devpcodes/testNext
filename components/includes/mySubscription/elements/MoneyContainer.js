@@ -1,26 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useSelector } from 'react-redux';
 import MoneyBox from './MoneyBox';
 import { formatNum } from '../../../../services/formatNum';
 import { postBankAccountBalance } from '../../../../services/components/mySubscription/postBankAccountBalance';
 import { getToken } from '../../../../services/user/accessToken';
-const MoneyContainer = ({ payable, receivable }) => {
+import { message } from 'antd';
+import { debounce } from '../../../../services/throttle';
+const MoneyContainer = memo(({ payable, receivable }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
-    useEffect(() => {
-        getBalance();
-    }, [currentAccount]);
+    const [balance, setBalance] = useState('--');
+
     const getBalance = async () => {
         const token = getToken();
-
-        const res = await postBankAccountBalance({
-            token,
-            broker_id: currentAccount.broker_id,
-            account: currentAccount.account,
-        });
-        console.log('res', res);
+        try {
+            const res = await postBankAccountBalance({
+                token,
+                broker_id: currentAccount.broker_id,
+                account: currentAccount.account,
+            });
+            console.log('res', res);
+            const found = res.balance.find(element => element.currency === 'TWD');
+            console.log('found', found);
+            setBalance(found.amt);
+        } catch (error) {
+            const err = message.error;
+            debounce(err.bind(null, error), 500);
+        }
     };
+
+    useEffect(() => {
+        setTimeout(() => {
+            getBalance();
+        }, 700);
+    }, [currentAccount]);
+
     return (
         <div className="moneyBox__container">
             {isMobile ? (
@@ -40,7 +55,7 @@ const MoneyContainer = ({ payable, receivable }) => {
                         {
                             label:
                                 '帳號 ' + (currentAccount.broker_id || '--') + '-' + (currentAccount.account || '--'),
-                            val: `$135,000`,
+                            val: `$${formatNum(balance)}`,
                             style: { flex: '1 0 0' },
                             showLine: true,
                         },
@@ -69,7 +84,7 @@ const MoneyContainer = ({ payable, receivable }) => {
                                     (currentAccount.broker_id || '--') +
                                     '-' +
                                     (currentAccount.account || '--'),
-                                val: '$135,000',
+                                val: `$${formatNum(balance)}`,
                             },
                         ]}
                         style={{ width: '50%', marginRight: 20 }}
@@ -103,6 +118,6 @@ const MoneyContainer = ({ payable, receivable }) => {
             `}</style>
         </div>
     );
-};
+});
 
 export default MoneyContainer;
