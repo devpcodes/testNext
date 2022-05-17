@@ -92,7 +92,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
             <div className="subscription__header">
                 <div className="subscription__title">
                     <h2>申購專區</h2>
-                    {isMobile && <img className="subscription__icon" src={icon} />}
+                    {isMobile && <img className="subscription__icon" src={icon} onClick={showDescription} />}
                 </div>
                 <div>
                     <div className="subscription__toolbar">
@@ -207,6 +207,7 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
                         margin-top: -2px;
                         height: 20px;
                         margin-top: 6px;
+                        cursor: pointer;
                     }
                     .subscription__title {
                         display: flex;
