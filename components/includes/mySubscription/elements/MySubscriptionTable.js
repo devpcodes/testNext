@@ -173,6 +173,13 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                     return text;
                 },
             },
+            {
+                title: '委託書號',
+                width: '100px',
+                dataIndex: 'orderNo',
+                key: 'orderNo',
+                align: 'right',
+            },
         ];
         setColumns(myColumns);
     }, [data, searchColumns, statusFilterValue, cancelLoading]);

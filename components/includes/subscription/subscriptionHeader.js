@@ -73,9 +73,10 @@ const SubscriptionHeader = memo(({ onRefresh }) => {
                             本公司網路申購委託及取消每日以13:30為截止時點，申購後不得撤回或更改申購委託書，13:30後申請申購委託者，視為次一營業日之申購委託。
                         </p>
                         <p>8. 開戶完成日「當天」若欲參加股票申購，請透由所屬營業員專人申購。</p>
+                        <p>9.申購人銀行存款不足，不夠支付交割價款及預扣價款時，以交割價款為優先扣款</p>
                     </div>
                 ),
-                okText: '我知道了',
+                okText: '確認',
                 width: 600,
                 noCloseIcon: true,
                 noTitleIcon: true,
