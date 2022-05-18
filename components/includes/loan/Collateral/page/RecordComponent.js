@@ -7,6 +7,7 @@ import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import { AccountDropdown } from '../../../personalArea/accountDropdown/AccountDropdown';
 import IconBtn from '../../../tradingAccount/vipInventory/IconBtn';
 import RecordTable from '../elements/RecordTable';
+import RecordLoanTable from '../elements/RecordLoanTable';
 
 const RecordComponent = () => {
     const [refreshTime, setRefreshTime] = useState('');
@@ -86,7 +87,7 @@ const RecordComponent = () => {
                     </div>
                 </div>
 
-                <div>{tabCurrent == 0 ? <p>null</p> : <RecordTable />}</div>
+                <div>{tabCurrent == 0 ? <RecordLoanTable /> : <RecordTable />}</div>
             </div>
             <style jsx>
                 {`
@@ -175,6 +176,13 @@ const RecordComponent = () => {
                         color: 0d1623;
                         font-size: 14px;
                     }
+                    .record__container .sumItem .noData {
+                        font-size: 16px;
+                        color: #3f5372;
+                        width: 100%;
+                        line-height: 1.5;
+                        text-align: center;
+                    }
                     .record__container .sumItem a {
                     }
                     .record__container .sumItem > div {
@@ -196,6 +204,9 @@ const RecordComponent = () => {
                     .RecordTable__Content .sumItem table.detail td:last-child {
                         width: 50%;
                         text-align: right;
+                    }
+                    .RecordTable__Content.Loan {
+                        padding-left: 18%;
                     }
                 `}
             </style>
