@@ -13,6 +13,7 @@ import subBrokerage from './subBrokerage/reducer';
 import watchLists from './watchLists/reducer';
 import accBalance from './accBalance/reducer';
 import activeReturn from './activeReturn/reducer';
+import asset from './asset/reducer';
 
 const reducers = combineReducers({
     layout,
@@ -29,6 +30,7 @@ const reducers = combineReducers({
     watchLists,
     accBalance,
     activeReturn,
+    asset,
 });
 
 export default reducers;

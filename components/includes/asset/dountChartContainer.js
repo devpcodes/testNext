@@ -1,8 +1,88 @@
-import { useCallback, useState, memo } from 'react';
+import { useCallback, useState, memo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { useSelector, useDispatch } from 'react-redux';
+import { formatNum } from '../../../services/formatNum';
 const DountChart = dynamic(() => import('./dountChart'), { ssr: false });
 
 const DountChartContainer = memo(({}) => {
+    const realTimePrtLosSum = useSelector(store => store.asset.realTimePrtLosSum.data);
+    const realTimePrtLosSumTotal = useSelector(store => store.asset.realTimePrtLosSum.total);
+    const [domData, setDomData] = useState({});
+    useEffect(() => {
+        const data = {
+            // 證券
+            S: {
+                total_proportion: parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
+                profit_loss_percent: formatNum(
+                    parseFloat(
+                        ((realTimePrtLosSum?.S.sum_amt - realTimePrtLosSum?.S.sum_cost) /
+                            realTimePrtLosSum?.S.sum_cost) *
+                            100,
+                    ).toFixed(2),
+                ),
+                is_profit: realTimePrtLosSum?.S.sum_amt - realTimePrtLosSum?.S.sum_cost >= 0 ? true : false,
+            },
+            // 基金
+            OF: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2),
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
+                ),
+            },
+            F: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2),
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                ),
+            },
+            H: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2), // 總佔比
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.H.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP.sum_twd),
+                ), // 總額
+                profit_loss_percent: (
+                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP.sum_twd) -
+                        (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
+                            parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
+                            parseInt(realTimePrtLosSum?.MIP.sum_cost_twd))) /
+                        (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
+                            parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
+                            parseInt(realTimePrtLosSum?.MIP.sum_cost_twd))) *
+                    100
+                ).toFixed(2),
+                is_profit:
+                    parseInt(realTimePrtLosSum?.H.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP.sum_twd) -
+                        (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
+                            parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
+                            parseInt(realTimePrtLosSum?.MIP.sum_cost_twd)) >=
+                    0
+                        ? true
+                        : false,
+            },
+        };
+        setDomData(data);
+    }, [realTimePrtLosSum]);
     return (
         <>
             <div className="dountchart__container">
@@ -10,34 +90,44 @@ const DountChartContainer = memo(({}) => {
 
                 <div className="dount__desc funds">
                     <p className="dount__desc__name">
-                        <span className="point__circle"></span>基金 <span className="pl__percent">(18.25%)</span>
+                        <span className="point__circle"></span>基金{' '}
+                        <span className="pl__percent">({domData.OF?.total_proportion}%)</span>
                     </p>
-                    <p className="dount__desc__amount">$135,000</p>
-                    <p className="dount__desc__pl loss">損益 -5.05%</p>
+                    <p className="dount__desc__amount">${domData.OF?.sum_amt}</p>
+                    {/* <p className="dount__desc__pl loss">損益 -5.05%</p> OF 沒有成本   */}
                 </div>
 
                 <div className="dount__desc stock">
                     <p className="dount__desc__name">
-                        <span className="point__circle"></span>國內證券 <span className="pl__percent">(12.8%)</span>
+                        <span className="point__circle"></span>國內證券{' '}
+                        <span className="pl__percent">({domData.S?.total_proportion}%)</span>
                     </p>
-                    <p className="dount__desc__amount">$16,954,147</p>
-                    <p className="dount__desc__pl profit">損益 +5.26%</p>
+                    <p className="dount__desc__amount">${domData.S?.sum_amt}</p>
+                    <p className={domData.S?.is_profit ? 'dount__desc__pl profit' : 'dount__desc__pl loss'}>
+                        損益 {domData.S?.is_profit ? '+' : '-'}
+                        {domData.S?.profit_loss_percent}%
+                    </p>
                 </div>
 
                 <div className="dount__desc feature">
                     <p className="dount__desc__name">
-                        <span className="point__circle"></span>期權 <span className="pl__percent">(10.2%)</span>
+                        <span className="point__circle"></span>期權{' '}
+                        <span className="pl__percent">({domData.F?.total_proportion}%)</span>
                     </p>
-                    <p className="dount__desc__amount">$980,000</p>
-                    <p className="dount__desc__pl profit">損益 +5.26%</p>
+                    <p className="dount__desc__amount">${domData.F?.sum_amt}</p>
+                    {/* <p className="dount__desc__pl profit">損益 +5.26%</p> */}
                 </div>
 
                 <div className="dount__desc subBrokerage">
                     <p className="dount__desc__name">
-                        <span className="point__circle"></span>海外證券 <span className="pl__percent">(3.2%)</span>
+                        <span className="point__circle"></span>海外證券{' '}
+                        <span className="pl__percent">({domData.H?.total_proportion}%)</span>
                     </p>
-                    <p className="dount__desc__amount">$180,482</p>
-                    <p className="dount__desc__pl loss">損益 -5.05%</p>
+                    <p className="dount__desc__amount">${domData.H?.sum_amt}</p>
+                    <p className={domData.H?.is_profit ? 'dount__desc__pl profit' : 'dount__desc__pl loss'}>
+                        損益 {domData.H?.is_profit ? '+' : '-'}
+                        {domData.H?.profit_loss_percent}%
+                    </p>
                 </div>
             </div>
 
