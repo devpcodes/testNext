@@ -36,7 +36,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                         <div className="code">{stockData.stockId}</div>
                     </div>
                     <div className="action">{stockData.marketStatus}</div>
-                    <div className="status">{stockData.status}</div>
+                    <div className="status">{stockData.statusMessage}</div>
                 </div>
                 <div className="subscriptionCards__body">
                     <div className="info">
@@ -110,7 +110,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                         </button>
                     ) : (
                         <button disabled className="action__btn disabled">
-                            {stockData.status}
+                            {stockData.statusMessage}
                         </button>
                     )}
                 </div>
