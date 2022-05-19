@@ -1,11 +1,90 @@
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { useCallback, useState, memo } from 'react';
+import { useCallback, useState, memo, useEffect } from 'react';
 import { Card } from 'antd';
 import leftAllow from '../../../resources/images/pages/asset/ic-ic-arrow-chevron-left@2x.png';
 import rightAllow from '../../../resources/images/pages/asset/ic-ic-arrow-chevron-right@2x.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { formatNum } from '../../../services/formatNum';
 
 const AssetCarouselOverview = memo(({}) => {
+    const realTimePrtLosSum = useSelector(store => store.asset.realTimePrtLosSum.data);
+    const realTimePrtLosSumTotal = useSelector(store => store.asset.realTimePrtLosSum.total);
+    const [domData, setDomData] = useState({});
+    useEffect(() => {
+        const data = {
+            // 證券
+            S: {
+                total_proportion: parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
+            },
+            // 基金
+            OF: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2),
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
+                ),
+            },
+            F: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2),
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                ),
+            },
+            H: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2), // 總佔比
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.H.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP.sum_twd),
+                ), // 總額
+            },
+            BOND: {
+                total_proportion: parseFloat(
+                    (realTimePrtLosSum?.BOND.sum_total_value_twd / realTimePrtLosSumTotal) * 100,
+                ).toFixed(2), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.BOND.sum_total_value_twd), // 總額
+            },
+            SN: {
+                total_proportion: parseFloat(
+                    (parseInt(realTimePrtLosSum?.SN.sum_twd) +
+                        parseInt(realTimePrtLosSum?.WM_SN.sum_twd) / realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2), // 總佔比
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.SN.sum_twd) + parseInt(realTimePrtLosSum?.WM_SN.sum_twd),
+                ), // 總額
+            },
+            INTRANSIT: {
+                total_proportion: parseFloat(
+                    (realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd / realTimePrtLosSumTotal) * 100,
+                ).toFixed(2), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd), // 總額
+            },
+            DEPOSIT: {
+                total_proportion: parseFloat(
+                    (realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd / realTimePrtLosSumTotal) * 100,
+                ).toFixed(2), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd), // 總額
+            },
+        };
+        setDomData(data);
+    }, [realTimePrtLosSum]);
+
     const responsive = {
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
@@ -48,43 +127,43 @@ const AssetCarouselOverview = memo(({}) => {
                     itemClass="card__items"
                 >
                     <div className="carousel__card">
-                        <Card title="國內證券 (12.58%)">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`國內證券 (${domData.S?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.S?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="海外證券 (3.2%)">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`海外證券 (${domData.H?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.H?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="期權 (10.2%)">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`期權 (${domData.F?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.F?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="基金 ( 18.25%)">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`基金 (${domData.OF?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.OF?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="債券 ( 0%)">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`債券 (${domData.BOND?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.BOND?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="結構型">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`結構型 (${domData.SN?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.SN?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="在途款">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`在途款 (${domData.INTRANSIT?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.INTRANSIT?.sum_amt}</p>
                         </Card>
                     </div>
                     <div className="carousel__card">
-                        <Card title="約當現金">
-                            <p className="asset__carousel__amount">$16,954,147</p>
+                        <Card title={`約當現金 (${domData.DEPOSIT?.total_proportion}%)`}>
+                            <p className="asset__carousel__amount">${domData.DEPOSIT?.sum_amt}</p>
                         </Card>
                     </div>
                 </Carousel>

@@ -54,6 +54,26 @@ const assetDetailContainer = memo(({}) => {
                         <TabPane tab={<span>海外證券</span>} key="2">
                             <AssetCards />
                         </TabPane>
+
+                        <TabPane tab={<span>期權</span>} key="3">
+                            <AssetCards />
+                        </TabPane>
+
+                        <TabPane tab={<span>基金</span>} key="4">
+                            <AssetCards />
+                        </TabPane>
+
+                        <TabPane tab={<span>結構型</span>} key="5">
+                            <AssetCards />
+                        </TabPane>
+
+                        <TabPane tab={<span>債券</span>} key="6">
+                            <AssetCards />
+                        </TabPane>
+
+                        <TabPane tab={<span>在途款</span>} key="7">
+                            <AssetCards />
+                        </TabPane>
                     </Tabs>
                 </div>
             )}
