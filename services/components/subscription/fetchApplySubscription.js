@@ -6,8 +6,8 @@ export const fetchApplySubscription = async function (
     account,
     stockId,
     clientIP,
-    source = 'h',
     ca_content,
+    source = 'h',
 ) {
     try {
         const reqUrl = '/order';
@@ -17,8 +17,8 @@ export const fetchApplySubscription = async function (
             account,
             stockId,
             clientIP,
-            source,
             ca_content,
+            source,
         });
 
         if (res.data.success != null && res.data.success === true) {
