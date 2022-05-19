@@ -72,7 +72,7 @@ export const goOrderMapping = (str, gtcDate) => {
     let arr = str?.split('&');
     let narr = [];
     for (let index = 0; index < arr?.length; index++) {
-        const element = arr[index];
+        let element = arr[index];
         if (element === 'GTC') {
             element = '長';
         }

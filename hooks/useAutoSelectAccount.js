@@ -18,8 +18,9 @@ export const useAutoSelectAccount = type => {
         if (accounts?.length > 0) {
             setTimeout(() => {
                 const groupedAccount = accountGroupByType(accounts);
-
+                console.log('groupedAccount', groupedAccount);
                 if (groupedAccount[type] != null && groupedAccount[type]?.length > 0 && type !== 'S') {
+                    console.log('currentAccount', groupedAccount[type][0]);
                     dispatch(setCurrentAccount(groupedAccount[type][0]));
                 } else {
                     setHasAccount(false);
