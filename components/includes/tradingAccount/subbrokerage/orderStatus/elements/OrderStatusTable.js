@@ -110,284 +110,285 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
     }, [nameData, fetchData]);
 
     useEffect(() => {
-        const newColumns = [
-            {
-                title: '動作',
-                dataIndex: 'active',
-                key: 'active',
-                fixed: !isMobile ? 'left' : 'auto',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            <ControlBtns
-                                BS={record.BS}
-                                CanModify={record.CanModify}
-                                CanCancel={record.CanCancel}
-                                data={record}
-                                successHandler={successHandler}
-                            />
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '狀態',
-                dataIndex: 'StateMsg',
-                key: 'StateMsg',
-                fixed: !isMobile ? 'left' : 'auto',
-                width: 100,
-                ...getColumnSearchProps('StateMsg'),
-                render: (text, record) => {
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</div>;
-                },
-            },
-            {
-                title: '市場',
-                dataIndex: 'market',
-                key: 'market',
-                fixed: !isMobile ? 'left' : 'auto',
-                width: 100,
-                ...getColumnSearchProps('market'),
-                render: (text, record) => {
-                    const marketID = record.StockID.split('.').slice(-1).pop();
-                    const market = marketName(marketID).name;
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
-                },
-            },
-            {
-                title: '代碼',
-                dataIndex: 'StockID',
-                key: 'StockID',
-                fixed: !isMobile ? 'left' : 'auto',
-                width: 100,
-                render: (text, record) => {
-                    const symbol = text.substring(0, text.lastIndexOf('.'));
-                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
-                },
-            },
-            {
-                title: '商品',
-                dataIndex: 'name',
-                key: 'name',
-                width: 200,
-                render: (text, record) => {
-                    return (
-                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {text}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '買賣',
-                dataIndex: 'BS',
-                key: 'BS',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span
-                            style={{
-                                color: text === 'B' ? '#f45a4c' : '#22a16f',
-                                opacity: record.State === '99' ? 0.45 : 1,
-                            }}
-                        >
-                            {text === 'B' ? '買' : '賣'}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '類別',
-                dataIndex: 'PriceType',
-                key: 'PriceType',
-                width: 100,
-                render: (text, record) => {
-                    const priceType = getPriceType(record.PriceType);
-                    const icons = goOrderMapping(priceType, record.GTCDate);
-                    const marketID = record.StockID.split('.').slice(-1).pop();
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {marketID === 'US' && (
-                                <>
-                                    {icons.map((icon, index) => {
-                                        return icon !== 'AON' && icon !== 'ANY' ? (
-                                            <p
-                                                key={index}
-                                                className="item--down2"
-                                                style={{
-                                                    display: 'inline-block',
-                                                    fontSize: '1rem',
-                                                    background:
-                                                        icon === '長'
-                                                            ? '#6c7b94'
-                                                            : record.BS === 'B'
-                                                            ? themeColor.buyTabColor
-                                                            : themeColor.sellTabColor,
-                                                    color: 'white',
-                                                    padding: '0 3px',
-                                                    borderRadius: '2px',
-                                                    marginRight: '4px',
-                                                    marginBottom: 0,
-                                                }}
-                                            >
-                                                {icon}
-                                            </p>
-                                        ) : (
-                                            <p
-                                                key={'B' + index}
-                                                className="item--down2"
-                                                style={{
-                                                    display: 'inline-block',
-                                                    marginBottom: 0,
-                                                }}
-                                            >
-                                                {icon}
-                                            </p>
-                                        );
-                                    })}
-                                </>
-                            )}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '價格',
-                dataIndex: 'Price',
-                key: 'Price',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '數量',
-                dataIndex: 'Qoriginal',
-                key: 'Qoriginal',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
-                },
-            },
-            {
-                title: '取消',
-                dataIndex: 'cancel',
-                key: 'cancel',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    let cancel;
-                    if (record.hasOwnProperty('Qcurrent') && record['Qmatched'] != null && !isNaN(record['Qmatched'])) {
-                        record.cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
-                        cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
-                    }
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{cancel}</span>;
-                },
-            },
-            {
-                title: '成交量',
-                dataIndex: 'Qmatched',
-                key: 'Qmatched',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
-                    );
-                },
-            },
-            {
-                title: '成交均價',
-                dataIndex: 'AvgPrice',
-                key: 'AvgPrice',
-                align: 'right',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
-                    );
-                },
-            },
-            {
-                title: '委託書號',
-                dataIndex: 'OrderNo',
-                key: 'OrderNo',
-                width: 100,
-                align: 'center',
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
-                },
-            },
-            {
-                title: '觸發價格',
-                dataIndex: 'TouchedPrice',
-                key: 'TouchedPrice',
-                ...getColumnSearchProps('TouchedPrice'),
-                align: 'center',
-                width: 100,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{getTouchPrice(record)}</span>;
-                },
-            },
-            {
-                title: '來源',
-                dataIndex: 'Source',
-                key: 'Source',
-                align: 'center',
-                width: 100,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
-                },
-            },
-            {
-                title: '委託時間',
-                dataIndex: 'CreateTime',
-                key: 'CreateTime',
-                align: 'center',
-                width: 100,
-                render: (text, record) => {
-                    const time = getTimerHandler(record);
-                    const timeArr = time.split(' ');
-                    return (
-                        <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-                            <p style={{ marginBottom: 0 }}>{timeArr[0]}</p>
-                            <p style={{ marginBottom: 0 }}>{timeArr[1]}</p>
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '原因',
-                dataIndex: 'CodeMsg',
-                key: 'CodeMsg',
-                align: 'center',
-                width: 150,
-                render: (text, record) => {
-                    return (
-                        <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
-                            {text}
-                        </span>
-                    );
-                },
-            },
-            {
-                title: '幣別',
-                dataIndex: 'Currency',
-                key: 'Currency',
-                align: 'center',
-                width: 150,
-                render: (text, record) => {
-                    return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
-                },
-            },
-        ];
+        const newColumns = [];
+        // const newColumns = [
+        //     {
+        //         title: '動作',
+        //         dataIndex: 'active',
+        //         key: 'active',
+        //         fixed: !isMobile ? 'left' : 'auto',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return (
+        //                 <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+        //                     <ControlBtns
+        //                         BS={record.BS}
+        //                         CanModify={record.CanModify}
+        //                         CanCancel={record.CanCancel}
+        //                         data={record}
+        //                         successHandler={successHandler}
+        //                     />
+        //                 </div>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '狀態',
+        //         dataIndex: 'StateMsg',
+        //         key: 'StateMsg',
+        //         fixed: !isMobile ? 'left' : 'auto',
+        //         width: 100,
+        //         ...getColumnSearchProps('StateMsg'),
+        //         render: (text, record) => {
+        //             return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</div>;
+        //         },
+        //     },
+        //     {
+        //         title: '市場',
+        //         dataIndex: 'market',
+        //         key: 'market',
+        //         fixed: !isMobile ? 'left' : 'auto',
+        //         width: 100,
+        //         ...getColumnSearchProps('market'),
+        //         render: (text, record) => {
+        //             const marketID = record.StockID.split('.').slice(-1).pop();
+        //             const market = marketName(marketID).name;
+        //             return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
+        //         },
+        //     },
+        //     {
+        //         title: '代碼',
+        //         dataIndex: 'StockID',
+        //         key: 'StockID',
+        //         fixed: !isMobile ? 'left' : 'auto',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             const symbol = text.substring(0, text.lastIndexOf('.'));
+        //             return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{symbol}</div>;
+        //         },
+        //     },
+        //     {
+        //         title: '商品',
+        //         dataIndex: 'name',
+        //         key: 'name',
+        //         width: 200,
+        //         render: (text, record) => {
+        //             return (
+        //                 <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
+        //                     {text}
+        //                 </span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '買賣',
+        //         dataIndex: 'BS',
+        //         key: 'BS',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return (
+        //                 <span
+        //                     style={{
+        //                         color: text === 'B' ? '#f45a4c' : '#22a16f',
+        //                         opacity: record.State === '99' ? 0.45 : 1,
+        //                     }}
+        //                 >
+        //                     {text === 'B' ? '買' : '賣'}
+        //                 </span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '類別',
+        //         dataIndex: 'PriceType',
+        //         key: 'PriceType',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             const priceType = getPriceType(record.PriceType);
+        //             const icons = goOrderMapping(priceType, record.GTCDate);
+        //             const marketID = record.StockID.split('.').slice(-1).pop();
+        //             return (
+        //                 <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+        //                     {marketID === 'US' && (
+        //                         <>
+        //                             {icons.map((icon, index) => {
+        //                                 return icon !== 'AON' && icon !== 'ANY' ? (
+        //                                     <p
+        //                                         key={index}
+        //                                         className="item--down2"
+        //                                         style={{
+        //                                             display: 'inline-block',
+        //                                             fontSize: '1rem',
+        //                                             background:
+        //                                                 icon === '長'
+        //                                                     ? '#6c7b94'
+        //                                                     : record.BS === 'B'
+        //                                                     ? themeColor.buyTabColor
+        //                                                     : themeColor.sellTabColor,
+        //                                             color: 'white',
+        //                                             padding: '0 3px',
+        //                                             borderRadius: '2px',
+        //                                             marginRight: '4px',
+        //                                             marginBottom: 0,
+        //                                         }}
+        //                                     >
+        //                                         {icon}
+        //                                     </p>
+        //                                 ) : (
+        //                                     <p
+        //                                         key={'B' + index}
+        //                                         className="item--down2"
+        //                                         style={{
+        //                                             display: 'inline-block',
+        //                                             marginBottom: 0,
+        //                                         }}
+        //                                     >
+        //                                         {icon}
+        //                                     </p>
+        //                                 );
+        //                             })}
+        //                         </>
+        //                     )}
+        //                 </span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '價格',
+        //         dataIndex: 'Price',
+        //         key: 'Price',
+        //         align: 'right',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return (
+        //                 <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+        //                     {!isNaN(text) ? formatNum(parseFloat(text)) : 0}
+        //                 </span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '數量',
+        //         dataIndex: 'Qoriginal',
+        //         key: 'Qoriginal',
+        //         align: 'right',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</span>;
+        //         },
+        //     },
+        //     {
+        //         title: '取消',
+        //         dataIndex: 'cancel',
+        //         key: 'cancel',
+        //         align: 'right',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             let cancel;
+        //             if (record.hasOwnProperty('Qcurrent') && record['Qmatched'] != null && !isNaN(record['Qmatched'])) {
+        //                 record.cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
+        //                 cancel = parseFloat((record.Qoriginal - parseFloat(record['Qnext'])).toPrecision(12));
+        //             }
+        //             return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{cancel}</span>;
+        //         },
+        //     },
+        //     {
+        //         title: '成交量',
+        //         dataIndex: 'Qmatched',
+        //         key: 'Qmatched',
+        //         align: 'right',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return (
+        //                 <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '成交均價',
+        //         dataIndex: 'AvgPrice',
+        //         key: 'AvgPrice',
+        //         align: 'right',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return (
+        //                 <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{parseFloat(text) || '--'}</span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '委託書號',
+        //         dataIndex: 'OrderNo',
+        //         key: 'OrderNo',
+        //         width: 100,
+        //         align: 'center',
+        //         render: (text, record) => {
+        //             return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
+        //         },
+        //     },
+        //     {
+        //         title: '觸發價格',
+        //         dataIndex: 'TouchedPrice',
+        //         key: 'TouchedPrice',
+        //         ...getColumnSearchProps('TouchedPrice'),
+        //         align: 'center',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{getTouchPrice(record)}</span>;
+        //         },
+        //     },
+        //     {
+        //         title: '來源',
+        //         dataIndex: 'Source',
+        //         key: 'Source',
+        //         align: 'center',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text || '--'}</span>;
+        //         },
+        //     },
+        //     {
+        //         title: '委託時間',
+        //         dataIndex: 'CreateTime',
+        //         key: 'CreateTime',
+        //         align: 'center',
+        //         width: 100,
+        //         render: (text, record) => {
+        //             const time = getTimerHandler(record);
+        //             const timeArr = time.split(' ');
+        //             return (
+        //                 <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+        //                     <p style={{ marginBottom: 0 }}>{timeArr[0]}</p>
+        //                     <p style={{ marginBottom: 0 }}>{timeArr[1]}</p>
+        //                 </div>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '原因',
+        //         dataIndex: 'CodeMsg',
+        //         key: 'CodeMsg',
+        //         align: 'center',
+        //         width: 150,
+        //         render: (text, record) => {
+        //             return (
+        //                 <span style={{ whiteSpace: 'pre-wrap', opacity: record.State === '99' ? 0.45 : 1 }}>
+        //                     {text}
+        //                 </span>
+        //             );
+        //         },
+        //     },
+        //     {
+        //         title: '幣別',
+        //         dataIndex: 'Currency',
+        //         key: 'Currency',
+        //         align: 'center',
+        //         width: 150,
+        //         render: (text, record) => {
+        //             return <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{currencyChName(text)}</span>;
+        //         },
+        //     },
+        // ];
         setColumns(newColumns);
     }, [data, isMobile, searchColumns, marketFilterValue, stateMsgFilterValue, touchPriceFilterValue]);
 
