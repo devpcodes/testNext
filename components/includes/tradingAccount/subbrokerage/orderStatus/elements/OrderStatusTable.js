@@ -143,19 +143,19 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                     return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{text}</div>;
                 },
             },
-            // {
-            //     title: '市場',
-            //     dataIndex: 'market',
-            //     key: 'market',
-            //     fixed: !isMobile ? 'left' : 'auto',
-            //     width: 100,
-            //     ...getColumnSearchProps('market'),
-            //     render: (text, record) => {
-            //         const marketID = record.StockID.split('.').slice(-1).pop();
-            //         const market = marketName(marketID).name;
-            //         return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
-            //     },
-            // },
+            {
+                title: '市場',
+                dataIndex: 'market',
+                key: 'market',
+                fixed: !isMobile ? 'left' : 'auto',
+                width: 100,
+                ...getColumnSearchProps('market'),
+                render: (text, record) => {
+                    const marketID = record.StockID.split('.').slice(-1).pop();
+                    const market = marketName(marketID).name;
+                    return <div style={{ opacity: record.State === '99' ? 0.45 : 1 }}>{market}</div>;
+                },
+            },
             {
                 title: '代碼',
                 dataIndex: 'StockID',
@@ -198,61 +198,62 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                     );
                 },
             },
-            // {
-            //     title: '類別',
-            //     dataIndex: 'PriceType',
-            //     key: 'PriceType',
-            //     width: 100,
-            //     render: (text, record) => {
-            //         const priceType = getPriceType(record.PriceType);
-            //         const icons = goOrderMapping(priceType, record.GTCDate);
-            //         const marketID = record.StockID.split('.').slice(-1).pop();
-            //         return (
-            //             <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
-            //                 {marketID === 'US' && (
-            //                     <>
-            //                         {icons.map((icon, index) => {
-            //                             return icon !== 'AON' && icon !== 'ANY' ? (
-            //                                 <p
-            //                                     key={index}
-            //                                     className="item--down2"
-            //                                     style={{
-            //                                         display: 'inline-block',
-            //                                         fontSize: '1rem',
-            //                                         background:
-            //                                             icon === '長'
-            //                                                 ? '#6c7b94'
-            //                                                 : record.BS === 'B'
-            //                                                 ? themeColor.buyTabColor
-            //                                                 : themeColor.sellTabColor,
-            //                                         color: 'white',
-            //                                         padding: '0 3px',
-            //                                         borderRadius: '2px',
-            //                                         marginRight: '4px',
-            //                                         marginBottom: 0,
-            //                                     }}
-            //                                 >
-            //                                     {icon}
-            //                                 </p>
-            //                             ) : (
-            //                                 <p
-            //                                     key={'B' + index}
-            //                                     className="item--down2"
-            //                                     style={{
-            //                                         display: 'inline-block',
-            //                                         marginBottom: 0,
-            //                                     }}
-            //                                 >
-            //                                     {icon}
-            //                                 </p>
-            //                             );
-            //                         })}
-            //                     </>
-            //                 )}
-            //             </span>
-            //         );
-            //     },
-            // },
+            {
+                title: '類別',
+                dataIndex: 'PriceType',
+                key: 'PriceType',
+                width: 100,
+                render: (text, record) => {
+                    const priceType = getPriceType(record.PriceType);
+                    const icons = goOrderMapping(priceType, record.GTCDate);
+                    const marketID = record.StockID.split('.').slice(-1).pop();
+                    console.log('-------', priceType, icons, marketID);
+                    return (
+                        <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
+                            {marketID === 'US' && (
+                                <>
+                                    {icons.map((icon, index) => {
+                                        return icon !== 'AON' && icon !== 'ANY' ? (
+                                            <p
+                                                key={index}
+                                                className="item--down2"
+                                                style={{
+                                                    display: 'inline-block',
+                                                    fontSize: '1rem',
+                                                    background:
+                                                        icon === '長'
+                                                            ? '#6c7b94'
+                                                            : record.BS === 'B'
+                                                            ? themeColor.buyTabColor
+                                                            : themeColor.sellTabColor,
+                                                    color: 'white',
+                                                    padding: '0 3px',
+                                                    borderRadius: '2px',
+                                                    marginRight: '4px',
+                                                    marginBottom: 0,
+                                                }}
+                                            >
+                                                {icon}
+                                            </p>
+                                        ) : (
+                                            <p
+                                                key={'B' + index}
+                                                className="item--down2"
+                                                style={{
+                                                    display: 'inline-block',
+                                                    marginBottom: 0,
+                                                }}
+                                            >
+                                                {icon}
+                                            </p>
+                                        );
+                                    })}
+                                </>
+                            )}
+                        </span>
+                    );
+                },
+            },
             {
                 title: '價格',
                 dataIndex: 'Price',

@@ -10,17 +10,17 @@ import DealPageComponent from '../tradingAccount/subbrokerage/deal/page/DealPage
 import ShareholdingPage from '../tradingAccount/subbrokerage/shareholding/page/ShareholdingPage';
 import BatchPage from '../tradingAccount/subbrokerage/batchSubbrokerage/page/BatchPage';
 import OrderBox from '../tradingAccount/subbrokerage/inventory/elements/OrderBox';
-import { useAutoSelectAccount } from '../../../hooks/useAutoSelectAccount';
-import { accountGroupByType } from '../../../services/user/accountGroupByType';
-import { setCurrentAccount } from '../../../store/user/action';
+// import { useAutoSelectAccount } from '../../../hooks/useAutoSelectAccount';
+// import { accountGroupByType } from '../../../services/user/accountGroupByType';
+// import { setCurrentAccount } from '../../../store/user/action';
 //import { GetArticleData } from '../../../../services/components/announcement/announceList';
 
 const SubBrokerMain = () => {
-    const accounts = useSelector(store => store.user.accounts);
+    // const accounts = useSelector(store => store.user.accounts);
     const [current, setCurrent] = useState('order');
     const [orderDataN, setOrderDataN] = useState('');
     const [orderBoxCtrl, setOrderBoxCtrl] = useState(true);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const menuList = [
         { key: 'order', title: '委回' },
         { key: 'deal', title: '成交' },
@@ -45,15 +45,15 @@ const SubBrokerMain = () => {
         setOrderDataN(data);
     };
 
-    useEffect(() => {
-        setTimeout(() => {
-            const groupedAccount = accountGroupByType(accounts);
-            if (groupedAccount['H'] != null && groupedAccount['H']?.length > 0) {
-                console.log('changeCurrentAccount');
-                dispatch(setCurrentAccount(groupedAccount['H'][0]));
-            }
-        }, 1000);
-    }, [current]);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         const groupedAccount = accountGroupByType(accounts);
+    //         if (groupedAccount['H'] != null && groupedAccount['H']?.length > 0) {
+    //             console.log('changeCurrentAccount');
+    //             dispatch(setCurrentAccount(groupedAccount['H'][0]));
+    //         }
+    //     }, 1000);
+    // }, [current]);
 
     return (
         <div className="page__container subBrokerage">
