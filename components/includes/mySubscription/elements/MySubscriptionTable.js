@@ -255,6 +255,7 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                 });
                 message.success('取消申購已送出');
                 setCancelLoading(false);
+                getOrderStatus();
             } catch (error) {
                 message.error(error);
                 setCancelLoading(false);

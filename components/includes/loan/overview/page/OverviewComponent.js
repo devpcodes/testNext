@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Tooltip } from 'antd';
 import moment from 'moment';
 import { message } from 'antd';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
@@ -98,6 +99,15 @@ const OverviewComponent = () => {
         // alert(allCanLoan)
         setAllCanLoan(allCanLoan);
     };
+    const tooltipHandler = () => {
+        return (
+            <div>
+                <p style={{ marginBottom: 0 }}>1. 擔保维持率=(已抵押庫存市值+補繳保證金)/已申請借款 *100%。</p>
+                <p style={{ marginBottom: 0 }}>2. 本資料每日16:00後更新。</p>
+                <p style={{ marginBottom: 0 }}>3. 維持率低於130%，須補繳繳保證金。</p>
+            </div>
+        );
+    };
     return (
         <div className="overview__container">
             <Breadcrumb />
@@ -125,9 +135,11 @@ const OverviewComponent = () => {
             <div className="overview__head2">
                 <h2 className="overview__title">擔保品明細</h2>
                 <div>
-                    <img className="overview__icon" src={info} />
+                    <Tooltip title={tooltipHandler} placement="bottom">
+                        <img className="overview__icon" src={info} />
+                    </Tooltip>
                     <span className="overview__hold--label">整戶維持率：</span>
-                    <span className="overview__hold--val">170%</span>
+                    <span className="overview__hold--val">{accountOverview.marginRatio + '%'}</span>
                 </div>
             </div>
             <div className="overview__table">

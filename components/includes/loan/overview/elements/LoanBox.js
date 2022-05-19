@@ -5,8 +5,20 @@ import info from '../../../../../resources/images/components/loanZone/ic-ic-atte
 import Bar from './Bar';
 import SinoBtn from '../../Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../../services/formatNum';
+import { Tooltip } from 'antd';
 const LoanBox = ({ allCanLoan, financing }) => {
     const router = useRouter();
+    const titleHandler = () => {
+        return (
+            <div>
+                <p style={{ marginBottom: 0 }}>1. 本服務以日計息，自撥款日起算。</p>
+                <p style={{ marginBottom: 0 }}>2. 線上手續費每筆100 元。</p>
+                <p style={{ marginBottom: 0 }}>3. (匯入多筆庫存同時一次申請借貸時，以一筆計算)。</p>
+                <p style={{ marginBottom: 0 }}>4. 撥券費以股票張數計算，每張 1 元。</p>
+                <p style={{ marginBottom: 0 }}>5. 上述費用於還款時收取。</p>
+            </div>
+        );
+    };
     return (
         <div className="loan__container">
             <div className="loan__head">
@@ -18,7 +30,10 @@ const LoanBox = ({ allCanLoan, financing }) => {
             <div className="loan__content">
                 <div>
                     <span className="canLoanMoney">可借款金額</span>
-                    <img className="canLoanIcon" src={info} />
+                    <Tooltip title={titleHandler} placement="bottom">
+                        <img className="canLoanIcon" src={info} />
+                    </Tooltip>
+
                     <span className="canLoanDesc">借款說明</span>
                 </div>
                 <p className="loan__money">${formatNum(Number(allCanLoan) - Number(financing))}</p>
