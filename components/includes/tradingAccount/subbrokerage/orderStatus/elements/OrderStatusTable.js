@@ -33,7 +33,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
     const [reload, setReload] = useState(0);
     const currentReload = useRef(0);
     const postData = useMemo(() => {
-        if (currentAccount.account != null) {
+        if (currentAccount.account != null && currentAccount.accttype === 'H') {
             const postData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 orderID: '',
