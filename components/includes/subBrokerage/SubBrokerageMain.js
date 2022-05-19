@@ -49,9 +49,10 @@ const SubBrokerMain = () => {
         setTimeout(() => {
             const groupedAccount = accountGroupByType(accounts);
             if (groupedAccount['H'] != null && groupedAccount['H']?.length > 0) {
+                console.log('changeCurrentAccount');
                 dispatch(setCurrentAccount(groupedAccount['H'][0]));
             }
-        }, 500);
+        }, 1000);
     }, [current]);
 
     return (
