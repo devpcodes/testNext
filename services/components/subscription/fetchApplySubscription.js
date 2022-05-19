@@ -1,6 +1,14 @@
 import { getSubscriptionInstance } from '../../myAxios';
 
-export const fetchApplySubscription = async function (token, branch, account, stockId, clientIP, ca_content) {
+export const fetchApplySubscription = async function (
+    token,
+    branch,
+    account,
+    stockId,
+    clientIP,
+    source = 'h',
+    ca_content,
+) {
     try {
         const reqUrl = '/order';
         const res = await getSubscriptionInstance().post(reqUrl, {
@@ -9,6 +17,7 @@ export const fetchApplySubscription = async function (token, branch, account, st
             account,
             stockId,
             clientIP,
+            source,
             ca_content,
         });
 
