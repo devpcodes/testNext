@@ -46,10 +46,12 @@ const SubBrokerMain = () => {
     };
 
     useEffect(() => {
-        const groupedAccount = accountGroupByType(accounts);
-        if (groupedAccount['H'] != null && groupedAccount['H']?.length > 0) {
-            dispatch(setCurrentAccount(groupedAccount['H'][0]));
-        }
+        setTimeout(() => {
+            const groupedAccount = accountGroupByType(accounts);
+            if (groupedAccount['H'] != null && groupedAccount['H']?.length > 0) {
+                dispatch(setCurrentAccount(groupedAccount['H'][0]));
+            }
+        }, 500);
     }, [current]);
 
     return (
