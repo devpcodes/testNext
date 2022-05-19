@@ -1,38 +1,50 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
+import { useDispatch } from 'react-redux';
 import Bar from './Bar';
 import SinoBtn from '../../Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../../services/formatNum';
-const LoanBox = ({ allCanLoan, financing }) => {
-    const router = useRouter();
+import { setModal } from '../../../../../store/components/layouts/action';
+const UseBox = ({ style, usedFinancing, financing }) => {
+    const dispatch = useDispatch();
+    const clickHandler = () => {
+        dispatch(
+            setModal({
+                visible: true,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                title: '如何申請動用',
+                type: 'info',
+                content: (
+                    <p>
+                        本服務提供您於每筆借款申請(抵押擔保品)時同步進行動用，若您有動用前次借款餘額之需求，請去電至分公司或臨櫃辦理。
+                    </p>
+                ),
+                okText: '確認',
+            }),
+        );
+    };
     return (
-        <div className="loan__container">
+        <div className="loan__container" style={style}>
             <div className="loan__head">
-                <span className="loan__title">借款</span>
-                <a className="loan__gobtn">
-                    借款紀錄 <img className="loan__goIcon" src={go} />
-                </a>
+                <span className="loan__title">動用</span>
             </div>
             <div className="loan__content">
                 <div>
-                    <span className="canLoanMoney">可借款金額</span>
-                    <img className="canLoanIcon" src={info} />
-                    <span className="canLoanDesc">借款說明</span>
+                    <span className="canLoanMoney">可動用金額</span>
                 </div>
-                <p className="loan__money">${formatNum(Number(allCanLoan) - Number(financing))}</p>
+                <p className="loan__money">${formatNum(Number(financing) - Number(usedFinancing))}</p>
                 <div className="loan__contentBottom">
                     <div className="loan__left">
-                        <Bar min={financing} max={allCanLoan} />
+                        <Bar min={usedFinancing} max={financing} />
                         <div className="loan__text--box">
                             <div>
-                                <span className="loan__money--lable">已申請借款</span>
-                                <span className="loan__money--val">${formatNum(financing)}</span>
+                                <span className="loan__money--lable">已動用金額</span>
+                                <span className="loan__money--val">${formatNum(usedFinancing)}</span>
                             </div>
                             <div>
-                                <span className="loan__all--label">總計可借款</span>
-                                <span className="loan__all--val">${formatNum(allCanLoan)}</span>
+                                <span className="loan__all--label">已申請借款</span>
+                                <span className="loan__all--val">${formatNum(financing)}</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +52,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     <div className="loan__right">
                         <SinoBtn
                             parentClass={'search__container'}
-                            text={'立即借貸'}
+                            text={'立即動用'}
                             style={{
                                 border: 'none',
                                 outline: 'none',
@@ -53,22 +65,14 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 color: 'white',
                                 verticalAlign: 'top',
                             }}
-                            onClick={() => {
-                                router.push('/loan-zone/Collateral/');
-                            }}
+                            onClick={clickHandler}
                         />
                     </div>
                 </div>
             </div>
-            <div className="loan__footer">
-                <span className="footer__text">想獲得更高額度的借款金額?</span>
-                <Link href="/loan-zone/Collateral/">
-                    <a className="footer__link">立即試算 ></a>
-                </Link>
-            </div>
             <style jsx>{`
                 .loan__container {
-                    height: 300px;
+                    height: 240px;
                     border-radius: 2px;
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
@@ -98,7 +102,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     padding: 30px 30px 16px 30px;
                 }
                 .canLoanMoney {
-                    font-size: 20px;
+                    font-size: 16px;
                     letter-spacing: 0.5px;
                     color: #0d1623;
                 }
@@ -113,7 +117,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                 }
                 .loan__money {
                     margin: 0;
-                    font-size: 40px;
+                    font-size: 28px;
                     font-weight: bold;
                     color: #0d1623;
                 }
@@ -197,4 +201,4 @@ const LoanBox = ({ allCanLoan, financing }) => {
     );
 };
 
-export default LoanBox;
+export default UseBox;

@@ -1,4 +1,5 @@
-const Bar = ({ style }) => {
+const Bar = ({ style, min, max }) => {
+    const wid = (Number(min) * 100) / max || 0;
     return (
         <>
             <div className="bar__background" style={style}>
@@ -15,7 +16,7 @@ const Bar = ({ style }) => {
                     border-radius: 5.5px;
                     position: absolute;
                     background-color: #254a91;
-                    width: 30%;
+                    width: ${wid}%;
                     height: 12px;
                     top: 0;
                     left: 0;

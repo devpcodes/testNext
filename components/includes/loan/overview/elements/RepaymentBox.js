@@ -1,38 +1,66 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
 import Bar from './Bar';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../../../../store/components/layouts/action';
 import SinoBtn from '../../Collateral/elements/SinoBtn';
-import { formatNum } from '../../../../../services/formatNum';
-const LoanBox = ({ allCanLoan, financing }) => {
-    const router = useRouter();
+import VerticalTable from './VerticalTable';
+const RepaymentBox = ({ style }) => {
+    const dispatch = useDispatch();
+    const clickHandler = () => {
+        dispatch(
+            setModal({
+                visible: true,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                title: '如何申請動用',
+                type: 'info',
+                content: (
+                    <>
+                        <p style={{ marginBottom: '5px', color: '#0d1623' }}>
+                            1. 每筆借款期限為6個月，到期可向分公司申請展延，或於借貸期間隨時申請還款。
+                        </p>
+                        <p style={{ marginBottom: '5px', color: '#0d1623' }}>2. 還款方式：</p>
+                        <div style={{ marginLeft: '30px', color: '#0d1623' }}>
+                            <p style={{ marginBottom: '5px' }}>
+                                • <span style={{ fontWeight: 'bold' }}>賣股還款：</span>
+                                透過線上或臨櫃交易賣出擔保品以償還該筆借款，扣除利息與相關費用並償還本金後，餘額將返還至您的交割帳戶。
+                            </p>
+                            <p>
+                                • <span style={{ fontWeight: 'bold' }}>現金還款：</span>
+                                請將還款金額轉帳或匯款至各分公司之償還帳戶，並去電至分公司進行還款指示，或以現金至臨櫃完成還款，還款費用以扣除利息與相關費用後再償還本金。
+                            </p>
+                        </div>
+                        <VerticalTable />
+                    </>
+                ),
+                okText: '確認',
+                width: '600px',
+            }),
+        );
+    };
     return (
-        <div className="loan__container">
+        <div className="loan__container" style={style}>
             <div className="loan__head">
-                <span className="loan__title">借款</span>
+                <span className="loan__title">還款</span>
                 <a className="loan__gobtn">
-                    借款紀錄 <img className="loan__goIcon" src={go} />
+                    還款紀錄 <img className="loan__goIcon" src={go} />
                 </a>
             </div>
             <div className="loan__content">
                 <div>
-                    <span className="canLoanMoney">可借款金額</span>
-                    <img className="canLoanIcon" src={info} />
-                    <span className="canLoanDesc">借款說明</span>
+                    <span className="canLoanMoney">應還款金額</span>
+                    {/* <img className="canLoanIcon" src={info} /> */}
+                    <span className="canLoanDesc">(含息)</span>
                 </div>
-                <p className="loan__money">${formatNum(Number(allCanLoan) - Number(financing))}</p>
+                <p className="loan__money">$1,032,000</p>
                 <div className="loan__contentBottom">
                     <div className="loan__left">
-                        <Bar min={financing} max={allCanLoan} />
+                        {/* <Bar /> */}
                         <div className="loan__text--box">
                             <div>
-                                <span className="loan__money--lable">已申請借款</span>
-                                <span className="loan__money--val">${formatNum(financing)}</span>
-                            </div>
-                            <div>
-                                <span className="loan__all--label">總計可借款</span>
-                                <span className="loan__all--val">${formatNum(allCanLoan)}</span>
+                                <span className="loan__money--lable">利息及其它費用</span>
+                                <span className="loan__money--val">$53,000</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +68,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     <div className="loan__right">
                         <SinoBtn
                             parentClass={'search__container'}
-                            text={'立即借貸'}
+                            text={'立即還款'}
                             style={{
                                 border: 'none',
                                 outline: 'none',
@@ -53,22 +81,14 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 color: 'white',
                                 verticalAlign: 'top',
                             }}
-                            onClick={() => {
-                                router.push('/loan-zone/Collateral/');
-                            }}
+                            onClick={clickHandler}
                         />
                     </div>
                 </div>
             </div>
-            <div className="loan__footer">
-                <span className="footer__text">想獲得更高額度的借款金額?</span>
-                <Link href="/loan-zone/Collateral/">
-                    <a className="footer__link">立即試算 ></a>
-                </Link>
-            </div>
             <style jsx>{`
                 .loan__container {
-                    height: 300px;
+                    height: 240px;
                     border-radius: 2px;
                     border: solid 1px #d7e0ef;
                     background-color: #fff;
@@ -98,7 +118,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     padding: 30px 30px 16px 30px;
                 }
                 .canLoanMoney {
-                    font-size: 20px;
+                    font-size: 16px;
                     letter-spacing: 0.5px;
                     color: #0d1623;
                 }
@@ -113,7 +133,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                 }
                 .loan__money {
                     margin: 0;
-                    font-size: 40px;
+                    font-size: 28px;
                     font-weight: bold;
                     color: #0d1623;
                 }
@@ -197,4 +217,4 @@ const LoanBox = ({ allCanLoan, financing }) => {
     );
 };
 
-export default LoanBox;
+export default RepaymentBox;
