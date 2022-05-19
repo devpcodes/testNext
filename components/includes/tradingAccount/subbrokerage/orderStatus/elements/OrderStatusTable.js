@@ -73,6 +73,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
 
     useEffect(() => {
         if (Array.isArray(fetchData)) {
+            console.log('----------QuickSearch', fetchData);
             setError('');
             const newSymbolList = [];
             const newData = fetchData.map((item, index) => {
@@ -91,6 +92,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
 
     useEffect(() => {
         if (nameData?.length > 0) {
+            console.log('----------nameData', nameData);
             let newData = fetchData?.map(item => {
                 const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
                 item.name = symbol;
