@@ -15,31 +15,31 @@ export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
 function SubBrokerageNew() {
     const dispatch = useDispatch();
     const router = useRouter();
-    // const hasAccount = useAutoSelectAccount('H');
-    // useEffect(() => {
-    //     if (!hasAccount) {
-    //         setTimeout(() => {
-    //             router.push('/');
-    //         }, 300);
-    //         message.error('無可交易帳號');
-    //         // dispatch(
-    //         //     setModal({
-    //         //         visible: true,
-    //         //         type: 'confirm',
-    //         //         content: '無可交易帳號',
-    //         //         title: '系統訊息',
-    //         //         onOk: () => {
-    //         //             router.push('/');
-    //         //             dispatch(setModal({ visible: false }));
-    //         //         },
-    //         //         onCancel: () => {
-    //         //             router.push('/');
-    //         //             dispatch(setModal({ visible: false }));
-    //         //         },
-    //         //     }),
-    //         // );
-    //     }
-    // }, [hasAccount]);
+    const hasAccount = useAutoSelectAccount('H');
+    useEffect(() => {
+        if (!hasAccount) {
+            setTimeout(() => {
+                router.push('/');
+            }, 300);
+            message.error('無可交易帳號');
+            // dispatch(
+            //     setModal({
+            //         visible: true,
+            //         type: 'confirm',
+            //         content: '無可交易帳號',
+            //         title: '系統訊息',
+            //         onOk: () => {
+            //             router.push('/');
+            //             dispatch(setModal({ visible: false }));
+            //         },
+            //         onCancel: () => {
+            //             router.push('/');
+            //             dispatch(setModal({ visible: false }));
+            //         },
+            //     }),
+            // );
+        }
+    }, [hasAccount]);
     return (
         <>
             <ActiveReturn />
