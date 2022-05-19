@@ -106,11 +106,11 @@ const OrderStatusPage = () => {
                     right: 0,
                 }}
             />
-            <OrderStatusTable
+            {/* <OrderStatusTable
                 touchPriceFilterValue={touchPriceFilterValue}
                 controlReload={controlReload}
                 showDelBtn={delBtnHandler}
-            />
+            /> */}
             <style jsx>
                 {`
                     .sum__container {
