@@ -16,6 +16,8 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { debounce } from '../../../../../services/throttle';
 import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
+import { useRouter } from 'next/router';
+import { useLoanAccount } from '../../../../../hooks/useLoanAccount';
 const OverviewComponent = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
@@ -27,6 +29,17 @@ const OverviewComponent = () => {
     const [current, setCurrent] = useState('notGuaranteed');
     const [allCanLoan, setAllCanLoan] = useState(0);
     const [accountOverview, setAccountOverview] = useState({});
+
+    // const { isLogin, accounts } = useUser();
+    // const [loanIdno, setLoanIdno] = useState('');
+    const router = useRouter();
+    const haveLoanAccount = useLoanAccount(getToken());
+
+    useEffect(() => {
+        if (!haveLoanAccount && haveLoanAccount != null) {
+            router.push('/loan-zone');
+        }
+    }, [haveLoanAccount]);
 
     useEffect(() => {
         if (currentAccount.idno != null) {
@@ -140,7 +153,7 @@ const OverviewComponent = () => {
                         <img className="overview__icon" src={info} />
                     </Tooltip>
                     <span className="overview__hold--label">整戶維持率：</span>
-                    <span className="overview__hold--val">{accountOverview.marginRatio + '%'}</span>
+                    <span className="overview__hold--val">{(accountOverview.marginRatio || '--') + '%'}</span>
                 </div>
             </div>
             <div className="overview__table">
