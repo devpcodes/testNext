@@ -1,12 +1,13 @@
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
 import Bar from './Bar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../../../store/components/layouts/action';
 import SinoBtn from '../../Collateral/elements/SinoBtn';
 import VerticalTable from './VerticalTable';
 import qrCode from '../../../../../resources/images/components/loanZone/demo.jpg';
 const RepaymentBox = ({ style }) => {
+    const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
     const clickHandler = () => {
         const data = [
@@ -81,7 +82,7 @@ const RepaymentBox = ({ style }) => {
                             <VerticalTable
                                 data={data}
                                 style={{
-                                    marginRight: '18px',
+                                    marginRight: isMobile ? '0' : '18px',
                                     flex: '3 0 0',
                                 }}
                             />
@@ -90,12 +91,19 @@ const RepaymentBox = ({ style }) => {
                                 style={{
                                     width: '145px',
                                     height: '135px',
-                                    display: 'inline-block',
+                                    display: isMobile ? 'none' : 'inline-block',
                                     flex: '1 0 0',
                                 }}
                             />
                         </div>
-                        <p style={{ marginTop: '16px', color: '#6c7b94', marginBottom: 0 }}>
+                        <p
+                            style={{
+                                marginTop: '16px',
+                                color: '#6c7b94',
+                                marginBottom: 0,
+                                display: isMobile ? 'none' : 'block',
+                            }}
+                        >
                             此條碼支援銀行轉帳，掃描後即可轉帳。
                         </p>
                     </>
@@ -134,6 +142,28 @@ const RepaymentBox = ({ style }) => {
                     <div className="loan__right">
                         <SinoBtn
                             parentClass={'search__container'}
+                            text={'還款紀錄'}
+                            style={{
+                                display: isMobile ? 'inline-block' : 'none',
+                                border: '1px solid #d7e0ef',
+                                outline: 'none',
+                                // width: '100%',
+                                height: '40px',
+                                fontSize: '16px',
+                                padding: '9px 19px 9px 20px',
+                                borderRadius: '2px',
+                                backgroundColor: 'white',
+                                color: '#0d1623',
+                                verticalAlign: 'top',
+                                flex: '1 0 0',
+                                marginRight: '16px',
+                            }}
+                            onClick={() => {
+                                router.push('/loan-zone/Record/?tab=1');
+                            }}
+                        />
+                        <SinoBtn
+                            parentClass={'search__container'}
                             text={'立即還款'}
                             style={{
                                 border: 'none',
@@ -146,6 +176,7 @@ const RepaymentBox = ({ style }) => {
                                 backgroundColor: '#c43826',
                                 color: 'white',
                                 verticalAlign: 'top',
+                                flex: '1 0 0',
                             }}
                             onClick={clickHandler}
                         />
@@ -277,6 +308,74 @@ const RepaymentBox = ({ style }) => {
                     line-height: normal;
                     letter-spacing: normal;
                     color: #0d1623;
+                }
+                @media (max-width: 768px) {
+                    .loan__text--box {
+                        /* justify-content: space-around;
+                        text-align: center; */
+                    }
+                    .canLoanMoney {
+                        font-size: 16px;
+                    }
+                    .canLoanDesc {
+                        display: none;
+                    }
+                    .loan__content {
+                        padding: 19px 16px;
+                    }
+                    .loan__money {
+                        font-size: 24px;
+                    }
+                    .loan__contentBottom {
+                        margin-top: 16px;
+                        display: block;
+                    }
+                    .loan__all--label {
+                        /* display: block; */
+                        margin-bottom: 6px;
+                    }
+                    .loan__money--lable {
+                        /* display: block; */
+                        margin-bottom: 6px;
+                    }
+                    .loan__left {
+                        margin-right: 0;
+                    }
+                    .loan__line {
+                        display: block;
+                        width: 1px;
+                        height: 42px;
+                        background-color: #d7e0ef;
+                    }
+                    .loan__right {
+                        margin-top: 16px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .loan__container {
+                        height: auto;
+                        border-left: none;
+                        border-right: none;
+                    }
+                    .loan__footer {
+                        height: auto;
+                        border-top: none;
+                        padding-right: 0;
+                        padding-top: 0;
+                        text-align: center;
+                        padding-bottom: 15px;
+                    }
+                    .loan__head {
+                        height: 28px;
+                        padding: 0 0 0 16px;
+                    }
+                    .loan__title {
+                        font-size: 14px;
+                        line-height: 28px;
+                    }
+                    .loan__gobtn {
+                        display: none;
+                    }
                 }
             `}</style>
         </div>

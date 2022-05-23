@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
 import Bar from './Bar';
@@ -7,6 +8,7 @@ import SinoBtn from '../../Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../../services/formatNum';
 import { Tooltip } from 'antd';
 const LoanBox = ({ allCanLoan, financing }) => {
+    const isMobile = useSelector(store => store.layout.isMobile);
     const router = useRouter();
     const titleHandler = () => {
         return (
@@ -45,6 +47,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 <span className="loan__money--lable">已申請借款</span>
                                 <span className="loan__money--val">${formatNum(financing)}</span>
                             </div>
+                            <div className="loan__line"></div>
                             <div>
                                 <span className="loan__all--label">總計可借款</span>
                                 <span className="loan__all--val">${formatNum(allCanLoan)}</span>
@@ -53,6 +56,28 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     </div>
 
                     <div className="loan__right">
+                        <SinoBtn
+                            parentClass={'search__container'}
+                            text={'借款紀錄'}
+                            style={{
+                                display: isMobile ? 'inline-block' : 'none',
+                                border: '1px solid #d7e0ef',
+                                outline: 'none',
+                                // width: '100%',
+                                height: '40px',
+                                fontSize: '16px',
+                                padding: '9px 19px 9px 20px',
+                                borderRadius: '2px',
+                                backgroundColor: 'white',
+                                color: '#0d1623',
+                                verticalAlign: 'top',
+                                flex: '1 0 0',
+                                marginRight: '16px',
+                            }}
+                            onClick={() => {
+                                router.push('/loan-zone/Record/');
+                            }}
+                        />
                         <SinoBtn
                             parentClass={'search__container'}
                             text={'立即借貸'}
@@ -67,6 +92,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 backgroundColor: '#c43826',
                                 color: 'white',
                                 verticalAlign: 'top',
+                                flex: '1 0 0',
                             }}
                             onClick={() => {
                                 router.push('/loan-zone/Collateral/');
@@ -82,6 +108,9 @@ const LoanBox = ({ allCanLoan, financing }) => {
                 </Link>
             </div>
             <style jsx>{`
+                .loan__line {
+                    display: none;
+                }
                 .loan__container {
                     height: 300px;
                     border-radius: 2px;
@@ -206,6 +235,82 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     line-height: normal;
                     letter-spacing: normal;
                     color: #0d1623;
+                }
+                @media (max-width: 768px) {
+                    .loan__text--box {
+                        justify-content: space-around;
+                        text-align: center;
+                    }
+                    .canLoanMoney {
+                        font-size: 16px;
+                    }
+                    .canLoanDesc {
+                        display: none;
+                    }
+                    .loan__content {
+                        padding: 19px 16px;
+                    }
+                    .loan__money {
+                        font-size: 24px;
+                    }
+                    .loan__contentBottom {
+                        margin-top: 16px;
+                        display: block;
+                    }
+                    .loan__all--label {
+                        display: block;
+                        margin-bottom: 6px;
+                    }
+                    .loan__money--lable {
+                        display: block;
+                        margin-bottom: 6px;
+                    }
+                    .loan__left {
+                        margin-right: 0;
+                    }
+                    .loan__line {
+                        display: block;
+                        width: 1px;
+                        height: 42px;
+                        background-color: #d7e0ef;
+                    }
+                    .loan__right {
+                        margin-top: 16px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .loan__container {
+                        height: auto;
+                        border-left: none;
+                        border-right: none;
+                    }
+                    .loan__footer {
+                        height: auto;
+                        border-top: none;
+                        padding-right: 0;
+                        padding-top: 0;
+                        text-align: center;
+                        padding-bottom: 15px;
+                    }
+                    .loan__head {
+                        height: 28px;
+                        padding: 0 0 0 16px;
+                    }
+                    .loan__title {
+                        font-size: 14px;
+                        line-height: 28px;
+                    }
+                    .loan__gobtn {
+                        display: none;
+                    }
+                }
+                @media (max-width: 350px) {
+                    .footer__text {
+                        font-size: 14px;
+                    }
+                    .footer__link {
+                        font-size: 14px;
+                    }
                 }
             `}</style>
         </div>

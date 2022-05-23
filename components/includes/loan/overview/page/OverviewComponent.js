@@ -17,6 +17,7 @@ import { debounce } from '../../../../../services/throttle';
 import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
 const OverviewComponent = () => {
+    const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
     const menuList = [
         { key: 'notGuaranteed', title: '未擔保' },
@@ -126,15 +127,15 @@ const OverviewComponent = () => {
             <LoanBox allCanLoan={allCanLoan} financing={accountOverview.financing} />
             <div className="overview__useContainer">
                 <UseBox
-                    style={{ width: '49.3%', marginRight: '1.4%' }}
+                    style={{ width: isMobile ? '100%' : '49.3%', marginRight: isMobile ? 0 : '1.4%' }}
                     financing={accountOverview.financing}
                     usedFinancing={accountOverview.usedFinancing}
                 />
-                <RepaymentBox style={{ width: '49.3%' }} />
+                <RepaymentBox style={{ width: isMobile ? '100%' : '49.3%', marginTop: isMobile ? '16px' : '0' }} />
             </div>
             <div className="overview__head2">
                 <h2 className="overview__title">擔保品明細</h2>
-                <div>
+                <div className="overview__ratio">
                     <Tooltip title={tooltipHandler} placement="bottom">
                         <img className="overview__icon" src={info} />
                     </Tooltip>
@@ -185,6 +186,43 @@ const OverviewComponent = () => {
                 .overview__icon {
                     margin-top: -5px;
                 }
+                @media (max-width: 1024px) {
+                    .overview__container {
+                        width: 90%;
+                    }
+                }
+                @media (max-width: 768px) {
+                    .overview__container {
+                        width: 100%;
+                    }
+                    .overview__title {
+                        font-size: 20px;
+                    }
+                    .overview__head {
+                        display: block;
+                        padding: 0 16px;
+                    }
+                    .overview__btns {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 16px;
+                    }
+                    .overview__useContainer {
+                        display: block;
+                    }
+                    .overview__head2 {
+                        padding: 0 16px;
+                        margin-top: 16px;
+                    }
+                    .overview__ratio {
+                        margin-top: -7px;
+                    }
+                }
+                @media (max-width: 450px) {
+                    .overview__container {
+                        padding-top: 1px !important;
+                    }
+                }
             `}</style>
             <style jsx global>{`
                 .page__container {
@@ -219,6 +257,15 @@ const OverviewComponent = () => {
                     font-size: 16px;
                     font-weight: 500;
                     color: #0d1623;
+                }
+
+                @media (max-width: 768px) {
+                    .subscription__description__btn {
+                        flex: 1 0 0;
+                    }
+                    .site-breadcrumb {
+                        padding-left: 16px;
+                    }
                 }
             `}</style>
         </div>

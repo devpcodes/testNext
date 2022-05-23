@@ -1,11 +1,12 @@
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Bar from './Bar';
 import SinoBtn from '../../Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../../services/formatNum';
 import { setModal } from '../../../../../store/components/layouts/action';
 const UseBox = ({ style, usedFinancing, financing }) => {
+    const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
     const clickHandler = () => {
         dispatch(
@@ -42,6 +43,7 @@ const UseBox = ({ style, usedFinancing, financing }) => {
                                 <span className="loan__money--lable">已動用金額</span>
                                 <span className="loan__money--val">${formatNum(usedFinancing)}</span>
                             </div>
+                            <div className="loan__line"></div>
                             <div>
                                 <span className="loan__all--label">已申請借款</span>
                                 <span className="loan__all--val">${formatNum(financing)}</span>
@@ -54,15 +56,15 @@ const UseBox = ({ style, usedFinancing, financing }) => {
                             parentClass={'search__container'}
                             text={'立即動用'}
                             style={{
-                                border: 'none',
+                                border: isMobile ? '1px solid #d7e0ef' : 'none',
                                 outline: 'none',
                                 width: '100%',
                                 height: '40px',
                                 fontSize: '16px',
                                 padding: '9px 19px 9px 20px',
                                 borderRadius: '2px',
-                                backgroundColor: '#c43826',
-                                color: 'white',
+                                backgroundColor: isMobile ? 'white' : '#c43826',
+                                color: isMobile ? '#0d1623' : 'white',
                                 verticalAlign: 'top',
                             }}
                             onClick={clickHandler}
@@ -195,6 +197,74 @@ const UseBox = ({ style, usedFinancing, financing }) => {
                     line-height: normal;
                     letter-spacing: normal;
                     color: #0d1623;
+                }
+                @media (max-width: 768px) {
+                    .loan__text--box {
+                        justify-content: space-around;
+                        text-align: center;
+                    }
+                    .canLoanMoney {
+                        font-size: 16px;
+                    }
+                    .canLoanDesc {
+                        display: none;
+                    }
+                    .loan__content {
+                        padding: 19px 16px;
+                    }
+                    .loan__money {
+                        font-size: 24px;
+                    }
+                    .loan__contentBottom {
+                        margin-top: 16px;
+                        display: block;
+                    }
+                    .loan__all--label {
+                        display: block;
+                        margin-bottom: 6px;
+                    }
+                    .loan__money--lable {
+                        display: block;
+                        margin-bottom: 6px;
+                    }
+                    .loan__left {
+                        margin-right: 0;
+                    }
+                    .loan__line {
+                        display: block;
+                        width: 1px;
+                        height: 42px;
+                        background-color: #d7e0ef;
+                    }
+                    .loan__right {
+                        margin-top: 16px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .loan__container {
+                        height: auto;
+                        border-left: none;
+                        border-right: none;
+                    }
+                    .loan__footer {
+                        height: auto;
+                        border-top: none;
+                        padding-right: 0;
+                        padding-top: 0;
+                        text-align: center;
+                        padding-bottom: 15px;
+                    }
+                    .loan__head {
+                        height: 28px;
+                        padding: 0 0 0 16px;
+                    }
+                    .loan__title {
+                        font-size: 14px;
+                        line-height: 28px;
+                    }
+                    .loan__gobtn {
+                        display: none;
+                    }
                 }
             `}</style>
         </div>
