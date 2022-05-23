@@ -10,7 +10,7 @@ import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
 import { debounce } from '../../../../../services/throttle';
-const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler }) => {
+const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler, reload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -18,6 +18,12 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [loading, setLoading] = useState(false);
     const { isLogin } = useUser();
+
+    useEffect(() => {
+        if (reload) {
+            getAccountOverview();
+        }
+    }, [reload]);
 
     useEffect(() => {
         if (stockData?.stockId != null && currentKey === 'self') {

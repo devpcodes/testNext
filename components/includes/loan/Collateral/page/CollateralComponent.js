@@ -42,6 +42,7 @@ const CollateralComponent = () => {
     const [tabletCalculationShow, setTabletCalculationShow] = useState(false);
     const [goLoanVisible, setGoLoanVisible] = useState(false);
     const [stockData, setStockData] = useState({});
+    const [reload, setReload] = useState(false);
     useEffect(() => {
         if (isLogin) {
             setCurrent('inventory');
@@ -81,7 +82,13 @@ const CollateralComponent = () => {
     const renderTable = current => {
         console.log('current', current);
         return (
-            <SelfTable currentKey={current} setCurrentData={currentDataHandler} reset={reset} stockData={stockData} />
+            <SelfTable
+                currentKey={current}
+                setCurrentData={currentDataHandler}
+                reset={reset}
+                stockData={stockData}
+                reload={reload}
+            />
         );
     };
 
@@ -200,7 +207,12 @@ const CollateralComponent = () => {
             );
         }
     };
-
+    const inventoryReload = () => {
+        setReload(true);
+        setTimeout(() => {
+            setReload(false);
+        }, 500);
+    };
     return (
         <div className="collateral__container">
             {winWidth > 530 && <Breadcrumb />}
@@ -355,6 +367,7 @@ const CollateralComponent = () => {
                     goLoanClose={goLoanClose}
                     allLoanMoney={allLoanMoney}
                     goSubmitData={submitData}
+                    inventoryReload={inventoryReload}
                 />
             </div>
 

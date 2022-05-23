@@ -12,7 +12,7 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { postApply } from '../../../../../services/components/loznZone/calculation/postApply';
 import icon from '../../../../../resources/images/components/loanZone/basic-help-circle (1).svg';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
-const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
+const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryReload }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { Panel } = Collapse;
@@ -218,6 +218,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 // showLoanSuccessModal('20220429143000');
             }, 500);
         }
+        inventoryReload();
     };
     const replacer = (match, p1, p2, p3, p4, p5, offset, string) => {
         // p1 is nondigits, p2 digits, and p3 non-alphanumerics
