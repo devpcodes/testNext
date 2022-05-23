@@ -218,7 +218,6 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                 // showLoanSuccessModal('20220429143000');
             }, 500);
         }
-        inventoryReload();
     };
     const replacer = (match, p1, p2, p3, p4, p5, offset, string) => {
         // p1 is nondigits, p2 digits, and p3 non-alphanumerics
@@ -249,6 +248,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                 onOk: () => {
                     goLoanClose();
                     dispatch(setModal({ visible: false }));
+                    inventoryReload();
                 },
                 content: (
                     <>
