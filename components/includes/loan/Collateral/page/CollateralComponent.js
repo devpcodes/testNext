@@ -15,6 +15,7 @@ import closeIcon from '../../../../../resources/images/components/loanZone/menu-
 import Modal from 'antd/lib/modal/Modal';
 import GoLoan from '../elements/GoLoan';
 import { fetchGreenChannel } from '../../../../../services/components/loznZone/calculation/fetchGreenChannel';
+import { useLoanAccount } from '../../../../../hooks/useLoanAccount';
 const CollateralComponent = () => {
     const menuList = [
         { key: 'self', title: '自選試算' },
@@ -43,6 +44,8 @@ const CollateralComponent = () => {
     const [goLoanVisible, setGoLoanVisible] = useState(false);
     const [stockData, setStockData] = useState({});
     const [reload, setReload] = useState(false);
+    useLoanAccount();
+
     useEffect(() => {
         if (isLogin) {
             setCurrent('inventory');

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { InputNumber, Tooltip } from 'antd';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,6 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
-import { debounce } from '../../../../../services/throttle';
 import _ from 'lodash';
 const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler, reload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -19,7 +18,9 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [loading, setLoading] = useState(false);
     const { isLogin } = useUser();
-
+    const userSettings = useSelector(store => store.user.userSettings);
+    const nowAccount = useRef('');
+    const nowKey = useRef('');
     useEffect(() => {
         if (reload) {
             getAccountOverview();
@@ -37,11 +38,6 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
 
     useEffect(() => {
         if (isLogin && (currentKey === 'inventory' || currentKey === 'notGuaranteed' || currentKey === 'guaranteed')) {
-            // setTimeout(() => {
-            //     getAccountOverview();
-            //     setOverviewTable(true);
-            // }, 200);
-
             getAccountOverview();
             setOverviewTable(true);
         }

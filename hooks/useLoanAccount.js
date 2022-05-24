@@ -11,22 +11,28 @@ export const useLoanAccount = token => {
     const [haveLoanAccount, setHaveLoanAccount] = useState(null);
     useEffect(() => {
         if (isLogin) {
-            getAccountStatus();
+            setTimeout(() => {
+                getAccountStatus();
+            }, 500);
         }
     }, [isLogin]);
 
     const getAccountStatus = async () => {
         const res = await fetchAccountStatus(getToken());
-        if (res.success) {
-            const id = jwt_decode(getToken()).user_id;
-            const account = accounts.find(element => {
-                if (element.idno === id && element.accttype === 'S') {
-                    return true;
+        if (res.success && res.result?.length > 0) {
+            const loanAccounts = [];
+            accounts.map(item => {
+                for (let index = 0; index < res.result.length; index++) {
+                    const element = res.result[index];
+                    if (element.status === 'A' && element.account === item.account) {
+                        loanAccounts.push(item);
+                        return;
+                    }
                 }
             });
-            // console.log('account....', account);
+            // console.log('account....', loanAccounts);
             setHaveLoanAccount(true);
-            dispatch(setCurrentAccount(account));
+            dispatch(setCurrentAccount(loanAccounts[0]));
         } else {
             setHaveLoanAccount(false);
         }
