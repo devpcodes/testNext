@@ -106,9 +106,9 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
             {
                 title: '申購狀態',
                 width: '100px',
-                dataIndex: 'statusMessage',
-                key: 'statusMessage',
-                ...getColumnSearchProps('statusMessage'),
+                dataIndex: 'orderStatusMessage',
+                key: 'orderStatusMessage',
+                ...getColumnSearchProps('orderStatusMessage'),
                 render(text, record, idx) {
                     return text;
                 },
@@ -264,7 +264,7 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
     };
 
     const getColumnSearchProps = dataIndex => {
-        if (dataIndex === 'statusMessage') {
+        if (dataIndex === 'orderStatusMessage') {
             return {
                 filterDropdown: ({ confirm }) => (
                     <DropfilterCheckBox
@@ -299,8 +299,8 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
     const onStatusFilterSubmit = (confirm, val) => {
         confirm();
         setSearchColumns(columns => {
-            if (!columns.includes('statusMessage')) {
-                columns.push('statusMessage');
+            if (!columns.includes('orderStatusMessage')) {
+                columns.push('orderStatusMessage');
             }
             return columns;
         });
@@ -310,9 +310,9 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
 
     const onStatusFilterReset = (confirm, val) => {
         confirm();
-        if (searchColumns.indexOf('statusMessage') !== -1) {
+        if (searchColumns.indexOf('orderStatusMessage') !== -1) {
             setSearchColumns(columns => {
-                const index = searchColumns.indexOf('statusMessage');
+                const index = searchColumns.indexOf('orderStatusMessage');
                 columns.splice(index, 1);
                 return columns;
             });
@@ -347,7 +347,8 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
 
     useEffect(() => {
         // console.log('************', orderAmountSorter)
-        debounce(getOrderStatus, 500);
+        // debounce(getOrderStatus, 500);
+        getOrderStatus();
     }, [statusFilterValue, currentPage, orderAmountSorter, lotDateSorter]);
 
     const getOrderStatus = async () => {
@@ -361,7 +362,7 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                     account: currentAccount.account,
                     page: currentPage,
                     pageSize,
-                    statusFilter: statusFilterValue,
+                    orderStatusFilter: statusFilterValue,
                     orderAmountSort: orderAmountSorter,
                     lotDateSort: lotDateSorter,
                 });

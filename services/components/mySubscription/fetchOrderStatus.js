@@ -6,7 +6,7 @@ export const fetchOrderStatus = async function ({
     account,
     page,
     pageSize,
-    statusFilter,
+    orderStatusFilter,
     orderAmountSort,
     lotDateSort,
 }) {
@@ -15,12 +15,12 @@ export const fetchOrderStatus = async function ({
         account,
         page,
         pageSize,
-        statusFilter,
+        orderStatusFilter,
         orderAmountSort,
         lotDateSort,
     };
-    if (!statusFilter) {
-        delete params.statusFilter;
+    if (!orderStatusFilter) {
+        delete params.orderStatusFilter;
     }
     if (!orderAmountSort || orderAmountSort == null) {
         delete params.orderAmountSort;
