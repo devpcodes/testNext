@@ -10,6 +10,7 @@ import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
 import { debounce } from '../../../../../services/throttle';
+import _ from 'lodash';
 const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler, reload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -33,12 +34,16 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
             setData(cloneData);
         }
     }, [stockData]);
+
     useEffect(() => {
         if (isLogin && (currentKey === 'inventory' || currentKey === 'notGuaranteed' || currentKey === 'guaranteed')) {
-            setTimeout(() => {
-                getAccountOverview();
-                setOverviewTable(true);
-            }, 200);
+            // setTimeout(() => {
+            //     getAccountOverview();
+            //     setOverviewTable(true);
+            // }, 200);
+
+            getAccountOverview();
+            setOverviewTable(true);
         }
         if (currentKey === 'self') {
             getPopularStocks();
