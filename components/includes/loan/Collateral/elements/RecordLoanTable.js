@@ -25,6 +25,7 @@ const RecordTable = ({ refresh, payableHandler }) => {
                 interestRate: '52',
                 method: '線上',
                 pid: '14add56w7f',
+                key: '0001',
             },
             {
                 detail: '',
@@ -37,6 +38,7 @@ const RecordTable = ({ refresh, payableHandler }) => {
                 method: '線上',
                 pid: '14add56w7f',
                 canReturn: true,
+                key: '0002',
             },
         ]);
         setTotal(2);
@@ -53,7 +55,6 @@ const RecordTable = ({ refresh, payableHandler }) => {
                         return text;
                     } else {
                         const btnsArr = activeHandler(record);
-                        console.log('btnsArr', btnsArr);
                         return (
                             <>
                                 {btnsArr.map((element, index) => {
@@ -188,13 +189,11 @@ const RecordTable = ({ refresh, payableHandler }) => {
     }, [data]);
 
     const pageChangeHandler = val => {
-        console.log('vvv', val);
         setCurrentPage(val);
     };
 
     const openDetail = (e, id) => {
         e.preventDefault();
-        console.log(id, ' ', IsOpen[id], 'to', !IsOpen[id]);
         let IsOpen_ = IsOpen;
         IsOpen_[id] = !IsOpen_[id];
         setIsOpen(IsOpen_);
@@ -304,7 +303,6 @@ const RecordTable = ({ refresh, payableHandler }) => {
         if (record.canReturn) {
             btnsArr.push('canReturn');
         }
-        console.log('btnsArr', btnsArr);
         return btnsArr;
     };
     return (

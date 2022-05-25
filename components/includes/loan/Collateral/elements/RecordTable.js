@@ -21,6 +21,7 @@ const RecordTable = ({ refresh, payableHandler }) => {
                 left: '214',
                 method: 'BBBB',
                 pid: '14add56w7f',
+                key: '0001',
             },
         ]);
         setTotal(2);
@@ -98,13 +99,11 @@ const RecordTable = ({ refresh, payableHandler }) => {
     }, [data]);
 
     const pageChangeHandler = val => {
-        console.log('vvv', val);
         setCurrentPage(val);
     };
 
     const openDetail = (e, id) => {
         e.preventDefault();
-        console.log(id, ' ', IsOpen[id], 'to', !IsOpen[id]);
         let IsOpen_ = IsOpen;
         IsOpen_[id] = !IsOpen_[id];
         setIsOpen(IsOpen_);

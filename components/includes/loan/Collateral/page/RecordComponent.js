@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import moment from 'moment';
 import Modal from 'antd/lib/modal/Modal';
@@ -14,7 +15,15 @@ const RecordComponent = () => {
     const [tabCurrent, setTabCurrent] = useState(0);
     const isMobile = useCheckMobile();
     const winWidth = useSelector(store => store.layout.winWidth);
+    const router = useRouter();
 
+    useEffect(() => {
+        console.log('[params]', router.query);
+        let params = router.query;
+        if (params.tab) {
+            setTabCurrent(params.tab);
+        }
+    }, [router]);
     useEffect(() => {
         let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
         setRefreshTime(time);
