@@ -66,33 +66,33 @@ export const getContentData = type => {
                     class: '',
                 },
                 // QQ3 : 未平倉損益資料不知道是什麼
-                QQ3: {
-                    title: '未平倉損益',
-                    amount: `$${formatNum(mtamt)}`,
-                    class: '',
-                },
+                // QQ3: {
+                //     title: '未平倉損益',
+                //     amount: `$${formatNum(mtamt)}`,
+                //     class: '',
+                // },
                 sum_dbaln_twd: {
                     title: '前日餘額',
                     amount: `$${formatNum(realTimePrtLosSum?.FF.sum_dbaln_twd)}`,
                     class: '',
                 },
                 // QQ5 原始保證金資料??
-                QQ5: {
-                    title: '原始保證金',
-                    amount: `$${formatNum(otamt)}`,
-                    class: '',
-                },
+                // QQ5: {
+                //     title: '原始保證金',
+                //     amount: `$${formatNum(otamt)}`,
+                //     class: '',
+                // },
                 sum_dtmmmrg_twd: {
                     title: '維持保證金',
                     amount: `$${formatNum(realTimePrtLosSum?.FF.sum_dtmmmrg_twd)}`,
                     class: '',
                 },
                 // QQ4 : 追繳保證金????
-                QQ4: {
-                    title: '追繳保證金',
-                    amount: `$--`,
-                    class: '',
-                },
+                // QQ4: {
+                //     title: '追繳保證金',
+                //     amount: `$--`,
+                //     class: '',
+                // },
             };
         case 'H':
             return {
