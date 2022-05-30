@@ -729,7 +729,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setTableData(mobileTableData);
                 }
                 break;
-
             case 'WM_FUND':
                 tableTitle = {
                     WM_FUND: [
@@ -1008,7 +1007,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     mobileTableData.WM_SN = WM_SNMobileTableData;
                     setTableData(mobileTableData);
                 }
-
             case 'SN':
                 tableTitle = {
                     SN: [
@@ -1248,7 +1246,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     ],
                 };
 
-                let webTableData = {};
                 let WM_SN_INTRANSITWebTableData = [];
 
                 realTimePrtLosSum?.WM_SN_INTRANSIT.data.map((data, index) => {

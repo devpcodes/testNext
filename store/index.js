@@ -11,9 +11,9 @@ import solace from './solace/reducer';
 import goOrderSB from './goOrderSB/reducer';
 import subBrokerage from './subBrokerage/reducer';
 import watchLists from './watchLists/reducer';
+import asset from './asset/reducer';
 import accBalance from './accBalance/reducer';
 import activeReturn from './activeReturn/reducer';
-import asset from './asset/reducer';
 
 const reducers = combineReducers({
     layout,
@@ -28,9 +28,9 @@ const reducers = combineReducers({
     solace,
     subBrokerage,
     watchLists,
+    asset,
     accBalance,
     activeReturn,
-    asset,
 });
 
 export default reducers;
