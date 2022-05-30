@@ -1,36 +1,58 @@
 import { useCallback, useState, memo } from 'react';
 import AssetHeader from '../asset/header';
 import { useSelector } from 'react-redux';
+import { getContentData, getTitleData } from './getData';
 
-const AssetDetailOverview = memo(({}) => {
+const AssetDetailOverview = memo(({ type }) => {
+    const CustomTitle = ({ type }) => {
+        const titleDomData = getTitleData(type);
+        return (
+            <>
+                <div>
+                    <div className="title">
+                        {titleDomData?.title} <span className="currency">{titleDomData?.currency}</span>
+                    </div>
+                    <div className="amount">${titleDomData?.sum}</div>
+                </div>
+            </>
+        );
+    };
+
+    const GetDom = ({ type }) => {
+        let dom = [];
+        const domData = getContentData(type);
+        if (Object.keys(domData).length > 0) {
+            for (const [key, value] of Object.entries(domData)) {
+                dom.push(
+                    <>
+                        <div className="asset__detail__summary__item">
+                            <div className="asset__detail__summary__item__title">{value.title}</div>
+                            <div className={`asset__detail__summary__item__amount ${value.class}`}>{value.amount}</div>
+                        </div>
+                        <div className="line"></div>
+                    </>,
+                );
+            }
+        }
+
+        return <>{dom}</>;
+    };
+
     return (
         <>
             <div className="asset__detail__overview">
-                <div>
-                    <div className="title">
-                        台股庫存總市值 <span className="currency">NTD</span>
-                    </div>
-                    <div className="amount">$16,954,147</div>
-                </div>
+                <CustomTitle type={type} />
                 <div className="asset__detail__summary">
-                    <div className="asset__detail__summary__item">
-                        <div className="asset__detail__summary__item__title">總成本</div>
-                        <div className="asset__detail__summary__item__amount">$10,651,654</div>
-                    </div>
-                    <div className="line"></div>
-                    <div className="asset__detail__summary__item">
-                        <div className="asset__detail__summary__item__title">損益試算</div>
-                        <div className="asset__detail__summary__item__amount win">$980,000</div>
-                    </div>
-                    <div className="line"></div>
-                    <div className="asset__detail__summary__item">
-                        <div className="asset__detail__summary__item__title">報酬率</div>
-                        <div className="asset__detail__summary__item__amount win">1.26%</div>
-                    </div>
+                    <GetDom type={type} />
                 </div>
             </div>
 
-            <style jsx>{`
+            <style jsx>{``}</style>
+
+            <style jsx global>{`
+                .line:last-child {
+                    display: none;
+                }
                 .line {
                     width: 1px;
                     height: 37px;
@@ -112,8 +134,6 @@ const AssetDetailOverview = memo(({}) => {
                     }
                 }
             `}</style>
-
-            <style jsx global>{``}</style>
         </>
     );
 });

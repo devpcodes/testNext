@@ -5,10 +5,11 @@ const AssetDetailModal = memo(({ isVisible, data, closeHandler }) => {
     const handleClose = () => {
         closeHandler();
     };
+    console.log(data);
     return (
         <>
             <Modal
-                title={`${data.name}`}
+                title={`${data.content?.modalTitle}`}
                 visible={isVisible}
                 destroyOnClose={true}
                 maskClosable={true}
@@ -16,38 +17,15 @@ const AssetDetailModal = memo(({ isVisible, data, closeHandler }) => {
                 footer={null}
             >
                 <div className="info">
-                    <div className="info__block">
-                        <div className="info__title">現價</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">參考市值</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">成本均價</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">付出成本</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">現價</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">參考市值</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">成本均價</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
-                    <div className="info__block">
-                        <div className="info__title">付出成本</div>
-                        <div className="info__amount">32.15</div>
-                    </div>
+                    {data.title &&
+                        data.title.map((d, i) => {
+                            return (
+                                <div className="info__block" key={i}>
+                                    <div className="info__title">{d.title}</div>
+                                    <div className="info__amount">{data.content[d.dataIndex]}</div>
+                                </div>
+                            );
+                        })}
                 </div>
             </Modal>
 

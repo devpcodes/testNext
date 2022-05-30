@@ -30,10 +30,10 @@ const AssetChartOverview = memo(({}) => {
                 </Tabs>
             </div>
 
-            <div className="total__pl">
+            {/* <div className="total__pl">
                 <h6>總未實現損益</h6>
                 <p>$980,000 (+1.24%)</p>
-            </div>
+            </div> */}
 
             <style jsx>{`
                 .asset__chart__overview__tab {

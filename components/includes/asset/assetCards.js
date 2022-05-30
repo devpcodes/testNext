@@ -1,45 +1,63 @@
-import { useCallback, useState, memo } from 'react';
+import { useCallback, useState, memo, useEffect } from 'react';
 import { Tabs, Card } from 'antd';
-
-const AssetCards = memo(({}) => {
-    const CustomTitle = () => {
+import { useSelector } from 'react-redux';
+import { formatNum } from '../../../services/formatNum';
+import Link from 'next/link';
+import { getContentData, getTitleData } from './getData';
+const AssetCards = memo(({ type }) => {
+    const CustomTitle = ({ type }) => {
+        const titleDomData = getTitleData(type);
         return (
             <>
-                <div>
-                    <div className="title">
-                        台股庫存總市值 <span className="currency">NTD</span>
-                    </div>
-                    <div className="amount">$16,954,147</div>
-                </div>
+                <Link href={`/AssetDetail?type=${type}`}>
+                    <a>
+                        <div className="title">
+                            {titleDomData?.title} <span className="currency">{titleDomData?.currency}</span>
+                        </div>
+                        <div className="amount">${titleDomData?.sum}</div>
+                    </a>
+                </Link>
             </>
         );
     };
 
+    const GetCardDom = ({ type }) => {
+        let dom = [];
+        const cardDomData = getContentData(type);
+        if (Object.keys(cardDomData).length > 0) {
+            for (const [key, value] of Object.entries(cardDomData)) {
+                dom.push(
+                    <div className="amount__detail__items">
+                        <p className="amount__detail__items__title">{value.title}</p>
+                        <p className={`amount__detail__items__value ${value.class}`}>{value.amount}</p>
+                    </div>,
+                );
+            }
+        }
+
+        return <>{dom}</>;
+    };
+
     return (
         <>
-            <Card title={<CustomTitle />} className="card__items">
+            <Card title={<CustomTitle type={type} />} className="cards__detail">
                 <div className="asset__carousel__amount__detail">
-                    <div className="amount__detail__items">
-                        <p className="amount__detail__items__title">總成本</p>
-                        <p className="amount__detail__items__value">$10,651,657</p>
-                    </div>
-                    <div className="amount__detail__items">
-                        <p className="amount__detail__items__title">未實現損益</p>
-                        <p className="amount__detail__items__value win">$980,000</p>
-                    </div>
-                    <div className="amount__detail__items">
-                        <p className="amount__detail__items__title">報酬率</p>
-                        <p className="amount__detail__items__value win">1.26%</p>
-                    </div>
+                    <GetCardDom type={type} />
                 </div>
             </Card>
 
             <style jsx>{`
                 .asset__carousel__amount__detail {
                     display: flex;
+                    flex-wrap: wrap;
                 }
+            `}</style>
+            <style jsx global>{`
                 .amount__detail__items {
                     width: 33%;
+                }
+                .amount__detail__items:nth-child(n + 4) {
+                    margin-top: 20px;
                 }
                 .amount__detail__items__title {
                     font-size: 16px;
@@ -70,13 +88,16 @@ const AssetCards = memo(({}) => {
                         width: 100%;
                         margin-bottom: 4px;
                     }
+                    .amount__detail__items:nth-child(n + 4) {
+                        margin-top: 0;
+                    }
                 }
-            `}</style>
-            <style jsx global>{`
-                .card__items {
+                .cards__detail {
                     width: 540px;
                 }
-
+                .cards__detail:nth-child(n + 2) {
+                    margin-top: 20px;
+                }
                 .title {
                     font-size: 16px;
                     color: #192639;

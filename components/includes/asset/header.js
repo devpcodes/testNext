@@ -2,8 +2,29 @@ import { useCallback, useState, memo } from 'react';
 import { Button } from 'antd';
 import refresh from '../../../resources/images/pages/asset/basic-refresh-02.svg';
 import hide from '../../../resources/images/pages/asset/ic-hide.svg';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchQueryRealTimePrtLosSum } from '../../../services/asset/queryRealTimePrtLosSum';
+import { getToken } from '../../../services/user/accessToken';
+import { setRealTimePrtLosSum } from '../../../store/asset/action';
 
 const AssetHeader = memo(({ title }) => {
+    const user = useSelector(store => store.user.currentAccount);
+    const dispatch = useDispatch();
+    const getTime = () => {
+        const now = new Date();
+        const formatTime = `${now.getFullYear()}.${
+            now.getMonth() + 1
+        }.${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+        return formatTime;
+    };
+
+    const [refreshTime, setrefreshTime] = useState(getTime());
+
+    const refreshAction = async () => {
+        const res = await fetchQueryRealTimePrtLosSum(getToken());
+        dispatch(setRealTimePrtLosSum(res));
+        setrefreshTime(getTime());
+    };
     return (
         <>
             <div className="asset__toolbar">
@@ -11,15 +32,17 @@ const AssetHeader = memo(({ title }) => {
                     <h2>{title}</h2>
                 </div>
                 <div className="asset__toolbar__right">
-                    <span className="time">最後更新時間 : 2022.02.18 15:36</span>
+                    <span className="time">最後更新時間 : {refreshTime}</span>
                     <div className="tools">
                         <Button className="btn refresh__btn">
-                            <img src={refresh} />
+                            <img src={refresh} onClick={refreshAction} />
                         </Button>
                         <Button className="btn refresh__btn">
                             <img src={hide} />
                         </Button>
-                        <span className="account__info">A2288***** ｜ 金大戶</span>
+                        <span className="account__info">
+                            {user.idno} ｜ {user.username}
+                        </span>
                     </div>
                 </div>
             </div>
