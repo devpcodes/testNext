@@ -93,18 +93,18 @@ const TimeLine = ({ style, data }) => {
             return;
         }
         if (
-            data.statusMessage !== '委託預約中' &&
-            data.statusMessage !== '委託處理中' &&
-            data.statusMessage !== '委託已送出' &&
-            data.statusMessage !== '未中籤' &&
-            data.statusMessage !== '已中籤'
+            data.orderStatus !== 'S1' &&
+            data.orderStatus !== 'S2' &&
+            data.orderStatus !== 'Y' &&
+            data.orderStatus !== 'N1' &&
+            data.orderStatus !== 'W1'
         ) {
             setText(data.statusMessage);
         }
     };
     // 中籤 未中籤 ui設定
     const visible3Handler = data => {
-        if (data.status !== 'N1' && data.status !== 'W1') {
+        if (data.orderStatus !== 'N1' && data.orderStatus !== 'W1') {
             setEndDataItem01Dom('line1__item none');
             setEndDataItem02Dom('line2__item none');
             setEndDataItem03Dom('line3__item none');
@@ -117,14 +117,14 @@ const TimeLine = ({ style, data }) => {
         //     setEndDataItem02LineDom('line')
         // }
         console.log('1231231231235555');
-        if (data.status === 'N1' || data.status === 'W1') {
-            if (data.status === 'N1') {
+        if (data.orderStatus === 'N1' || data.orderStatus === 'W1') {
+            if (data.orderStatus === 'N1') {
                 setLabel2Text('未中籤');
                 setLabel3TextUp(`退款 ${moment(data.moneyDate).format('MM/DD')}`);
                 setLabel3TextDown(`退款 ${formatNum(data.orderAmount)}`);
                 setText(`好可惜未中籤！款項將於${moment(data.moneyDate).format('MM/DD')}退款請您留意！`);
             }
-            if (data.status === 'W1') {
+            if (data.orderStatus === 'W1') {
                 setLabel2Text('中籤');
                 setLabel3TextUp(`撥券 ${moment(data.stkDate).format('MM/DD')}`);
                 setLabel3TextDown(`${data.stockId + ' ' + data.stockName}  匯入${Number(data.share) / 1000}張`);
@@ -154,7 +154,7 @@ const TimeLine = ({ style, data }) => {
                 </span>
                 <span
                     style={{
-                        marginRight: data.status !== 'N1' && data.status !== 'W1' ? 97 : 0,
+                        marginRight: data.orderStatus !== 'N1' && data.orderStatus !== 'W1' ? 97 : 0,
                     }}
                     className={resultDataItem01Dom}
                     ref={resultDataItem1Dom}
@@ -168,14 +168,14 @@ const TimeLine = ({ style, data }) => {
             <div
                 className="line2__box"
                 style={{
-                    width: data.status !== 'N1' && data.status !== 'W1' ? 211 : 'auto',
+                    width: data.orderStatus !== 'N1' && data.orderStatus !== 'W1' ? 211 : 'auto',
                 }}
             >
                 <span ref={feeDataItem2Dom} className={feeDataItem02Dom}></span>
                 <span
                     className="line"
                     style={{
-                        width: data.status !== 'N1' && data.status !== 'W1' ? '60%' : '30%',
+                        width: data.orderStatus !== 'N1' && data.orderStatus !== 'W1' ? '60%' : '30%',
                     }}
                 ></span>
                 <span className={resultDataItem02Dom}></span>
@@ -197,7 +197,7 @@ const TimeLine = ({ style, data }) => {
                 <span
                     className={resultDataItem03Dom}
                     style={{
-                        marginLeft: data.status !== 'N1' && data.status !== 'W1' ? '33%' : '23%',
+                        marginLeft: data.orderStatus !== 'N1' && data.orderStatus !== 'W1' ? '33%' : '23%',
                         width: '40px',
                         display: 'inline-block',
                         textAlign: 'center',
