@@ -87,7 +87,7 @@ const AnnouncePageComp = () => {
                         <div className="content_title">{data.title}</div>
                         <div className="content_class">
                             <div className="class_tag">
-                                發布日期<span>2021.05.24</span>
+                                發布日期<span>{data.postTime}</span>
                             </div>
                             <div className="class_tag">
                                 商品類別<span className="orange">{data.category1 + ' ' + data.category2}</span>
