@@ -1,7 +1,7 @@
 import React from 'react';
 import YellowRedLine from './YellowRedLine';
-import phoneService from '../../../../resources/images/pages/homepage/contact_section/img-service-service-phone.svg';
-import onlineService from '../../../../resources/images/pages/homepage/contact_section/img-service-service-24-hr.svg';
+import phoneService from '../../../../resources/images/pages/homepage/contact_section/a1-ic-15.svg';
+import onlineService from '../../../../resources/images/pages/homepage/contact_section/a1-ic-16.svg';
 import { RightOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 

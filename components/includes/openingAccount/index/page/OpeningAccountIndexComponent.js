@@ -7,18 +7,21 @@ import AppointmentOpenAccount from '../element/AppointmentOpenAccount';
 
 //securitiesAccountTypes
 import icon_futures from '../../../../../resources/images/pages/open_account/img-service-user-futures.svg';
-import icon_credit from '../../../../../resources/images/pages/open_account/img-service-user-credit.svg';
-import icon_sub_brokerage from '../../../../../resources/images/pages/open_account/img-service-sub-brokerage.svg';
-import icon_manager_trust from '../../../../../resources/images/pages/open_account/img-service-manager-trust.svg';
+import icon_credit from '../../../../../resources/images/pages/open_account/a41-ic-01.svg';
+import icon_sub_brokerage from '../../../../../resources/images/pages/open_account/a41-ic-03.svg';
+import icon_manager_trust from '../../../../../resources/images/pages/open_account/a41-ic-04.svg';
 import icon_management from '../../../../../resources/images/pages/open_account/img-service-user-management.svg';
-import icon_borrow from '../../../../../resources/images/pages/open_account/img-service-user-borrow.svg';
-import icon_no_limit_money from '../../../../../resources/images/pages/open_account/img-service-no-limit-money.svg';
-import icon_search from '../../../../../resources/images/pages/open_account/img-service-progress-search.svg';
+import icon_borrow from '../../../../../resources/images/pages/open_account/a41-ic-05.svg';
+import icon_no_limit_money from '../../../../../resources/images/pages/open_account/a41-ic-06.svg';
+import icon_search from '../../../../../resources/images/pages/open_account/a41-ic-07.svg';
 
+//feature
+import featureOpen from '../../../../../resources/images/pages/open_account/a41-ic-02.svg';
+import featureOpenDetail from '../../../../../resources/images/pages/open_account/a41-ic-07.svg';
 //closeCounter
-import icon1 from '../../../../../resources/images/pages/open_account/img-card1.svg';
-import icon2 from '../../../../../resources/images/pages/open_account/img-card2.svg';
-import icon3 from '../../../../../resources/images/pages/open_account/img-card3.svg';
+import icon1 from '../../../../../resources/images/pages/open_account/a41-img-01.jpg';
+import icon2 from '../../../../../resources/images/pages/open_account/a41-img-02.jpg';
+import icon3 from '../../../../../resources/images/pages/open_account/a41-img-03.jpg';
 
 function OpeningAccountIndexComponent(props) {
     const { Content } = Layout;
@@ -28,11 +31,6 @@ function OpeningAccountIndexComponent(props) {
             title: '信用戶',
             image: icon_credit,
             link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_1?dirtype=99&strProd=0002&strWeb=0001',
-        },
-        {
-            title: '期貨戶',
-            image: icon_futures,
-            link: 'https://www.sinotrade.com.tw/stfopenact?strProd=0002&strWeb=0001',
         },
         {
             title: '複委託',
@@ -84,13 +82,26 @@ function OpeningAccountIndexComponent(props) {
             link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_14?dirtype=99&strProd=0002&strWeb=0001',
         },
     ]);
-
+    const [featureAccountTypes] = useState([
+        {
+            title: '預約開戶',
+            image: featureOpen,
+            link: 'https://www.sinotrade.com.tw/stfopenact?strProd=0002&strWeb=0001',
+        },
+        {
+            title: '查詢營業據點',
+            image: featureOpenDetail,
+            link: `https://www.sinotrade.com.tw/stfopenact/progress?strProd=0002&strWeb=0001`,
+        },
+    ]);
     return (
         <Layout>
             <OpenAccountHeader />
             <Content className="layoutContent">
                 <h2 className="secondTitle">證券戶加開</h2>
                 <SecuritiesAccountMenu linkData={securitiesAccountTypes} />
+                <h2 className="secondTitle">期貨開戶</h2>
+                <SecuritiesAccountMenu linkData={featureAccountTypes} />
                 <h2 className="secondTitle">預約臨櫃開戶</h2>
                 <AppointmentOpenAccount linkData={closeCounter} />
             </Content>
