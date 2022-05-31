@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
-const SubscriptionCards = memo(({ stockData, onActionClick }) => {
+const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => {
     console.log(stockData);
 
     const formatDate = date => {
@@ -107,6 +107,13 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                             onClick={() => onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
                         >
                             立即申購
+                        </button>
+                    ) : stockData.canCancelOrder ? (
+                        <button
+                            className="action__btn buy"
+                            onClick={() => onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
+                        >
+                            立即取消
                         </button>
                     ) : (
                         <button disabled className="action__btn disabled">

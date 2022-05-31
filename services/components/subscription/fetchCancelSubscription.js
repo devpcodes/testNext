@@ -1,8 +1,8 @@
 import { getSubscriptionInstance } from '../../myAxios';
 
-export const fetchApplySubscription = async function (token, branch, account, stockId, ca_content, source) {
+export const fetchCancelSubscription = async function (token, branch, account, stockId, ca_content, source) {
     try {
-        const reqUrl = '/order';
+        const reqUrl = '/cancel';
         const res = await getSubscriptionInstance().post(reqUrl, {
             token,
             branch,

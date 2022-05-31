@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubscriptionList } from '../../../services/components/subscription/fetchSubscriptionList';
 import { fetchLoginSubscriptionList } from '../../../services/components/subscription/fetchLoginSubscriptionList';
 import { fetchApplySubscription } from '../../../services/components/subscription/fetchApplySubscription';
+import { fetchCancelSubscription } from '../../../services/components/subscription/fetchCancelSubscription';
 import { getToken } from '../../../services/user/accessToken';
 import { setModal } from '../../../store/components/layouts/action';
 import Breadcrumb from '../breadcrumb/breadcrumb';
@@ -69,11 +70,55 @@ const SubscriptionMain = memo(({}) => {
                     const cert = await signCert({ idno: idno }, true, getToken());
                     console.log(cert);
                     if (cert.signature) {
-                        const response = await fetchApplySubscription(token, branch, account, id, '0.0.0.0', cert, 'h');
+                        const response = await fetchApplySubscription(token, branch, account, id, cert, 'h');
                         dispatch(
                             setModal({
                                 visible: true,
                                 content: response.success && response.message === 'OK' ? `申購成功` : `申購失敗`,
+                                type: 'info',
+                                title: '系統訊息',
+                            }),
+                        );
+                        const listResponse = await fetchLoginSubscriptionList(token, branch, account);
+                        if (listResponse.success && listResponse.message === 'OK') {
+                            setSubscriptionData(listResponse.result);
+                        }
+                    }
+                },
+            }),
+        );
+    });
+
+    const cancelSubscription = useCallback(async (name, id, price) => {
+        const branch = currentBrokerID;
+        const account = currentAccount;
+        const token = getToken();
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消確認',
+                content: (
+                    <div>
+                        <p>
+                            帳號：{currentBrokerID}-{currentAccount} {userName} <br />
+                            商品：{id} {name} <br />
+                            {/* 申購扣款金額： {price} 元 <br />
+                            <br />
+                            <span className="notice">
+                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
+                            </span> */}
+                        </p>
+                    </div>
+                ),
+                type: 'confirm',
+                onOk: async () => {
+                    const cert = await signCert({ idno: idno }, true, getToken());
+                    if (cert.signature) {
+                        const response = await fetchCancelSubscription(token, branch, account, id, cert, 'h');
+                        dispatch(
+                            setModal({
+                                visible: true,
+                                content: response.success && response.message === 'OK' ? `取消成功` : `取消失敗`,
                                 type: 'info',
                                 title: '系統訊息',
                             }),
@@ -98,7 +143,11 @@ const SubscriptionMain = memo(({}) => {
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
                             <div className="subscriptionCards">
-                                <SubscriptionCards stockData={stockData} onActionClick={submitSubscription} />
+                                <SubscriptionCards
+                                    stockData={stockData}
+                                    onActionClick={submitSubscription}
+                                    onCancelClick={cancelSubscription}
+                                />
                             </div>
                         ))}
                     <div className="subscriptionCards">
