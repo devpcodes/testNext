@@ -38,6 +38,11 @@ function Subbrokerage() {
                     iHeight={1000}
                 />
             </div>
+            <style global jsx>{`
+                body {
+                    overflow: hidden !important;
+                }
+            `}</style>
         </>
     );
 }
