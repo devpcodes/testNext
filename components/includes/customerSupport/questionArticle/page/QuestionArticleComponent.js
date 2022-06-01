@@ -47,6 +47,11 @@ const QuestionArticleComponent = () => {
             setHaveAnswer(false);
         }
     }, [id]);
+    useEffect(() => {
+        return () => {
+            dispatch(setGoBackPath(''));
+        };
+    }, []);
 
     useEffect(() => {
         getAds();
