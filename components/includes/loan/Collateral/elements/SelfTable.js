@@ -403,7 +403,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
         nowData = nowData.forEach((item, index) => {
             item.key = index;
             item.expectedCollateralShare = 1;
-            item.closePrice = item.reference;
+            item.closePrice = item.prevClose > 0 ? item.prevClose : item.reference;
             item.stockPercent = item.loanRate;
             item.canLoanMoney = canLoanMoneyHandler(item);
             // console.log(Number(item.closePrice), Number(item.stockQty), Number(item.loanRate));
