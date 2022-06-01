@@ -1065,7 +1065,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.WM_SN = WM_SNWebTableData;
+                setModalAllData(webTableData);
                 setTableData(webTableData);
+                setColumnData(tableTitle);
+                setModalTitleData(tableTitle);
 
                 if (isMobile) {
                     setColumnData({
@@ -1120,6 +1123,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     mobileTableData.WM_SN = WM_SNMobileTableData;
                     setTableData(mobileTableData);
                 }
+                break;
             case 'SN':
                 tableTitle = {
                     SN: [
@@ -1158,7 +1162,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.SN = SNWebTableData;
+                setModalAllData(webTableData);
                 setTableData(webTableData);
+                setColumnData(tableTitle);
+                setModalTitleData(tableTitle);
 
                 if (isMobile) {
                     setColumnData({
@@ -1238,7 +1245,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.BOND = BONDWebTableData;
+                setModalAllData(webTableData);
                 setTableData(webTableData);
+                setColumnData(tableTitle);
+                setModalTitleData(tableTitle);
 
                 if (isMobile) {
                     setColumnData({
@@ -1299,7 +1309,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.WM_FUND_INTRANSIT = WM_FUND_INTRANSITWebTableData;
+                setModalAllData(webTableData);
                 setTableData(webTableData);
+                setColumnData(tableTitle);
+                setModalTitleData(tableTitle);
+
                 if (isMobile) {
                     setColumnData({
                         WM_FUND_INTRANSIT: [
@@ -1375,7 +1389,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.WM_SN_INTRANSIT = WM_SN_INTRANSITWebTableData;
+                setModalAllData(webTableData);
                 setTableData(webTableData);
+                setColumnData(tableTitle);
+                setModalTitleData(tableTitle);
+
                 if (isMobile) {
                     setColumnData({
                         WM_SN_INTRANSIT: [
@@ -1421,7 +1439,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 }
                 break;
             case 'WM_TRUST_DEPOSIT':
-                setColumnData({
+                tableTitle = {
                     WM_TRUST_DEPOSIT: [
                         { title: '信託專戶幣別', dataIndex: 'trust_cur' },
                         { title: '可用餘額', dataIndex: 'available_balance' },
@@ -1429,7 +1447,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         { title: '參考匯率日期', dataIndex: 'exrate_dt' },
                         { title: '參考市值(台幣)', dataIndex: 'amount_twd' },
                     ],
-                });
+                };
 
                 let WM_TRUST_DEPOSITWebTableData = [];
 
@@ -1444,7 +1462,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.WM_TRUST_DEPOSIT = WM_TRUST_DEPOSITWebTableData;
+                setModalAllData(webTableData);
                 setTableData(webTableData);
+                setColumnData(tableTitle);
+                setModalTitleData(tableTitle);
 
                 if (isMobile) {
                     setColumnData({
