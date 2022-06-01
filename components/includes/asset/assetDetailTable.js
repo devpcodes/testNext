@@ -39,40 +39,166 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 tableTitle = {
                     stock: [
                         { title: '股票代碼', dataIndex: 'stock' },
-                        { title: '股票名稱', dataIndex: 'stocknm' },
-                        { title: '類別', dataIndex: 'ttypename' },
-                        { title: '即時庫存', dataIndex: 'qty' },
-                        { title: '現價', dataIndex: 'mprice' },
-                        { title: '參考市值', dataIndex: 'amt' },
-                        // { title : '成本均價', dataIndex : 'cost'},
-                        { title: '付出成本', dataIndex: 'cost' },
-                        { title: '損益試算', dataIndex: 'unreal' },
-                        { title: '報酬率', dataIndex: 'ur_ratio' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'stocknm',
+                            sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                        },
+                        {
+                            title: '類別',
+                            dataIndex: 'ttypename',
+                            filters: [
+                                { text: '現股', value: '現股' },
+                                { text: '融資', value: '融資' },
+                                { text: '融券', value: '融券' },
+                            ],
+                            onFilter: (value, record) => record.ttypename.startsWith(value),
+                            filterSearch: true,
+                        },
+                        { title: '即時庫存', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
+                        { title: '現價', dataIndex: 'mprice', align: 'right' },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'amt',
+                            render: amt => formatNum(amt),
+                            sorter: (a, b) => a.amt - b.amt,
+                            align: 'right',
+                        },
+                        {
+                            title: '成本均價',
+                            dataIndex: 'avgprice',
+                            render: avgprice => formatNum(avgprice),
+                            align: 'right',
+                        },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'unreal',
+                            align: 'right',
+                            render: unreal => (
+                                <div class={unreal > 0 ? 'win' : unreal < 0 ? 'loss' : ''}>{formatNum(unreal)}</div>
+                            ),
+                            sorter: (a, b) => a.unreal - b.unreal,
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率',
+                            dataIndex: 'ur_ratio',
+                            align: 'right',
+                            render: ur_ratio => (
+                                <div
+                                    class={
+                                        parseFloat(ur_ratio.slice(0, -1)) > 0
+                                            ? 'win'
+                                            : parseFloat(ur_ratio.slice(0, -1)) < 0
+                                            ? 'loss'
+                                            : ''
+                                    }
+                                >
+                                    {ur_ratio}
+                                </div>
+                            ),
+                            sorter: (a, b) => parseFloat(a.ur_ratio.slice(0, -1)) - parseFloat(b.ur_ratio.slice(0, -1)),
+                        },
                     ],
                     unreal: [
                         { title: '股票代碼', dataIndex: 'stock' },
-                        { title: '股票名稱', dataIndex: 'stocknm' },
-                        { title: '出借股數', dataIndex: 'qty' },
-                        { title: '現價', dataIndex: 'lastprice' },
-                        { title: '參考市值', dataIndex: 'namt' },
-                        { title: '成本均價', dataIndex: 'avgprice' },
-                        { title: '付出成本', dataIndex: 'cost' },
-                        { title: '損益試算', dataIndex: 'unreal' },
-                        { title: '報酬率', dataIndex: 'ur_ratio' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'stocknm',
+                            sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                        },
+                        { title: '出借股數', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
+                        { title: '現價', dataIndex: 'lastprice', align: 'right' },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'namt',
+                            render: namt => formatNum(namt),
+                            sorter: (a, b) => a.namt - b.namt,
+                            align: 'right',
+                        },
+                        {
+                            title: '成本均價',
+                            dataIndex: 'avgprice',
+                            render: avgprice => formatNum(avgprice),
+                            align: 'right',
+                        },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'unreal',
+                            align: 'right',
+                            render: unreal => (
+                                <div class={unreal > 0 ? 'win' : unreal < 0 ? 'loss' : ''}>{formatNum(unreal)}</div>
+                            ),
+                            sorter: (a, b) => a.unreal - b.unreal,
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率',
+                            dataIndex: 'ur_ratio',
+                            align: 'right',
+                            render: ur_ratio => (
+                                <div
+                                    class={
+                                        parseFloat(ur_ratio.slice(0, -1)) > 0
+                                            ? 'win'
+                                            : parseFloat(ur_ratio.slice(0, -1)) < 0
+                                            ? 'loss'
+                                            : ''
+                                    }
+                                >
+                                    {ur_ratio}
+                                </div>
+                            ),
+                            sorter: (a, b) => parseFloat(a.ur_ratio.slice(0, -1)) - parseFloat(b.ur_ratio.slice(0, -1)),
+                        },
                     ],
                     creditdn: [
                         { title: '股票代碼', dataIndex: 'stock' },
-                        { title: '股票名稱', dataIndex: 'stocknm' },
-                        { title: '股數', dataIndex: 'qty' },
-                        { title: '現價', dataIndex: 'lastprice' },
-                        { title: '市值', dataIndex: 'namt' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'stocknm',
+                            sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                        },
+                        { title: '股數', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
+                        { title: '現價', dataIndex: 'lastprice', align: 'right' },
+                        {
+                            title: '市值',
+                            dataIndex: 'namt',
+                            render: namt => formatNum(namt),
+                            sorter: (a, b) => a.namt - b.namt,
+                            align: 'right',
+                        },
                     ],
                     lenddn: [
                         { title: '股票代碼', dataIndex: 'stock' },
-                        { title: '股票名稱', dataIndex: 'stocknm' },
-                        { title: '股數', dataIndex: 'qty' },
-                        { title: '現價', dataIndex: 'lastprice' },
-                        { title: '市值', dataIndex: 'namt' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'stocknm',
+                            sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                        },
+                        { title: '股數', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
+                        { title: '現價', dataIndex: 'lastprice', align: 'right' },
+                        {
+                            title: '市值',
+                            dataIndex: 'namt',
+                            render: namt => formatNum(namt),
+                            sorter: (a, b) => a.namt - b.namt,
+                            align: 'right',
+                        },
                     ],
                 };
 
@@ -81,18 +207,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         stock: data.stock,
                         stocknm: data.stocknm,
                         ttypename: data.ttypename,
-                        qty: formatNum(data.qty),
+                        qty: data.qty,
                         mprice: data.mprice,
-                        amt: formatNum(data.amt),
-                        cost: formatNum(data.cost),
-                        unreal: (
-                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
-                                {formatNum(data.unreal)}
-                            </div>
-                        ),
-                        ur_ratio: (
-                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.ur_ratio}</div>
-                        ),
+                        amt: data.amt,
+                        avgprice: parseFloat(data.cost / data.qty).toFixed(2),
+                        cost: data.cost,
+                        unreal: data.unreal,
+                        ur_ratio: data.ur_ratio,
                         modalTitle: data.stocknm,
                     });
                 });
@@ -101,21 +222,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     unrealTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
-                        qty: formatNum(data.qty),
+                        qty: data.qty,
                         lastprice: data.lastprice,
-                        namt: formatNum(data.namt),
-                        avgprice: formatNum(data.avgprice),
-                        cost: formatNum(data.cost),
-                        unreal: (
-                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
-                                {formatNum(data.unreal)}
-                                <br />
-                                {data.ur_ratio}
-                            </div>
-                        ),
-                        ur_ratio: (
-                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.ur_ratio}</div>
-                        ),
+                        namt: data.namt,
+                        avgprice: data.avgprice,
+                        cost: data.cost,
+                        unreal: data.unreal,
+                        ur_ratio: data.ur_ratio,
                     });
                 });
 
@@ -123,7 +236,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     creditdnTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
-                        qty: formatNum(data.qty),
+                        qty: data.qty,
                         lastprice: data.lastprice,
                         namt: data.namt,
                     });
@@ -133,7 +246,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     creditdnTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
-                        qty: formatNum(data.qty),
+                        qty: data.qty,
                         lastprice: data.lastprice,
                         namt: data.namt,
                     });
@@ -1368,11 +1481,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
         emptyText: (
             <span>
                 <img src={noData} />
-                <p className="noData__desc">
-                    目前還沒加入個股
-                    <br />
-                    請使用上方搜尋列新增個股
-                </p>
+                <p className="noData__desc">查無資料</p>
             </span>
         ),
     };
