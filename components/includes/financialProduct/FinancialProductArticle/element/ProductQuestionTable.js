@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table, ConfigProvider } from 'antd';
 import { Link } from 'next/link';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getCommonQuestion } from '../../../../../services/components/customerSupport/commonQuestion';
 import { useRouter } from 'next/router';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import noDataImg from '../../../../../resources/images/components/productQuestion/img-404.svg';
+import noDataImg from '../../../../../resources/images/components/productQuestion/empty.png';
+import { setGoBackPath } from '../../../../../store/general/action';
 
 const ProductQuestionTable = function ({ keywords }) {
     const router = useRouter();
@@ -18,7 +19,7 @@ const ProductQuestionTable = function ({ keywords }) {
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const clientWidth = useSelector(store => store.layout.winWidth);
-
+    const dispatch = useDispatch();
     const scrollTop = () => {
         if (clientWidth <= 450) {
             window.scrollTo({
@@ -56,6 +57,18 @@ const ProductQuestionTable = function ({ keywords }) {
     };
 
     const toQuestion = questionUUID => {
+        let dynmaicPath = '';
+        dynmaicPath = router.pathname.split('[');
+        if (dynmaicPath.length > 1) {
+            dynmaicPath = dynmaicPath[1].substring(0, dynmaicPath[1].length - 1);
+        } else {
+            dynmaicPath = '';
+        }
+        if (router.query[dynmaicPath]) {
+            dispatch(setGoBackPath(`${router.asPath}`));
+        } else {
+            dispatch(setGoBackPath(`${router.pathname}${window.location.search}`));
+        }
         router.push(`/customer-support/question/${questionUUID}`);
     };
 

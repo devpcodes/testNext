@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import parse from 'html-react-parser';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Carousel, message } from 'antd';
 import { PageHead } from '../../../PageHead';
 import { Layout, Collapse } from 'antd';
@@ -19,7 +19,7 @@ import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import SearchInput from '../../SearchInput';
 import { getAdSlot } from '../../../../../services/components/bannerSlider/AdSlot';
 import { logout } from '../../../../../services/user/logoutFetcher';
-
+import { setGoBackPath } from '../../../../../store/general/action';
 const QuestionArticleComponent = () => {
     const { Panel } = Collapse;
     const router = useRouter();
@@ -32,6 +32,8 @@ const QuestionArticleComponent = () => {
     const [ads, setAds] = useState([]);
     const [fromCategory, setFromCategory] = useState(0);
     const [haveAnswer, setHaveAnswer] = useState(false);
+    const goBackPath = useSelector(store => store.general.goBackPath);
+    const dispatch = useDispatch();
     useEffect(async () => {
         const data = await getCommonQuestionArticle(id);
         setArticleData(data);
@@ -102,7 +104,6 @@ const QuestionArticleComponent = () => {
             return true;
         }
     };
-
     return (
         <>
             <PageHead title={'永豐金理財網'} />
@@ -116,7 +117,19 @@ const QuestionArticleComponent = () => {
                                 <CustomerButton
                                     type="default"
                                     className="web-back-to-list"
-                                    onClick={() => router.push(`/customer-support/question?key=${fromCategory}`)}
+                                    onClick={() => {
+                                        if (goBackPath) {
+                                            if (goBackPath.indexOf('commonQuestion') >= 0) {
+                                                router.push(goBackPath);
+                                            } else {
+                                                router.push(goBackPath + '&tabKey=commonQuestion');
+                                            }
+
+                                            dispatch(setGoBackPath(''));
+                                        } else {
+                                            router.push(`/customer-support/question?key=${fromCategory}`);
+                                        }
+                                    }}
                                 >
                                     返回列表
                                 </CustomerButton>

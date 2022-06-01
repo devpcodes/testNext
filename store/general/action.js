@@ -13,3 +13,10 @@ export const setCurrentPath = path => {
         payload: path,
     };
 };
+
+export const setGoBackPath = path => {
+    return {
+        type: actionType.SET_GOBACK_PATH,
+        payload: path,
+    };
+};
