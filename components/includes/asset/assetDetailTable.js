@@ -29,12 +29,15 @@ const AssetDetailTable = memo(({ type, reload }) => {
     useEffect(() => {
         let webTableData = {};
         let tableTitle = {};
+        let modalMobileData = {};
         switch (type) {
             case 'S':
                 let stockWebTableData = [];
                 let unrealTableData = [];
                 let creditdnTableData = [];
                 let lenddnTableData = [];
+                let stockModalData = [];
+                let unrealModalData = [];
 
                 tableTitle = {
                     stock: [
@@ -216,6 +219,26 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         ur_ratio: data.ur_ratio,
                         modalTitle: data.stocknm,
                     });
+
+                    stockModalData.push({
+                        stock: data.stock,
+                        stocknm: data.stocknm,
+                        ttypename: data.ttypename,
+                        qty: formatNum(data.qty),
+                        mprice: data.mprice,
+                        amt: formatNum(data.amt),
+                        avgprice: parseFloat(data.cost / data.qty).toFixed(2),
+                        cost: formatNum(data.cost),
+                        unreal: (
+                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
+                                {formatNum(data.unreal)}
+                            </div>
+                        ),
+                        ur_ratio: (
+                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.ur_ratio}</div>
+                        ),
+                        modalTitle: data.stocknm,
+                    });
                 });
 
                 realTimePrtLosSum?.L.unreal_sums.data.map((data, index) => {
@@ -229,6 +252,26 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost: data.cost,
                         unreal: data.unreal,
                         ur_ratio: data.ur_ratio,
+                    });
+
+                    unrealModalData.push({
+                        stock: data.stock,
+                        stocknm: data.stocknm,
+                        qty: formatNum(data.qty),
+                        lastprice: data.lastprice,
+                        namt: formatNum(data.namt),
+                        avgprice: formatNum(data.avgprice),
+                        cost: formatNum(data.cost),
+                        unreal: (
+                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
+                                {formatNum(data.unreal)}
+                                <br />
+                                {data.ur_ratio}
+                            </div>
+                        ),
+                        ur_ratio: (
+                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.ur_ratio}</div>
+                        ),
                     });
                 });
 
@@ -257,7 +300,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 webTableData.creditdn = creditdnTableData;
                 webTableData.lenddn = lenddnTableData;
 
-                setModalAllData(webTableData);
+                modalMobileData.stock = stockModalData;
+                modalMobileData.unreal = unrealModalData;
+                modalMobileData.creditdn = creditdnTableData;
+                modalMobileData.lenddn = lenddnTableData;
+
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -454,6 +502,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     ],
                 };
                 let futureWebTableData = [];
+                let futureModaleData = [];
 
                 realTimePrtLosSum?.F.data.map((data, index) => {
                     futureWebTableData.push({
@@ -467,11 +516,28 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         otamt: formatNum(data.otamt),
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
                     });
+
+                    futureModaleData.push({
+                        stockName: data.stockName,
+                        bs: data.bs === 'B' ? '買' : '賣',
+                        currency: data.currency,
+                        openq: data.openq,
+                        mprice: data.mprice,
+                        tprice: data.tprice,
+                        futeamt: (
+                            <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>
+                                {formatNum(data.futeamt)}
+                            </div>
+                        ),
+                        otamt: formatNum(data.otamt),
+                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                    });
                 });
 
                 webTableData.future = futureWebTableData;
+                modalMobileData.future = futureModaleData;
 
-                setModalAllData(webTableData);
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -692,7 +758,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 };
 
                 let subBrokerageWebTableData = [];
-
+                let subBrokerageModalData = [];
                 realTimePrtLosSum?.H.data.map((data, index) => {
                     subBrokerageWebTableData.push({
                         name: data.name,
@@ -707,11 +773,25 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pl: data.pl,
                         roi: data.roi,
                     });
+
+                    subBrokerageModalData.push({
+                        name: data.name,
+                        market: data.market,
+                        curr: data.curr,
+                        last_inv: formatNum(data.last_inv),
+                        ref_price: data.ref_price,
+                        amount: formatNum(data.amount),
+                        amount_twd: formatNum(data.amount_twd),
+                        cost_twd: formatNum(data.cost_twd),
+                        cost: formatNum(data.cost),
+                        pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
+                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                    });
                 });
 
                 webTableData.subBrokerage = subBrokerageWebTableData;
-
-                setModalAllData(webTableData);
+                modalMobileData.subBrokerage = subBrokerageModalData;
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -817,6 +897,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 };
 
                 let FIPWebTableData = [];
+                let FIPModalData = [];
 
                 realTimePrtLosSum?.FIP.data.map((data, index) => {
                     FIPWebTableData.push({
@@ -832,11 +913,26 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pl: data.pl,
                         roi: data.roi,
                     });
+
+                    FIPModalData.push({
+                        symbol: data.symbol,
+                        pro_name: data.pro_name,
+                        curr: data.curr,
+                        last_inv: data.last_inv,
+                        ave_cost: data.ave_cost,
+                        amount: formatNum(data.amount),
+                        amount_twd: formatNum(data.amount_twd),
+                        cost_twd: data.cost_twd,
+                        cost: formatNum(data.cost),
+                        pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
+                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                    });
                 });
 
                 webTableData.FIP = FIPWebTableData;
+                modalMobileData.FIP = FIPModalData;
 
-                setModalAllData(webTableData);
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -942,6 +1038,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 };
 
                 let MIPWebTableData = [];
+                let MIPModalData = [];
 
                 realTimePrtLosSum?.MIP.data.map((data, index) => {
                     MIPWebTableData.push({
@@ -957,11 +1054,26 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pl: data.pl,
                         roi: data.roi,
                     });
+
+                    MIPModalData.push({
+                        symbol: data.symbol,
+                        pro_name: data.pro_name,
+                        curr: data.curr,
+                        last_inv: data.last_inv,
+                        ave_cost: data.ave_cost,
+                        amount: formatNum(data.amount),
+                        amount_twd: formatNum(data.amount_twd),
+                        cost_twd: data.cost_twd,
+                        cost: formatNum(data.cost),
+                        pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
+                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                    });
                 });
 
                 webTableData.MIP = MIPWebTableData;
+                modalMobileData.MIP = MIPModalData;
 
-                setModalAllData(webTableData);
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -1019,24 +1131,111 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'WM_FUND':
                 tableTitle = {
                     WM_FUND: [
-                        { title: '商品代碼', dataIndex: 'fund_code' },
-                        { title: '商品名', dataIndex: 'fund_name' },
-                        { title: '幣別', dataIndex: 'purchase_cur' },
-                        { title: '參考淨值', dataIndex: 'nav' },
-                        { title: '參考市值', dataIndex: 'ave_cost' },
-                        { title: '台幣市值', dataIndex: 'namt' },
-                        { title: '持有成本', dataIndex: 'invest_cost' },
-                        { title: '損益試算', dataIndex: 'prtlos' },
-                        { title: '報酬率', dataIndex: 'roi' },
-                        { title: '累計配息', dataIndex: 'acc_dividend' },
-                        { title: '含息報酬率', dataIndex: 'roi_dividend' },
+                        {
+                            title: '商品代碼',
+                            dataIndex: 'fund_code',
+                            sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                        },
+                        {
+                            title: '商品名',
+                            dataIndex: 'fund_name',
+                            sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                        },
+                        {
+                            title: '幣別',
+                            dataIndex: 'purchase_cur',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.purchase_cur.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '參考淨值',
+                            dataIndex: 'nav',
+                            render: nav => formatNum(nav),
+                            align: 'right',
+                        },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'ave_cost',
+                            render: ave_cost => formatNum(ave_cost),
+                            align: 'right',
+                        },
+                        {
+                            title: '台幣市值',
+                            dataIndex: 'namt',
+                            render: namt => formatNum(namt),
+                            sorter: (a, b) => a.namt - b.namt,
+                            align: 'right',
+                        },
+                        {
+                            title: '持有成本',
+                            dataIndex: 'invest_cost',
+                            sorter: (a, b) => a.invest_cost - b.invest_cost,
+                            render: invest_cost => formatNum(invest_cost),
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'prtlos',
+                            sorter: (a, b) => a.prtlos - b.prtlos,
+                            render: prtlos => (
+                                <div class={prtlos > 0 ? 'win' : prtlos < 0 ? 'loss' : ''}>{formatNum(prtlos)}</div>
+                            ),
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率',
+                            dataIndex: 'roi',
+                            sorter: (a, b) => a.roi - b.roi,
+                            render: roi => <div class={roi > 0 ? 'win' : roi < 0 ? 'loss' : ''}>{formatNum(roi)}%</div>,
+                            align: 'right',
+                        },
+                        {
+                            title: '累計配息',
+                            dataIndex: 'acc_dividend',
+                            sorter: (a, b) => a.acc_dividend - b.acc_dividend,
+                            render: acc_dividend => formatNum(acc_dividend),
+                            align: 'right',
+                        },
+                        {
+                            title: '含息報酬率',
+                            dataIndex: 'roi_dividend',
+                            sorter: (a, b) => a.roi_dividend - b.roi_dividend,
+                            render: roi_dividend => (
+                                <div class={roi_dividend > 0 ? 'win' : roi_dividend < 0 ? 'loss' : ''}>
+                                    {formatNum(roi_dividend)}%
+                                </div>
+                            ),
+                            align: 'right',
+                        },
                     ],
                 };
 
                 let WM_FUNDWebTableData = [];
+                let WM_FUNDModalData = [];
 
                 realTimePrtLosSum?.WM_FUND.data.map((data, index) => {
                     WM_FUNDWebTableData.push({
+                        fund_code: data.fund_code,
+                        fund_name: data.fund_name,
+                        purchase_cur: data.purchase_cur,
+                        nav: data.nav,
+                        ave_cost: data.ave_cost,
+                        namt: data.namt,
+                        invest_cost: data.invest_cost,
+                        prtlos: data.prtlos,
+                        roi: data.roi,
+                        acc_dividend: formatNum(data.acc_dividend),
+                        roi_dividend: roi_dividend,
+                    });
+
+                    WM_FUNDModalData.push({
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
                         purchase_cur: data.purchase_cur,
@@ -1060,8 +1259,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.WM_FUND = WM_FUNDWebTableData;
-
-                setModalAllData(webTableData);
+                modalMobileData.WM_FUND = WM_FUNDModalData;
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -1123,17 +1322,56 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'OF':
                 tableTitle = {
                     OF: [
-                        { title: '商品名稱', dataIndex: 'fund_cn' },
-                        { title: '參考損益', dataIndex: 'trade_nonachieve' },
-                        { title: '參考報酬率(%)', dataIndex: 'trade_profit_rate' },
-                        { title: '參考市值', dataIndex: 'trade_value' },
+                        {
+                            title: '商品名稱',
+                            dataIndex: 'fund_cn',
+                            sorter: (a, b) => a.fund_cn.length - b.fund_cn.length,
+                        },
+                        {
+                            title: '參考損益',
+                            dataIndex: 'trade_nonachieve',
+                            sorter: (a, b) => a.trade_nonachieve.length - b.trade_nonachieve.length,
+                            render: trade_nonachieve => (
+                                <span class={trade_nonachieve > 0 ? 'win' : trade_nonachieve < 0 ? 'loss' : ''}>
+                                    {formatNum(trade_nonachieve)}
+                                </span>
+                            ),
+                            align: 'right',
+                        },
+                        {
+                            title: '參考報酬率(%)',
+                            dataIndex: 'trade_profit_rate',
+                            sorter: (a, b) => a.trade_profit_rate.length - b.trade_profit_rate.length,
+                            render: trade_profit_rate => (
+                                <span class={trade_profit_rate > 0 ? 'win' : trade_profit_rate < 0 ? 'loss' : ''}>
+                                    {formatNum(trade_profit_rate)}%
+                                </span>
+                            ),
+                            align: 'right',
+                        },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'trade_value',
+                            sorter: (a, b) => a.trade_value.length - b.trade_value.length,
+                            render: trade_value => {
+                                formatNum(trade_value);
+                            },
+                            align: 'right',
+                        },
                     ],
                 };
 
                 let OFWebTableData = [];
-
+                let OFModalData = [];
                 realTimePrtLosSum?.OF.data.map((data, index) => {
                     OFWebTableData.push({
+                        fund_cn: data.fund_cn,
+                        trade_nonachieve: data.trade_nonachieve,
+                        trade_profit_rate: data.trade_profit_rate,
+                        trade_value: data.trade_value,
+                    });
+
+                    OFModalData.push({
                         fund_cn: data.fund_cn,
                         trade_nonachieve: (
                             <span class={data.trade_nonachieve > 0 ? 'win' : data.trade_nonachieve < 0 ? 'loss' : ''}>
@@ -1150,8 +1388,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.OF = OFWebTableData;
+                modalMobileData.OF = OFModalData;
 
-                setModalAllData(webTableData);
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -1200,23 +1439,108 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'WM_SN':
                 tableTitle = {
                     WM_SN: [
-                        { title: '商品代碼', dataIndex: 'fund_code' },
-                        { title: '商品名', dataIndex: 'fund_name' },
-                        { title: '幣別', dataIndex: 'purchase_cur' },
-                        { title: '參考價', dataIndex: 'nav' },
-                        { title: '參考市值', dataIndex: 'namt' },
-                        { title: '申購價格', dataIndex: 'purchase_nav' },
-                        { title: '付出成本', dataIndex: 'invest_cost' },
-                        { title: '損益試算', dataIndex: 'prtlos' },
-                        { title: '累計配息', dataIndex: 'acc_dividend' },
-                        { title: '參考含息報酬率(%)', dataIndex: 'roi_dividend' },
+                        {
+                            title: '商品代碼',
+                            dataIndex: 'fund_code',
+                            sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                        },
+                        {
+                            title: '商品名',
+                            dataIndex: 'fund_name',
+                            sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                        },
+                        {
+                            title: '幣別',
+                            dataIndex: 'purchase_cur',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.purchase_cur.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '參考價',
+                            dataIndex: 'nav',
+                            align: 'right',
+                        },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'namt',
+                            render: namt => {
+                                formatNum(namt);
+                            },
+                            align: 'right',
+                        },
+                        {
+                            title: '申購價格',
+                            dataIndex: 'purchase_nav',
+                            render: purchase_nav => {
+                                formatNum(purchase_nav);
+                            },
+                            align: 'right',
+                        },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'invest_cost',
+                            render: invest_cost => {
+                                formatNum(invest_cost);
+                            },
+                            sorter: (a, b) => a.invest_cost.length - b.invest_cost.length,
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'prtlos',
+                            render: prtlos => (
+                                <span class={prtlos > 0 ? 'win' : prtlos < 0 ? 'loss' : ''}>{formatNum(prtlos)}</span>
+                            ),
+                            sorter: (a, b) => a.prtlos.length - b.prtlos.length,
+                            align: 'right',
+                        },
+                        {
+                            title: '累計配息',
+                            dataIndex: 'acc_dividend',
+                            render: acc_dividend => {
+                                formatNum(acc_dividend);
+                            },
+                            sorter: (a, b) => a.acc_dividend.length - b.acc_dividend.length,
+                            align: 'right',
+                        },
+                        {
+                            title: '參考含息報酬率(%)',
+                            dataIndex: 'roi_dividend',
+                            render: roi_dividend => (
+                                <span class={roi_dividend > 0 ? 'win' : roi_dividend < 0 ? 'loss' : ''}>
+                                    {formatNum(roi_dividend)}%
+                                </span>
+                            ),
+                            sorter: (a, b) => a.roi_dividend.length - b.roi_dividend.length,
+                            align: 'right',
+                        },
                     ],
                 };
 
                 let WM_SNWebTableData = [];
-
+                let WM_SNModalData = [];
                 realTimePrtLosSum?.WM_SN.data.map((data, index) => {
                     WM_SNWebTableData.push({
+                        fund_code: data.fund_code,
+                        fund_name: data.fund_name,
+                        purchase_cur: data.purchase_cur,
+                        nav: data.nav,
+                        namt: data.namt,
+                        purchase_nav: data.purchase_nav,
+                        invest_cost: data.invest_cost,
+                        prtlos: data.prtlos,
+                        acc_dividend: data.acc_dividend,
+                        roi_dividend: data.roi_dividend,
+                    });
+
+                    WM_SNModalData.push({
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
                         purchase_cur: data.purchase_cur,
@@ -1239,7 +1563,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.WM_SN = WM_SNWebTableData;
-                setModalAllData(webTableData);
+                modalMobileData.WM_SN = WM_SNModalData;
+
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -1301,21 +1627,91 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'SN':
                 tableTitle = {
                     SN: [
-                        { title: '商品代碼', dataIndex: 'prod_no' },
-                        { title: '商品名', dataIndex: 'prod_name' },
-                        { title: '幣別', dataIndex: 'currency' },
-                        { title: '參考價', dataIndex: 'price' },
-                        { title: '參考市值', dataIndex: 'market_amt' },
-                        { title: '付出成本', dataIndex: 'total_amt' },
-                        { title: '損益試算', dataIndex: 'ref_value_amt' },
-                        { title: '報酬率(%)', dataIndex: 'ref_value_prc' },
+                        {
+                            title: '商品代碼',
+                            dataIndex: 'prod_no',
+                            sorter: (a, b) => a.prod_no.length - b.prod_no.length,
+                        },
+                        {
+                            title: '商品名',
+                            dataIndex: 'prod_name',
+                            sorter: (a, b) => a.prod_name.length - b.prod_name.length,
+                        },
+                        {
+                            title: '幣別',
+                            dataIndex: 'currency',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.currency.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '參考價',
+                            dataIndex: 'price',
+                            align: 'right',
+                        },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'market_amt',
+                            render: market_amt => {
+                                formatNum(market_amt);
+                            },
+                            align: 'right',
+                        },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'total_amt',
+                            render: total_amt => {
+                                formatNum(total_amt);
+                            },
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'ref_value_amt',
+                            render: ref_value_amt => (
+                                <div class={ref_value_amt > 0 ? 'win' : ref_value_amt < 0 ? 'loss' : ''}>
+                                    {formatNum(ref_value_amt)}
+                                </div>
+                            ),
+                            sorter: (a, b) => a.ref_value_amt.length - b.ref_value_amt.length,
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率(%)',
+                            dataIndex: 'ref_value_prc',
+                            render: ref_value_prc => (
+                                <div class={ref_value_prc > 0 ? 'win' : ref_value_prc < 0 ? 'loss' : ''}>
+                                    {formatNum(ref_value_prc)}%
+                                </div>
+                            ),
+                            sorter: (a, b) => a.ref_value_prc.length - b.ref_value_prc.length,
+                            align: 'right',
+                        },
                     ],
                 };
 
                 let SNWebTableData = [];
+                let SNModalData = [];
 
                 realTimePrtLosSum?.SN.data.map((data, index) => {
                     SNWebTableData.push({
+                        prod_no: data.prod_no,
+                        prod_name: data.cc,
+                        currency: data.currency,
+                        price: data.price,
+                        market_amt: data.market_amt,
+                        total_amt: data.total_amt,
+                        ref_value_amt: data.ref_value_amt,
+                        ref_value_prc: data.ref_value_prc,
+                    });
+
+                    SNModalData.push({
                         prod_no: data.prod_no,
                         prod_name: data.cc,
                         currency: data.currency,
@@ -1336,7 +1732,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.SN = SNWebTableData;
-                setModalAllData(webTableData);
+                modalMobileData.SN = SNModalData;
+
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -1396,19 +1794,71 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'BOND':
                 tableTitle = {
                     BOND: [
-                        { title: '商品代號', dataIndex: 'name' },
-                        { title: '商品名稱', dataIndex: 'symbol' },
-                        { title: '幣別', dataIndex: 'total_pv' },
-                        { title: '持有面額', dataIndex: 'total_value' },
-                        { title: '參考市值', dataIndex: 'total_value_twd' },
-                        { title: '參考市值(台幣)', dataIndex: 'trade_cur' },
+                        {
+                            title: '商品代號',
+                            dataIndex: 'name',
+                            sorter: (a, b) => a.name.length - b.name.length,
+                        },
+                        {
+                            title: '商品名稱',
+                            dataIndex: 'symbol',
+                            sorter: (a, b) => a.symbol.length - b.symbol.length,
+                        },
+                        {
+                            title: '幣別',
+                            dataIndex: 'total_pv',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.total_pv.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '持有面額',
+                            dataIndex: 'total_value',
+                            render: total_value => {
+                                formatNum(total_value);
+                            },
+                            align: 'right',
+                        },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'total_value_twd',
+                            render: total_value_twd => {
+                                formatNum(total_value_twd);
+                            },
+                            align: 'right',
+                        },
+                        {
+                            title: '參考市值(台幣)',
+                            dataIndex: 'trade_cur',
+                            render: trade_cur => {
+                                formatNum(trade_cur);
+                            },
+                            sorter: (a, b) => a.trade_cur.length - b.trade_cur.length,
+                            align: 'right',
+                        },
                     ],
                 };
 
                 let BONDWebTableData = [];
+                let BONDModalData = [];
 
                 realTimePrtLosSum?.BOND.data.map((data, index) => {
                     BONDWebTableData.push({
+                        name: data.name,
+                        symbol: data.symbol,
+                        total_pv: data.total_pv,
+                        total_value: data.total_value,
+                        total_value_twd: data.total_value_twd,
+                        trade_cur: data.trade_cur,
+                    });
+
+                    BONDModalData.push({
                         name: data.name,
                         symbol: data.symbol,
                         total_pv: data.total_pv,
@@ -1419,7 +1869,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 webTableData.BOND = BONDWebTableData;
-                setModalAllData(webTableData);
+                modalMobileData.BOND = BONDModalData;
+
+                setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
                 setModalTitleData(tableTitle);
@@ -1455,15 +1907,35 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'WM_FUND_INTRANSIT':
                 tableTitle = {
                     WM_FUND_INTRANSIT: [
-                        { title: '商品代碼', dataIndex: 'fund_code' },
-                        { title: '產品名稱', dataIndex: 'fund_name' },
+                        {
+                            title: '商品代碼',
+                            dataIndex: 'fund_code',
+                            sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                        },
+                        {
+                            title: '產品名稱',
+                            dataIndex: 'fund_name',
+                            sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                        },
                         { title: '交易日期', dataIndex: 'trade_dt' },
                         { title: '交易類別', dataIndex: 'fund_type' },
-                        { title: '幣別', dataIndex: 'cur' },
-                        { title: '單位數', dataIndex: 'unit' },
-                        { title: '手續費', dataIndex: 'management_fee' },
+                        {
+                            title: '幣別',
+                            dataIndex: 'cur',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.cur.startsWith(value),
+                            filterSearch: true,
+                        },
+                        { title: '單位數', dataIndex: 'unit', align: 'right' },
+                        { title: '手續費', dataIndex: 'management_fee', align: 'right' },
                         // { title : '參考現值', dataIndex: 'amount_twd'},
-                        { title: '約當台幣', dataIndex: 'amount_twd' },
+                        { title: '約當台幣', dataIndex: 'amount_twd', align: 'right' },
                     ],
                 };
 
@@ -1478,7 +1950,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cur: data.cur,
                         unit: data.unit,
                         management_fee: data.management_fee,
-                        amount_twd: formatNum(data.amount_twd),
+                        amount_twd: data.amount_twd,
                     });
                 });
 
@@ -1535,15 +2007,35 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'WM_SN_INTRANSIT':
                 tableTitle = {
                     WM_SN_INTRANSIT: [
-                        { title: '商品代碼', dataIndex: 'fund_code' },
-                        { title: '產品名稱', dataIndex: 'fund_name' },
+                        {
+                            title: '商品代碼',
+                            dataIndex: 'fund_code',
+                            sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                        },
+                        {
+                            title: '產品名稱',
+                            dataIndex: 'fund_name',
+                            sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                        },
                         { title: '交易日期', dataIndex: 'trade_dt' },
                         { title: '交易類別', dataIndex: 'fund_type' },
-                        { title: '幣別', dataIndex: 'cur' },
-                        { title: '單位數', dataIndex: 'unit' },
-                        { title: '手續費', dataIndex: 'management_fee' },
+                        {
+                            title: '幣別',
+                            dataIndex: 'cur',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.cur.startsWith(value),
+                            filterSearch: true,
+                        },
+                        { title: '單位數', dataIndex: 'unit', align: 'right' },
+                        { title: '手續費', dataIndex: 'management_fee', align: 'right' },
                         // { title : '參考現值', dataIndex: 'amount_twd'},
-                        { title: '約當台幣', dataIndex: 'amount_twd' },
+                        { title: '約當台幣', dataIndex: 'amount_twd', align: 'right' },
                     ],
                 };
 
@@ -1558,7 +2050,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cur: data.cur,
                         unit: data.unit,
                         management_fee: data.management_fee,
-                        amount_twd: formatNum(data.amount_twd),
+                        amount_twd: data.amount_twd,
                     });
                 });
 
