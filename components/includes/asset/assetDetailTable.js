@@ -447,6 +447,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                 <div class={futeamt > 0 ? 'win' : futeamt < 0 ? 'loss' : ''}>{formatNum(futeamt)}</div>
                             ),
                             sorter: (a, b) => parseFloat(a.futeamt.slice(0, -1)) - parseFloat(b.futeamt.slice(0, -1)),
+                            align: 'right',
                         },
                         { title: '原始保證金', dataIndex: 'otamt', align: 'right' },
                         { title: '報酬率', dataIndex: 'roi', align: 'right' },
@@ -549,9 +550,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         // { title : '未平倉損益', dataIndex: 'futeamt'},
                         // { title : '原始保證金', dataIndex: 'otamt'},
                         // { title : '報酬率', dataIndex: 'roi'},
-                        { title: '前日餘額', dataIndex: 'dbaln' },
-                        { title: '參考權益數', dataIndex: 'dlbaln' },
-                        { title: '維持保證金', dataIndex: 'dtmmmrg' },
+                        { title: '前日餘額', dataIndex: 'dbaln', align: 'right' },
+                        { title: '參考權益數', dataIndex: 'dlbaln', align: 'right' },
+                        { title: '維持保證金', dataIndex: 'dtmmmrg', align: 'right' },
                     ],
                 };
 
@@ -610,17 +611,83 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'H':
                 tableTitle = {
                     subBrokerage: [
-                        { title: '股票名稱', dataIndex: 'name' },
-                        { title: '市場', dataIndex: 'market' },
-                        { title: '幣別', dataIndex: 'curr' },
-                        { title: '庫存', dataIndex: 'last_inv' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'name',
+                            sorter: (a, b) => a.name.length - b.name.length,
+                        },
+                        {
+                            title: '市場',
+                            dataIndex: 'market',
+                            filters: [
+                                { text: 'US', value: 'US' },
+                                { text: 'SEHK', value: 'SEHK' },
+                                { text: 'SHSE', value: 'SHSE' },
+                                { text: 'SZSE', value: 'SZSE' },
+                                { text: 'JP', value: 'JP' },
+                            ],
+                            onFilter: (value, record) => record.market.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '幣別',
+                            dataIndex: 'curr',
+                            filters: [
+                                { text: 'USD', value: 'USD' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                                { text: 'RMB', value: 'RMB' },
+                            ],
+                            onFilter: (value, record) => record.curr.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '庫存',
+                            dataIndex: 'last_inv',
+                            render: last_inv => formatNum(last_inv),
+                            align: 'right',
+                        },
                         { title: '現價', dataIndex: 'ref_price' },
-                        { title: '參考市值', dataIndex: 'amount' },
-                        { title: '參考台幣市值', dataIndex: 'amount_twd' },
-                        { title: '成本均價', dataIndex: 'cost_twd' },
-                        { title: '付出成本', dataIndex: 'cost' },
-                        { title: '損益試算', dataIndex: 'pl' },
-                        { title: '報酬率', dataIndex: 'roi' },
+                        {
+                            title: '參考市值',
+                            dataIndex: 'amount',
+                            render: amount => formatNum(amount),
+                            align: 'right',
+                        },
+                        {
+                            title: '參考台幣市值',
+                            dataIndex: 'amount_twd',
+                            render: amount_twd => formatNum(amount_twd),
+                            sorter: (a, b) => a.amount_twd - b.amount_twd,
+                            align: 'right',
+                        },
+                        {
+                            title: '成本均價',
+                            dataIndex: 'cost_twd',
+                            render: cost_twd => formatNum(cost_twd),
+                            align: 'right',
+                        },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'pl',
+                            render: pl => <div class={pl > 0 ? 'win' : pl < 0 ? 'loss' : ''}>{formatNum(pl)}</div>,
+                            sorter: (a, b) => a.pl - b.pl,
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率',
+                            dataIndex: 'roi',
+                            render: roi => <div class={roi > 0 ? 'win' : roi < 0 ? 'loss' : ''}>{roi}%</div>,
+                            sorter: (a, b) => a.pl - b.pl,
+                            align: 'right',
+                        },
                     ],
                 };
 
@@ -631,14 +698,14 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         name: data.name,
                         market: data.market,
                         curr: data.curr,
-                        last_inv: formatNum(data.last_inv),
+                        last_inv: data.last_inv,
                         ref_price: data.ref_price,
-                        amount: formatNum(data.amount),
-                        amount_twd: formatNum(data.amount_twd),
-                        cost_twd: formatNum(data.cost_twd),
-                        cost: formatNum(data.cost),
-                        pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
-                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        amount: data.amount,
+                        amount_twd: data.amount_twd,
+                        cost_twd: data.cost_twd,
+                        cost: data.cost,
+                        pl: data.pl,
+                        roi: data.roi,
                     });
                 });
 
@@ -703,16 +770,49 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 tableTitle = {
                     FIP: [
                         { title: '股票代碼', dataIndex: 'symbol' },
-                        { title: '股票名稱', dataIndex: 'pro_name' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'pro_name',
+                            sorter: (a, b) => a.pro_name.length - b.pro_name.length,
+                        },
                         { title: '幣別', dataIndex: 'curr' },
-                        { title: '庫存', dataIndex: 'last_inv' },
-                        { title: '現價', dataIndex: 'ave_cost' },
-                        { title: '市值', dataIndex: 'amount' },
-                        { title: '參考台幣市值', dataIndex: 'amount_twd' },
+                        { title: '庫存', dataIndex: 'last_inv', align: 'right' },
+                        { title: '現價', dataIndex: 'ave_cost', align: 'right' },
+                        {
+                            title: '市值',
+                            dataIndex: 'amount',
+                            render: amount => formatNum(amount),
+                            align: 'right',
+                        },
+                        {
+                            title: '參考台幣市值',
+                            dataIndex: 'amount_twd',
+                            render: amount_twd => formatNum(amount_twd),
+                            sorter: (a, b) => a.amount_twd - b.amount_twd,
+                            align: 'right',
+                        },
                         { title: '成本均價', dataIndex: 'cost_twd' },
-                        { title: '付出成本', dataIndex: 'cost' },
-                        { title: '損益試算', dataIndex: 'pl' },
-                        { title: '報酬率', dataIndex: 'roi' },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'pl',
+                            render: pl => <div class={pl > 0 ? 'win' : pl < 0 ? 'loss' : ''}>{formatNum(pl)}</div>,
+                            sorter: (a, b) => a.pl - b.pl,
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率',
+                            dataIndex: 'roi',
+                            render: roi => <div class={roi > 0 ? 'win' : roi < 0 ? 'loss' : ''}>{roi}%</div>,
+                            sorter: (a, b) => a.pl - b.pl,
+                            align: 'right',
+                        },
                     ],
                 };
 
@@ -725,12 +825,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         curr: data.curr,
                         last_inv: data.last_inv,
                         ave_cost: data.ave_cost,
-                        amount: formatNum(data.amount),
-                        amount_twd: formatNum(data.amount_twd),
+                        amount: data.amount,
+                        amount_twd: data.amount_twd,
                         cost_twd: data.cost_twd,
-                        cost: formatNum(data.cost),
-                        pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
-                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        cost: data.cost,
+                        pl: data.pl,
+                        roi: data.roi,
                     });
                 });
 
@@ -795,16 +895,49 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 tableTitle = {
                     MIP: [
                         { title: '股票代碼', dataIndex: 'symbol' },
-                        { title: '股票名稱', dataIndex: 'pro_name' },
+                        {
+                            title: '股票名稱',
+                            dataIndex: 'pro_name',
+                            sorter: (a, b) => a.pro_name.length - b.pro_name.length,
+                        },
                         { title: '幣別', dataIndex: 'curr' },
-                        { title: '庫存', dataIndex: 'last_inv' },
-                        { title: '現價', dataIndex: 'ave_cost' },
-                        { title: '市值', dataIndex: 'amount' },
-                        { title: '參考台幣市值', dataIndex: 'amount_twd' },
+                        { title: '庫存', dataIndex: 'last_inv', align: 'right' },
+                        { title: '現價', dataIndex: 'ave_cost', align: 'right' },
+                        {
+                            title: '市值',
+                            dataIndex: 'amount',
+                            render: amount => formatNum(amount),
+                            align: 'right',
+                        },
+                        {
+                            title: '參考台幣市值',
+                            dataIndex: 'amount_twd',
+                            render: amount_twd => formatNum(amount_twd),
+                            sorter: (a, b) => a.amount_twd - b.amount_twd,
+                            align: 'right',
+                        },
                         { title: '成本均價', dataIndex: 'cost_twd' },
-                        { title: '付出成本', dataIndex: 'cost' },
-                        { title: '損益試算', dataIndex: 'pl' },
-                        { title: '報酬率', dataIndex: 'roi' },
+                        {
+                            title: '付出成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
+                            align: 'right',
+                        },
+                        {
+                            title: '損益試算',
+                            dataIndex: 'pl',
+                            render: pl => <div class={pl > 0 ? 'win' : pl < 0 ? 'loss' : ''}>{formatNum(pl)}</div>,
+                            sorter: (a, b) => a.pl - b.pl,
+                            align: 'right',
+                        },
+                        {
+                            title: '報酬率',
+                            dataIndex: 'roi',
+                            render: roi => <div class={roi > 0 ? 'win' : roi < 0 ? 'loss' : ''}>{roi}%</div>,
+                            sorter: (a, b) => a.pl - b.pl,
+                            align: 'right',
+                        },
                     ],
                 };
 
@@ -817,12 +950,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         curr: data.curr,
                         last_inv: data.last_inv,
                         ave_cost: data.ave_cost,
-                        amount: formatNum(data.amount),
-                        amount_twd: formatNum(data.amount_twd),
+                        amount: data.amount,
+                        amount_twd: data.amount_twd,
                         cost_twd: data.cost_twd,
-                        cost: formatNum(data.cost),
-                        pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
-                        roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        cost: data.cost,
+                        pl: data.pl,
+                        roi: data.roi,
                     });
                 });
 
