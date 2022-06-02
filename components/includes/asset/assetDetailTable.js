@@ -408,15 +408,48 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'F':
                 tableTitle = {
                     future: [
-                        { title: '商品名稱', dataIndex: 'stockName' },
-                        { title: '買賣別', dataIndex: 'bs' },
-                        { title: '幣別', dataIndex: 'currency' },
-                        { title: '口數', dataIndex: 'openq' },
-                        { title: '現價', dataIndex: 'mprice' },
-                        { title: '成交均價', dataIndex: 'tprice' },
-                        { title: '未平倉損益', dataIndex: 'futeamt' },
-                        { title: '原始保證金', dataIndex: 'otamt' },
-                        { title: '報酬率', dataIndex: 'roi' },
+                        {
+                            title: '商品名稱',
+                            dataIndex: 'stockName',
+                            sorter: (a, b) => a.stockName.length - b.stockName.length,
+                        },
+                        {
+                            title: '買賣別',
+                            dataIndex: 'bs',
+                            filters: [
+                                { text: '買', value: '買' },
+                                { text: '賣', value: '賣' },
+                            ],
+                            onFilter: (value, record) => record.bs.startsWith(value),
+                            filterSearch: true,
+                        },
+                        {
+                            title: '幣別',
+                            dataIndex: 'currency',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.currency.startsWith(value),
+                            filterSearch: true,
+                        },
+                        { title: '口數', dataIndex: 'openq', align: 'right' },
+                        { title: '現價', dataIndex: 'mprice', align: 'right' },
+                        { title: '成交均價', dataIndex: 'tprice', align: 'right' },
+                        {
+                            title: '未平倉損益',
+                            dataIndex: 'futeamt',
+                            align: 'right',
+                            render: futeamt => (
+                                <div class={futeamt > 0 ? 'win' : futeamt < 0 ? 'loss' : ''}>{formatNum(futeamt)}</div>
+                            ),
+                            sorter: (a, b) => parseFloat(a.futeamt.slice(0, -1)) - parseFloat(b.futeamt.slice(0, -1)),
+                        },
+                        { title: '原始保證金', dataIndex: 'otamt', align: 'right' },
+                        { title: '報酬率', dataIndex: 'roi', align: 'right' },
                     ],
                 };
                 let futureWebTableData = [];
@@ -429,11 +462,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         openq: data.openq,
                         mprice: data.mprice,
                         tprice: data.tprice,
-                        futeamt: (
-                            <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>
-                                {formatNum(data.futeamt)}
-                            </div>
-                        ),
+                        futeamt: data.futeamt,
                         otamt: formatNum(data.otamt),
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
                     });
@@ -501,7 +530,19 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     foreignFuture: [
                         // { title : '商品名稱', dataIndex: 'stockName'},
                         // { title : '買賣別', dataIndex: 'bs'},
-                        { title: '幣別', dataIndex: 'currency' },
+                        {
+                            title: '幣別',
+                            dataIndex: 'currency',
+                            filters: [
+                                { text: 'NTD', value: 'NTD' },
+                                { text: 'USD', value: 'USD' },
+                                { text: 'RMB', value: 'RMB' },
+                                { text: 'HKD', value: 'HKD' },
+                                { text: 'JPY', value: 'JPY' },
+                            ],
+                            onFilter: (value, record) => record.currency.startsWith(value),
+                            filterSearch: true,
+                        },
                         // { title : '口數', dataIndex: 'openq'},
                         // { title : '現價', dataIndex: 'mprice'},
                         // { title : '成交均價', dataIndex: 'tprice'},
