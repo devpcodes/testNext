@@ -280,6 +280,7 @@ const FinancialProductArticleComponent = ({
         const announcementRes = await getAnnouncement(res?.keywords, 3);
         setAnnouncement(announcementRes);
     }, [productCode]);
+    console.log('--------', articleData?.commonQuestionKeywords);
     return (
         <>
             <PageHead title={'永豐金理財網'} />

@@ -30,11 +30,14 @@ const ProductQuestionTable = function ({ keywords }) {
     };
 
     useEffect(async () => {
-        const res = await getCommonQuestion(null, keywords, 1, 1000, null);
-        setTotalQuestion(res.counts);
-        setTotalPages(res.counts / 2);
-        if (res.dataList.length) {
-            setQuestionList(res.dataList);
+        console.log('-------keywords', keywords);
+        if (keywords) {
+            const res = await getCommonQuestion(null, keywords, 1, 1000, null);
+            setTotalQuestion(res.counts);
+            setTotalPages(res.counts / 2);
+            if (res.dataList.length) {
+                setQuestionList(res.dataList);
+            }
         }
     }, [keywords]);
 
