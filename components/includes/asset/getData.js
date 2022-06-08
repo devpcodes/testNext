@@ -52,11 +52,11 @@ export const getContentData = type => {
                     class: '',
                 },
                 // QQ2 : 追繳保證金????
-                QQ2: {
-                    title: '追繳保證金',
-                    amount: `$--`,
-                    class: '',
-                },
+                // QQ2: {
+                //     title: '追繳保證金',
+                //     amount: `$--`,
+                //     class: '',
+                // },
             };
         case 'FF':
             return {
@@ -248,65 +248,64 @@ export const getContentData = type => {
                 },
             };
         case 'OF':
+            // 名目本金
+            let trade_nonachieve = 0;
+
+            realTimePrtLosSum?.OF.data.map((data, index) => {
+                trade_nonachieve = trade_nonachieve + data.trade_nonachieve;
+            });
             return {
                 // QQ6 集保基金沒有總成本
-                sum_cost_twd: {
-                    title: '總成本',
-                    amount: `$--`,
-                    class: '',
-                },
+                // sum_cost_twd: {
+                //     title: '總成本',
+                //     amount: `$--`,
+                //     class: '',
+                // },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${formatNum(
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd,
-                    )}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
-                            ? 'loss'
-                            : '',
+                    amount: `$${formatNum(trade_nonachieve)}`,
+                    class: trade_nonachieve > 0 ? 'win' : trade_nonachieve < 0 ? 'loss' : '',
                 },
                 // QQ7 集保基金沒有成本無法算報酬率
-                rate_of_return: {
-                    title: '報酬率(%)',
-                    amount:
-                        realTimePrtLosSum?.WM_FUND.sum_cost_twd != '0'
-                            ? `${parseFloat(
-                                  ((realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd) /
-                                      realTimePrtLosSum?.WM_FUND.sum_cost_twd) *
-                                      100,
-                              ).toFixed(2)}%`
-                            : '--',
-                    class:
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
-                            ? 'loss'
-                            : '',
-                },
+                // rate_of_return: {
+                //     title: '報酬率(%)',
+                //     amount:
+                //         realTimePrtLosSum?.WM_FUND.sum_cost_twd != '0'
+                //             ? `${parseFloat(
+                //                   ((realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd) /
+                //                       realTimePrtLosSum?.WM_FUND.sum_cost_twd) *
+                //                       100,
+                //               ).toFixed(2)}%`
+                //             : '--',
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
+                //             ? 'loss'
+                //             : '',
+                // },
                 // QQ8 集保基金沒有累積配息
-                sum_prtlos_dividend: {
-                    title: '累計配息',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_prtlos_dividend: {
+                //     title: '累計配息',
+                //     amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
+                //             ? 'loss'
+                //             : '',
+                // },
                 // QQ9 集保基金沒有成本無法算報酬率
-                sum_roi_dividend: {
-                    title: '含息報酬率(%)',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_roi_dividend: {
+                //     title: '含息報酬率(%)',
+                //     amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi_dividend)}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
+                //             ? 'loss'
+                //             : '',
+                // },
             };
         case 'BOND':
             return {
@@ -316,58 +315,58 @@ export const getContentData = type => {
                     class: '',
                 },
                 // QQ10 沒有成本沒有損益
-                sum_unreal: {
-                    title: '損益試算',
-                    amount: `$${formatNum(
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd,
-                    )}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_unreal: {
+                //     title: '損益試算',
+                //     amount: `$${formatNum(
+                //         realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd,
+                //     )}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
+                //             ? 'loss'
+                //             : '',
+                // },
                 // QQ11 沒有成本沒有報酬率
-                rate_of_return: {
-                    title: '報酬率(%)',
-                    amount:
-                        realTimePrtLosSum?.WM_FUND.sum_cost_twd != '0'
-                            ? `${parseFloat(
-                                  ((realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd) /
-                                      realTimePrtLosSum?.WM_FUND.sum_cost_twd) *
-                                      100,
-                              ).toFixed(2)}%`
-                            : '--',
-                    class:
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
-                            ? 'loss'
-                            : '',
-                },
+                // rate_of_return: {
+                //     title: '報酬率(%)',
+                //     amount:
+                //         realTimePrtLosSum?.WM_FUND.sum_cost_twd != '0'
+                //             ? `${parseFloat(
+                //                   ((realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd) /
+                //                       realTimePrtLosSum?.WM_FUND.sum_cost_twd) *
+                //                       100,
+                //               ).toFixed(2)}%`
+                //             : '--',
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
+                //             ? 'loss'
+                //             : '',
+                // },
                 // QQ12 沒有累計債息
-                sum_prtlos_dividend: {
-                    title: '累計債息',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_prtlos_dividend: {
+                //     title: '累計債息',
+                //     amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
+                //             ? 'loss'
+                //             : '',
+                // },
                 // QQ13 沒有成本沒有報酬率
-                sum_roi_dividend: {
-                    title: '含息報酬率(%)',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_roi_dividend: {
+                //     title: '含息報酬率(%)',
+                //     amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi_dividend)}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
+                //             ? 'loss'
+                //             : '',
+                // },
             };
         case 'SN':
             // 名目本金
@@ -377,9 +376,9 @@ export const getContentData = type => {
             // 參考市值
             let market_amt_sn = 0;
             realTimePrtLosSum?.SN.data.map((data, index) => {
-                total_amt_sn = total_amt_sn + +data.total_amt;
-                trade_amt_sn = trade_amt_sn + +data.trade_amt;
-                market_amt_sn = market_amt_sn + +data.market_amt;
+                total_amt_sn = total_amt_sn + data.total_amt;
+                trade_amt_sn = trade_amt_sn + data.trade_amt;
+                market_amt_sn = market_amt_sn + data.market_amt;
             });
 
             return {
@@ -402,27 +401,27 @@ export const getContentData = type => {
                     class: market_amt_sn - trade_amt_sn > 0 ? 'win' : market_amt_sn - trade_amt_sn < 0 ? 'loss' : '',
                 },
                 // QQ15 找不到累積配息欄位
-                sum_prtlos_dividend: {
-                    title: '累計配息',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_prtlos_dividend: {
+                //     title: '累計配息',
+                //     amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
+                //             ? 'loss'
+                //             : '',
+                // },
                 // QQ16 找不到累積配息欄位
-                sum_roi_dividend: {
-                    title: '含息報酬率(%)',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
-                },
+                // sum_roi_dividend: {
+                //     title: '含息報酬率(%)',
+                //     amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi_dividend)}`,
+                //     class:
+                //         realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
+                //             ? 'win'
+                //             : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
+                //             ? 'loss'
+                //             : '',
+                // },
             };
         case 'WM_SN':
             return {
@@ -494,44 +493,44 @@ export const getContentData = type => {
         case 'WM_FUND_INTRANSIT':
             // QQ17 : 無詳細資料和算法
             return {
-                sum_cost: {
-                    title: '申購總額',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
-                    class: '',
-                },
-                sum_unreal: {
-                    title: '贖回總額',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
-                    class: '',
-                },
+                // sum_cost: {
+                //     title: '申購總額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
+                //     class: '',
+                // },
+                // sum_unreal: {
+                //     title: '贖回總額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
+                //     class: '',
+                // },
             };
         case 'WM_SN_INTRANSIT':
             // QQ18 : 無詳細資料和算法
             return {
-                sum_cost: {
-                    title: '買進總額',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
-                    class: '',
-                },
-                sum_unreal: {
-                    title: '賣出總額',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
-                    class: '',
-                },
+                // sum_cost: {
+                //     title: '買進總額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
+                //     class: '',
+                // },
+                // sum_unreal: {
+                //     title: '賣出總額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
+                //     class: '',
+                // },
             };
         case 'WM_TRUST_DEPOSIT':
             // QQ19 無圈存金額，無法分台幣美金
             return {
-                sum_cost: {
-                    title: '可動用餘額',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
-                    class: '',
-                },
-                sum_unreal: {
-                    title: '圈存總額',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
-                    class: '',
-                },
+                // sum_cost: {
+                //     title: '可動用餘額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
+                //     class: '',
+                // },
+                // sum_unreal: {
+                //     title: '圈存總額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
+                //     class: '',
+                // },
             };
         default:
             return {};
