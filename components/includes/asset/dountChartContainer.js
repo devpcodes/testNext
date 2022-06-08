@@ -9,19 +9,32 @@ const DountChartContainer = memo(({}) => {
     const realTimePrtLosSumTotal = useSelector(store => store.asset.realTimePrtLosSum.total);
     const [domData, setDomData] = useState({});
     useEffect(() => {
+        let trade_nonachieve = 0;
+        realTimePrtLosSum?.OF.data.map((data, index) => {
+            trade_nonachieve = trade_nonachieve + parseInt(data.trade_nonachieve);
+        });
+
+        let prtlos = 0;
+        realTimePrtLosSum?.WM_FUND.data.map((data, index) => {
+            prtlos = prtlos + parseInt(data.prtlos);
+        });
+
+        let OFtotalPrtlos = trade_nonachieve + prtlos;
+        let HtotalPrtlos =
+            parseInt(realTimePrtLosSum?.H.sum_twd) +
+            parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+            parseInt(realTimePrtLosSum?.MIP.sum_twd) -
+            (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
+                parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
+                parseInt(realTimePrtLosSum?.MIP.sum_cost_twd));
         const data = {
             // 證券
             S: {
                 total_proportion: parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
                 sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
-                profit_loss_percent: formatNum(
-                    parseFloat(
-                        ((realTimePrtLosSum?.S.sum_amt - realTimePrtLosSum?.S.sum_cost) /
-                            realTimePrtLosSum?.S.sum_cost) *
-                            100,
-                    ).toFixed(2),
-                ),
-                is_profit: realTimePrtLosSum?.S.sum_amt - realTimePrtLosSum?.S.sum_cost >= 0 ? true : false,
+                profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
+                is_profit:
+                    realTimePrtLosSum?.S.sum_unreal > 0 ? true : realTimePrtLosSum?.S.sum_unreal < 0 ? false : null,
             },
             // 基金
             OF: {
@@ -33,6 +46,8 @@ const DountChartContainer = memo(({}) => {
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
                 ),
+                profit_loss: formatNum(OFtotalPrtlos),
+                is_profit: OFtotalPrtlos > 0 ? true : OFtotalPrtlos < 0 ? false : null,
             },
             F: {
                 total_proportion: parseFloat(
@@ -43,6 +58,7 @@ const DountChartContainer = memo(({}) => {
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
                 ),
+                // profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
             },
             H: {
                 total_proportion: parseFloat(
@@ -57,28 +73,8 @@ const DountChartContainer = memo(({}) => {
                         parseInt(realTimePrtLosSum?.FIP.sum_twd) +
                         parseInt(realTimePrtLosSum?.MIP.sum_twd),
                 ), // 總額
-                profit_loss_percent: (
-                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd) -
-                        (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
-                            parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
-                            parseInt(realTimePrtLosSum?.MIP.sum_cost_twd))) /
-                        (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
-                            parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
-                            parseInt(realTimePrtLosSum?.MIP.sum_cost_twd))) *
-                    100
-                ).toFixed(2),
-                is_profit:
-                    parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd) -
-                        (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
-                            parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
-                            parseInt(realTimePrtLosSum?.MIP.sum_cost_twd)) >=
-                    0
-                        ? true
-                        : false,
+                profit_loss: HtotalPrtlos,
+                is_profit: HtotalPrtlos > 0 ? true : HtotalPrtlos < 0 ? false : null,
             },
         };
         setDomData(data);
@@ -94,7 +90,18 @@ const DountChartContainer = memo(({}) => {
                         <span className="pl__percent">({domData.OF?.total_proportion}%)</span>
                     </p>
                     <p className="dount__desc__amount">${domData.OF?.sum_amt}</p>
-                    {/* <p className="dount__desc__pl loss">損益 -5.05%</p> OF 沒有成本   */}
+                    <p
+                        className={
+                            domData.OF?.is_profit == null
+                                ? ''
+                                : domData.OF?.is_profit == true
+                                ? 'dount__desc__pl profit'
+                                : 'dount__desc__pl loss'
+                        }
+                    >
+                        損益 {domData.OF?.is_profit == null ? '' : domData.OF?.is_profit == true ? '+' : '-'}
+                        {domData.OF?.profit_loss}
+                    </p>
                 </div>
 
                 <div className="dount__desc stock">
@@ -103,9 +110,17 @@ const DountChartContainer = memo(({}) => {
                         <span className="pl__percent">({domData.S?.total_proportion}%)</span>
                     </p>
                     <p className="dount__desc__amount">${domData.S?.sum_amt}</p>
-                    <p className={domData.S?.is_profit ? 'dount__desc__pl profit' : 'dount__desc__pl loss'}>
-                        損益 {domData.S?.is_profit ? '+' : '-'}
-                        {domData.S?.profit_loss_percent}%
+                    <p
+                        className={
+                            domData.S?.is_profit == null
+                                ? ''
+                                : domData.S?.is_profit == true
+                                ? 'dount__desc__pl profit'
+                                : 'dount__desc__pl loss'
+                        }
+                    >
+                        損益 {domData.S?.is_profit == null ? '' : domData.S?.is_profit == true ? '+' : '-'}
+                        {domData.S?.profit_loss}
                     </p>
                 </div>
 
@@ -124,9 +139,17 @@ const DountChartContainer = memo(({}) => {
                         <span className="pl__percent">({domData.H?.total_proportion}%)</span>
                     </p>
                     <p className="dount__desc__amount">${domData.H?.sum_amt}</p>
-                    <p className={domData.H?.is_profit ? 'dount__desc__pl profit' : 'dount__desc__pl loss'}>
-                        損益 {domData.H?.is_profit ? '+' : '-'}
-                        {domData.H?.profit_loss_percent}%
+                    <p
+                        className={
+                            domData.H?.is_profit == null
+                                ? ''
+                                : domData.H?.is_profit == true
+                                ? 'dount__desc__pl profit'
+                                : 'dount__desc__pl loss'
+                        }
+                    >
+                        損益 {domData.H?.is_profit == null ? '' : domData.H?.is_profit == true ? '+' : '-'}
+                        {domData.H?.profit_loss}
                     </p>
                 </div>
             </div>

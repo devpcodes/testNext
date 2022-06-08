@@ -1232,7 +1232,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         prtlos: data.prtlos,
                         roi: data.roi,
                         acc_dividend: formatNum(data.acc_dividend),
-                        roi_dividend: roi_dividend,
+                        roi_dividend: data.roi_dividend,
                     });
 
                     WM_FUNDModalData.push({
@@ -1252,7 +1252,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         acc_dividend: formatNum(data.acc_dividend),
                         roi_dividend: (
                             <div class={data.roi_dividend > 0 ? 'win' : data.roi_dividend < 0 ? 'loss' : ''}>
-                                {roi_dividend}%
+                                {data.roi_dividend}%
                             </div>
                         ),
                     });
