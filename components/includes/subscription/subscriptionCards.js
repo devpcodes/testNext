@@ -46,7 +46,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => 
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">總申購張數</div>
-                            <div className="info__cell__amount">{formatAmount(stockData.share)}</div>
+                            <div className="info__cell__amount">{formatAmount(parseInt(stockData.share / 1000))}</div>
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">市價</div>
@@ -54,7 +54,9 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => 
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">申購張數</div>
-                            <div className="info__cell__amount">{formatAmount(stockData.applyShare)}</div>
+                            <div className="info__cell__amount">
+                                {formatAmount(parseInt(stockData.applyShare / 1000))}
+                            </div>
                         </div>
                     </div>
                     <div className={stockData.diffPrice > 0 ? 'price__difference up' : 'price__difference down'}>
