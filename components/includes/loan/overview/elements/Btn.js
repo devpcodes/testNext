@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Button } from 'antd';
 import accountInfo from '../../../../../resources/images/components/loanZone/ic-ic-user-circle-black.svg';
 import money from '../../../../../resources/images/components/loanZone/ic-ic-money.svg';
+import info from '../../../../../resources/images/components/loanZone/ic-info.svg';
 const Btn = ({ text, type, style, onClick }) => {
     const getImageHandler = type => {
         switch (type) {
@@ -9,6 +10,8 @@ const Btn = ({ text, type, style, onClick }) => {
                 return accountInfo;
             case 'money':
                 return money;
+            case 'info':
+                return info;
         }
     };
     return (
