@@ -154,15 +154,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             dataIndex: 'ur_ratio',
                             align: 'right',
                             render: ur_ratio => (
-                                <div
-                                    class={
-                                        parseFloat(ur_ratio.slice(0, -1)) > 0
-                                            ? 'win'
-                                            : parseFloat(ur_ratio.slice(0, -1)) < 0
-                                            ? 'loss'
-                                            : ''
-                                    }
-                                >
+                                <div class={parseFloat(ur_ratio) > 0 ? 'win' : parseFloat(ur_ratio) < 0 ? 'loss' : ''}>
                                     {ur_ratio}
                                 </div>
                             ),
@@ -251,7 +243,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         avgprice: data.avgprice,
                         cost: data.cost,
                         unreal: data.unreal,
-                        ur_ratio: data.ur_ratio,
+                        ur_ratio: data.urratio,
                     });
 
                     unrealModalData.push({
@@ -286,7 +278,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 });
 
                 realTimePrtLosSum?.L.lenddn_sums.data.map((data, index) => {
-                    creditdnTableData.push({
+                    lenddnTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
                         qty: data.qty,
