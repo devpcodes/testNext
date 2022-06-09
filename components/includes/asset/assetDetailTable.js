@@ -1462,25 +1462,19 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         {
                             title: '參考市值',
                             dataIndex: 'namt',
-                            render: namt => {
-                                formatNum(namt);
-                            },
+                            render: namt => formatNum(namt),
                             align: 'right',
                         },
                         {
                             title: '申購價格',
                             dataIndex: 'purchase_nav',
-                            render: purchase_nav => {
-                                formatNum(purchase_nav);
-                            },
+                            render: purchase_nav => formatNum(purchase_nav),
                             align: 'right',
                         },
                         {
                             title: '付出成本',
                             dataIndex: 'invest_cost',
-                            render: invest_cost => {
-                                formatNum(invest_cost);
-                            },
+                            render: invest_cost => formatNum(invest_cost),
                             sorter: (a, b) => a.invest_cost.length - b.invest_cost.length,
                             align: 'right',
                         },
@@ -1496,9 +1490,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         {
                             title: '累計配息',
                             dataIndex: 'acc_dividend',
-                            render: acc_dividend => {
-                                formatNum(acc_dividend);
-                            },
+                            render: acc_dividend => formatNum(acc_dividend),
                             sorter: (a, b) => a.acc_dividend.length - b.acc_dividend.length,
                             align: 'right',
                         },
@@ -1523,13 +1515,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
                         purchase_cur: data.purchase_cur,
-                        nav: data.nav,
-                        namt: data.namt,
-                        purchase_nav: data.purchase_nav,
-                        invest_cost: data.invest_cost,
-                        prtlos: data.prtlos,
-                        acc_dividend: data.acc_dividend,
-                        roi_dividend: data.roi_dividend,
+                        nav: parseFloat(data.nav),
+                        namt: parseFloat(data.namt),
+                        purchase_nav: parseFloat(data.purchase_nav),
+                        invest_cost: parseFloat(data.invest_cost),
+                        prtlos: parseFloat(data.prtlos),
+                        acc_dividend: parseFloat(data.acc_dividend),
+                        roi_dividend: parseFloat(data.roi_dividend),
                     });
 
                     WM_SNModalData.push({
@@ -1650,17 +1642,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         {
                             title: '參考市值',
                             dataIndex: 'market_amt',
-                            render: market_amt => {
-                                formatNum(market_amt);
-                            },
+                            render: market_amt => formatNum(market_amt),
                             align: 'right',
                         },
                         {
                             title: '付出成本',
                             dataIndex: 'total_amt',
-                            render: total_amt => {
-                                formatNum(total_amt);
-                            },
+                            render: total_amt => formatNum(total_amt),
                             align: 'right',
                         },
                         {
@@ -1694,7 +1682,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 realTimePrtLosSum?.SN.data.map((data, index) => {
                     SNWebTableData.push({
                         prod_no: data.prod_no,
-                        prod_name: data.cc,
+                        prod_name: data.prod_name,
                         currency: data.currency,
                         price: data.price,
                         market_amt: data.market_amt,
@@ -1705,7 +1693,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                     SNModalData.push({
                         prod_no: data.prod_no,
-                        prod_name: data.cc,
+                        prod_name: data.prod_name,
                         currency: data.currency,
                         price: data.price,
                         market_amt: formatNum(data.market_amt),
