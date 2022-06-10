@@ -385,9 +385,10 @@ export const getContentData = type => {
             // 參考市值
             let market_amt_sn = 0;
             realTimePrtLosSum?.SN.data.map((data, index) => {
-                total_amt_sn = total_amt_sn + data.total_amt;
-                trade_amt_sn = trade_amt_sn + data.trade_amt;
-                market_amt_sn = market_amt_sn + data.market_amt;
+                parseFloat();
+                total_amt_sn = total_amt_sn + parseFloat(data.total_amt);
+                trade_amt_sn = trade_amt_sn + parseFloat(data.trade_amt);
+                market_amt_sn = market_amt_sn + parseFloat(data.market_amt);
             });
 
             return {
@@ -398,7 +399,7 @@ export const getContentData = type => {
                 },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${market_amt_sn - trade_amt_sn}`,
+                    amount: `$${parseFloat(market_amt_sn - trade_amt_sn).toFixed(2)}`,
                     class: market_amt_sn - trade_amt_sn > 0 ? 'win' : market_amt_sn - trade_amt_sn < 0 ? 'loss' : '',
                 },
                 rate_of_return: {
