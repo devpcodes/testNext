@@ -41,6 +41,21 @@ export const getContentData = type => {
                 mtamt = mtamt + +data.mtamt;
             });
             return {
+                sum_balv: {
+                    title: '權益數',
+                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_balv)}`,
+                    class: '',
+                },
+                sum_futeamt_twd: {
+                    title: '未平倉損益',
+                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_futeamt_twd)}`,
+                    class:
+                        realTimePrtLosSum?.F.sum_futeamt_twd > 0
+                            ? 'win'
+                            : realTimePrtLosSum?.F.sum_futeamt_twd < 0
+                            ? 'loss'
+                            : '',
+                },
                 otamt: {
                     title: '原始保證金',
                     amount: `$${formatNum(otamt)}`,
@@ -51,12 +66,6 @@ export const getContentData = type => {
                     amount: `$${formatNum(mtamt)}`,
                     class: '',
                 },
-                // QQ2 : 追繳保證金????
-                // QQ2: {
-                //     title: '追繳保證金',
-                //     amount: `$--`,
-                //     class: '',
-                // },
             };
         case 'FF':
             return {

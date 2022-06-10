@@ -849,7 +849,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         { title: '幣別', dataIndex: 'curr' },
                         { title: '庫存', dataIndex: 'last_inv', align: 'right' },
-                        { title: '現價', dataIndex: 'ave_cost', align: 'right' },
+                        { title: '現價', dataIndex: 'avg_cost', align: 'right' },
                         {
                             title: '市值',
                             dataIndex: 'amount',
@@ -897,7 +897,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        ave_cost: data.ave_cost,
+                        avg_cost: data.avg_cost,
                         amount: data.amount,
                         amount_twd: data.amount_twd,
                         cost_twd: data.cost_twd,
@@ -911,7 +911,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        ave_cost: data.ave_cost,
+                        avg_cost: data.avg_cost,
                         amount: formatNum(data.amount),
                         amount_twd: formatNum(data.amount_twd),
                         cost_twd: data.cost_twd,
@@ -990,7 +990,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         { title: '幣別', dataIndex: 'curr' },
                         { title: '庫存', dataIndex: 'last_inv', align: 'right' },
-                        { title: '現價', dataIndex: 'ave_cost', align: 'right' },
+                        { title: '現價', dataIndex: 'avg_cost', align: 'right' },
                         {
                             title: '市值',
                             dataIndex: 'amount',
@@ -1038,7 +1038,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        ave_cost: data.ave_cost,
+                        avg_cost: data.avg_cost,
                         amount: data.amount,
                         amount_twd: data.amount_twd,
                         cost_twd: data.cost_twd,
@@ -1052,7 +1052,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        ave_cost: data.ave_cost,
+                        avg_cost: data.avg_cost,
                         amount: formatNum(data.amount),
                         amount_twd: formatNum(data.amount_twd),
                         cost_twd: data.cost_twd,
@@ -1154,15 +1154,15 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         {
                             title: '參考市值',
-                            dataIndex: 'ave_cost',
-                            render: ave_cost => formatNum(ave_cost),
+                            dataIndex: 'namt',
+                            render: namt => formatNum(namt),
                             align: 'right',
                         },
                         {
                             title: '台幣市值',
-                            dataIndex: 'namt',
-                            render: namt => formatNum(namt),
-                            sorter: (a, b) => a.namt - b.namt,
+                            dataIndex: 'amount_twd',
+                            render: amount_twd => formatNum(amount_twd),
+                            sorter: (a, b) => a.amount_twd - b.amount_twd,
                             align: 'right',
                         },
                         {
@@ -1218,8 +1218,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         fund_name: data.fund_name,
                         purchase_cur: data.purchase_cur,
                         nav: data.nav,
-                        ave_cost: data.ave_cost,
                         namt: data.namt,
+                        amount_twd: data.amount_twd,
                         invest_cost: data.invest_cost,
                         prtlos: data.prtlos,
                         roi: data.roi,
@@ -1232,8 +1232,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         fund_name: data.fund_name,
                         purchase_cur: data.purchase_cur,
                         nav: formatNum(data.nav),
-                        ave_cost: formatNum(data.ave_cost),
                         namt: formatNum(data.namt),
+                        amount_twd: formatNum(data.amount_twd),
                         invest_cost: formatNum(data.invest_cost),
                         prtlos: (
                             <div class={data.prtlos > 0 ? 'win' : data.prtlos < 0 ? 'loss' : ''}>
@@ -1262,7 +1262,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         WM_FUND: [
                             { title: '商品/幣別', dataIndex: 'fund_name__purchase_cur' },
                             { title: '淨值/市值', dataIndex: 'nav__nav_cost' },
-                            { title: '損益/台幣市值', dataIndex: 'prtlos__namt' },
+                            { title: '損益/台幣市值', dataIndex: 'prtlos__amount_twd' },
                             { title: '累計配息/含息報酬率', dataIndex: 'acc_dividend__roi_dividend' },
                         ],
                     });
@@ -1286,13 +1286,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {formatNum(data.nav_cost)}
                                 </div>
                             ),
-                            prtlos__namt: (
+                            prtlos__amount_twd: (
                                 <div>
                                     <span class={data.prtlos > 0 ? 'win' : data.prtlos < 0 ? 'loss' : ''}>
                                         {formatNum(data.prtlos)}
                                     </span>
                                     <br />
-                                    {formatNum(data.namt)}
+                                    {formatNum(data.amount_twd)}
                                 </div>
                             ),
                             acc_dividend__roi_dividend: (
