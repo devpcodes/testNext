@@ -56,6 +56,11 @@ export const getContentData = type => {
                             ? 'loss'
                             : '',
                 },
+                sum_ybaln: {
+                    title: '前日帳戶餘額',
+                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_ybaln)}`,
+                    class: '',
+                },
                 otamt: {
                     title: '原始保證金',
                     amount: `$${formatNum(otamt)}`,
@@ -64,6 +69,11 @@ export const getContentData = type => {
                 mtamt: {
                     title: '維持保證金',
                     amount: `$${formatNum(mtamt)}`,
+                    class: '',
+                },
+                sum_axamt: {
+                    title: '加收保證金',
+                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_axamt)}`,
                     class: '',
                 },
             };
