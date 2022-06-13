@@ -22,7 +22,7 @@ const DountChart = function () {
 
         // fake Data
         chart.data = [
-            { sector: '國內證券', size: realTimePrtLosSum?.S.sum_amt },
+            { sector: '國內證券', size: realTimePrtLosSum?.S.sum_namt },
             {
                 sector: '期貨',
                 size: parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),

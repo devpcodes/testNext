@@ -555,7 +555,7 @@ export const getTitleData = type => {
             titleData = {
                 title: '台股庫存總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.S.sum_amt),
+                sum: formatNum(realTimePrtLosSum?.S.sum_namt),
             };
             break;
         case 'F':

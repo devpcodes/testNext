@@ -17,9 +17,9 @@ const AssetCarouselOverview = memo(({}) => {
             S: {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
-                        ? parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2)
+                        ? parseFloat((realTimePrtLosSum?.S.sum_namt / realTimePrtLosSumTotal) * 100).toFixed(2)
                         : '--', // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
+                sum_amt: formatNum(realTimePrtLosSum?.S.sum_namt), // 總額
             },
             // 基金
             OF: {

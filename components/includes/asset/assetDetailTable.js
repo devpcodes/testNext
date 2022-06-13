@@ -1776,17 +1776,17 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     BOND: [
                         {
                             title: '商品代號',
-                            dataIndex: 'name',
+                            dataIndex: 'symbol',
                             sorter: (a, b) => a.name.length - b.name.length,
                         },
                         {
                             title: '商品名稱',
-                            dataIndex: 'symbol',
+                            dataIndex: 'name',
                             sorter: (a, b) => a.symbol.length - b.symbol.length,
                         },
                         {
                             title: '幣別',
-                            dataIndex: 'total_pv',
+                            dataIndex: 'trade_cur',
                             filters: [
                                 { text: 'NTD', value: 'NTD' },
                                 { text: 'USD', value: 'USD' },
@@ -1799,27 +1799,21 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         {
                             title: '持有面額',
-                            dataIndex: 'total_value',
-                            render: total_value => {
-                                formatNum(total_value);
-                            },
+                            dataIndex: 'total_pv',
+                            render: total_pv => formatNum(total_pv),
                             align: 'right',
                         },
                         {
                             title: '參考市值',
-                            dataIndex: 'total_value_twd',
-                            render: total_value_twd => {
-                                formatNum(total_value_twd);
-                            },
+                            dataIndex: 'total_value',
+                            render: total_value => formatNum(total_value),
                             align: 'right',
                         },
                         {
                             title: '參考市值(台幣)',
-                            dataIndex: 'trade_cur',
-                            render: trade_cur => {
-                                formatNum(trade_cur);
-                            },
-                            sorter: (a, b) => a.trade_cur.length - b.trade_cur.length,
+                            dataIndex: 'total_value_twd',
+                            render: total_value_twd => formatNum(total_value_twd),
+                            sorter: (a, b) => parseInt(a.total_value_twd) - parseInt(b.total_value_twd),
                             align: 'right',
                         },
                     ],
@@ -1851,6 +1845,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 webTableData.BOND = BONDWebTableData;
                 modalMobileData.BOND = BONDModalData;
 
+                console.log(webTableData);
+
                 setModalAllData(modalMobileData);
                 setTableData(webTableData);
                 setColumnData(tableTitle);
@@ -1861,9 +1857,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         BOND: [
                             { title: '商品名稱', dataIndex: 'symbol' },
                             { title: '幣別', dataIndex: 'total_pv' },
-                            { title: '持有面額', dataIndex: 'total_value' },
-                            { title: '參考市值', dataIndex: 'total_value_twd' },
-                            { title: '參考市值(台幣)', dataIndex: 'trade_cur' },
+                            { title: '持有面額', dataIndex: 'total_pv' },
+                            { title: '參考市值', dataIndex: 'total_value' },
+                            { title: '參考市值(台幣)', dataIndex: 'total_value_twd' },
                         ],
                     });
 
