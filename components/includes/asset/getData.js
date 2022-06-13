@@ -576,7 +576,7 @@ export const getTitleData = type => {
             titleData = {
                 title: '海外股票總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.H.sum_cost_twd),
+                sum: formatNum(realTimePrtLosSum?.H.sum_twd),
             };
             break;
         case 'MIP':
