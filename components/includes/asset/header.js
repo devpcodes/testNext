@@ -37,9 +37,9 @@ const AssetHeader = memo(({ title }) => {
                         <Button className="btn refresh__btn">
                             <img src={refresh} onClick={refreshAction} />
                         </Button>
-                        <Button className="btn refresh__btn">
+                        {/* <Button className="btn refresh__btn">
                             <img src={hide} />
-                        </Button>
+                        </Button> */}
                         <span className="account__info">
                             {user.idno} ｜ {user.username}
                         </span>
