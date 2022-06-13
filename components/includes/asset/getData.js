@@ -318,11 +318,11 @@ export const getContentData = type => {
             };
         case 'BOND':
             return {
-                sum_cost_twd: {
-                    title: '總持有面額',
-                    amount: `$${formatNum(realTimePrtLosSum?.BOND.sum_total_pv)}`,
-                    class: '',
-                },
+                // sum_cost_twd: {
+                //     title: '總持有面額',
+                //     amount: `$${formatNum(realTimePrtLosSum?.BOND.sum_total_pv)}`,
+                //     class: '',
+                // },
                 // QQ10 沒有成本沒有損益
                 // sum_unreal: {
                 //     title: '損益試算',

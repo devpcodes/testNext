@@ -17,19 +17,11 @@ const assetDetailContainer = memo(({}) => {
     const realTimePrtLosSum = useSelector(store => store.asset.realTimePrtLosSum.data);
     const realTimePrtLosSumTotal = useSelector(store => store.asset.realTimePrtLosSum.total);
     const [domData, setDomData] = useState({});
-    const typeList = ['S', 'F', 'H', 'OF', 'BOND', 'SN', 'INTRANSIT', 'DEPOSIT'];
+    const typeList = ['S', 'H', 'F', 'OF', 'BOND', 'SN', 'INTRANSIT', 'DEPOSIT'];
     const getEachTypeAssetCards = type => {
         switch (type) {
             case 'S':
                 return <AssetCards type="S" />;
-                break;
-            case 'F':
-                return (
-                    <>
-                        <AssetCards type="F" />
-                        <AssetCards type="FF" />
-                    </>
-                );
                 break;
             case 'H':
                 return (
@@ -37,6 +29,14 @@ const assetDetailContainer = memo(({}) => {
                         <AssetCards type="H" />
                         <AssetCards type="FIP" />
                         <AssetCards type="MIP" />
+                    </>
+                );
+                break;
+            case 'F':
+                return (
+                    <>
+                        <AssetCards type="F" />
+                        <AssetCards type="FF" />
                     </>
                 );
                 break;
@@ -106,18 +106,6 @@ const assetDetailContainer = memo(({}) => {
                 title: '國內證券',
                 class: 's__point',
             },
-            F: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2),
-                sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
-                ),
-                title: '期權',
-                class: 'f__point',
-            },
             H: {
                 total_proportion: parseFloat(
                     ((parseInt(realTimePrtLosSum?.H.sum_twd) +
@@ -134,6 +122,19 @@ const assetDetailContainer = memo(({}) => {
                 title: '海外證券',
                 class: 'h__point',
             },
+            F: {
+                total_proportion: parseFloat(
+                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                        realTimePrtLosSumTotal) *
+                        100,
+                ).toFixed(2),
+                sum_amt: formatNum(
+                    parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                ),
+                title: '期權',
+                class: 'f__point',
+            },
+
             // 基金
             OF: {
                 total_proportion: parseFloat(
