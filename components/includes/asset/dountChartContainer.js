@@ -30,7 +30,10 @@ const DountChartContainer = memo(({}) => {
         const data = {
             // 證券
             S: {
-                total_proportion: parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
                 profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
                 is_profit:
@@ -38,11 +41,15 @@ const DountChartContainer = memo(({}) => {
             },
             // 基金
             OF: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2),
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.OF.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--',
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
                 ),
@@ -50,24 +57,31 @@ const DountChartContainer = memo(({}) => {
                 is_profit: OFtotalPrtlos > 0 ? true : OFtotalPrtlos < 0 ? false : null,
             },
             F: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2),
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.F.sum_balv) +
+                                  parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--',
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
                 ),
                 // profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
             },
             H: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.H.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.H.sum_twd) +
                         parseInt(realTimePrtLosSum?.FIP.sum_twd) +

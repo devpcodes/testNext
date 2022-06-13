@@ -611,7 +611,7 @@ export const getTitleData = type => {
             titleData = {
                 title: '海外債券總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.BOND.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.BOND.sum_total_value_twd),
             };
             break;
         case 'SN':

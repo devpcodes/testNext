@@ -15,38 +15,52 @@ const AssetCarouselOverview = memo(({}) => {
         const data = {
             // 證券
             S: {
-                total_proportion: parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
             },
             // 基金
             OF: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2),
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.OF.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--',
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
                 ),
             },
             F: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2),
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.F.sum_balv) +
+                                  parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--',
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
                 ),
             },
             H: {
-                total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
-                        realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.H.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.FIP.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.H.sum_twd) +
                         parseInt(realTimePrtLosSum?.FIP.sum_twd) +
@@ -54,31 +68,43 @@ const AssetCarouselOverview = memo(({}) => {
                 ), // 總額
             },
             BOND: {
-                total_proportion: parseFloat(
-                    (realTimePrtLosSum?.BOND.sum_total_value_twd / realTimePrtLosSumTotal) * 100,
-                ).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              (realTimePrtLosSum?.BOND.sum_total_value_twd / realTimePrtLosSumTotal) * 100,
+                          ).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(realTimePrtLosSum?.BOND.sum_total_value_twd), // 總額
             },
             SN: {
-                total_proportion: parseFloat(
-                    (parseInt(realTimePrtLosSum?.SN.sum_twd) +
-                        parseInt(realTimePrtLosSum?.WM_SN.sum_twd) / realTimePrtLosSumTotal) *
-                        100,
-                ).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              (parseInt(realTimePrtLosSum?.SN.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.WM_SN.sum_twd) / realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.SN.sum_twd) + parseInt(realTimePrtLosSum?.WM_SN.sum_twd),
                 ), // 總額
             },
             INTRANSIT: {
-                total_proportion: parseFloat(
-                    (realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd / realTimePrtLosSumTotal) * 100,
-                ).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              (realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd / realTimePrtLosSumTotal) * 100,
+                          ).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd), // 總額
             },
             DEPOSIT: {
-                total_proportion: parseFloat(
-                    (realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd / realTimePrtLosSumTotal) * 100,
-                ).toFixed(2), // 總佔比
+                total_proportion:
+                    parseInt(realTimePrtLosSumTotal) != 0
+                        ? parseFloat(
+                              (realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd / realTimePrtLosSumTotal) * 100,
+                          ).toFixed(2)
+                        : '--', // 總佔比
                 sum_amt: formatNum(realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd), // 總額
             },
         };
