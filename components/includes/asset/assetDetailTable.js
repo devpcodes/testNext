@@ -1345,9 +1345,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '參考市值',
                             dataIndex: 'trade_value',
                             sorter: (a, b) => a.trade_value.length - b.trade_value.length,
-                            render: trade_value => {
-                                formatNum(trade_value);
-                            },
+                            render: trade_value => formatNum(trade_value),
                             align: 'right',
                         },
                     ],
