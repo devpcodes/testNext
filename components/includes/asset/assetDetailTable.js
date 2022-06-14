@@ -2161,7 +2161,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
         MIP: [{ title: '豐存美股 - 定期定額', detailType: 'MIP' }],
         WM_FUND: [{ title: '信託基金', detailType: 'WM_FUND' }],
         OF: [{ title: '集保基金', detailType: 'OF' }],
-        WM_SN: [{ title: '基金結構型商品庫存', detailType: 'WM_SN' }],
+        WM_SN: [{ title: '結構型商品庫存', detailType: 'WM_SN' }],
         SN: [{ title: '結構型商品庫存', detailType: 'SN' }],
         BOND: [{ title: '海外債', detailType: 'BOND' }],
         WM_FUND_INTRANSIT: [{ title: '基金在途', detailType: 'WM_FUND_INTRANSIT' }],

@@ -412,7 +412,7 @@ export const getContentData = type => {
                 },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${parseFloat(market_amt_sn - trade_amt_sn).toFixed(2)}`,
+                    amount: `$${formatNum(parseFloat(market_amt_sn - trade_amt_sn).toFixed(2))}`,
                     class: market_amt_sn - trade_amt_sn > 0 ? 'win' : market_amt_sn - trade_amt_sn < 0 ? 'loss' : '',
                 },
                 rate_of_return: {
