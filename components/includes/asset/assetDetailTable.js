@@ -1223,7 +1223,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         invest_cost: data.invest_cost,
                         prtlos: data.prtlos,
                         roi: data.roi,
-                        acc_dividend: formatNum(data.acc_dividend),
+                        acc_dividend: data.acc_dividend,
                         roi_dividend: data.roi_dividend,
                     });
 
