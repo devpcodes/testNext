@@ -647,7 +647,7 @@ export const getTitleData = type => {
             break;
         case 'WM_SN_INTRANSIT':
             titleData = {
-                title: '信託基金結構型在途總市值',
+                title: '信託結構型在途總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.WM_SN_INTRANSIT.sum_twd),
             };
