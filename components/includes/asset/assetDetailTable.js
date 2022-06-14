@@ -197,7 +197,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     ],
                 };
 
-                realTimePrtLosSum?.S.data.map((data, index) => {
+                realTimePrtLosSum?.S?.data.map((data, index) => {
                     stockWebTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
@@ -233,7 +233,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     });
                 });
 
-                realTimePrtLosSum?.L.unreal_sums.data.map((data, index) => {
+                realTimePrtLosSum?.L?.unreal_sums.data.map((data, index) => {
                     unrealTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
@@ -267,7 +267,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     });
                 });
 
-                realTimePrtLosSum?.L.creditdn_sums.data.map((data, index) => {
+                realTimePrtLosSum?.L?.creditdn_sums.data.map((data, index) => {
                     creditdnTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
@@ -277,7 +277,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     });
                 });
 
-                realTimePrtLosSum?.L.lenddn_sums.data.map((data, index) => {
+                realTimePrtLosSum?.L?.lenddn_sums.data.map((data, index) => {
                     lenddnTableData.push({
                         stock: data.stock,
                         stocknm: data.stocknm,
@@ -332,7 +332,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let creditdnMobileTableData = [];
                     let lenddnMobileTableData = [];
 
-                    realTimePrtLosSum?.S.data.map((data, index) => {
+                    realTimePrtLosSum?.S?.data.map((data, index) => {
                         stockMobileTableData.push({
                             ttypename: data.ttypename,
                             stocknm__mprice: (
@@ -359,7 +359,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         });
                     });
 
-                    realTimePrtLosSum?.L.unreal_sums.data.map((data, index) => {
+                    realTimePrtLosSum?.L?.unreal_sums.data.map((data, index) => {
                         unrealMobileTableData.push({
                             stocknm__mprice: (
                                 <div>
@@ -385,7 +385,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         });
                     });
 
-                    realTimePrtLosSum?.L.creditdn_sums.data.map((data, index) => {
+                    realTimePrtLosSum?.L?.creditdn_sums.data.map((data, index) => {
                         creditdnMobileTableData.push({
                             stocknm__mprice: (
                                 <div>
@@ -411,7 +411,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         });
                     });
 
-                    realTimePrtLosSum?.L.lenddn_sums.data.map((data, index) => {
+                    realTimePrtLosSum?.L?.lenddn_sums.data.map((data, index) => {
                         lenddnMobileTableData.push({
                             stocknm__mprice: (
                                 <div>
@@ -496,7 +496,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 let futureWebTableData = [];
                 let futureModaleData = [];
 
-                realTimePrtLosSum?.F.data.map((data, index) => {
+                realTimePrtLosSum?.F?.data.map((data, index) => {
                     futureWebTableData.push({
                         stockName: data.stockName,
                         bs: data.bs === 'B' ? '買' : '賣',
@@ -547,7 +547,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let futureMobileTableData = [];
 
-                    realTimePrtLosSum?.F.data.map((data, index) => {
+                    realTimePrtLosSum?.F?.data.map((data, index) => {
                         futureMobileTableData.push({
                             bs__currency: (
                                 <div>
@@ -616,7 +616,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let foreignFutureWebTableData = [];
 
-                realTimePrtLosSum?.FF.data.map((data, index) => {
+                realTimePrtLosSum?.FF?.data.map((data, index) => {
                     foreignFutureWebTableData.push({
                         currency: data.currency,
                         dbaln: formatNum(data.dbaln),
@@ -653,7 +653,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let foreignFutureMobileTableData = [];
 
-                    realTimePrtLosSum?.FF.data.map((data, index) => {
+                    realTimePrtLosSum?.FF?.data.map((data, index) => {
                         foreignFutureMobileTableData.push({
                             currency: data.currency,
                             dbaln: formatNum(data.dbaln),
@@ -751,7 +751,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let subBrokerageWebTableData = [];
                 let subBrokerageModalData = [];
-                realTimePrtLosSum?.H.data.map((data, index) => {
+                realTimePrtLosSum?.H?.data.map((data, index) => {
                     subBrokerageWebTableData.push({
                         name: data.name,
                         market: data.market,
@@ -801,7 +801,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let subBrokerageMobileTableData = [];
 
-                    realTimePrtLosSum?.H.data.map((data, index) => {
+                    realTimePrtLosSum?.H?.data.map((data, index) => {
                         subBrokerageMobileTableData.push({
                             market__curr: (
                                 <div>
@@ -891,7 +891,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 let FIPWebTableData = [];
                 let FIPModalData = [];
 
-                realTimePrtLosSum?.FIP.data.map((data, index) => {
+                realTimePrtLosSum?.FIP?.data.map((data, index) => {
                     FIPWebTableData.push({
                         symbol: data.symbol,
                         pro_name: data.pro_name,
@@ -942,7 +942,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let FIPMobileTableData = [];
 
-                    realTimePrtLosSum?.FIP.data.map((data, index) => {
+                    realTimePrtLosSum?.FIP?.data.map((data, index) => {
                         FIPMobileTableData.push({
                             market__curr: (
                                 <div>
@@ -1032,7 +1032,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 let MIPWebTableData = [];
                 let MIPModalData = [];
 
-                realTimePrtLosSum?.MIP.data.map((data, index) => {
+                realTimePrtLosSum?.MIP?.data.map((data, index) => {
                     MIPWebTableData.push({
                         symbol: data.symbol,
                         pro_name: data.pro_name,
@@ -1083,7 +1083,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let MIPMobileTableData = [];
 
-                    realTimePrtLosSum?.MIP.data.map((data, index) => {
+                    realTimePrtLosSum?.MIP?.data.map((data, index) => {
                         MIPMobileTableData.push({
                             market__curr: (
                                 <div>
@@ -1212,7 +1212,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 let WM_FUNDWebTableData = [];
                 let WM_FUNDModalData = [];
 
-                realTimePrtLosSum?.WM_FUND.data.map((data, index) => {
+                realTimePrtLosSum?.WM_FUND?.data.map((data, index) => {
                     WM_FUNDWebTableData.push({
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
@@ -1270,7 +1270,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let WM_FUNDMobileTableData = [];
 
-                    realTimePrtLosSum?.WM_FUND.data.map((data, index) => {
+                    realTimePrtLosSum?.WM_FUND?.data.map((data, index) => {
                         WM_FUNDMobileTableData.push({
                             fund_name__purchase_cur: (
                                 <div>
@@ -1353,7 +1353,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let OFWebTableData = [];
                 let OFModalData = [];
-                realTimePrtLosSum?.OF.data.map((data, index) => {
+                realTimePrtLosSum?.OF?.data.map((data, index) => {
                     OFWebTableData.push({
                         fund_cn: data.fund_cn,
                         trade_nonachieve: data.trade_nonachieve,
@@ -1398,7 +1398,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let OFMobileTableData = [];
 
-                    realTimePrtLosSum?.OF.data.map((data, index) => {
+                    realTimePrtLosSum?.OF?.data.map((data, index) => {
                         OFMobileTableData.push({
                             fund_cn: data.fund_cn,
                             trade_nonachieve: (
@@ -1508,7 +1508,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let WM_SNWebTableData = [];
                 let WM_SNModalData = [];
-                realTimePrtLosSum?.WM_SN.data.map((data, index) => {
+                realTimePrtLosSum?.WM_SN?.data.map((data, index) => {
                     WM_SNWebTableData.push({
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
@@ -1565,7 +1565,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let WM_SNMobileTableData = [];
 
-                    realTimePrtLosSum?.WM_SN.data.map((data, index) => {
+                    realTimePrtLosSum?.WM_SN?.data.map((data, index) => {
                         WM_SNMobileTableData.push({
                             fund_name__purchase_cur: (
                                 <div>
@@ -1677,7 +1677,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 let SNWebTableData = [];
                 let SNModalData = [];
 
-                realTimePrtLosSum?.SN.data.map((data, index) => {
+                realTimePrtLosSum?.SN?.data.map((data, index) => {
                     SNWebTableData.push({
                         prod_no: data.prod_no,
                         prod_name: data.prod_name,
@@ -1730,7 +1730,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let SNMobileTableData = [];
 
-                    realTimePrtLosSum?.SN.data.map((data, index) => {
+                    realTimePrtLosSum?.SN?.data.map((data, index) => {
                         SNMobileTableData.push({
                             prod_name__currency: (
                                 <div>
@@ -1820,7 +1820,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 let BONDWebTableData = [];
                 let BONDModalData = [];
 
-                realTimePrtLosSum?.BOND.data.map((data, index) => {
+                realTimePrtLosSum?.BOND?.data.map((data, index) => {
                     BONDWebTableData.push({
                         name: data.name,
                         symbol: data.symbol,
@@ -1864,7 +1864,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let BONDMobileTableData = [];
                     let mobileTableData = {};
 
-                    realTimePrtLosSum?.BOND.data.map((data, index) => {
+                    realTimePrtLosSum?.BOND?.data.map((data, index) => {
                         BONDMobileTableData.push({
                             symbol: data.symbol,
                             total_pv: data.total_pv,
@@ -1915,7 +1915,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let WM_FUND_INTRANSITWebTableData = [];
 
-                realTimePrtLosSum?.WM_FUND_INTRANSIT.data.map((data, index) => {
+                realTimePrtLosSum?.WM_FUND_INTRANSIT?.data.map((data, index) => {
                     WM_FUND_INTRANSITWebTableData.push({
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
@@ -1947,7 +1947,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let WM_FUND_INTRANSITMobileTableData = [];
 
-                    realTimePrtLosSum?.WM_FUND_INTRANSIT.data.map((data, index) => {
+                    realTimePrtLosSum?.WM_FUND_INTRANSIT?.data.map((data, index) => {
                         WM_FUND_INTRANSITMobileTableData.push({
                             fund_name__cur: (
                                 <div>
@@ -2015,7 +2015,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let WM_SN_INTRANSITWebTableData = [];
 
-                realTimePrtLosSum?.WM_SN_INTRANSIT.data.map((data, index) => {
+                realTimePrtLosSum?.WM_SN_INTRANSIT?.data.map((data, index) => {
                     WM_SN_INTRANSITWebTableData.push({
                         fund_code: data.fund_code,
                         fund_name: data.fund_name,
@@ -2047,7 +2047,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let WM_SN_INTRANSITMobileTableData = [];
 
-                    realTimePrtLosSum?.WM_SN_INTRANSIT.data.map((data, index) => {
+                    realTimePrtLosSum?.WM_SN_INTRANSIT?.data.map((data, index) => {
                         WM_SN_INTRANSITMobileTableData.push({
                             fund_name__cur: (
                                 <div>
@@ -2091,7 +2091,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 let WM_TRUST_DEPOSITWebTableData = [];
 
-                realTimePrtLosSum?.WM_TRUST_DEPOSIT.data.map((data, index) => {
+                realTimePrtLosSum?.WM_TRUST_DEPOSIT?.data.map((data, index) => {
                     WM_TRUST_DEPOSITWebTableData.push({
                         trust_cur: data.trust_cur,
                         available_balance: formatNum(data.available_balance),
@@ -2121,7 +2121,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     let mobileTableData = {};
                     let WM_TRUST_DEPOSITMobileTableData = [];
 
-                    realTimePrtLosSum?.WM_TRUST_DEPOSIT.data.map((data, index) => {
+                    realTimePrtLosSum?.WM_TRUST_DEPOSIT?.data.map((data, index) => {
                         WM_TRUST_DEPOSITMobileTableData.push({
                             trust_cur: data.trust_cur,
                             available_balance: formatNum(data.available_balance),
