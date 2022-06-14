@@ -626,14 +626,14 @@ export const getTitleData = type => {
             break;
         case 'SN':
             titleData = {
-                title: '信託結構型商品總市值',
+                title: '結構型商品總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.SN.sum_twd),
             };
             break;
         case 'WM_SN':
             titleData = {
-                title: '基金結構型商品總市值',
+                title: '信託結構型商品總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.WM_SN.sum_twd),
             };
