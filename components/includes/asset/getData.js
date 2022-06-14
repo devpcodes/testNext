@@ -8,57 +8,65 @@ export const getContentData = type => {
             return {
                 sum_cost: {
                     title: '總成本',
-                    amount: `$${formatNum(realTimePrtLosSum?.S.sum_cost)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.S?.sum_cost)}`,
                     class: '',
                 },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${formatNum(realTimePrtLosSum?.S.sum_unreal)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.S?.sum_unreal)}`,
                     class:
-                        realTimePrtLosSum?.S.sum_unreal > 0 ? 'win' : realTimePrtLosSum?.S.sum_unreal < 0 ? 'loss' : '',
+                        realTimePrtLosSum?.S?.sum_unreal > 0
+                            ? 'win'
+                            : realTimePrtLosSum?.S?.sum_unreal < 0
+                            ? 'loss'
+                            : '',
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
                     amount:
-                        realTimePrtLosSum?.S.sum_cost != '0'
+                        realTimePrtLosSum?.S?.sum_cost != '0'
                             ? `${parseFloat(
-                                  (realTimePrtLosSum?.S.sum_unreal / realTimePrtLosSum?.S.sum_cost) * 100,
+                                  (realTimePrtLosSum?.S?.sum_unreal / realTimePrtLosSum?.S?.sum_cost) * 100,
                               ).toFixed(2)}%`
                             : '--',
                     class:
-                        realTimePrtLosSum?.S.sum_unreal > 0 ? 'win' : realTimePrtLosSum?.S.sum_unreal < 0 ? 'loss' : '',
+                        realTimePrtLosSum?.S?.sum_unreal > 0
+                            ? 'win'
+                            : realTimePrtLosSum?.S?.sum_unreal < 0
+                            ? 'loss'
+                            : '',
                 },
             };
         case 'F':
             // 期貨原始保證金
             let otamt = 0;
             let mtamt = 0;
-            realTimePrtLosSum?.F.data.map((data, index) => {
+            realTimePrtLosSum?.F?.data.map((data, index) => {
                 otamt = otamt + +data.otamt;
             });
             // 期貨維持保證金
-            realTimePrtLosSum?.F.data.map((data, index) => {
+            realTimePrtLosSum?.F?.data.map((data, index) => {
                 mtamt = mtamt + +data.mtamt;
             });
             return {
                 sum_balv: {
                     title: '權益數',
-                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_balv)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.F?.sum_balv)}`,
                     class: '',
                 },
                 sum_futeamt_twd: {
                     title: '未平倉損益',
-                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_futeamt_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.F?.sum_futeamt_twd)}`,
                     class:
-                        realTimePrtLosSum?.F.sum_futeamt_twd > 0
+                        realTimePrtLosSum?.F?.sum_futeamt_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.F.sum_futeamt_twd < 0
+                            : realTimePrtLosSum?.F?.sum_futeamt_twd < 0
                             ? 'loss'
                             : '',
                 },
                 sum_ybaln: {
                     title: '前日帳戶餘額',
-                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_ybaln)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.F?.sum_ybaln)}`,
                     class: '',
                 },
                 otamt: {
@@ -73,7 +81,7 @@ export const getContentData = type => {
                 },
                 sum_axamt: {
                     title: '加收保證金',
-                    amount: `$${formatNum(realTimePrtLosSum?.F.sum_axamt)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.F?.sum_axamt)}`,
                     class: '',
                 },
             };
@@ -81,7 +89,7 @@ export const getContentData = type => {
             return {
                 sum_dlbaln_twd: {
                     title: '權益數',
-                    amount: `$${formatNum(realTimePrtLosSum?.FF.sum_dlbaln_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dlbaln_twd)}`,
                     class: '',
                 },
                 // QQ3 : 未平倉損益資料不知道是什麼
@@ -92,7 +100,7 @@ export const getContentData = type => {
                 // },
                 sum_dbaln_twd: {
                     title: '前日餘額',
-                    amount: `$${formatNum(realTimePrtLosSum?.FF.sum_dbaln_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dbaln_twd)}`,
                     class: '',
                 },
                 // QQ5 原始保證金資料??
@@ -103,7 +111,7 @@ export const getContentData = type => {
                 // },
                 sum_dtmmmrg_twd: {
                     title: '維持保證金',
-                    amount: `$${formatNum(realTimePrtLosSum?.FF.sum_dtmmmrg_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dtmmmrg_twd)}`,
                     class: '',
                 },
                 // QQ4 : 追繳保證金????
@@ -118,33 +126,33 @@ export const getContentData = type => {
                 //  QQ-1 : 沒完整資料很難串，目前也沒有各市場分開。
                 sum_cost: {
                     title: '總成本',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_cost_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.H?.sum_cost_twd)}`,
                     class: '',
                 },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${formatNum(realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.H?.sum_twd - realTimePrtLosSum?.H?.sum_cost_twd)}`,
                     class:
-                        realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd > 0
+                        realTimePrtLosSum?.H?.sum_twd - realTimePrtLosSum?.H?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd < 0
+                            : realTimePrtLosSum?.H?.sum_twd - realTimePrtLosSum?.H?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
                     amount:
-                        realTimePrtLosSum?.H.sum_cost_twd != '0'
+                        realTimePrtLosSum?.H?.sum_cost_twd != '0'
                             ? `${parseFloat(
-                                  ((realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd) /
-                                      realTimePrtLosSum?.H.sum_cost_twd) *
+                                  ((realTimePrtLosSum?.H?.sum_twd - realTimePrtLosSum?.H?.sum_cost_twd) /
+                                      realTimePrtLosSum?.H?.sum_cost_twd) *
                                       100,
                               ).toFixed(2)}%`
                             : '--',
                     class:
-                        realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd > 0
+                        realTimePrtLosSum?.H?.sum_twd - realTimePrtLosSum?.H?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.H.sum_twd - realTimePrtLosSum?.H.sum_cost_twd < 0
+                            : realTimePrtLosSum?.H?.sum_twd - realTimePrtLosSum?.H?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
@@ -153,28 +161,28 @@ export const getContentData = type => {
             return {
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${formatNum(realTimePrtLosSum?.MIP.sum_twd - realTimePrtLosSum?.MIP.sum_cost_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.MIP?.sum_twd - realTimePrtLosSum?.MIP?.sum_cost_twd)}`,
                     class:
-                        realTimePrtLosSum?.MIP.sum_twd - realTimePrtLosSum?.MIP.sum_cost_twd > 0
+                        realTimePrtLosSum?.MIP?.sum_twd - realTimePrtLosSum?.MIP?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.MIP.sum_twd - realTimePrtLosSum?.MIP.sum_cost_twd < 0
+                            : realTimePrtLosSum?.MIP?.sum_twd - realTimePrtLosSum?.MIP?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
                     amount:
-                        realTimePrtLosSum?.MIP.sum_cost_twd != '0'
+                        realTimePrtLosSum?.MIP?.sum_cost_twd != '0'
                             ? `${parseFloat(
-                                  ((realTimePrtLosSum?.MIP.sum_twd - realTimePrtLosSum?.MIP.sum_cost_twd) /
-                                      realTimePrtLosSum?.MIP.sum_cost_twd) *
+                                  ((realTimePrtLosSum?.MIP?.sum_twd - realTimePrtLosSum?.MIP?.sum_cost_twd) /
+                                      realTimePrtLosSum?.MIP?.sum_cost_twd) *
                                       100,
                               ).toFixed(2)}%`
                             : '--',
                     class:
-                        realTimePrtLosSum?.MIP.sum_twd - realTimePrtLosSum?.MIP.sum_cost_twd > 0
+                        realTimePrtLosSum?.MIP?.sum_twd - realTimePrtLosSum?.MIP?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.MIP.sum_twd - realTimePrtLosSum?.MIP.sum_cost_twd < 0
+                            : realTimePrtLosSum?.MIP?.sum_twd - realTimePrtLosSum?.MIP?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
@@ -183,28 +191,28 @@ export const getContentData = type => {
             return {
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${formatNum(realTimePrtLosSum?.FIP.sum_twd - realTimePrtLosSum?.FIP.sum_cost_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.FIP?.sum_twd - realTimePrtLosSum?.FIP?.sum_cost_twd)}`,
                     class:
-                        realTimePrtLosSum?.FIP.sum_twd - realTimePrtLosSum?.FIP.sum_cost_twd > 0
+                        realTimePrtLosSum?.FIP?.sum_twd - realTimePrtLosSum?.FIP?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.FIP.sum_twd - realTimePrtLosSum?.FIP.sum_cost_twd < 0
+                            : realTimePrtLosSum?.FIP?.sum_twd - realTimePrtLosSum?.FIP?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
                     amount:
-                        realTimePrtLosSum?.FIP.sum_cost_twd != '0'
+                        realTimePrtLosSum?.FIP?.sum_cost_twd != '0'
                             ? `${parseFloat(
-                                  ((realTimePrtLosSum?.FIP.sum_twd - realTimePrtLosSum?.FIP.sum_cost_twd) /
-                                      realTimePrtLosSum?.FIP.sum_cost_twd) *
+                                  ((realTimePrtLosSum?.FIP?.sum_twd - realTimePrtLosSum?.FIP?.sum_cost_twd) /
+                                      realTimePrtLosSum?.FIP?.sum_cost_twd) *
                                       100,
                               ).toFixed(2)}%`
                             : '--',
                     class:
-                        realTimePrtLosSum?.FIP.sum_twd - realTimePrtLosSum?.FIP.sum_cost_twd > 0
+                        realTimePrtLosSum?.FIP?.sum_twd - realTimePrtLosSum?.FIP?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.FIP.sum_twd - realTimePrtLosSum?.FIP.sum_cost_twd < 0
+                            : realTimePrtLosSum?.FIP?.sum_twd - realTimePrtLosSum?.FIP?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
@@ -213,47 +221,42 @@ export const getContentData = type => {
             return {
                 sum_cost_twd: {
                     title: '總成本',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND.sum_cost_twd)}`, //realTimePrtLosSum?.WM_FUND.sum_twd
+                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sum_cost_twd)}`, //realTimePrtLosSum?.WM_FUND.sum_twd
                     class: '',
                 },
                 sum_unreal: {
                     title: '損益試算',
                     amount: `$${formatNum(
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd,
+                        realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd,
                     )}`,
                     class:
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
+                        realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
+                            : realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
                     amount:
-                        realTimePrtLosSum?.WM_FUND.sum_cost_twd != '0'
+                        realTimePrtLosSum?.WM_FUND?.sum_cost_twd != '0'
                             ? `${parseFloat(
-                                  ((realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd) /
-                                      realTimePrtLosSum?.WM_FUND.sum_cost_twd) *
+                                  ((realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd) /
+                                      realTimePrtLosSum?.WM_FUND?.sum_cost_twd) *
                                       100,
                               ).toFixed(2)}%`
                             : '--',
                     class:
-                        realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd > 0
+                        realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd > 0
                             ? 'win'
-                            : realTimePrtLosSum?.WM_FUND.sum_twd - realTimePrtLosSum?.WM_FUND.sum_cost_twd < 0
+                            : realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd < 0
                             ? 'loss'
                             : '',
                 },
                 sum_prtlos_dividend: {
                     title: '累計配息',
-                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend)}`,
-                    class:
-                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
+                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_acc_dividend_twd)}`,
+                    class: '',
                 },
                 sum_roi_dividend: {
                     title: '含息報酬率(%)',
@@ -492,12 +495,7 @@ export const getContentData = type => {
                 sum_acc_dividend_twd: {
                     title: '累計配息',
                     amount: `$${formatNum(realTimePrtLosSum?.WM_SN?.sub_total.sum_acc_dividend_twd)}`,
-                    class:
-                        realTimePrtLosSum?.WM_SN?.sub_total.sum_prtlos_dividend > 0
-                            ? 'win'
-                            : realTimePrtLosSum?.WM_SN?.sub_total.sum_prtlos_dividend < 0
-                            ? 'loss'
-                            : '',
+                    class: '',
                 },
                 sum_roi_dividend: {
                     title: '含息報酬率(%)',
@@ -565,98 +563,98 @@ export const getTitleData = type => {
             titleData = {
                 title: '台股庫存總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.S.sum_namt),
+                sum: formatNum(realTimePrtLosSum?.S?.sum_namt),
             };
             break;
         case 'F':
             titleData = {
                 title: '國內期權總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.F.sum_balv),
+                sum: formatNum(realTimePrtLosSum?.F?.sum_balv),
             };
             break;
         case 'FF':
             titleData = {
                 title: '國外期權總市值',
                 currency: 'USD',
-                sum: formatNum(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                sum: formatNum(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
             };
             break;
         case 'H':
             titleData = {
                 title: '海外股票總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.H.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.H?.sum_twd),
             };
             break;
         case 'MIP':
             titleData = {
                 title: '豐存美股(定期定股)總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.MIP.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.MIP?.sum_twd),
             };
             break;
         case 'FIP':
             titleData = {
                 title: '豐存美股(定期定額)總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.FIP.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.FIP?.sum_twd),
             };
             break;
         case 'WM_FUND':
             titleData = {
                 title: '信託基金總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.WM_FUND.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.WM_FUND?.sum_twd),
             };
             break;
         case 'OF':
             titleData = {
                 title: '集保基金總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.OF.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.OF?.sum_twd),
             };
             break;
         case 'BOND':
             titleData = {
                 title: '海外債券總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.BOND.sum_total_value_twd),
+                sum: formatNum(realTimePrtLosSum?.BOND?.sum_total_value_twd),
             };
             break;
         case 'SN':
             titleData = {
                 title: '結構型商品總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.SN.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.SN?.sum_twd),
             };
             break;
         case 'WM_SN':
             titleData = {
                 title: '信託結構型商品總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.WM_SN.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.WM_SN?.sum_twd),
             };
             break;
         case 'WM_FUND_INTRANSIT':
             titleData = {
                 title: '信託基金在途總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.WM_FUND_INTRANSIT?.sum_twd),
             };
             break;
         case 'WM_SN_INTRANSIT':
             titleData = {
                 title: '信託結構型在途總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.WM_SN_INTRANSIT.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.WM_SN_INTRANSIT?.sum_twd),
             };
             break;
         case 'WM_TRUST_DEPOSIT':
             titleData = {
                 title: '信託存款總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd),
+                sum: formatNum(realTimePrtLosSum?.WM_TRUST_DEPOSIT?.sum_twd),
             };
             break;
         default:

@@ -6,10 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchQueryRealTimePrtLosSum } from '../../../services/asset/queryRealTimePrtLosSum';
 import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
+import { useRouter } from 'next/router';
 
 const AssetHeader = memo(({ title }) => {
     const user = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
+    const router = useRouter();
     const getTime = () => {
         const now = new Date();
         const formatTime = `${now.getFullYear()}.${
@@ -21,7 +23,7 @@ const AssetHeader = memo(({ title }) => {
     const [refreshTime, setrefreshTime] = useState(getTime());
 
     const refreshAction = async () => {
-        const res = await fetchQueryRealTimePrtLosSum(getToken());
+        const res = await fetchQueryRealTimePrtLosSum(getToken(), router.query.type);
         dispatch(setRealTimePrtLosSum(res));
         setrefreshTime(getTime());
     };

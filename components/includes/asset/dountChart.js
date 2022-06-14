@@ -22,29 +22,29 @@ const DountChart = function () {
 
         // fake Data
         chart.data = [
-            { sector: '國內證券', size: realTimePrtLosSum?.S.sum_namt },
+            { sector: '國內證券', size: realTimePrtLosSum?.S?.sum_namt },
             {
                 sector: '期貨',
-                size: parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                size: parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
             },
             {
                 sector: '海外證券',
                 size:
-                    parseInt(realTimePrtLosSum?.H.sum_twd) +
-                    parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                    parseInt(realTimePrtLosSum?.MIP.sum_twd),
+                    parseInt(realTimePrtLosSum?.H?.sum_twd) +
+                    parseInt(realTimePrtLosSum?.FIP?.sum_twd) +
+                    parseInt(realTimePrtLosSum?.MIP?.sum_twd),
             },
             {
                 sector: '基金',
-                size: parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
+                size: parseInt(realTimePrtLosSum?.OF?.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND?.sum_twd),
             },
-            { sector: '債券', size: realTimePrtLosSum?.BOND.sum_total_value_twd },
+            { sector: '債券', size: realTimePrtLosSum?.BOND?.sum_total_value_twd },
             {
                 sector: '結構型商品',
-                size: parseInt(realTimePrtLosSum?.SN.sum_twd) + parseInt(realTimePrtLosSum?.WM_SN.sum_twd),
+                size: parseInt(realTimePrtLosSum?.SN?.sum_twd) + parseInt(realTimePrtLosSum?.WM_SN?.sum_twd),
             },
-            { sector: '在途款', size: parseInt(realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd) },
-            { sector: '約當現金', size: parseInt(realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd) },
+            { sector: '在途款', size: parseInt(realTimePrtLosSum?.WM_FUND_INTRANSIT?.sum_twd) },
+            { sector: '約當現金', size: parseInt(realTimePrtLosSum?.WM_TRUST_DEPOSIT?.sum_twd) },
         ];
 
         // dount chart 中間文字設定

@@ -14,10 +14,10 @@ const AssetDetailMain = memo(({}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     useEffect(async () => {
-        const res = await fetchQueryRealTimePrtLosSum(getToken());
+        const res = await fetchQueryRealTimePrtLosSum(getToken(), router.query.type);
         dispatch(setRealTimePrtLosSum(res));
         setReload(true);
-    }, []);
+    }, [router.query.type]);
     const [reload, setReload] = useState(false);
 
     const titleDomData = getTitleData(router.query.type);

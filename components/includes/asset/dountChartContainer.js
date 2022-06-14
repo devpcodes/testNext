@@ -10,48 +10,48 @@ const DountChartContainer = memo(({}) => {
     const [domData, setDomData] = useState({});
     useEffect(() => {
         let trade_nonachieve = 0;
-        realTimePrtLosSum?.OF.data.map((data, index) => {
+        realTimePrtLosSum?.OF?.data.map((data, index) => {
             trade_nonachieve = trade_nonachieve + parseInt(data.trade_nonachieve);
         });
 
         let prtlos = 0;
-        realTimePrtLosSum?.WM_FUND.data.map((data, index) => {
+        realTimePrtLosSum?.WM_FUND?.data.map((data, index) => {
             prtlos = prtlos + parseInt(data.prtlos);
         });
 
         let OFtotalPrtlos = trade_nonachieve + prtlos;
         let HtotalPrtlos =
-            parseInt(realTimePrtLosSum?.H.sum_twd) +
-            parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-            parseInt(realTimePrtLosSum?.MIP.sum_twd) -
-            (parseInt(realTimePrtLosSum?.H.sum_cost_twd) +
-                parseInt(realTimePrtLosSum?.FIP.sum_cost_twd) +
-                parseInt(realTimePrtLosSum?.MIP.sum_cost_twd));
+            parseInt(realTimePrtLosSum?.H?.sum_twd) +
+            parseInt(realTimePrtLosSum?.FIP?.sum_twd) +
+            parseInt(realTimePrtLosSum?.MIP?.sum_twd) -
+            (parseInt(realTimePrtLosSum?.H?.sum_cost_twd) +
+                parseInt(realTimePrtLosSum?.FIP?.sum_cost_twd) +
+                parseInt(realTimePrtLosSum?.MIP?.sum_cost_twd));
         const data = {
             // 證券
             S: {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
-                        ? parseFloat((realTimePrtLosSum?.S.sum_namt / realTimePrtLosSumTotal) * 100).toFixed(2)
+                        ? parseFloat((realTimePrtLosSum?.S?.sum_namt / realTimePrtLosSumTotal) * 100).toFixed(2)
                         : '--', // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.S.sum_namt), // 總額
-                profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
+                sum_amt: formatNum(realTimePrtLosSum?.S?.sum_namt), // 總額
+                profit_loss: formatNum(realTimePrtLosSum?.S?.sum_unreal),
                 is_profit:
-                    realTimePrtLosSum?.S.sum_unreal > 0 ? true : realTimePrtLosSum?.S.sum_unreal < 0 ? false : null,
+                    realTimePrtLosSum?.S?.sum_unreal > 0 ? true : realTimePrtLosSum?.S?.sum_unreal < 0 ? false : null,
             },
             // 基金
             OF: {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
                         ? parseFloat(
-                              ((parseInt(realTimePrtLosSum?.OF.sum_twd) +
-                                  parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
+                              ((parseInt(realTimePrtLosSum?.OF?.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.WM_FUND?.sum_twd)) /
                                   realTimePrtLosSumTotal) *
                                   100,
                           ).toFixed(2)
                         : '--',
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
+                    parseInt(realTimePrtLosSum?.OF?.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND?.sum_twd),
                 ),
                 profit_loss: formatNum(OFtotalPrtlos),
                 is_profit: OFtotalPrtlos > 0 ? true : OFtotalPrtlos < 0 ? false : null,
@@ -60,14 +60,14 @@ const DountChartContainer = memo(({}) => {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
                         ? parseFloat(
-                              ((parseInt(realTimePrtLosSum?.F.sum_balv) +
-                                  parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                              ((parseInt(realTimePrtLosSum?.F?.sum_balv) +
+                                  parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd)) /
                                   realTimePrtLosSumTotal) *
                                   100,
                           ).toFixed(2)
                         : '--',
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                    parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
                 ),
                 // profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
             },
@@ -75,19 +75,19 @@ const DountChartContainer = memo(({}) => {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
                         ? parseFloat(
-                              ((parseInt(realTimePrtLosSum?.H.sum_twd) +
-                                  parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                                  parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
+                              ((parseInt(realTimePrtLosSum?.H?.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.FIP?.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.MIP?.sum_twd)) /
                                   realTimePrtLosSumTotal) *
                                   100,
                           ).toFixed(2)
                         : '--', // 總佔比
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd),
+                    parseInt(realTimePrtLosSum?.H?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP?.sum_twd),
                 ), // 總額
-                profit_loss: HtotalPrtlos,
+                profit_loss: formatNum(HtotalPrtlos),
                 is_profit: HtotalPrtlos > 0 ? true : HtotalPrtlos < 0 ? false : null,
             },
         };

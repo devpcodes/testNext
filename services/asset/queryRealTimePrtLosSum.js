@@ -1,10 +1,11 @@
 import { getDivoInstance } from '../myAxios';
 
-export const fetchQueryRealTimePrtLosSum = async function (token, modal = true) {
+export const fetchQueryRealTimePrtLosSum = async function (token, asset_type, modal = true) {
     try {
         const url = `/assets/queryRealTimePrtLosSum`;
         const res = await getDivoInstance(undefined, modal).post(url, {
             token,
+            asset_type: asset_type ? [asset_type] : null,
         });
         if (res.data.success != null && res.data.success === true) {
             return res.data.result;

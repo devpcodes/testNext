@@ -101,35 +101,35 @@ const assetDetailContainer = memo(({}) => {
         const data = {
             // 證券
             S: {
-                total_proportion: parseFloat((realTimePrtLosSum?.S.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.S.sum_amt), // 總額
+                total_proportion: parseFloat((realTimePrtLosSum?.S?.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.S?.sum_amt), // 總額
                 title: '國內證券',
                 class: 's__point',
             },
             H: {
                 total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd)) /
+                    ((parseInt(realTimePrtLosSum?.H?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP?.sum_twd)) /
                         realTimePrtLosSumTotal) *
                         100,
                 ).toFixed(2), // 總佔比
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.H.sum_twd) +
-                        parseInt(realTimePrtLosSum?.FIP.sum_twd) +
-                        parseInt(realTimePrtLosSum?.MIP.sum_twd),
+                    parseInt(realTimePrtLosSum?.H?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.FIP?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.MIP?.sum_twd),
                 ), // 總額
                 title: '海外證券',
                 class: 'h__point',
             },
             F: {
                 total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd)) /
+                    ((parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd)) /
                         realTimePrtLosSumTotal) *
                         100,
                 ).toFixed(2),
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.F.sum_balv) + parseInt(realTimePrtLosSum?.FF.sum_dlbaln_twd),
+                    parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
                 ),
                 title: '期權',
                 class: 'f__point',
@@ -138,12 +138,12 @@ const assetDetailContainer = memo(({}) => {
             // 基金
             OF: {
                 total_proportion: parseFloat(
-                    ((parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd)) /
+                    ((parseInt(realTimePrtLosSum?.OF?.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND?.sum_twd)) /
                         realTimePrtLosSumTotal) *
                         100,
                 ).toFixed(2),
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.OF.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND.sum_twd),
+                    parseInt(realTimePrtLosSum?.OF?.sum_twd) + parseInt(realTimePrtLosSum?.WM_FUND?.sum_twd),
                 ),
                 title: '基金',
                 class: 'of__point',
@@ -151,37 +151,37 @@ const assetDetailContainer = memo(({}) => {
 
             BOND: {
                 total_proportion: parseFloat(
-                    (realTimePrtLosSum?.BOND.sum_total_value_twd / realTimePrtLosSumTotal) * 100,
+                    (realTimePrtLosSum?.BOND?.sum_total_value_twd / realTimePrtLosSumTotal) * 100,
                 ).toFixed(2), // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.BOND.sum_total_value_twd), // 總額
+                sum_amt: formatNum(realTimePrtLosSum?.BOND?.sum_total_value_twd), // 總額
                 title: '債券',
                 class: 'bond__point',
             },
             SN: {
                 total_proportion: parseFloat(
-                    (parseInt(realTimePrtLosSum?.SN.sum_twd) +
-                        parseInt(realTimePrtLosSum?.WM_SN.sum_twd) / realTimePrtLosSumTotal) *
+                    (parseInt(realTimePrtLosSum?.SN?.sum_twd) +
+                        parseInt(realTimePrtLosSum?.WM_SN?.sum_twd) / realTimePrtLosSumTotal) *
                         100,
                 ).toFixed(2), // 總佔比
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.SN.sum_twd) + parseInt(realTimePrtLosSum?.WM_SN.sum_twd),
+                    parseInt(realTimePrtLosSum?.SN?.sum_twd) + parseInt(realTimePrtLosSum?.WM_SN?.sum_twd),
                 ), // 總額
                 title: '結構型商品',
                 class: 'sn__point',
             },
             INTRANSIT: {
                 total_proportion: parseFloat(
-                    (realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd / realTimePrtLosSumTotal) * 100,
+                    (realTimePrtLosSum?.WM_FUND_INTRANSIT?.sum_twd / realTimePrtLosSumTotal) * 100,
                 ).toFixed(2), // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.WM_FUND_INTRANSIT.sum_twd), // 總額
+                sum_amt: formatNum(realTimePrtLosSum?.WM_FUND_INTRANSIT?.sum_twd), // 總額
                 title: '在途款',
                 class: 'intransit__point',
             },
             DEPOSIT: {
                 total_proportion: parseFloat(
-                    (realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd / realTimePrtLosSumTotal) * 100,
+                    (realTimePrtLosSum?.WM_TRUST_DEPOSIT?.sum_twd / realTimePrtLosSumTotal) * 100,
                 ).toFixed(2), // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.WM_TRUST_DEPOSIT.sum_twd), // 總額
+                sum_amt: formatNum(realTimePrtLosSum?.WM_TRUST_DEPOSIT?.sum_twd), // 總額
                 title: '約當現金',
                 class: 'deposit__point',
             },
