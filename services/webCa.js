@@ -379,8 +379,9 @@ export const caResultDataHandler = async function (
     failCallback,
     isWebview,
 ) {
+    const webview = isWebview;
     if (suggestAction === 'ApplyCert') {
-        const result = await applyCert(userIdNo, token, isWebview);
+        const result = await applyCert(userIdNo, token, webview);
         console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
         if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
