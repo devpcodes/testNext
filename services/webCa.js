@@ -194,7 +194,7 @@ export const clearCert = function () {
 };
 
 // 安裝憑證
-export const applyCert = function (user_idNo, token, callBack, isWebview = false) {
+export const applyCert = function (user_idNo, token, callBack, isWebview) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
         DM = false;
