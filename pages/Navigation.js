@@ -68,9 +68,16 @@ const Navigation = () => {
                 if (validateRes.msg !== '驗章成功') {
                     if (validateRes.msg.split('||')[0].split('=')[1] === '8020') {
                         setClearCA(true);
-                        caResultDataHandler('ApplyCert', tokenVal.user_id, getToken(), redirect, function () {
-                            alert('部屬失敗，請關閉此頁面或回到上一頁重新登入');
-                        });
+                        caResultDataHandler(
+                            'ApplyCert',
+                            tokenVal.user_id,
+                            getToken(),
+                            redirect,
+                            function () {
+                                alert('部屬失敗，請關閉此頁面或回到上一頁重新登入');
+                            },
+                            true,
+                        );
                     } else {
                         redirect();
                     }
