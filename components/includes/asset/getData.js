@@ -226,30 +226,21 @@ export const getContentData = type => {
                 },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${formatNum(
-                        realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd,
-                    )}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos)}`,
                     class:
-                        realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd > 0
+                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos > 0
                             ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd < 0
+                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_prtlos < 0
                             ? 'loss'
                             : '',
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
-                    amount:
-                        realTimePrtLosSum?.WM_FUND?.sum_cost_twd != '0'
-                            ? `${parseFloat(
-                                  ((realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd) /
-                                      realTimePrtLosSum?.WM_FUND?.sum_cost_twd) *
-                                      100,
-                              ).toFixed(2)}%`
-                            : '--',
+                    amount: `${realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi}%`,
                     class:
-                        realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd > 0
+                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi > 0
                             ? 'win'
-                            : realTimePrtLosSum?.WM_FUND?.sum_twd - realTimePrtLosSum?.WM_FUND?.sum_cost_twd < 0
+                            : realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi < 0
                             ? 'loss'
                             : '',
                 },
