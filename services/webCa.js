@@ -4,7 +4,7 @@ import { getToken } from './user/accessToken';
 import BirthdayChecker from '../components/includes/BirthdayChecker';
 import { caValidator } from '../services/caValidator';
 import { logout } from '../services/user/logoutFetcher';
-export const signCert = async function (userInfo, isNeedSign = true, token) {
+export const signCert = async function (userInfo, isNeedSign = true, token, isWebview = false) {
     if (isNeedSign) {
         let DM;
         let signDict = {};
@@ -57,6 +57,7 @@ export const signCert = async function (userInfo, isNeedSign = true, token) {
             signTxt: userInfo.idno + verifyNo,
             identifyNo: hashKey,
             verifyNo: verifyNo,
+            isWebview: isWebview,
         });
 
         if (ca.getSignature()) {

@@ -58,7 +58,7 @@ const Navigation = () => {
             const checkData = checkCert(tokenVal.user_id);
             if (checkData.suggestAction == 'None') {
                 // 有憑證送驗章
-                const cert = await signCert({ idno: tokenVal.user_id }, true, tokenVal);
+                const cert = await signCert({ idno: tokenVal.user_id }, true, tokenVal, true);
                 const validateRes = await caValidator(getToken(), {
                     signature: cert.signature,
                     plainText: cert.plainText,
