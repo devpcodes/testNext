@@ -2006,10 +2006,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             onFilter: (value, record) => record.cur.startsWith(value),
                             filterSearch: true,
                         },
-                        { title: '單位數', dataIndex: 'unit', align: 'right' },
-                        { title: '手續費', dataIndex: 'management_fee', align: 'right' },
+                        // { title: '單位數', dataIndex: 'unit', align: 'right' },
+                        // { title: '手續費', dataIndex: 'management_fee', align: 'right' },
                         // { title : '參考現值', dataIndex: 'amount_twd'},
-                        { title: '約當台幣', dataIndex: 'amount_twd', align: 'right' },
+                        // { title: '約當台幣', dataIndex: 'amount_twd', align: 'right' },
                     ],
                 };
 
