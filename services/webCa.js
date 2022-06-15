@@ -194,7 +194,7 @@ export const clearCert = function () {
 };
 
 // 安裝憑證
-export const applyCert = function (user_idNo, token, callBack, isWebview) {
+export const applyCert = function (user_idNo, token, isWebview, callBack) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
         DM = false;
@@ -379,9 +379,8 @@ export const caResultDataHandler = async function (
     failCallback,
     isWebview,
 ) {
-    const webview = isWebview;
     if (suggestAction === 'ApplyCert') {
-        const result = await applyCert(userIdNo, token, webview);
+        const result = await applyCert(userIdNo, token, isWebview);
         console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
         if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
