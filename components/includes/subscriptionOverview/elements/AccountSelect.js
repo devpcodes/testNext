@@ -16,6 +16,9 @@ const AccountSelect = ({ data, accText, ...props }) => {
                 })}
             </Select>
             <style jsx>{`
+                .sino__select {
+                    width: 100%;
+                }
                 .sino__select .option__accType {
                     color: #daa360;
                 }

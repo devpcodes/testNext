@@ -43,12 +43,12 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     <div className="loan__left">
                         <Bar min={financing} max={allCanLoan} />
                         <div className="loan__text--box">
-                            <div>
+                            <div className="loan__used">
                                 <span className="loan__money--lable">已動用金額</span>
                                 <span className="loan__money--val">${formatNum(financing)}</span>
                             </div>
                             <div className="loan__line"></div>
-                            <div>
+                            <div className="loan__total">
                                 <span className="loan__all--label">總額度</span>
                                 <span className="loan__all--val">${formatNum(allCanLoan)}</span>
                             </div>
@@ -58,7 +58,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     <div className="loan__right">
                         <SinoBtn
                             parentClass={'search__container'}
-                            text={'動用申購信用通'}
+                            text={'我要還款'}
                             style={{
                                 display: isMobile ? 'inline-block' : 'none',
                                 border: '1px solid #d7e0ef',
@@ -310,6 +310,22 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     }
                     .loan__gobtn {
                         display: none;
+                    }
+                    .loan__used {
+                        flex: 1;
+                    }
+                    .loan__total {
+                        flex: 1;
+                    }
+                    .footer__link {
+                        display: none;
+                    }
+                    .loan__footer {
+                        height: 60px;
+                    }
+                    .footer__text {
+                        padding-left: 16px;
+                        text-align: left;
                     }
                 }
                 @media (max-width: 350px) {
