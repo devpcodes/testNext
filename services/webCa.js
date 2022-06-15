@@ -194,7 +194,7 @@ export const clearCert = function () {
 };
 
 // 安裝憑證
-export const applyCert = function (user_idNo, token, callBack) {
+export const applyCert = function (user_idNo, token, callBack, isWebview = false) {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
         DM = false;
@@ -210,6 +210,7 @@ export const applyCert = function (user_idNo, token, callBack) {
     console.log({
         userID: user_idNo,
         memberNo: token,
+        isWebview: isWebview,
     });
     return new Promise((resolve, reject) => {
         // 清除母憑證
@@ -373,9 +374,16 @@ export const CAHandler = async function (token, cb) {
 };
 
 //憑證安裝
-export const caResultDataHandler = async function (suggestAction, userIdNo, token, successCallback, failCallback) {
+export const caResultDataHandler = async function (
+    suggestAction,
+    userIdNo,
+    token,
+    successCallback,
+    failCallback,
+    isWebview,
+) {
     if (suggestAction === 'ApplyCert') {
-        const result = await applyCert(userIdNo, token);
+        const result = await applyCert(userIdNo, token, isWebview);
         console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
         if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {
