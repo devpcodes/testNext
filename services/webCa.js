@@ -207,11 +207,7 @@ export const applyCert = function (user_idNo, token, callBack, isWebview = false
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
         DM: DM,
     });
-    console.log({
-        userID: user_idNo,
-        memberNo: token,
-        isWebview: isWebview,
-    });
+
     return new Promise((resolve, reject) => {
         // 清除母憑證
         ca.clearLS();
@@ -220,6 +216,7 @@ export const applyCert = function (user_idNo, token, callBack, isWebview = false
             {
                 userID: user_idNo,
                 memberNo: token,
+                isWebview: isWebview,
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
