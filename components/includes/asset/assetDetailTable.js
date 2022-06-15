@@ -2006,7 +2006,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             onFilter: (value, record) => record.cur.startsWith(value),
                             filterSearch: true,
                         },
-                        // { title: '單位數', dataIndex: 'unit', align: 'right' },
+                        { title: '名目本金', dataIndex: 'invest_cost', align: 'right' },
                         // { title: '手續費', dataIndex: 'management_fee', align: 'right' },
                         // { title : '參考現值', dataIndex: 'amount_twd'},
                         // { title: '約當台幣', dataIndex: 'amount_twd', align: 'right' },
@@ -2022,9 +2022,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         trade_dt: data.trade_dt,
                         fund_type: data.fund_type,
                         cur: data.cur,
-                        unit: data.unit,
-                        management_fee: data.management_fee,
-                        amount_twd: data.amount_twd,
+                        invest_cost: formatNum(invest_cost),
                     });
                 });
 
@@ -2037,10 +2035,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 if (isMobile) {
                     setColumnData({
                         WM_SN_INTRANSIT: [
-                            { title: '買賣別/幣別', dataIndex: 'stockName' },
-                            { title: '商品/現價', dataIndex: 'bs' },
-                            { title: '口數/成本', dataIndex: 'currency' },
-                            { title: '損益/報酬率', dataIndex: 'openq' },
+                            { title: '商品/幣別', dataIndex: 'fund_name__cur' },
+                            { title: '交易日期/交易類別', dataIndex: 'trade_dt__fund_type' },
+                            { title: '名目本金', dataIndex: 'invest_cost' },
                         ],
                     });
 
@@ -2063,14 +2060,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.fund_type}
                                 </div>
                             ),
-                            unit__management_fee: (
-                                <div>
-                                    {data.unit}
-                                    <br />
-                                    {data.management_fee}
-                                </div>
-                            ),
-                            amount_twd: data.amount_twd,
+                            invest_cost: data.invest_cost,
                         });
                     });
 
