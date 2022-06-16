@@ -67,7 +67,7 @@ const SubscriptionOverviewComp = () => {
                     <h2 className="subOverview__h2">使用明細</h2>
                 )}
                 <div className="subOverview__downControl">
-                    <span className="subOverview__update">最後更新時間：2022.02.18 15:36</span>
+                    <span className="subOverview__updatePc">最後更新時間：2022.02.18 15:36</span>
                     <Btn
                         text="注意事項"
                         type="info"
@@ -86,6 +86,17 @@ const SubscriptionOverviewComp = () => {
             <style jsx>{`
                 .subOverview__update {
                     display: none;
+                }
+                .subOverview__updatePc {
+                    font-size: 14px;
+                    font-weight: normal;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: normal;
+                    letter-spacing: normal;
+                    color: #3f5372;
+                    display: inline-block;
+                    margin-top: 10px;
                 }
                 .subOverview__container {
                     padding-top: 20px;
@@ -135,6 +146,7 @@ const SubscriptionOverviewComp = () => {
                     color: #3f5372;
                     display: inline-block;
                     margin-top: 10px;
+                    display: none;
                 }
                 .subOverview__desc {
                     font-size: 14px;
@@ -209,6 +221,9 @@ const SubscriptionOverviewComp = () => {
                         color: #3f5372;
                         margin-top: -12px;
                         margin-bottom: 40px;
+                    }
+                    .subOverview__updatePc {
+                        display: none;
                     }
                 }
             `}</style>
