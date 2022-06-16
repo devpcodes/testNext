@@ -7,12 +7,16 @@ import { formatNum } from '../../../services/formatNum';
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
-const assetDetailContainer = memo(({}) => {
-    const [activeTab, setActiveTab] = useState('1');
+const assetDetailContainer = memo(({ tabType }) => {
+    const [activeTab, setActiveTab] = useState(tabType);
     const isMobile = useSelector(store => store.layout.isMobile);
     const changeChartOverviewGroup = key => {
         setActiveTab(key);
     };
+
+    useEffect(() => {
+        setActiveTab(tabType);
+    }, [tabType]);
 
     const realTimePrtLosSum = useSelector(store => store.asset.realTimePrtLosSum.data);
     const realTimePrtLosSumTotal = useSelector(store => store.asset.realTimePrtLosSum.total);
@@ -196,7 +200,7 @@ const assetDetailContainer = memo(({}) => {
                     {typeList.map((type, index) => {
                         const assetCards = getEachTypeAssetCards(type);
                         return (
-                            <Panel header={<CustomMobileTitle type={type} />} key={index}>
+                            <Panel header={<CustomMobileTitle type={type} />} key={type}>
                                 {assetCards}
                             </Panel>
                         );
@@ -204,11 +208,11 @@ const assetDetailContainer = memo(({}) => {
                 </Collapse>
             ) : (
                 <div className="asset__detail__overview__tab">
-                    <Tabs onChange={changeChartOverviewGroup}>
+                    <Tabs onChange={changeChartOverviewGroup} activeKey={activeTab}>
                         {typeList.map((type, index) => {
                             const assetCards = getEachTypeAssetCards(type);
                             return (
-                                <TabPane tab={<span>{domData[type]?.title}</span>} key={index}>
+                                <TabPane tab={<span>{domData[type]?.title}</span>} key={type}>
                                     {assetCards}
                                 </TabPane>
                             );

@@ -8,6 +8,7 @@ import { fetchQueryRealTimePrtLosSum } from '../../../services/asset/queryRealTi
 import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { getTitleData } from './getData';
+import Breadcrumb from '../breadcrumb/breadcrumb';
 
 const AssetDetailMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -25,6 +26,7 @@ const AssetDetailMain = memo(({}) => {
     return (
         <>
             <div className="asset__container">
+                <Breadcrumb categoryName={'資產總覽'} articleTitle={titleDomData.title} />
                 <AssetHeader title={titleDomData.title} type={router.query.type} />
                 <AssetDetailOverview type={router.query.type} />
                 <AssetDetailTable type={router.query.type} reload={reload} />

@@ -83,6 +83,13 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                     elementPathArr.current.push(`/${levelArr.current[0]}`);
                 }
                 break;
+            case 'AssetDetail':
+                elementPathArr.current.push(`/Asset`);
+                // elementPathArr.current.push(`/${levelArr.current[0]}?type=${router.query.type}`);
+                break;
+            case 'Asset':
+                elementPathArr.current.push(`/`);
+                break;
             default:
                 break;
         }

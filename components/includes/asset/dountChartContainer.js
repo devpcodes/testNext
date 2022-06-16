@@ -69,7 +69,13 @@ const DountChartContainer = memo(({}) => {
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
                 ),
-                // profit_loss: formatNum(realTimePrtLosSum?.S.sum_unreal),
+                profit_loss: formatNum(realTimePrtLosSum?.F?.sum_futeamt_twd),
+                is_profit:
+                    realTimePrtLosSum?.F?.sum_futeamt_twd > 0
+                        ? true
+                        : realTimePrtLosSum?.F?.sum_futeamt_twd < 0
+                        ? false
+                        : null,
             },
             H: {
                 total_proportion:
@@ -144,7 +150,18 @@ const DountChartContainer = memo(({}) => {
                         <span className="pl__percent">({domData.F?.total_proportion}%)</span>
                     </p>
                     <p className="dount__desc__amount">${domData.F?.sum_amt}</p>
-                    {/* <p className="dount__desc__pl profit">損益 +5.26%</p> */}
+                    <p
+                        className={
+                            domData.F?.is_profit == null
+                                ? ''
+                                : domData.F?.is_profit == true
+                                ? 'dount__desc__pl profit'
+                                : 'dount__desc__pl loss'
+                        }
+                    >
+                        未平倉損益 {domData.F?.is_profit == null ? '' : domData.F?.is_profit == true ? '+' : '-'}
+                        {domData.F?.profit_loss}
+                    </p>
                 </div>
 
                 <div className="dount__desc subBrokerage">

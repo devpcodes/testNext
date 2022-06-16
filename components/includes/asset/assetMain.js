@@ -8,10 +8,17 @@ import { useEffect } from 'react';
 import { fetchQueryRealTimePrtLosSum } from '../../../services/asset/queryRealTimePrtLosSum';
 import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
+import Breadcrumb from '../breadcrumb/breadcrumb';
 
 const AssetMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
+    const [tabType, setTabType] = useState('F');
+
+    const changeTypeHandler = useCallback(t => {
+        setTabType(t);
+    });
+
     useEffect(async () => {
         const res = await fetchQueryRealTimePrtLosSum(getToken());
         dispatch(setRealTimePrtLosSum(res));
@@ -19,10 +26,11 @@ const AssetMain = memo(({}) => {
     return (
         <>
             <div className="asset__container">
+                <Breadcrumb categoryName={'首頁'} articleTitle={'資產總覽'} />
                 <AssetHeader title="資產總覽" />
                 <AssetChartOverview />
-                {!isMobile ? <AssetCarouselOverview /> : <></>}
-                <AssetDetailContainer />
+                {!isMobile ? <AssetCarouselOverview changeTypeHandler={changeTypeHandler} /> : <></>}
+                <AssetDetailContainer tabType={tabType} />
             </div>
 
             <style jsx>{`

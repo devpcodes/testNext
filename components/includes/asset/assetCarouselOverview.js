@@ -7,7 +7,7 @@ import rightAllow from '../../../resources/images/pages/asset/ic-ic-arrow-chevro
 import { useSelector, useDispatch } from 'react-redux';
 import { formatNum } from '../../../services/formatNum';
 
-const AssetCarouselOverview = memo(({}) => {
+const AssetCarouselOverview = memo(({ changeTypeHandler }) => {
     const realTimePrtLosSum = useSelector(store => store.asset.realTimePrtLosSum.data);
     const realTimePrtLosSumTotal = useSelector(store => store.asset.realTimePrtLosSum.total);
     const [domData, setDomData] = useState({});
@@ -143,6 +143,10 @@ const AssetCarouselOverview = memo(({}) => {
         );
     };
 
+    const changeTabType = type => {
+        changeTypeHandler(type);
+    };
+
     return (
         <>
             <div className="asset__carousel__overview">
@@ -153,42 +157,42 @@ const AssetCarouselOverview = memo(({}) => {
                     customRightArrow={<CustomRightArrow />}
                     itemClass="card__items"
                 >
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('S')}>
                         <Card title={`國內證券 (${domData.S?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.S?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('H')}>
                         <Card title={`海外證券 (${domData.H?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.H?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('F')}>
                         <Card title={`期權 (${domData.F?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.F?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('OF')}>
                         <Card title={`基金 (${domData.OF?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.OF?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('BOND')}>
                         <Card title={`債券 (${domData.BOND?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.BOND?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('SN')}>
                         <Card title={`結構型 (${domData.SN?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.SN?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('INTRANSIT')}>
                         <Card title={`在途款 (${domData.INTRANSIT?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.INTRANSIT?.sum_amt}</p>
                         </Card>
                     </div>
-                    <div className="carousel__card">
+                    <div className="carousel__card" onClick={() => changeTabType('DEPOSIT')}>
                         <Card title={`約當現金 (${domData.DEPOSIT?.total_proportion}%)`}>
                             <p className="asset__carousel__amount">${domData.DEPOSIT?.sum_amt}</p>
                         </Card>
@@ -208,6 +212,7 @@ const AssetCarouselOverview = memo(({}) => {
                 }
                 .carousel__card {
                     margin: 0px 0px;
+                    cursor: pointer;
                 }
             `}</style>
             <style jsx global>{`
