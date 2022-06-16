@@ -60,11 +60,11 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
                 break;
             case 'AssetDetail':
-                elementPathArr.current.push(`/Asset`);
+                elementPathArr.current.push(`/Asset${router.query.nav === '0' ? '?nav=0' : ''}`);
                 // elementPathArr.current.push(`/${levelArr.current[0]}?type=${router.query.type}`);
                 break;
             case 'Asset':
-                elementPathArr.current.push(`/`);
+                elementPathArr.current.push(`/${router.query.nav === '0' ? '?nav=0' : ''}`);
                 break;
             case 'question':
                 elementNameArr.current.push('常見問題');
