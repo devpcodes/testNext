@@ -4,12 +4,16 @@ import { useSelector } from 'react-redux';
 import { formatNum } from '../../../services/formatNum';
 import Link from 'next/link';
 import { getContentData, getTitleData } from './getData';
+import { useRouter } from 'next/router';
+
 const AssetCards = memo(({ type }) => {
+    const router = useRouter();
+
     const CustomTitle = ({ type }) => {
         const titleDomData = getTitleData(type);
         return (
             <>
-                <Link href={`/AssetDetail?type=${type}`}>
+                <Link href={`/AssetDetail?type=${type}${router.query.nav === '0' ? '&nav=0' : ''}`}>
                     <a>
                         <div className="title">
                             {titleDomData?.title} <span className="currency">{titleDomData?.currency}</span>
