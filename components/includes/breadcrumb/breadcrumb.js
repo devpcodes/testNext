@@ -51,6 +51,13 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
 
     const pathHandler = str => {
         switch (str) {
+            case 'AssetDetail':
+                elementPathArr.current.push(`/Asset`);
+                // elementPathArr.current.push(`/${levelArr.current[0]}?type=${router.query.type}`);
+                break;
+            case 'Asset':
+                elementPathArr.current.push(`/`);
+                break;
             case 'customer-support':
                 elementNameArr.current.push('客戶支援');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
@@ -82,13 +89,6 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                 } else {
                     elementPathArr.current.push(`/${levelArr.current[0]}`);
                 }
-                break;
-            case 'AssetDetail':
-                elementPathArr.current.push(`/Asset`);
-                // elementPathArr.current.push(`/${levelArr.current[0]}?type=${router.query.type}`);
-                break;
-            case 'Asset':
-                elementPathArr.current.push(`/`);
                 break;
             default:
                 break;
