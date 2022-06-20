@@ -127,7 +127,7 @@ const TimeLine = ({ style, data }) => {
             if (data.orderStatus === 'W1') {
                 setLabel2Text('中籤');
                 setLabel3TextUp(`撥券 ${moment(data.stkDate).format('MM/DD')}`);
-                setLabel3TextDown(`${data.stockId + ' ' + data.stockName}  匯入${Number(data.share) / 1000}張`);
+                setLabel3TextDown(`${data.stockId + ' ' + data.stockName}  匯入${Number(data.applyShare) / 1000}張`);
                 if (
                     moment(data.currentDate).isSame(moment(data.lotDate)) ||
                     (moment(data.currentDate).isAfter(moment(data.lotDate)) &&
