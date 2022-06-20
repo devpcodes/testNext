@@ -2261,6 +2261,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                 .ant-tabs-content {
                     padding: 0 0;
                 }
+                body .sino__table .ant-table-tbody > tr > td {
+                    white-space: break-spaces;
+                }
             `}</style>
         </>
     );

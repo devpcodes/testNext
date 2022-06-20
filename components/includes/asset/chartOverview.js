@@ -95,6 +95,9 @@ const AssetChartOverview = memo(({}) => {
                 }
                 .ant-tabs-tabpane {
                     padding: 15px 30px;
+                    display: flex;
+                    justify-content: space-between;
+                    flex-flow: wrap;
                 }
 
                 .ant-tabs-tab-btn:hover,

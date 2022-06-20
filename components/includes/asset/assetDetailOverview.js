@@ -99,7 +99,6 @@ const AssetDetailOverview = memo(({ type }) => {
                     display: flex;
                     flex-direction: column;
                     align-self: flex-end;
-                    width: 30%;
                 }
 
                 .asset__detail__summary__item__title {
@@ -119,16 +118,34 @@ const AssetDetailOverview = memo(({ type }) => {
                 .asset__detail__summary__item__amount.loss {
                     color: #22a16f;
                 }
-                @media (max-width: 860px) {
+                @media (max-width: 1500px) {
                     .asset__detail__overview {
                         flex-direction: column;
                     }
                     .asset__detail__summary {
                         margin-top: 10px;
                     }
-                    .line {
-                        margin: 7px 20px 0 20px;
+                }
+
+                @media (max-width: 1200px) {
+                    .asset__detail__overview {
+                        flex-direction: column;
                     }
+                    .asset__detail__summary {
+                        flex-flow: wrap;
+                    }
+                    .asset__detail__summary__item {
+                        width: 26%;
+                    }
+                    .line {
+                        margin: 18px 5% 0 5%;
+                    }
+                    .line:nth-child(3n) {
+                        display: none;
+                    }
+                }
+
+                @media (max-width: 860px) {
                     .asset__detail__overview {
                         padding: 24px 20px 24px 20px;
                     }

@@ -37,6 +37,7 @@ const AssetDetailMain = memo(({}) => {
                     padding-left: 10%;
                     padding-right: 10%;
                     padding-top: 20px;
+                    background-color: #f9fbff;
                 }
                 @media (max-width: 768px) {
                     .asset__container {

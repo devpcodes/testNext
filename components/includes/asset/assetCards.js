@@ -5,6 +5,7 @@ import { formatNum } from '../../../services/formatNum';
 import Link from 'next/link';
 import { getContentData, getTitleData } from './getData';
 import { useRouter } from 'next/router';
+import rightAllow from '../../../resources/images/pages/asset/ic-ic-arrow-chevron-right@2x.png';
 
 const AssetCards = memo(({ type }) => {
     const router = useRouter();
@@ -15,6 +16,7 @@ const AssetCards = memo(({ type }) => {
             <>
                 <Link href={`/AssetDetail?type=${type}${router.query.nav === '0' ? '&nav=0' : ''}`}>
                     <a>
+                        <img src={rightAllow} alt={'rightAllow'} className="card__right__allow"></img>
                         <div className="title">
                             {titleDomData?.title} <span className="currency">{titleDomData?.currency}</span>
                         </div>
@@ -57,6 +59,11 @@ const AssetCards = memo(({ type }) => {
                 }
             `}</style>
             <style jsx global>{`
+                .card__right__allow {
+                    position: absolute;
+                    right: 21px;
+                    top: 27px;
+                }
                 .amount__detail__items {
                     width: 33%;
                 }
@@ -81,25 +88,12 @@ const AssetCards = memo(({ type }) => {
                 .amount__detail__items__value.loss {
                     color: #22a16f;
                 }
-
-                @media (max-width: 768px) {
-                    .asset__carousel__amount__detail {
-                        display: block;
-                    }
-                    .amount__detail__items {
-                        display: flex;
-                        justify-content: space-between;
-                        width: 100%;
-                        margin-bottom: 4px;
-                    }
-                    .amount__detail__items:nth-child(n + 4) {
-                        margin-top: 0;
-                    }
-                }
                 .cards__detail {
-                    width: 540px;
+                    width: 48%;
+                    min-height: 266px;
+                    min-width: 400px;
                 }
-                .cards__detail:nth-child(n + 2) {
+                .cards__detail:nth-child(n + 1) {
                     margin-top: 20px;
                 }
                 .title {
@@ -127,6 +121,23 @@ const AssetCards = memo(({ type }) => {
 
                 .ant-card-head {
                     background-color: #f2f5fa;
+                }
+                @media (max-width: 768px) {
+                    .asset__carousel__amount__detail {
+                        display: block;
+                    }
+                    .amount__detail__items {
+                        display: flex;
+                        justify-content: space-between;
+                        width: 100%;
+                        margin-bottom: 4px;
+                    }
+                    .amount__detail__items:nth-child(n + 4) {
+                        margin-top: 0;
+                    }
+                    .cards__detail {
+                        width: 100%;
+                    }
                 }
             `}</style>
         </>
