@@ -11,7 +11,7 @@ const MoneyContainer = memo(({ payable, receivable }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [balance, setBalance] = useState('--');
-
+    const [bankAccount, setBankAccount] = useState('--');
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -24,6 +24,7 @@ const MoneyContainer = memo(({ payable, receivable }) => {
             const found = res.balance.find(element => element.currency === 'TWD');
             console.log('found', found);
             setBalance(found.amt);
+            setBankAccount(res.bankactno);
         } catch (error) {
             const err = message.error;
             debounce(err.bind(null, error), 500);
@@ -79,11 +80,7 @@ const MoneyContainer = memo(({ payable, receivable }) => {
                         title={[{ val: '銀行交割餘額' }]}
                         data={[
                             {
-                                label:
-                                    '交割帳號 ' +
-                                    (currentAccount.broker_id || '--') +
-                                    '-' +
-                                    (currentAccount.account || '--'),
+                                label: '交割帳號 ' + bankAccount,
                                 val: `$${formatNum(balance)}`,
                             },
                         ]}
