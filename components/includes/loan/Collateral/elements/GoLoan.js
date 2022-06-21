@@ -12,7 +12,7 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { postApply } from '../../../../../services/components/loznZone/calculation/postApply';
 import icon from '../../../../../resources/images/components/loanZone/basic-help-circle (1).svg';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
-const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
+const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryReload }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { Panel } = Collapse;
@@ -147,7 +147,6 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                     overflow: 'auto',
                 },
                 onOk: async () => {
-                    showNotInsinder(true);
                     await submitData();
                 },
                 okText: '同意簽署',
@@ -185,6 +184,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 true,
             );
             if (checkSignCA(ca_content)) {
+                showNotInsinder(true);
                 const moneyTime = await postApply({
                     branch: currentAccount.broker_id,
                     account: currentAccount.account,
@@ -208,6 +208,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
             //     token,
             // });
         } catch (error) {
+            showNotInsinder(false);
             // console.log('error',error)
             goLoanClose();
             dispatch(setModal({ visible: false }));
@@ -247,6 +248,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData }) => {
                 onOk: () => {
                     goLoanClose();
                     dispatch(setModal({ visible: false }));
+                    inventoryReload();
                 },
                 content: (
                     <>

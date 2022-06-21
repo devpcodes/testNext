@@ -460,6 +460,7 @@ const Layout = memo(({ children }) => {
                     modal.footer != null ? modal.footer : getModalFooter(modal.type, modal.okText || '確定', modal.onOk)
                 }
                 destroyOnClose={true}
+                width={modal.width || '382px'}
             >
                 {modal.content}
             </Modal>
@@ -495,13 +496,14 @@ const Layout = memo(({ children }) => {
                 }
 
                 .confirm__container {
-                    width: 382px !important;
+                    width: 382px;
                 }
                 .confirm__container .ant-modal-content {
                     border-radius: 4px;
                 }
                 .confirm__container .ant-modal-header {
-                    background: #f2f5fa;
+                    // background: #f2f5fa;
+                    background: white;
                 }
                 .confirm__container .ant-btn-primary {
                     background: #f45a4c;

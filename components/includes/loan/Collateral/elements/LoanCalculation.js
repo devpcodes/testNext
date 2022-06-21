@@ -30,6 +30,7 @@ const LoanCalculation = ({
     const { isLogin, accounts } = useUser();
     const [loanIdno, setLoanIdno] = useState('');
     const accountError = useRef(false);
+    const [loanAccounts, setLoanAccounts] = useState([]);
     // const loanIdno = useRef('');
     const dispatch = useDispatch();
 
@@ -45,11 +46,12 @@ const LoanCalculation = ({
 
     const getAccountStatus = async () => {
         const res = await fetchAccountStatus(getToken());
-        if (res.success) {
+        if (res.success && res.result?.length > 0) {
             // setHasSubmitAccount(true)
             // loanIdno.current = jwt_decode(getToken()).user_id;
-            checkAccountError(res.result[0]);
-            setLoanIdno(jwt_decode(getToken()).user_id);
+            // checkAccountError(res.result[0]);
+            setLoanAccounts(res.result);
+            // setLoanIdno(jwt_decode(getToken()).user_id);
         }
     };
 
@@ -78,25 +80,7 @@ const LoanCalculation = ({
         }
         // console.log('------', loanIdno.current, currentAccount?.idno)
         console.log('allLoanMoney', allLoanMoney);
-        if (allLoanMoney === '--' || submitData.length === 0 || allLoanMoney == 0) {
-            dispatch(
-                setModal({
-                    visible: true,
-                    type: 'info',
-                    title: '提醒',
-                    content: (
-                        <>
-                            <p>請勾選單保品後進行試算</p>
-                        </>
-                    ),
-                    okText: '確認',
-                    noCloseIcon: true,
-                    noTitleIcon: true,
-                }),
-            );
-            return;
-        }
-        if (loanIdno === '') {
+        if (loanAccounts.length === 0) {
             dispatch(
                 setModal({
                     visible: true,
@@ -111,7 +95,7 @@ const LoanCalculation = ({
             );
             return;
         }
-        if (loanIdno !== currentAccount?.idno) {
+        if (!checkLoanCurrentAccount()) {
             dispatch(
                 setModal({
                     visible: true,
@@ -128,13 +112,31 @@ const LoanCalculation = ({
             return;
         }
         console.log('accountError', accountError.current);
-        if (accountError.current) {
+        if (!checkLoanAccountStatus()) {
             dispatch(
                 setModal({
                     visible: true,
                     type: 'info',
                     title: '提醒',
                     content: '噯呀糟糕！目前您的不限用途借貸帳戶狀態異常，請洽您的營業員。02-12345678',
+                    okText: '確認',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                }),
+            );
+            return;
+        }
+        if (allLoanMoney === '--' || submitData.length === 0 || allLoanMoney == 0) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'info',
+                    title: '提醒',
+                    content: (
+                        <>
+                            <p>請勾選單保品後進行試算</p>
+                        </>
+                    ),
                     okText: '確認',
                     noCloseIcon: true,
                     noTitleIcon: true,
@@ -154,6 +156,24 @@ const LoanCalculation = ({
         }
 
         //'歡迎您使用永豐金證券不限用途款項借貸服務，請先申辦借貸戶加入不限用途的行列。'
+    };
+
+    const checkLoanCurrentAccount = () => {
+        const haveCanLoanAccount = loanAccounts.filter(item => {
+            if (item.account === currentAccount.account) {
+                return true;
+            }
+        });
+        return haveCanLoanAccount.length > 0 ? true : false;
+    };
+
+    const checkLoanAccountStatus = () => {
+        const loanAccountStatus = loanAccounts.filter(item => {
+            if (item.account === currentAccount.account && item.status === 'A') {
+                return true;
+            }
+        });
+        return loanAccountStatus.length > 0 ? true : false;
     };
 
     const checkQuota = (totalFinancing, allLoanMoney) => {
@@ -300,18 +320,18 @@ const LoanCalculation = ({
                     width: '100%',
                     height: '48px',
                     fontSize: '16px',
-                    background: currentKey === 'self' && isLogin && loanIdno !== '' ? '#e6ebf5' : '#c43826',
-                    color: currentKey === 'self' && isLogin && loanIdno !== '' ? '#a9b6cb' : 'white',
+                    background: currentKey === 'self' && isLogin && loanAccounts.length !== 0 ? '#e6ebf5' : '#c43826',
+                    color: currentKey === 'self' && isLogin && loanAccounts.length !== 0 ? '#a9b6cb' : 'white',
                     border: 'none',
                 }}
                 parentClass="caluculation"
                 text={'立即借貸'}
                 onClick={submitHandler}
-                disabled={currentKey === 'self' && isLogin && loanIdno !== '' ? true : false}
+                disabled={currentKey === 'self' && isLogin && loanAccounts.length !== 0 ? true : false}
             />
             <div
                 className="calculation__openAcc--container"
-                style={{ display: isLogin && loanIdno !== '' ? 'none' : 'block' }}
+                style={{ display: isLogin && loanAccounts.length !== 0 ? 'none' : 'block' }}
             >
                 <a className="calcu__openAccount">
                     立即申辦借貸帳戶

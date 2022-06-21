@@ -189,6 +189,7 @@ const TimeLine = ({ style, data }) => {
                     style={{
                         display: 'inline-block',
                         fontSize: '14px',
+                        width: 76,
                     }}
                 >
                     扣款 {formatNum(data.orderAmount)}

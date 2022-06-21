@@ -100,9 +100,15 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
             case 'loan-zone':
                 elementNameArr.current.push('借貸專區');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
+                break;
             case 'Collateral':
                 elementNameArr.current.push('擔保品試算');
                 elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
+            case 'Overview':
+                elementNameArr.current.push('借款總覽');
+                elementPathArr.current.push(`/${levelArr.current[1]}/Overview`);
+                break;
             default:
                 break;
         }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { InputNumber, Tooltip } from 'antd';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +9,8 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
-import { debounce } from '../../../../../services/throttle';
-const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
+import _ from 'lodash';
+const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler, reload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [data, setData] = useState([]);
@@ -18,21 +18,28 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [loading, setLoading] = useState(false);
     const { isLogin } = useUser();
+    const userSettings = useSelector(store => store.user.userSettings);
+    const nowAccount = useRef('');
+    const nowKey = useRef('');
+    useEffect(() => {
+        if (reload) {
+            getAccountOverview();
+        }
+    }, [reload]);
 
     useEffect(() => {
-        if (stockData.stockId != null && currentKey === 'self') {
+        if (stockData?.stockId != null && currentKey === 'self') {
             const cloneData = [...data];
             cloneData.push(stockData);
             sortSelfData(cloneData);
             setData(cloneData);
         }
     }, [stockData]);
+
     useEffect(() => {
-        if (isLogin && currentKey === 'inventory') {
-            setTimeout(() => {
-                getAccountOverview();
-                setOverviewTable(true);
-            }, 200);
+        if (isLogin && (currentKey === 'inventory' || currentKey === 'notGuaranteed' || currentKey === 'guaranteed')) {
+            getAccountOverview();
+            setOverviewTable(true);
         }
         if (currentKey === 'self') {
             getPopularStocks();
@@ -65,7 +72,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
     }, [reset]);
 
     useEffect(() => {
-        if (currentKey === 'inventory') {
+        if (currentKey === 'inventory' || currentKey === 'notGuaranteed' || currentKey === 'guaranteed') {
             getInventoryColumn();
         }
         if (currentKey === 'self') {
@@ -156,7 +163,8 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
     };
 
     const getInventoryColumn = () => {
-        const newColumns = [
+        let newColumns = [];
+        newColumns = [
             {
                 title: '商品',
                 dataIndex: 'stockName',
@@ -168,8 +176,8 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
             },
             {
                 title: '可擔保張數',
-                dataIndex: 'stockQty',
-                key: 'stockQty',
+                dataIndex: 'canCollateralQty',
+                key: 'canCollateralQty',
                 width: 90,
                 align: 'right',
                 render: (text, record) => {
@@ -187,7 +195,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
                         <InputNumber
                             value={record.expectedCollateralShare}
                             min={0}
-                            max={record.stockQty}
+                            max={record.canCollateralQty}
                             onChange={inputChangeHandler.bind(null, record)}
                         />
                     );
@@ -264,8 +272,105 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
                 },
             },
         ];
-
+        if (currentKey === 'notGuaranteed') {
+            newColumns = notGuaranteedHandler();
+        }
+        if (currentKey === 'guaranteed') {
+            newColumns = guaranteedHandler();
+        }
         setColumns(newColumns);
+    };
+
+    const guaranteedHandler = () => {
+        return [
+            {
+                title: '擔保商品',
+                dataIndex: 'stockName',
+                key: 'stockName',
+                width: 100,
+                render: (text, record) => {
+                    return record.stockId + ' ' + text;
+                },
+            },
+            {
+                title: '已擔保張數',
+                dataIndex: 'collateralQty',
+                key: 'collateralQty',
+                width: 100,
+                align: 'center',
+                render: (text, record) => {
+                    return text != null ? Number(text) : '--';
+                },
+            },
+            {
+                title: '擔保品市值',
+                dataIndex: 'closePrice',
+                key: 'closePrice',
+                width: 100,
+                align: 'center',
+                render: (text, record) => {
+                    return text != null ? formatNum(Number(record.collateralQty) * Number(text) * 1000) : '--';
+                },
+            },
+        ];
+    };
+
+    const notGuaranteedHandler = () => {
+        return [
+            {
+                title: '商品',
+                dataIndex: 'stockName',
+                key: 'stockName',
+                width: 100,
+                render: (text, record) => {
+                    return record.stockId + ' ' + text;
+                },
+            },
+            {
+                title: '可擔保張數',
+                dataIndex: 'canCollateralQty',
+                key: 'canCollateralQty',
+                width: 100,
+                align: 'center',
+                render: (text, record) => {
+                    return text != null ? Number(text) : '--';
+                },
+            },
+            {
+                title: '利率',
+                width: 100,
+                dataIndex: 'loanYearRate',
+                key: 'loanYearRate',
+                align: 'center',
+                render: text => {
+                    return text != null ? Number(text) * 100 + '%' : '--';
+                },
+            },
+            {
+                title: '融通成數',
+                width: 100,
+                dataIndex: 'stockPercent',
+                key: 'stockPercent',
+                align: 'center',
+                render: text => {
+                    return text != null ? Number(text) * 10 + '成' : '--';
+                },
+            },
+            {
+                title: '可借款金額',
+                dataIndex: 'canLoanMoney',
+                key: 'canLoanMoney',
+                width: 100,
+                align: 'right',
+                // sorter: (a, b) => {
+                //     console.log('a', 'b', a, b);
+                //     return Number(a.canLoanMoney) - Number(b.canLoanMoney);
+                // },
+                render: (text, record) => {
+                    return formatNum(text);
+                },
+            },
+        ];
     };
 
     const getPopularStocks = async () => {
@@ -308,22 +413,44 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
         return nowData;
     };
 
+    const allCanLoanHandler = data => {
+        let allCanLoan = 0;
+        data.forEach(item => {
+            allCanLoan += Number(item.canLoanMoney);
+        });
+        if (canLoanHandler != null) {
+            canLoanHandler(allCanLoan);
+        }
+    };
+
     const getAccountOverview = async () => {
         console.log('currentAccount', currentAccount);
         const token = getToken();
         try {
             setLoading(true);
-            const result = await fetchApplyInfo(token, currentAccount.broker_id, currentAccount.account);
+            let result = await fetchApplyInfo(token, currentAccount.broker_id, currentAccount.account);
             setLoading(false);
             const selectedKeys = [];
             result.forEach((item, index) => {
                 item.key = index;
-                item.expectedCollateralShare = item.stockQty;
+                item.expectedCollateralShare = item.stockQty - item.collateralQty;
                 item.canLoanMoney = canLoanMoneyHandler(item);
+                item.canCollateralQty = item.stockQty - item.collateralQty;
                 console.log(Number(item.closePrice), Number(item.stockQty), Number(item.stockPercent));
                 selectedKeys.push(item.key);
             });
             console.log('result..............', result);
+            allCanLoanHandler(result);
+            if (currentKey === 'notGuaranteed') {
+                result = result.filter(element => {
+                    return element.canCollateralQty != 0;
+                });
+            }
+            if (currentKey === 'guaranteed') {
+                result = result.filter(element => {
+                    return element.collateralQty != 0;
+                });
+            }
             setSelectedRowKeys(selectedKeys);
             setData(result);
         } catch (error) {
@@ -373,45 +500,87 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData }) => {
     };
     return (
         <>
-            <AccountTable
-                noDataSetting={{
-                    text:
-                        currentKey === 'self'
-                            ? '目前還沒加入個股請使用上方搜尋列新增擔保品'
-                            : '此帳號無庫存股票，請選擇其他帳號或自選試算。',
-                    tStyle: {
-                        width: '215px',
-                        margin: '0 auto 20px auto',
-                        whiteSpace: 'pre-wrap',
-                        color: '#3f5372',
-                    },
-                }}
-                columns={columns}
-                dataSource={data}
-                pagination={false}
-                rowSelection={{
-                    type: 'checkbox',
-                    onChange: changeSelectedHandler,
-                    selectedRowKeys,
-                }}
-                scroll={{ x: 650, y: 600 }}
-                loading={{
-                    indicator: (
-                        <div
-                            style={{
-                                marginTop: '20px',
-                                color: 'black',
-                                fontSize: '1.6rem',
-                                width: '100%',
-                                transform: 'translateX(-49%) translateY(-54px)',
-                            }}
-                        >
-                            資料加載中...
-                        </div>
-                    ),
-                    spinning: loading,
-                }}
-            />
+            {currentKey !== 'notGuaranteed' && currentKey !== 'guaranteed' ? (
+                <AccountTable
+                    noDataSetting={{
+                        text:
+                            currentKey === 'self'
+                                ? '目前還沒加入個股請使用上方搜尋列新增擔保品'
+                                : '此帳號無庫存股票，請選擇其他帳號或自選試算。',
+                        tStyle: {
+                            width: '215px',
+                            margin: '0 auto 20px auto',
+                            whiteSpace: 'pre-wrap',
+                            color: '#3f5372',
+                        },
+                    }}
+                    columns={columns}
+                    dataSource={data}
+                    pagination={false}
+                    rowSelection={{
+                        type: 'checkbox',
+                        onChange: changeSelectedHandler,
+                        selectedRowKeys,
+                    }}
+                    scroll={{ x: 650, y: 600 }}
+                    loading={{
+                        indicator: (
+                            <div
+                                style={{
+                                    marginTop: '20px',
+                                    color: 'black',
+                                    fontSize: '1.6rem',
+                                    width: '100%',
+                                    transform: 'translateX(-49%) translateY(-54px)',
+                                }}
+                            >
+                                資料加載中...
+                            </div>
+                        ),
+                        spinning: loading,
+                    }}
+                />
+            ) : (
+                <AccountTable
+                    noDataSetting={{
+                        text:
+                            currentKey === 'self'
+                                ? '目前還沒加入個股請使用上方搜尋列新增擔保品'
+                                : '此帳號無庫存股票，請選擇其他帳號或自選試算。',
+                        tStyle: {
+                            width: '215px',
+                            margin: '0 auto 20px auto',
+                            whiteSpace: 'pre-wrap',
+                            color: '#3f5372',
+                        },
+                    }}
+                    columns={columns}
+                    dataSource={data}
+                    pagination={false}
+                    // rowSelection={{
+                    //     type: 'checkbox',
+                    //     onChange: changeSelectedHandler,
+                    //     selectedRowKeys,
+                    // }}
+                    scroll={{ x: 650, y: 600 }}
+                    loading={{
+                        indicator: (
+                            <div
+                                style={{
+                                    marginTop: '20px',
+                                    color: 'black',
+                                    fontSize: '1.6rem',
+                                    width: '100%',
+                                    transform: 'translateX(-49%) translateY(-54px)',
+                                }}
+                            >
+                                資料加載中...
+                            </div>
+                        ),
+                        spinning: loading,
+                    }}
+                />
+            )}
         </>
     );
 };
