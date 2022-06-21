@@ -1,3 +1,4 @@
+import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
 const MoneyBox = ({ title, data, style }) => {
     return (
         <div className="money__container" style={style}>
@@ -5,7 +6,11 @@ const MoneyBox = ({ title, data, style }) => {
                 {title.map((element, i) => {
                     return (
                         <React.Fragment key={i}>
-                            <span style={element.style}>{element.val}</span>
+                            <span style={element.style}>
+                                {!!element.icon && <img className="title__icon" src={icon} />}
+                                {element.val}
+                            </span>
+                            {element.linkText && <a className="money__Alink">{element.linkText}</a>}
                             {i !== title.length - 1 && <div className="money__line--head"></div>}
                         </React.Fragment>
                     );
@@ -30,6 +35,10 @@ const MoneyBox = ({ title, data, style }) => {
                 })}
             </div>
             <style jsx>{`
+                .title__icon {
+                    margin-top: -2px;
+                    margin-right: 2px;
+                }
                 .money__container {
                     height: 130px;
                     border-radius: 2px;
@@ -37,6 +46,7 @@ const MoneyBox = ({ title, data, style }) => {
                     background-color: #fff;
                 }
                 .money__header {
+                    position: relative;
                     height: 39px;
                     background-color: #f2f5fa;
                     border-bottom: 1px solid #d7e0ef;
@@ -46,6 +56,12 @@ const MoneyBox = ({ title, data, style }) => {
                     line-height: 39px;
                     display: flex;
                     justify-content: space-around;
+                }
+                .money__Alink {
+                    position: absolute;
+                    right: 12px;
+                    font-size: 14px;
+                    color: #0d1623;
                 }
                 .money__content {
                     display: flex;
@@ -74,6 +90,12 @@ const MoneyBox = ({ title, data, style }) => {
                 }
                 .money__item {
                     flex: 1 0 0;
+                }
+                @media (max-width: 900px) {
+                    .money__Alink {
+                        right: 0;
+                        font-size: 12px;
+                    }
                 }
                 @media (max-width: 768px) {
                     .money__header {

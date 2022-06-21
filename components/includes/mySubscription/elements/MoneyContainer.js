@@ -84,10 +84,10 @@ const MoneyContainer = memo(({ payable, receivable }) => {
                                 val: `$${formatNum(balance)}`,
                             },
                         ]}
-                        style={{ width: '50%', marginRight: 20 }}
+                        style={{ width: '33%', marginRight: 20 }}
                     />
                     <MoneyBox
-                        style={{ width: '50%' }}
+                        style={{ width: '33%', marginRight: 20 }}
                         title={[{ val: '次一營業日申購款' }]}
                         data={[
                             {
@@ -97,6 +97,22 @@ const MoneyContainer = memo(({ payable, receivable }) => {
                             },
                             {
                                 label: '應退申購款',
+                                val: `$${formatNum(receivable)}`,
+                                showLine: false,
+                            },
+                        ]}
+                    />
+                    <MoneyBox
+                        style={{ width: '33%' }}
+                        title={[{ val: '申購信用通', linkText: '我要還款 >', icon: true }]}
+                        data={[
+                            {
+                                label: '可動用',
+                                val: `$${formatNum(payable)}`,
+                                showLine: true,
+                            },
+                            {
+                                label: '已動用',
                                 val: `$${formatNum(receivable)}`,
                                 showLine: false,
                             },
