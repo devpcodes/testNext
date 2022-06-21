@@ -3,96 +3,98 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import SubscriptionBtn from '../../../mySubscription/elements/SubscriptionBtn';
-const RecordTable = ({ refresh, payableHandler }) => {
+import { getToken } from '../../../../../services/user/accessToken';
+import {
+    repaymentDetail,
+    collateralDeatil,
+    fetchApplyRecord,
+} from '../../../../../services/components/loznZone/calculation/getApplyRecord';
+const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
+    const [dataAll, setDataAll] = useState([]);
     const [data, setData] = useState([]);
-    const [IsOpen, setIsOpen] = useState({});
-    const pageSize = 5;
+    const [dataOther, setDataOther] = useState([]);
+    const [detail, setDetail] = useState({});
+    const pageSize = 10;
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
+
     useEffect(() => {
-        setData([
-            {
-                detail: '審查中',
-                applyDate: '2022-05-11 12:30:33:221',
-                payDate: '2022-05-11 12:30:33:221',
-                loanPrice: '2000',
-                left: '214',
-                useful: '2145',
-                interestRate: '52',
-                method: '線上',
-                pid: '14add56w7f',
-                key: '0001',
-            },
-            {
-                detail: '',
-                applyDate: '2022-05-11 12:30:33:221',
-                payDate: '2022-05-11 12:30:33:221',
-                loanPrice: '2000',
-                left: '214',
-                useful: '2145',
-                interestRate: '52',
-                method: '線上',
-                pid: '14add56w7f',
-                canReturn: true,
-                key: '0002',
-            },
-        ]);
-        setTotal(2);
-    }, []);
+        let d_ = rowData.concat(rowDataOther);
+        setData(rowData);
+        setDataOther(rowDataOther);
+        setDataAll(d_);
+        setTotal(d_.length);
+    }, [rowData]);
+
     useEffect(() => {
         const myColumns = [
             {
                 title: '明細/動作',
                 width: '100px',
-                dataIndex: 'detail',
-                key: 'detail',
+                dataIndex: 'status',
+                key: 'status',
                 render(text, record, idx) {
-                    if (text == '審查中' || text == '已還款') {
-                        return text;
+                    if (record.name == 'Not Expandable') {
+                        if (text == '1') {
+                            return (
+                                <React.Fragment key={idx}>
+                                    <SubscriptionBtn
+                                        text="取消"
+                                        colorType="blue"
+                                        width={100 / 2 - 1 + '%'}
+                                        style={{ marginRight: 10 }}
+                                        // onClick={clickHandler.bind(null, record, 'canCancelOrder')}
+                                        // loading={cancelLoading}
+                                    />
+                                    <SubscriptionBtn
+                                        text="變更"
+                                        colorType="blue"
+                                        width={100 / 2 - 1 + '%'}
+                                        style={{ marginRight: 10 }}
+                                        // onClick={clickHandler.bind(null, record, 'canSellStock')}
+                                    />
+                                </React.Fragment>
+                            );
+                        } else {
+                            let nt = '';
+                            switch (text) {
+                                case '2':
+                                    nt = '預約已刪除';
+                                    break;
+                                case '4':
+                                    nt = '申請成功';
+                                    break;
+                                case '7':
+                                    nt = '無法刪除';
+                                    break;
+                                case '8':
+                                    nt = '轉檔中';
+                                    break;
+                                case '3':
+                                    nt = '測試';
+                                    break;
+                            }
+                            return nt;
+                        }
                     } else {
-                        const btnsArr = activeHandler(record);
-                        return (
-                            <>
-                                {btnsArr.map((element, index) => {
-                                    return (
-                                        <React.Fragment key={index}>
-                                            {element === 'canCancel' && (
-                                                <SubscriptionBtn
-                                                    text="取消"
-                                                    colorType="blue"
-                                                    width={100 / btnsArr.length - 1 + '%'}
-                                                    style={{ marginRight: 10 }}
-                                                    // onClick={clickHandler.bind(null, record, 'canCancelOrder')}
-                                                    // loading={cancelLoading}
-                                                />
-                                            )}
-                                            {element === 'canChange' && (
-                                                <SubscriptionBtn
-                                                    text="變更"
-                                                    colorType="blue"
-                                                    width={100 / btnsArr.length - 1 + '%'}
-                                                    style={{ marginRight: 10 }}
-                                                    // onClick={clickHandler.bind(null, record, 'canSellStock')}
-                                                />
-                                            )}
-                                            {element === 'canReturn' && (
-                                                <SubscriptionBtn
-                                                    text="我要還款"
-                                                    colorType="red"
-                                                    width={100 / btnsArr.length - 1 + '%'}
-
-                                                    // onClick={clickHandler.bind(null, record, 'canMortgage')}
-                                                />
-                                            )}
-                                        </React.Fragment>
-                                    );
-                                })}
-                            </>
-                        );
+                        if (text == '1') {
+                            return '已還款';
+                        } else {
+                            return (
+                                <React.Fragment key={idx}>
+                                    <SubscriptionBtn
+                                        text="我要還款"
+                                        colorType="red"
+                                        width={99 + '%'}
+                                        // onClick={clickHandler.bind(null, record, 'canMortgage')}
+                                    />
+                                </React.Fragment>
+                            );
+                        }
                     }
                 },
             },
@@ -102,16 +104,16 @@ const RecordTable = ({ refresh, payableHandler }) => {
                 dataIndex: 'applyDate',
                 key: 'applyDate',
                 align: 'right',
-                sorter: true,
+                // sorter: true,
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
             },
             {
-                title: '借款金額',
+                title: '已動用金額',
                 width: '100px',
-                dataIndex: 'loanPrice',
-                key: 'loanPrice',
+                dataIndex: 'applyFinancing',
+                key: 'applyFinancing',
                 align: 'right',
                 render(text, record, idx) {
                     return text; //formatNum(text);
@@ -120,30 +122,41 @@ const RecordTable = ({ refresh, payableHandler }) => {
             {
                 title: '應還款金額',
                 width: '100px',
-                dataIndex: 'left',
-                key: 'left',
+                dataIndex: 'outstanding',
+                key: 'outstanding',
                 align: 'right',
                 render(text, record, idx) {
-                    return text;
+                    let n =
+                        Number(text) +
+                        Number(record.payable) +
+                        Number(record.outstandingFee) +
+                        Number(record.outstandingStkFee) +
+                        Number(record.unpaidPledgeFee);
+                    if (n) {
+                        return n;
+                    } else {
+                        return '-';
+                    }
                 },
             },
-            {
-                title: '剩餘可動用金額',
-                width: '100px',
-                dataIndex: 'useful',
-                key: 'useful',
-                sorter: true,
-                render(text, record, idx) {
-                    return text;
-                },
-            },
+            // {
+            //     title: '剩餘可動用金額',
+            //     width: '100px',
+            //     dataIndex: 'applyFinancing',
+            //     key: 'applyFinancing',
+            //     // sorter: true,
+            //     align: 'right',
+            //     render(text, record, idx) {
+            //         return text;
+            //     },
+            // },
             {
                 title: '撥款日',
                 width: '100px',
-                dataIndex: 'payDate',
-                key: 'payDate',
+                dataIndex: 'moneyDate',
+                key: 'moneyDate',
                 align: 'right',
-                sorter: true,
+                // sorter: true,
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
@@ -151,53 +164,47 @@ const RecordTable = ({ refresh, payableHandler }) => {
             {
                 title: '借貸利率',
                 width: '100px',
-                dataIndex: 'interestRate',
-                key: 'interestRate',
+                dataIndex: 'loanRate',
+                key: 'loanRate',
                 align: 'right',
                 render(text, record, idx) {
-                    return text; //Number(text) / 100;
+                    if (text) {
+                        return text;
+                    } else {
+                        return '-';
+                    }
                 },
             },
             {
                 title: '申請方式',
                 width: '100px',
-                dataIndex: 'method',
-                key: 'method',
-                sorter: true,
-                render(text, record, idx) {
-                    return text;
-                },
-            },
-            {
-                title: '案號',
-                width: '120px',
-                dataIndex: 'pid',
-                key: 'pid',
+                dataIndex: 'source',
+                key: 'source',
                 align: 'right',
                 render(text, record, idx) {
-                    return text;
+                    let t = '';
+                    switch (text) {
+                        case '1':
+                            t = '臨櫃';
+                            break;
+                        case '2':
+                            t = '電子';
+                            break;
+                        case '3':
+                            t = 'EMS';
+                            break;
+                    }
+                    return t;
                 },
             },
         ];
         setColumns(myColumns);
-
-        let IsOpen_ = {};
-        data.map(x => {
-            IsOpen_[x.pid] = false;
-        });
-        setIsOpen(IsOpen_);
     }, [data]);
 
     const pageChangeHandler = val => {
         setCurrentPage(val);
     };
 
-    const openDetail = (e, id) => {
-        e.preventDefault();
-        let IsOpen_ = IsOpen;
-        IsOpen_[id] = !IsOpen_[id];
-        setIsOpen(IsOpen_);
-    };
     const expandRender = record => {
         return (
             <div className="RecordTable__Content Loan flexBox">
@@ -205,68 +212,75 @@ const RecordTable = ({ refresh, payableHandler }) => {
                     <p>擔保明細</p>
                     <div>
                         <table className="detail">
-                            <tr>
-                                <td>2603 長榮</td>
-                                <td>1 張</td>
-                            </tr>
-                            <tr>
-                                <td>2890 永豐金</td>
-                                <td>20 張</td>
-                            </tr>
+                            <tbody>
+                                {record.collateral ? (
+                                    record.collateral.map((x, i) => {
+                                        return (
+                                            <tr key={i}>
+                                                <td>
+                                                    {x.stockId} {x.stockName}
+                                                </td>
+                                                <td>{x.collateralQty} 張</td>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="noData">尚無符合資料</div>
+                                )}
+                            </tbody>
                         </table>
                     </div>
                 </div>
                 <div className="sumItem">
                     <p>費用明細</p>
                     <div>
-                        <table className="detail">
-                            <tr>
-                                <td>應付利息</td>
-                                <td>3540</td>
-                            </tr>
-                            <tr>
-                                <td>手續費</td>
-                                <td>100</td>
-                            </tr>
-                            <tr>
-                                <td>撥券費</td>
-                                <td>21</td>
-                            </tr>
-                            <tr>
-                                <td>設質費</td>
-                                <td>0</td>
-                            </tr>
-                        </table>
+                        {record.detail.length > 0 ? (
+                            <table className="detail">
+                                <tbody>
+                                    <tr>
+                                        <td>應付利息</td>
+                                        <td>{record.detail[record.detail.length - 1].paid}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>手續費</td>
+                                        <td>{record.detail[record.detail.length - 1].writeOffFee}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>撥券費</td>
+                                        <td>{record.detail[record.detail.length - 1].writeOffTransFee}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>設質費</td>
+                                        <td>{record.detail[record.detail.length - 1].unpaidPledgeFee}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className="noData">尚無符合資料</div>
+                        )}
                     </div>
                 </div>
                 <div className="sumItem">
                     <p>還款紀錄</p>
                     <div>
-                        <div className="noData">尚無還款紀錄</div>
-                        {/* <table className="detail">
-                            <tr>
-                                <td>2603 長榮</td>
-                                <td>35000</td>
-                            </tr>
-                            <tr>
-                                <td>2890 永豐金</td>
-                                <td>3540</td>
-                            </tr>
-                            <tr>
-                                <td>2412 中華電</td>
-                                <td>100</td>
-                            </tr>
-                            <tr>
-                                <td>2884 玉山金</td>
-                                <td>21</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <a className="more">查看更多</a>
-                                </td>
-                            </tr>
-                        </table> */}
+                        {record.detail.length > 0 ? (
+                            <table className="detail">
+                                <tbody>
+                                    {record.detail.map((x, i) => {
+                                        return (
+                                            <tr key={i}>
+                                                <td>{x.repaymentDate}</td>
+                                                <td>{x.repayment}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className="noData">尚無還款紀錄</div>
+                        )}
+
+                        {/*  */}
                     </div>
                 </div>
             </div>
@@ -292,19 +306,6 @@ const RecordTable = ({ refresh, payableHandler }) => {
         // }
     };
 
-    const activeHandler = record => {
-        const btnsArr = [];
-        if (record.canCancel) {
-            btnsArr.push('canCancel');
-        }
-        if (record.canChange) {
-            btnsArr.push('canChange');
-        }
-        if (record.canReturn) {
-            btnsArr.push('canReturn');
-        }
-        return btnsArr;
-    };
     return (
         <AccountTable
             filterColumns={searchColumns}
@@ -316,7 +317,7 @@ const RecordTable = ({ refresh, payableHandler }) => {
                 total,
             }}
             columns={columns}
-            dataSource={data}
+            dataSource={dataAll}
             expandable={{
                 expandedRowRender: expandRender,
                 rowExpandable: record => record.name !== 'Not Expandable',
@@ -343,4 +344,4 @@ const RecordTable = ({ refresh, payableHandler }) => {
     );
 };
 
-export default RecordTable;
+export default RecordLoanTable;
