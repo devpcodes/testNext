@@ -11,12 +11,12 @@ import { RightOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 //images
-import icon_guideline from '../../../../../resources/images/pages/customer_support/img-service-guideline.svg';
-import icon_account from '../../../../../resources/images/pages/customer_support/img-service-account.svg';
-import icon_password from '../../../../../resources/images/pages/customer_support/img-service-password.svg';
-import icon_contact from '../../../../../resources/images/pages/customer_support/img-service-contact.svg';
-import icon_paper from '../../../../../resources/images/pages/customer_support/img-service-paper.svg';
-import icon_site from '../../../../../resources/images/pages/customer_support/img-service-site.svg';
+import icon_guideline from '../../../../../resources/images/pages/customer_support/a5-ic-01.svg';
+import icon_account from '../../../../../resources/images/pages/customer_support/a5-ic-02.svg';
+import icon_password from '../../../../../resources/images/pages/customer_support/a5-ic-03.svg';
+import icon_contact from '../../../../../resources/images/pages/customer_support/a5-ic-04.svg';
+import icon_paper from '../../../../../resources/images/pages/customer_support/a5-ic-05.svg';
+import icon_site from '../../../../../resources/images/pages/customer_support/a5-ic-06.svg';
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());

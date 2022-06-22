@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table, ConfigProvider } from 'antd';
 import CustomerButton from '../../../customerSupport/CustomerButton';
-import noDataImg from '../../../../../resources/images/components/productQuestion/img-404.svg';
+import noDataImg from '../../../../../resources/images/components/productQuestion/empty.png';
 
 const ProductFileTable = function ({ dataSource }) {
     const clientWidth = useSelector(store => store.layout.winWidth);
