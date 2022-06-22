@@ -6,6 +6,7 @@ export const fetchQueryRealTimePrtLosSum = async function (token, asset_type, mo
         const res = await getDivoInstance(undefined, modal).post(url, {
             token,
             asset_type: asset_type ? [asset_type] : null,
+            isR6: true,
         });
         if (res.data.success != null && res.data.success === true) {
             return res.data.result;
