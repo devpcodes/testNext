@@ -238,7 +238,10 @@ export const getContentData = type => {
                 },
                 rate_of_return: {
                     title: '報酬率(%)',
-                    amount: `${realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi}%`,
+                    amount:
+                        realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi != '0'
+                            ? `${realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi}%`
+                            : '--',
                     class:
                         realTimePrtLosSum?.WM_FUND?.sub_total.sum_roi > 0
                             ? 'win'
@@ -285,7 +288,10 @@ export const getContentData = type => {
                 // QQ7 集保基金沒有成本無法算報酬率
                 rate_of_return: {
                     title: '報酬率(%)',
-                    amount: `${parseFloat((trade_nonachieve / sum_cost_twd) * 100).toFixed(2)}%`,
+                    amount:
+                        sum_cost_twd != '0'
+                            ? `${parseFloat((trade_nonachieve / sum_cost_twd) * 100).toFixed(2)}%`
+                            : '--',
                     class: trade_nonachieve > 0 ? 'win' : trade_nonachieve < 0 ? 'loss' : '',
                 },
                 // QQ8 集保基金沒有累積配息
