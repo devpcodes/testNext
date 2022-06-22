@@ -3,14 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import moment from 'moment';
-import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-big (1).svg';
-import { Modal, Select, Button, Input, Checkbox, InputNumber } from 'antd';
+import { Modal, Button } from 'antd';
 import { getToken } from '../../../../../services/user/accessToken';
-import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import { AccountDropdown } from '../../../personalArea/accountDropdown/AccountDropdown';
 import IconBtn from '../../../tradingAccount/vipInventory/IconBtn';
 import RecordTable from '../elements/RecordTable';
 import RecordLoanTable from '../elements/RecordLoanTable';
+import { useUser } from '../../../../../hooks/useUser';
 import {
     repaymentDetail,
     collateralDeatil,
@@ -18,6 +17,7 @@ import {
     applyStatus,
 } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 import { setModal } from '../../../../../store/components/layouts/action';
+import { set } from 'lodash';
 const RecordComponent = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [refreshTime, setRefreshTime] = useState('');
@@ -27,12 +27,19 @@ const RecordComponent = () => {
     const [totalTL, setTotalTL] = useState(0);
     const [totalTM, setTotalTM] = useState(0);
     const [totalTR, setTotalTR] = useState(0);
-    const [stockList, setStockList] = useState({});
+    const [stockList, setStockList] = useState([]);
+    const [detailList, setDetailList] = useState([]);
     const [moreModalShow, setMoreModalShow] = useState(false);
-    const [moreModalData, setMoreModalData] = useState([]);
     const winWidth = useSelector(store => store.layout.winWidth);
     const router = useRouter();
     const dispatch = useDispatch();
+    const { isLogin } = useUser();
+    useEffect(() => {
+        if (!isLogin) {
+            dispatch(showLoginHandler(true));
+        }
+    }, [isLogin]);
+
     useEffect(() => {
         let params = router.query;
         if (params.tab) {
@@ -40,58 +47,37 @@ const RecordComponent = () => {
         }
     }, [router]);
 
-    useEffect(async () => {
-        let data = await getApplyRecord();
-        if (data) {
-            setDataLoan(data.applyRecord);
-            setDataOther(data.applyStatus);
-        }
-    }, [currentAccount]);
-
-    useEffect(async () => {
-        totalCount();
-    }, [dataLoan]);
-
-    useEffect(async () => {
-        buildStockList();
-    }, [dataLoan]);
-
     useEffect(() => {
         let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
         setRefreshTime(time);
     });
 
+    useEffect(() => {
+        getApplyRecord();
+    }, [currentAccount]);
+
+    useEffect(() => {
+        totalCount();
+        buildStockList();
+    }, [dataLoan]);
+
     const totalCount = async () => {
         let TL = 0;
         let TM = 0;
-        let TR = 0;
-        await dataLoan.map(x => {
-            TL += parseInt(x.applyFinancing);
+        console.log('[dataLoan]', dataLoan);
+        await dataLoan.map((x, i) => {
+            TL += Number(x.applyFinancing);
             TM +=
-                parseInt(x.outstanding) +
-                parseInt(x.outstandingFee) +
-                parseInt(x.outstandingStkFee) +
-                parseInt(x.unpaidPledgeFee);
-            let e = 0;
-            if (x.collateral) {
-                x.collateral.map(y => {
-                    e += parseInt(y.collateralQty) * y.close;
-                });
-            }
-            TR += e;
+                Number(x.outstanding) +
+                Number(x.outstandingFee) +
+                Number(x.outstandingStkFee) +
+                Number(x.unpaidPledgeFee);
         });
         setTotalTL(TL);
         setTotalTM(TM);
-        console.log('TR', TR);
-        if (TR != 0) {
-            setTotalTR(TR);
-        }
     };
 
-    const countCollateral = () => {};
-
-    const onRefresh = e => {
-        e.preventDefault();
+    const onRefresh = () => {
         let time = moment(new Date()).format('YYYY.MM.DD HH:mm:ss');
         getApplyRecord();
         setRefreshTime(time);
@@ -106,13 +92,22 @@ const RecordComponent = () => {
         let token = getToken();
         try {
             const res = await fetchApplyRecord(token, currentAccount.broker_id, currentAccount.account);
+            let st_arr = [];
+            let dt_arr = [];
             await res.map(async (x, i) => {
-                let dataset = await getDetail(x.applyDate);
-                x.detail = dataset;
-                let collateral = await getCollateralDeatil(x.applyDate);
-                x.collateral = collateral;
+                let d1 = await getRepayment(x.applyDate, x.key);
+                x.detail = d1;
+                dt_arr = dt_arr.concat(d1);
+                console.log('dt_arr', dt_arr);
+                setDetailList(dt_arr);
+                let d2 = await getCollateral(x.applyDate, x.key);
+                x.collateral = d2;
+                st_arr = st_arr.concat(d2);
+                setStockList(st_arr);
+                return x;
             });
-            buildStockList(res);
+
+            setDataLoan(res);
             const res2 = await applyStatus(token, currentAccount.broker_id, currentAccount.account);
             let res2_ = await res2.filter(x => {
                 let arr = ['1', '2', '4', '7', '8'];
@@ -120,10 +115,7 @@ const RecordComponent = () => {
                     return x;
                 }
             });
-            return {
-                applyRecord: res,
-                applyStatus: res2_,
-            };
+            setDataOther(res2_);
         } catch (error) {
             dispatch(
                 setModal({
@@ -141,48 +133,80 @@ const RecordComponent = () => {
         }
     };
 
-    const getDetail = async date => {
+    const getRepayment = async (date, key) => {
         let token = getToken();
         let dataset = await repaymentDetail(token, currentAccount.broker_id, currentAccount.account, date);
+        dataset.map((x, i) => {
+            x.group = key;
+            x.key = key + i;
+            return x;
+        });
         return dataset;
     };
 
-    const getCollateralDeatil = async date => {
+    const getCollateral = async (date, key) => {
         let token = getToken();
         let dataset = await collateralDeatil(token, currentAccount.broker_id, currentAccount.account, date);
+        dataset.map((x, i) => {
+            x.group = key;
+            x.key = key + i;
+            return x;
+        });
         return dataset;
     };
 
-    const moreModalHandler = data => {
-        setMoreModalShow(data[0]);
-        setMoreContent(data[1]);
-    };
-
-    const setMoreContent = a => {
-        if (a == 'clear') {
-            setMoreModalData([]);
-        } else if (a == 'all') {
-            setMoreModalData([]);
-        }
-    };
-
-    const buildStockList = () => {
-        let arr = [];
-        dataLoan.map(x => {
-            x.collateral.map(y => {
-                let obj = {
-                    group: x.key,
-                    stockId: y.stockId,
-                    stockName: y.stockName,
-                    qty: y.collateralQty,
-                    close: y.close,
-                };
-                arr.push(obj);
-            });
+    const buildStockList = async () => {
+        console.log('[buildStockList]', stockList);
+        let TR = 0;
+        stockList.map(x => {
+            if (x.collateralQty && x.close) {
+                let v = Number(x.collateralQty) * Number(x.close);
+                // console.log(x.collateralQty,'x',x.close,'=',v);
+                TR += v;
+            }
         });
-        if (arr.length > 0) {
-            setStockList(arr);
+        setTotalTR(TR.toFixed(2));
+    };
+
+    const clickHandler = active => {
+        let st = stockList;
+        console.log(st);
+        if (active !== 'all') {
+            st = st.filter(x => x.group === active);
         }
+        dispatch(
+            setModal({
+                visible: true,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                title: '擔保品明細',
+                type: 'info',
+                bodyStyle: {
+                    height: 230,
+                    overflow: 'auto',
+                },
+                content: (
+                    <div className="item_list">
+                        {st.length > 0 ? (
+                            st.map((x, i) => {
+                                return (
+                                    <p key={i} className="item_list_row">
+                                        <span>
+                                            {x.stockId} {x.stockName}
+                                        </span>
+                                        <span>{x.collateralQty} 張</span>
+                                    </p>
+                                );
+                            })
+                        ) : (
+                            <p>無資料</p>
+                        )}
+                    </div>
+                ),
+                okText: '確認',
+                width: '320px',
+            }),
+        );
     };
 
     return (
@@ -207,7 +231,7 @@ const RecordComponent = () => {
                     </div>
                     <div className="topBarRight flexBox">
                         <p className="desc__update">更新時間：{refreshTime} </p>
-                        <IconBtn type={'refresh'} onClick={e => onRefresh(e)}></IconBtn>
+                        <IconBtn type={'refresh'} onClick={onRefresh.bind(null, 'click')}></IconBtn>
                         <div className="AccountDropdownBox">
                             <AccountDropdown
                                 type={'S'}
@@ -231,7 +255,7 @@ const RecordComponent = () => {
                     <div className="sumItem">
                         <p>
                             已擔保商品市值
-                            <a className="checkMore" onClick={moreModalHandler.bind(null, [true, 'clear'])}>
+                            <a className="checkMore" onClick={clickHandler.bind(null, 'all')}>
                                 擔保明細
                             </a>
                         </p>
@@ -241,50 +265,24 @@ const RecordComponent = () => {
 
                 <div>
                     {tabCurrent == 0 ? (
-                        <RecordLoanTable rowData={dataLoan} rowDataOther={dataOther} stockList={stockList} />
+                        <RecordLoanTable
+                            rowData={dataLoan}
+                            rowDataOther={dataOther}
+                            stockList={stockList}
+                            // showMore = {clickHandler}
+                        />
                     ) : (
-                        <RecordTable />
+                        <RecordTable
+                            rowData={dataLoan}
+                            rowDataOther={dataOther}
+                            stockList={stockList}
+                            detailList={detailList}
+                        />
                     )}
                 </div>
-                <Modal
-                    className="record__Modal"
-                    title={
-                        <p className="title__box">
-                            <span className="title">贖回擔保品明細</span>
-                        </p>
-                    }
-                    visible={moreModalShow}
-                    width={320}
-                    height={240}
-                    onCancel={null}
-                    closable={false}
-                    footer={[
-                        <Button type="primary" onClick={moreModalHandler.bind(null, [false, 'all'])}>
-                            確認
-                        </Button>,
-                    ]}
-                >
-                    <div className="item_list">
-                        {stockList.length > 0 ? (
-                            stockList.map((x, i) => {
-                                return (
-                                    <p key={i} className="item_list_row">
-                                        <span>
-                                            {x.stockId} {x.stockName}
-                                        </span>
-                                        <span>{x.qty} 張</span>
-                                    </p>
-                                );
-                            })
-                        ) : (
-                            <p>無資料</p>
-                        )}
-                    </div>
-                </Modal>
             </div>
             <style jsx>
                 {`
-        
         .record__container {
             width: 80%;
             margin: 0 auto;
@@ -339,6 +337,38 @@ const RecordComponent = () => {
             </style>
             <style jsx global>
                 {`
+                    .record__container .checkMore_b {
+                        display: block;
+                        color: #daa360;
+                        text-align: right;
+                        font-size: 14px;
+                    }
+                    .record__container .checkMore_b::after {
+                        content: '';
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        border: 2px solid #daa360;
+                        border-width: 2px 2px 0 0;
+                        transform: rotate(45deg) translateY(-1px);
+                        margin-left: 4px;
+                    }
+                    .record__container .sumItem p .checkMore {
+                        position: absolute;
+                        right: 10px;
+                        color: #0d1623;
+                        font-size: 14px;
+                    }
+                    .record__container .sumItem p .checkMore::after {
+                        content: '';
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        border: 2px solid #0d1623;
+                        border-width: 2px 2px 0 0;
+                        transform: rotate(45deg) translateY(-1px);
+                        margin-left: 4px;
+                    }
                     .item_list .item_list_row {
                         display: flex;
                         justify-content: space-between;
@@ -391,12 +421,7 @@ const RecordComponent = () => {
                         margin-bottom: 0;
                         position: relative;
                     }
-                    .record__container .sumItem p .checkMore {
-                        position: absolute;
-                        right: 10px;
-                        color: 0d1623;
-                        font-size: 14px;
-                    }
+
                     .record__container .sumItem .noData {
                         font-size: 16px;
                         color: #3f5372;

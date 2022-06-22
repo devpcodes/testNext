@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
-const RecordTable = ({ refresh, payableHandler }) => {
+import {
+    repaymentDetail,
+    collateralDeatil,
+    fetchApplyRecord,
+    applyStatus,
+} from '../../../../../services/components/loznZone/calculation/getApplyRecord';
+const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList, detailList }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
@@ -13,37 +19,18 @@ const RecordTable = ({ refresh, payableHandler }) => {
     const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
     useEffect(() => {
-        setData([
-            {
-                detail: 'AAAA',
-                date: '2022-05-11 12:30:33:221',
-                price: '2000',
-                left: '214',
-                method: 'BBBB',
-                pid: '14add56w7f',
-                key: '0001',
-            },
-        ]);
-        setTotal(2);
-    }, []);
+        console.log('[22detailList]', detailList);
+        setData(detailList);
+        setTotal(detailList.length);
+    }, [detailList]);
     useEffect(() => {
         const myColumns = [
             {
-                title: '明細',
-                width: '100px',
-                dataIndex: 'detail',
-                key: 'detail',
-                render(text, record, idx) {
-                    return text;
-                },
-            },
-            {
                 title: '還款日',
                 width: '100px',
-                dataIndex: 'date',
-                key: 'date',
+                dataIndex: 'repaymentDate',
+                key: 'repaymentDate',
                 align: 'right',
-                sorter: true,
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
@@ -51,8 +38,8 @@ const RecordTable = ({ refresh, payableHandler }) => {
             {
                 title: '還款金額',
                 width: '100px',
-                dataIndex: 'price',
-                key: 'price',
+                dataIndex: 'repayment',
+                key: 'repayment',
                 align: 'right',
                 render(text, record, idx) {
                     return text; //formatNum(text);
@@ -71,21 +58,12 @@ const RecordTable = ({ refresh, payableHandler }) => {
             {
                 title: '還款方式',
                 width: '100px',
-                dataIndex: 'method',
+                dataIndex: 'group',
                 key: 'method',
-                sorter: true,
-                render(text, record, idx) {
-                    return text;
-                },
-            },
-            {
-                title: '案號',
-                width: '120px',
-                dataIndex: 'pid',
-                key: 'pid',
                 align: 'right',
                 render(text, record, idx) {
-                    return text;
+                    let d_ = rowData.filter(x => x.key == text);
+                    return d_.source;
                 },
             },
         ];
@@ -98,6 +76,10 @@ const RecordTable = ({ refresh, payableHandler }) => {
         setIsOpen(IsOpen_);
     }, [data]);
 
+    const getData = () => {
+        repaymentDetail, collateralDeatil, val;
+    };
+
     const pageChangeHandler = val => {
         setCurrentPage(val);
     };
@@ -107,6 +89,69 @@ const RecordTable = ({ refresh, payableHandler }) => {
         let IsOpen_ = IsOpen;
         IsOpen_[id] = !IsOpen_[id];
         setIsOpen(IsOpen_);
+    };
+
+    const handleTableChange = (pagination, filters, sorter) => {
+        // console.log('------------.-', pagination, statusFilterValue, sorter);
+        // if (sorter.columnKey === 'orderAmount') {
+        //     setLotDateSorter('');
+        //     if (sorter.order == null) {
+        //         setOrderAmountSorter('');
+        //         return;
+        //     }
+        //     setOrderAmountSorter(sorter.order === 'ascend' ? '1' : '2');
+        // }
+        // if (sorter.columnKey === 'lotDate') {
+        //     setOrderAmountSorter('');
+        //     if (sorter.order == null) {
+        //         setLotDateSorter('');
+        //         return;
+        //     }
+        //     setLotDateSorter(sorter.order === 'ascend' ? '1' : '2');
+        // }
+    };
+
+    const stockModal = active => {
+        let st = stockList;
+        if (active !== 'all') {
+            st = st.filter(x => {
+                x.group === active;
+            });
+            console.log(active, st);
+        }
+        dispatch(
+            setModal({
+                visible: true,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                title: '贖回擔保品明細',
+                type: 'info',
+                bodyStyle: {
+                    height: 230,
+                    overflow: 'auto',
+                },
+                content: (
+                    <div className="item_list">
+                        {st.length > 0 ? (
+                            st.map((x, i) => {
+                                return (
+                                    <p key={i} className="item_list_row">
+                                        <span>
+                                            {x.stockId} {x.stockName}
+                                        </span>
+                                        <span>{x.notReturnedQty} 張</span>
+                                    </p>
+                                );
+                            })
+                        ) : (
+                            <p>無資料</p>
+                        )}
+                    </div>
+                ),
+                okText: '確認',
+                width: '320px',
+            }),
+        );
     };
     const expandRender = record => {
         return (
@@ -142,52 +187,36 @@ const RecordTable = ({ refresh, payableHandler }) => {
                     <p>贖回擔保品明細</p>
                     <div>
                         <table className="detail">
-                            <tr>
-                                <td>2603 長榮</td>
-                                <td>35000</td>
-                            </tr>
-                            <tr>
-                                <td>2890 永豐金</td>
-                                <td>3540</td>
-                            </tr>
-                            <tr>
-                                <td>2412 中華電</td>
-                                <td>100</td>
-                            </tr>
-                            <tr>
-                                <td>2884 玉山金</td>
-                                <td>21</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <a className="more">查看更多</a>
-                                </td>
-                            </tr>
+                            <tbody>
+                                {record.collateral ? (
+                                    record.collateral.map((x, i) => {
+                                        if (i < 3) {
+                                            return (
+                                                <tr key={i}>
+                                                    <td>
+                                                        {x.stockId} {x.stockName}
+                                                    </td>
+                                                    <td>{x.notReturnedQty} 張</td>
+                                                </tr>
+                                            );
+                                        }
+                                    })
+                                ) : (
+                                    <div className="noData">尚無符合資料</div>
+                                )}
+                            </tbody>
                         </table>
+                        {record.collateral ? (
+                            <a className="checkMore_b" onClick={stockModal.bind(null, record.key)}>
+                                查看更多
+                            </a>
+                        ) : (
+                            ''
+                        )}
                     </div>
                 </div>
             </div>
         );
-    };
-    const handleTableChange = (pagination, filters, sorter) => {
-        // console.log('------------.-', pagination, statusFilterValue, sorter);
-        // if (sorter.columnKey === 'orderAmount') {
-        //     setLotDateSorter('');
-        //     if (sorter.order == null) {
-        //         setOrderAmountSorter('');
-        //         return;
-        //     }
-        //     setOrderAmountSorter(sorter.order === 'ascend' ? '1' : '2');
-        // }
-        // if (sorter.columnKey === 'lotDate') {
-        //     setOrderAmountSorter('');
-        //     if (sorter.order == null) {
-        //         setLotDateSorter('');
-        //         return;
-        //     }
-        //     setLotDateSorter(sorter.order === 'ascend' ? '1' : '2');
-        // }
     };
     return (
         <AccountTable
