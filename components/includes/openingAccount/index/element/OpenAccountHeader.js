@@ -22,15 +22,15 @@ const OpenAccountHeader = ({ defaultValue, value, onInput, onPressEnter }) => {
                             <CustomerButton
                                 type="primary"
                                 onClick={() =>
-                                    window.open('https://www.sinotrade.com.tw/openact?strProd=0002&strWeb=0001')
+                                    window.open('https://www.sinotrade.com.tw/openact?strProd=0037&strWeb=0035')
                                 }
                             >
-                                立即開戶
+                                開證券帳戶
                             </CustomerButton>
                             <CustomerButton
                                 onClick={() =>
                                     window.open(
-                                        'https://www.sinotrade.com.tw/openact/progress?strProd=0002&strWeb=0001',
+                                        'https://www.sinotrade.com.tw/openact/progress?strProd=0037&strWeb=0035',
                                     )
                                 }
                             >

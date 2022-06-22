@@ -30,17 +30,17 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '信用戶',
             image: icon_credit,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_1?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_1?dirtype=99&strProd=0037&strWeb=0035',
         },
         {
             title: '複委託',
             image: icon_sub_brokerage,
-            link: 'https://www.sinotrade.com.tw/EX/OpenCount/Apply_SUB01.aspx?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/EX/OpenCount/Apply_SUB01.aspx?dirtype=99&strProd=0037&strWeb=0035',
         },
         {
             title: '財管信託',
             image: icon_manager_trust,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_1?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_1?dirtype=99&strProd=0037&strWeb=0035',
         },
         // {
         //     title: '財管人工戶',
@@ -50,26 +50,26 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '借券戶',
             image: icon_borrow,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0037&strWeb=0035',
         },
         ,
         {
             title: '不限用途款項',
             image: icon_no_limit_money,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_3?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_3?dirtype=99&strProd=0037&strWeb=0035',
         },
         ,
         {
             title: '加開進度查詢',
             image: icon_search,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_2?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_2?dirtype=99&strProd=0037&strWeb=0035',
         },
     ]);
     const [closeCounter] = useState([
         {
             title: '預約開戶',
             image: icon1,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_1_1?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_1_1?dirtype=99&strProd=0037&strWeb=0035',
         },
         {
             title: '查詢營業據點',
@@ -79,19 +79,19 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '臨櫃進度查詢',
             image: icon3,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_14?dirtype=99&strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_14?dirtype=99&strProd=0037&strWeb=0035',
         },
     ]);
     const [featureAccountTypes] = useState([
         {
-            title: '預約開戶',
+            title: '期貨戶',
             image: featureOpen,
-            link: 'https://www.sinotrade.com.tw/stfopenact?strProd=0002&strWeb=0001',
+            link: 'https://www.sinotrade.com.tw/stfopenact?strProd=0037&strWeb=0035',
         },
         {
-            title: '查詢營業據點',
+            title: '開戶進度查詢',
             image: featureOpenDetail,
-            link: `https://www.sinotrade.com.tw/stfopenact/progress?strProd=0002&strWeb=0001`,
+            link: `https://www.sinotrade.com.tw/stfopenact/progress?strProd=0037&strWeb=0035`,
         },
     ]);
     return (
