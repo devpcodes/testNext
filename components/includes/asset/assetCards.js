@@ -33,7 +33,7 @@ const AssetCards = memo(({ type }) => {
         if (Object.keys(cardDomData).length > 0) {
             for (const [key, value] of Object.entries(cardDomData)) {
                 dom.push(
-                    <div className="amount__detail__items">
+                    <div className="amount__detail__items" key={key}>
                         <p className="amount__detail__items__title">{value.title}</p>
                         <p className={`amount__detail__items__value ${value.class}`}>{value.amount}</p>
                     </div>,
