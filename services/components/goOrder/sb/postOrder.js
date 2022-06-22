@@ -1,5 +1,6 @@
 import { getA8Instance } from '../../../myAxios';
 export const postOrder = async (data, orderList) => {
+    console.log('---', data, orderList);
     var url = `/SubBrokerage/SecuritiesTrade/Order`;
     try {
         const res = await getA8Instance('v2', undefined, false).post(url, data);

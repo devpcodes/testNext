@@ -189,6 +189,9 @@ const SubmitBtn = () => {
         }
     };
     const submitDataHandler = async () => {
+        if (currentAccount.accttype !== 'H') {
+            message.error('交易帳號錯誤');
+        }
         const token = getToken();
         const ID = currentAccount.idno;
         //TODO cookie之後會廢掉
