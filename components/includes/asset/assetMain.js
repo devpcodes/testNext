@@ -13,7 +13,7 @@ import Breadcrumb from '../breadcrumb/breadcrumb';
 const AssetMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
-    const [tabType, setTabType] = useState('F');
+    const [tabType, setTabType] = useState('S');
 
     const changeTypeHandler = useCallback(t => {
         setTabType(t);
