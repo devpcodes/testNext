@@ -6,8 +6,7 @@ import SubscriptionBtn from '../../../mySubscription/elements/SubscriptionBtn';
 import VerticalTable from '../../overview/elements/VerticalTable';
 import { setModal } from '../../../../../store/components/layouts/action';
 import qrCode from '../../../../../resources/images/components/loanZone/demo.jpg';
-
-const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showMore, stockList }) => {
+const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showMore, stockList, deleteApplyFunc }) => {
     const [columns, setColumns] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [dataAll, setDataAll] = useState([]);
@@ -44,7 +43,7 @@ const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showM
                                         colorType="blue"
                                         width={100 / 2 - 1 + '%'}
                                         style={{ marginRight: 10 }}
-                                        // onClick={clickHandler.bind(null, record, 'canCancelOrder')}
+                                        // onClick={clickModifyBtn.bind(null, record, 'canCancelOrder')}
                                         // loading={cancelLoading}
                                     />
                                     <SubscriptionBtn
@@ -52,7 +51,7 @@ const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showM
                                         colorType="blue"
                                         width={100 / 2 - 1 + '%'}
                                         style={{ marginRight: 10 }}
-                                        // onClick={clickHandler.bind(null, record, 'canSellStock')}
+                                        onClick={clickModifyBtn.bind(null, record, 'change')}
                                     />
                                 </React.Fragment>
                             );
@@ -87,7 +86,8 @@ const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showM
                                         text="我要還款"
                                         colorType="red"
                                         width={99 + '%'}
-                                        onClick={clickHandler.bind(null, record, 'canMortgage')}
+                                        onClick={clickModifyBtn.bind(null, record, 'delete')}
+                                        // onClick={clickHandler.bind(null, record, 'canMortgage')}
                                     />
                                 </React.Fragment>
                             );
@@ -189,6 +189,18 @@ const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showM
 
     const pageChangeHandler = val => {
         setCurrentPage(val);
+    };
+
+    const deleteApplyHandler = val => {
+        deleteApplyFunc(val);
+    };
+
+    const clickModifyBtn = (d, a) => {
+        if (a == 'change') {
+            window.location.href = `/newweb/loan-zone/Collateral?applyDate=${d.applyDate}`;
+        } else if (a == 'delete') {
+            deleteApplyHandler(d.applyDate);
+        }
     };
 
     const clickHandler = () => {

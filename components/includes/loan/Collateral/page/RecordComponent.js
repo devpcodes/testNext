@@ -15,6 +15,7 @@ import {
     collateralDeatil,
     fetchApplyRecord,
     applyStatus,
+    deleteApply,
 } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 import { setModal } from '../../../../../store/components/layouts/action';
 import { set } from 'lodash';
@@ -28,6 +29,7 @@ const RecordComponent = () => {
     const [totalTM, setTotalTM] = useState(0);
     const [totalTR, setTotalTR] = useState(0);
     const [stockList, setStockList] = useState([]);
+    const [stockAll, setStockAll] = useState([]);
     const [detailList, setDetailList] = useState([]);
     const [moreModalShow, setMoreModalShow] = useState(false);
     const winWidth = useSelector(store => store.layout.winWidth);
@@ -50,16 +52,19 @@ const RecordComponent = () => {
     useEffect(() => {
         let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
         setRefreshTime(time);
-    });
+    }, []);
 
     useEffect(() => {
         getApplyRecord();
-    }, [currentAccount]);
+    }, [currentAccount, refreshTime]);
 
     useEffect(() => {
         totalCount();
-        buildStockList();
     }, [dataLoan]);
+
+    useEffect(() => {
+        buildStockList();
+    }, [stockList]);
 
     const totalCount = async () => {
         let TL = 0;
@@ -73,13 +78,13 @@ const RecordComponent = () => {
                 Number(x.outstandingStkFee) +
                 Number(x.unpaidPledgeFee);
         });
-        setTotalTL(TL);
-        setTotalTM(TM);
+        setTotalTL(TL.toFixed(2));
+        setTotalTM(TM.toFixed(2));
     };
 
     const onRefresh = () => {
         let time = moment(new Date()).format('YYYY.MM.DD HH:mm:ss');
-        getApplyRecord();
+        // getApplyRecord();
         setRefreshTime(time);
     };
 
@@ -94,18 +99,25 @@ const RecordComponent = () => {
             const res = await fetchApplyRecord(token, currentAccount.broker_id, currentAccount.account);
             let st_arr = [];
             let dt_arr = [];
-            await res.map(async (x, i) => {
-                let d1 = await getRepayment(x.applyDate, x.key);
-                x.detail = d1;
-                dt_arr = dt_arr.concat(d1);
-                console.log('dt_arr', dt_arr);
+            if (res.length > 0) {
+                await res.map(async (x, i) => {
+                    let d1 = await getRepayment(x.applyDate, x.key);
+                    x.detail = d1;
+                    dt_arr = dt_arr.concat(d1);
+
+                    let d2 = await getCollateral(x.applyDate, x.key);
+                    x.collateral = d2;
+                    st_arr = st_arr.concat(d2);
+                    if ((res.length = i)) {
+                        setDetailList(dt_arr);
+                        setStockList(st_arr);
+                    }
+                    return x;
+                });
+            } else {
                 setDetailList(dt_arr);
-                let d2 = await getCollateral(x.applyDate, x.key);
-                x.collateral = d2;
-                st_arr = st_arr.concat(d2);
                 setStockList(st_arr);
-                return x;
-            });
+            }
 
             setDataLoan(res);
             const res2 = await applyStatus(token, currentAccount.broker_id, currentAccount.account);
@@ -144,6 +156,57 @@ const RecordComponent = () => {
         return dataset;
     };
 
+    const deleteApplyFunc = async date => {
+        let token = getToken();
+        dispatch(
+            setModal({
+                visible: true,
+                content: `你確定要取消該筆申請嗎?`,
+                type: 'confirm',
+                icon: false,
+                title: '取消申請',
+                onOk: async () => {
+                    let ca_content = sign(
+                        {
+                            idno: currentAccount.idno,
+                            broker_id: currentAccount.broker_id,
+                            account: currentAccount.account,
+                        },
+                        true,
+                        token,
+                        true,
+                    );
+                    dispatch(setModal({ visible: false }));
+                    if (checkSignCA(ca_content)) {
+                        let res_ = deleteApply(
+                            token,
+                            currentAccount.broker_id,
+                            currentAccount.account,
+                            date,
+                            ca_content,
+                        ).then(res => {
+                            if (res) {
+                                dispatch(
+                                    setModal({
+                                        visible: true,
+                                        content: `申請已取消`,
+                                        type: 'info',
+                                        title: '系統訊息',
+                                    }),
+                                );
+                                onRefresh();
+                            } else {
+                                dispatch(
+                                    setModal({ visible: true, content: `伺服器錯誤`, type: 'info', title: '系統訊息' }),
+                                );
+                            }
+                        });
+                    }
+                },
+            }),
+        );
+    };
+
     const getCollateral = async (date, key) => {
         let token = getToken();
         let dataset = await collateralDeatil(token, currentAccount.broker_id, currentAccount.account, date);
@@ -158,14 +221,26 @@ const RecordComponent = () => {
     const buildStockList = async () => {
         console.log('[buildStockList]', stockList);
         let TR = 0;
+        let arr = [];
+        let obj = {};
         stockList.map(x => {
             if (x.collateralQty && x.close) {
                 let v = Number(x.collateralQty) * Number(x.close);
                 // console.log(x.collateralQty,'x',x.close,'=',v);
                 TR += v;
             }
+            if (Object.keys(obj).includes(x.stockId)) {
+                let qty = obj[x.stockId].collateralQty + Number(x.collateralQty);
+                obj[x.stockId].collateralQty = qty;
+            } else {
+                obj[x.stockId] = { stockId: x.stockId, stockName: x.stockName, collateralQty: Number(x.collateralQty) };
+            }
+        });
+        Object.keys(obj).map(x => {
+            arr.push(obj[x]);
         });
         setTotalTR(TR.toFixed(2));
+        setStockAll(arr);
     };
 
     const clickHandler = active => {
@@ -173,6 +248,8 @@ const RecordComponent = () => {
         console.log(st);
         if (active !== 'all') {
             st = st.filter(x => x.group === active);
+        } else {
+            st = stockAll;
         }
         dispatch(
             setModal({
@@ -230,7 +307,7 @@ const RecordComponent = () => {
                         </button>
                     </div>
                     <div className="topBarRight flexBox">
-                        <p className="desc__update">更新時間：{refreshTime} </p>
+                        <p className="desc__update forPC">更新時間：{refreshTime} </p>
                         <IconBtn type={'refresh'} onClick={onRefresh.bind(null, 'click')}></IconBtn>
                         <div className="AccountDropdownBox">
                             <AccountDropdown
@@ -269,7 +346,8 @@ const RecordComponent = () => {
                             rowData={dataLoan}
                             rowDataOther={dataOther}
                             stockList={stockList}
-                            // showMore = {clickHandler}
+                            showMore={clickHandler}
+                            deleteApplyFunc={deleteApplyFunc}
                         />
                     ) : (
                         <RecordTable
@@ -280,6 +358,7 @@ const RecordComponent = () => {
                         />
                     )}
                 </div>
+                <p className="desc__update forM">最後更新時間：{refreshTime} </p>
             </div>
             <style jsx>
                 {`
@@ -332,6 +411,21 @@ const RecordComponent = () => {
             color: #fff;
         }
         .record__container .sumItem > div {font-size:24px;font-weight:800; text-align:center;}
+        .forPC{display:inherite;}
+        .forMB{display:none;}
+        @media screen and (max-width: 768px) {
+            .record__container{width:96%;}
+            .topBarRight {text-align:center;margin-top:20px;}
+            .topBar .topBarLeft {display:block;}
+            .topBarLeft .nav__items {}
+            .record__container .sumItem{width:50%;}
+            .record__container .sumItem>div{font-size:16px;}
+            .record__container .sumItem>p{font-size:14px;color:#3f5372;}
+            .record__container .sumItem:nth-child(3){width:100%;margin-top:20px;}
+            .desc__update{font-size:14px;text-align:center;color:#3f5372;line-height:2;width:100%;}
+            .forPC{display:none;}
+            .forMB{display:inherite;}
+        }
 
             }`}
             </style>
@@ -453,6 +547,14 @@ const RecordComponent = () => {
                     }
                     .RecordTable__Content.Loan {
                         padding-left: 18%;
+                    }
+                    .record__container .repayment_table .ant-table-thead th:first-child::after {
+                        content: '明細';
+                    }
+                    @media screen and (max-width: 768px) {
+                        .flexBox {
+                            flex-wrap: wrap;
+                        }
                     }
                 `}
             </style>

@@ -20,6 +20,7 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
     const [total, setTotal] = useState(0);
     useEffect(() => {
         console.log('[22detailList]', detailList);
+        console.log('[22stockList]', stockList);
         setData(detailList);
         setTotal(detailList.length);
     }, [detailList]);
@@ -27,43 +28,77 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
         const myColumns = [
             {
                 title: '還款日',
-                width: '100px',
+                width: '20%',
                 dataIndex: 'repaymentDate',
                 key: 'repaymentDate',
-                align: 'right',
+                align: 'left',
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
             },
             {
                 title: '還款金額',
-                width: '100px',
+                width: '30%',
                 dataIndex: 'repayment',
                 key: 'repayment',
-                align: 'right',
+                align: 'center',
                 render(text, record, idx) {
                     return text; //formatNum(text);
                 },
             },
-            {
-                title: '剩餘還款金額',
-                width: '100px',
-                dataIndex: 'left',
-                key: 'left',
-                align: 'right',
-                render(text, record, idx) {
-                    return text;
-                },
-            },
+            // {
+            //     title: '剩餘還款金額',
+            //     width: '25%',
+            //     dataIndex: 'group',
+            //     key: 'repayment',
+            //     align: 'right',
+            //     render(text, record, idx) {
+            //         let d_ = rowData.filter(x => x.key == text);
+            //         let n = null
+            //         if(d_[0]){
+            //             n =
+            //             Number(d_[0].outstanding) +
+            //             Number(d_[0].payable) +
+            //             Number(d_[0].outstandingFee) +
+            //             Number(d_[0].outstandingStkFee) +
+            //             Number(d_[0].unpaidPledgeFee);
+            //         }
+            //     if (n) {
+            //         return n;
+            //     } else {
+            //         return '-';
+            //     }
+            //     },
+            // },
             {
                 title: '還款方式',
-                width: '100px',
+                width: '40%',
                 dataIndex: 'group',
                 key: 'method',
-                align: 'right',
+                align: 'center',
                 render(text, record, idx) {
-                    let d_ = rowData.filter(x => x.key == text);
-                    return d_.source;
+                    let d_ = detailList.filter(x => x.group == text);
+                    console.log('[method]', text, d_);
+                    if (d_[0]) {
+                        switch (d_[0].writeOffCode) {
+                            case '1':
+                                return '賣股還款';
+                            case '2':
+                                return '現金還款';
+                            case '3':
+                                return '換出';
+                            case '4':
+                                return '處分';
+                            case '5':
+                                return '轉出';
+                            case '6':
+                                return '調降';
+                            default:
+                                return '-';
+                        }
+                    } else {
+                        return '-';
+                    }
                 },
             },
         ];
@@ -134,14 +169,14 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                     <div className="item_list">
                         {st.length > 0 ? (
                             st.map((x, i) => {
-                                return (
-                                    <p key={i} className="item_list_row">
-                                        <span>
-                                            {x.stockId} {x.stockName}
-                                        </span>
-                                        <span>{x.notReturnedQty} 張</span>
-                                    </p>
-                                );
+                                // return (
+                                //     <p key={i} className="item_list_row">
+                                //         <span>
+                                //             {x.stockId} {x.stockName}
+                                //         </span>
+                                //         <span>{x.notReturnedQty} 張</span>
+                                //     </p>
+                                // );
                             })
                         ) : (
                             <p>無資料</p>
@@ -162,23 +197,23 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                         <table className="detail">
                             <tr>
                                 <td>本金</td>
-                                <td>35000</td>
+                                <td>{record.repayment}</td>
                             </tr>
                             <tr>
                                 <td>利息</td>
-                                <td>3540</td>
+                                <td>{record.paid}</td>
                             </tr>
                             <tr>
                                 <td>手續費</td>
-                                <td>100</td>
+                                <td>{record.writeOffFee}</td>
                             </tr>
                             <tr>
                                 <td>撥券費</td>
-                                <td>21</td>
+                                <td>{record.writeOffTransFee}</td>
                             </tr>
                             <tr>
                                 <td>設質費</td>
-                                <td>50</td>
+                                <td>{record.unpaidPledgeFee}</td>
                             </tr>
                         </table>
                     </div>
@@ -188,15 +223,15 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                     <div>
                         <table className="detail">
                             <tbody>
-                                {record.collateral ? (
-                                    record.collateral.map((x, i) => {
-                                        if (i < 3) {
+                                {record.group ? (
+                                    stockList.map((x, i) => {
+                                        if (x.group == record.group) {
                                             return (
                                                 <tr key={i}>
                                                     <td>
                                                         {x.stockId} {x.stockName}
                                                     </td>
-                                                    <td>{x.notReturnedQty} 張</td>
+                                                    <td>{Number(x.collateralQty) - Number(x.notReturnedQty)} 張</td>
                                                 </tr>
                                             );
                                         }
@@ -220,6 +255,7 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
     };
     return (
         <AccountTable
+            className="repayment_table"
             filterColumns={searchColumns}
             pagination={{
                 onChange: pageChangeHandler,
