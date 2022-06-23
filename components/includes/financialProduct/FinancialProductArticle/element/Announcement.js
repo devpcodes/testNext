@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import noDataImg from '../../../../../resources/images/components/productQuestion/img-404.svg';
+import noDataImg from '../../../../../resources/images/components/productQuestion/empty.png';
 
 const Announcement = ({ data }) => {
     const customizeRenderEmpty = () => {

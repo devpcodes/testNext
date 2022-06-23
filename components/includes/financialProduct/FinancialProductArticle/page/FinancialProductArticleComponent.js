@@ -48,6 +48,7 @@ const FinancialProductArticleComponent = ({
     }, [router.query.categoryCode]);
 
     const onTabsChange = key => {
+        console.log('key======', key);
         setActiveTabKey(key);
     };
 
@@ -76,13 +77,22 @@ const FinancialProductArticleComponent = ({
         if (isTradingPlatform) {
             router.push('/trading-platform');
         } else {
-            router.push('/financial-product');
+            router.push('/financial-product' + `?categoryCode=${router.query.categoryCode}`);
         }
     };
 
     const toAnnouncement = () => {
         window.open('https://www.sinotrade.com.tw/CSCenter/CSCenter_13_5', '_blank');
     };
+
+    useEffect(() => {
+        console.log('commonQuestion==========', router.query.tabKey);
+        if (router.query.tabKey) {
+            setTimeout(() => {
+                setActiveTabKey(router.query.tabKey);
+            }, 500);
+        }
+    }, [router.query.tabKey]);
 
     const renderProducts = () => {
         return isTradingPlatform ? (
@@ -105,7 +115,6 @@ const FinancialProductArticleComponent = ({
             </div>
         ) : null;
     };
-
     const serverRender = () => {
         if (serverTabsArray?.length > 0) {
             return (
@@ -271,6 +280,7 @@ const FinancialProductArticleComponent = ({
         const announcementRes = await getAnnouncement(res?.keywords, 3);
         setAnnouncement(announcementRes);
     }, [productCode]);
+    console.log('--------', articleData?.commonQuestionKeywords);
     return (
         <>
             <PageHead title={'永豐金理財網'} />

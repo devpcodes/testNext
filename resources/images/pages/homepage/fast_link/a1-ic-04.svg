@@ -1,0 +1,11 @@
+<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="49.7217" cy="20.7218" rx="11.8241" ry="11.8241" transform="rotate(45 49.7217 20.7218)" fill="url(#paint0_linear_230_11898)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.25 17.0001C10.25 16.0336 11.0335 15.2501 12 15.2501H34.25V18.7501H13.75V45.7501H49.75V35.7501H53.25V47.5001C53.25 48.4666 52.4665 49.2501 51.5 49.2501H12C11.0335 49.2501 10.25 48.4666 10.25 47.5001V17.0001Z" fill="#172439"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M43.8271 17H53.8271V27L50.0646 23.2374L35.2657 38.0363C34.9375 38.3645 34.4924 38.5489 34.0283 38.5489C33.5642 38.5489 33.119 38.3645 32.7908 38.0363L25.7783 31.0238L18.0003 38.8021L15.5254 36.3273L24.5408 27.3115C24.869 26.9833 25.3141 26.7989 25.7783 26.7989C26.2424 26.7989 26.6875 26.9832 27.0157 27.3114L34.0283 34.324L47.5897 20.7626L43.8271 17Z" fill="#172439"/>
+<defs>
+<linearGradient id="paint0_linear_230_11898" x1="49.7217" y1="12.3754" x2="49.7217" y2="37.4147" gradientUnits="userSpaceOnUse">
+<stop offset="0.322917" stop-color="#DAA360"/>
+<stop offset="1" stop-color="#DAA360" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

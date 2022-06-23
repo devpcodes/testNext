@@ -8,11 +8,11 @@ import NewsArticles from '../element/NewsArticles.js';
 import bgd from '../../../../../resources/images/pages/beginner/a42-d-01.jpg';
 import bgt from '../../../../../resources/images/pages/beginner/a42-m-01.jpg';
 import bgm from '../../../../../resources/images/pages/beginner/a42-t-01.jpg';
-import pic1 from '../../../../../resources/images/pages/beginner/img-card.svg';
-import pic2 from '../../../../../resources/images/pages/beginner/img-card-2.svg';
-import icon1 from '../../../../../resources/images/pages/beginner/icon1.png';
-import icon2 from '../../../../../resources/images/pages/beginner/icon2.png';
-import icon3 from '../../../../../resources/images/pages/beginner/icon3.png';
+import pic1 from '../../../../../resources/images/pages/beginner/a42-img-01.png';
+import pic2 from '../../../../../resources/images/pages/beginner/a42-img-02.png';
+import icon1 from '../../../../../resources/images/pages/beginner/a42-img-03.jpg';
+import icon2 from '../../../../../resources/images/pages/beginner/a42-img-04.jpg';
+import icon3 from '../../../../../resources/images/pages/beginner/a42-img-05.jpg';
 import img1 from '../../../../../resources/images/pages/beginner/img1.png';
 import { postArticleList } from '../../../../../services/pages/index/postArticleList';
 

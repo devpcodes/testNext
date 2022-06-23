@@ -1,2 +1,3 @@
 export const SET_PLATFORM = 'SET_PLATFORM';
 export const SET_CURRENT_PATH = 'SET_CURRENT_PATH';
+export const SET_GOBACK_PATH = 'SET_GOBACK_PATH';
