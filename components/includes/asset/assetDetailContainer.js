@@ -105,8 +105,10 @@ const assetDetailContainer = memo(({ tabType }) => {
         const data = {
             // 證券
             S: {
-                total_proportion: parseFloat((realTimePrtLosSum?.S?.sum_amt / realTimePrtLosSumTotal) * 100).toFixed(2), // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.S?.sum_amt), // 總額
+                total_proportion: parseFloat((realTimePrtLosSum?.S?.sum_namt / realTimePrtLosSumTotal) * 100).toFixed(
+                    2,
+                ), // 總佔比
+                sum_amt: formatNum(realTimePrtLosSum?.S?.sum_namt), // 總額
                 title: '國內證券',
                 class: 's__point',
             },
