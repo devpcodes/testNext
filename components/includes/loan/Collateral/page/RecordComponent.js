@@ -30,6 +30,7 @@ const RecordComponent = () => {
     const [totalTR, setTotalTR] = useState(0);
     const [stockList, setStockList] = useState([]);
     const [stockAll, setStockAll] = useState([]);
+    const [dataAll, setDataAll] = useState([]);
     const [detailList, setDetailList] = useState([]);
     const [moreModalShow, setMoreModalShow] = useState(false);
     const winWidth = useSelector(store => store.layout.winWidth);
@@ -59,6 +60,8 @@ const RecordComponent = () => {
     }, [currentAccount, refreshTime]);
 
     useEffect(() => {
+        let d_ = dataLoan.concat(dataOther);
+        setDataAll(d_);
         totalCount();
     }, [dataLoan]);
 
@@ -346,6 +349,7 @@ const RecordComponent = () => {
                             rowData={dataLoan}
                             rowDataOther={dataOther}
                             stockList={stockList}
+                            allData={dataAll}
                             showMore={clickHandler}
                             deleteApplyFunc={deleteApplyFunc}
                         />

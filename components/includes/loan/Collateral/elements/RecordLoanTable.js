@@ -6,7 +6,16 @@ import SubscriptionBtn from '../../../mySubscription/elements/SubscriptionBtn';
 import VerticalTable from '../../overview/elements/VerticalTable';
 import { setModal } from '../../../../../store/components/layouts/action';
 import qrCode from '../../../../../resources/images/components/loanZone/demo.jpg';
-const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showMore, stockList, deleteApplyFunc }) => {
+const RecordLoanTable = ({
+    refresh,
+    payableHandler,
+    rowData,
+    rowDataOther,
+    allData,
+    showMore,
+    stockList,
+    deleteApplyFunc,
+}) => {
     const [columns, setColumns] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [dataAll, setDataAll] = useState([]);
@@ -22,9 +31,9 @@ const RecordLoanTable = ({ refresh, payableHandler, rowData, rowDataOther, showM
         let d_ = rowData.concat(rowDataOther);
         setData(rowData);
         setDataOther(rowDataOther);
-        setDataAll(d_);
-        setTotal(d_.length);
-    }, [rowData]);
+        setDataAll(allData);
+        setTotal(allData.length);
+    }, [rowData, rowDataOther]);
 
     useEffect(() => {
         const myColumns = [

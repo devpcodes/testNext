@@ -19,8 +19,6 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
     const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
     useEffect(() => {
-        console.log('[22detailList]', detailList);
-        console.log('[22stockList]', stockList);
         setData(detailList);
         setTotal(detailList.length);
     }, [detailList]);
@@ -78,7 +76,6 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                 align: 'center',
                 render(text, record, idx) {
                     let d_ = detailList.filter(x => x.group == text);
-                    console.log('[method]', text, d_);
                     if (d_[0]) {
                         switch (d_[0].writeOffCode) {
                             case '1':
