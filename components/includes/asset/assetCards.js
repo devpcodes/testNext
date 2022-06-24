@@ -137,6 +137,7 @@ const AssetCards = memo(({ type }) => {
                     }
                     .cards__detail {
                         width: 100%;
+                        min-width: auto;
                     }
                 }
             `}</style>
