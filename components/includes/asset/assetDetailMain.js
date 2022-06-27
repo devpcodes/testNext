@@ -15,7 +15,7 @@ const AssetDetailMain = memo(({}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     useEffect(async () => {
-        const type = router.query.type == 'S' ? ['S', 'L'] : [router.query.type];
+        const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
         const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
         dispatch(setRealTimePrtLosSum(res));
         setReload(true);
