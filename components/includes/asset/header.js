@@ -23,7 +23,8 @@ const AssetHeader = memo(({ title }) => {
     const [refreshTime, setrefreshTime] = useState(getTime());
 
     const refreshAction = async () => {
-        const res = await fetchQueryRealTimePrtLosSum(getToken(), router.query.type);
+        const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
+        const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
         dispatch(setRealTimePrtLosSum(res));
         setrefreshTime(getTime());
     };
