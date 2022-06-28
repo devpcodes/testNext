@@ -1,10 +1,10 @@
 import { Select } from 'antd';
 import icon from '../../../../resources/images/components/subscriptionOverview/arrow-chevron-down-copy (2).svg';
 
-const AccountSelect = ({ data, accText, ...props }) => {
+const AccountSelect = ({ data, accText, onClick, ...props }) => {
     const { Option, OptGroup } = Select;
     return (
-        <div className="sino__select">
+        <div className="sino__select" onClick={onClick}>
             <Select suffixIcon={<img className="select__icon" src={icon} />} {...props}>
                 {data?.map(item => {
                     return (

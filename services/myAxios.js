@@ -265,7 +265,7 @@ export const getZionInstance = (version = zionDefaultVersion, modal = true) => {
 const createSubscriptionInstance = () =>
     axios.create({
         baseURL: `${process.env.NEXT_PUBLIC_SUBSCRIPTION}`,
-        timeout: 7000,
+        timeout: 90000,
         withCredentials: true,
         validateStatus: function (status) {
             return status >= 200 && status < 300;
@@ -278,7 +278,20 @@ export const getSubscriptionInstance = () => {
     SubscriptionIns.interceptors.response.use(
         response => response,
         error => {
-            return errorHandler(error, modal);
+            return errorHandler(error, false);
+        },
+    );
+
+    return SubscriptionIns;
+};
+
+export const getSubscriptionInstanceV2 = () => {
+    const SubscriptionIns = createSubscriptionInstance();
+
+    SubscriptionIns.interceptors.response.use(
+        response => response,
+        error => {
+            return error;
         },
     );
 
