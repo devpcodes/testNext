@@ -590,7 +590,8 @@ const SubscriptionOverviewComp = () => {
                         margin-bottom: 15px;
                     }
                     .subOverview__icon {
-                        margin-top: -13px;
+                        margin-top: 6px;
+                        height: 20px;
                     }
                     .subOverview__down {
                         margin-top: 15px;
