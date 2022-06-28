@@ -21,6 +21,10 @@ const LoanBox = ({ allCanLoan, financing }) => {
             </div>
         );
     };
+    const onClick = () => {
+        if (financing > 0) {
+        }
+    };
     return (
         <div className="loan__container">
             <div className="loan__head">
@@ -95,20 +99,26 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 flex: '1 0 0',
                             }}
                             onClick={() => {
-                                router.push('/loan-zone/Collateral/');
+                                router.push('/subscriptionArea/Subscription/');
                             }}
                         />
                     </div>
                 </div>
             </div>
             <div className="loan__footer">
-                <span className="footer__text">
+                {/* <span className="footer__text">
                     本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
                     <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
-                </span>
-                <Link href="/loan-zone/Collateral/">
-                    <a className="footer__link">我要還款 ></a>
-                </Link>
+                </span> */}
+                {financing <= 0 || financing == '--' ? (
+                    <a className="footer__link--disabled" disabled>
+                        我要還款 >
+                    </a>
+                ) : (
+                    <a className="footer__link" onClick={onClick}>
+                        我要還款 >
+                    </a>
+                )}
             </div>
             <style jsx>{`
                 .text__red {
@@ -205,6 +215,11 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     font-size: 16px;
                     letter-spacing: 0.4px;
                     color: #c97b1d;
+                }
+                .footer__link--disabled {
+                    color: #bfbfbf;
+                    font-size: 16px;
+                    letter-spacing: 0.4px;
                 }
                 .loan__money--lable {
                     font-size: 16px;

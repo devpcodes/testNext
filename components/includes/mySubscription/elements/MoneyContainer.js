@@ -33,7 +33,9 @@ const MoneyContainer = memo(({ payable, receivable }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            getBalance();
+            if (currentAccount.broker_id != null) {
+                debounce(getBalance, 500);
+            }
         }, 700);
     }, [currentAccount]);
 

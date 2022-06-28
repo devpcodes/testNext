@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { InputNumber, Tooltip } from 'antd';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useUser } from '../../../../../hooks/useUser';
 import { fetchApplyInfo } from '../../../../../services/components/loznZone/calculation/fetchApplyInfo';
@@ -21,11 +22,19 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
     const userSettings = useSelector(store => store.user.userSettings);
     const nowAccount = useRef('');
     const nowKey = useRef('');
+    const router = useRouter();
+    const [applyDate, setApplyDate] = useState('');
     useEffect(() => {
         if (reload) {
             getAccountOverview();
         }
     }, [reload]);
+
+    useEffect(() => {
+        if (router.query.applyDate) {
+            setApplyDate(router.query.applyDate);
+        }
+    }, [router]);
 
     useEffect(() => {
         if (stockData?.stockId != null && currentKey === 'self') {
@@ -428,7 +437,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
         const token = getToken();
         try {
             setLoading(true);
-            let result = await fetchApplyInfo(token, currentAccount.broker_id, currentAccount.account);
+            let result = await fetchApplyInfo(token, currentAccount.broker_id, currentAccount.account, applyDate);
             setLoading(false);
             const selectedKeys = [];
             result.forEach((item, index) => {
