@@ -109,10 +109,10 @@ const DountChartContainer = memo(({}) => {
                 <div className="dount__desc funds">
                     <p className="dount__desc__name">
                         <span className="point__circle"></span>基金{' '}
-                        <span className="pl__percent">({domData.OF?.total_proportion}%)</span>
                         <Tooltip title="資產總覽基金數值僅供參考，實際信託基金帳務悉以財富管理信託電子平台顯示數據為準。">
                             <img src={info} className="info_png" />
                         </Tooltip>
+                        <span className="pl__percent">({domData.OF?.total_proportion}%)</span>
                     </p>
                     <p className="dount__desc__amount">${domData.OF?.sum_amt}</p>
                     <p
@@ -284,7 +284,7 @@ const DountChartContainer = memo(({}) => {
                     width: 16px;
                     height: 16px;
                     cursor: pointer;
-                    margin-left: 6px;
+                    margin: 0 4px 0 0px;
                 }
 
                 @media (max-width: 900px) {
