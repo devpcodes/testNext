@@ -2178,7 +2178,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
         OF: [{ title: '集保基金', detailType: 'OF' }],
         WM_SN: [{ title: '結構型商品庫存', detailType: 'WM_SN' }],
         SN: [{ title: '結構型商品庫存', detailType: 'SN' }],
-        BOND: [{ title: '海外債', detailType: 'BOND' }],
+        BOND: [{ title: '海外債/境外結構型', detailType: 'BOND' }],
         WM_FUND_INTRANSIT: [{ title: '基金在途', detailType: 'WM_FUND_INTRANSIT' }],
         WM_SN_INTRANSIT: [{ title: '基金結構型在途', detailType: 'WM_SN_INTRANSIT' }],
         WM_TRUST_DEPOSIT: [{ title: '信託存款', detailType: 'WM_TRUST_DEPOSIT' }],
