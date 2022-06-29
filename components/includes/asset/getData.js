@@ -362,11 +362,11 @@ export const getContentData = type => {
                 //             ? 'loss'
                 //             : '',
                 // },
-                sum_total_value_twd: {
-                    title: '合計參考市值',
-                    amount: `$${formatNum(realTimePrtLosSum?.BOND?.sum_total_value_twd)}`,
-                    class: '',
-                },
+                // sum_total_value_twd: {
+                //     title: '合計參考市值',
+                //     amount: `$${formatNum(realTimePrtLosSum?.BOND?.sum_total_value_twd)}`,
+                //     class: '',
+                // },
             };
         case 'SN':
             // 名目本金
@@ -595,7 +595,7 @@ export const getTitleData = type => {
             break;
         case 'BOND':
             titleData = {
-                title: '海外債券總市值',
+                title: '海外債/境外結構型總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.BOND?.sum_total_value_twd),
             };
