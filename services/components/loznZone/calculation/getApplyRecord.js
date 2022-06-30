@@ -105,7 +105,7 @@ export const applyStatus = async function (token, branch, account) {
 export const deleteApply = async function (token, branch, account, date) {
     try {
         const url = '/loan/api/apply';
-        const res = await getA8StpInstance(false).get(url, {
+        const res = await getA8StpInstance(false).delete(url, {
             headers: { token: `${token}` },
             params: {
                 branch,
@@ -115,6 +115,26 @@ export const deleteApply = async function (token, branch, account, date) {
         });
         if (res.data.success) {
             return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getClose = async function (token) {
+    //永豐金 2890
+    try {
+        const url = '/loan/api/checkGreenChannelStock';
+        const res = await getA8StpInstance(false).get(url, {
+            headers: { token: `${token}` },
+            params: {
+                stockId: 2890,
+            },
+        });
+        if (res.data.success) {
+            return res.data.result;
         } else {
             return false;
         }

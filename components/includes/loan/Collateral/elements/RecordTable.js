@@ -44,30 +44,6 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                     return text; //formatNum(text);
                 },
             },
-            // {
-            //     title: '剩餘還款金額',
-            //     width: '25%',
-            //     dataIndex: 'group',
-            //     key: 'repayment',
-            //     align: 'right',
-            //     render(text, record, idx) {
-            //         let d_ = rowData.filter(x => x.key == text);
-            //         let n = null
-            //         if(d_[0]){
-            //             n =
-            //             Number(d_[0].outstanding) +
-            //             Number(d_[0].payable) +
-            //             Number(d_[0].outstandingFee) +
-            //             Number(d_[0].outstandingStkFee) +
-            //             Number(d_[0].unpaidPledgeFee);
-            //         }
-            //     if (n) {
-            //         return n;
-            //     } else {
-            //         return '-';
-            //     }
-            //     },
-            // },
             {
                 title: '還款方式',
                 width: '40%',
@@ -116,13 +92,6 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
         setCurrentPage(val);
     };
 
-    const openDetail = (e, id) => {
-        e.preventDefault();
-        let IsOpen_ = IsOpen;
-        IsOpen_[id] = !IsOpen_[id];
-        setIsOpen(IsOpen_);
-    };
-
     const handleTableChange = (pagination, filters, sorter) => {
         // console.log('------------.-', pagination, statusFilterValue, sorter);
         // if (sorter.columnKey === 'orderAmount') {
@@ -166,14 +135,14 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                     <div className="item_list">
                         {st.length > 0 ? (
                             st.map((x, i) => {
-                                // return (
-                                //     <p key={i} className="item_list_row">
-                                //         <span>
-                                //             {x.stockId} {x.stockName}
-                                //         </span>
-                                //         <span>{x.notReturnedQty} 張</span>
-                                //     </p>
-                                // );
+                                return (
+                                    <p key={i} className="item_list_row">
+                                        <span>
+                                            {x.stockId} {x.stockName}
+                                        </span>
+                                        <span>{x.notReturnedQty} 張</span>
+                                    </p>
+                                );
                             })
                         ) : (
                             <p>無資料</p>
