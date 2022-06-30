@@ -25,9 +25,11 @@ const LoanBox = ({ allCanLoan, financing }) => {
         <div className="loan__container">
             <div className="loan__head">
                 <span className="loan__title">借款</span>
-                <a className="loan__gobtn">
-                    借款紀錄 <img className="loan__goIcon" src={go} />
-                </a>
+                <Link href="/loan-zone/Record/">
+                    <a className="loan__gobtn">
+                        借款紀錄 <img className="loan__goIcon" src={go} />
+                    </a>
+                </Link>
             </div>
             <div className="loan__content">
                 <div>
