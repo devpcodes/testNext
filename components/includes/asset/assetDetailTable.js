@@ -41,11 +41,16 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 tableTitle = {
                     stock: [
-                        { title: '股票代碼', dataIndex: 'stock' },
+                        {
+                            title: '股票代碼',
+                            dataIndex: 'stock',
+                            fixed: 'left',
+                        },
                         {
                             title: '股票名稱',
                             dataIndex: 'stocknm',
                             sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                            fixed: 'left',
                         },
                         {
                             title: '類別',
@@ -111,11 +116,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                     ],
                     unreal: [
-                        { title: '股票代碼', dataIndex: 'stock' },
+                        { title: '股票代碼', dataIndex: 'stock', fixed: 'left' },
                         {
                             title: '股票名稱',
                             dataIndex: 'stocknm',
                             sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                            fixed: 'left',
                         },
                         { title: '出借股數', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
                         { title: '現價', dataIndex: 'lastprice', align: 'right' },
@@ -162,11 +168,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                     ],
                     creditdn: [
-                        { title: '股票代碼', dataIndex: 'stock' },
+                        { title: '股票代碼', dataIndex: 'stock', fixed: 'left' },
                         {
                             title: '股票名稱',
                             dataIndex: 'stocknm',
                             sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                            fixed: 'left',
                         },
                         { title: '股數', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
                         { title: '現價', dataIndex: 'lastprice', align: 'right' },
@@ -179,11 +186,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                     ],
                     lenddn: [
-                        { title: '股票代碼', dataIndex: 'stock' },
+                        { title: '股票代碼', dataIndex: 'stock', fixed: 'left' },
                         {
                             title: '股票名稱',
                             dataIndex: 'stocknm',
                             sorter: (a, b) => a.stocknm.length - b.stocknm.length,
+                            fixed: 'left',
                         },
                         { title: '股數', dataIndex: 'qty', render: qty => formatNum(qty), align: 'right' },
                         { title: '現價', dataIndex: 'lastprice', align: 'right' },
@@ -452,6 +460,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品名稱',
                             dataIndex: 'stockName',
                             sorter: (a, b) => a.stockName.length - b.stockName.length,
+                            fixed: 'left',
                         },
                         {
                             title: '買賣別',
@@ -673,6 +682,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '股票名稱',
                             dataIndex: 'name',
                             sorter: (a, b) => a.name.length - b.name.length,
+                            fixed: 'left',
                         },
                         {
                             title: '市場',
@@ -841,11 +851,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'FIP':
                 tableTitle = {
                     FIP: [
-                        { title: '股票代碼', dataIndex: 'symbol' },
+                        { title: '股票代碼', dataIndex: 'symbol', fixed: 'left' },
                         {
                             title: '股票名稱',
                             dataIndex: 'pro_name',
                             sorter: (a, b) => a.pro_name.length - b.pro_name.length,
+                            fixed: 'left',
                         },
                         { title: '幣別', dataIndex: 'curr' },
                         { title: '庫存', dataIndex: 'last_inv', align: 'right' },
@@ -982,11 +993,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
             case 'MIP':
                 tableTitle = {
                     MIP: [
-                        { title: '股票代碼', dataIndex: 'symbol' },
+                        { title: '股票代碼', dataIndex: 'symbol', fixed: 'left' },
                         {
                             title: '股票名稱',
                             dataIndex: 'pro_name',
                             sorter: (a, b) => a.pro_name.length - b.pro_name.length,
+                            fixed: 'left',
                         },
                         { title: '幣別', dataIndex: 'curr' },
                         { title: '庫存', dataIndex: 'last_inv', align: 'right' },
@@ -1127,11 +1139,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品代碼',
                             dataIndex: 'fund_code',
                             sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                            fixed: 'left',
                         },
                         {
                             title: '商品名',
                             dataIndex: 'fund_name',
                             sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                            fixed: 'left',
                         },
                         {
                             title: '幣別',
@@ -1318,6 +1332,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品名稱',
                             dataIndex: 'fund_cn',
                             sorter: (a, b) => a.fund_cn.length - b.fund_cn.length,
+                            fixed: 'left',
                         },
                         {
                             title: '參考損益',
@@ -1433,11 +1448,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品代碼',
                             dataIndex: 'fund_code',
                             sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                            fixed: 'left',
                         },
                         {
                             title: '商品名',
                             dataIndex: 'fund_name',
                             sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                            fixed: 'left',
                         },
                         {
                             title: '幣別',
@@ -1613,11 +1630,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品代碼',
                             dataIndex: 'prod_no',
                             sorter: (a, b) => a.prod_no.length - b.prod_no.length,
+                            fixed: 'left',
                         },
                         {
                             title: '商品名',
                             dataIndex: 'prod_name',
                             sorter: (a, b) => a.prod_name.length - b.prod_name.length,
+                            fixed: 'left',
                         },
                         {
                             title: '幣別',
@@ -1776,11 +1795,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品代號',
                             dataIndex: 'symbol',
                             sorter: (a, b) => a.name.length - b.name.length,
+                            fixed: 'left',
                         },
                         {
                             title: '商品名稱',
                             dataIndex: 'name',
                             sorter: (a, b) => a.symbol.length - b.symbol.length,
+                            fixed: 'left',
                         },
                         {
                             title: '幣別',
@@ -1885,11 +1906,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品代碼',
                             dataIndex: 'fund_code',
                             sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                            fixed: 'left',
                         },
                         {
                             title: '產品名稱',
                             dataIndex: 'fund_name',
                             sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                            fixed: 'left',
                         },
                         { title: '交易日期', dataIndex: 'trade_dt' },
                         { title: '交易類別', dataIndex: 'fund_type' },
@@ -1985,11 +2008,13 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             title: '商品代碼',
                             dataIndex: 'fund_code',
                             sorter: (a, b) => a.fund_code.length - b.fund_code.length,
+                            fixed: 'left',
                         },
                         {
                             title: '產品名稱',
                             dataIndex: 'fund_name',
                             sorter: (a, b) => a.fund_name.length - b.fund_name.length,
+                            fixed: 'left',
                         },
                         { title: '交易日期', dataIndex: 'trade_dt' },
                         { title: '交易類別', dataIndex: 'fund_type' },
@@ -2153,7 +2178,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
         OF: [{ title: '集保基金', detailType: 'OF' }],
         WM_SN: [{ title: '結構型商品庫存', detailType: 'WM_SN' }],
         SN: [{ title: '結構型商品庫存', detailType: 'SN' }],
-        BOND: [{ title: '海外債', detailType: 'BOND' }],
+        BOND: [{ title: '海外債/境外結構型', detailType: 'BOND' }],
         WM_FUND_INTRANSIT: [{ title: '基金在途', detailType: 'WM_FUND_INTRANSIT' }],
         WM_SN_INTRANSIT: [{ title: '基金結構型在途', detailType: 'WM_SN_INTRANSIT' }],
         WM_TRUST_DEPOSIT: [{ title: '信託存款', detailType: 'WM_TRUST_DEPOSIT' }],

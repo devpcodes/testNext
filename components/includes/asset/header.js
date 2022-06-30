@@ -7,6 +7,8 @@ import { fetchQueryRealTimePrtLosSum } from '../../../services/asset/queryRealTi
 import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { useRouter } from 'next/router';
+import { Tooltip } from 'antd';
+import info from '../../../resources/images/pages/asset/ic-ic-info@2x.png';
 
 const AssetHeader = memo(({ title }) => {
     const user = useSelector(store => store.user.currentAccount);
@@ -45,6 +47,9 @@ const AssetHeader = memo(({ title }) => {
                         </Button> */}
                         <span className="account__info">
                             {user.idno} ｜ {user.username}
+                            <Tooltip title="資產總覽僅彙總登入ID所擁有的資產，不適用於群組帳號。">
+                                <img src={info} className="info_png" />
+                            </Tooltip>
                         </span>
                     </div>
                 </div>
@@ -80,6 +85,13 @@ const AssetHeader = memo(({ title }) => {
                 }
                 .tools {
                     display: inline-block;
+                }
+
+                .info_png {
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                    margin: 0 0px 0 10px;
                 }
 
                 @media (max-width: 900px) {

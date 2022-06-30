@@ -2,6 +2,8 @@ import { useCallback, useState, memo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { formatNum } from '../../../services/formatNum';
+import { Tooltip } from 'antd';
+import info from '../../../resources/images/pages/asset/ic-ic-info@2x.png';
 const DountChart = dynamic(() => import('./dountChart'), { ssr: false });
 
 const DountChartContainer = memo(({}) => {
@@ -107,6 +109,9 @@ const DountChartContainer = memo(({}) => {
                 <div className="dount__desc funds">
                     <p className="dount__desc__name">
                         <span className="point__circle"></span>基金{' '}
+                        <Tooltip title="資產總覽基金數值僅供參考，實際信託基金帳務悉以財富管理信託電子平台顯示數據為準。">
+                            <img src={info} className="info_png" />
+                        </Tooltip>
                         <span className="pl__percent">({domData.OF?.total_proportion}%)</span>
                     </p>
                     <p className="dount__desc__amount">${domData.OF?.sum_amt}</p>
@@ -273,6 +278,13 @@ const DountChartContainer = memo(({}) => {
                 .subBrokerage {
                     top: 226px;
                     left: 365px;
+                }
+
+                .info_png {
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                    margin: 0 4px 0 0px;
                 }
 
                 @media (max-width: 900px) {
