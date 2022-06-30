@@ -1,4 +1,5 @@
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
+import Link from 'next/link';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
 import Bar from './Bar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -117,9 +118,11 @@ const RepaymentBox = ({ style }) => {
         <div className="loan__container" style={style}>
             <div className="loan__head">
                 <span className="loan__title">還款</span>
-                <a className="loan__gobtn">
-                    還款紀錄 <img className="loan__goIcon" src={go} />
-                </a>
+                <Link href="/loan-zone/Record/?tab=1">
+                    <a className="loan__gobtn">
+                        還款紀錄 <img className="loan__goIcon" src={go} />
+                    </a>
+                </Link>
             </div>
             <div className="loan__content">
                 <div>

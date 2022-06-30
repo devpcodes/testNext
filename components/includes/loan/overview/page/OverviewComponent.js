@@ -51,6 +51,9 @@ const OverviewComponent = () => {
         const token = getToken();
         try {
             const res = await fetchAccountOverview(token, currentAccount.broker_id, currentAccount.account);
+            if (res[0]?.status === 'F' && blockReason == '1') {
+                accountDetailHandler();
+            }
             setAccountOverview(res[0]);
         } catch (error) {
             message.error(error);
