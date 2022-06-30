@@ -36,11 +36,11 @@ const LoanIndex = () => {
             //dispatch(showLoginHandler(true));
             let token = getToken();
             let res = await getAccountStatus(token, currentAccount.broker_id, currentAccount.account);
-            console.log(res);
+
             if (res.status == 'A') {
-                window.location.href = `/newweb/loan-zone/Collateral`;
+                window.location.href = `/newweb/loan-zone/Overview`;
             } else if (res.status == 'F' && res.blockReason == '1') {
-                window.location.href = `/newweb/loan-zone/Collateral`;
+                window.location.href = `/newweb/loan-zone/Overview`;
             }
         }
     }, [isLogin]);

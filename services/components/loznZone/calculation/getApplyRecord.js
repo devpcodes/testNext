@@ -153,7 +153,7 @@ export const getAccountStatus = async function (token, branch, account) {
                 account,
             },
         });
-        // console.log('[/accountOverview]',res.data)
+        console.log('[accountOverview]', res.data);
         if (res.data.success) {
             return res.data.result[0];
         } else {
