@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
 import moment from 'moment';
-import { Modal, Button } from 'antd';
 import { getToken } from '../../../../../services/user/accessToken';
 import { AccountDropdown } from '../../../personalArea/accountDropdown/AccountDropdown';
 import IconBtn from '../../../tradingAccount/vipInventory/IconBtn';

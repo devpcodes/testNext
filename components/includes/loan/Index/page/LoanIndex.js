@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Modal, Button, Radio, Slider } from 'antd';
 import { useUser } from '../../../../../hooks/useUser';
+import { getToken } from '../../../../../services/user/accessToken';
 import bannerPC from '../../../../../resources/images/components/loanZone/bg-banner-pc.png';
 import bannerMB from '../../../../../resources/images/components/loanZone/bg-banner-mb.png';
 import bannerPAD from '../../../../../resources/images/components/loanZone/bg-banner-pad.png';
@@ -15,7 +16,7 @@ import cyclel from '../../../../../resources/images/components/loanZone/cycle-l.
 import cycler from '../../../../../resources/images/components/loanZone/cycle-r.svg';
 import cycles from '../../../../../resources/images/components/loanZone/cycle-s.svg';
 import QaCollapse from '../elements/QaCollapse';
-import { getClose } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
+import { getClose, getAccountStatus } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 const LoanIndex = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const winWidth = useSelector(store => store.layout.winWidth);
@@ -29,12 +30,18 @@ const LoanIndex = () => {
     const [paid, setPaid] = useState(0); //利息
     const dispatch = useDispatch();
     const { isLogin } = useUser();
-
-    useEffect(() => {
+    useEffect(async () => {
         console.log('isLogin', isLogin);
         if (isLogin) {
             //dispatch(showLoginHandler(true));
-            window.location.href = `/newweb/loan-zone/Collateral`;
+            let token = getToken();
+            let res = await getAccountStatus(token, currentAccount.broker_id, currentAccount.account);
+            console.log(res);
+            if (res.status == 'A') {
+                window.location.href = `/newweb/loan-zone/Collateral`;
+            } else if (res.status == 'F' && res.blockReason == '1') {
+                window.location.href = `/newweb/loan-zone/Collateral`;
+            }
         }
     }, [isLogin]);
 
@@ -159,12 +166,15 @@ const LoanIndex = () => {
         let n = sliderValue;
         let d = radioValue;
 
-        let a = (Number(n) * Number(close.prevClose) * Number(close.loanRate)).toFixed(0);
-        setTotal(a);
+        let a = (Number(n) * 1000 * Number(close.prevClose) * Number(close.loanRate)).toFixed(0);
+        let a_ = isNaN(a) ? 0 : a;
+        setTotal(a_);
         let b = Number(a) * Number(close.groupRate) * (Number(d) / 365);
-        setPaid(Math.ceil(b));
+        let b_ = Math.ceil(b);
+        let c = isNaN(b_) ? 0 : b_;
+        setPaid(c);
 
-        console.log('ab', a, Math.ceil(b));
+        console.log('count', a_, c);
         // page*close*loanRate
         // ^*groupRate*(day/365)
     };
@@ -403,7 +413,7 @@ const LoanIndex = () => {
                 {`
              #loanIndex__container {width: 100vw; overflow: hidden;}
             .bg-cycle{position:absolute;}
-            .bg-cycle.cyclel{left:0;top:-350px;}
+            .bg-cycle.cyclel{left:0;bottom:-350px;}
             .bg-cycle.cycler{right:0;top:-100px;}
             .mainArea{min-height:40px; width:100%;padding:80px 0;position:relative;}
             .mainArea:nth-child(odd){background-color:#f9fbff;}
@@ -470,7 +480,7 @@ const LoanIndex = () => {
             .iconBox .btnBox{flex-wrap:wrap;justify-content: center;}
             .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
             .bg-cycle{position:absolute;}
-            .bg-cycle.cyclel{ width: 12%; bottom: -74%; top: auto;  z-index: 0;}
+            .bg-cycle.cyclel{ width: 12%; bottom: -74%; z-index: 0;}
             .bg-cycle.cycler{ width: 10%; top: auto; bottom: -17%;z-index:0;}
         }
         @media screen and (max-width: 425px) {

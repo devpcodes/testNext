@@ -75,7 +75,7 @@ export const collateralDeatil = async function (token, branch, account, date) {
 
 export const applyStatus = async function (token, branch, account) {
     try {
-        const url = '/loan/api/applyStatus';
+        const url = '/loan/api/accountOverview';
         const date = new Date();
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
@@ -130,11 +130,32 @@ export const getClose = async function (token) {
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
             params: {
-                stockId: 2890,
+                stockId: '2890',
             },
         });
         if (res.data.success) {
             return res.data.result;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+export const getAccountStatus = async function (token, branch, account) {
+    //永豐金 2890
+    try {
+        const url = '/loan/api/accountOverview';
+        const res = await getA8StpInstance(false).get(url, {
+            headers: { token: `${token}` },
+            params: {
+                branch,
+                account,
+            },
+        });
+        // console.log('[/accountOverview]',res.data)
+        if (res.data.success) {
+            return res.data.result[0];
         } else {
             return false;
         }
