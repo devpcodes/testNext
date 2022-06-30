@@ -2,16 +2,22 @@ import { useEffect, useState, memo } from 'react';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useSelector } from 'react-redux';
 import MoneyBox from './MoneyBox';
+import SignBox from './SignBox';
 import { formatNum } from '../../../../services/formatNum';
 import { postBankAccountBalance } from '../../../../services/components/mySubscription/postBankAccountBalance';
 import { getToken } from '../../../../services/user/accessToken';
 import { message } from 'antd';
 import { debounce } from '../../../../services/throttle';
+import { fetchAccount } from '../../../../services/components/subscriptionOverview/fetchAccount';
+import { postQueryCrossSelling } from '../../../../services/components/mySubscription/postQueryCrossSelling';
 const MoneyContainer = memo(({ payable, receivable }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [balance, setBalance] = useState('--');
     const [bankAccount, setBankAccount] = useState('--');
+    const [signAccounts, setSignAccounts] = useState([]);
+    const [signAcc, setSignAcc] = useState(false);
+    const [applyStatus, setApplyStatus] = useState(false);
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -32,9 +38,42 @@ const MoneyContainer = memo(({ payable, receivable }) => {
     };
 
     useEffect(() => {
+        if (signAccounts.length > 0) {
+            const signAccs = signAccounts.filter(item => {
+                return item.account === currentAccount.account;
+            });
+            setSignAcc(signAccs[0].bank_flag === '1' ? true : false);
+        }
+    }, [currentAccount, signAccounts]);
+
+    const getQueryCrossSelling = async account => {
+        const res = await postQueryCrossSelling(getToken());
+        console.log('res', res, account);
+        setSignAccounts(res);
+    };
+
+    const getDsAndBank = async () => {
+        try {
+            const res = await fetchAccount(getToken());
+            console.log('step1', res);
+            //TODO mock
+            res.applyStatus = '1';
+            if (res.applyStatus === '1') {
+                setApplyStatus(true);
+                getQueryCrossSelling(currentAccount.account);
+            } else {
+                setApplyStatus(false);
+            }
+        } catch (error) {
+            message.error(error);
+        }
+    };
+
+    useEffect(() => {
         setTimeout(() => {
             if (currentAccount.broker_id != null) {
                 debounce(getBalance, 500);
+                debounce(getDsAndBank, 500);
             }
         }, 700);
     }, [currentAccount]);
@@ -104,22 +143,38 @@ const MoneyContainer = memo(({ payable, receivable }) => {
                             },
                         ]}
                     />
-                    <MoneyBox
-                        style={{ width: '33%' }}
-                        title={[{ val: '申購信用通', linkText: '我要還款 >', icon: true }]}
-                        data={[
-                            {
-                                label: '可動用',
-                                val: `$${formatNum(payable)}`,
-                                showLine: true,
-                            },
-                            {
-                                label: '已動用',
-                                val: `$${formatNum(receivable)}`,
-                                showLine: false,
-                            },
-                        ]}
-                    />
+                    {!applyStatus && (
+                        <SignBox
+                            style={{ width: '33%' }}
+                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            content={'立即申辦'}
+                        />
+                    )}
+                    {applyStatus && !signAcc && (
+                        <SignBox
+                            style={{ width: '33%' }}
+                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            content={'立即簽署'}
+                        />
+                    )}
+                    {applyStatus && signAcc && (
+                        <MoneyBox
+                            style={{ width: '33%' }}
+                            title={[{ val: '申購信用通', linkText: '我要還款 >', icon: true }]}
+                            data={[
+                                {
+                                    label: '可動用',
+                                    val: `$${formatNum(payable)}`,
+                                    showLine: true,
+                                },
+                                {
+                                    label: '已動用',
+                                    val: `$${formatNum(receivable)}`,
+                                    showLine: false,
+                                },
+                            ]}
+                        />
+                    )}
                 </>
             )}
 
