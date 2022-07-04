@@ -7,6 +7,8 @@ export const fetchOrderStatus = async function ({
     page,
     pageSize,
     orderStatusFilter,
+    loanStatusFilter,
+    methodFilter,
     orderAmountSort,
     lotDateSort,
 }) {
@@ -16,11 +18,19 @@ export const fetchOrderStatus = async function ({
         page,
         pageSize,
         orderStatusFilter,
+        loanStatusFilter,
+        methodFilter,
         orderAmountSort,
         lotDateSort,
     };
     if (!orderStatusFilter) {
         delete params.orderStatusFilter;
+    }
+    if (!loanStatusFilter) {
+        delete params.loanStatusFilter;
+    }
+    if (!methodFilter) {
+        delete params.methodFilter;
     }
     if (!orderAmountSort || orderAmountSort == null) {
         delete params.orderAmountSort;

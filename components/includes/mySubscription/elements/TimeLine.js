@@ -3,7 +3,7 @@ import moment from 'moment';
 import icon from '../../../../resources/images/components/mySubscription/attention-error (1).svg';
 import { formatNum } from '../../../../services/formatNum';
 
-const TimeLine = ({ style, data }) => {
+const TimeLine = ({ style, data, applyStatus }) => {
     const feeDataItem1Dom = useRef(null);
     const [feeDataItem01Dom, setfeeDataItem01Dom] = useState('line1__item');
     const feeDataItem2Dom = useRef(null);
@@ -22,13 +22,18 @@ const TimeLine = ({ style, data }) => {
     const [endDataItem02Dom, setEndDataItem02Dom] = useState('line2__item');
     const endDataItem3Dom = useRef(null);
     const [endDataItem03Dom, setEndDataItem03Dom] = useState('line3__item');
+    const [sysDataItem01Dom, setSysDataItem01Dom] = useState('line1__item');
     const endDataItem2LineDom = useRef(null);
     const [endDataItem02LineDom, setEndDataItem02LineDom] = useState('line');
+    const [sysDataItem03LineDom, setSysDataItem03LineDom] = useState('line');
+    const [sysDataItem02Dom, setSysDataItem02Dom] = useState('line2__item');
+    const [sysDataItem03Dom, setSysDataItem03Dom] = useState('line3__item');
     const [text, setText] = useState('');
     const [label2Text, setLabel2Text] = useState('待抽籤');
     const [link, setLink] = useState('');
     const [label3TextUp, setLabel3TextUp] = useState('');
     const [label3TextDown, setLabel3TextDown] = useState('');
+    const [label4TextDown, setLabel4TextDown] = useState('');
     useEffect(() => {
         console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
         resetHandler();
@@ -56,6 +61,17 @@ const TimeLine = ({ style, data }) => {
             setResultDataItem03Dom('line3__item disabled');
         }
 
+        // if (moment(data.currentDate).isSame(moment(data.moneyDate))) {
+        //     setResultDataItem01Dom('line1__item active');
+        //     setResultDataItem02Dom('line2__item active');
+        //     setResultDataItem03Dom('line3__item active');
+        // }
+        // if (moment(data.currentDate).isAfter(moment(data.moneyDate))) {
+        //     setResultDataItem01Dom('line1__item disabled');
+        //     setResultDataItem02Dom('line2__item disabled');
+        //     setResultDataItem03Dom('line3__item disabled');
+        // }
+
         if (moment(data.currentDate).isSame(moment(data.stkDate))) {
             setEndDataItem01Dom('line1__item active');
             setEndDataItem02Dom('line2__item active');
@@ -80,14 +96,21 @@ const TimeLine = ({ style, data }) => {
         setEndDataItem01Dom('line1__item');
         setEndDataItem02Dom('line2__item');
         setEndDataItem03Dom('line3__item');
+
+        setSysDataItem02Dom('line2__item');
         setEndDataItem02LineDom('line');
         setText('');
         setLabel2Text('待抽籤');
         setLink('');
         setLabel3TextUp('');
         setLabel3TextDown('');
+        setLabel3TextDown('');
     };
     const textHandler = () => {
+        if (data.method === '2') {
+            loanTextHandler();
+            return;
+        }
         if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
             setText(`記得截止日${moment(data.feeDate).format('MM/DD')}前將款項備足待扣喲!`);
             return;
@@ -102,6 +125,38 @@ const TimeLine = ({ style, data }) => {
             setText(data.statusMessage);
         }
     };
+
+    const loanTextHandler = () => {
+        if (moment(data.currentDate).isBefore(moment(data.endDate))) {
+            if (data.loanStatus === '1') {
+                setText(`動用完成：於3/7撥入，3/8將進行申購扣款請您留意其他交割收付款項`);
+                return;
+            }
+            if (data.loanStatus === '2') {
+                setText(`動用失敗：請確認您的額度狀態，或請洽永豐銀行客服中心02-2505-9999。`);
+                return;
+            }
+            if (!applyStatus) {
+                setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
+                setLink('前往永豐銀行簽署去 >');
+                return;
+            }
+            setText(
+                `預約動用免備款，於${moment(data.endDate).format('MM/DD')}撥入交割帳戶待扣款，請您留意交割收付款項`,
+            );
+            return;
+        }
+        if (
+            data.orderStatus !== 'S1' &&
+            data.orderStatus !== 'S2' &&
+            data.orderStatus !== 'Y' &&
+            data.orderStatus !== 'N1' &&
+            data.orderStatus !== 'W1'
+        ) {
+            setText(data.statusMessage);
+        }
+    };
+
     // 中籤 未中籤 ui設定
     const visible3Handler = data => {
         if (data.orderStatus !== 'N1' && data.orderStatus !== 'W1') {
@@ -123,6 +178,9 @@ const TimeLine = ({ style, data }) => {
                 setLabel3TextUp(`退款 ${moment(data.moneyDate).format('MM/DD')}`);
                 setLabel3TextDown(`退款 ${formatNum(data.orderAmount)}`);
                 setText(`好可惜未中籤！款項將於${moment(data.moneyDate).format('MM/DD')}退款請您留意！`);
+                if (data.method === '2') {
+                    loanTextDownHandler('N1');
+                }
             }
             if (data.orderStatus === 'W1') {
                 setLabel2Text('中籤');
@@ -146,6 +204,16 @@ const TimeLine = ({ style, data }) => {
             }
         }
     };
+    const loanTextDownHandler = type => {
+        if (type === 'N1') {
+            setLabel4TextDown(`待還 ${formatNum(data.orderAmount)}`);
+            setText(
+                `於${moment(data.moneyDate).format(
+                    'MM/DD',
+                )}退還至您交割帳戶，完成退款後系統將依退款日銀行欠款進行後續償還作業！`,
+            );
+        }
+    };
     return (
         <div style={style}>
             <div className="line1__box">
@@ -164,6 +232,7 @@ const TimeLine = ({ style, data }) => {
                 <span ref={endDataItem1Dom} className={endDataItem01Dom}>
                     {label3TextUp}
                 </span>
+                <span className={sysDataItem01Dom}>系統還款</span>
             </div>
             <div
                 className="line2__box"
@@ -175,12 +244,20 @@ const TimeLine = ({ style, data }) => {
                 <span
                     className="line"
                     style={{
-                        width: data.orderStatus !== 'N1' && data.orderStatus !== 'W1' ? '60%' : '30%',
+                        width:
+                            data.orderStatus !== 'N1' && data.orderStatus !== 'W1'
+                                ? '60%'
+                                : data.method === '2'
+                                ? '19%'
+                                : '30%',
                     }}
                 ></span>
                 <span className={resultDataItem02Dom}></span>
                 <span ref={endDataItem2LineDom} className={endDataItem02LineDom}></span>
                 <span className={endDataItem02Dom}></span>
+
+                <span className={sysDataItem03LineDom}></span>
+                <span className={sysDataItem02Dom}></span>
             </div>
             <div className="line3__box">
                 <span
@@ -197,7 +274,12 @@ const TimeLine = ({ style, data }) => {
                 <span
                     className={resultDataItem03Dom}
                     style={{
-                        marginLeft: data.orderStatus !== 'N1' && data.orderStatus !== 'W1' ? '33%' : '23%',
+                        marginLeft:
+                            data.orderStatus !== 'N1' && data.orderStatus !== 'W1'
+                                ? '33%'
+                                : data.method === '2'
+                                ? '13%'
+                                : '23%',
                         width: '40px',
                         display: 'inline-block',
                         textAlign: 'center',
@@ -212,11 +294,21 @@ const TimeLine = ({ style, data }) => {
                     ref={endDataItem3Dom}
                     style={{
                         display: 'inline-block',
-                        marginLeft: '24%',
+                        marginLeft: data.method === '2' ? '14%' : '24%',
                         fontSize: '14px',
                     }}
                 >
                     {label3TextDown}
+                </span>
+                <span
+                    className={sysDataItem03Dom}
+                    style={{
+                        display: 'inline-block',
+                        marginLeft: '12%',
+                        fontSize: '14px',
+                    }}
+                >
+                    {label4TextDown}
                 </span>
             </div>
             <p className="time__desc">
@@ -278,11 +370,11 @@ const TimeLine = ({ style, data }) => {
                     margin-left: 30px;
                 }
                 .line2__item:last-child {
-                    margin-right: 30px;
+                    margin-right: ${data.method === '2' ? '18px' : '30px'};
                 }
                 .line {
                     height: 1px;
-                    width: 30%;
+                    width: ${data.method === '2' ? '19%' : '30%'};
                     display: inline-block;
                     background: #d7e0ef;
                     margin-top: 3px;

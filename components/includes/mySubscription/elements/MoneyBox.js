@@ -1,5 +1,8 @@
 import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
+import SinoBtn from '../../../includes/loan/Collateral/elements/SinoBtn';
+import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 const MoneyBox = ({ title, data, style }) => {
+    const isMobile = useCheckMobile();
     return (
         <div className="money__container" style={style}>
             <div className="money__header">
@@ -10,7 +13,7 @@ const MoneyBox = ({ title, data, style }) => {
                                 {!!element.icon && <img className="title__icon" src={icon} />}
                                 {element.val}
                             </span>
-                            {element.linkText && <a className="money__Alink">{element.linkText}</a>}
+                            {!isMobile && element.linkText && <a className="money__Alink">{element.linkText} ></a>}
                             {i !== title.length - 1 && <div className="money__line--head"></div>}
                         </React.Fragment>
                     );
@@ -33,6 +36,20 @@ const MoneyBox = ({ title, data, style }) => {
                         </React.Fragment>
                     );
                 })}
+                {isMobile && title[0]?.linkText && (
+                    <div className="money__item" style={{ textAlign: 'center' }}>
+                        <SinoBtn
+                            text={'我要還款'}
+                            style={{
+                                margin: '0 auto',
+                                backgroundColor: '#daa360',
+                                color: 'white',
+                                border: 'none',
+                                marginTop: '4px',
+                            }}
+                        />
+                    </div>
+                )}
             </div>
             <style jsx>{`
                 .title__icon {

@@ -10,7 +10,8 @@ import { message } from 'antd';
 import { debounce } from '../../../../services/throttle';
 import { fetchAccount } from '../../../../services/components/subscriptionOverview/fetchAccount';
 import { postQueryCrossSelling } from '../../../../services/components/mySubscription/postQueryCrossSelling';
-const MoneyContainer = memo(({ payable, receivable }) => {
+import { fetchAccountStatus } from '../../../../services/components/subscriptionOverview/fetchAccountStatus';
+const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [balance, setBalance] = useState('--');
@@ -18,6 +19,8 @@ const MoneyContainer = memo(({ payable, receivable }) => {
     const [signAccounts, setSignAccounts] = useState([]);
     const [signAcc, setSignAcc] = useState(false);
     const [applyStatus, setApplyStatus] = useState(false);
+    const [allCanLoan, setAllCanLoan] = useState('--');
+    const [financing, setFinancing] = useState('--');
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -42,9 +45,32 @@ const MoneyContainer = memo(({ payable, receivable }) => {
             const signAccs = signAccounts.filter(item => {
                 return item.account === currentAccount.account;
             });
+            //TODO MOCK
+            signAccs[0].bank_flag = '1';
             setSignAcc(signAccs[0].bank_flag === '1' ? true : false);
         }
     }, [currentAccount, signAccounts]);
+
+    useEffect(() => {
+        console.log('applyStatus', applyStatus);
+        if (applyStatus) {
+            applyStatusHandler(true);
+        }
+    }, [applyStatus]);
+
+    useEffect(() => {
+        if (signAcc) {
+            getAccountStatus();
+        }
+    }, [signAcc]);
+
+    const getAccountStatus = async () => {
+        try {
+            const res = await fetchAccountStatus(getToken());
+            setAllCanLoan(res.limitAmount);
+            setFinancing(res.totalOs);
+        } catch (error) {}
+    };
 
     const getQueryCrossSelling = async account => {
         const res = await postQueryCrossSelling(getToken());
@@ -53,20 +79,23 @@ const MoneyContainer = memo(({ payable, receivable }) => {
     };
 
     const getDsAndBank = async () => {
-        try {
-            const res = await fetchAccount(getToken());
-            console.log('step1', res);
-            //TODO mock
-            res.applyStatus = '1';
-            if (res.applyStatus === '1') {
-                setApplyStatus(true);
-                getQueryCrossSelling(currentAccount.account);
-            } else {
-                setApplyStatus(false);
-            }
-        } catch (error) {
-            message.error(error);
-        }
+        //TODO mock
+        setApplyStatus(true);
+
+        // try {
+        //     const res = await fetchAccount(getToken());
+        //     console.log('step1', res);
+        //     // //TODO mock
+        //     // res.applyStatus = '1';
+        //     if (res.applyStatus === '1') {
+        //         setApplyStatus(true);
+        //         getQueryCrossSelling(currentAccount.account);
+        //     } else {
+        //         setApplyStatus(false);
+        //     }
+        // } catch (error) {
+        //     message.error(error||'伺服器錯誤');
+        // }
     };
 
     useEffect(() => {
@@ -81,40 +110,63 @@ const MoneyContainer = memo(({ payable, receivable }) => {
     return (
         <div className="moneyBox__container">
             {isMobile ? (
-                <MoneyBox
-                    style={{ width: '100%' }}
-                    title={[
-                        {
-                            val: '銀行交割餘額',
-                            style: { flex: '1 0 0' },
-                        },
-                        {
-                            val: '次一營業日申購款',
-                            style: { flex: '1.5 0 0' },
-                        },
-                    ]}
-                    data={[
-                        {
-                            label:
-                                '帳號 ' + (currentAccount.broker_id || '--') + '-' + (currentAccount.account || '--'),
-                            val: `$${formatNum(balance)}`,
-                            style: { flex: '1 0 0' },
-                            showLine: true,
-                        },
-                        {
-                            label: '應扣申購款',
-                            val: `$${formatNum(payable)}`,
-                            style: { flex: '0.75 0 0' },
-                            showLine: false,
-                        },
-                        {
-                            label: '應退申購款',
-                            val: `$${formatNum(receivable)}`,
-                            style: { flex: '0.75 0 0' },
-                            showLine: false,
-                        },
-                    ]}
-                />
+                <>
+                    <MoneyBox
+                        style={{ width: '100%' }}
+                        title={[
+                            {
+                                val: '銀行交割餘額',
+                                style: { flex: '1 0 0' },
+                            },
+                            {
+                                val: '次一營業日申購款',
+                                style: { flex: '1.5 0 0' },
+                            },
+                        ]}
+                        data={[
+                            {
+                                label:
+                                    '帳號 ' +
+                                    (currentAccount.broker_id || '--') +
+                                    '-' +
+                                    (currentAccount.account || '--'),
+                                val: `$${formatNum(balance)}`,
+                                style: { flex: '1 0 0' },
+                                showLine: true,
+                            },
+                            {
+                                label: '應扣申購款',
+                                val: `$${formatNum(payable)}`,
+                                style: { flex: '0.75 0 0' },
+                                showLine: false,
+                            },
+                            {
+                                label: '應退申購款',
+                                val: `$${formatNum(receivable)}`,
+                                style: { flex: '0.75 0 0' },
+                                showLine: false,
+                            },
+                        ]}
+                    />
+                    {applyStatus && signAcc && (
+                        <MoneyBox
+                            style={{ width: '100%', display: 'block', marginTop: '16px' }}
+                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            data={[
+                                {
+                                    label: '可動用',
+                                    val: `$${formatNum(Number(allCanLoan) - Number(financing))}`,
+                                    showLine: false,
+                                },
+                                {
+                                    label: '已動用',
+                                    val: `$${formatNum(financing)}`,
+                                    showLine: false,
+                                },
+                            ]}
+                        />
+                    )}
+                </>
             ) : (
                 <>
                     <MoneyBox
@@ -160,16 +212,16 @@ const MoneyContainer = memo(({ payable, receivable }) => {
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款 >', icon: true }]}
+                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
                             data={[
                                 {
                                     label: '可動用',
-                                    val: `$${formatNum(payable)}`,
+                                    val: `$${formatNum(Number(allCanLoan) - Number(financing))}`,
                                     showLine: true,
                                 },
                                 {
                                     label: '已動用',
-                                    val: `$${formatNum(receivable)}`,
+                                    val: `$${formatNum(financing)}`,
                                     showLine: false,
                                 },
                             ]}
@@ -184,6 +236,11 @@ const MoneyContainer = memo(({ payable, receivable }) => {
                     justify-content: space-between;
                     margin-top: 18px;
                     margin-bottom: 17px;
+                }
+                @media (max-width: 768px) {
+                    .moneyBox__container {
+                        display: block;
+                    }
                 }
             `}</style>
         </div>

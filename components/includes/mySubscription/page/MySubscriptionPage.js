@@ -14,6 +14,7 @@ const MySubscriptionPage = () => {
     const [refresh, setRefresh] = useState(false);
     const [payable, setPayable] = useState('--');
     const [receivable, setReceivable] = useState('--');
+    const [applyStatus, setApplyStatus] = useState(false);
     useEffect(() => {
         if (!isLogin) {
             dispatch(showLoginHandler(true));
@@ -29,6 +30,9 @@ const MySubscriptionPage = () => {
         setPayable(payable);
         setReceivable(receivable);
     };
+    const applyStatusHandler = boo => {
+        setApplyStatus(boo);
+    };
     console.log('refresh...........');
     return (
         <div>
@@ -36,8 +40,8 @@ const MySubscriptionPage = () => {
                 <Breadcrumb />
                 <SubscriptionHeader onRefresh={onRefresh} />
             </div>
-            <MoneyContainer payable={payable} receivable={receivable} />
-            <MySubscriptionTable refresh={refresh} payableHandler={payableHandler} />
+            <MoneyContainer payable={payable} receivable={receivable} applyStatusHandler={applyStatusHandler} />
+            <MySubscriptionTable refresh={refresh} payableHandler={payableHandler} applyStatus={applyStatus} />
             <style jsx>{`
                 @media (max-width: 768px) {
                     .subscription__head {

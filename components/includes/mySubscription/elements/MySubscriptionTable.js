@@ -17,8 +17,56 @@ import { getCookie } from '../../../../services/components/layouts/cookieControl
 import { postCancel } from '../../../../services/components/mySubscription/postCancel';
 import { openGoOrder } from '../../../../services/openGoOrder';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
-import { WindowsOutlined } from '@ant-design/icons';
-const MySubscriptionTable = ({ refresh, payableHandler }) => {
+// import { WindowsOutlined } from '@ant-design/icons';
+const mockData = [
+    {
+        branch: '9A95',
+        account: '0685473',
+        stockId: '2314s',
+        orderNo: '00000000',
+        orderDate: '20220321',
+        isPreOrder: false,
+        method: '2',
+        loanStatus: '0',
+        status: 'S',
+        statusMessage: '存款不足',
+        orderStatus: 'N1',
+        orderStatusMessage: '委託預約中',
+        canCancelOrder: true,
+        canAppropriation: false,
+        canCancelAppropriation: false,
+        canSellStock: false,
+        canMortgage: false,
+        stockName: '台揚',
+        stockFullName: '台揚科技股份有限公司',
+        market: 'C',
+        marketStatus: '發行後轉上櫃',
+        brokerId: '8150',
+        brokerName: '台新',
+        price: 52,
+        share: 850000,
+        beginDate: '20220224',
+        endDate: '20220301',
+        feeDate: '20220302',
+        lotDate: '20220303',
+        moneyDate: '20220304',
+        stkDate: '20220311',
+        applyShare: 1000,
+        actualShare: 850000,
+        tfee: 20,
+        bfee: 0,
+        amount: 52000,
+        mfee: 50,
+        orderAmount: 52070,
+        exShare: 850000,
+        exPrice: 52,
+        close: '82.7',
+        diffPrice: '16.7',
+        diffRatio: '25.30',
+        currentDate: '20220304',
+    },
+];
+const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     const pageSize = 10;
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -26,6 +74,8 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
     const [searchColumns, setSearchColumns] = useState([]);
 
     const [statusFilterValue, setStatusFilterValue] = useState('');
+    const [methodFilterValue, setMethodFilterValue] = useState('');
+    const [loanStatusFilterValue, setLoanStatusFilterValue] = useState('');
     const [cancelLoading, setCancelLoading] = useState(false);
     const [orderAmountSorter, setOrderAmountSorter] = useState('');
     const [lotDateSorter, setLotDateSorter] = useState('');
@@ -88,6 +138,24 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                                                 onClick={clickHandler.bind(null, record, 'canMortgage')}
                                             />
                                         )}
+                                        {element === 'canAppropriation' && (
+                                            <SubscriptionBtn
+                                                text="申請動用"
+                                                colorType="red"
+                                                width={100 / btnsArr.length - 1 + '%'}
+                                                style={{ marginRight: 10 }}
+                                                onClick={clickHandler.bind(null, record, 'canAppropriation')}
+                                            />
+                                        )}
+                                        {element === 'canCancelAppropriation' && (
+                                            <SubscriptionBtn
+                                                text="取消動用"
+                                                colorType="blue"
+                                                width={100 / btnsArr.length - 1 + '%'}
+                                                onClick={clickHandler.bind(null, record, 'canCancelAppropriation')}
+                                                loading={cancelLoading}
+                                            />
+                                        )}
                                     </React.Fragment>
                                 );
                             })}
@@ -111,6 +179,26 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                 ...getColumnSearchProps('orderStatusMessage'),
                 render(text, record, idx) {
                     return text;
+                },
+            },
+            {
+                title: '方式',
+                width: '100px',
+                dataIndex: 'method',
+                key: 'method',
+                ...getColumnSearchProps('method'),
+                render(text, record, idx) {
+                    return text === '1' ? '一般' : '借款';
+                },
+            },
+            {
+                title: '借還狀態',
+                width: '100px',
+                dataIndex: 'loanStatus',
+                key: 'loanStatus',
+                ...getColumnSearchProps('loanStatus'),
+                render(text, record, idx) {
+                    return loanStatusHandler(text);
                 },
             },
             {
@@ -182,7 +270,7 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
             },
         ];
         setColumns(myColumns);
-    }, [data, searchColumns, statusFilterValue, cancelLoading]);
+    }, [data, searchColumns, statusFilterValue, cancelLoading, methodFilterValue, loanStatusFilterValue]);
 
     useEffect(() => {
         console.log(currentPage, orderAmountSorter, statusFilterValue);
@@ -193,6 +281,27 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
         if (type === 'canCancelOrder') cancelHandler(record);
         if (type === 'canSellStock') sellHandler(record);
         if (type === 'canMortgage') mortgageHandler(record);
+    };
+
+    const loanStatusHandler = text => {
+        switch (text) {
+            case '0':
+                return '待撥款';
+            case '1':
+                return '撥款成功';
+            case '2':
+                return '撥款失敗';
+            case '3':
+                return '待還款';
+            case '4':
+                return '還款成功';
+            case '5':
+                return '還款失敗';
+            case '6':
+                return '須人工還款';
+            default:
+                return '--';
+        }
     };
 
     const sellHandler = record => {
@@ -213,6 +322,8 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
     };
 
     const activeHandler = record => {
+        //TODO MOCK
+        record.canAppropriation = true;
         const btnsArr = [];
         if (record.canCancelOrder) {
             btnsArr.push('canCancelOrder');
@@ -225,6 +336,9 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
         }
         if (record.canMortgage) {
             btnsArr.push('canMortgage');
+        }
+        if (record.canAppropriation) {
+            btnsArr.push('canAppropriation');
         }
         return btnsArr;
     };
@@ -294,6 +408,101 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
                 // },
             };
         }
+        if (dataIndex === 'method') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'radio'}
+                        onSubmit={onMethodFilterSubmit.bind(null, confirm)}
+                        onReset={onMethodFilterReset.bind(null, confirm)}
+                        // value={searchStatus}
+                        data={[
+                            { text: '一般', value: '1' },
+                            { text: '借款', value: '2' },
+                        ]}
+                    />
+                ),
+            };
+        }
+        if (dataIndex === 'loanStatus') {
+            return {
+                filterDropdown: ({ confirm }) => (
+                    <DropfilterCheckBox
+                        type={'checkbox'}
+                        onSubmit={onLoanStatusFilterSubmit.bind(null, confirm)}
+                        onReset={onLoanStatusFilterReset.bind(null, confirm)}
+                        // value={searchStatus}
+                        data={[
+                            { text: '待撥款', value: '0' },
+                            { text: '撥款成功', value: '1' },
+                            { text: '撥款失敗', value: '2' },
+                            { text: '待還款', value: '3' },
+                            { text: '還款成功', value: '4' },
+                            { text: '還款失敗', value: '5' },
+                            { text: '須人工還款', value: '6' },
+                        ]}
+                    />
+                ),
+                // filteredValue: [statusFilterValue] || null,
+                // onFilter: (value, record) => {
+                //     console.log('===', value);
+                //     // handleTableChange(record, value);
+                //     if (value === 'ALL' || value === '') {
+                //         return true;
+                //     } else {
+                //         return record['status'].includes(value);
+                //     }
+                // },
+            };
+        }
+    };
+
+    const onLoanStatusFilterSubmit = (confirm, val) => {
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('loanStatus')) {
+                columns.push('loanStatus');
+            }
+            return columns;
+        });
+
+        setLoanStatusFilterValue(val.toString());
+    };
+
+    const onLoanStatusFilterReset = (confirm, val) => {
+        confirm();
+        if (searchColumns.indexOf('loanStatus') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('loanStatus');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setLoanStatusFilterValue('');
+        }
+    };
+
+    const onMethodFilterSubmit = (confirm, val) => {
+        confirm();
+        setSearchColumns(columns => {
+            if (!columns.includes('method')) {
+                columns.push('method');
+            }
+            return columns;
+        });
+
+        setMethodFilterValue(val.toString());
+    };
+
+    const onMethodFilterReset = (confirm, val) => {
+        confirm();
+        if (searchColumns.indexOf('method') !== -1) {
+            setSearchColumns(columns => {
+                const index = searchColumns.indexOf('method');
+                columns.splice(index, 1);
+                return columns;
+            });
+            setMethodFilterValue('');
+        }
     };
 
     const onStatusFilterSubmit = (confirm, val) => {
@@ -349,41 +558,47 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
         // console.log('************', orderAmountSorter)
         // debounce(getOrderStatus, 500);
         getOrderStatus();
-    }, [statusFilterValue, currentPage, orderAmountSorter, lotDateSorter]);
+    }, [statusFilterValue, currentPage, orderAmountSorter, lotDateSorter, methodFilterValue, loanStatusFilterValue]);
 
     const getOrderStatus = async () => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
-            setLoading(true);
-            try {
-                const res = await fetchOrderStatus({
-                    token,
-                    branch: currentAccount.broker_id,
-                    account: currentAccount.account,
-                    page: currentPage,
-                    pageSize,
-                    orderStatusFilter: statusFilterValue,
-                    orderAmountSort: orderAmountSorter,
-                    lotDateSort: lotDateSorter,
-                });
-                setLoading(false);
-                setTotal(res.count);
-                payableHandler(res.payable, res.receivable);
-                if (res?.dataList?.length >= 0) {
-                    const newData = res?.dataList?.map((element, index) => {
-                        element.key = index;
-                        // element.canSellStock = true;
-                        // element.canMortgage = true;
-                        // element.canCancelOrder = true;
-                        element.currentDate != null ? element.currentDate : moment().format('YYYYMMDD');
-                        return element;
-                    });
-                    setData(newData);
-                }
-            } catch (error) {
-                setLoading(false);
-                message.error('伺服器錯誤');
-            }
+            //TODO MOCK
+            setData(mockData);
+            // setLoading(true);
+            // try {
+            //     const res = await fetchOrderStatus({
+            //         token,
+            //         branch: currentAccount.broker_id,
+            //         account: currentAccount.account,
+            //         page: currentPage,
+            //         pageSize,
+            //         methodFilter: methodFilterValue,
+            //         orderStatusFilter: statusFilterValue,
+            //         loanStatusFilter: loanStatusFilterValue,
+            //         orderAmountSort: orderAmountSorter,
+            //         lotDateSort: lotDateSorter,
+            //     });
+            //     setLoading(false);
+            //     setTotal(res.count);
+            //     payableHandler(res.payable, res.receivable);
+            //     if (res?.dataList?.length >= 0) {
+            //         const newData = res?.dataList?.map((element, index) => {
+            //             element.key = index;
+            //             // element.canSellStock = true;
+            //             // element.canMortgage = true;
+            //             // element.canCancelOrder = true;
+            //             element.currentDate != null ? element.currentDate : moment().format('YYYYMMDD');
+            //             return element;
+            //         });
+            //         setData(newData);
+            //     }
+
+            // } catch (error) {
+
+            //     setLoading(false);
+            //     message.error('伺服器錯誤');
+            // }
         }
     };
 
@@ -392,11 +607,12 @@ const MySubscriptionTable = ({ refresh, payableHandler }) => {
             <TimeLine
                 style={{
                     marginLeft: '16.5%',
-                    width: '344px',
+                    width: record.method === '2' ? '400px' : '344px',
                     marginTop: '5px',
                     marginBottom: '5px',
                 }}
                 data={record}
+                applyStatus={applyStatus}
             />
         );
     };
