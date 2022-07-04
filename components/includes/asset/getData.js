@@ -567,14 +567,14 @@ export const getTitleData = type => {
             break;
         case 'MIP':
             titleData = {
-                title: '豐存美股(定期定股)總市值',
+                title: '豐存美股(定期定額)總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.MIP?.sum_twd),
             };
             break;
         case 'FIP':
             titleData = {
-                title: '豐存美股(定期定額)總市值',
+                title: '豐存美股(定期定股)總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.FIP?.sum_twd),
             };
