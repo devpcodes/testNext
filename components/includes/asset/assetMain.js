@@ -9,6 +9,7 @@ import { fetchQueryRealTimePrtLosSum } from '../../../services/asset/queryRealTi
 import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import Breadcrumb from '../breadcrumb/breadcrumb';
+import { Modal } from 'antd';
 
 const AssetMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -21,7 +22,13 @@ const AssetMain = memo(({}) => {
 
     useEffect(async () => {
         const res = await fetchQueryRealTimePrtLosSum(getToken());
-        dispatch(setRealTimePrtLosSum(res));
+        if (res?.success != null && res?.success === true) {
+            dispatch(setRealTimePrtLosSum(res.result));
+        } else {
+            Modal.error({
+                content: res === '伺服器錯誤' ? res : res.message,
+            });
+        }
     }, []);
     return (
         <>

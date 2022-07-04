@@ -9,6 +9,7 @@ import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { useRouter } from 'next/router';
 import { Tooltip } from 'antd';
 import info from '../../../resources/images/pages/asset/ic-ic-info@2x.png';
+import { Modal } from 'antd';
 
 const AssetHeader = memo(({ title }) => {
     const user = useSelector(store => store.user.currentAccount);
@@ -27,8 +28,14 @@ const AssetHeader = memo(({ title }) => {
     const refreshAction = async () => {
         const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
         const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
-        dispatch(setRealTimePrtLosSum(res));
-        setrefreshTime(getTime());
+        if (res?.success != null && res?.success === true) {
+            dispatch(setRealTimePrtLosSum(res.result));
+            setrefreshTime(getTime());
+        } else {
+            Modal.error({
+                content: res === '伺服器錯誤' ? res : res.message,
+            });
+        }
     };
     return (
         <>
