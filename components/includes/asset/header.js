@@ -52,12 +52,12 @@ const AssetHeader = memo(({ title }) => {
                         {/* <Button className="btn refresh__btn">
                             <img src={hide} />
                         </Button> */}
-                        <span className="account__info">
+                        {/* <span className="account__info">
                             {user.idno} ｜ {user.username}
                             <Tooltip title="資產總覽僅彙總登入ID所擁有的資產，不適用於群組帳號。">
                                 <img src={info} className="info_png" />
                             </Tooltip>
-                        </span>
+                        </span> */}
                     </div>
                 </div>
             </div>
