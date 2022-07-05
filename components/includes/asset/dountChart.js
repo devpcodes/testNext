@@ -20,7 +20,6 @@ const DountChart = function () {
     const drawChart = () => {
         let chart = am4core.create('chartdiv', am4charts.PieChart);
 
-        // fake Data
         chart.data = [
             { sector: '國內證券', size: realTimePrtLosSum?.S?.sum_namt },
             {
