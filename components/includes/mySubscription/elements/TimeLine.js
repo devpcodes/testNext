@@ -3,7 +3,8 @@ import moment from 'moment';
 import icon from '../../../../resources/images/components/mySubscription/attention-error (1).svg';
 import { formatNum } from '../../../../services/formatNum';
 
-const TimeLine = ({ style, data, applyStatus }) => {
+const TimeLine = ({ data, applyStatus }) => {
+    const [style, setStyle] = useState({});
     const feeDataItem1Dom = useRef(null);
     const [feeDataItem01Dom, setfeeDataItem01Dom] = useState('line1__item');
     const feeDataItem2Dom = useRef(null);
@@ -34,6 +35,7 @@ const TimeLine = ({ style, data, applyStatus }) => {
     const [label3TextUp, setLabel3TextUp] = useState('');
     const [label3TextDown, setLabel3TextDown] = useState('');
     const [label4TextDown, setLabel4TextDown] = useState('');
+    const [label4TextUp, setLabel4TextUp] = useState('');
     useEffect(() => {
         console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
         resetHandler();
@@ -61,29 +63,62 @@ const TimeLine = ({ style, data, applyStatus }) => {
             setResultDataItem03Dom('line3__item disabled');
         }
 
-        // if (moment(data.currentDate).isSame(moment(data.moneyDate))) {
-        //     setResultDataItem01Dom('line1__item active');
-        //     setResultDataItem02Dom('line2__item active');
-        //     setResultDataItem03Dom('line3__item active');
-        // }
-        // if (moment(data.currentDate).isAfter(moment(data.moneyDate))) {
-        //     setResultDataItem01Dom('line1__item disabled');
-        //     setResultDataItem02Dom('line2__item disabled');
-        //     setResultDataItem03Dom('line3__item disabled');
-        // }
+        if (data.orderStatus === 'W1') {
+            if (moment(data.currentDate).isSame(moment(data.stkDate))) {
+                setEndDataItem01Dom('line1__item active');
+                setEndDataItem02Dom('line2__item active');
+                setEndDataItem03Dom('line3__item active');
+            }
+            if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
+                setEndDataItem01Dom('line1__item disabled');
+                setEndDataItem02Dom('line2__item disabled');
+                setEndDataItem03Dom('line3__item disabled');
+            }
+        } else {
+            if (data.loanStatus === '4') {
+                if (moment(data.currentDate).isSame(moment(data.moneyDate))) {
+                    setSysDataItem01Dom('line1__item active');
+                    setSysDataItem02Dom('line2__item active');
+                    setSysDataItem03Dom('line3__item active');
+                    setEndDataItem01Dom('line1__item disabled');
+                    setEndDataItem02Dom('line2__item disabled');
+                    setEndDataItem03Dom('line3__item disabled');
+                }
+                if (moment(data.currentDate).isAfter(moment(data.moneyDate))) {
+                    setSysDataItem01Dom('line1__item disabled');
+                    setSysDataItem02Dom('line2__item disabled');
+                    setSysDataItem03Dom('line3__item disabled');
+                    setEndDataItem01Dom('line1__item disabled');
+                    setEndDataItem02Dom('line2__item disabled');
+                    setEndDataItem03Dom('line3__item disabled');
+                }
+            } else {
+                if (moment(data.currentDate).isSame(moment(data.moneyDate))) {
+                    setEndDataItem01Dom('line1__item active');
+                    setEndDataItem02Dom('line2__item active');
+                    setEndDataItem03Dom('line3__item active');
+                }
+                if (moment(data.currentDate).isAfter(moment(data.moneyDate))) {
+                    setEndDataItem01Dom('line1__item disabled');
+                    setEndDataItem02Dom('line2__item disabled');
+                    setEndDataItem03Dom('line3__item disabled');
+                    if (data.method === '2') {
+                        setSysDataItem01Dom('line1__item disabled');
+                        setSysDataItem02Dom('line2__item disabled');
+                        setSysDataItem03Dom('line3__item disabled');
+                    }
+                }
+            }
+        }
 
-        if (moment(data.currentDate).isSame(moment(data.stkDate))) {
-            setEndDataItem01Dom('line1__item active');
-            setEndDataItem02Dom('line2__item active');
-            setEndDataItem03Dom('line3__item active');
-        }
-        if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
-            setEndDataItem01Dom('line1__item disabled');
-            setEndDataItem02Dom('line2__item disabled');
-            setEndDataItem03Dom('line3__item disabled');
-        }
         textHandler(data);
         visible3Handler(data);
+        setStyle({
+            marginLeft: '16.5%',
+            marginTop: '5px',
+            marginBottom: '5px',
+            width: data.method === '2' && data.orderStatus === 'N1' ? '400px' : '344px',
+        });
     }, [data]);
     console.log('data', data); //disabled // active //【 抵押低利借款方案 】
     const resetHandler = () => {
@@ -96,6 +131,9 @@ const TimeLine = ({ style, data, applyStatus }) => {
         setEndDataItem01Dom('line1__item');
         setEndDataItem02Dom('line2__item');
         setEndDataItem03Dom('line3__item');
+        setSysDataItem01Dom('line1__item');
+        setSysDataItem02Dom('line2__item');
+        setSysDataItem03Dom('line3__item');
 
         setSysDataItem02Dom('line2__item');
         setEndDataItem02LineDom('line');
@@ -104,7 +142,8 @@ const TimeLine = ({ style, data, applyStatus }) => {
         setLink('');
         setLabel3TextUp('');
         setLabel3TextDown('');
-        setLabel3TextDown('');
+        setLabel4TextUp('');
+        setLabel4TextDown('');
     };
     const textHandler = () => {
         if (data.method === '2') {
@@ -164,6 +203,17 @@ const TimeLine = ({ style, data, applyStatus }) => {
             setEndDataItem02Dom('line2__item none');
             setEndDataItem03Dom('line3__item none');
             setEndDataItem02LineDom('line none');
+
+            setSysDataItem01Dom('line1__item none');
+            setSysDataItem02Dom('line2__item none');
+            setSysDataItem03Dom('line3__item none');
+            setSysDataItem03LineDom('line none');
+        }
+        if (data.orderStatus === 'W1') {
+            setSysDataItem01Dom('line1__item none');
+            setSysDataItem02Dom('line2__item none');
+            setSysDataItem03Dom('line3__item none');
+            setSysDataItem03LineDom('line none');
         }
         // if (data.status === 'N1' || data.status === 'W1') {
         //     setEndDataItem01Dom('line1__item');
@@ -179,7 +229,7 @@ const TimeLine = ({ style, data, applyStatus }) => {
                 setLabel3TextDown(`退款 ${formatNum(data.orderAmount)}`);
                 setText(`好可惜未中籤！款項將於${moment(data.moneyDate).format('MM/DD')}退款請您留意！`);
                 if (data.method === '2') {
-                    loanTextDownHandler('N1');
+                    loanTextDownHandler(data.orderStatus);
                 }
             }
             if (data.orderStatus === 'W1') {
@@ -201,17 +251,40 @@ const TimeLine = ({ style, data, applyStatus }) => {
                     setText('快來看看');
                     setLink('【 近期申購Go 】');
                 }
+                if (data.method === '2') {
+                    loanTextDownHandler(data.orderStatus);
+                }
             }
         }
     };
     const loanTextDownHandler = type => {
         if (type === 'N1') {
-            setLabel4TextDown(`待還 ${formatNum(data.orderAmount)}`);
+            setLabel4TextDown(`待還 ${formatNum(Number(data.orderAmount) - Number(data.tfee))}`);
             setText(
                 `於${moment(data.moneyDate).format(
                     'MM/DD',
                 )}退還至您交割帳戶，完成退款後系統將依退款日銀行欠款進行後續償還作業！`,
             );
+            if (data.loanStatus === '5' && applyStatus) {
+                setText(`還款失敗：超過利息應繳款日，請盡速繳息才能進行還款。`);
+            }
+            if (!applyStatus) {
+                setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
+                setLink('前往永豐銀行簽署去 >');
+                return;
+            }
+            if (data.loanStatus === '4') {
+                setLabel4TextDown(`償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee))}`);
+                setText(`還款成功：請您留意是否仍有銀行欠款別忘還款喲！`);
+                setLink('查看明細GO >');
+                setLabel4TextUp(`系統還款 ${moment(data.moneyDate).format('MM/DD')}`);
+            } else {
+                setLabel4TextUp(`系統還款`);
+            }
+        }
+        if (type === 'W1') {
+            setText('撥券已完成~~快來看看');
+            setLink('近期申購GO >');
         }
     };
     return (
@@ -232,7 +305,7 @@ const TimeLine = ({ style, data, applyStatus }) => {
                 <span ref={endDataItem1Dom} className={endDataItem01Dom}>
                     {label3TextUp}
                 </span>
-                <span className={sysDataItem01Dom}>系統還款</span>
+                <span className={sysDataItem01Dom}>{label4TextUp || '系統還款'}</span>
             </div>
             <div
                 className="line2__box"
@@ -247,7 +320,7 @@ const TimeLine = ({ style, data, applyStatus }) => {
                         width:
                             data.orderStatus !== 'N1' && data.orderStatus !== 'W1'
                                 ? '60%'
-                                : data.method === '2'
+                                : data.method === '2' && data.orderStatus !== 'W1'
                                 ? '19%'
                                 : '30%',
                     }}
@@ -255,9 +328,12 @@ const TimeLine = ({ style, data, applyStatus }) => {
                 <span className={resultDataItem02Dom}></span>
                 <span ref={endDataItem2LineDom} className={endDataItem02LineDom}></span>
                 <span className={endDataItem02Dom}></span>
-
-                <span className={sysDataItem03LineDom}></span>
-                <span className={sysDataItem02Dom}></span>
+                {data.orderStatus !== 'W1' && (
+                    <>
+                        <span className={sysDataItem03LineDom}></span>
+                        <span className={sysDataItem02Dom}></span>
+                    </>
+                )}
             </div>
             <div className="line3__box">
                 <span
@@ -277,8 +353,10 @@ const TimeLine = ({ style, data, applyStatus }) => {
                         marginLeft:
                             data.orderStatus !== 'N1' && data.orderStatus !== 'W1'
                                 ? '33%'
-                                : data.method === '2'
-                                ? '13%'
+                                : data.method === '2' && data.orderStatus !== 'W1'
+                                ? data.loanStatus === '4'
+                                    ? '10%'
+                                    : '13%'
                                 : '23%',
                         width: '40px',
                         display: 'inline-block',
@@ -294,7 +372,12 @@ const TimeLine = ({ style, data, applyStatus }) => {
                     ref={endDataItem3Dom}
                     style={{
                         display: 'inline-block',
-                        marginLeft: data.method === '2' ? '14%' : '24%',
+                        marginLeft:
+                            data.method === '2' && data.orderStatus !== 'W1'
+                                ? data.loanStatus === '4'
+                                    ? '11%'
+                                    : '14%'
+                                : '24%',
                         fontSize: '14px',
                     }}
                 >
@@ -304,7 +387,7 @@ const TimeLine = ({ style, data, applyStatus }) => {
                     className={sysDataItem03Dom}
                     style={{
                         display: 'inline-block',
-                        marginLeft: '12%',
+                        marginLeft: data.loanStatus === '4' ? '8%' : '12%',
                         fontSize: '14px',
                     }}
                 >
@@ -370,11 +453,15 @@ const TimeLine = ({ style, data, applyStatus }) => {
                     margin-left: 30px;
                 }
                 .line2__item:last-child {
-                    margin-right: ${data.method === '2' ? '18px' : '30px'};
+                    margin-right: ${data.method === '2' && data.orderStatus !== 'W1'
+                        ? data.loanStatus === '4'
+                            ? '45px'
+                            : '18px'
+                        : '30px'};
                 }
                 .line {
                     height: 1px;
-                    width: ${data.method === '2' ? '19%' : '30%'};
+                    width: ${data.method === '2' && data.orderStatus !== 'W1' ? '19%' : '30%'};
                     display: inline-block;
                     background: #d7e0ef;
                     margin-top: 3px;
