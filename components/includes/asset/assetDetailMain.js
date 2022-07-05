@@ -9,6 +9,7 @@ import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { getTitleData } from './getData';
 import Breadcrumb from '../breadcrumb/breadcrumb';
+import { Modal } from 'antd';
 
 const AssetDetailMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -17,8 +18,14 @@ const AssetDetailMain = memo(({}) => {
     useEffect(async () => {
         const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
         const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
-        dispatch(setRealTimePrtLosSum(res));
-        setReload(true);
+        if (res?.success != null && res?.success === true) {
+            dispatch(setRealTimePrtLosSum(res.result));
+            setReload(true);
+        } else {
+            Modal.error({
+                content: res === '伺服器錯誤' ? res : res.message,
+            });
+        }
     }, [router.query.type]);
     const [reload, setReload] = useState(false);
 

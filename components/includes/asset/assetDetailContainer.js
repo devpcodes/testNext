@@ -182,8 +182,9 @@ const assetDetailContainer = memo(({ tabType }) => {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
                         ? parseFloat(
-                              (parseInt(realTimePrtLosSum?.SN?.sum_twd) +
-                                  parseInt(realTimePrtLosSum?.WM_SN?.sum_twd) / realTimePrtLosSumTotal) *
+                              ((parseInt(realTimePrtLosSum?.SN?.sum_twd) +
+                                  parseInt(realTimePrtLosSum?.WM_SN?.sum_twd)) /
+                                  realTimePrtLosSumTotal) *
                                   100,
                           ).toFixed(2)
                         : '--', // 總佔比
