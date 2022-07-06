@@ -182,6 +182,10 @@ const LoanIndex = () => {
         setSliderValue(val);
     };
 
+    const btnHref = val => {
+        window.location.href = val;
+    };
+
     const onChange = val => {
         // console.log(val.target.value,'month')
         setRadioValue(val.target.value);
@@ -222,7 +226,7 @@ const LoanIndex = () => {
                     <div>
                         <Button type="primary">立即申辦</Button>
                         <br></br>
-                        <Button>前往借貸</Button>
+                        <Button onClick={btnHref.bind(null, '/newweb/loan-zone/Overview')}>前往借貸</Button>
                     </div>
                 </div>
             </div>
