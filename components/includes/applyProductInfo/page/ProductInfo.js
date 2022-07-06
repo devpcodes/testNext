@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal, Button, Tabs, Slider } from 'antd';
+import { Modal, Button, Tabs, Carousel } from 'antd';
 import { useUser } from '../../../../hooks/useUser';
 import CountUp from 'react-countup';
 import bannerPC from '../../../../resources/images/pages/subscriptionArea/bg-banner-pc.png';
@@ -46,7 +46,98 @@ const ProductInfo = () => {
             });
         }
     };
+    useEffect(() => {
+        let data = [
+            {
+                title: '【申辦】不限用途款項借貸戶申辦資格是什麼？',
+                content: '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
+                open: true,
+                key: 1,
+            },
+            {
+                title: '【申辦】申辦的方式和流程是甚麼？',
+                content: [
+                    '您可線上申辦或臨櫃辦理。',
+                    '線上申辦只要上傳雙證件、選擇分公司並簽署契約就完成，申請送出後約1-3個工作天會收到審核結果通知。',
+                ],
+                open: false,
+                key: 2,
+            },
+            { title: '【申辦】一個人可在永豐金開立幾戶不限用途款項借貸戶？', content: '一戶。', open: false, key: 3 },
+            { title: '【申辦】開戶後，多久可以申請借貸？', content: '馬上。', open: false, key: 4 },
+            {
+                title: '【申辦】不限用途借貸戶申辦須要開辦費嗎？',
+                content: '不限用途借貸服務免開辦費。',
+                open: false,
+                key: 5,
+            },
+            {
+                title: '【申辦】我是聯電的員工，我可以申辦不限用途款項借貸？',
+                content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
+                open: false,
+                key: 6,
+            },
 
+            {
+                title: '【借貸動用】有哪些股票可以申請借款呢？成數利率又是多少？',
+                content: '點我查看符合本公司規定之上市櫃股票。',
+                open: false,
+                key: 7,
+            },
+            {
+                title: '【借貸動用】申請借貸後，何時會撥款？',
+                content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。',
+                open: false,
+                key: 8,
+            },
+            {
+                title: '【借貸動用】每筆最少借款金額是多少？',
+                content: '一萬元，並以千元為級距，最高不得超過100萬元',
+                open: false,
+                key: 9,
+            },
+            {
+                title: '【借貸動用】借款的利息如何計算？',
+                content: '擔保品匯入後，未動用不起息，動用後以日計息並計算至還款前一日。',
+                open: false,
+                key: 10,
+            },
+            {
+                title: '【借貸動用】借款除了利息外還須支付那些費用？',
+                content: [
+                    '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
+                    '撥券費：每張1元。',
+                    '上述費用於還款或借款到期時收取。',
+                    '借貸服務免開辦費。',
+                ],
+                open: false,
+                key: 11,
+            },
+
+            {
+                title: '【還款與其他】我要如何還款呢？',
+                content: [
+                    '現金還款:需於營業日14:30前臨櫃提出申請。',
+                    '賣出還款:客戶自行賣出庫存，Ｔ日計算客戶應付之相關還款金額後,於T+2日收取還款金額並退還剩餘交割款。',
+                ],
+                open: false,
+                key: 12,
+            },
+            {
+                title: '【還款與其他】擔保品如何申請返還？',
+                content: '你可於現金還款後，申請擔保品返還。',
+                open: false,
+                key: 13,
+            },
+            {
+                title: '【還款與其他】我收到整戶維持不足的通知該怎麼辦？',
+                content: '您可選擇償還部分借款或致電分公司增加/變更擔保品。',
+                open: false,
+                key: 14,
+            },
+        ];
+        setQaData(data);
+    }, []);
     useEffect(() => {
         if (!isLogin) {
             dispatch(showLoginHandler(true));
