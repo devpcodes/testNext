@@ -191,7 +191,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                                 text="申請動用"
                                                 colorType="red"
                                                 width={100 / btnsArr.length - 1 + '%'}
-                                                style={{ marginRight: 10 }}
+                                                style={{ marginRight: 10, padding: '3px 5px 3px 5px' }}
                                                 onClick={clickHandler.bind(null, record, 'canAppropriation')}
                                             />
                                         )}
@@ -202,6 +202,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                                 width={100 / btnsArr.length - 1 + '%'}
                                                 onClick={clickHandler.bind(null, record, 'canCancelAppropriation')}
                                                 loading={cancelLoading}
+                                                style={{ marginRight: 10, padding: '3px 5px 3px 5px' }}
                                             />
                                         )}
                                     </React.Fragment>
@@ -612,41 +613,39 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
             //TODO MOCK
-            setData(mockData);
-            // setLoading(true);
-            // try {
-            //     const res = await fetchOrderStatus({
-            //         token,
-            //         branch: currentAccount.broker_id,
-            //         account: currentAccount.account,
-            //         page: currentPage,
-            //         pageSize,
-            //         methodFilter: methodFilterValue,
-            //         orderStatusFilter: statusFilterValue,
-            //         loanStatusFilter: loanStatusFilterValue,
-            //         orderAmountSort: orderAmountSorter,
-            //         lotDateSort: lotDateSorter,
-            //     });
-            //     setLoading(false);
-            //     setTotal(res.count);
-            //     payableHandler(res.payable, res.receivable);
-            //     if (res?.dataList?.length >= 0) {
-            //         const newData = res?.dataList?.map((element, index) => {
-            //             element.key = index;
-            //             // element.canSellStock = true;
-            //             // element.canMortgage = true;
-            //             // element.canCancelOrder = true;
-            //             element.currentDate != null ? element.currentDate : moment().format('YYYYMMDD');
-            //             return element;
-            //         });
-            //         setData(newData);
-            //     }
-
-            // } catch (error) {
-
-            //     setLoading(false);
-            //     message.error('伺服器錯誤');
-            // }
+            // setData(mockData);
+            setLoading(true);
+            try {
+                const res = await fetchOrderStatus({
+                    token,
+                    branch: currentAccount.broker_id,
+                    account: currentAccount.account,
+                    page: currentPage,
+                    pageSize,
+                    methodFilter: methodFilterValue,
+                    orderStatusFilter: statusFilterValue,
+                    loanStatusFilter: loanStatusFilterValue,
+                    orderAmountSort: orderAmountSorter,
+                    lotDateSort: lotDateSorter,
+                });
+                setLoading(false);
+                setTotal(res.count);
+                payableHandler(res.payable, res.receivable);
+                if (res?.dataList?.length >= 0) {
+                    const newData = res?.dataList?.map((element, index) => {
+                        element.key = index;
+                        // element.canSellStock = true;
+                        // element.canMortgage = true;
+                        // element.canCancelOrder = true;
+                        element.currentDate != null ? element.currentDate : moment().format('YYYYMMDD');
+                        return element;
+                    });
+                    setData(newData);
+                }
+            } catch (error) {
+                setLoading(false);
+                message.error('伺服器錯誤');
+            }
         }
     };
 

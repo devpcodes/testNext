@@ -24,15 +24,19 @@ const SignBox = ({ title, content, style }) => {
                         <p className="money__val">{content}</p>
                         <img
                             src={goIcon}
+                            className="go__icon"
                             style={{
                                 marginLeft: '5px',
-                                marginTop: '-9px',
+                                // marginTop: '-9px',
                             }}
                         />
                     </div>
                 </React.Fragment>
             </div>
             <style jsx>{`
+                .go__icon {
+                    margin-top: -9px;
+                }
                 .title__icon {
                     margin-top: -2px;
                     margin-right: 2px;
@@ -122,7 +126,10 @@ const SignBox = ({ title, content, style }) => {
                         font-size: 16px;
                     }
                     .money__content {
-                        margin-top: 11px;
+                        margin-top: 16px;
+                    }
+                    .go__icon {
+                        margin-top: -6px;
                     }
                 }
             `}</style>

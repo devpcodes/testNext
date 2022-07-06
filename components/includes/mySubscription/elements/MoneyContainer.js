@@ -47,7 +47,10 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             });
             //TODO MOCK
             signAccs[0].bank_flag = '1';
-            setSignAcc(signAccs[0].bank_flag === '1' ? true : false);
+
+            // setSignAcc(signAccs[0].bank_flag === '1' ? true : false);
+        } else {
+            setSignAcc(false);
         }
     }, [currentAccount, signAccounts]);
 
@@ -81,12 +84,11 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const getDsAndBank = async () => {
         //TODO mock
         setApplyStatus(true);
+        getQueryCrossSelling(currentAccount.account);
 
         // try {
         //     const res = await fetchAccount(getToken());
         //     console.log('step1', res);
-        //     // //TODO mock
-        //     // res.applyStatus = '1';
         //     if (res.applyStatus === '1') {
         //         setApplyStatus(true);
         //         getQueryCrossSelling(currentAccount.account);
@@ -94,6 +96,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
         //         setApplyStatus(false);
         //     }
         // } catch (error) {
+        //     setApplyStatus(false);
         //     message.error(error||'伺服器錯誤');
         // }
     };
@@ -148,6 +151,20 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             },
                         ]}
                     />
+                    {!applyStatus && (
+                        <SignBox
+                            style={{ width: '100%', marginTop: '16px' }}
+                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            content={'立即申辦'}
+                        />
+                    )}
+                    {applyStatus && !signAcc && (
+                        <SignBox
+                            style={{ width: '100%', marginTop: '16px' }}
+                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            content={'立即簽署'}
+                        />
+                    )}
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}

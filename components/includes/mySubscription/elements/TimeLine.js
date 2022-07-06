@@ -215,6 +215,12 @@ const TimeLine = ({ data, applyStatus }) => {
             setSysDataItem03Dom('line3__item none');
             setSysDataItem03LineDom('line none');
         }
+        if (data.method === '1') {
+            setSysDataItem01Dom('line1__item none');
+            setSysDataItem02Dom('line2__item none');
+            setSysDataItem03Dom('line3__item none');
+            setSysDataItem03LineDom('line none');
+        }
         // if (data.status === 'N1' || data.status === 'W1') {
         //     setEndDataItem01Dom('line1__item');
         //     setEndDataItem02Dom('line2__item');
@@ -328,7 +334,7 @@ const TimeLine = ({ data, applyStatus }) => {
                 <span className={resultDataItem02Dom}></span>
                 <span ref={endDataItem2LineDom} className={endDataItem02LineDom}></span>
                 <span className={endDataItem02Dom}></span>
-                {data.orderStatus !== 'W1' && (
+                {data.method === '2' && data.orderStatus !== 'W1' && (
                     <>
                         <span className={sysDataItem03LineDom}></span>
                         <span className={sysDataItem02Dom}></span>
@@ -459,6 +465,9 @@ const TimeLine = ({ data, applyStatus }) => {
                             : '18px'
                         : '30px'};
                 }
+                /* .line2__item:last-child {
+                    margin-right: ${data.method === '1' && '30px'};
+                } */
                 .line {
                     height: 1px;
                     width: ${data.method === '2' && data.orderStatus !== 'W1' ? '19%' : '30%'};
