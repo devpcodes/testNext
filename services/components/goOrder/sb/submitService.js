@@ -97,7 +97,7 @@ export const submitService = async (
             orderData.PriceType = priceType(GTCDate, aon, TouchedPrice);
         }
         console.log(orderData);
-        return await postOrder(orderData, orderList);
+        return await postOrder(orderData, orderList, currentAccount);
     } else {
         throw '憑證驗證失敗';
     }
