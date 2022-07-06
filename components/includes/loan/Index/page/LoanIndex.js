@@ -30,20 +30,18 @@ const LoanIndex = () => {
     const [paid, setPaid] = useState(0); //利息
     const dispatch = useDispatch();
     const { isLogin } = useUser();
-    useEffect(async () => {
-        console.log('isLogin', isLogin);
-        if (isLogin) {
-            //dispatch(showLoginHandler(true));
-            let token = getToken();
-            let res = await getAccountStatus(token, currentAccount.broker_id, currentAccount.account);
-
-            if (res.status == 'A') {
-                window.location.href = `/newweb/loan-zone/Overview`;
-            } else if (res.status == 'F' && res.blockReason == '1') {
-                window.location.href = `/newweb/loan-zone/Overview`;
-            }
-        }
-    }, [isLogin]);
+    // useEffect(async () => {
+    //     console.log('isLogin', isLogin);
+    //     if (isLogin) {
+    //         let token = getToken();
+    //         let res = await getAccountStatus(token, currentAccount.broker_id, currentAccount.account);
+    //         if (res.status == 'A') {
+    //             window.location.href = `/newweb/loan-zone/Overview`;
+    //         } else if (res.status == 'F' && res.blockReason == '1') {
+    //             window.location.href = `/newweb/loan-zone/Overview`;
+    //         }
+    //     }
+    // }, [isLogin]);
 
     useEffect(async () => {
         let res = await getClose();
