@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { Collapse } from 'antd';
-import plusIcon from '../../../../../resources/images/components/loanZone/combined-shape.svg';
 
 const QaCollapse = ({ dataSource }) => {
     useEffect(() => {

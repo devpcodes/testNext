@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal, Button, Tabs, Carousel } from 'antd';
+import { Modal, Button, Tabs, Carousel, Divider, Steps } from 'antd';
 import { useUser } from '../../../../hooks/useUser';
 import CountUp from 'react-countup';
 import bannerPC from '../../../../resources/images/pages/subscriptionArea/bg-banner-pc.png';
@@ -10,8 +10,6 @@ import hands from '../../../../resources/images/pages/subscriptionArea/group-22.
 import dotLine from '../../../../resources/images/pages/subscriptionArea/dot-line.svg';
 import icon1 from '../../../../resources/images/pages/subscriptionArea/index-icon-1.svg';
 import icon61 from '../../../../resources/images/pages/subscriptionArea/icon6-1.svg';
-// import cyclel from '../../../../resources/images/components/loanZone/cycle-l.svg';
-// import cycler from '../../../../resources/images/components/loanZone/cycle-r.svg';
 import QaCollapse from '../../loan/Index/elements/QaCollapse';
 
 const ProductInfo = () => {
@@ -25,6 +23,7 @@ const ProductInfo = () => {
     const [titleValue, setTitleValue] = useState(45); //申購檔次
     const dispatch = useDispatch();
     const { isLogin } = useUser();
+    const { Step } = Steps;
     const menuList = [
         { title: '申辦啟用', key: 'p1' },
         { title: '借款申購試算', key: 'p2' },
@@ -32,6 +31,13 @@ const ProductInfo = () => {
         { title: '中籤還款', key: 'p4' },
         { title: '其他', key: 'p5' },
     ];
+    const contentStyle = {
+        height: '160px',
+        color: '#fff',
+        lineHeight: '160px',
+        textAlign: 'center',
+        background: '#364d79',
+    };
 
     const handleClick = key => {
         setState({ current: key });
@@ -244,6 +250,10 @@ const ProductInfo = () => {
         setQaData(data);
     }, []);
 
+    const onCarouselChange = currentSlide => {
+        console.log(currentSlide);
+    };
+
     return (
         <div id="applyIndex__container">
             <div className="mainArea mainArea1">
@@ -313,6 +323,94 @@ const ProductInfo = () => {
                         <p></p>
                         <img src={dotLine}></img>
                     </div>
+                    <div className="slickBox">
+                        <Carousel arrows dots={false} afterChange={onCarouselChange}>
+                            <div>
+                                <div className="slideContent">
+                                    <div className="slideCard">
+                                        <div className="topLabel">
+                                            <div>
+                                                聯發國際 2756<label>NO.1</label>
+                                            </div>
+                                            <p>初上櫃</p>
+                                        </div>
+                                        <div className="secondLabel">
+                                            <p>
+                                                申購價 <span>78.8</span>
+                                            </p>
+                                            <p>
+                                                總申購張數 <span>262</span>
+                                            </p>
+                                            <p>
+                                                市價 <span>121.5</span>
+                                            </p>
+                                            <p>
+                                                申購張數 <span>1</span>
+                                            </p>
+                                        </div>
+                                        <div className="pinkLabel">
+                                            <span>42,700</span>元 (+54%)
+                                        </div>
+                                        <div className="bottomLabel">
+                                            <a>+</a>
+                                        </div>
+                                    </div>
+                                    <div className="slideCard">
+                                        <div className="stepBar ">
+                                            <div className="stepDot dotGray">
+                                                <div>開始</div>
+                                                <div className="dot"></div>
+                                                <div className="subText">01/04</div>
+                                            </div>
+                                            <div className="stepDot dotRed">
+                                                <div>截止</div>
+                                                <div className="dot"></div>
+                                                <div className="subText">01/06</div>
+                                            </div>
+                                            <div className="stepDot">
+                                                <div>扣款</div>
+                                                <div className="dot"></div>
+                                                <div className="subText">01/07</div>
+                                            </div>
+                                            <div className="stepDot">
+                                                <div>抽籤</div>
+                                                <div className="dot"></div>
+                                                <div className="subText">01/10</div>
+                                            </div>
+                                            <div className="stepDot">
+                                                <div>退款</div>
+                                                <div className="dot"></div>
+                                                <div className="subText">01/11</div>
+                                            </div>
+                                            <div className="stepDot">
+                                                <div>撥券</div>
+                                                <div className="dot"></div>
+                                                <div className="subText">01/14</div>
+                                            </div>
+                                            {/* <Steps progressDot current={1} size='small'>
+                                    <Step title="開始" description="01/04" />
+                                    <Step title="截止" description="01/06" />
+                                    <Step title="扣款" description="01/07" />
+                                    <Step title="抽籤" description="01/10" />
+                                    <Step title="退款" description="01/11" />
+                                    <Step title="撥券" description="01/14" />
+                                    </Steps> */}
+                                        </div>
+                                    </div>
+                                    <div className="slideCard">
+                                        <p>A3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div></div>
+                            <div>
+                                <h3 style={contentStyle}>C</h3>
+                            </div>
+                            <div>
+                                <h3 style={contentStyle}>D</h3>
+                            </div>
+                        </Carousel>
+                    </div>
                 </div>
             </div>
             <div className="mainArea mainArea4">
@@ -330,11 +428,10 @@ const ProductInfo = () => {
                         申辦資格
                         <p></p>
                         <img src={dotLine}></img>
-                        <img src={hands}></img>
                     </div>
                     <div>
                         <div>
-                            <img src={dotLine}></img>
+                            <img src={hands}></img>
                         </div>
                         <div>
                             <p>年滿 20 歲之本國自然人</p>
@@ -352,7 +449,7 @@ const ProductInfo = () => {
                         <p></p>
                         <img src={dotLine}></img>
                     </div>
-                    <div>
+                    <div className="tabBox">
                         <Tabs
                             defaultActiveKey="all"
                             onChange={handleClick}
@@ -368,6 +465,31 @@ const ProductInfo = () => {
             </div>
             <style jsx>
                 {`
+.secondLabel{display:flex; justify-content:space-between; flex-wrap: wrap; }
+.secondLabel p{display:flex; justify-content:space-between; width:45%;}
+.pinkLabel{display:flex;align-items: flex-end; background:#feefed; color:#f45a4c;padding:16px;font-size:16px;line-height:1;}
+.pinkLabel::before{content:"價差";display:block; color:#f45a4c; font-size:16px;line-height: 28px; margin-right: 1em;}
+.pinkLabel span{font-size:28px;font-weight:800;margin-right:5px;}
+            .bottomLabel a{display:inline-block;}
+            .active .bottomLabel a{transform: rotate(45deg);}
+
+            .stepBar{ position:relative;display:flex;justify-content:space-between;}
+            .stepBar::before{ content:"";display:block; width:calc(100% - 24px);height:1px;background:#d7e0ef; position:absolute; top:50%; left:12px;z-index:0; }
+            .stepBar .stepDot{ padding:0 2px;z-index:1;}
+            .stepBar .stepDot > div{ text-align:center;}
+            .stepBar .stepDot .subText{ font-size:12px;}
+            .stepBar .stepDot .dot{ background:#FFF;padding:0 4px;width: fit-content; margin: 0 auto;}
+            .stepBar .stepDot .dot::before{ content:"";display:inline-block;border:2px solid #d7e0ef; width:12px;height:12px;border-radius:8px;background:#3f5372; }
+            .tabBox{border-bottom:1px solid #ccc;margin-bottom:35px;}
+
+            .stepBar .stepDot.dotGray > div{ color:#6c7b94;}
+            .stepBar .stepDot.dotGray .dot::before{ background:#a9b6cb; }
+            .stepBar .stepDot.dotRed > div{ color:#c43826;}
+            .stepBar .stepDot.dotRed .dot::before{ background:#c43826; border-color:#ebbdb7;}
+
+            .tabBox{border-bottom:1px solid #ccc;margin-bottom:35px;}
+
+
              #applyIndex__container {width: 100vw; overflow: hidden;}
             .bg-cycle{position:absolute;}
             .bg-cycle.cyclel{left:0;bottom:-350px;}
@@ -407,6 +529,8 @@ const ProductInfo = () => {
             .mainArea .contentBox .DataTitle {color:#3f5372;width:4em;flex-shrink: 0;}
             .mainArea .contentBox .dataRow:not(:last-child) .DataTitle{height:4em;}
             .mainArea .contentBox .DataInfo{color:#0d1623;text-align:left;margin-left:2em;width:100%;}
+
+            .mainArea3 .contentBox{max-width:1080px;}
 
             .iconBg{box-sizing:border-box;width:80px;height:80px;border:5px solid #d7e0ef;border-radius:100px;text-align:center;margin: 0 auto;}
             .iconBg1{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
@@ -457,6 +581,7 @@ const ProductInfo = () => {
 
             .iconBg1,  .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
             .mainArea .contentBox .countBoxRight{width:100%;}
+            
            
         }
 
@@ -464,6 +589,39 @@ const ProductInfo = () => {
             </style>
             <style jsx global>
                 {`
+                    #applyIndex__container .slick-list {
+                    }
+                    #applyIndex__container .slick-slide .slideContent {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    #applyIndex__container .slickBox .slick-next::before {
+                        content: '';
+                        display: inline-block;
+                        width: 0;
+                        height: 0;
+                        border-style: solid;
+                        border-width: 12.5px 0 12.5px 12px;
+                        border-color: transparent transparent transparent #7d7d7d;
+                    }
+                    #applyIndex__container .slickBox .slick-prev::before {
+                        content: '';
+                        display: inline-block;
+                        width: 0;
+                        height: 0;
+                        border-style: solid;
+                        border-width: 12.5px 12px 12.5px 0;
+                        border-color: transparent #7d7d7d transparent transparent;
+                    }
+                    #applyIndex__container .slick-slide .slideContent .slideCard {
+                        background: #fff;
+                        width: 32%;
+                        border: 1px solid #d7e0ef;
+                        border-radius: 2px;
+                        padding: 24px 24px 16px;
+                        min-height: 380px;
+                        max-width: 342px;
+                    }
                     #applyIndex__container .ant-tabs-tab {
                         font-size: 16px;
                     }
