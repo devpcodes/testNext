@@ -1,0 +1,7 @@
+<svg width="60" height="10" viewBox="0 0 60 10" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" fill-rule="evenodd">
+        <path stroke="#DAA360" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M5 5h50"/>
+        <circle fill="#DAA360" cx="5" cy="5" r="5"/>
+        <circle fill="#DAA360" cx="55" cy="5" r="5"/>
+    </g>
+</svg>
