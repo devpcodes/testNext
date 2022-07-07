@@ -1,29 +1,29 @@
 import { getSubscriptionInstance } from '../../myAxios';
 
-export const postCancel = async function ({
+export const postOrder = async function ({
+    isAppropriation,
+    bankChannel,
+    callbackUrl,
     branch,
     account,
     stockId,
-    status,
-    ca_content,
-    client_ip,
-    isAppropriation = false,
     source = 'h',
     token,
+    ca_content,
 }) {
     try {
-        const reqUrl = '/cancel';
+        const reqUrl = '/order';
         const res = await getSubscriptionInstance().post(
             reqUrl,
             {
+                isAppropriation,
+                bankChannel,
+                callbackUrl,
                 branch,
                 account,
                 stockId,
-                status,
-                ca_content,
-                client_ip,
-                isAppropriation,
                 source,
+                ca_content,
             },
             {
                 headers: {

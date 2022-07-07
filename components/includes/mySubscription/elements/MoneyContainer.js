@@ -163,6 +163,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
                             content={'立即簽署'}
+                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
                         />
                     )}
                     {applyStatus && signAcc && (
@@ -224,6 +225,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '33%' }}
                             title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
                             content={'立即簽署'}
+                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
                         />
                     )}
                     {applyStatus && signAcc && (

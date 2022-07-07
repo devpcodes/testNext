@@ -17,6 +17,7 @@ import { getCookie } from '../../../../services/components/layouts/cookieControl
 import { postCancel } from '../../../../services/components/mySubscription/postCancel';
 import { openGoOrder } from '../../../../services/openGoOrder';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
+import { postOrder } from '../../../../services/components/mySubscription/postOrder';
 // import { WindowsOutlined } from '@ant-design/icons';
 const mockData = [
     {
@@ -82,7 +83,7 @@ const mockData = [
         orderStatusMessage: '委託預約中',
         canCancelOrder: true,
         canAppropriation: false,
-        canCancelAppropriation: false,
+        canCancelAppropriation: true,
         canSellStock: false,
         canMortgage: false,
         stockName: '台揚',
@@ -163,17 +164,19 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                             <SubscriptionBtn
                                                 text="取消申購"
                                                 colorType="blue"
-                                                width={100 / btnsArr.length - 1 + '%'}
+                                                width={64 + 'px'}
                                                 onClick={clickHandler.bind(null, record, 'canCancelOrder')}
                                                 loading={cancelLoading}
+                                                style={{ marginRight: 5 }}
                                             />
                                         )}
                                         {element === 'canSellStock' && (
                                             <SubscriptionBtn
                                                 text="賣出"
                                                 colorType="green"
-                                                width={100 / btnsArr.length - 1 + '%'}
-                                                style={{ marginRight: 10 }}
+                                                // width={100 / btnsArr.length - 1 + '%'}
+                                                width={40 + 'px'}
+                                                style={{ marginRight: 5 }}
                                                 onClick={clickHandler.bind(null, record, 'canSellStock')}
                                             />
                                         )}
@@ -181,8 +184,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                             <SubscriptionBtn
                                                 text="抵押"
                                                 colorType="yellow"
-                                                width={100 / btnsArr.length - 1 + '%'}
-                                                style={{ marginRight: 10 }}
+                                                width="40px"
+                                                style={{ marginRight: 5 }}
                                                 onClick={clickHandler.bind(null, record, 'canMortgage')}
                                             />
                                         )}
@@ -190,8 +193,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                             <SubscriptionBtn
                                                 text="申請動用"
                                                 colorType="red"
-                                                width={100 / btnsArr.length - 1 + '%'}
-                                                style={{ marginRight: 10, padding: '3px 5px 3px 5px' }}
+                                                width="72px"
+                                                style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
                                                 onClick={clickHandler.bind(null, record, 'canAppropriation')}
                                             />
                                         )}
@@ -199,10 +202,10 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                             <SubscriptionBtn
                                                 text="取消動用"
                                                 colorType="blue"
-                                                width={100 / btnsArr.length - 1 + '%'}
+                                                width="72px"
                                                 onClick={clickHandler.bind(null, record, 'canCancelAppropriation')}
                                                 loading={cancelLoading}
-                                                style={{ marginRight: 10, padding: '3px 5px 3px 5px' }}
+                                                style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
                                             />
                                         )}
                                     </React.Fragment>
@@ -330,6 +333,47 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         if (type === 'canCancelOrder') cancelHandler(record);
         if (type === 'canSellStock') sellHandler(record);
         if (type === 'canMortgage') mortgageHandler(record);
+        if (type === 'canAppropriation') appropriationHandler(record);
+        if (type === 'canCancelAppropriation') cancelAppropriation(record);
+    };
+
+    const cancelAppropriation = async record => {
+        cancelHandler(record, true);
+    };
+
+    const appropriationHandler = async record => {
+        const token = getToken();
+        const ca_content = sign(
+            {
+                idno: currentAccount.idno,
+                broker_id: currentAccount.broker_id,
+                account: currentAccount.account,
+            },
+            true,
+            token,
+            true,
+        );
+        if (checkSignCA(ca_content)) {
+            setCancelLoading(true);
+            try {
+                const res = await postOrder({
+                    isAppropriation: true,
+                    bankChannel: 'NETBANK',
+                    callbackUrl: location.href,
+                    branch: currentAccount.broker_id,
+                    account: currentAccount.account,
+                    stockId: record.stockId,
+                    token,
+                    ca_content,
+                });
+                setCancelLoading(false);
+                message.success('申請動用已送出');
+                getOrderStatus();
+            } catch (error) {
+                setCancelLoading(false);
+                message.error(error);
+            }
+        }
     };
 
     const loanStatusHandler = text => {
@@ -392,7 +436,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         return btnsArr;
     };
 
-    const cancelHandler = async record => {
+    const cancelHandler = async (record, type = false) => {
         const token = getToken();
         const ca_content = sign(
             {
@@ -402,6 +446,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
             },
             true,
             token,
+            true,
         );
         //branch, account, stockId, status, ca_content, client_ip
         if (checkSignCA(ca_content)) {
@@ -414,9 +459,10 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     status: record.status,
                     ca_content,
                     client_ip: getCookie('client_ip'),
+                    isAppropriation: type,
                     token,
                 });
-                message.success('取消申購已送出');
+                message.success(type ? '取消動用已送出' : '取消申購已送出');
                 setCancelLoading(false);
                 getOrderStatus();
             } catch (error) {
@@ -614,6 +660,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         if (token && currentAccount.broker_id) {
             //TODO MOCK
             // setData(mockData);
+
             setLoading(true);
             try {
                 const res = await fetchOrderStatus({

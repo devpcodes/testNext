@@ -134,6 +134,7 @@ const TimeLine = ({ data, applyStatus }) => {
         setSysDataItem01Dom('line1__item');
         setSysDataItem02Dom('line2__item');
         setSysDataItem03Dom('line3__item');
+        setSysDataItem03LineDom('line');
 
         setSysDataItem02Dom('line2__item');
         setEndDataItem02LineDom('line');

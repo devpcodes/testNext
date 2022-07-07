@@ -1,6 +1,11 @@
 import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
 import goIcon from '../../../../resources/images/components/mySubscription/arrow-chevron-down-copy (3).svg';
-const SignBox = ({ title, content, style }) => {
+const SignBox = ({ title, content, style, contentLink }) => {
+    const clickHandler = () => {
+        if (contentLink.indexOf('http') >= 0) {
+            window.open(contentLink);
+        }
+    };
     return (
         <div className="money__container" style={style}>
             <div className="money__header">
@@ -19,7 +24,7 @@ const SignBox = ({ title, content, style }) => {
             </div>
             <div className="money__content">
                 <React.Fragment>
-                    <div className="money__item">
+                    <div className="money__item" onClick={clickHandler}>
                         {/* <p className="money__label">{element.label}</p> */}
                         <p className="money__val">{content}</p>
                         <img
