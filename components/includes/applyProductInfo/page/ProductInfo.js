@@ -10,7 +10,18 @@ import hands from '../../../../resources/images/pages/subscriptionArea/group-22.
 import dotLine from '../../../../resources/images/pages/subscriptionArea/dot-line.svg';
 import icon1 from '../../../../resources/images/pages/subscriptionArea/index-icon-1.svg';
 import icon61 from '../../../../resources/images/pages/subscriptionArea/icon6-1.svg';
+import icon62 from '../../../../resources/images/pages/subscriptionArea/icon6-2.svg';
+import icon63 from '../../../../resources/images/pages/subscriptionArea/icon6-3.svg';
+import icon64 from '../../../../resources/images/pages/subscriptionArea/icon6-4.svg';
+import icon65 from '../../../../resources/images/pages/subscriptionArea/icon6-5.svg';
+import icon66 from '../../../../resources/images/pages/subscriptionArea/icon6-6.svg';
+import bg1 from '../../../../resources/images/pages/subscriptionArea/bg-1.svg';
+import bg2 from '../../../../resources/images/pages/subscriptionArea/bg-2.svg';
+import bg3 from '../../../../resources/images/pages/subscriptionArea/bg-3.svg';
+import bg4 from '../../../../resources/images/pages/subscriptionArea/bg-4.svg';
+import check from '../../../../resources/images/pages/subscriptionArea/check.svg';
 import QaCollapse from '../../loan/Index/elements/QaCollapse';
+import SubscriptionCards from '../../subscription/subscriptionCards';
 
 const ProductInfo = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -38,6 +49,7 @@ const ProductInfo = () => {
         textAlign: 'center',
         background: '#364d79',
     };
+    const stockData = [{}];
 
     const handleClick = key => {
         setState({ current: key });
@@ -265,7 +277,7 @@ const ProductInfo = () => {
                         <p>用小資金放大機會</p>
                     </div>
                     <div>回顧 2022 上半年申購實績</div>
-                    <div>
+                    <div className="flexBox">
                         <div>
                             <p>
                                 <span>
@@ -276,13 +288,13 @@ const ProductInfo = () => {
                             <p>申購檔次</p>
                         </div>
                         <div>
-                            <p className="icon-arrow-up">
+                            <p>
                                 <span>42,630</span>元
                             </p>
                             <p>期間最高價差</p>
                         </div>
                         <div>
-                            <p>
+                            <p className="icon-arrow-up">
                                 <span>18.09</span>%
                             </p>
                             <p>首日平均漲幅</p>
@@ -304,13 +316,60 @@ const ProductInfo = () => {
                             申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享先抽籤後付款的服務，快來抓緊每個申購抽籤的機會吧！
                         </p>
                     </div>
-                    <div>
-                        <div>
-                            <img src={icon61}></img>
+                    <div className="flexBox areaContent">
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon61}></img>
+                            </div>
+                            <div>
+                                <p>免出資，更高效</p>
+                                <p>20 萬內免出資，彈性資金運用更高效</p>
+                            </div>
                         </div>
-                        <div>
-                            <p>免出資，更高效</p>
-                            <p>20 萬內免出資，彈性資金運用更高效</p>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon62}></img>
+                            </div>
+                            <div>
+                                <p>零閒置，更彈性</p>
+                                <p>隨借隨還零閒置，讓手頭資金運用更彈性</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon63}></img>
+                            </div>
+                            <div>
+                                <p>免切換，更順暢</p>
+                                <p>交易帳務同平台免切換，告別資金撥轉與查詢困擾</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon64}></img>
+                            </div>
+                            <div>
+                                <p>線上申辦，更快速</p>
+                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon65}></img>
+                            </div>
+                            <div>
+                                <p>提供試算，更清晰</p>
+                                <p>借款申購提供一鍵試算預估報酬供評估</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon66}></img>
+                            </div>
+                            <div>
+                                <p>聰明還款，更安心</p>
+                                <p>未中籤提供系統還款免人工轉帳，讓您更安心</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -327,7 +386,7 @@ const ProductInfo = () => {
                         <Carousel arrows dots={false} afterChange={onCarouselChange}>
                             <div>
                                 <div className="slideContent">
-                                    <div className="slideCard">
+                                    {/* <div className="slideCard">
                                         <div className="topLabel">
                                             <div>
                                                 聯發國際 2756<label>NO.1</label>
@@ -354,6 +413,13 @@ const ProductInfo = () => {
                                         <div className="bottomLabel">
                                             <a>+</a>
                                         </div>
+                                    </div> */}
+                                    <div className="slideCard">
+                                        <SubscriptionCards
+                                            stockData={stockData}
+                                            // onActionClick={submitSubscription}
+                                            // onCancelClick={cancelSubscription}
+                                        />
                                     </div>
                                     <div className="slideCard">
                                         <div className="stepBar ">
@@ -387,14 +453,6 @@ const ProductInfo = () => {
                                                 <div className="dot"></div>
                                                 <div className="subText">01/14</div>
                                             </div>
-                                            {/* <Steps progressDot current={1} size='small'>
-                                    <Step title="開始" description="01/04" />
-                                    <Step title="截止" description="01/06" />
-                                    <Step title="扣款" description="01/07" />
-                                    <Step title="抽籤" description="01/10" />
-                                    <Step title="退款" description="01/11" />
-                                    <Step title="撥券" description="01/14" />
-                                    </Steps> */}
                                         </div>
                                     </div>
                                     <div className="slideCard">
@@ -420,16 +478,59 @@ const ProductInfo = () => {
                         <p></p>
                         <img src={dotLine}></img>
                     </div>
+                    <div className="areaContent flexBox">
+                        <div className="areaItem">
+                            <p>申購前</p>
+                            <p>申辦啟用</p>
+                            <div>
+                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用借款申購功能。
+                            </div>
+                            <a>了解更多</a>
+                        </div>
+                        <div className="areaItem">
+                            <p>申購期間 </p>
+                            <p>借款申購試算</p>
+                            <div>
+                                申購期間 <span>20 萬內抽籤股票</span>，可自由選擇申購方式。
+                                <ul>
+                                    <li>自備款現金申購</li>
+                                    <li>免出資借款申購</li>
+                                </ul>
+                            </div>
+
+                            <a>了解更多</a>
+                        </div>
+                        <div className="areaItem">
+                            <p>截止~扣款日 </p>
+                            <p>動用扣款</p>
+                            <div>
+                                <span>整筆借款酌收金流服務費 50 元</span>
+                                ，於申購截止日動用後隔天扣款，可隨借隨還，依動用金額以日計息於每月 21 日收取。
+                            </div>
+                            <a>了解更多</a>
+                        </div>
+                        <div className="areaItem">
+                            <p>抽籤日後</p>
+                            <p>中籤還款</p>
+                            <div>
+                                <ul>
+                                    <li>未中籤：退款後，若有銀行欠款系統將進行還款，無須轉帳。</li>
+                                    <li>有中籤：若有銀行欠款須自行轉帳償還，未提供償還服務。</li>
+                                </ul>
+                            </div>
+                            <a>了解更多</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="mainArea mainArea4">
+            <div className="mainArea mainArea5">
                 <div className="contentBox">
                     <div className="areaTitle">
                         申辦資格
                         <p></p>
                         <img src={dotLine}></img>
                     </div>
-                    <div>
+                    <div className="areaContent flexBox">
                         <div>
                             <img src={hands}></img>
                         </div>
@@ -442,7 +543,7 @@ const ProductInfo = () => {
                     </div>
                 </div>
             </div>
-            <div className="mainArea mainArea5">
+            <div className="mainArea mainArea6">
                 <div className="contentBox">
                     <div className="areaTitle">
                         常見問題
@@ -465,13 +566,84 @@ const ProductInfo = () => {
             </div>
             <style jsx>
                 {`
-.secondLabel{display:flex; justify-content:space-between; flex-wrap: wrap; }
-.secondLabel p{display:flex; justify-content:space-between; width:45%;}
-.pinkLabel{display:flex;align-items: flex-end; background:#feefed; color:#f45a4c;padding:16px;font-size:16px;line-height:1;}
-.pinkLabel::before{content:"價差";display:block; color:#f45a4c; font-size:16px;line-height: 28px; margin-right: 1em;}
-.pinkLabel span{font-size:28px;font-weight:800;margin-right:5px;}
-            .bottomLabel a{display:inline-block;}
-            .active .bottomLabel a{transform: rotate(45deg);}
+                .mainArea{min-height:40px; width:100%;padding:80px 0;position:relative;}
+                .mainArea:nth-child(odd){background-color:#f9fbff;}
+                .mainArea:nth-child(1){background:url(${bannerPC}) no-repeat center top/1600px;height:644px;background-color:#f9fbff;overflow:visible;}
+                .mainArea .contentBox {min-height:40px; width:96%; max-width:1185px;margin:0 auto;}
+                .mainArea .contentBox .areaTitle{font-size:32px;color:#0d1623;text-align:center;font-weight:800;}
+                .mainArea .contentBox .areaTitle p{font-size:16px;color:#3f5372;text-align:center;font-weight:500;margin:0;line-height:1.8;}
+                .mainArea .contentBox .areaTitle img{display: block;margin: 0.3em auto 1em;}
+                .mainArea .contentBox .countBox {display:flex;justify-content:space-between;align-items:center;}
+                .mainArea .contentBox .countBoxRight {width:325px;flex-shrink: 1;flex-shrink: 0.27;box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.1);background-color:#FFF;}
+                .mainArea .contentBox .countBoxRightContent { padding:30px;}
+                .mainArea .contentBox .countBoxRightContent p {font-size:16px; color:#3f5372;padding:0;margin:0;line-height:2;}
+                .mainArea .contentBox .countBoxRightContent p span:nth-child(2){color:#0d1623;}
+                .mainArea .contentBox .countBoxRightContent p.tob{line-height:1.5;margin-bottom:10px;}
+                .mainArea .contentBox .countBoxRightContent p.tob span{font-size:28px;font-weight:800;color:#0d1623;}
+                .mainArea .contentBox .countBoxLeft {width:100%;padding:44px 0 44px 44px;}
+                .mainArea .contentBox .countBoxLeftContent {border:1px solid #d7e0ef; background-color:#F9FBFF;padding:44px;border-width:1px 0 1px 1px;}
+                .mainArea .contentBox .dataRow{font-size:16px;font-weight:800;text-align:left;display:flex;}
+                .mainArea .contentBox .DataTitle {color:#3f5372;width:4em;flex-shrink: 0;}
+                .mainArea .contentBox .dataRow:not(:last-child) .DataTitle{height:4em;}
+                .mainArea .contentBox .DataInfo{color:#0d1623;text-align:left;margin-left:2em;width:100%;}
+                
+                .secondLabel{display:flex; justify-content:space-between; flex-wrap: wrap; }
+                .secondLabel p{display:flex; justify-content:space-between; width:45%;}
+                .pinkLabel{display:flex;align-items: flex-end; background:#feefed; color:#f45a4c;padding:16px;font-size:16px;line-height:1;}
+                .pinkLabel::before{content:"價差";display:block; color:#f45a4c; font-size:16px;line-height: 28px; margin-right: 1em;}
+                .pinkLabel span{font-size:28px;font-weight:800;margin-right:5px;}
+                .bottomLabel a{display:inline-block;}
+                .active .bottomLabel a{transform: rotate(45deg);}
+                
+                .flexBox{display:flex;justify-content:space-between;}
+            
+            
+            .mainArea1 {position:relative;}
+            .mainArea1 .contentBox { max-width:1080px;font-size: 16px;}
+            .mainArea1 .icon-arrow-up::before {content:""; display:inline-block; width: 0; height: 0; border-style: solid; border-width: 0 10px 17.3px 10px;margin-right:3px;
+             border-color: transparent transparent #c43826 transparent;}
+            .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
+            .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
+            .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
+            .mainArea1 .contentBox > div:nth-child(2) p:first-child{margin-bottom:10px;}
+            .mainArea1 .contentBox > div:nth-child(3){color:#0d1623; font-size:16px; line-height:1.5; margin:35px 0 15px; }
+            .mainArea1 .contentBox > div:nth-child(4){margin:0 0 20px; width:70%; max-width:420px; }
+            .mainArea1 .contentBox > div:nth-child(4) p:nth-child(1){font-weight: 700;margin-bottom: 0}
+            .mainArea1 .contentBox > div:nth-child(4) p:nth-child(1) span{font-size: 32px; font-weight: 900;margin-right:5px; line-height: 1.2;}
+            .mainArea1 .contentBox > div:nth-child(5){width:205px; text-align:center;}
+            .mainArea1 .contentBox > div:nth-child(5) a{font-size:14px; margin:0 auto;}
+
+            .mainArea5 .contentBox {}
+            .mainArea5 .contentBox .areaContent{margin:60px auto 40px;}
+            .mainArea5 .contentBox .areaContent > div:nth-child(1) {width: 60%; max-width: 704px;}
+            .mainArea5 .contentBox .areaContent > div:nth-child(2) {width: 40%;padding-left:55px;padding-top:32px;}
+            .mainArea5 .contentBox .areaContent > div:nth-child(2) p {font-size: 22px;font-weight: 800;color: #0d1623;letter-spacing:-0.04em;display:flex; justify-content:flex-start;}
+            .mainArea5 .contentBox .areaContent > div:nth-child(2) p::before {content:''; display:inline-block; width:24px; height:28px; background:url(${check}) center no-repeat;flex-shrink:0;
+            margin-right: 10px;}
+
+
+            .mainArea6 .contentBox {max-width:980px;}
+
+            .mainArea4 .areaContent {margin:65px auto 35px;}
+            .mainArea4 .areaContent .areaItem{width:22%;background:url(${bg1}) right top no-repeat;}
+            .mainArea4 .areaContent .areaItem:nth-child(2) {background-image:url(${bg2}) ;}
+            .mainArea4 .areaContent .areaItem:nth-child(3) {background-image:url(${bg3});}
+            .mainArea4 .areaContent .areaItem:nth-child(4) {background-image:url(${bg4});}
+            .mainArea4 .areaContent .areaItem > p:nth-child(1) {font-size: 14px;color: #3f5372;}
+            .mainArea4 .areaContent .areaItem > p:nth-child(2) {font-size: 22px; color: #0d1623; font-weight: 800;}
+            .mainArea4 .areaContent .areaItem > div {font-size: 16px; color: #0d1623; width:90%; margin-bottom: 10px;font-weight: 700; }
+            .mainArea4 .areaContent .areaItem > div span {color: #c43826;}
+            .mainArea4 .areaContent .areaItem > div ul {margin:0; padding-inline-start: 1.3em;}
+            .mainArea4 .areaContent .areaItem > div ul li {font-size: 16px; color: #0d1623;letter-spacing: -0.05em;}
+            .mainArea4 .areaContent .areaItem > a {font-size: 14px;color: #3f5372;}
+
+            .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
+            .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 20px;margin-bottom: 35px;}
+            .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
+            .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
+            .mainArea2 .areaContent .areaItem div:nth-child(2){}
+            .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size: 22px; font-weight: 800;color:#0d1623;margin-bottom:0.2em;}
+            .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){ font-size: 14px; color: #3f5372;margin-bottom:0;letter-spacing:0.05em; line-height:1.5;}
 
             .stepBar{ position:relative;display:flex;justify-content:space-between;}
             .stepBar::before{ content:"";display:block; width:calc(100% - 24px);height:1px;background:#d7e0ef; position:absolute; top:50%; left:12px;z-index:0; }
@@ -491,44 +663,14 @@ const ProductInfo = () => {
 
 
              #applyIndex__container {width: 100vw; overflow: hidden;}
+
             .bg-cycle{position:absolute;}
             .bg-cycle.cyclel{left:0;bottom:-350px;}
             .bg-cycle.cycler{right:0;top:-100px;}
-            .mainArea{min-height:40px; width:100%;padding:80px 0;position:relative;}
-            .mainArea:nth-child(odd){background-color:#f9fbff;}
-            .mainArea:nth-child(1){background:url(${bannerPC}) no-repeat center top/1600px;height:644px;background-color:#f9fbff;overflow:visible;}
-            .mainArea .contentBox {min-height:40px; width:96%; max-width:980px;margin:0 auto;}
-            .mainArea1 {position:relative;}
-            .mainArea1 .icon-arrow-up::before {content:"";display:inline-block;width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 0 10px 17.3px 10px;
-                border-color: transparent transparent #c43826 transparent;}
 
-            .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
-            .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
-            .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
-            .mainArea1 .contentBox > div:nth-child(2) p:first-child{margin-bottom:10px;}
-            .mainArea1 .contentBox > div:nth-child(3){color:#0d1623; font-size:18px; line-height:1.5; margin:24px 0; }
-            .mainArea1 .contentBox > div:nth-child(4){margin:top:10px; width:70%; max-width:205px; }
 
-            .mainArea2 {padding-top:160px;}
-            .mainArea .contentBox .areaTitle{font-size:32px;color:#0d1623;text-align:center;font-weight:800;}
-            .mainArea .contentBox .areaTitle p{font-size:16px;color:#3f5372;text-align:center;font-weight:500;margin:0;line-height:1.8;}
-            .mainArea .contentBox .areaTitle img{display: block;margin: 0.3em auto 1em;}
-            .mainArea .contentBox .countBox {display:flex;justify-content:space-between;align-items:center;}
-            .mainArea .contentBox .countBoxRight {width:325px;flex-shrink: 1;flex-shrink: 0.27;box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.1);background-color:#FFF;}
-            .mainArea .contentBox .countBoxRightContent { padding:30px;}
-            .mainArea .contentBox .countBoxRightContent p {font-size:16px; color:#3f5372;padding:0;margin:0;line-height:2;}
-            .mainArea .contentBox .countBoxRightContent p span:nth-child(2){color:#0d1623;}
-            .mainArea .contentBox .countBoxRightContent p.tob{line-height:1.5;margin-bottom:10px;}
-            .mainArea .contentBox .countBoxRightContent p.tob span{font-size:28px;font-weight:800;color:#0d1623;}
-            .mainArea .contentBox .countBoxLeft {width:100%;padding:44px 0 44px 44px;}
-            .mainArea .contentBox .countBoxLeftContent {border:1px solid #d7e0ef; background-color:#F9FBFF;padding:44px;border-width:1px 0 1px 1px;}
-            .mainArea .contentBox .dataRow{font-size:16px;font-weight:800;text-align:left;display:flex;}
-            .mainArea .contentBox .DataTitle {color:#3f5372;width:4em;flex-shrink: 0;}
-            .mainArea .contentBox .dataRow:not(:last-child) .DataTitle{height:4em;}
-            .mainArea .contentBox .DataInfo{color:#0d1623;text-align:left;margin-left:2em;width:100%;}
+
+
 
             .mainArea3 .contentBox{max-width:1080px;}
 
@@ -537,8 +679,6 @@ const ProductInfo = () => {
             .iconBg2{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
             .iconBg3{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
             .iconBg4{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
-
-
 
             .forPC{display:inherite;}
             .forMB{display:none;}
@@ -554,6 +694,7 @@ const ProductInfo = () => {
             .bg-cycle.cycler{ width: 10%; top: auto; bottom: -17%;z-index:0;}
         }
         @media screen and (max-width: 425px) {
+            .flexBox{flex-wrap:wrap;}
             .forPC{display:none;}
             .forMB{display:block!important;}      
             .mainArea .contentBox .areaTitle{font-size:20px; width: 94%; margin: 0 auto;}
@@ -665,21 +806,6 @@ const ProductInfo = () => {
                         background-color: #c43826;
                         border-color: #c43826;
                     }
-                    #applyIndex__container .ant-radio-inner:after {
-                        background-color: #daa360;
-                        width: 16px;
-                        height: 16px;
-                    }
-                    #applyIndex__container .ant-radio-checked .ant-radio-inner {
-                        border-color: #daa360;
-                        width: 24px;
-                        height: 24px;
-                    }
-                    #applyIndex__container .ant-radio-group {
-                        width: 96%;
-                        display: flex;
-                        justify-content: space-between;
-                    }
                     #applyIndex__container .iconBox .ant-btn {
                         width: 47%;
                         font-size: 16px;
@@ -689,7 +815,7 @@ const ProductInfo = () => {
                         width: 64%;
                     }
                     #applyIndex__container .mainArea1 .contentBox .ant-btn {
-                        //width: 100%;
+                        width: 100%;
                         height: 48px;
                         font-size: 18px;
                         margin: 10px 0;
