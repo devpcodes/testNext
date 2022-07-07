@@ -1,0 +1,20 @@
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="50%" y1="14.706%" x2="50%" y2="120.588%" id="rvmhezqwxa">
+            <stop stop-color="#DAA360" offset="32.292%"/>
+            <stop stop-color="#DAA360" stop-opacity="0" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#F9FBFF" d="M-651-579H949v1717H-651z"/>
+        <path stroke="#D7E0EF" fill="#FFF" d="M-78.5-26.5h211v141h-211z"/>
+        <path d="M0 0h60v60H0z"/>
+        <path d="M4 41.75c0 .967.784 1.75 1.75 1.75h21.677V40H7.5V13.5H46v14.464h3.5V11.75A1.75 1.75 0 0 0 47.75 10h-42A1.75 1.75 0 0 0 4 11.75v30z" fill="#172439"/>
+        <path fill="#172439" d="M10.75 32.25h10v3.5h-10z"/>
+        <path d="M39.75 11.75c-4.39 0-12 2.625-12 2.625v16.75c0 3.208 12 9.625 12 9.625s12-6.125 12-9.625v-16.75s-7.61-2.625-12-2.625z" fill="url(#rvmhezqwxa)" fill-rule="nonzero" transform="translate(4 10)"/>
+        <g>
+            <path d="M38.744 35.744a5 5 0 1 0 5-5" stroke="#FFF" stroke-width="3"/>
+            <path fill="#FFF" d="m39.744 30.744 5-3.488v6.976z"/>
+        </g>
+    </g>
+</svg>

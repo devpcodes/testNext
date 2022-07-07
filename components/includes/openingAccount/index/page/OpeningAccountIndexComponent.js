@@ -8,6 +8,7 @@ import AppointmentOpenAccount from '../element/AppointmentOpenAccount';
 //securitiesAccountTypes
 import icon_futures from '../../../../../resources/images/pages/open_account/img-service-user-futures.svg';
 import icon_credit from '../../../../../resources/images/pages/open_account/a41-ic-01.svg';
+import icon_renewal from '../../../../../resources/images/pages/open_account/a-41-ic-09.svg';
 import icon_sub_brokerage from '../../../../../resources/images/pages/open_account/a41-ic-03.svg';
 import icon_manager_trust from '../../../../../resources/images/pages/open_account/a41-ic-04.svg';
 import icon_management from '../../../../../resources/images/pages/open_account/img-service-user-management.svg';
@@ -28,9 +29,14 @@ function OpeningAccountIndexComponent(props) {
     const router = useRouter();
     const [securitiesAccountTypes] = useState([
         {
-            title: '信用戶',
+            title: '信用戶(新開)',
             image: icon_credit,
             link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_1?dirtype=99&strProd=0037&strWeb=0035',
+        },
+        {
+            title: '信用戶(續約)',
+            image: icon_renewal,
+            link: process.env.NEXT_PUBLIC_OPENING_ACCOUNT_USER_RENEWAL,
         },
         {
             title: '複委託',
