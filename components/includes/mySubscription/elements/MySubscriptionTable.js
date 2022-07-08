@@ -416,7 +416,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
 
     const activeHandler = record => {
         //TODO MOCK
-        record.canAppropriation = true;
+        // record.canAppropriation = true;
         const btnsArr = [];
         if (record.canCancelOrder) {
             btnsArr.push('canCancelOrder');

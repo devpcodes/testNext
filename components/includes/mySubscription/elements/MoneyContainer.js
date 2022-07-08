@@ -46,9 +46,9 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                 return item.account === currentAccount.account;
             });
             //TODO MOCK
-            signAccs[0].bank_flag = '1';
+            // signAccs[0].bank_flag = '1';
 
-            // setSignAcc(signAccs[0].bank_flag === '1' ? true : false);
+            setSignAcc(signAccs[0]?.bank_flag === '1' ? true : false);
         } else {
             setSignAcc(false);
         }
@@ -83,22 +83,22 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
 
     const getDsAndBank = async () => {
         //TODO mock
-        setApplyStatus(true);
-        getQueryCrossSelling(currentAccount.account);
+        // setApplyStatus(true);
+        // getQueryCrossSelling(currentAccount.account);
 
-        // try {
-        //     const res = await fetchAccount(getToken());
-        //     console.log('step1', res);
-        //     if (res.applyStatus === '1') {
-        //         setApplyStatus(true);
-        //         getQueryCrossSelling(currentAccount.account);
-        //     } else {
-        //         setApplyStatus(false);
-        //     }
-        // } catch (error) {
-        //     setApplyStatus(false);
-        //     message.error(error||'伺服器錯誤');
-        // }
+        try {
+            const res = await fetchAccount(getToken());
+            console.log('step1', res);
+            if (res.applyStatus === '1') {
+                setApplyStatus(true);
+                getQueryCrossSelling(currentAccount.account);
+            } else {
+                setApplyStatus(false);
+            }
+        } catch (error) {
+            setApplyStatus(false);
+            message.error(error || '伺服器錯誤');
+        }
     };
 
     useEffect(() => {
