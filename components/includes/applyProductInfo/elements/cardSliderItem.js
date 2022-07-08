@@ -176,6 +176,18 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     display: inline-block;
                     color: #a9b6cb;
                 }
+                @media (max-width: 768px) {
+                    .slideCard {
+                        min-height: 400px;
+                    }
+                    .TypeB > div > p {
+                        letter-spacing: -0.05em;
+                    }
+                }
+                @media (max-width: 425px) {
+                    .slideCard {
+                    }
+                }
             `}</style>
             <style jsx global>{`
                 #cardSlider__container .closeBtn span {

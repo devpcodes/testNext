@@ -9,6 +9,7 @@ import bannerPC from '../../../../resources/images/pages/subscriptionArea/bg-ban
 import bannerMB from '../../../../resources/images/pages/subscriptionArea/bg-banner-mb.png';
 import bannerPAD from '../../../../resources/images/pages/subscriptionArea/bg-banner-pad.png';
 import hands from '../../../../resources/images/pages/subscriptionArea/group-22.png';
+import handsS from '../../../../resources/images/pages/subscriptionArea/group-22s.png';
 import dotLine from '../../../../resources/images/pages/subscriptionArea/dot-line.svg';
 import bgimgl from '../../../../resources/images/pages/subscriptionArea/bgimg-l.png';
 import bgimgr from '../../../../resources/images/pages/subscriptionArea/bgimg-r.png';
@@ -31,6 +32,7 @@ const ProductInfo = () => {
     const { TabPane } = Tabs;
     const [titleValue, setTitleValue] = useState(45); //申購檔次
     const [menuCurrent, setMenuCurrent] = useState('p1');
+    const [windowWidth, setWindowWidth] = useState(1600);
 
     const menuList = [
         { title: '申辦啟用', key: 'p1' },
@@ -39,13 +41,13 @@ const ProductInfo = () => {
         { title: '中籤還款', key: 'p4' },
         { title: '其他', key: 'p5' },
     ];
-    const contentStyle = {
-        height: '160px',
-        color: '#fff',
-        lineHeight: '160px',
-        textAlign: 'center',
-        background: '#364d79',
-    };
+    // const contentStyle = {
+    //     height: '160px',
+    //     color: '#fff',
+    //     lineHeight: '160px',
+    //     textAlign: 'center',
+    //     background: '#364d79',
+    // };
     const slideCardData = [
         {
             stockId: '2756',
@@ -252,16 +254,6 @@ const ProductInfo = () => {
             settingDate: '2022-05-04',
         },
     ];
-
-    const handleClick = key => {
-        setMenuCurrent(key);
-    };
-
-    const handleScroll = key => {
-        setMenuCurrent(key);
-        scrollTo('qaArea');
-    };
-
     const qaDataLib = [
         {
             title: '【申辦】不限用途款項借貸戶申辦資格是什麼？',
@@ -375,10 +367,21 @@ const ProductInfo = () => {
             key: 14,
         },
     ];
-    const windowWidth = window.innerWidth;
+
+    const handleClick = key => {
+        setMenuCurrent(key);
+    };
+
+    const handleScroll = key => {
+        setMenuCurrent(key);
+        scrollTo('qaArea');
+    };
+
     useEffect(() => {
         console.log('window.innerWidth', window.innerWidth);
+        setWindowWidth(window.innerWidth);
     }, []);
+
     useEffect(() => {
         let group = menuCurrent;
         let data = qaDataLib.filter(x => x.group == group);
@@ -513,7 +516,10 @@ const ProductInfo = () => {
                         <img src={dotLine}></img>
                     </div>
                     <div className="slickBox">
-                        <CardSlider rowData={slideCardData} itemNum={3} />
+                        <CardSlider
+                            rowData={slideCardData}
+                            itemNum={windowWidth > 768 ? 3 : windowWidth > 425 ? 2 : 1}
+                        />
                     </div>
                     <div className="info">
                         <InfoCircleFilled /> 市場公開資訊不代表未來績效表現，本素材不構成任何投資建議。
@@ -595,6 +601,7 @@ const ProductInfo = () => {
                     <div className="areaContent flexBox">
                         <div>
                             <img src={hands}></img>
+                            <img src={handsS}></img>
                         </div>
                         <div>
                             <p>年滿 20 歲之本國自然人</p>
@@ -634,143 +641,149 @@ const ProductInfo = () => {
                 .goTo > a {display:block;width:45px;font-size:16px;color:#FFF;font-weight:800;margin:0 auto;text-align:center;padding:1em 0 0.5em;}
                 .goTo > a:not(:first-child) {border-top:1px solid #f45a4c;padding:0.5em 0 0.5em; }
                 .goTo > a:last-child {border-top:1px solid #f45a4c;padding:0.5em 0 1em; }
+
+                .flexBox{display:flex;justify-content:space-between;}
+
                 .mainArea{min-height:40px; width:100%;padding:80px 0;position:relative;}
                 .mainArea:nth-child(odd){background-color:#f9fbff;}
-                
                 .mainArea .contentBox {min-height:40px; width:96%; max-width:1185px;margin:0 auto;}
                 .mainArea .contentBox .areaTitle{font-size:32px;color:#0d1623;text-align:center;font-weight:800;}
                 .mainArea .contentBox .areaTitle p{font-size:16px;color:#3f5372;text-align:center;font-weight:500;margin:0;line-height:1.8;}
                 .mainArea .contentBox .areaTitle img{display: block;margin: 0.3em auto 1em;}
-                .mainArea .contentBox .countBox {display:flex;justify-content:space-between;align-items:center;}
-                .mainArea .contentBox .countBoxRight {width:325px;flex-shrink: 1;flex-shrink: 0.27;box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.1);background-color:#FFF;}
-                .mainArea .contentBox .countBoxRightContent { padding:30px;}
-                .mainArea .contentBox .countBoxRightContent p {font-size:16px; color:#3f5372;padding:0;margin:0;line-height:2;}
-                .mainArea .contentBox .countBoxRightContent p span:nth-child(2){color:#0d1623;}
-                .mainArea .contentBox .countBoxRightContent p.tob{line-height:1.5;margin-bottom:10px;}
-                .mainArea .contentBox .countBoxRightContent p.tob span{font-size:28px;font-weight:800;color:#0d1623;}
-                .mainArea .contentBox .countBoxLeft {width:100%;padding:44px 0 44px 44px;}
-                .mainArea .contentBox .countBoxLeftContent {border:1px solid #d7e0ef; background-color:#F9FBFF;padding:44px;border-width:1px 0 1px 1px;}
-                .mainArea .contentBox .dataRow{font-size:16px;font-weight:800;text-align:left;display:flex;}
-                .mainArea .contentBox .DataTitle {color:#3f5372;width:4em;flex-shrink: 0;}
-                .mainArea .contentBox .dataRow:not(:last-child) .DataTitle{height:4em;}
-                .mainArea .contentBox .DataInfo{color:#0d1623;text-align:left;margin-left:2em;width:100%;}
-                
-                .secondLabel{display:flex; justify-content:space-between; flex-wrap: wrap; }
-                .secondLabel p{display:flex; justify-content:space-between; width:45%;}
-                .pinkLabel{display:flex;align-items: flex-end; background:#feefed; color:#f45a4c;padding:16px;font-size:16px;line-height:1;}
-                .pinkLabel::before{content:"價差";display:block; color:#f45a4c; font-size:16px;line-height: 28px; margin-right: 1em;}
-                .pinkLabel span{font-size:28px;font-weight:800;margin-right:5px;}
-                .bottomLabel a{display:inline-block;}
-                .active .bottomLabel a{transform: rotate(45deg);}
-                
-                .flexBox{display:flex;justify-content:space-between;}
 
-            .mainArea.mainArea1{background-color:#FFF;overflow:visible;background-color:#f9fbff;
-            position:relative;}
-            .mainArea1 .bg{position:absolute;width:100%;background:url(${bannerPC}) no-repeat center top/1600px; height:625px; z-index:0;top:0;}
-            .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: relative;}
-            .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
-            .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
-            .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
-            .mainArea1 .contentBox > div:nth-child(2) p:first-child{margin-bottom:10px;}
-            .mainArea1 .contentBox > div:nth-child(3){color:#0d1623; font-size:16px; line-height:1.5; margin:35px 0 15px; }
-            .mainArea1 .contentBox > div:nth-child(4){margin:0 0 20px; width:70%; max-width:420px; }
-            .mainArea1 .contentBox > div:nth-child(4) p:nth-child(1){font-weight: 700;margin-bottom: 0}
-            .mainArea1 .contentBox > div:nth-child(4) p:nth-child(1) span{font-size: 32px; font-weight: 900;margin-right:5px; line-height: 1.2;}
-            .mainArea1 .contentBox > div:nth-child(5){width:205px; text-align:center;}
-            .mainArea1 .contentBox > div:nth-child(5) a{font-size:14px; margin:0 auto;}
+                .mainArea.mainArea1{background-color:#FFF;overflow:visible;background-color:#f9fbff; position:relative;}
+                .mainArea1 .bg{position:absolute;width:100%;background:url(${bannerPC}) no-repeat center top/1600px; height:625px; z-index:0;top:0;}
+                .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: relative;}
+                .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
+                .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
+                .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
+                .mainArea1 .contentBox > div:nth-child(2) p:first-child{margin-bottom:10px;}
+                .mainArea1 .contentBox > div:nth-child(3){color:#0d1623; font-size:16px; line-height:1.5; margin:35px 0 15px; }
+                .mainArea1 .contentBox > div:nth-child(4){margin:0 0 20px; width:70%; max-width:420px; }
+                .mainArea1 .contentBox > div:nth-child(4) p:nth-child(1){font-weight: 700;margin-bottom: 0;color:#0d1623;}
+                .mainArea1 .contentBox > div:nth-child(4) p:nth-child(1) span{font-size: 32px; font-weight: 900;margin-right:5px; line-height: 1.2;}
+                .mainArea1 .contentBox > div:nth-child(5){width:205px; text-align:center;}
+                .mainArea1 .contentBox > div:nth-child(5) a{font-size:14px; margin:0 auto;}
 
-            .mainArea5 .contentBox {}
-            .mainArea5 .contentBox .areaContent{margin:60px auto 40px;}
-            .mainArea5 .contentBox .areaContent > div:nth-child(1) {width: 60%; max-width: 704px;}
-            .mainArea5 .contentBox .areaContent > div:nth-child(2) {width: 40%;padding-left:55px;padding-top:32px;}
-            .mainArea5 .contentBox .areaContent > div:nth-child(2) p {font-size: 22px;font-weight: 800;color: #0d1623;letter-spacing:-0.04em;display:flex; justify-content:flex-start;}
-            .mainArea5 .contentBox .areaContent > div:nth-child(2) p::before {content:''; display:inline-block; width:24px; height:28px; background:url(${check}) center no-repeat;flex-shrink:0;
-            margin-right: 10px;}
+                .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
+                .mainArea2 .contentBox {padding-top:20px;}
+                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 20px;margin-bottom: 35px;}
+                .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
+                .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
+                .mainArea2 .areaContent .areaItem div:nth-child(2){}
+                .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size: 22px; font-weight: 800;color:#0d1623;margin-bottom:0.2em;}
+                .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){ font-size: 14px; color: #3f5372;margin-bottom:0;letter-spacing:0.05em; line-height:1.5;}
 
-            .mainArea6 .contentBox {max-width:980px;}
+                .mainArea3 .contentBox{max-width:1080px;}
+                .mainArea3 .contentBox .slickBox{margin-bottom:40px;}
+                .mainArea3 .contentBox .info{margin: 0 auto; color:#3f5372;text-align:center;}
 
-            .mainArea4 .areaContent {margin:65px auto 35px;}
-            .mainArea4 .areaContent .areaItem{width:22%;background:url(${bg1}) right top no-repeat;}
-            .mainArea4 .areaContent .areaItem:nth-child(2) {background-image:url(${bg2}) ;}
-            .mainArea4 .areaContent .areaItem:nth-child(3) {background-image:url(${bg3});}
-            .mainArea4 .areaContent .areaItem:nth-child(4) {background-image:url(${bg4});}
-            .mainArea4 .areaContent .areaItem > p:nth-child(1) {font-size: 14px;color: #3f5372; margin-bottom: 0;}
-            .mainArea4 .areaContent .areaItem > p:nth-child(2) {font-size: 22px; color: #0d1623; font-weight: 800;}
-            .mainArea4 .areaContent .areaItem > div {font-size: 16px; color: #0d1623; width:90%; margin-bottom: 10px;font-weight: 700; }
-            .mainArea4 .areaContent .areaItem > div span {color: #c43826;}
-            .mainArea4 .areaContent .areaItem > div ul {margin:0; padding-inline-start: 1.3em;}
-            .mainArea4 .areaContent .areaItem > div ul li {font-size: 16px; color: #0d1623;letter-spacing: -0.05em;}
-            .mainArea4 .areaContent .areaItem > a {font-size: 14px;color: #3f5372;}
+                .mainArea4 .areaContent {margin:65px auto 35px;}
+                .mainArea4 .areaContent .areaItem{width:22%;background:url(${bg1}) right top no-repeat;}
+                .mainArea4 .areaContent .areaItem:nth-child(2) {background-image:url(${bg2}) ;}
+                .mainArea4 .areaContent .areaItem:nth-child(3) {background-image:url(${bg3});}
+                .mainArea4 .areaContent .areaItem:nth-child(4) {background-image:url(${bg4});}
+                .mainArea4 .areaContent .areaItem > p:nth-child(1) {font-size: 14px;color: #3f5372; margin-bottom: 0;}
+                .mainArea4 .areaContent .areaItem > p:nth-child(2) {font-size: 22px; color: #0d1623; font-weight: 800;}
+                .mainArea4 .areaContent .areaItem > div {font-size: 16px; color: #0d1623; width:90%; margin-bottom: 10px;font-weight: 700; }
+                .mainArea4 .areaContent .areaItem > div span {color: #c43826;}
+                .mainArea4 .areaContent .areaItem > div ul {margin:0; padding-inline-start: 1.3em;}
+                .mainArea4 .areaContent .areaItem > div ul li {font-size: 16px; color: #0d1623;letter-spacing: -0.05em;}
+                .mainArea4 .areaContent .areaItem > a {font-size: 14px;color: #3f5372;}
 
-            .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
-            .mainArea2 .contentBox {padding-top:20px;}
-            .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 20px;margin-bottom: 35px;}
-            .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
-            .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
-            .mainArea2 .areaContent .areaItem div:nth-child(2){}
-            .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size: 22px; font-weight: 800;color:#0d1623;margin-bottom:0.2em;}
-            .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){ font-size: 14px; color: #3f5372;margin-bottom:0;letter-spacing:0.05em; line-height:1.5;}
+                .mainArea5 .contentBox {}
+                .mainArea5 .contentBox .areaContent{margin:60px auto 40px;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(1) {width: 60%; max-width: 704px;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(1) img{width: 100%;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(1) img:last-child{display:none;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(2) {width: 40%;padding-left:55px;padding-top:32px;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(2) p {font-size: 22px;font-weight: 800;color: #0d1623;letter-spacing:-0.04em;display:flex; justify-content:flex-start;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(2) p::before {content:''; display:inline-block; width:24px; height:28px; background:url(${check}) center no-repeat;flex-shrink:0;
+                margin-right: 10px;}
 
-            .mainArea3 .contentBox .slickBox{margin-bottom:40px;}
-            .mainArea3 .contentBox .info{margin: 0 auto; color:#3f5372;text-align:center;}
+                .mainArea6 .contentBox {max-width:980px;}
 
-            .tabBox{border-bottom:1px solid #ccc;margin-bottom:35px;}
+                .tabBox{border-bottom:1px solid #ccc;margin-bottom:35px;}
 
-            .bg-cycle{position:absolute;}
-            .bg-cycle.cyclel{left:0;top:-80px;}
-            .bg-cycle.cycler{right:0;bottom:-85px;}
+                .bg-cycle{position:absolute;}
+                .bg-cycle.cyclel{left:0;top:-80px;}
+                .bg-cycle.cycler{right:0;bottom:-85px;}
 
-            .mainArea3 .contentBox{max-width:1080px;}
+                .forPC{display:inherite;}
+                .forMB{display:none;}
+            @media screen and (max-width: 768px) {
+                .mainArea {width:100vw;}
+                .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
+                .mainArea::before{content:'';display:block;width:100vw;}
+                .mainArea.mainArea1 {background-color:#FFF; padding:6% 0;}
+                .mainArea1 .contentBox{margin: 0 6%;position: relative;}
+                .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:68%;height:auto;}
+                .mainArea1 .contentBox>div:nth-child(2){font-size:40px;padding-left:0.4em;}
+                .mainArea1 .contentBox>div:nth-child(4){width:55%;}
+                .mainArea2 .areaContent {width:84%;}
+                .mainArea2 .areaContent .areaItem{width:48%;}
+                .mainArea3 .contentBox .slickBox{width: 94%; margin: 0 auto 40px;}
+                .mainArea3 .contentBox .info{margin-top:2em;}
+                .mainArea4 .areaContent {flex-wrap:wrap;justify-content: space-around;}
+                .mainArea4 .areaContent .areaItem{width:42%;margin-bottom:40px;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(1) img:first-child{display:none;}
+                .mainArea5 .contentBox .areaContent > div:nth-child(1) img:last-child{display:block;}
+                .mainArea5 .contentBox {width:100%;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(1) {width:35%;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(2) {width: 65%;padding:4em 4em;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(2) p{font-size: 20px;}
 
-            .iconBg{box-sizing:border-box;width:80px;height:80px;border:5px solid #d7e0ef;border-radius:100px;text-align:center;margin: 0 auto;}
-            .iconBg1{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
-            .iconBg2{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
-            .iconBg3{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
-            .iconBg4{background:url(${icon1}) no-repeat center/50px ;background-color:#FFF;}
+                .goTo{ right:0%; bottom:3%; border-radius:16px 0 0 16px; width:50px; }
+                .goTo > a {line-height:1.3;width:34px;}
+                .bg-cycle{ display:none;}
+            }
+            @media screen and (max-width: 425px) {
+                .flexBox{flex-wrap:wrap;}
+                .forPC{display:none;}
+                .forMB{display:block!important;}      
+                .mainArea {padding:0;}
+                .mainArea .contentBox .areaTitle{font-size:20px; width: 94%; margin: 0 auto;}
+                .mainArea .contentBox .areaTitle p{font-size:16px;}  
+                .mainArea .contentBox {width:100%;padding-top:30px;}
 
-            .forPC{display:inherite;}
-            .forMB{display:none;}
-        @media screen and (max-width: 768px) {
-            .mainArea {width:100vw;}
-            .mainArea1 .contentBox{margin: 4%;position: relative;}
-            .mainArea::before{content:'';display:block;width:100vw;}
-            .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:68%;height:auto;}
-            .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
-            .bg-cycle{position:absolute;}
-            .bg-cycle.cyclel{ width: 12%; bottom: -74%; z-index: 0;}
-            .bg-cycle.cycler{ width: 10%; top: auto; bottom: -17%;z-index:0;}
-        }
-        @media screen and (max-width: 425px) {
-            .flexBox{flex-wrap:wrap;}
-            .forPC{display:none;}
-            .forMB{display:block!important;}      
-            .mainArea .contentBox .areaTitle{font-size:20px; width: 94%; margin: 0 auto;}
-            .mainArea .contentBox .areaTitle p{font-size:16px;}    
-            .mainArea:nth-child(1){background:url(${bannerMB}) no-repeat center top/100%;padding-top:90%;height:auto;}
-            .mainArea1::before {content:'';display:block;width:100vw;padding-top:100%;}
-            .mainArea1 .contentBox{position: absolute; top: 15px; left: 50%; transform: translateX(-50%);}
-            .mainArea1 .contentBox >div:nth-child(4){width:50%;}
-            .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0.5em;}
-            .mainArea1 .contentBox>div:nth-child(2){font-size:30px; padding-left:0.5em;}
-            .mainArea1 .contentBox>div:nth-child(2) p:first-child{margin-bottom:0.15em}
-            .mainArea1 .contentBox>div:nth-child(3){ margin: 0.5em 0; font-size: 16px; line-height: 1.3;}
-            #applyIndex__container .mainArea1 .contentBox .ant-btn{margin:0.1em 0;}
-            .bg-cycle{display:none}
-            .mainArea {padding: 6em 0;}
-            .mainArea1 {margin:0;}
-            .mainArea.mainArea1 .contentBox{width:86%;}
-            .mainArea .contentBox{width:100%;}
-            .mainArea2 .areaTitle{margin-top:3em!important;}
-            .mainArea .contentBox .countBox{flex-wrap:wrap;}
-            .mainArea .contentBox .countBoxLeft{padding:0;width: 94%;margin: 0 auto;}
-            .mainArea .contentBox .countBoxLeftContent{border-width: 1px 1px 0 1px;padding: 5%;}
-            .mainArea .contentBox .countBoxRightContent{padding: 5% 6%;margin: 0 auto;}
-            .mainArea .contentBox .iconBox{flex-wrap:wrap;padding: 0 4%;}
+                .mainArea1 {margin:0;}
+                .mainArea.mainArea1 { background-color: #f9fbff; padding: 6% 0 5%; }
+                .mainArea.mainArea1 .contentBox{width:86%;}
+                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:90%;height:auto;}
+                .mainArea1 .contentBox >div:nth-child(4){width:50%;}
+                .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0.5em;}
+                .mainArea1 .contentBox>div:nth-child(2){font-size:30px; padding-left:0.5em;margin: 1em 0;}
+                .mainArea1 .contentBox>div:nth-child(2) p:first-child{margin-bottom:0.15em}
+                .mainArea1 .contentBox>div:nth-child(3){ margin: 0.5em 0; font-size: 16px; line-height: 1.3;}
+                .mainArea1 .contentBox>div:nth-child(4) { width: 100%;margin-bottom:0;  }
+                .mainArea1 .contentBox>div:nth-child(5) {  width: 100%;margin-bottom:10px; }
+                .mainArea1 .contentBox>div:nth-child(4) p:nth-child(1) span{font-size:24px;}
+                #applyIndex__container .mainArea1 .contentBox .ant-btn{margin:0.1em 0;}
 
-            .iconBg1,  .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
-            .mainArea .contentBox .countBoxRight{width:100%;}
-        }
+                .bg-cycle{display:none}
+
+                .mainArea2 .contentBox{width:92%;;}
+                .mainArea2 .areaContent .areaItem{padding:0;text-align:center;}
+                .mainArea2 .areaContent .areaItem div:nth-child(1){margin:0 auto;}
+                .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size:16px;}
+                .mainArea3 .contentBox .slickBox{margin: 0 auto 20px;}
+                .mainArea3 .contentBox .info{padding-bottom:40px;font-size:16px;width:94%;text-align: justify;}
+                .mainArea4 .contentBox { width:96%}
+                .mainArea4 .areaContent .areaItem{ width: 100%; background-position: 4% top; background-size: 13%; padding-left: 19%; }
+                .mainArea4 .areaContent .areaItem>p:nth-child(1){font-size:16px;}
+                .mainArea4 .areaContent .areaItem>p:nth-child(2){font-size:16px;margin-bottom:0.5em;}
+                .mainArea4 .areaContent .areaItem>div{font-weight:500;}                
+                .mainArea5 .contentBox .areaContent{flex-wrap: wrap;margin: 40px auto 40px;}
+                .mainArea5 .contentBox .areaContent > *{width:100%!important;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(1) img:first-child{display:block;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(1) img:last-child{display:none;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(2) p{font-size:16px;}
+                .mainArea5 .contentBox .areaContent>div:nth-child(2) p::before{width: 18px;background-size: contain; height: 25px;}
+
+                .tabBox { padding-left: 5%; }
+                .goTo{ right:0%; bottom:3%; border-radius:16px 0 0 16px; width:42px; }
+                .goTo > a {line-height:1.1;width:24px;}
+            }
 
             }`}
             </style>

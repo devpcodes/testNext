@@ -52,10 +52,20 @@ const CardSlider = ({ rowData, itemNum = 3 }) => {
             <style jsx global>{`
                 #cardSlider__container .slick-slide .slideContent {
                     display: flex;
-                    justify-content: space-between;
+                    justify-content: space-around;
                 }
                 #cardSlider__container .slick-slide .slideContent .slideCard {
                     width: 32%;
+                }
+                @media (max-width: 768px) {
+                    #cardSlider__container .slick-slide .slideContent .slideCard {
+                        width: 49%;
+                    }
+                }
+                @media (max-width: 425px) {
+                    #cardSlider__container .slick-slide .slideContent .slideCard {
+                        width: 100%;
+                    }
                 }
             `}</style>
         </div>
