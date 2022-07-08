@@ -3,9 +3,7 @@ import React from 'react';
 import { Collapse } from 'antd';
 
 const QaCollapse = ({ dataSource }) => {
-    useEffect(() => {
-        console.log('rowData', dataSource);
-    }, [dataSource]);
+    useEffect(() => {}, [dataSource]);
 
     const { Panel } = Collapse;
 

@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal, Button, Tabs, Carousel, Divider, Steps } from 'antd';
+import { Button, Tabs, Carousel, Steps } from 'antd';
+import { RightOutlined, LeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { useUser } from '../../../../hooks/useUser';
 import CountUp from 'react-countup';
+import CardSlider from '../elements/cardSlider';
 import bannerPC from '../../../../resources/images/pages/subscriptionArea/bg-banner-pc.png';
 import bannerMB from '../../../../resources/images/pages/subscriptionArea/bg-banner-mb.png';
 import bannerPAD from '../../../../resources/images/pages/subscriptionArea/bg-banner-pad.png';
 import hands from '../../../../resources/images/pages/subscriptionArea/group-22.png';
 import dotLine from '../../../../resources/images/pages/subscriptionArea/dot-line.svg';
+import bgimgl from '../../../../resources/images/pages/subscriptionArea/bgimg-l.png';
+import bgimgr from '../../../../resources/images/pages/subscriptionArea/bgimg-r.png';
 import icon1 from '../../../../resources/images/pages/subscriptionArea/index-icon-1.svg';
 import icon61 from '../../../../resources/images/pages/subscriptionArea/icon6-1.svg';
 import icon62 from '../../../../resources/images/pages/subscriptionArea/icon6-2.svg';
@@ -21,20 +25,13 @@ import bg3 from '../../../../resources/images/pages/subscriptionArea/bg-3.svg';
 import bg4 from '../../../../resources/images/pages/subscriptionArea/bg-4.svg';
 import check from '../../../../resources/images/pages/subscriptionArea/check.svg';
 import QaCollapse from '../../loan/Index/elements/QaCollapse';
-import SubscriptionCards from '../../subscription/subscriptionCards';
 
 const ProductInfo = () => {
-    const currentAccount = useSelector(store => store.user.currentAccount);
-    const [sliderValue, setSliderValue] = useState(25); //撥券費
-    const [radioValue, setRadioValue] = useState(7);
     const [qaData, setQaData] = useState([]);
-    const [testVal, setTestVal] = useState('');
-    const [state, setState] = useState({ current: 'all' });
     const { TabPane } = Tabs;
     const [titleValue, setTitleValue] = useState(45); //申購檔次
-    const dispatch = useDispatch();
-    const { isLogin } = useUser();
-    const { Step } = Steps;
+    const [menuCurrent, setMenuCurrent] = useState('p1');
+
     const menuList = [
         { title: '申辦啟用', key: 'p1' },
         { title: '借款申購試算', key: 'p2' },
@@ -49,227 +46,357 @@ const ProductInfo = () => {
         textAlign: 'center',
         background: '#364d79',
     };
-    const stockData = [{}];
+    const slideCardData = [
+        {
+            stockId: '2756',
+            stockName: '聯發國際',
+            market: 'C',
+            marketStatus: '初上櫃',
+            brokerId: '8150',
+            brokerName: '台新',
+            price: 78.8, //申購價
+            share: 262000, //總申購張數
+            currentDate: '20220106',
+            beginDate: '20220104',
+            endDate: '20220106',
+            feeDate: '20220107',
+            lotDate: '20220110',
+            moneyDate: '20220111',
+            stkDate: '20220114',
+            applyShare: '1000', //申購張數
+            tfee: '20',
+            mfee: '50',
+            exShare: '1599000',
+            exPrice: '66',
+            close: '121.5', //市價
+            diffPrice: '16.7',
+            diffRatio: '25.30',
+            orderAmount: '66070',
+            canOrder: 'false',
+            status: '申購尚未開始',
+            statusMessage: 'NO.1',
+            lowest: 78,
+            m1: 20,
+            m2: 50,
+            m3: 8,
+            settingDate: '2022-01-06',
+        },
+        {
+            stockId: '3707',
+            stockName: '漢磊',
+            market: 'C',
+            marketStatus: '發行後轉上櫃',
+            brokerId: '8150',
+            brokerName: '台新',
+            price: 52,
+            share: 850000,
+            beginDate: '20220104',
+            currentDate: '20220530',
+            endDate: '20220601',
+            feeDate: '20220602',
+            lotDate: '20220606',
+            moneyDate: '20220607',
+            stkDate: '20220614',
+            applyShare: '1000',
+            tfee: '20',
+            mfee: '50',
+            exShare: '1599000',
+            exPrice: '66',
+            close: '82.7',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
+            orderAmount: '66070',
+            canOrder: 'false',
+            status: '申購尚未開始',
+            statusMessage: 'NO.2',
+            lowest: 79,
+            m1: 20,
+            m2: 50,
+            m3: 9,
+            settingDate: '2022-06-01',
+        },
+        {
+            stockId: '6546',
+            stockName: '正基',
+            market: 'C',
+            marketStatus: '發行後轉上櫃',
+            brokerId: '8150',
+            brokerName: '台新',
+            price: 52,
+            share: 850000,
+            currentDate: '20220225',
+            beginDate: '202200512',
+            endDate: '20220516',
+            feeDate: '20220517',
+            lotDate: '20220518',
+            moneyDate: '2022519',
+            stkDate: '20220524',
+            applyShare: '1000',
+            tfee: '20',
+            mfee: '50',
+            exShare: '1599000',
+            exPrice: '66',
+            close: '82.7',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
+            orderAmount: '66070',
+            canOrder: 'false',
+            status: '申購尚未開始',
+            statusMessage: 'NO.3',
+            lowest: 79,
+            m1: 20,
+            m2: 50,
+            m3: 9,
+            settingDate: '2022-05-16',
+        },
+        {
+            stockId: '4768',
+            stockName: '晶呈科技',
+            market: 'C',
+            marketStatus: '初上櫃',
+            brokerId: '8150',
+            brokerName: '台新',
+            price: 78.8, //申購價
+            share: 262000, //總申購張數
+            currentDate: '20220106',
+            beginDate: '20220330',
+            endDate: '20220401',
+            feeDate: '20220406',
+            lotDate: '20220407',
+            moneyDate: '20220408',
+            stkDate: '20220413',
+            applyShare: '1000', //申購張數
+            tfee: '20',
+            mfee: '50',
+            exShare: '1599000',
+            exPrice: '66',
+            close: '121.5', //市價
+            diffPrice: '16.7',
+            diffRatio: '25.30',
+            orderAmount: '66070',
+            canOrder: 'false',
+            status: '申購尚未開始',
+            statusMessage: 'NO.4',
+            lowest: 78,
+            m1: 20,
+            m2: 50,
+            m3: 8,
+            settingDate: '2022-04-01',
+        },
+        {
+            stockId: '6715',
+            stockName: '嘉基',
+            market: 'C',
+            marketStatus: '發行後轉上櫃',
+            brokerId: '8150',
+            brokerName: '台新',
+            price: 52,
+            share: 850000,
+            beginDate: '20220104',
+            currentDate: '20220216',
+            endDate: '20220218',
+            feeDate: '20220221',
+            lotDate: '20220222',
+            moneyDate: '20220223',
+            stkDate: '20220303',
+            applyShare: '1000',
+            tfee: '20',
+            mfee: '50',
+            exShare: '1599000',
+            exPrice: '66',
+            close: '82.7',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
+            orderAmount: '66070',
+            canOrder: 'false',
+            status: '申購尚未開始',
+            statusMessage: 'NO.5',
+            lowest: 79,
+            m1: 20,
+            m2: 50,
+            m3: 9,
+            settingDate: '2022-02-18',
+        },
+        {
+            stockId: '6799',
+            stockName: '來頡',
+            market: 'C',
+            marketStatus: '發行後轉上櫃',
+            brokerId: '8150',
+            brokerName: '台新',
+            price: 52,
+            share: 850000,
+            currentDate: '20220225',
+            beginDate: '20220429',
+            endDate: '20220504',
+            feeDate: '20220505',
+            lotDate: '20220506',
+            moneyDate: '20220509',
+            stkDate: '20220512',
+            applyShare: '1000',
+            tfee: '20',
+            mfee: '50',
+            exShare: '1599000',
+            exPrice: '66',
+            close: '82.7',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
+            orderAmount: '66070',
+            canOrder: 'false',
+            status: '申購尚未開始',
+            statusMessage: 'NO.6',
+            lowest: 110,
+            m1: 20,
+            m2: 50,
+            m3: 40,
+            settingDate: '2022-05-04',
+        },
+    ];
 
     const handleClick = key => {
-        setState({ current: key });
-        console.log(key);
-        if (key == 'all') {
-            onClick('');
-        } else {
-            menuList.map(x => {
-                if (x.key === key) {
-                    onClick(x.title);
-                }
-            });
-        }
+        setMenuCurrent(key);
     };
+
+    const handleScroll = key => {
+        setMenuCurrent(key);
+        scrollTo('qaArea');
+    };
+
+    const qaDataLib = [
+        {
+            title: '【申辦】不限用途款項借貸戶申辦資格是什麼？',
+            content: '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
+            open: true,
+            group: 'p1',
+            key: 1,
+        },
+        {
+            title: '【申辦】申辦的方式和流程是甚麼？',
+            content: [
+                '您可線上申辦或臨櫃辦理。',
+                '線上申辦只要上傳雙證件、選擇分公司並簽署契約就完成，申請送出後約1-3個工作天會收到審核結果通知。',
+            ],
+            open: false,
+            group: 'p1',
+            key: 2,
+        },
+        {
+            title: '【申辦】一個人可在永豐金開立幾戶不限用途款項借貸戶？',
+            content: '一戶。',
+            group: 'p1',
+            open: false,
+            key: 3,
+        },
+        {
+            title: '【申辦】開戶後，多久可以申請借貸？',
+            content: '馬上。',
+            open: false,
+            group: 'p2',
+            key: 4,
+        },
+        {
+            title: '【申辦】不限用途借貸戶申辦須要開辦費嗎？',
+            content: '不限用途借貸服務免開辦費。',
+            open: false,
+            group: 'p2',
+            key: 5,
+        },
+        {
+            title: '【試算】我是聯電的員工，我可以申辦不限用途款項借貸？',
+            content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
+            open: false,
+            group: 'p2',
+            key: 6,
+        },
+
+        {
+            title: '【借貸動用】有哪些股票可以申請借款呢？成數利率又是多少？',
+            content: '點我查看符合本公司規定之上市櫃股票。',
+            open: false,
+            group: 'p3',
+            key: 7,
+        },
+        {
+            title: '【借貸動用】申請借貸後，何時會撥款？',
+            content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。',
+            open: false,
+            group: 'p3',
+            key: 8,
+        },
+        {
+            title: '【借貸動用】每筆最少借款金額是多少？',
+            content: '一萬元，並以千元為級距，最高不得超過100萬元',
+            open: false,
+            group: 'p3',
+            key: 9,
+        },
+        {
+            title: '【還款與其他】借款的利息如何計算？',
+            content: '擔保品匯入後，未動用不起息，動用後以日計息並計算至還款前一日。',
+            open: false,
+            group: 'p4',
+            key: 10,
+        },
+        {
+            title: '【還款與其他】借款除了利息外還須支付那些費用？',
+            content: [
+                '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
+                '撥券費：每張1元。',
+                '上述費用於還款或借款到期時收取。',
+                '借貸服務免開辦費。',
+            ],
+            open: false,
+            group: 'p4',
+            key: 11,
+        },
+
+        {
+            title: '【還款與其他】我要如何還款呢？',
+            content: [
+                '現金還款:需於營業日14:30前臨櫃提出申請。',
+                '賣出還款:客戶自行賣出庫存，Ｔ日計算客戶應付之相關還款金額後,於T+2日收取還款金額並退還剩餘交割款。',
+            ],
+            open: false,
+            group: 'p4',
+            key: 12,
+        },
+        {
+            title: '【還款與其他】擔保品如何申請返還？',
+            content: '你可於現金還款後，申請擔保品返還。',
+            open: false,
+            group: 'p5',
+            key: 13,
+        },
+        {
+            title: '【還款與其他】我收到整戶維持不足的通知該怎麼辦？',
+            content: '您可選擇償還部分借款或致電分公司增加/變更擔保品。',
+            open: false,
+            group: 'p5',
+            key: 14,
+        },
+    ];
+    const windowWidth = window.innerWidth;
     useEffect(() => {
-        let data = [
-            {
-                title: '【申辦】不限用途款項借貸戶申辦資格是什麼？',
-                content: '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
-                open: true,
-                key: 1,
-            },
-            {
-                title: '【申辦】申辦的方式和流程是甚麼？',
-                content: [
-                    '您可線上申辦或臨櫃辦理。',
-                    '線上申辦只要上傳雙證件、選擇分公司並簽署契約就完成，申請送出後約1-3個工作天會收到審核結果通知。',
-                ],
-                open: false,
-                key: 2,
-            },
-            { title: '【申辦】一個人可在永豐金開立幾戶不限用途款項借貸戶？', content: '一戶。', open: false, key: 3 },
-            { title: '【申辦】開戶後，多久可以申請借貸？', content: '馬上。', open: false, key: 4 },
-            {
-                title: '【申辦】不限用途借貸戶申辦須要開辦費嗎？',
-                content: '不限用途借貸服務免開辦費。',
-                open: false,
-                key: 5,
-            },
-            {
-                title: '【申辦】我是聯電的員工，我可以申辦不限用途款項借貸？',
-                content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
-                open: false,
-                key: 6,
-            },
-
-            {
-                title: '【借貸動用】有哪些股票可以申請借款呢？成數利率又是多少？',
-                content: '點我查看符合本公司規定之上市櫃股票。',
-                open: false,
-                key: 7,
-            },
-            {
-                title: '【借貸動用】申請借貸後，何時會撥款？',
-                content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。',
-                open: false,
-                key: 8,
-            },
-            {
-                title: '【借貸動用】每筆最少借款金額是多少？',
-                content: '一萬元，並以千元為級距，最高不得超過100萬元',
-                open: false,
-                key: 9,
-            },
-            {
-                title: '【借貸動用】借款的利息如何計算？',
-                content: '擔保品匯入後，未動用不起息，動用後以日計息並計算至還款前一日。',
-                open: false,
-                key: 10,
-            },
-            {
-                title: '【借貸動用】借款除了利息外還須支付那些費用？',
-                content: [
-                    '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
-                    '撥券費：每張1元。',
-                    '上述費用於還款或借款到期時收取。',
-                    '借貸服務免開辦費。',
-                ],
-                open: false,
-                key: 11,
-            },
-
-            {
-                title: '【還款與其他】我要如何還款呢？',
-                content: [
-                    '現金還款:需於營業日14:30前臨櫃提出申請。',
-                    '賣出還款:客戶自行賣出庫存，Ｔ日計算客戶應付之相關還款金額後,於T+2日收取還款金額並退還剩餘交割款。',
-                ],
-                open: false,
-                key: 12,
-            },
-            {
-                title: '【還款與其他】擔保品如何申請返還？',
-                content: '你可於現金還款後，申請擔保品返還。',
-                open: false,
-                key: 13,
-            },
-            {
-                title: '【還款與其他】我收到整戶維持不足的通知該怎麼辦？',
-                content: '您可選擇償還部分借款或致電分公司增加/變更擔保品。',
-                open: false,
-                key: 14,
-            },
-        ];
-        setQaData(data);
+        console.log('window.innerWidth', window.innerWidth);
     }, []);
     useEffect(() => {
-        if (!isLogin) {
-            dispatch(showLoginHandler(true));
-        }
-    }, [isLogin]);
-    // useEffect(async () => {
-    //     let res = await getClose();
-    //     console.log(res);
-    //     setClose(res);
-    // }, []);
-
-    useEffect(() => {}, []);
-
-    useEffect(() => {
-        let data = [
-            {
-                title: '【申辦】不限用途款項借貸戶申辦資格是什麼？',
-                content: '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
-                open: true,
-                key: 1,
-            },
-            {
-                title: '【申辦】申辦的方式和流程是甚麼？',
-                content: [
-                    '您可線上申辦或臨櫃辦理。',
-                    '線上申辦只要上傳雙證件、選擇分公司並簽署契約就完成，申請送出後約1-3個工作天會收到審核結果通知。',
-                ],
-                open: false,
-                key: 2,
-            },
-            { title: '【申辦】一個人可在永豐金開立幾戶不限用途款項借貸戶？', content: '一戶。', open: false, key: 3 },
-            { title: '【申辦】開戶後，多久可以申請借貸？', content: '馬上。', open: false, key: 4 },
-            {
-                title: '【申辦】不限用途借貸戶申辦須要開辦費嗎？',
-                content: '不限用途借貸服務免開辦費。',
-                open: false,
-                key: 5,
-            },
-            {
-                title: '【申辦】我是聯電的員工，我可以申辦不限用途款項借貸？',
-                content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
-                open: false,
-                key: 6,
-            },
-
-            {
-                title: '【借貸動用】有哪些股票可以申請借款呢？成數利率又是多少？',
-                content: '點我查看符合本公司規定之上市櫃股票。',
-                open: false,
-                key: 7,
-            },
-            {
-                title: '【借貸動用】申請借貸後，何時會撥款？',
-                content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。',
-                open: false,
-                key: 8,
-            },
-            {
-                title: '【借貸動用】每筆最少借款金額是多少？',
-                content: '一萬元，並以千元為級距，最高不得超過100萬元',
-                open: false,
-                key: 9,
-            },
-            {
-                title: '【借貸動用】借款的利息如何計算？',
-                content: '擔保品匯入後，未動用不起息，動用後以日計息並計算至還款前一日。',
-                open: false,
-                key: 10,
-            },
-            {
-                title: '【借貸動用】借款除了利息外還須支付那些費用？',
-                content: [
-                    '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
-                    '撥券費：每張1元。',
-                    '上述費用於還款或借款到期時收取。',
-                    '借貸服務免開辦費。',
-                ],
-                open: false,
-                key: 11,
-            },
-
-            {
-                title: '【還款與其他】我要如何還款呢？',
-                content: [
-                    '現金還款:需於營業日14:30前臨櫃提出申請。',
-                    '賣出還款:客戶自行賣出庫存，Ｔ日計算客戶應付之相關還款金額後,於T+2日收取還款金額並退還剩餘交割款。',
-                ],
-                open: false,
-                key: 12,
-            },
-            {
-                title: '【還款與其他】擔保品如何申請返還？',
-                content: '你可於現金還款後，申請擔保品返還。',
-                open: false,
-                key: 13,
-            },
-            {
-                title: '【還款與其他】我收到整戶維持不足的通知該怎麼辦？',
-                content: '您可選擇償還部分借款或致電分公司增加/變更擔保品。',
-                open: false,
-                key: 14,
-            },
-        ];
+        let group = menuCurrent;
+        let data = qaDataLib.filter(x => x.group == group);
         setQaData(data);
-    }, []);
+    }, [menuCurrent]);
 
-    const onCarouselChange = currentSlide => {
-        console.log(currentSlide);
+    const scrollTo = id => {
+        let t = document.getElementById(id).offsetTop;
+        window.scroll({
+            top: t,
+            behavior: 'smooth',
+        });
     };
 
     return (
         <div id="applyIndex__container">
             <div className="mainArea mainArea1">
-                {/* <img src={cyclel} className="bg-cycle cyclel"></img> */}
+                <div className="bg"></div>
                 <div className="contentBox">
                     <div>券商首創申購便利通</div>
                     <div>
@@ -303,7 +430,10 @@ const ProductInfo = () => {
                     <div>
                         <Button type="primary">立即申購</Button>
                         <br></br>
-                        <a href="#">尚未開通服務，我要申辦</a>
+                        <a href="#">
+                            尚未開通服務，我要申辦
+                            <RightOutlined />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -375,7 +505,7 @@ const ProductInfo = () => {
                 </div>
             </div>
             <div className="mainArea mainArea3">
-                {/* <img src={cycler} className="bg-cycle cycler"></img> */}
+                <img src={bgimgl} className="bg-cycle cyclel"></img>
                 <div className="contentBox">
                     <div className="areaTitle">
                         實績排行搶先看
@@ -383,91 +513,10 @@ const ProductInfo = () => {
                         <img src={dotLine}></img>
                     </div>
                     <div className="slickBox">
-                        <Carousel arrows dots={false} afterChange={onCarouselChange}>
-                            <div>
-                                <div className="slideContent">
-                                    {/* <div className="slideCard">
-                                        <div className="topLabel">
-                                            <div>
-                                                聯發國際 2756<label>NO.1</label>
-                                            </div>
-                                            <p>初上櫃</p>
-                                        </div>
-                                        <div className="secondLabel">
-                                            <p>
-                                                申購價 <span>78.8</span>
-                                            </p>
-                                            <p>
-                                                總申購張數 <span>262</span>
-                                            </p>
-                                            <p>
-                                                市價 <span>121.5</span>
-                                            </p>
-                                            <p>
-                                                申購張數 <span>1</span>
-                                            </p>
-                                        </div>
-                                        <div className="pinkLabel">
-                                            <span>42,700</span>元 (+54%)
-                                        </div>
-                                        <div className="bottomLabel">
-                                            <a>+</a>
-                                        </div>
-                                    </div> */}
-                                    <div className="slideCard">
-                                        <SubscriptionCards
-                                            stockData={stockData}
-                                            // onActionClick={submitSubscription}
-                                            // onCancelClick={cancelSubscription}
-                                        />
-                                    </div>
-                                    <div className="slideCard">
-                                        <div className="stepBar ">
-                                            <div className="stepDot dotGray">
-                                                <div>開始</div>
-                                                <div className="dot"></div>
-                                                <div className="subText">01/04</div>
-                                            </div>
-                                            <div className="stepDot dotRed">
-                                                <div>截止</div>
-                                                <div className="dot"></div>
-                                                <div className="subText">01/06</div>
-                                            </div>
-                                            <div className="stepDot">
-                                                <div>扣款</div>
-                                                <div className="dot"></div>
-                                                <div className="subText">01/07</div>
-                                            </div>
-                                            <div className="stepDot">
-                                                <div>抽籤</div>
-                                                <div className="dot"></div>
-                                                <div className="subText">01/10</div>
-                                            </div>
-                                            <div className="stepDot">
-                                                <div>退款</div>
-                                                <div className="dot"></div>
-                                                <div className="subText">01/11</div>
-                                            </div>
-                                            <div className="stepDot">
-                                                <div>撥券</div>
-                                                <div className="dot"></div>
-                                                <div className="subText">01/14</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="slideCard">
-                                        <p>A3</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div></div>
-                            <div>
-                                <h3 style={contentStyle}>C</h3>
-                            </div>
-                            <div>
-                                <h3 style={contentStyle}>D</h3>
-                            </div>
-                        </Carousel>
+                        <CardSlider rowData={slideCardData} itemNum={3} />
+                    </div>
+                    <div className="info">
+                        <InfoCircleFilled /> 市場公開資訊不代表未來績效表現，本素材不構成任何投資建議。
                     </div>
                 </div>
             </div>
@@ -485,7 +534,10 @@ const ProductInfo = () => {
                             <div>
                                 持有台股帳戶，<span>線上 3 分鐘</span>立即啟用借款申購功能。
                             </div>
-                            <a>了解更多</a>
+                            <a onClick={handleScroll.bind(null, 'p1')}>
+                                了解更多
+                                <RightOutlined />
+                            </a>
                         </div>
                         <div className="areaItem">
                             <p>申購期間 </p>
@@ -498,7 +550,10 @@ const ProductInfo = () => {
                                 </ul>
                             </div>
 
-                            <a>了解更多</a>
+                            <a onClick={handleScroll.bind(null, 'p2')}>
+                                了解更多
+                                <RightOutlined />
+                            </a>
                         </div>
                         <div className="areaItem">
                             <p>截止~扣款日 </p>
@@ -507,7 +562,10 @@ const ProductInfo = () => {
                                 <span>整筆借款酌收金流服務費 50 元</span>
                                 ，於申購截止日動用後隔天扣款，可隨借隨還，依動用金額以日計息於每月 21 日收取。
                             </div>
-                            <a>了解更多</a>
+                            <a onClick={handleScroll.bind(null, 'p3')}>
+                                了解更多
+                                <RightOutlined />
+                            </a>
                         </div>
                         <div className="areaItem">
                             <p>抽籤日後</p>
@@ -518,12 +576,16 @@ const ProductInfo = () => {
                                     <li>有中籤：若有銀行欠款須自行轉帳償還，未提供償還服務。</li>
                                 </ul>
                             </div>
-                            <a>了解更多</a>
+                            <a onClick={handleScroll.bind(null, 'p4')}>
+                                了解更多
+                                <RightOutlined />
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="mainArea mainArea5">
+                <img src={bgimgr} className="bg-cycle cycler"></img>
                 <div className="contentBox">
                     <div className="areaTitle">
                         申辦資格
@@ -543,7 +605,7 @@ const ProductInfo = () => {
                     </div>
                 </div>
             </div>
-            <div className="mainArea mainArea6">
+            <div className="mainArea mainArea6" id="qaArea">
                 <div className="contentBox">
                     <div className="areaTitle">
                         常見問題
@@ -551,11 +613,7 @@ const ProductInfo = () => {
                         <img src={dotLine}></img>
                     </div>
                     <div className="tabBox">
-                        <Tabs
-                            defaultActiveKey="all"
-                            onChange={handleClick}
-                            //tabBarGutter={mobleType ? 30:44}
-                        >
+                        <Tabs defaultActiveKey={'p1'} onChange={handleClick} activeKey={menuCurrent}>
                             {menuList.map(x => {
                                 return <TabPane tab={x.title} key={x.key}></TabPane>;
                             })}
@@ -564,11 +622,21 @@ const ProductInfo = () => {
                     <QaCollapse dataSource={qaData} />
                 </div>
             </div>
+            <div className="goTo">
+                <a>立即申購</a>
+                <a>我要申辦</a>
+            </div>
             <style jsx>
                 {`
+                #applyIndex__container {width: 100vw; overflow: hidden;}
+                .goTo{position:fixed; right:2%; bottom:5%; border-radius:50px; width:70px; box-shadow: 0 2px 15px 0 rgba(196, 56, 38, 0.5);
+                    background-color: #c43826;}
+                .goTo > a {display:block;width:45px;font-size:16px;color:#FFF;font-weight:800;margin:0 auto;text-align:center;padding:1em 0 0.5em;}
+                .goTo > a:not(:first-child) {border-top:1px solid #f45a4c;padding:0.5em 0 0.5em; }
+                .goTo > a:last-child {border-top:1px solid #f45a4c;padding:0.5em 0 1em; }
                 .mainArea{min-height:40px; width:100%;padding:80px 0;position:relative;}
                 .mainArea:nth-child(odd){background-color:#f9fbff;}
-                .mainArea:nth-child(1){background:url(${bannerPC}) no-repeat center top/1600px;height:644px;background-color:#f9fbff;overflow:visible;}
+                
                 .mainArea .contentBox {min-height:40px; width:96%; max-width:1185px;margin:0 auto;}
                 .mainArea .contentBox .areaTitle{font-size:32px;color:#0d1623;text-align:center;font-weight:800;}
                 .mainArea .contentBox .areaTitle p{font-size:16px;color:#3f5372;text-align:center;font-weight:500;margin:0;line-height:1.8;}
@@ -596,12 +664,11 @@ const ProductInfo = () => {
                 .active .bottomLabel a{transform: rotate(45deg);}
                 
                 .flexBox{display:flex;justify-content:space-between;}
-            
-            
-            .mainArea1 {position:relative;}
-            .mainArea1 .contentBox { max-width:1080px;font-size: 16px;}
-            .mainArea1 .icon-arrow-up::before {content:""; display:inline-block; width: 0; height: 0; border-style: solid; border-width: 0 10px 17.3px 10px;margin-right:3px;
-             border-color: transparent transparent #c43826 transparent;}
+
+            .mainArea.mainArea1{background-color:#FFF;overflow:visible;background-color:#f9fbff;
+            position:relative;}
+            .mainArea1 .bg{position:absolute;width:100%;background:url(${bannerPC}) no-repeat center top/1600px; height:625px; z-index:0;top:0;}
+            .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: relative;}
             .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
             .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
             .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
@@ -621,7 +688,6 @@ const ProductInfo = () => {
             .mainArea5 .contentBox .areaContent > div:nth-child(2) p::before {content:''; display:inline-block; width:24px; height:28px; background:url(${check}) center no-repeat;flex-shrink:0;
             margin-right: 10px;}
 
-
             .mainArea6 .contentBox {max-width:980px;}
 
             .mainArea4 .areaContent {margin:65px auto 35px;}
@@ -629,7 +695,7 @@ const ProductInfo = () => {
             .mainArea4 .areaContent .areaItem:nth-child(2) {background-image:url(${bg2}) ;}
             .mainArea4 .areaContent .areaItem:nth-child(3) {background-image:url(${bg3});}
             .mainArea4 .areaContent .areaItem:nth-child(4) {background-image:url(${bg4});}
-            .mainArea4 .areaContent .areaItem > p:nth-child(1) {font-size: 14px;color: #3f5372;}
+            .mainArea4 .areaContent .areaItem > p:nth-child(1) {font-size: 14px;color: #3f5372; margin-bottom: 0;}
             .mainArea4 .areaContent .areaItem > p:nth-child(2) {font-size: 22px; color: #0d1623; font-weight: 800;}
             .mainArea4 .areaContent .areaItem > div {font-size: 16px; color: #0d1623; width:90%; margin-bottom: 10px;font-weight: 700; }
             .mainArea4 .areaContent .areaItem > div span {color: #c43826;}
@@ -638,6 +704,7 @@ const ProductInfo = () => {
             .mainArea4 .areaContent .areaItem > a {font-size: 14px;color: #3f5372;}
 
             .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
+            .mainArea2 .contentBox {padding-top:20px;}
             .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 20px;margin-bottom: 35px;}
             .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
             .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
@@ -645,32 +712,14 @@ const ProductInfo = () => {
             .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size: 22px; font-weight: 800;color:#0d1623;margin-bottom:0.2em;}
             .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){ font-size: 14px; color: #3f5372;margin-bottom:0;letter-spacing:0.05em; line-height:1.5;}
 
-            .stepBar{ position:relative;display:flex;justify-content:space-between;}
-            .stepBar::before{ content:"";display:block; width:calc(100% - 24px);height:1px;background:#d7e0ef; position:absolute; top:50%; left:12px;z-index:0; }
-            .stepBar .stepDot{ padding:0 2px;z-index:1;}
-            .stepBar .stepDot > div{ text-align:center;}
-            .stepBar .stepDot .subText{ font-size:12px;}
-            .stepBar .stepDot .dot{ background:#FFF;padding:0 4px;width: fit-content; margin: 0 auto;}
-            .stepBar .stepDot .dot::before{ content:"";display:inline-block;border:2px solid #d7e0ef; width:12px;height:12px;border-radius:8px;background:#3f5372; }
-            .tabBox{border-bottom:1px solid #ccc;margin-bottom:35px;}
-
-            .stepBar .stepDot.dotGray > div{ color:#6c7b94;}
-            .stepBar .stepDot.dotGray .dot::before{ background:#a9b6cb; }
-            .stepBar .stepDot.dotRed > div{ color:#c43826;}
-            .stepBar .stepDot.dotRed .dot::before{ background:#c43826; border-color:#ebbdb7;}
+            .mainArea3 .contentBox .slickBox{margin-bottom:40px;}
+            .mainArea3 .contentBox .info{margin: 0 auto; color:#3f5372;text-align:center;}
 
             .tabBox{border-bottom:1px solid #ccc;margin-bottom:35px;}
-
-
-             #applyIndex__container {width: 100vw; overflow: hidden;}
 
             .bg-cycle{position:absolute;}
-            .bg-cycle.cyclel{left:0;bottom:-350px;}
-            .bg-cycle.cycler{right:0;top:-100px;}
-
-
-
-
+            .bg-cycle.cyclel{left:0;top:-80px;}
+            .bg-cycle.cycler{right:0;bottom:-85px;}
 
             .mainArea3 .contentBox{max-width:1080px;}
 
@@ -686,8 +735,7 @@ const ProductInfo = () => {
             .mainArea {width:100vw;}
             .mainArea1 .contentBox{margin: 4%;position: relative;}
             .mainArea::before{content:'';display:block;width:100vw;}
-            .mainArea:nth-child(1){background:url(${bannerPAD}) no-repeat center top/100%;padding:0 0 13em 0;height:auto;}
-
+            .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:68%;height:auto;}
             .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
             .bg-cycle{position:absolute;}
             .bg-cycle.cyclel{ width: 12%; bottom: -74%; z-index: 0;}
@@ -699,7 +747,7 @@ const ProductInfo = () => {
             .forMB{display:block!important;}      
             .mainArea .contentBox .areaTitle{font-size:20px; width: 94%; margin: 0 auto;}
             .mainArea .contentBox .areaTitle p{font-size:16px;}    
-            .mainArea:nth-child(1){background:url(${bannerMB}) no-repeat center top/100%;padding:0;height:auto;}
+            .mainArea:nth-child(1){background:url(${bannerMB}) no-repeat center top/100%;padding-top:90%;height:auto;}
             .mainArea1::before {content:'';display:block;width:100vw;padding-top:100%;}
             .mainArea1 .contentBox{position: absolute; top: 15px; left: 50%; transform: translateX(-50%);}
             .mainArea1 .contentBox >div:nth-child(4){width:50%;}
@@ -722,47 +770,34 @@ const ProductInfo = () => {
 
             .iconBg1,  .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
             .mainArea .contentBox .countBoxRight{width:100%;}
-            
-           
         }
 
             }`}
             </style>
             <style jsx global>
                 {`
-                    #applyIndex__container .slick-list {
-                    }
-                    #applyIndex__container .slick-slide .slideContent {
-                        display: flex;
-                        justify-content: space-between;
+                    #applyIndex__container .mainArea3 .contentBox .info span {
+                        color: #a7b1c4;
                     }
                     #applyIndex__container .slickBox .slick-next::before {
                         content: '';
                         display: inline-block;
-                        width: 0;
-                        height: 0;
-                        border-style: solid;
-                        border-width: 12.5px 0 12.5px 12px;
-                        border-color: transparent transparent transparent #7d7d7d;
+                        width: 20px;
+                        height: 20px;
+                        border: 1px solid #a9b6cb;
+                        border-width: 3px 3px 0 0;
+                        transform: rotate(45deg);
                     }
                     #applyIndex__container .slickBox .slick-prev::before {
                         content: '';
                         display: inline-block;
-                        width: 0;
-                        height: 0;
-                        border-style: solid;
-                        border-width: 12.5px 12px 12.5px 0;
-                        border-color: transparent #7d7d7d transparent transparent;
+                        width: 20px;
+                        height: 20px;
+                        border: 1px solid #a9b6cb;
+                        border-width: 3px 0 0 3px;
+                        transform: rotate(-45deg);
                     }
-                    #applyIndex__container .slick-slide .slideContent .slideCard {
-                        background: #fff;
-                        width: 32%;
-                        border: 1px solid #d7e0ef;
-                        border-radius: 2px;
-                        padding: 24px 24px 16px;
-                        min-height: 380px;
-                        max-width: 342px;
-                    }
+
                     #applyIndex__container .ant-tabs-tab {
                         font-size: 16px;
                     }
@@ -786,22 +821,6 @@ const ProductInfo = () => {
                         margin: 0;
                     }
 
-                    #applyIndex__container .ant-slider-handle {
-                        width: 20px;
-                        height: 20px;
-                        border-color: #daa360;
-                    }
-                    #applyIndex__container .ant-slider-rail {
-                        height: 12px;
-                        border-radius: 12px;
-                        background: #ffffff;
-                        border: 1px solid #d7e0ef;
-                    }
-                    #applyIndex__container .ant-slider-track {
-                        height: 12px;
-                        border-radius: 12px;
-                        background: #daa360;
-                    }
                     #applyIndex__container .ant-btn-primary {
                         background-color: #c43826;
                         border-color: #c43826;
