@@ -763,11 +763,12 @@ const ProductInfo = () => {
                 .bg-cycle{display:none}
 
                 .mainArea2 .contentBox{width:92%;;}
-                .mainArea2 .areaContent .areaItem{padding:0;text-align:center;}
-                .mainArea2 .areaContent .areaItem div:nth-child(1){margin:0 auto;}
+                .mainArea2 .areaContent .areaItem{padding:0;text-align:center;align-content: flex-start;}
+                .mainArea2 .areaContent .areaItem div:nth-child(1){margin:0 auto 10px;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size:16px;}
                 .mainArea3 .contentBox .slickBox{margin: 0 auto 20px;}
                 .mainArea3 .contentBox .info{padding-bottom:40px;font-size:16px;width:94%;text-align: justify;}
+                .mainArea3 .contentBox .slickBox{width: 85%;}
                 .mainArea4 .contentBox { width:96%}
                 .mainArea4 .areaContent .areaItem{ width: 100%; background-position: 4% top; background-size: 13%; padding-left: 19%; }
                 .mainArea4 .areaContent .areaItem>p:nth-child(1){font-size:16px;}
@@ -874,6 +875,30 @@ const ProductInfo = () => {
                             flex-wrap: wrap;
                         }
                         #applyIndex__container .mainArea1 .contentBox .ant-btn {
+                        }
+                        #applyIndex__container .slickBox .slick-next::before {
+                            content: '';
+                            display: inline-block;
+                            width: 10px;
+                            height: 10px;
+                            border: 1px solid #a9b6cb;
+                            border-width: 3px 3px 0 0;
+                            transform: rotate(45deg);
+                        }
+                        #applyIndex__container .slickBox .slick-prev::before {
+                            content: '';
+                            display: inline-block;
+                            width: 10px;
+                            height: 10px;
+                            border: 1px solid #a9b6cb;
+                            border-width: 3px 0 0 3px;
+                            transform: rotate(-45deg);
+                        }
+                        #applyIndex__container .slickBox .ant-carousel .slick-next {
+                            right: -20px;
+                        }
+                        #applyIndex__container .slickBox .ant-carousel .slick-prev {
+                            left: -20px;
                         }
                     }
                 `}
