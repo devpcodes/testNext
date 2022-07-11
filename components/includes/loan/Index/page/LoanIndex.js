@@ -14,7 +14,7 @@ import icon3 from '../../../../../resources/images/components/loanZone/index-ico
 import icon4 from '../../../../../resources/images/components/loanZone/index-icon-4.svg';
 import cyclel from '../../../../../resources/images/components/loanZone/cycle-l.svg';
 import cycler from '../../../../../resources/images/components/loanZone/cycle-r.svg';
-import cycles from '../../../../../resources/images/components/loanZone/cycle-s.svg';
+import infi from '../../../../../resources/images/components/loanZone/infi.png';
 import QaCollapse from '../elements/QaCollapse';
 import { getClose, getAccountStatus } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 const LoanIndex = () => {
@@ -56,13 +56,16 @@ const LoanIndex = () => {
     useEffect(() => {
         let data = [
             {
-                title: '【申辦】不限用途款項借貸戶申辦資格是什麼？',
+                type: '【申辦】',
+                title: '不限用途款項借貸戶申辦資格是什麼？',
                 content: '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
+                tag: 'tag1',
                 open: true,
                 key: 1,
             },
             {
-                title: '【申辦】申辦的方式和流程是甚麼？',
+                type: '【申辦】',
+                title: '申辦的方式和流程是甚麼？',
                 content: [
                     '您可線上申辦或臨櫃辦理。',
                     '線上申辦只要上傳雙證件、選擇分公司並簽署契約就完成，申請送出後約1-3個工作天會收到審核結果通知。',
@@ -70,47 +73,67 @@ const LoanIndex = () => {
                 open: false,
                 key: 2,
             },
-            { title: '【申辦】一個人可在永豐金開立幾戶不限用途款項借貸戶？', content: '一戶。', open: false, key: 3 },
-            { title: '【申辦】開戶後，多久可以申請借貸？', content: '馬上。', open: false, key: 4 },
             {
-                title: '【申辦】不限用途借貸戶申辦須要開辦費嗎？',
+                type: '【申辦】',
+                title: '一個人可在永豐金開立幾戶不限用途款項借貸戶？',
+                content: '一戶。',
+                open: false,
+                key: 3,
+            },
+            {
+                type: '【申辦】',
+                title: '開戶後，多久可以申請借貸？',
+                content: '馬上。',
+                open: false,
+                key: 4,
+            },
+            {
+                type: '【申辦】',
+                title: '不限用途借貸戶申辦須要開辦費嗎？',
                 content: '不限用途借貸服務免開辦費。',
                 open: false,
                 key: 5,
             },
             {
-                title: '【申辦】我是聯電的員工，我可以申辦不限用途款項借貸？',
+                type: '【申辦】',
+                title: '我是聯電的員工，我可以申辦不限用途款項借貸？',
                 content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
                 open: false,
                 key: 6,
             },
 
             {
-                title: '【借貸動用】有哪些股票可以申請借款呢？成數利率又是多少？',
+                type: '【借貸動用】',
+                title: '有哪些股票可以申請借款呢？成數利率又是多少？',
                 content: '點我查看符合本公司規定之上市櫃股票。',
                 open: false,
+                tag: 'tag2',
                 key: 7,
             },
             {
-                title: '【借貸動用】申請借貸後，何時會撥款？',
+                type: '【借貸動用】',
+                title: '申請借貸後，何時會撥款？',
                 content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。',
                 open: false,
                 key: 8,
             },
             {
-                title: '【借貸動用】每筆最少借款金額是多少？',
+                type: '【借貸動用】',
+                title: '每筆最少借款金額是多少？',
                 content: '一萬元，並以千元為級距，最高不得超過100萬元',
                 open: false,
                 key: 9,
             },
             {
-                title: '【借貸動用】借款的利息如何計算？',
+                type: '【借貸動用】',
+                title: '借款的利息如何計算？',
                 content: '擔保品匯入後，未動用不起息，動用後以日計息並計算至還款前一日。',
                 open: false,
                 key: 10,
             },
             {
-                title: '【借貸動用】借款除了利息外還須支付那些費用？',
+                type: '【借貸動用】',
+                title: '借款除了利息外還須支付那些費用？',
                 content: [
                     '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
                     '撥券費：每張1元。',
@@ -122,7 +145,8 @@ const LoanIndex = () => {
             },
 
             {
-                title: '【還款與其他】我要如何還款呢？',
+                type: '【還款與其他】',
+                title: '我要如何還款呢？',
                 content: [
                     '現金還款:需於營業日14:30前臨櫃提出申請。',
                     '賣出還款:客戶自行賣出庫存，Ｔ日計算客戶應付之相關還款金額後,於T+2日收取還款金額並退還剩餘交割款。',
@@ -131,13 +155,15 @@ const LoanIndex = () => {
                 key: 12,
             },
             {
-                title: '【還款與其他】擔保品如何申請返還？',
+                type: '【還款與其他】',
+                title: '擔保品如何申請返還？',
                 content: '你可於現金還款後，申請擔保品返還。',
                 open: false,
                 key: 13,
             },
             {
-                title: '【還款與其他】我收到整戶維持不足的通知該怎麼辦？',
+                type: '【還款與其他】',
+                title: '我收到整戶維持不足的通知該怎麼辦？',
                 content: '您可選擇償還部分借款或致電分公司增加/變更擔保品。',
                 open: false,
                 key: 14,
@@ -224,7 +250,15 @@ const LoanIndex = () => {
                         借款金額無限制，隨借隨還免綁約！
                     </div>
                     <div>
-                        <Button type="primary">立即申辦</Button>
+                        <Button
+                            type="primary"
+                            onClick={btnHref.bind(
+                                null,
+                                'https://strd.sinotrade.com.tw/exopact/ApplyLNA01?strProd=0002&strWeb=0001',
+                            )}
+                        >
+                            立即申辦
+                        </Button>
                         <br></br>
                         <Button onClick={btnHref.bind(null, '/newweb/loan-zone/Overview')}>前往借貸</Button>
                     </div>
@@ -247,7 +281,11 @@ const LoanIndex = () => {
                     </div>
                     <div className="bottomBoxItem">
                         <p>
-                            借期<span>∞</span> <br className="forMB"></br>個月
+                            借期{' '}
+                            <div className="infiImg">
+                                <img src={infi}></img>
+                            </div>{' '}
+                            <br className="forMB"></br>個月
                         </p>
                         <p>6 個月到期可申請展延或借新還舊。</p>
                     </div>
@@ -333,8 +371,16 @@ const LoanIndex = () => {
                                 <p>上傳雙證並簽署契約</p>
                             </div>
                             <div className="btnBox">
-                                <Button>了解更多</Button>
-                                <Button type="primary">申辦進度</Button>
+                                <Button onClick={btnHref.bind(null, '#tag1')}>了解更多</Button>
+                                <Button
+                                    onClick={btnHref.bind(
+                                        null,
+                                        'https://strd.sinotrade.com.tw/exopact/LNA/ProgQueryLNA01',
+                                    )}
+                                    type="primary"
+                                >
+                                    申辦進度
+                                </Button>
                             </div>
                         </div>
                         <div>
@@ -351,7 +397,7 @@ const LoanIndex = () => {
                                 <p>於可借款金額內動用申請</p>
                             </div>
                             <div className="singleBtn">
-                                <Button>了解更多</Button>
+                                <Button onClick={btnHref.bind(null, '#tag2')}>了解更多</Button>
                             </div>
                         </div>
                         <div>
@@ -413,6 +459,8 @@ const LoanIndex = () => {
             </div>
             <style jsx>
                 {`
+            .infiImg{width:1.7em; display: inline-block;margin-top:6%;}
+            .infiImg img{width:100%;}
              #loanIndex__container {width: 100vw; overflow: hidden;}
             .bg-cycle{position:absolute;}
             .bg-cycle.cyclel{left:0;bottom:-350px;}
@@ -488,6 +536,7 @@ const LoanIndex = () => {
         @media screen and (max-width: 425px) {
             .forPC{display:none;}
             .forMB{display:block!important;}      
+            .infiImg{height:1.4em;margin-top:0%;}
             .mainArea .contentBox .areaTitle{font-size:20px; width: 94%; margin: 0 auto;}
             .mainArea .contentBox .areaTitle p{font-size:16px;}    
             .mainArea:nth-child(1){background:url(${bannerMB}) no-repeat center top/100%;padding:0;height:auto;}
