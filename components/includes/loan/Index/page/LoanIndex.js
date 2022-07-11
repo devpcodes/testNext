@@ -569,11 +569,9 @@ const LoanIndex = () => {
             .iconBg1,  .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
             .mainArea2 .bottomBox .line::before,
             .mainArea2 .bottomBox .line::after { height:6em; top:1em; }
-            .mainArea .contentBox .countBoxRight{width:100%;}
-           
+            .mainArea .contentBox .countBoxRight{width:100%;}           
         }
-
-            }`}
+        `}
             </style>
             <style jsx global>
                 {`
@@ -646,8 +644,6 @@ const LoanIndex = () => {
                     @media screen and (max-width: 425px) {
                         #loanIndex__container .ant-radio-group {
                             flex-wrap: wrap;
-                        }
-                        #loanIndex__container .mainArea1 .contentBox .ant-btn {
                         }
                     }
                 `}
