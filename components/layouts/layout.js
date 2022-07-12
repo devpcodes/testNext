@@ -71,6 +71,11 @@ const Layout = memo(({ children }) => {
     const queryStr = useRef('');
     const isRendered = useRef(false);
     useEffect(() => {
+        if (sessionStorage.getItem('nav') === '0') {
+            setShowNav(false);
+        }
+    }, [router.pathname]);
+    useEffect(() => {
         prevIsMobile.current = isMobile;
         prevPlatform.current = platform;
         // 不是第一次 render 才更新資料
@@ -122,10 +127,11 @@ const Layout = memo(({ children }) => {
     useEffect(() => {
         queryStr.current = router.query;
         sessionAddSource();
-        if (router.query.nav != '0') {
+        if (router.query.nav != '0' && sessionStorage.getItem('nav') !== '0') {
             setShowNav(true);
         } else {
             setShowNav(false);
+            sessionStorage.setItem('nav', '0');
         }
     }, [router.query]);
 
