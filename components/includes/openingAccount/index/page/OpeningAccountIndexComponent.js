@@ -68,7 +68,7 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '加開進度查詢',
             image: icon_search,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_2?dirtype=99&strProd=0037&strWeb=0035',
+            link: process.env.NEXT_PUBLIC_OPENING_ACCOUNT_USER_ADDSEARCH,
         },
     ]);
     const [closeCounter] = useState([
