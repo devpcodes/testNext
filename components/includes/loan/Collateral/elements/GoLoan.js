@@ -21,37 +21,41 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
     const submitMoney = useRef(allLoanMoney);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        dispatch(
-            setModal({
-                visible,
-                title: '借貸申請確認',
-                content: renderContent(),
-                noCloseIcon: true,
-                noTitleIcon: true,
-                onCancel: () => {
-                    goLoanClose();
-                    // setTimeout(() => {
-                    //     form.setFieldsValue({
-                    //         loanMoney: allLoanMoney,
-                    //     });
-                    // }, 300);
-                    // dispatch(setModal({ visible: false }));
-                },
-                okButtonProps: {
-                    style: {
-                        background: '#c43826',
+        dispatch(setModal({ visible: false }));
+        setTimeout(() => {
+            dispatch(
+                setModal({
+                    visible,
+                    title: '借貸申請確認',
+                    content: renderContent(),
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                    onCancel: () => {
+                        goLoanClose();
+                        // setTimeout(() => {
+                        //     form.setFieldsValue({
+                        //         loanMoney: allLoanMoney,
+                        //     });
+                        // }, 300);
+                        // dispatch(setModal({ visible: false }));
                     },
-                },
-                bodyStyle: {
-                    padding: '16px 24px',
-                },
-                onOk: () => {
-                    submitMoney.current = form.getFieldValue('loanMoney');
-                    submitHandler(submitMoney.current);
-                },
-                centered: isMobile ? true : false,
-            }),
-        );
+                    okButtonProps: {
+                        style: {
+                            background: '#c43826',
+                        },
+                    },
+                    bodyStyle: {
+                        padding: '16px 24px',
+                    },
+                    onOk: () => {
+                        submitMoney.current = form.getFieldValue('loanMoney');
+                        submitHandler(submitMoney.current);
+                    },
+                    centered: isMobile ? true : false,
+                }),
+            );
+        }, 50);
+
         setTimeout(() => {
             form.setFieldsValue({
                 loanMoney: allLoanMoney,

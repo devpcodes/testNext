@@ -43,7 +43,7 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
 
     //no Data customize
     const customizeRenderEmpty = () => {
-        console.log('empty', noData.text);
+        // console.log('empty', noData.text);
         return (
             <div style={{ textAlign: 'center' }}>
                 <img src={noData.imgSrc || noDataImg}></img>
@@ -59,7 +59,7 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
                 active = true;
             }
         });
-        console.log('active', filterColumns);
+        // console.log('active', filterColumns);
         return active;
     };
 
