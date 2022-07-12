@@ -40,7 +40,12 @@ const LoanBox = ({ allCanLoan, financing }) => {
 
                     <span className="canLoanDesc">借款說明</span>
                 </div>
-                <p className="loan__money">${formatNum(Number(allCanLoan) - Number(financing))}</p>
+                <p className="loan__money">
+                    $
+                    {Number(allCanLoan) - Number(financing) < 0
+                        ? '--'
+                        : formatNum(Number(allCanLoan) - Number(financing))}
+                </p>
                 <div className="loan__contentBottom">
                     <div className="loan__left">
                         <Bar min={financing} max={allCanLoan} />

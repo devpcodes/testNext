@@ -28,8 +28,9 @@ const OverviewComponent = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [current, setCurrent] = useState('notGuaranteed');
     const [allCanLoan, setAllCanLoan] = useState(0);
+    const [resultAllCanLoan, setResultAllCanLoan] = useState(0);
     const [accountOverview, setAccountOverview] = useState({});
-
+    const [financing, setFinancing] = useState('--');
     // const { isLogin, accounts } = useUser();
     // const [loanIdno, setLoanIdno] = useState('');
     const router = useRouter();
@@ -55,6 +56,7 @@ const OverviewComponent = () => {
                 accountDetailHandler();
             }
             setAccountOverview(res[0]);
+            setFinancing(res[0].financing);
         } catch (error) {
             message.error(error);
         }
@@ -119,10 +121,9 @@ const OverviewComponent = () => {
     });
 
     useEffect(() => {
-        if (accountOverview.financing != null) {
-            setAllCanLoan(Number(allCanLoan) + Number(accountOverview.financing));
-        }
-    }, [accountOverview]);
+        console.log('financing....', financing);
+        setResultAllCanLoan(Number(allCanLoan) + Number(financing));
+    }, [financing, allCanLoan]);
 
     const tooltipHandler = () => {
         return (
@@ -148,7 +149,7 @@ const OverviewComponent = () => {
                     <Btn type="money" text="借貸商品" />
                 </div>
             </div>
-            <LoanBox allCanLoan={allCanLoan} financing={accountOverview.financing} />
+            <LoanBox allCanLoan={resultAllCanLoan} financing={accountOverview.financing} />
             <div className="overview__useContainer">
                 <UseBox
                     style={{ width: isMobile ? '100%' : '49.3%', marginRight: isMobile ? 0 : '1.4%' }}

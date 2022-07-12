@@ -450,7 +450,8 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
         data.forEach(item => {
             allCanLoan += Number(item.canLoanMoney);
         });
-        if (canLoanHandler != null) {
+        if (canLoanHandler != null && currentKey === 'notGuaranteed') {
+            console.log('allcanloan', allCanLoan);
             canLoanHandler(allCanLoan);
         }
     };
