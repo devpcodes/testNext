@@ -13,10 +13,21 @@ const CalculationDescription = () => {
                 title: '試算說明',
                 content: (
                     <div>
-                        <p style={{ marginBottom: 0, color: '#0d1623' }}>1. 本服務已日計息</p>
-                        <p style={{ marginBottom: 0, color: '#0d1623' }}>2. 線上動用手續費每筆100 元</p>
-                        <p style={{ marginBottom: 0, color: '#0d1623' }}>3. 撥券費以股票張數計算，每張 1 元</p>
-                        <p style={{ marginBottom: 0, color: '#0d1623' }}>4. 上述費用於還款時收取</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                            1. 可借款額度以您可提供擔保之庫存市值與融通成數進行預估。
+                        </p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                            2. 實際借款額度不得超過授信總額。若您借款已達授信總額上限，請洽所屬分公司。
+                        </p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>3. 線上每筆借款上限300萬元。</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>4. 線上可擔保股票與借款成數/利率 點我查看</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>5. 本服務以日計息，自動用日起算</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>6. 線上動用手續費每筆100 元</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                            (匯入多筆庫存同時一次申請動用時，以一筆計算)
+                        </p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>7. 撥券費以股票張數計算，每張 1 元</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>8.上述4到7.點費用於還款或借貸到期時收取。</p>
                     </div>
                 ),
                 okText: '我知道了',

@@ -106,7 +106,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
             <div className="loan__footer">
                 <span className="footer__text">想獲得更高額度的借款金額?</span>
                 <Link href="/loan-zone/Collateral/">
-                    <a className="footer__link">立即試算 ></a>
+                    <a className="footer__link">自選試算 ></a>
                 </Link>
             </div>
             <style jsx>{`
