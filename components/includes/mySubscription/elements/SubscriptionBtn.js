@@ -41,6 +41,19 @@ const SubscriptionBtn = ({ text, width, colorType, onClick, style, loading }) =>
                 ...style,
             });
         }
+        if (colorType === 'red') {
+            setMyStyle({
+                padding: '3px 2px 3px 3px',
+                borderRadius: '2px',
+                backgroundColor: '#f9ecea',
+                width: width || '100%',
+                height: '26px',
+                color: '#c43826',
+                lineHeight: '14px',
+                fontSize: '14px',
+                ...style,
+            });
+        }
     }, [colorType]);
     return (
         <>

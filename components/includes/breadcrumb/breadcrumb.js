@@ -109,6 +109,10 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                 elementNameArr.current.push('擔保品試算');
                 elementPathArr.current.push(`/${levelArr.current[1]}`);
                 break;
+            case 'Record':
+                elementNameArr.current.push('借還紀錄');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
             case 'Overview':
                 elementNameArr.current.push('借款總覽');
                 elementPathArr.current.push(`/${levelArr.current[1]}/Overview`);
