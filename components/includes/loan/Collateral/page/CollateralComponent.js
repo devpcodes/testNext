@@ -44,7 +44,7 @@ const CollateralComponent = () => {
     const [goLoanVisible, setGoLoanVisible] = useState(false);
     const [stockData, setStockData] = useState({});
     const [reload, setReload] = useState(false);
-    useLoanAccount();
+    // useLoanAccount();
 
     useEffect(() => {
         if (isLogin) {

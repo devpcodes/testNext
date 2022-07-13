@@ -160,7 +160,7 @@ const LoanCalculation = ({
 
     const checkLoanCurrentAccount = () => {
         const haveCanLoanAccount = loanAccounts.filter(item => {
-            if (item.account === currentAccount.account) {
+            if (item.account === currentAccount?.account) {
                 return true;
             }
         });
@@ -169,7 +169,7 @@ const LoanCalculation = ({
 
     const checkLoanAccountStatus = () => {
         const loanAccountStatus = loanAccounts.filter(item => {
-            if (item.account === currentAccount.account && item.status === 'A') {
+            if (item.account === currentAccount?.account && item.status === 'A') {
                 return true;
             }
         });

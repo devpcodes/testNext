@@ -110,7 +110,7 @@ export const AccountDropdown = ({
     if (
         !accounts.length ||
         (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object) ||
-        (currentAccount.accttype !== 'S' && currentAccount.accttype !== 'H' && currentAccount.accttype !== 'F')
+        (currentAccount?.accttype !== 'S' && currentAccount?.accttype !== 'H' && currentAccount?.accttype !== 'F')
     )
         return null;
 
