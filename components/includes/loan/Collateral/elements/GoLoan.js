@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { Form, Input, Collapse, message, Table } from 'antd';
 import moment from 'moment';
 import { setModal } from '../../../../../store/components/layouts/action';
@@ -21,6 +22,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
     const submitMoney = useRef(allLoanMoney);
     const [loading, setLoading] = useState(false);
     const [errorMoney, setErrorMoney] = useState('');
+    const router = useRouter();
     useEffect(() => {
         dispatch(setModal({ visible: false }));
         setTimeout(() => {
@@ -259,6 +261,10 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                     goLoanClose();
                     dispatch(setModal({ visible: false }));
                     inventoryReload();
+                },
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                    router.push('/loan-zone/Record/');
                 },
                 content: (
                     <>
