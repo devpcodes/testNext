@@ -143,10 +143,10 @@ const OverviewComponent = () => {
                     <Btn
                         type="accountInfo"
                         text="帳戶詳情"
-                        style={{ marginRight: 16 }}
+                        // style={{ marginRight: 16 }}
                         onClick={accountDetailHandler}
                     />
-                    <Btn type="money" text="借貸商品" />
+                    {/* <Btn type="money" text="借貸商品" /> */}
                 </div>
             </div>
             <LoanBox allCanLoan={resultAllCanLoan} financing={accountOverview.financing} />

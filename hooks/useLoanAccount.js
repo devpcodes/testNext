@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import { useUser } from './useUser';
 import { setCurrentAccount } from '../store/user/action';
@@ -9,13 +9,15 @@ export const useLoanAccount = token => {
     const { isLogin, accounts } = useUser();
     const dispatch = useDispatch();
     const [haveLoanAccount, setHaveLoanAccount] = useState(null);
+    const userSettings = useSelector(store => store.user.userSettings);
     useEffect(() => {
-        if (isLogin) {
-            setTimeout(() => {
-                getAccountStatus();
-            }, 500);
+        if (isLogin && userSettings?.id != null) {
+            // setTimeout(() => {
+            //     getAccountStatus();
+            // }, 500);
+            getAccountStatus();
         }
-    }, [isLogin]);
+    }, [isLogin, userSettings]);
 
     const getAccountStatus = async () => {
         const res = await fetchAccountStatus(getToken());
