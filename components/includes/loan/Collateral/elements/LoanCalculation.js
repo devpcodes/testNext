@@ -333,7 +333,12 @@ const LoanCalculation = ({
                 className="calculation__openAcc--container"
                 style={{ display: isLogin && loanAccounts.length !== 0 ? 'none' : 'block' }}
             >
-                <a className="calcu__openAccount">
+                <a
+                    className="calcu__openAccount"
+                    target="_blank"
+                    href={process.env.NEXT_PUBLIC_LOANACCOUNT}
+                    rel="noreferrer noopener"
+                >
                     立即申辦借貸帳戶
                     <span className="calcu__img">{'>'}</span>
                     {/* <img className="calcu__img" src={arrow} alt="借貸"/> */}
