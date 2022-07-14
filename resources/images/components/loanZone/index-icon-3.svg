@@ -1,0 +1,21 @@
+<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="73.812%" y1="85.013%" x2="40.548%" y2="40.144%" id="scsbyn6kha">
+            <stop stop-color="#D9A260" stop-opacity="0" offset="0%"/>
+            <stop stop-color="#DAA360" offset="100%"/>
+            <stop stop-color="#DAA360" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(6.68 7.51)">
+            <path fill="#172439" d="m32.159 11.177-5.79-2.508L33.1 4.94z"/>
+            <path d="M31.289 8.706C28.43 3.51 22.97 0 16.704 0 7.48 0 0 7.611 0 17s7.479 17 16.704 17c1.78 0 3.495-.283 5.104-.808" stroke="#172439" stroke-width="2.5" stroke-linejoin="round"/>
+            <ellipse fill="url(#scsbyn6kha)" cx="16.758" cy="16.627" rx="10.5" ry="10.686"/>
+            <g stroke="#172439" stroke-linejoin="round" stroke-width="2.5">
+                <path d="M37.099 19.49c0-2.209-3.582-4-8-4s-8 1.791-8 4M21.099 19.49v12.235c0 2.08 3.582 3.765 8 3.765s8-1.685 8-3.765V19.49"/>
+                <path d="M21.099 19.49c0 2.21 3.582 4 8 4s8-1.79 8-4M21.099 25.49c0 2.21 3.582 4 8 4s8-1.79 8-4"/>
+            </g>
+        </g>
+        <path opacity=".412" d="M0 0h50v50H0z"/>
+    </g>
+</svg>

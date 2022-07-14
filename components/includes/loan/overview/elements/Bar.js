@@ -1,5 +1,11 @@
 const Bar = ({ style, min, max }) => {
-    const wid = (Number(min) * 100) / max || 0;
+    let wid = 0;
+
+    wid = (Number(min) * 100) / max || 0;
+    if (wid > 100) {
+        wid = 100;
+    }
+
     return (
         <>
             <div className="bar__background" style={style}>

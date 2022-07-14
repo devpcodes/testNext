@@ -11,6 +11,7 @@ import { formatNum } from '../../../../../services/formatNum';
 import closeIcon from '../../../../../resources/images/components/loanZone/menu-close-small.svg';
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
 import _ from 'lodash';
+import { setModal } from '../../../../../store/components/layouts/action';
 const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler, reload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -24,6 +25,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
     const nowKey = useRef('');
     const router = useRouter();
     const [applyDate, setApplyDate] = useState('');
+    const dispatch = useDispatch();
     useEffect(() => {
         if (reload) {
             getAccountOverview();
@@ -39,9 +41,26 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
     useEffect(() => {
         if (stockData?.stockId != null && currentKey === 'self') {
             const cloneData = [...data];
-            cloneData.push(stockData);
-            sortSelfData(cloneData);
-            setData(cloneData);
+            const result = cloneData.find(item => {
+                return item.stockId === stockData.stockId;
+            });
+            if (result == null) {
+                cloneData.push(stockData);
+                sortSelfData(cloneData);
+                setData(cloneData);
+            } else {
+                dispatch(
+                    setModal({
+                        visible: true,
+                        type: 'info',
+                        title: '提醒',
+                        content: '擔保品已存在下方試算欄',
+                        okText: '確認',
+                        noCloseIcon: true,
+                        noTitleIcon: true,
+                    }),
+                );
+            }
         }
     }, [stockData]);
 
@@ -70,6 +89,10 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
 
     useEffect(() => {
         if (reset) {
+            if (currentKey === 'self') {
+                setData([]);
+                return;
+            }
             const selectedKeys = [];
             data.forEach((item, index) => {
                 item.expectedCollateralShare = 0;
@@ -427,7 +450,8 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
         data.forEach(item => {
             allCanLoan += Number(item.canLoanMoney);
         });
-        if (canLoanHandler != null) {
+        if (canLoanHandler != null && currentKey === 'notGuaranteed') {
+            console.log('allcanloan', allCanLoan);
             canLoanHandler(allCanLoan);
         }
     };
@@ -555,6 +579,8 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
                         text:
                             currentKey === 'self'
                                 ? '目前還沒加入個股請使用上方搜尋列新增擔保品'
+                                : currentKey === 'guaranteed'
+                                ? '查無資料'
                                 : '此帳號無庫存股票，請選擇其他帳號或自選試算。',
                         tStyle: {
                             width: '215px',

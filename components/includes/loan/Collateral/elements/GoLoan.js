@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { Form, Input, Collapse, message, Table } from 'antd';
 import moment from 'moment';
 import { setModal } from '../../../../../store/components/layouts/action';
@@ -20,39 +21,50 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
     const currentAccount = useSelector(store => store.user.currentAccount);
     const submitMoney = useRef(allLoanMoney);
     const [loading, setLoading] = useState(false);
+    const [errorMoney, setErrorMoney] = useState('');
+    const router = useRouter();
     useEffect(() => {
-        dispatch(
-            setModal({
-                visible,
-                title: '借貸申請確認',
-                content: renderContent(),
-                noCloseIcon: true,
-                noTitleIcon: true,
-                onCancel: () => {
-                    goLoanClose();
-                    // setTimeout(() => {
-                    //     form.setFieldsValue({
-                    //         loanMoney: allLoanMoney,
-                    //     });
-                    // }, 300);
-                    // dispatch(setModal({ visible: false }));
-                },
-                okButtonProps: {
-                    style: {
-                        background: '#c43826',
-                    },
-                },
-                bodyStyle: {
-                    padding: '16px 24px',
-                },
-                onOk: () => {
-                    submitMoney.current = form.getFieldValue('loanMoney');
-                    submitHandler(submitMoney.current);
-                },
-                centered: isMobile ? true : false,
-            }),
-        );
+        dispatch(setModal({ visible: false }));
         setTimeout(() => {
+            dispatch(
+                setModal({
+                    visible,
+                    title: '借貸申請確認',
+                    content: renderContent(),
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                    onCancel: () => {
+                        goLoanClose();
+                        // setTimeout(() => {
+                        //     form.setFieldsValue({
+                        //         loanMoney: allLoanMoney,
+                        //     });
+                        // }, 300);
+                        // dispatch(setModal({ visible: false }));
+                    },
+                    okButtonProps: {
+                        style: {
+                            background: '#c43826',
+                        },
+                    },
+                    bodyStyle: {
+                        padding: '16px 24px',
+                    },
+                    onOk: () => {
+                        submitMoney.current = form.getFieldValue('loanMoney');
+                        submitHandler(submitMoney.current);
+                    },
+                    centered: isMobile ? true : false,
+                }),
+            );
+        }, 50);
+
+        setTimeout(() => {
+            if (allLoanMoney < 10000) {
+                setErrorMoney('動用金額單筆最低1萬元');
+            } else {
+                setErrorMoney('');
+            }
             form.setFieldsValue({
                 loanMoney: allLoanMoney,
             });
@@ -250,6 +262,10 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                     dispatch(setModal({ visible: false }));
                     inventoryReload();
                 },
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                    router.push('/loan-zone/Record/');
+                },
                 content: (
                     <>
                         <p>您的借貸申請已送出，款項如匯入完成將以簡訊或電子郵件進行通知。</p>
@@ -389,6 +405,11 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
 
     const verifyLoanMoney = async loanMoney => {
         console.log('----loanMoney', loanMoney);
+        if (errorMoney) {
+            return new Promise((resolve, reject) => {
+                reject();
+            });
+        }
         var errors = form.getFieldsError();
         errors = errors.filter(val => {
             return val.errors.length !== 0;
@@ -473,7 +494,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                         loanSelect: '01',
                         loanMoney: allLoanMoney,
                         loanAccount:
-                            currentAccount.bhname + ' ' + currentAccount.broker_id + '-' + currentAccount.account,
+                            currentAccount?.bhname + ' ' + currentAccount?.broker_id + '-' + currentAccount?.account,
                     }}
                 >
                     <Form.Item name="loanSelect" label="借貸目的">
@@ -505,42 +526,84 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                             }}
                         />
                     </Form.Item>
-                    <Form.Item
-                        name="loanMoney"
-                        label="動用金額"
-                        rules={[
-                            {
-                                //提醒您，借貸申請動用金額須以千元為單位，單筆最低1萬元。
-                                validator: (rule, value) => {
-                                    return verifyHandler('checkHaveLoanMoney', value, null, '請輸入動用金額。');
+                    {errorMoney ? (
+                        <Form.Item
+                            validateStatus={errorMoney === '' ? 'success' : 'error'}
+                            help={errorMoney}
+                            name="loanMoney"
+                            label="動用金額"
+                            rules={[
+                                {
+                                    //提醒您，借貸申請動用金額須以千元為單位，單筆最低1萬元。
+                                    validator: (rule, value) => {
+                                        return verifyHandler('checkHaveLoanMoney', value, null, '請輸入動用金額。');
+                                    },
                                 },
-                            },
-                            {
-                                validator: (rule, value) => {
-                                    return verifyHandler(
-                                        'checkLoanMoney',
-                                        value,
-                                        allLoanMoney,
-                                        `可輸入金額為 10,000~${formatNum(allLoanMoney)}元，需以千元為填寫單位。`,
-                                    );
+                                {
+                                    validator: (rule, value) => {
+                                        return verifyHandler(
+                                            'checkLoanMoney',
+                                            value,
+                                            allLoanMoney,
+                                            `可輸入金額為 10,000~${formatNum(allLoanMoney)}元，需以千元為填寫單位。`,
+                                        );
+                                    },
                                 },
-                            },
-                        ]}
-                    >
-                        <Input
-                            addonBefore={<span>台幣</span>}
-                            style={{
-                                display: 'block',
-                                width: '100%',
-                                fontSize: '16px',
-                                color: '#0d1623',
-                            }}
-                            // onChange={(val) => {
-                            //     console.log('vvvv', form.getFieldValue('loanMoney'))
-                            // }}
-                            suffix="元"
-                        />
-                    </Form.Item>
+                            ]}
+                        >
+                            <Input
+                                addonBefore={<span>台幣</span>}
+                                style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    fontSize: '16px',
+                                    color: '#0d1623',
+                                }}
+                                // onChange={(val) => {
+                                //     console.log('vvvv', form.getFieldValue('loanMoney'))
+                                // }}
+                                suffix="元"
+                            />
+                        </Form.Item>
+                    ) : (
+                        <Form.Item
+                            name="loanMoney"
+                            label="動用金額"
+                            rules={[
+                                {
+                                    //提醒您，借貸申請動用金額須以千元為單位，單筆最低1萬元。
+                                    validator: (rule, value) => {
+                                        return verifyHandler('checkHaveLoanMoney', value, null, '請輸入動用金額。');
+                                    },
+                                },
+                                {
+                                    validator: (rule, value) => {
+                                        return verifyHandler(
+                                            'checkLoanMoney',
+                                            value,
+                                            allLoanMoney,
+                                            `可輸入金額為 10,000~${formatNum(allLoanMoney)}元，需以千元為填寫單位。`,
+                                        );
+                                    },
+                                },
+                            ]}
+                        >
+                            <Input
+                                addonBefore={<span>台幣</span>}
+                                style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    fontSize: '16px',
+                                    color: '#0d1623',
+                                }}
+                                // onChange={(val) => {
+                                //     console.log('vvvv', form.getFieldValue('loanMoney'))
+                                // }}
+                                suffix="元"
+                            />
+                        </Form.Item>
+                    )}
+
                     <Form.Item name="loanAccount" label="撥入帳號">
                         <Input
                             style={{

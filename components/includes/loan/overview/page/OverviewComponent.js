@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from 'antd';
 import moment from 'moment';
@@ -28,8 +28,9 @@ const OverviewComponent = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [current, setCurrent] = useState('notGuaranteed');
     const [allCanLoan, setAllCanLoan] = useState(0);
+    const [resultAllCanLoan, setResultAllCanLoan] = useState(0);
     const [accountOverview, setAccountOverview] = useState({});
-
+    const [financing, setFinancing] = useState('--');
     // const { isLogin, accounts } = useUser();
     // const [loanIdno, setLoanIdno] = useState('');
     const router = useRouter();
@@ -55,6 +56,7 @@ const OverviewComponent = () => {
                 accountDetailHandler();
             }
             setAccountOverview(res[0]);
+            setFinancing(res[0].financing);
         } catch (error) {
             message.error(error);
         }
@@ -99,23 +101,30 @@ const OverviewComponent = () => {
                 </div>
                 <div className="account__item">
                     <div className="account__label">不限用途借貸帳號</div>
-                    <div className="account__val" style={{ lineHeight: '43px' }}>
-                        {accountOverview.branch + '-' + accountOverview.account}
+                    <div className="account__val" style={{ lineHeight: '25px' }}>
+                        <p style={{ marginBottom: 0 }}>{accountOverview?.branchName}</p>
+                        <p style={{ marginBottom: 0 }}>{accountOverview.branch + '-' + accountOverview.account}</p>
                     </div>
                 </div>
                 <div className="account__item" style={{ borderBottom: 'none' }}>
                     <div className="account__label">撥入與扣款帳號</div>
-                    <div className="account__val" style={{ lineHeight: '43px' }}>
-                        {accountOverview.bankAccount}
+                    <div className="account__val" style={{ lineHeight: '25px' }}>
+                        <p style={{ marginBottom: 0 }}>{accountOverview?.bankName}</p>
+                        <p style={{ marginBottom: 0 }}>{accountOverview.bankAccount}</p>
                     </div>
                 </div>
             </div>
         );
     };
-    const canLoanHandler = allCanLoan => {
-        // alert(allCanLoan)
+    const canLoanHandler = useCallback(allCanLoan => {
         setAllCanLoan(allCanLoan);
-    };
+    });
+
+    useEffect(() => {
+        console.log('financing....', financing);
+        setResultAllCanLoan(Number(allCanLoan) + Number(financing));
+    }, [financing, allCanLoan]);
+
     const tooltipHandler = () => {
         return (
             <div>
@@ -134,13 +143,13 @@ const OverviewComponent = () => {
                     <Btn
                         type="accountInfo"
                         text="帳戶詳情"
-                        style={{ marginRight: 16 }}
+                        // style={{ marginRight: 16 }}
                         onClick={accountDetailHandler}
                     />
-                    <Btn type="money" text="借貸商品" />
+                    {/* <Btn type="money" text="借貸商品" /> */}
                 </div>
             </div>
-            <LoanBox allCanLoan={allCanLoan} financing={accountOverview.financing} />
+            <LoanBox allCanLoan={resultAllCanLoan} financing={accountOverview.financing} />
             <div className="overview__useContainer">
                 <UseBox
                     style={{ width: isMobile ? '100%' : '49.3%', marginRight: isMobile ? 0 : '1.4%' }}

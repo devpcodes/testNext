@@ -19,7 +19,7 @@ export const AccountButton = () => {
     const personalAreaVisible = useSelector(store => store.layout.personalAreaVisible);
     const showMenu = useSelector(store => store.layout.showMenu);
 
-    const accountElement = <AccountAvatar>{currentAccount.username && currentAccount.username[0]}</AccountAvatar>;
+    const accountElement = <AccountAvatar>{currentAccount?.username && currentAccount?.username[0]}</AccountAvatar>;
     const accountPopoverContent = (
         <div>
             <PersonalArea personalAreaVisible={personalAreaVisible} />

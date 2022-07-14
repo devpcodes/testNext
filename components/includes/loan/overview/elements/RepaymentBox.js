@@ -1,4 +1,5 @@
 import go from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy (1).svg';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import info from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
 import Bar from './Bar';
@@ -7,9 +8,27 @@ import { setModal } from '../../../../../store/components/layouts/action';
 import SinoBtn from '../../Collateral/elements/SinoBtn';
 import VerticalTable from './VerticalTable';
 import qrCode from '../../../../../resources/images/components/loanZone/demo.jpg';
+import { fetchRepaymentAccount } from '../../../../../services/components/loznZone/overview/fetchRepaymentAccount';
+import { getToken } from '../../../../../services/user/accessToken';
+import { message } from 'antd';
 const RepaymentBox = ({ style }) => {
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
+    const [repaymentData, setRepaymentData] = useState({});
+    useEffect(() => {
+        getRepaymentAcc();
+    }, [currentAccount]);
+    const getRepaymentAcc = async () => {
+        try {
+            if (currentAccount.broker_id != null) {
+                const res = await fetchRepaymentAccount(getToken(), currentAccount.broker_id);
+                setRepaymentData(res);
+            }
+        } catch (error) {
+            message.error(error);
+        }
+    };
     const clickHandler = () => {
         const data = [
             {
@@ -17,10 +36,10 @@ const RepaymentBox = ({ style }) => {
                 value: (
                     <>
                         <p className="item__p" style={{ marginBottom: 0 }}>
-                            永豐銀807
+                            {repaymentData.bankName + repaymentData.code}
                         </p>
                         <p className="item__p" style={{ marginBottom: 0 }}>
-                            123456789123
+                            {repaymentData.bankAccount}
                         </p>
                     </>
                 ),
@@ -33,7 +52,7 @@ const RepaymentBox = ({ style }) => {
             },
             {
                 label: '戶名',
-                value: '永豐證償還帳戶',
+                value: repaymentData.accountName,
                 labelStyle: {
                     flex: '1.5 0 0',
                 },
@@ -43,7 +62,7 @@ const RepaymentBox = ({ style }) => {
             },
             {
                 label: '分公司電話',
-                value: '02-22222222',
+                value: repaymentData.phone,
                 labelStyle: {
                     flex: '1.5 0 0',
                 },
@@ -87,7 +106,7 @@ const RepaymentBox = ({ style }) => {
                                     flex: '3 0 0',
                                 }}
                             />
-                            <img
+                            {/* <img
                                 src={qrCode}
                                 style={{
                                     width: '145px',
@@ -95,9 +114,9 @@ const RepaymentBox = ({ style }) => {
                                     display: isMobile ? 'none' : 'inline-block',
                                     flex: '1 0 0',
                                 }}
-                            />
+                            /> */}
                         </div>
-                        <p
+                        {/* <p
                             style={{
                                 marginTop: '16px',
                                 color: '#6c7b94',
@@ -106,7 +125,7 @@ const RepaymentBox = ({ style }) => {
                             }}
                         >
                             此條碼支援銀行轉帳，掃描後即可轉帳。
-                        </p>
+                        </p> */}
                     </>
                 ),
                 okText: '確認',
@@ -128,7 +147,7 @@ const RepaymentBox = ({ style }) => {
                 <div>
                     <span className="canLoanMoney">應還款金額</span>
                     {/* <img className="canLoanIcon" src={info} /> */}
-                    <span className="canLoanDesc">(含息)</span>
+                    <span className="canLoanDesc">(已動用+利息)</span>
                 </div>
                 <p className="loan__money">$1,032,000</p>
                 <div className="loan__contentBottom">
@@ -136,7 +155,7 @@ const RepaymentBox = ({ style }) => {
                         {/* <Bar /> */}
                         <div className="loan__text--box">
                             <div>
-                                <span className="loan__money--lable">利息及其它費用</span>
+                                <span className="loan__money--lable">預估利息</span>
                                 <span className="loan__money--val">$53,000</span>
                             </div>
                         </div>

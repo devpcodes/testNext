@@ -121,7 +121,8 @@ const CollateralComponent = () => {
     const submitHandler = click => {
         setLoanDays(inputLoanDays.current);
         const allMoney = getAllLoanHandler(submitDataCurr.current);
-        getInterestHandler(allMoney, inputLoanDays.current);
+        getInterestHandler(submitDataCurr.current, inputLoanDays.current);
+        // getInterestHandler(allMoney, inputLoanDays.current);
         getQtyHandler(submitDataCurr.current);
 
         if (winWidth <= 920 && click === 'click') {
@@ -157,8 +158,23 @@ const CollateralComponent = () => {
     };
 
     //取預估利息
-    const getInterestHandler = (allMoney, days) => {
-        const nowInterest = Math.ceil((allMoney * days) / 365);
+    // const getInterestHandler = (allMoney, days) => {
+    //     const nowInterest = Math.ceil(allMoney * 0.04 * (days / 365));
+    //     setInterest(nowInterest);
+    // };
+    const getInterestHandler = (data, days) => {
+        console.log('.......', data);
+        let nowInterest = 0;
+        data.forEach(item => {
+            console.log(
+                '------------+++++',
+                Math.ceil(Number(item.canLoanMoney) * Number(item.groupRate) * Number(days / 365)),
+            );
+            nowInterest += Math.ceil(
+                Number(item.canLoanMoney) * Number(item.groupRate || item.loanYearRate) * Number(days / 365),
+            );
+        });
+        // const nowInterest = Math.ceil(allMoney * 0.04 * (days / 365));
         setInterest(nowInterest);
     };
 
@@ -189,7 +205,7 @@ const CollateralComponent = () => {
 
     const searchStockHandler = async val => {
         const stockId = val.split(' ')[0];
-        // alert(stockId);
+        console.log('sssss', stockData);
         try {
             const res = await fetchGreenChannel(stockId);
             setStockData(res);
