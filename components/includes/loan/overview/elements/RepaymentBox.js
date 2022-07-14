@@ -36,7 +36,8 @@ const RepaymentBox = ({ style }) => {
                 value: (
                     <>
                         <p className="item__p" style={{ marginBottom: 0 }}>
-                            {repaymentData.bankName + repaymentData.code}
+                            {repaymentData.bankCode + repaymentData.bankName}
+                            {' ' + repaymentData.bankBranch + repaymentData.bankBranchName}
                         </p>
                         <p className="item__p" style={{ marginBottom: 0 }}>
                             {repaymentData.bankAccount}
@@ -102,7 +103,7 @@ const RepaymentBox = ({ style }) => {
                             <VerticalTable
                                 data={data}
                                 style={{
-                                    marginRight: isMobile ? '0' : '18px',
+                                    // marginRight: isMobile ? '0' : '18px',
                                     flex: '3 0 0',
                                 }}
                             />
