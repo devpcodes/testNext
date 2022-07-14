@@ -14,6 +14,7 @@ import { formatNum } from '../../../../../services/formatNum';
 import SinoBtn from './SinoBtn';
 import { fetchApplyStatus } from '../../../../../services/components/loznZone/calculation/fetchApplyStatus';
 import { debounce } from '../../../../../services/throttle';
+import { fetchRepaymentAccount } from '../../../../../services/components/loznZone/overview/fetchRepaymentAccount';
 // import arrow from '../../../../../resources/images/components/loanZone/arrow-chevron-down-copy.svg'
 const LoanCalculation = ({
     loanDays,
@@ -31,6 +32,7 @@ const LoanCalculation = ({
     const [loanIdno, setLoanIdno] = useState('');
     const accountError = useRef(false);
     const [loanAccounts, setLoanAccounts] = useState([]);
+    const [repaymentAcc, setRepaymentAcc] = useState({});
     // const loanIdno = useRef('');
     const dispatch = useDispatch();
 
@@ -42,6 +44,7 @@ const LoanCalculation = ({
 
     useEffect(() => {
         debounce(checkAccountError, 500);
+        debounce(getRepaymentAccount, 500);
     }, [currentAccount]);
 
     const getAccountStatus = async () => {
@@ -52,6 +55,15 @@ const LoanCalculation = ({
             // checkAccountError(res.result[0]);
             setLoanAccounts(res.result);
             // setLoanIdno(jwt_decode(getToken()).user_id);
+        }
+    };
+
+    const getRepaymentAccount = async () => {
+        try {
+            const res = await fetchRepaymentAccount(getToken(), currentAccount.broker_id);
+            setRepaymentAcc(res);
+        } catch (error) {
+            message.error('伺服器錯誤');
         }
     };
 
@@ -91,6 +103,9 @@ const LoanCalculation = ({
                     cancelText: '稍後申辦',
                     noCloseIcon: true,
                     noTitleIcon: true,
+                    onOk: () => {
+                        window.open(process.env.NEXT_PUBLIC_LOANACCOUNT);
+                    },
                 }),
             );
             return;
@@ -118,7 +133,7 @@ const LoanCalculation = ({
                     visible: true,
                     type: 'info',
                     title: '提醒',
-                    content: '噯呀糟糕！目前您的不限用途借貸帳戶狀態異常，請洽您的營業員。02-12345678',
+                    content: `噯呀糟糕！目前您的不限用途借貸帳戶狀態異常，請洽您的營業員。${repaymentAcc.phone}`,
                     okText: '確認',
                     noCloseIcon: true,
                     noTitleIcon: true,
@@ -187,8 +202,8 @@ const LoanCalculation = ({
                         <>
                             <p>噯呀糟糕！您的可借款額度已達您當初所申請的授信上限。</p>
                             <p>
-                                (您可至不限用途帳戶總覽查看您的授信額度，若要調高授信上限請洽您的所屬業務員。02-12345678
-                                )
+                                (您可至不限用途帳戶總覽查看您的授信額度，若要調高授信上限請洽您的所屬業務員。
+                                {`${repaymentAcc.phone}`})
                             </p>
                         </>
                     ),
@@ -220,7 +235,7 @@ const LoanCalculation = ({
                             <p>
                                 提醒您，公司內部人之股票借款須至臨櫃設質後辦理。請取消勾選畫面中您為內部人之股票，再進行線上借貸。
                             </p>
-                            <p>若您的內部人身分已異動，請洽您的所屬業務員。02-12345678</p>
+                            <p>若您的內部人身分已異動，請洽您的所屬業務員。{repaymentAcc.phone}</p>
                         </>
                     ),
                     okText: '確認',
@@ -268,7 +283,10 @@ const LoanCalculation = ({
                         content: (
                             <>
                                 <p>噯呀糟糕！您的借貸申請次數已達當日上限，請勿重複申請。</p>
-                                <p>若有調整借款需求，請至借貸明細 > 在途中進行編輯。或洽您的所屬業務員。02-12345678</p>
+                                <p>
+                                    若有調整借款需求，請至借貸明細 > 在途中進行編輯。或洽您的所屬業務員。
+                                    {repaymentAcc.phone}
+                                </p>
                             </>
                         ),
                         okText: '確認',
