@@ -654,6 +654,7 @@ const AccountInfo = () => {
                 }
                 .mainArea2 .contentBox .dataBox p {
                     color: #0d1623;
+                    justify-content: space-between;
                     display: flex;
                 }
                 .mainArea2 .contentBox .dataBox p a {
@@ -667,7 +668,7 @@ const AccountInfo = () => {
                     font-weight: 700;
                 }
                 .mainArea2 .contentBox .dataBox p > span:nth-child(2) {
-                    width: 60%;
+                    width: 57%;
                 }
                 .textBlack {
                     color: #0d1623 !important;
@@ -696,20 +697,28 @@ const AccountInfo = () => {
                         font-weight: 800;
                         margin-bottom: 0.5em;
                         display: flex;
+                        align-items: center;
                         justify-content: space-between;
                     }
                     .mainArea2 .contentBox {
                         width: 100%;
                     }
                     .mainArea2 .firstDatabox .dataBox:nth-child(2) {
-                        padding-top: 0px;
+                        width: 100%;
+                    }
+                    .mainArea2 .contentBox .dataBox p > span:nth-child(1) {
+                        width: 45%;
                     }
                     .mainArea2 .contentBox .dataBox p > span:nth-child(2) {
+                        width: 52%;
                         text-align: right;
                     }
                     #AccInfo__container .flexBox {
                         display: flex;
                         justify-content: space-between;
+                    }
+                    .mainArea2 .contentBox {
+                        font-size: 15px;
                     }
                 }
             `}</style>
