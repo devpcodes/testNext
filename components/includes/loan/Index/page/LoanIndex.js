@@ -51,7 +51,7 @@ const LoanIndex = () => {
 
     useEffect(async () => {
         toCount();
-    }, [close]);
+    }, [close, radioValue, sliderValue]);
 
     useEffect(() => {
         let data = [
@@ -203,13 +203,13 @@ const LoanIndex = () => {
         // ^*groupRate*(day/365)
     };
 
+    const btnHref = val => {
+        window.location.href = val;
+    };
+
     const onChange2 = val => {
         // console.log(val,'stock')
         setSliderValue(val);
-    };
-
-    const btnHref = val => {
-        window.location.href = val;
     };
 
     const onChange = val => {
@@ -346,7 +346,7 @@ const LoanIndex = () => {
                                         <span>25 元</span>
                                     </p>
                                 </div>
-                                <Button type="primary" onClick={toCount.bind(null, 'click')}>
+                                <Button type="primary" onClick={btnHref.bind(null, '/newweb/loan-zone/Collateral')}>
                                     體驗試算
                                 </Button>
                                 {/* c43826 */}
