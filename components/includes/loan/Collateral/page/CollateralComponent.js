@@ -45,6 +45,7 @@ const CollateralComponent = () => {
     const [goLoanVisible, setGoLoanVisible] = useState(false);
     const [stockData, setStockData] = useState({});
     const [reload, setReload] = useState(false);
+    const [phone, setPhone] = useState('');
     useLoanAccount();
 
     useEffect(() => {
@@ -264,6 +265,9 @@ const CollateralComponent = () => {
             }),
         );
     };
+    const getPhoneHandler = phoneNum => {
+        setPhone(phoneNum);
+    };
     return (
         <div className="collateral__container">
             {winWidth > 530 && <Breadcrumb />}
@@ -387,6 +391,7 @@ const CollateralComponent = () => {
                             currentKey={current}
                             submitData={submitData}
                             goLoanHandler={goLoanHandler}
+                            getPhone={getPhoneHandler}
                         />
                     </div>
                 ) : null}
@@ -436,6 +441,7 @@ const CollateralComponent = () => {
                     allLoanMoney={allLoanMoney}
                     goSubmitData={submitData}
                     inventoryReload={inventoryReload}
+                    phone={phone}
                 />
             </div>
 

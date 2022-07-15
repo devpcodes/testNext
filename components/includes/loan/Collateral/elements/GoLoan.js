@@ -13,7 +13,7 @@ import { getToken } from '../../../../../services/user/accessToken';
 import { postApply } from '../../../../../services/components/loznZone/calculation/postApply';
 import icon from '../../../../../resources/images/components/loanZone/basic-help-circle (1).svg';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
-const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryReload }) => {
+const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryReload, phone }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { Panel } = Collapse;
@@ -427,7 +427,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                 'checkLoanMoneyMax',
                 loanMoney,
                 allLoanMoney,
-                `提醒您，本次您動用的金額折合可借款額度為110% (小於130%)，請確認是否進行借款？`,
+                `提醒您，本次您未全額動用，請確認是否進行借款？`,
             );
         } catch (error) {
             goLoanClose();
@@ -443,7 +443,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                             content: (
                                 <>
                                     <p>{error}</p>
-                                    <p>本次借款送出後，若有餘額動用需求，請臨櫃辦理或洽您的所屬業務員。02-12345678。</p>
+                                    <p>本次借款送出後，若有餘額動用需求，請臨櫃辦理或洽您的所屬業務員。{phone}。</p>
                                 </>
                             ),
                             noCloseIcon: true,
