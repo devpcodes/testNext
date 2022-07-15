@@ -246,7 +246,8 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                 noCloseIcon: true,
                 noTitleIcon: true,
                 centered: isMobile ? true : false,
-                cancelText: '查看明細',
+                cancelText: '前往總覽',
+                okText: '查看明細',
                 okButtonProps: {
                     style: {
                         background: '#c43826',
@@ -257,12 +258,13 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                         paddingLeft: '11px',
                     },
                 },
-                onOk: () => {
+                onCancel: () => {
                     goLoanClose();
                     dispatch(setModal({ visible: false }));
-                    inventoryReload();
+                    router.push('/loan-zone/Overview/');
+                    // inventoryReload();
                 },
-                onCancel: () => {
+                onOk: () => {
                     dispatch(setModal({ visible: false }));
                     router.push('/loan-zone/Record/');
                 },

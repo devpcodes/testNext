@@ -16,6 +16,7 @@ import Modal from 'antd/lib/modal/Modal';
 import GoLoan from '../elements/GoLoan';
 import { fetchGreenChannel } from '../../../../../services/components/loznZone/calculation/fetchGreenChannel';
 import { useLoanAccount } from '../../../../../hooks/useLoanAccount';
+import btnIcon from '../../../../../resources/images/components/loanZone/ic-ic-attention-info-circle.svg';
 const CollateralComponent = () => {
     const menuList = [
         { key: 'self', title: '自選試算' },
@@ -232,6 +233,37 @@ const CollateralComponent = () => {
             setReload(false);
         }, 500);
     };
+    const tabBtnClick = () => {
+        dispatch(
+            setModal({
+                visible: true,
+                type: 'info',
+                title: '試算說明',
+                content: (
+                    <div>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                            1. 可借款額度以您可提供擔保之庫存市值與融通成數進行預估。
+                        </p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                            2. 實際借款額度不得超過授信總額。若您借款已達授信總額上限，請洽所屬分公司。
+                        </p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>3. 線上每筆借款上限300萬元。</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>4. 線上可擔保股票與借款成數/利率 點我查看</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>5. 本服務以日計息，自動用日起算</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>6. 線上動用手續費每筆100 元</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                            (匯入多筆庫存同時一次申請動用時，以一筆計算)
+                        </p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>7. 撥券費以股票張數計算，每張 1 元</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>8.上述4到7.點費用於還款或借貸到期時收取。</p>
+                    </div>
+                ),
+                okText: '我知道了',
+                noCloseIcon: true,
+                noTitleIcon: true,
+            }),
+        );
+    };
     return (
         <div className="collateral__container">
             {winWidth > 530 && <Breadcrumb />}
@@ -258,10 +290,10 @@ const CollateralComponent = () => {
                         )}
                         {/* 自選試算 MOBILE版 */}
                         {winWidth <= 530 && !showAccount && (
-                            <>
-                                <CalculationDescription />
+                            <div className="mobile__head">
                                 <SearchStock btnName="新增擔保品" onClick={searchStockHandler} />
-                            </>
+                                <CalculationDescription />
+                            </div>
                         )}
 
                         {/* 庫存試算 tab版 */}
@@ -284,24 +316,41 @@ const CollateralComponent = () => {
                             </div>
                         )}
                         {/* 庫存試算 手機版 */}
-                        {showAccount && winWidth <= 530 && <CalculationDescription />}
+                        {/* {showAccount && winWidth <= 530 && <CalculationDescription />} */}
                         {winWidth <= 530 && (
                             <>
                                 <div className="dropDown">
                                     {showAccount && (
-                                        <AccountDropdown
-                                            type={'S'}
-                                            personalAreaVisible={false}
-                                            tradingLayout={true}
-                                            width={'100%'}
-                                            tradingContainerWidth={'100%'}
-                                        />
+                                        <div className="showAccMobile__container">
+                                            <AccountDropdown
+                                                type={'S'}
+                                                personalAreaVisible={false}
+                                                tradingLayout={true}
+                                                width={'100%'}
+                                                tradingContainerWidth={'100%'}
+                                                style={{
+                                                    flex: '3 0 0',
+                                                }}
+                                            />
+                                            <CalculationDescription style={{ flex: '0 0 0', marginRight: 0 }} />
+                                        </div>
                                     )}
                                 </div>
                             </>
                         )}
                     </div>
-                    <TopTabBar menuList={menuList} current={current} onClick={tabClickHandler} activeKey={current} />
+                    <TopTabBar
+                        menuList={menuList}
+                        current={current}
+                        onClick={tabClickHandler}
+                        activeKey={current}
+                        btnObj={{
+                            text: !isMobile ? '試算說明' : '',
+                            icon: btnIcon,
+                            onClick: tabBtnClick,
+                            style: !isMobile ? {} : { marginRight: -10 },
+                        }}
+                    />
                     {renderTable(current)}
                     <LoanDays changeDaysHandler={changeDaysHandler} reset={reset} />
                     <div className="collateral__btnBox">
@@ -391,6 +440,14 @@ const CollateralComponent = () => {
             </div>
 
             <style jsx>{`
+                .showAccMobile__container {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .mobile__head {
+                    display: flex;
+                    justify-content: space-between;
+                }
                 .mask {
                     position: fixed;
                     top: 0;
