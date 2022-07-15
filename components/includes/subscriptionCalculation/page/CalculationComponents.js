@@ -1,5 +1,6 @@
 import Breadcrumb from '../../breadcrumb/breadcrumb';
 import Btn from '../../loan/overview/elements/Btn';
+import CalcuInfo from '../elements/CalcuInfo';
 import StockDetail from '../elements/StockDetail';
 
 const CalculationComponents = () => {
@@ -14,7 +15,9 @@ const CalculationComponents = () => {
                 <div className="calcu__left">
                     <StockDetail />
                 </div>
-                <div className="calcu__right"></div>
+                <div className="calcu__right">
+                    <CalcuInfo />
+                </div>
             </div>
             <style jsx>{`
                 .calcu__title {

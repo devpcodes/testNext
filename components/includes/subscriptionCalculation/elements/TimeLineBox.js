@@ -1,3 +1,13 @@
+import TimeLine from '../../subscription/timeLine';
+const stockData = {
+    currentDate: '20220715',
+    beginDate: '20220714',
+    endDate: '20220722',
+    feeDate: '20220723',
+    lotDate: '20220724',
+    moneyDate: '20220725',
+    stkDate: '20220725',
+};
 const TimeLineBox = ({ style }) => {
     return (
         <div className="timeLine__container" style={style}>
@@ -23,6 +33,11 @@ const TimeLineBox = ({ style }) => {
                     </div>
                 </div>
             </div>
+            <TimeLine
+                stockData={stockData}
+                style={{ marginTop: '22px' }}
+                blockStyle={{ width: '112%', marginLeft: '-6%' }}
+            />
             <style jsx>{`
                 .timeLine__container {
                     border-radius: 2px;

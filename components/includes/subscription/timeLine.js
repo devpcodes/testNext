@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
-const TimeLine = memo(({ stockData }) => {
+const TimeLine = memo(({ stockData, style, blockStyle }) => {
     /* 
     stockData={
         beginDate:'20220512',
@@ -42,8 +42,8 @@ const TimeLine = memo(({ stockData }) => {
 
     return (
         <>
-            <div>
-                <div className="time__block">
+            <div style={style}>
+                <div className="time__block" style={blockStyle}>
                     <div className={getDateClassName(stockData.beginDate)}>
                         <div className="step"> 開始 </div>
                         <div className="point"></div>
