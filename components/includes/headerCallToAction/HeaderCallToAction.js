@@ -62,7 +62,7 @@ export const HeaderCallToAction = () => {
 
     const goSignUp = useCallback(() => {
         return window.open(
-            'https://www.sinotrade.com.tw/openact?utm_campaign=OP_inchannel&utm_source=newweb&utm_medium=button_top&strProd=0037&strWeb=0035',
+            'https://www.sinotrade.com.tw/richclub/dawhotou/campaign?strProd=0037&strWeb=0035&utm_campaign=newweb_topbar_op&utm_source=newweb&utm_medium=button',
         );
     }, []);
 
@@ -79,11 +79,35 @@ export const HeaderCallToAction = () => {
     }, [router.query, platform]);
 
     const goLogIn = useCallback(() => {
-        if (router.pathname !== '/errPage') {
-            dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+        let dynmaicPath = '';
+        dynmaicPath = router.pathname.split('[');
+        if (dynmaicPath.length > 1) {
+            dynmaicPath = dynmaicPath[1].substring(0, dynmaicPath[1].length - 1);
+        } else {
+            dynmaicPath = '';
         }
+        if (router.pathname !== '/errPage') {
+            if (router.query[dynmaicPath]) {
+                dispatch(setCurrentPath(`${router.asPath}`));
+            } else {
+                dispatch(setCurrentPath(`${router.pathname}${window.location.search}`));
+            }
+        }
+
         // 無真正的 SinoTrade_login 頁面
-        router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
+        // console.log('pathname', router.pathname, router.asPath, router.query.code)
+        if (router.query[dynmaicPath]) {
+            router.push(
+                {
+                    pathname: router.pathname,
+                    query: { [dynmaicPath]: router.query[dynmaicPath] },
+                },
+                `/SinoTrade_login`,
+                { shallow: true },
+            );
+        } else {
+            router.push(router.pathname, `/SinoTrade_login`, { shallow: true });
+        }
     }, [router.pathname]);
 
     const loginBtn = <HeaderBtn content={isMobile ? '登入' : '客戶登入'} type={'primary'} clickHandler={goLogIn} />;

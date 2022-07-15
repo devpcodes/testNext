@@ -14,7 +14,10 @@ import {
     getFinancialProductDetail,
     getAnnouncement,
 } from '../../../../../services/components/financialProduct/financialProductServices';
-import { getTradingAppDetail } from '../../../../../services/components/tradingPlatform/tradingPlatformService';
+import {
+    getTradingAppDetail,
+    getTradingAppCategoriesAndProduct,
+} from '../../../../../services/components/tradingPlatform/tradingPlatformService';
 import OpenAccountButtons from '../element/OpenAccountButtons';
 import Announcement from '../element/Announcement';
 import { checkServer } from '../../../../../services/checkServer';
@@ -36,13 +39,33 @@ const FinancialProductArticleComponent = ({
     const [activeTabKey, setActiveTabKey] = useState('0');
     const [announcement, setAnnouncement] = useState([]);
     const clientWidth = useSelector(store => store.layout.winWidth);
-    // useEffect(() => {
-    //     if(router.query.categoryCode){
-    //         setProductCode(router.query.categoryCode)
-    //     }
-    // }, [router.query.categoryCode])
+    useEffect(() => {
+        console.log('------------', router.query.categoryCode);
+        if (router.query.categoryCode) {
+            // setProductCode(router.query.categoryCode)
+            getAppCode(router.query.categoryCode);
+        }
+    }, [router.query.categoryCode]);
+
     const onTabsChange = key => {
+        console.log('key======', key);
         setActiveTabKey(key);
+    };
+
+    const getAppCode = async categoryCode => {
+        const res = await getTradingAppCategoriesAndProduct(categoryCode);
+        //console.log('fffffff', res?.apps[0]?.appCode, router.query.code)
+        // if(res?.apps){
+        //     const data = res?.apps;
+        //     const newData = data.filter((element) => {
+
+        //     })
+        // }
+        // if (res?.apps[0]?.appCode) {
+        //     console.log('appCode', res.apps[0].appCode);
+        //     setProductCode(res.apps[0].appCode);
+        // }
+        setProductCode(router.query.code);
     };
 
     const toProduct = code => {
@@ -54,13 +77,22 @@ const FinancialProductArticleComponent = ({
         if (isTradingPlatform) {
             router.push('/trading-platform');
         } else {
-            router.push('/financial-product');
+            router.push('/financial-product' + `?categoryCode=${router.query.categoryCode}`);
         }
     };
 
     const toAnnouncement = () => {
         window.open('https://www.sinotrade.com.tw/CSCenter/CSCenter_13_5', '_blank');
     };
+
+    useEffect(() => {
+        console.log('commonQuestion==========', router.query.tabKey);
+        if (router.query.tabKey) {
+            setTimeout(() => {
+                setActiveTabKey(router.query.tabKey);
+            }, 500);
+        }
+    }, [router.query.tabKey]);
 
     const renderProducts = () => {
         return isTradingPlatform ? (
@@ -83,7 +115,6 @@ const FinancialProductArticleComponent = ({
             </div>
         ) : null;
     };
-
     const serverRender = () => {
         if (serverTabsArray?.length > 0) {
             return (
@@ -234,7 +265,6 @@ const FinancialProductArticleComponent = ({
             res = await getFinancialProductDetail(productCode);
         }
         if (res) {
-            console.log('res....................', res);
             setArticleData(res);
         }
         const tabsArray = [];
@@ -250,6 +280,7 @@ const FinancialProductArticleComponent = ({
         const announcementRes = await getAnnouncement(res?.keywords, 3);
         setAnnouncement(announcementRes);
     }, [productCode]);
+    console.log('--------', articleData?.commonQuestionKeywords);
     return (
         <>
             <PageHead title={'永豐金理財網'} />
@@ -329,7 +360,9 @@ const FinancialProductArticleComponent = ({
                                 {checkServer() && announcementServerRes?.length ? (
                                     <Announcement data={announcementServerRes} />
                                 ) : null}
-                                {!checkServer() && announcement.length ? <Announcement data={announcement} /> : null}
+                                {!checkServer() && announcement?.length >= 0 ? (
+                                    <Announcement data={announcement} />
+                                ) : null}
                             </div>
                         </div>
                     </div>
@@ -683,7 +716,10 @@ const FinancialProductArticleComponent = ({
             `}</style>
             <style jsx global>{`
                 .ant-tabs-content a {
-                    color: #DAA360 !important;
+                    color: #DAA360;
+                }
+                .ant-pagination-item.ant-pagination-item-2 a {
+                    color: rgba(0,0,0,.65);
                 }
                 .ant-tabs-content-holder {
                     padding: 0;

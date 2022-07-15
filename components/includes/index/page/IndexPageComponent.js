@@ -10,25 +10,25 @@ import ForthSection from '../element/ForthSection';
 import ContactSection from '../element/ContactSection';
 import QAShortcut from '../element/QAshortcut';
 
-import newAccount from '../../../../resources/images/pages/homepage/fast_link/img-service-new-account-quick.svg';
-import trade from '../../../../resources/images/pages/homepage/fast_link/img-service-trade.svg';
-import accounting from '../../../../resources/images/pages/homepage/fast_link/img-service-accounting.svg';
-import stock from '../../../../resources/images/pages/homepage/fast_link/img-service-stock.svg';
-import support from '../../../../resources/images/pages/homepage/fast_link/img-service-support.svg';
+import newAccount from '../../../../resources/images/pages/homepage/fast_link/a1-ic-01.svg';
+import trade from '../../../../resources/images/pages/homepage/fast_link/a1-ic-02.svg';
+import accounting from '../../../../resources/images/pages/homepage/fast_link/a1-ic-03.svg';
+import stock from '../../../../resources/images/pages/homepage/fast_link/a1-ic-04.svg';
+import support from '../../../../resources/images/pages/homepage/fast_link/a1-ic-05.svg';
 
-import pig from '../../../../resources/images/pages/homepage/third_section/img-service-account.svg';
-import stockSubs from '../../../../resources/images/pages/homepage/third_section/img-service-stock-subscription.svg';
-import python from '../../../../resources/images/pages/homepage/third_section/img-service-api.svg';
-import borrow from '../../../../resources/images/pages/homepage/third_section/img-service-user-borrow.svg';
-import receipt from '../../../../resources/images/pages/homepage/third_section/img-service-advance-receipt.svg';
-import noLimit from '../../../../resources/images/pages/homepage/third_section/img-service-no-limit-money.svg';
+import pig from '../../../../resources/images/pages/homepage/third_section/a1-ic-06.svg';
+import stockSubs from '../../../../resources/images/pages/homepage/third_section/a1-ic-07.svg';
+import python from '../../../../resources/images/pages/homepage/third_section/a1-ic-08.svg';
+import borrow from '../../../../resources/images/pages/homepage/third_section/a1-ic-09.svg';
+import receipt from '../../../../resources/images/pages/homepage/third_section/a1-ic-10.svg';
+import noLimit from '../../../../resources/images/pages/homepage/third_section/a1-ic-11.svg';
 
 import preview from '../../../../resources/images/pages/homepage/forth_section/preview.png';
 import SafetySection from '../element/SafetySection';
 
-import gov from '../../../../resources/images/pages/homepage/safety_section/img-service-trade-control.svg';
-import safe from '../../../../resources/images/pages/homepage/safety_section/img-service-data-safe.svg';
-import security from '../../../../resources/images/pages/homepage/safety_section/img-service-trade-security.svg';
+import gov from '../../../../resources/images/pages/homepage/safety_section/a1-ic-12.svg';
+import safe from '../../../../resources/images/pages/homepage/safety_section/a1-ic-13.svg';
+import security from '../../../../resources/images/pages/homepage/safety_section/a1-ic-14.svg';
 import RichClub from '../element/RichClub';
 
 const IndexPageComponent = ({ richClubNews }) => {
@@ -224,6 +224,9 @@ const IndexPageComponent = ({ richClubNews }) => {
 
                     .main-content {
                         background-color: #f9fbff;
+                    }
+                    .ant-carousel .slick-dots {
+                        z-index: 9;
                     }
                 `}
             </style>

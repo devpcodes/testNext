@@ -17,8 +17,15 @@ function Subbrokerage() {
     const router = useRouter();
     useEffect(() => {
         if (!checkAccountsType(accounts, 'H')) {
-            Modal.error({ content: '無可交易帳號' });
-            router.push('/');
+            Modal.error({
+                content: '無可交易帳號',
+                onOk: () => {
+                    router.push('/');
+                },
+                onCancel: () => {
+                    router.push('/');
+                },
+            });
         }
     }, [accounts]);
     return (
@@ -31,6 +38,11 @@ function Subbrokerage() {
                     iHeight={1000}
                 />
             </div>
+            <style global jsx>{`
+                body {
+                    overflow: hidden !important;
+                }
+            `}</style>
         </>
     );
 }

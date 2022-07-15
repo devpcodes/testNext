@@ -10,6 +10,7 @@ import { setOrderList } from '../../../../../../store/subBrokerage/action';
 import { fetchQuerySubBrokerageQuote } from '../../../../../../services/sb/querySubBrokerageQuote';
 import { getPriceJumpPoint } from '../../../../../../services/components/goOrder/sb/getPriceJumpPoint';
 import { getTransactionCost } from '../../../../../../services/components/goOrder/sb/getTransitionCost';
+import { fetchSBEstimated } from '../../../../../../services/sb/querySBEstimated';
 import { getTT } from '../../../../../../services/components/goOrder/sb/dataMapping';
 import { getCookie } from '../../../../../../services/components/layouts/cookieController';
 import { getWebId } from '../../../../../../services/components/goOrder/getWebId';
@@ -37,11 +38,21 @@ const OrderBoxBS = ({ type, orderData, product }) => {
     const [orderBoxData, setOrderBoxData] = useState('');
     const dispatch = useDispatch();
     const { Option } = Select;
-    useEffect(() => {
-        if (stockInfo['@StockID']) {
-            let val = getTransactionCost(valNum, valPrice, bs, stockInfo['@Currency']);
+    const broker_id = useSelector(store => store.user.currentAccount.broker_id);
+    const account = useSelector(store => store.user.currentAccount.account);
+
+    useEffect(async () => {
+        if (stockInfo['@StockID'] && valPrice && valNum) {
+            let val = await fetchSBEstimated(
+                stockInfo['@Exch'],
+                bs,
+                parseFloat(valPrice),
+                parseFloat(valNum),
+                broker_id,
+                account,
+            );
             // console.log('試算', valNum, valPrice, bs, stockInfo['@Currency'], val);
-            setTransactionCost(val);
+            setTransactionCost(val.amount);
         }
     }, [valNum, valPrice, bs, stockInfo]);
 
@@ -225,7 +236,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             let num = result[key].lotSize || result[key].lotSize || '';
             setValPrice(price);
             // if(type=== 'p'){
-              setValNum(num);  
+            setValNum(num);
             // }
         } catch (error) {
             console.log(error);

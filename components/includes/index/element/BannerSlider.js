@@ -42,7 +42,7 @@ const BannerSlider = () => {
                     {Array.isArray(ads) &&
                         ads.map((e, i) => (
                             <div key={i}>
-                                <a href={e.url} rel="noreferrer noopener">
+                                <a href={e.url} rel="noreferrer noopener" target={e.isBlank ? '_blank' : '_self'}>
                                     {/* <h3
                                         style={
                                             clientWidth > 450

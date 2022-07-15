@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, ConfigProvider } from 'antd';
 import { Link } from 'next/link';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getCommonQuestion } from '../../../../../services/components/customerSupport/commonQuestion';
 import { useRouter } from 'next/router';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import noDataImg from '../../../../../resources/images/components/productQuestion/empty.png';
+import { setGoBackPath } from '../../../../../store/general/action';
 
 const ProductQuestionTable = function ({ keywords }) {
     const router = useRouter();
@@ -17,7 +19,7 @@ const ProductQuestionTable = function ({ keywords }) {
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const clientWidth = useSelector(store => store.layout.winWidth);
-
+    const dispatch = useDispatch();
     const scrollTop = () => {
         if (clientWidth <= 450) {
             window.scrollTo({
@@ -28,11 +30,14 @@ const ProductQuestionTable = function ({ keywords }) {
     };
 
     useEffect(async () => {
-        const res = await getCommonQuestion(null, keywords, 1, 1000, null);
-        setTotalQuestion(res.counts);
-        setTotalPages(res.counts / 2);
-        if (res.dataList.length) {
-            setQuestionList(res.dataList);
+        console.log('-------keywords', keywords);
+        if (keywords) {
+            const res = await getCommonQuestion(null, keywords, 1, 1000, null);
+            setTotalQuestion(res.counts);
+            setTotalPages(res.counts / 2);
+            if (res.dataList.length) {
+                setQuestionList(res.dataList);
+            }
         }
     }, [keywords]);
 
@@ -55,6 +60,18 @@ const ProductQuestionTable = function ({ keywords }) {
     };
 
     const toQuestion = questionUUID => {
+        let dynmaicPath = '';
+        dynmaicPath = router.pathname.split('[');
+        if (dynmaicPath.length > 1) {
+            dynmaicPath = dynmaicPath[1].substring(0, dynmaicPath[1].length - 1);
+        } else {
+            dynmaicPath = '';
+        }
+        if (router.query[dynmaicPath]) {
+            dispatch(setGoBackPath(`${router.asPath}`));
+        } else {
+            dispatch(setGoBackPath(`${router.pathname}${window.location.search}`));
+        }
         router.push(`/customer-support/question/${questionUUID}`);
     };
 
@@ -89,29 +106,38 @@ const ProductQuestionTable = function ({ keywords }) {
         },
     ];
 
+    const customizeRenderEmpty = () => (
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <img src={noDataImg}></img>
+            <p style={{ color: '#6c7b94', marginTop: '12px', fontSize: '16px', fontWeight: 'bold' }}>{'暫無資訊'}</p>
+        </div>
+    );
+
     return (
         <>
-            <Table
-                className="product-question-table"
-                columns={columns}
-                dataSource={questionList}
-                rowKey="id"
-                total={totalQuestion}
-                pagination={
-                    clientWidth <= 450
-                        ? null
-                        : {
-                              position: ['bottomRight'],
-                              defaultPageSize: 15,
-                              defaultCurrent: 1,
-                              pageSize: 15,
-                              showSizeChanger: false,
-                              total: questionList.length,
-                              showTotal: (total, range) => `${range[0]}-${range[1]}則問題（共${total}則問題）`,
-                              onChange: scrollTop,
-                          }
-                }
-            />
+            <ConfigProvider renderEmpty={customizeRenderEmpty}>
+                <Table
+                    className="product-question-table"
+                    columns={columns}
+                    dataSource={questionList}
+                    rowKey="id"
+                    total={totalQuestion}
+                    pagination={
+                        clientWidth <= 450
+                            ? null
+                            : {
+                                  position: ['bottomRight'],
+                                  defaultPageSize: 15,
+                                  defaultCurrent: 1,
+                                  pageSize: 15,
+                                  showSizeChanger: false,
+                                  total: questionList.length,
+                                  showTotal: (total, range) => `${range[0]}-${range[1]}則問題（共${total}則問題）`,
+                                  onChange: scrollTop,
+                              }
+                    }
+                />
+            </ConfigProvider>
             <InfiniteScroll dataLength={totalQuestion} next={mobileNextPage} hasMore={mobileCurrentPage < totalPages}>
                 <div className="question-table-mobile">
                     {mobileQuestionList.length

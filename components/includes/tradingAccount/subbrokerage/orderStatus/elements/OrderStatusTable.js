@@ -33,7 +33,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
     const [reload, setReload] = useState(0);
     const currentReload = useRef(0);
     const postData = useMemo(() => {
-        if (currentAccount.account != null) {
+        if (currentAccount.account != null && currentAccount.accttype === 'H') {
             const postData = {
                 AID: currentAccount.broker_id + currentAccount.account,
                 orderID: '',
@@ -73,6 +73,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
 
     useEffect(() => {
         if (Array.isArray(fetchData)) {
+            console.log('----------QuickSearch', fetchData);
             setError('');
             const newSymbolList = [];
             const newData = fetchData.map((item, index) => {
@@ -91,6 +92,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
 
     useEffect(() => {
         if (nameData?.length > 0) {
+            console.log('----------nameData', nameData);
             let newData = fetchData?.map(item => {
                 const symbol = item.StockID.substring(0, item.StockID.lastIndexOf('.'));
                 item.name = symbol;
@@ -108,6 +110,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
     }, [nameData, fetchData]);
 
     useEffect(() => {
+        // const newColumns = [];
         const newColumns = [
             {
                 title: '動作',
@@ -204,6 +207,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                     const priceType = getPriceType(record.PriceType);
                     const icons = goOrderMapping(priceType, record.GTCDate);
                     const marketID = record.StockID.split('.').slice(-1).pop();
+                    console.log('-------', priceType, icons, marketID);
                     return (
                         <span style={{ opacity: record.State === '99' ? 0.45 : 1 }}>
                             {marketID === 'US' && (
@@ -416,7 +420,6 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
                 ),
                 filteredValue: [marketFilterValue] || null,
                 onFilter: (value, record) => {
-                    // console.log('record.........',value, record);
                     const marketID = record.StockID.split('.').slice(-1).pop();
                     const market = marketName(marketID).name;
                     if (value === 'ALL' || value === '') {
@@ -499,7 +502,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
     );
 
     const changeSelectedHandler = useCallback((selectedRowKeys, selectedRows) => {
-        console.log('sssss', selectedRowKeys, selectedRows);
+        // console.log('sssss', selectedRowKeys, selectedRows);
         setSelectedRowKeys(selectedRowKeys);
         if (showDelBtn != null) {
             showDelBtn(selectedRows);
@@ -552,7 +555,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
         }
     });
 
-    console.log('searchColumns......', currentReload.current, controlReload, fetchData);
+    // console.log('searchColumns......', currentReload.current, controlReload, fetchData);
     return (
         <div>
             <AccountTable

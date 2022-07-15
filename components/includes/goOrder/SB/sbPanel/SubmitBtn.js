@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { themeColor } from '../../panel/PanelTabs';
 import { formatNum } from '../../../../../services/formatNum';
 import { getTransactionCost } from '../../../../../services/components/goOrder/sb/getTransitionCost';
+import { fetchSBEstimated } from '../../../../../services/sb/querySBEstimated';
 import {
     setConfirmBoxColor,
     setConfirmBoxOpen,
@@ -24,14 +25,23 @@ const SubmitBtn = ({ text, ...props }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const quote = useSelector(store => store.goOrderSB.quote);
     const aon = useSelector(store => store.goOrderSB.aon);
+    const broker_id = useSelector(store => store.user.currentAccount.broker_id);
+    const account = useSelector(store => store.user.currentAccount.account);
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    useEffect(async () => {
         let cost = '';
-        if (stockInfo['@Currency'] != null) {
-            cost = getTransactionCost(qty, price, bs, stockInfo['@Currency']);
+        if (stockInfo['@Currency'] != null && qty && price) {
+            cost = await fetchSBEstimated(
+                stockInfo['@Exch'],
+                bs,
+                parseFloat(price),
+                parseFloat(qty),
+                broker_id,
+                account,
+            );
         }
-        dispatch(setTransactionCost(cost));
+        dispatch(setTransactionCost(cost.amount));
     }, [bs, stockInfo, qty, price]);
 
     const submitHandler = (bs, price, qty, touch, TouchedPrice, currentAccount, quote, aon) => {

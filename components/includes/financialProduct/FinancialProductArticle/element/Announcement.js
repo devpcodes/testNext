@@ -1,24 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import noDataImg from '../../../../../resources/images/components/productQuestion/empty.png';
 
 const Announcement = ({ data }) => {
+    const customizeRenderEmpty = () => {
+        const myStyle = {
+            textAlign: 'center',
+            marginTop: 0,
+            border: '1px solid #d7e0ef',
+            padding: '42px 8px 32px 8px',
+            backgroundColor: '#fff',
+        };
+        return (
+            <div style={myStyle}>
+                <img src={noDataImg}></img>
+                <p style={{ color: '#6c7b94', marginTop: '12px', fontSize: '16px', fontWeight: 'bold' }}>
+                    {'暫無資訊'}
+                </p>
+            </div>
+        );
+    };
+    console.log('data.............', data);
     return (
         <>
-            <div className="announcement_section">
-                {data
-                    ? data.map(item => {
-                          return (
-                              <div key={item.articleGUID} className="announcement_block">
-                                  <Link href={`/AnnouncementPage/?GUID=${item.articleGUID}`}>
-                                      <a>{item.title}</a>
-                                  </Link>
-                                  <p className="announcement-date">{item.postTime}</p>
-                              </div>
-                          );
-                      })
-                    : null}
-            </div>
+            {data.length === 0 ? (
+                customizeRenderEmpty()
+            ) : (
+                <div className="announcement_section">
+                    {data
+                        ? data.map(item => {
+                              return (
+                                  <div key={item.articleGUID} className="announcement_block">
+                                      <Link href={`/AnnouncementPage/?GUID=${item.articleGUID}`}>
+                                          <a>{item.title}</a>
+                                      </Link>
+                                      <p className="announcement-date">{item.postTime}</p>
+                                  </div>
+                              );
+                          })
+                        : null}
+                </div>
+            )}
             <style jsx>{`
                 .announcement_section {
                     padding: 32px;

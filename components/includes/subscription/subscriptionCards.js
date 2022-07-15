@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
-const SubscriptionCards = memo(({ stockData, onActionClick }) => {
-    console.log(stockData);
+const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, footerHidden, settingDate }) => {
+    // console.log(stockData);
 
     const formatDate = date => {
         return `${date.slice(4, 6)}/${date.slice(6, 8)}`;
@@ -12,16 +12,34 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
         return (amount + '').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
     };
 
+    const getDateClassName = date => {
+        let dateClassName = '';
+        let today = +new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
+        const sdate = +new Date(date.slice(0, 4), date.slice(4, 6), date.slice(6, 8));
+        if (settingDate) {
+            today = +new Date(settingDate.getFullYear(), settingDate.getMonth() + 1, settingDate.getDate());
+        }
+        // console.log(today, sdate);
+        if (today > sdate) {
+            dateClassName = 'before';
+        } else if (today === sdate) {
+            dateClassName = 'now';
+        } else if (today < sdate) {
+            dateClassName = 'after';
+        }
+        return `time__course ${dateClassName}`;
+    };
+
     return (
         <>
-            <div className="subscriptionCards">
+            <div>
                 <div className="subscriptionCards__header">
                     <div className="subscriptionCards__title">
                         <div className="name">{stockData.stockName}</div>
                         <div className="code">{stockData.stockId}</div>
                     </div>
                     <div className="action">{stockData.marketStatus}</div>
-                    <div className="status">{stockData.status}</div>
+                    <div className="status">{stockData.statusMessage}</div>
                 </div>
                 <div className="subscriptionCards__body">
                     <div className="info">
@@ -31,7 +49,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">總申購張數</div>
-                            <div className="info__cell__amount">{formatAmount(stockData.share)}</div>
+                            <div className="info__cell__amount">{formatAmount(parseInt(stockData.share / 1000))}</div>
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">市價</div>
@@ -39,7 +57,9 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">申購張數</div>
-                            <div className="info__cell__amount">{formatAmount(stockData.applyShare)}</div>
+                            <div className="info__cell__amount">
+                                {formatAmount(parseInt(stockData.applyShare / 1000))}
+                            </div>
                         </div>
                     </div>
                     <div className={stockData.diffPrice > 0 ? 'price__difference up' : 'price__difference down'}>
@@ -51,32 +71,32 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                         </span>
                     </div>
                     <div className="time__block">
-                        <div className="time__course">
+                        <div className={getDateClassName(stockData.beginDate)}>
                             <div className="step"> 開始 </div>
                             <div className="point"></div>
                             <div className="date"> {formatDate(stockData.beginDate)} </div>
                         </div>
-                        <div className="time__course">
+                        <div className={getDateClassName(stockData.endDate)}>
                             <div className="step"> 截止 </div>
                             <div className="point"></div>
                             <div className="date"> {formatDate(stockData.endDate)} </div>
                         </div>
-                        <div className="time__course">
+                        <div className={getDateClassName(stockData.feeDate)}>
                             <div className="step"> 扣款 </div>
                             <div className="point"></div>
                             <div className="date"> {formatDate(stockData.feeDate)} </div>
                         </div>
-                        <div className="time__course">
+                        <div className={getDateClassName(stockData.lotDate)}>
                             <div className="step"> 抽籤 </div>
                             <div className="point"></div>
                             <div className="date"> {formatDate(stockData.lotDate)} </div>
                         </div>
-                        <div className="time__course">
+                        <div className={getDateClassName(stockData.moneyDate)}>
                             <div className="step"> 退款 </div>
                             <div className="point"></div>
                             <div className="date"> {formatDate(stockData.moneyDate)} </div>
                         </div>
-                        <div className="time__course">
+                        <div className={getDateClassName(stockData.stkDate)}>
                             <div className="step"> 撥券 </div>
                             <div className="point"></div>
                             <div className="date"> {formatDate(stockData.stkDate)} </div>
@@ -84,32 +104,38 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                         <hr className="time__line" />
                     </div>
                 </div>
-
-                <div className="subscriptionCards__footer">
-                    <button
-                        className="action__btn buy"
-                        onClick={() => onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
-                    >
-                        立即申購
-                    </button>
-                </div>
+                {footerHidden ? (
+                    ''
+                ) : (
+                    <div className="subscriptionCards__footer">
+                        {stockData.canOrder ? (
+                            <button
+                                className="action__btn buy"
+                                onClick={() =>
+                                    onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
+                                }
+                            >
+                                立即申購
+                            </button>
+                        ) : stockData.canCancelOrder ? (
+                            <button
+                                className="action__btn buy"
+                                onClick={() =>
+                                    onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
+                                }
+                            >
+                                立即取消
+                            </button>
+                        ) : (
+                            <button disabled className="action__btn disabled">
+                                {stockData.statusMessage}
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
 
             <style jsx>{`
-                .subscriptionCards {
-                    border: solid 1px #d7e0ef;
-                    padding: 24px;
-                    width: 30%;
-                    margin-top: 24px;
-                    height: 400px;
-                    max-height: 400px;
-                    min-height: 400px;
-                    margin-bottom: 20px;
-                    margin-right: 5%;
-                }
-                .subscriptionCards:nth-child(3n) {
-                    margin-right: 0;
-                }
                 .subscriptionCards__header {
                     position: relative;
                     border-bottom: solid 1px #d7e0ef;
@@ -152,18 +178,60 @@ const SubscriptionCards = memo(({ stockData, onActionClick }) => {
                     text-align: center;
                     z-index: 1;
                 }
-                .time__course .point {
+                .dot {
+                    background: #fff;
+                    padding: 0 4px;
+                    width: fit-content;
+                    margin: 0 auto;
+                }
+                .dot::before {
+                    content: '';
+                    display: inline-block;
+                    border: 2px solid #d7e0ef;
                     width: 12px;
                     height: 12px;
+                    border-radius: 8px;
                     background: #3f5372;
-                    border-radius: 50%;
+                }
+                .time__course .point {
+                    background: #fff;
+                    padding: 0 3px;
+                    width: fit-content;
+                    margin: 0 auto;
+                }
+                .time__course .point::before {
+                    content: '';
+                    display: inline-block;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 8px;
+                    vertical-align: middle;
+                }
+                .time__course.before > div {
+                    color: #6c7b94;
+                }
+                .time__course.before .point::before {
+                    background: #a9b6cb;
                     border: solid 2px #d7e0ef;
-                    margin: 5px auto;
+                }
+                .time__course.after > div {
+                    color: #0d1623;
+                }
+                .time__course.after .point::before {
+                    background: #3f5372;
+                    border: solid 2px #d7e0ef;
+                }
+                .time__course.now > div {
+                    color: #c43826;
+                }
+                .time__course.now .point::before {
+                    background: #c43826;
+                    border: solid 2px #ebbdb7;
                 }
                 .time__line {
                     width: 84%;
                     position: absolute;
-                    top: 47%;
+                    top: 44%;
                     border: none;
                     background: #d7e0ef;
                     height: 1px;
