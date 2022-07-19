@@ -26,7 +26,7 @@ export const useLoanAccount = token => {
             accounts.map(item => {
                 for (let index = 0; index < res.result.length; index++) {
                     const element = res.result[index];
-                    if (element.status === 'A' && element.account === item.account) {
+                    if ((element.status === 'A' || element.status === 'F') && element.account === item.account) {
                         loanAccounts.push(item);
                         return;
                     }
