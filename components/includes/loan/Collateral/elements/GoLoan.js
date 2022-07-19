@@ -396,7 +396,10 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
     };
 
     const submitDataHandler = data => {
-        const newData = data.map(element => {
+        let filterData = data.filter(item => {
+            return item.expectedCollateralShare != 0;
+        });
+        const newData = filterData.map(element => {
             return {
                 stockId: element.stockId,
                 collateralQty: String(element.expectedCollateralShare),

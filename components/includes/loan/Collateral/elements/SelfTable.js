@@ -461,7 +461,13 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
         const token = getToken();
         try {
             setLoading(true);
-            let result = await fetchApplyInfo(token, currentAccount.broker_id, currentAccount.account, applyDate);
+            let result = await fetchApplyInfo(
+                token,
+                currentAccount.broker_id,
+                currentAccount.account,
+                applyDate,
+                currentKey,
+            );
             setLoading(false);
             const selectedKeys = [];
             result.forEach((item, index) => {

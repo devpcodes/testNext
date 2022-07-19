@@ -1,11 +1,15 @@
 import { getA8StpInstance } from '../../../myAxios';
 import moment from 'moment';
-export const fetchApplyInfo = async function (token, branch, account, applyDate) {
+export const fetchApplyInfo = async function (token, branch, account, applyDate, currentKey) {
     if (applyDate == null || applyDate === '') {
         applyDate = moment().format('YYYYMMDD');
     }
     try {
-        const url = '/loan/api/applyInfo';
+        var url = '/loan/api/applyInfo';
+        if (currentKey === 'notGuaranteed' || currentKey === 'guaranteed') {
+            url = '/loan/api/collateralDeatil';
+        }
+
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
             params: {
