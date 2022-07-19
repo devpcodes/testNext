@@ -52,15 +52,19 @@ const OverviewComponent = () => {
         const token = getToken();
         try {
             const res = await fetchAccountOverview(token, currentAccount.broker_id, currentAccount.account);
-            if (res[0]?.status === 'F' && blockReason == '1') {
-                accountDetailHandler();
-            }
             setAccountOverview(res[0]);
             setFinancing(res[0].financing);
         } catch (error) {
             // message.error('');
         }
     };
+
+    useEffect(() => {
+        //1
+        if (accountOverview.status === 'F' && accountOverview.blockReason == '1') {
+            accountDetailHandler();
+        }
+    }, [accountOverview]);
 
     const tabClickHandler = key => {
         setCurrent(key);
@@ -87,6 +91,7 @@ const OverviewComponent = () => {
                         {accountOverview.status === 'A' && '正常'}
                         {accountOverview.status === 'D' && '已銷戶'}
                         {accountOverview.status === 'F' && '凍結'}
+                        {accountOverview.status === 'F' && accountOverview.blockReason == '1' && '未開通'}
                     </div>
                 </div>
                 <div className="account__item">
