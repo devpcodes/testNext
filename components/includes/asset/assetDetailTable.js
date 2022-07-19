@@ -354,11 +354,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__namt: (
+                            qty__amt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.namt)}
+                                    {formatNum(data.amt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
