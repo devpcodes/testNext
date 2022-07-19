@@ -254,7 +254,7 @@ const LoanIndex = () => {
                             type="primary"
                             onClick={btnHref.bind(
                                 null,
-                                'https://strd.sinotrade.com.tw/exopact/ApplyLNA01?strProd=0002&strWeb=0001',
+                                'https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001',
                             )}
                         >
                             立即申辦
