@@ -239,7 +239,7 @@ const RecordLoanTable = ({
                                 )}
                             </tbody>
                         </table>
-                        {record.collateral.length >= 3 ? (
+                        {record.collateral.length > 3 ? (
                             <a className="checkMore_b" onClick={openMoreModal.bind(null, record.key)}>
                                 查看更多
                             </a>

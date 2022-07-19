@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
+import { setModal } from '../../../../../store/components/layouts/action';
 import {
     repaymentDetail,
     collateralDeatil,
@@ -18,6 +19,7 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
+    const dispatch = useDispatch();
     useEffect(() => {
         setData(detailList);
         setTotal(detailList.length);
@@ -92,6 +94,12 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
         setCurrentPage(val);
     };
 
+    const dataReturn = val => {
+        return `
+       <p>TESTT</p> 
+        `;
+    };
+
     const handleTableChange = (pagination, filters, sorter) => {
         // console.log('------------.-', pagination, statusFilterValue, sorter);
         // if (sorter.columnKey === 'orderAmount') {
@@ -114,10 +122,9 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
 
     const stockModal = active => {
         let st = stockList;
+        console.log(stockList);
         if (active !== 'all') {
-            st = st.filter(x => {
-                x.group === active;
-            });
+            st = st.filter(x => x.group === active);
             console.log(active, st);
         }
         dispatch(
@@ -161,26 +168,28 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                     <p>還款明細</p>
                     <div>
                         <table className="detail">
-                            <tr>
-                                <td>本金</td>
-                                <td>{record.repayment}</td>
-                            </tr>
-                            <tr>
-                                <td>利息</td>
-                                <td>{record.paid}</td>
-                            </tr>
-                            <tr>
-                                <td>手續費</td>
-                                <td>{record.writeOffFee}</td>
-                            </tr>
-                            <tr>
-                                <td>撥券費</td>
-                                <td>{record.writeOffTransFee}</td>
-                            </tr>
-                            <tr>
-                                <td>設質費</td>
-                                <td>{record.unpaidPledgeFee}</td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td>本金</td>
+                                    <td>{record.repayment}</td>
+                                </tr>
+                                <tr>
+                                    <td>利息</td>
+                                    <td>{record.paid}</td>
+                                </tr>
+                                <tr>
+                                    <td>手續費</td>
+                                    <td>{record.writeOffFee}</td>
+                                </tr>
+                                <tr>
+                                    <td>撥券費</td>
+                                    <td>{record.writeOffTransFee}</td>
+                                </tr>
+                                <tr>
+                                    <td>設質費</td>
+                                    <td>{record.unpaidPledgeFee}</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -190,25 +199,31 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                         <table className="detail">
                             <tbody>
                                 {record.group ? (
-                                    stockList.map((x, i) => {
-                                        if (x.group == record.group) {
-                                            return (
-                                                <tr key={i}>
-                                                    <td>
-                                                        {x.stockId} {x.stockName}
-                                                    </td>
-                                                    <td>{Number(x.collateralQty) - Number(x.notReturnedQty)} 張</td>
-                                                </tr>
-                                            );
-                                        }
-                                    })
+                                    stockList
+                                        .filter(f => f.group == record.group)
+                                        .map((x, i) => {
+                                            if (i < 3) {
+                                                return (
+                                                    <tr key={i}>
+                                                        <td>
+                                                            {x.stockId} {x.stockName}
+                                                        </td>
+                                                        <td>{Number(x.collateralQty) - Number(x.notReturnedQty)} 張</td>
+                                                    </tr>
+                                                );
+                                            }
+                                        })
                                 ) : (
-                                    <div className="noData">尚無符合資料</div>
+                                    <tr>
+                                        <td>
+                                            <div className="noData">尚無符合資料</div>
+                                        </td>
+                                    </tr>
                                 )}
                             </tbody>
                         </table>
-                        {record.collateral.length >= 3 ? (
-                            <a className="checkMore_b" onClick={stockModal.bind(null, record.key)}>
+                        {stockList.filter(f => f.group == record.group).length > 3 ? (
+                            <a className="checkMore_b" onClick={stockModal.bind(null, record.group)}>
                                 查看更多
                             </a>
                         ) : (

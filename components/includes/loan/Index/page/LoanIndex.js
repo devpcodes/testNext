@@ -343,7 +343,7 @@ const LoanIndex = () => {
                                     </p>
                                     <p>
                                         <span>撥券費</span>
-                                        <span>25 元</span>
+                                        <span>{sliderValue} 元</span>
                                     </p>
                                 </div>
                                 <Button type="primary" onClick={btnHref.bind(null, '/newweb/loan-zone/Collateral')}>
