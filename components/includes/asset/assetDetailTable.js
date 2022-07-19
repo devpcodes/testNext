@@ -326,7 +326,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             // { title : '類別' , dataIndex : 'ttypename'},
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
                             { title: '庫存/市值', dataIndex: 'qty__namt' },
-                            { title: '損益/報酬率', dataIndex: 'unreal__ur_ratio' },
+                            { title: '損益/報酬率', dataIndex: 'unreal__urratio' },
                         ],
                         creditdn: [
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
