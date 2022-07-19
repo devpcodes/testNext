@@ -207,7 +207,7 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
                                 )}
                             </tbody>
                         </table>
-                        {record.collateral ? (
+                        {record.collateral.length >= 3 ? (
                             <a className="checkMore_b" onClick={stockModal.bind(null, record.key)}>
                                 查看更多
                             </a>
