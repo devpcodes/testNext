@@ -251,7 +251,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         avgprice: data.avgprice,
                         cost: data.cost,
                         unreal: data.unreal,
-                        ur_ratio: data.urratio,
+                        urratio: data.urratio,
                         modalTitle: data.stocknm,
                     });
 
@@ -267,11 +267,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
                                 {formatNum(data.unreal)}
                                 <br />
-                                {data.ur_ratio}
+                                {data.urratio}
                             </div>
                         ),
-                        ur_ratio: (
-                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.ur_ratio}</div>
+                        urratio: (
+                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.urratio}</div>
                         ),
                         modalTitle: data.stocknm,
                     });
@@ -387,11 +387,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {formatNum(data.namt)}
                                 </div>
                             ),
-                            unreal__ur_ratio: (
+                            unreal__urratio: (
                                 <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
                                     {formatNum(data.unreal)}
                                     <br />
-                                    {data.ur_ratio}
+                                    {data.urratio}
                                 </div>
                             ),
                         });
@@ -1910,8 +1910,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     realTimePrtLosSum?.BOND?.data.map((data, index) => {
                         BONDMobileTableData.push({
                             symbol: data.symbol,
-                            trade_cur: formatNum(data.trade_cur),
-                            total_pv: data.total_pv,
+                            trade_cur: data.trade_cur,
+                            total_pv: formatNum(data.total_pv),
                             total_value: formatNum(data.total_value),
                             total_value_twd: formatNum(data.total_value_twd),
                         });
