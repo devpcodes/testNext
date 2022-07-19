@@ -43,7 +43,7 @@ const OverviewComponent = () => {
     }, [haveLoanAccount]);
 
     useEffect(() => {
-        if (currentAccount.idno != null) {
+        if (currentAccount?.idno != null) {
             debounce(getAccountOverview, 500);
         }
     }, [currentAccount]);
@@ -58,7 +58,7 @@ const OverviewComponent = () => {
             setAccountOverview(res[0]);
             setFinancing(res[0].financing);
         } catch (error) {
-            message.error(error);
+            // message.error('');
         }
     };
 

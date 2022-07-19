@@ -11,7 +11,7 @@ export const useLoanAccount = token => {
     const [haveLoanAccount, setHaveLoanAccount] = useState(null);
     const userSettings = useSelector(store => store.user.userSettings);
     useEffect(() => {
-        if (isLogin && userSettings?.id != null) {
+        if (isLogin && userSettings?.confirmAfterStockOrdered != null) {
             // setTimeout(() => {
             //     getAccountStatus();
             // }, 500);
@@ -32,9 +32,13 @@ export const useLoanAccount = token => {
                     }
                 }
             });
-            // console.log('account....', loanAccounts);
-            setHaveLoanAccount(true);
-            dispatch(setCurrentAccount(loanAccounts[0]));
+            console.log('loanAccounts................', loanAccounts);
+            if (loanAccounts.length > 0) {
+                setHaveLoanAccount(true);
+                dispatch(setCurrentAccount(loanAccounts[0]));
+            } else {
+                setHaveLoanAccount(false);
+            }
         } else {
             setHaveLoanAccount(false);
         }
