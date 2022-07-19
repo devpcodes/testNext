@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import TimeLine from '../../subscription/timeLine';
 const stockData = {
     currentDate: '20220715',
@@ -9,6 +10,7 @@ const stockData = {
     stkDate: '20220725',
 };
 const TimeLineBox = ({ style }) => {
+    const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div className="timeLine__container" style={style}>
             <div className="timeLine__head">
@@ -67,6 +69,11 @@ const TimeLineBox = ({ style }) => {
                 }
                 .val {
                     color: #0d1623;
+                }
+                @media (max-width: 768px) {
+                    .timeLine__left {
+                        margin-right: 12px;
+                    }
                 }
             `}</style>
         </div>

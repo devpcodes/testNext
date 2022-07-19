@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { getCommonQuestionCategories } from '../../../services/components/customerSupport/customerSupportService';
 
-function BreadcrumbLayout({ articleTitle, categoryName }) {
+function BreadcrumbLayout({ articleTitle, categoryName, style }) {
     // const routeList = useSelector(state => state.breadcrumb.routeList);
     const levelArr = useRef([]);
     const router = useRouter();
@@ -135,7 +135,7 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
 
     return (
         <>
-            <Breadcrumb className="site-breadcrumb">
+            <Breadcrumb className="site-breadcrumb" style={style}>
                 {_.uniq(BreadcrumbItemHandler()).map((item, index) => {
                     if (index !== BreadcrumbItemHandler().length - 1) {
                         let pathArr = _.clone(elementPathArr.current);
