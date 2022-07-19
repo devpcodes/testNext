@@ -325,16 +325,16 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         unreal: [
                             // { title : '類別' , dataIndex : 'ttypename'},
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt' },
                             { title: '損益/報酬率', dataIndex: 'unreal__ur_ratio' },
                         ],
                         creditdn: [
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt' },
                         ],
                         lenddn: [
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt' },
                         ],
                     });
 
@@ -354,11 +354,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
@@ -380,11 +380,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
@@ -406,11 +406,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
@@ -432,11 +432,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
@@ -1289,7 +1289,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setColumnData({
                         WM_FUND: [
                             { title: '商品/幣別', dataIndex: 'fund_name__purchase_cur' },
-                            { title: '淨值/市值', dataIndex: 'nav__nav_cost' },
+                            { title: '淨值/市值', dataIndex: 'nav__namt' },
                             { title: '損益/台幣市值', dataIndex: 'prtlos__amount_twd' },
                             { title: '累計配息/含息報酬率', dataIndex: 'acc_dividend__roi_dividend' },
                         ],
@@ -1307,11 +1307,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.purchase_cur}
                                 </div>
                             ),
-                            nav__nav_cost: (
+                            nav__namt: (
                                 <div>
                                     {formatNum(data.nav)}
                                     <br />
-                                    {formatNum(data.nav_cost)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             prtlos__amount_twd: (
@@ -1897,7 +1897,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setColumnData({
                         BOND: [
                             { title: '商品名稱', dataIndex: 'symbol' },
-                            { title: '幣別', dataIndex: 'total_pv' },
+                            { title: '幣別', dataIndex: 'trade_cur' },
                             { title: '持有面額', dataIndex: 'total_pv' },
                             { title: '參考市值', dataIndex: 'total_value' },
                             { title: '參考市值(台幣)', dataIndex: 'total_value_twd' },
@@ -1910,10 +1910,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     realTimePrtLosSum?.BOND?.data.map((data, index) => {
                         BONDMobileTableData.push({
                             symbol: data.symbol,
+                            trade_cur: formatNum(data.trade_cur),
                             total_pv: data.total_pv,
                             total_value: formatNum(data.total_value),
                             total_value_twd: formatNum(data.total_value_twd),
-                            trade_cur: formatNum(data.trade_cur),
                         });
                     });
 
