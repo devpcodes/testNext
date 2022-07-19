@@ -1878,7 +1878,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         total_pv: data.total_pv,
                         total_value: formatNum(data.total_value),
                         total_value_twd: formatNum(data.total_value_twd),
-                        trade_cur: formatNum(data.trade_cur),
+                        trade_cur: data.trade_cur,
                         modalTitle: data.name,
                     });
                 });
