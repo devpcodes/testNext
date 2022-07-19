@@ -2,7 +2,7 @@ import { Menu, Tabs } from 'antd';
 import { useState, useCallback, useEffect } from 'react';
 import theme from '../../../../resources/styles/theme';
 
-const TopTabBar = ({ current, menuList, onClick, ...props }) => {
+const TopTabBar = ({ current, menuList, onClick, btnObj, ...props }) => {
     const [state, setState] = useState({ current: 'all' });
     const { TabPane } = Tabs;
     const handleClick = key => {
@@ -20,7 +20,26 @@ const TopTabBar = ({ current, menuList, onClick, ...props }) => {
                         return <TabPane tab={x.title} key={x.key}></TabPane>;
                     })}
                 </Tabs>
+                {btnObj != null && (
+                    <div className="btn" onClick={btnObj.onClick} style={btnObj.style}>
+                        <img src={btnObj.icon} style={{ marginRight: 2, marginTop: -3 }} />
+                        {btnObj.text}
+                    </div>
+                )}
             </div>
+            <style jsx>{`
+                .subBrokerage {
+                    position: relative;
+                }
+                .btn {
+                    position: absolute;
+                    right: 28px;
+                    top: 15px;
+                    font-size: 14px;
+                    color: #3f5372;
+                    cursor: pointer;
+                }
+            `}</style>
             <style jsx global>
                 {`
                 .subBrokerage.tab_box .ant-tabs-nav{margin-bottom:0;background-color: #FFF;border: 1px solid #d7e0ef; border-width: 1px 1px 0 1px;}

@@ -25,6 +25,7 @@ const LoanCalculation = ({
     currentKey,
     submitData,
     goLoanHandler,
+    getPhone,
 }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     // const [hasSubmitAccount, setHasSubmitAccount] = useState(false);
@@ -61,6 +62,7 @@ const LoanCalculation = ({
     const getRepaymentAccount = async () => {
         try {
             const res = await fetchRepaymentAccount(getToken(), currentAccount.broker_id);
+            getPhone(res.phone);
             setRepaymentAcc(res);
         } catch (error) {
             message.error('伺服器錯誤');

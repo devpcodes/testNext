@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import SearchAutoComplete from '../../../tradingAccount/vipInventory/SearchAutoComplete';
 import SinoBtn from './SinoBtn';
-const SearchStock = ({ btnName, onClick }) => {
+const SearchStock = ({ btnName, onClick, style }) => {
     const [selected, setSelected] = useState('');
     const [width, setWidth] = useState('237px');
     const winWidth = useSelector(store => store.layout.winWidth);
@@ -18,7 +18,10 @@ const SearchStock = ({ btnName, onClick }) => {
             setWidth('170px');
         }
         if (winWidth <= 530) {
-            setWidth('100%');
+            setWidth('160px');
+        }
+        if (winWidth <= 360) {
+            setWidth('160px');
         }
     }, [winWidth]);
     const selectedHandler = bool => {
@@ -44,7 +47,7 @@ const SearchStock = ({ btnName, onClick }) => {
         }
     };
     return (
-        <div className="search__container">
+        <div className="search__container" style={style}>
             <SearchAutoComplete
                 width={width}
                 height="40px"
@@ -60,10 +63,10 @@ const SearchStock = ({ btnName, onClick }) => {
                 style={{
                     border: 'none',
                     outline: 'none',
-                    width: '122px',
+                    width: winWidth <= 530 ? '83px' : '100px',
                     height: '40px',
-                    fontSize: '16px',
-                    padding: winWidth <= 920 ? 0 : '9px 19px 9px 20px',
+                    fontSize: winWidth <= 530 ? '14px' : '16px',
+                    padding: winWidth <= 920 ? 0 : '0',
                     borderRadius: '0 2px 2px 0px',
                     backgroundColor: !selected ? 'rgb(230, 235, 245)' : '#c43826',
                     color: !selected ? 'color: rgb(169, 182, 203)' : 'white',
@@ -117,7 +120,7 @@ const SearchStock = ({ btnName, onClick }) => {
                     line-height: 41px;
                     color: #3f5372;
                 }
-                .autoComplete__container .ant-select-selector {
+                .autoComplete__container .ant-select-auto-complete .ant-select-selector {
                     height: 40px !important;
                     line-height: 40px !important;
                 }
@@ -131,6 +134,9 @@ const SearchStock = ({ btnName, onClick }) => {
                 @media (max-width: 450px) {
                     .autoComplete__container {
                         flex: 1;
+                    }
+                    .search__container .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                        font-size: 14px;
                     }
                 }
             `}</style>
