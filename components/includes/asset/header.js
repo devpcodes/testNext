@@ -24,17 +24,24 @@ const AssetHeader = memo(({ title }) => {
     };
 
     const [refreshTime, setrefreshTime] = useState(getTime());
+    const [canRefresh, setCanRefresh] = useState(true);
 
     const refreshAction = async () => {
-        const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
-        const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
-        if (res?.success != null && res?.success === true) {
-            dispatch(setRealTimePrtLosSum(res.result));
-            setrefreshTime(getTime());
-        } else {
-            Modal.error({
-                content: res === '伺服器錯誤' ? res : res.message,
-            });
+        if (canRefresh) {
+            setCanRefresh(false);
+            setTimeout(function () {
+                setCanRefresh(true);
+            }, 3000);
+            const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
+            const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
+            if (res?.success != null && res?.success === true) {
+                dispatch(setRealTimePrtLosSum(res.result));
+                setrefreshTime(getTime());
+            } else {
+                Modal.error({
+                    content: res === '伺服器錯誤' ? res : res.message,
+                });
+            }
         }
     };
     return (
