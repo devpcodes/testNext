@@ -301,7 +301,7 @@ const LoanIndex = () => {
                             <div className="countBoxLeftContent">
                                 <div className="dataRow">
                                     <div className="DataTitle">擔保商品</div>
-                                    <div className="DataInfo">2890 永豐金</div>
+                                    <div className="DataInfo">2330 台積電</div>
                                 </div>
                                 <div className="dataRow">
                                     <div className="DataTitle">擔保張數</div>
