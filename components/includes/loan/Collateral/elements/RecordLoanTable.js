@@ -8,16 +8,7 @@ import VerticalTable from '../../overview/elements/VerticalTable';
 import { setModal } from '../../../../../store/components/layouts/action';
 import qrCode from '../../../../../resources/images/components/loanZone/demo.jpg';
 
-const RecordLoanTable = ({
-    refresh,
-    payableHandler,
-    rowData,
-    rowDataOther,
-    allData,
-    showMore,
-    stockList,
-    deleteApplyFunc,
-}) => {
+const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApplyFunc }) => {
     const [columns, setColumns] = useState([]);
     const [searchColumns, setSearchColumns] = useState([]);
     const [dataAll, setDataAll] = useState([]);
@@ -31,12 +22,13 @@ const RecordLoanTable = ({
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        let d_ = rowData.concat(rowDataOther);
         setData(rowData);
         setDataOther(rowDataOther);
+    }, [rowData, rowDataOther]);
+    useEffect(() => {
         setDataAll(allData);
         setTotal(allData.length);
-    }, [rowData, rowDataOther]);
+    }, [allData]);
 
     useEffect(() => {
         const myColumns = [

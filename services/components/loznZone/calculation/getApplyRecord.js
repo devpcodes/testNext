@@ -13,7 +13,7 @@ export const fetchApplyRecord = async function (token, branch, account) {
                 branch,
                 account,
                 startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
-                endDate: moment(date).format('YYYYMMDD'),
+                endDate: moment(date).add(7, 'D').format('YYYYMMDD'),
             },
         });
         console.log('applyRecord[res]', res);
@@ -84,7 +84,7 @@ export const applyStatus = async function (token, branch, account) {
                 branch,
                 account,
                 startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
-                endDate: moment(date).format('YYYYMMDD'),
+                endDate: moment(date).add(7, 'D').format('YYYYMMDD'),
             },
         });
         console.log('[applyStatus]', res);
