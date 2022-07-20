@@ -157,11 +157,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         {
                             title: '報酬率',
-                            dataIndex: 'ur_ratio',
+                            dataIndex: 'urratio',
                             align: 'right',
-                            render: ur_ratio => (
-                                <div class={parseFloat(ur_ratio) > 0 ? 'win' : parseFloat(ur_ratio) < 0 ? 'loss' : ''}>
-                                    {ur_ratio}
+                            render: urratio => (
+                                <div class={parseFloat(urratio) > 0 ? 'win' : parseFloat(urratio) < 0 ? 'loss' : ''}>
+                                    {urratio}
                                 </div>
                             ),
                             sorter: (a, b) => parseFloat(a.ur_ratio.slice(0, -1)) - parseFloat(b.ur_ratio.slice(0, -1)),
@@ -266,8 +266,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         unreal: (
                             <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
                                 {formatNum(data.unreal)}
-                                <br />
-                                {data.urratio}
                             </div>
                         ),
                         urratio: (
