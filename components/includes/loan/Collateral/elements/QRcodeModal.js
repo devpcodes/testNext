@@ -14,10 +14,10 @@ const QRcodeModal = ({ btnText, className }) => {
             value: (
                 <>
                     <p className="item__p" style={{ marginBottom: 0 }}>
-                        永豐銀807
+                        807永豐商業銀行 1262城中分行
                     </p>
                     <p className="item__p" style={{ marginBottom: 0 }}>
-                        123456789123
+                        12600100386717
                     </p>
                 </>
             ),
@@ -30,7 +30,7 @@ const QRcodeModal = ({ btnText, className }) => {
         },
         {
             label: '戶名',
-            value: '永豐證償還帳戶',
+            value: '永豐金證券公司客戶證券交割專戶',
             labelStyle: {
                 flex: '1.5 0 0',
             },
@@ -40,7 +40,7 @@ const QRcodeModal = ({ btnText, className }) => {
         },
         {
             label: '分公司電話',
-            value: '02-22222222',
+            value: '02-23495004',
             labelStyle: {
                 flex: '1.5 0 0',
             },
@@ -81,17 +81,7 @@ const QRcodeModal = ({ btnText, className }) => {
                             <VerticalTable
                                 data={data}
                                 style={{
-                                    marginRight: isMobile ? '0' : '18px',
                                     flex: '3 0 0',
-                                }}
-                            />
-                            <img
-                                src={qrCode}
-                                style={{
-                                    width: '145px',
-                                    height: '135px',
-                                    display: isMobile ? 'none' : 'inline-block',
-                                    flex: '1 0 0',
                                 }}
                             />
                         </div>
@@ -102,9 +92,7 @@ const QRcodeModal = ({ btnText, className }) => {
                                 marginBottom: 0,
                                 display: isMobile ? 'none' : 'block',
                             }}
-                        >
-                            此條碼支援銀行轉帳，掃描後即可轉帳。
-                        </p>
+                        ></p>
                     </>
                 ),
                 okText: '確認',
