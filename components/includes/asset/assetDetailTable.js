@@ -509,7 +509,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 realTimePrtLosSum?.F?.data.map((data, index) => {
                     futureWebTableData.push({
-                        stockName: data.stockName,
+                        stockName: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                         bs: data.bs === 'B' ? '買' : '賣',
                         currency: data.currency,
                         openq: data.openq,
@@ -518,11 +518,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         futeamt: data.futeamt,
                         otamt: formatNum(data.otamt),
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
-                        modalTitle: data.stockName,
+                        modalTitle: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                     });
 
                     futureModaleData.push({
-                        stockName: data.stockName,
+                        stockName: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                         bs: data.bs === 'B' ? '買' : '賣',
                         currency: data.currency,
                         openq: data.openq,
@@ -535,7 +535,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         ),
                         otamt: formatNum(data.otamt),
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
-                        modalTitle: data.stockName,
+                        modalTitle: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                     });
                 });
 
@@ -571,7 +571,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             ),
                             stockName__mprice: (
                                 <div>
-                                    {data.stockName}
+                                    {`${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`}
                                     <br />
                                     {data.mprice}
                                 </div>
