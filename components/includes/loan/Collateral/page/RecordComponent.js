@@ -9,6 +9,7 @@ import IconBtn from '../../../tradingAccount/vipInventory/IconBtn';
 import RecordTable from '../elements/RecordTable';
 import RecordLoanTable from '../elements/RecordLoanTable';
 import { useUser } from '../../../../../hooks/useUser';
+import { checkSignCA, sign } from '../../../../../services/webCa';
 import {
     repaymentDetail,
     collateralDeatil,
@@ -61,9 +62,10 @@ const RecordComponent = () => {
 
     useEffect(() => {
         let d_ = dataLoan.concat(dataOther);
+        console.log('[d_]', d_);
         setDataAll(d_);
         totalCount();
-    }, [dataLoan]);
+    }, [dataLoan, dataOther]);
 
     useEffect(() => {
         buildStockList();
@@ -72,7 +74,6 @@ const RecordComponent = () => {
     const totalCount = async () => {
         let TL = 0;
         let TM = 0;
-        console.log('[dataLoan]', dataLoan);
         await dataLoan.map((x, i) => {
             TL += Number(x.applyFinancing);
             TM +=
@@ -121,7 +122,7 @@ const RecordComponent = () => {
                 setDetailList(dt_arr);
                 setStockList(st_arr);
             }
-
+            console.log('[DataLoan]', res);
             setDataLoan(res);
             const res2 = await applyStatus(token, currentAccount.broker_id, currentAccount.account);
             let res2_ = await res2.filter(x => {
@@ -130,6 +131,7 @@ const RecordComponent = () => {
                     return x;
                 }
             });
+            console.log('[DataOther]', res2_);
             setDataOther(res2_);
         } catch (error) {
             dispatch(
@@ -222,7 +224,7 @@ const RecordComponent = () => {
     };
 
     const buildStockList = async () => {
-        console.log('[buildStockList]', stockList);
+        // console.log('[buildStockList]', stockList);
         let TR = 0;
         let arr = [];
         let obj = {};

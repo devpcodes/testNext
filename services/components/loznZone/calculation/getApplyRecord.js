@@ -1,6 +1,7 @@
 import { getA8StpInstance } from '../../../myAxios';
 import moment from 'moment';
 import { isArray } from 'lodash';
+
 export const fetchApplyRecord = async function (token, branch, account) {
     try {
         console.log('applyRecord[req]', [branch, account]);
@@ -75,7 +76,7 @@ export const collateralDeatil = async function (token, branch, account, date) {
 
 export const applyStatus = async function (token, branch, account) {
     try {
-        const url = '/loan/api/accountOverview';
+        const url = '/loan/api/applyStatus';
         const date = new Date();
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
@@ -124,13 +125,13 @@ export const deleteApply = async function (token, branch, account, date) {
 };
 
 export const getClose = async function (token) {
-    //永豐金 2890
+    //永豐金 2890 台積電 2330
     try {
         const url = '/loan/api/checkGreenChannelStock';
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
             params: {
-                stockId: '2890',
+                stockId: '2330',
             },
         });
         if (res.data.success) {
@@ -143,7 +144,6 @@ export const getClose = async function (token) {
     }
 };
 export const getAccountStatus = async function (token, branch, account) {
-    //永豐金 2890
     try {
         const url = '/loan/api/accountOverview';
         const res = await getA8StpInstance(false).get(url, {

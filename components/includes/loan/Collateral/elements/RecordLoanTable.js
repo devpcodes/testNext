@@ -22,7 +22,7 @@ const RecordLoanTable = ({
     const [searchColumns, setSearchColumns] = useState([]);
     const [dataAll, setDataAll] = useState([]);
     const [data, setData] = useState([]);
-    // const [dataOther, setDataOther] = useState([]);
+    const [dataOther, setDataOther] = useState([]);
     const [show, setShow] = useState(false);
     const pageSize = 10;
     const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +33,7 @@ const RecordLoanTable = ({
     useEffect(() => {
         let d_ = rowData.concat(rowDataOther);
         setData(rowData);
-        // setDataOther(rowDataOther);
+        setDataOther(rowDataOther);
         setDataAll(allData);
         setTotal(allData.length);
     }, [rowData, rowDataOther]);
