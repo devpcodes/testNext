@@ -337,7 +337,7 @@ const RecordComponent = () => {
                 </div>
                 <div className="flexBox sunBox">
                     <div className="sumItem">
-                        <p>已動用總金額</p>
+                        <p>申請動用總金額</p>
                         <div>${totalTL}</div>
                     </div>
                     <div className="sumItem">

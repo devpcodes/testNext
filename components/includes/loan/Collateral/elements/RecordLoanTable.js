@@ -105,7 +105,7 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 },
             },
             {
-                title: '已動用金額',
+                title: '申請動用金額',
                 width: '100px',
                 dataIndex: 'applyFinancing',
                 key: 'applyFinancing',

@@ -84,10 +84,9 @@ export const applyStatus = async function (token, branch, account) {
                 branch,
                 account,
                 startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
-                endDate: moment(date).add(7, 'D').format('YYYYMMDD'),
+                endDate: moment(date).add(7, 'd').format('YYYYMMDD'),
             },
         });
-        console.log('[applyStatus]', res);
         if (res.data.success) {
             let d_ = res.data.result;
             d_.map((x, i) => {
