@@ -137,13 +137,13 @@ const assetDetailContainer = memo(({ tabType }) => {
                     parseInt(realTimePrtLosSumTotal) != 0
                         ? parseFloat(
                               ((parseInt(realTimePrtLosSum?.F?.sum_balv) +
-                                  parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd)) /
+                                  parseInt(realTimePrtLosSum?.FF?.sum_dbaln_twd)) /
                                   realTimePrtLosSumTotal) *
                                   100,
                           ).toFixed(2)
                         : '--',
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
+                    parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dbaln_twd),
                 ),
                 title: '期權',
                 class: 'f__point',
