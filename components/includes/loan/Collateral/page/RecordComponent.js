@@ -8,7 +8,7 @@ import { AccountDropdown } from '../../../personalArea/accountDropdown/AccountDr
 import IconBtn from '../../../tradingAccount/vipInventory/IconBtn';
 import RecordTable from '../elements/RecordTable';
 import RecordLoanTable from '../elements/RecordLoanTable';
-import { useUser } from '../../../../../hooks/useUser';
+import { formatNum } from '../../../../../services/formatNum';
 import { checkSignCA, sign } from '../../../../../services/webCa';
 import {
     repaymentDetail,
@@ -80,10 +80,11 @@ const RecordComponent = () => {
                 Number(x.outstanding) +
                 Number(x.outstandingFee) +
                 Number(x.outstandingStkFee) +
-                Number(x.unpaidPledgeFee);
+                Number(x.unpaidPledgeFee) +
+                Number(x.payable);
         });
-        setTotalTL(TL.toFixed(2));
-        setTotalTM(TM.toFixed(2));
+        setTotalTL(formatNum(TL.toFixed(0)));
+        setTotalTM(formatNum(TM.toFixed(0)));
     };
 
     const onRefresh = () => {
@@ -250,7 +251,7 @@ const RecordComponent = () => {
             arr.push(obj[x]);
         });
 
-        setTotalTR(TR.toFixed(2));
+        setTotalTR(formatNum(TR.toFixed(0)));
         setStockAll(arr);
     };
 
