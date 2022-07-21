@@ -6,8 +6,8 @@ export const fetchApplyInfo = async function (token, branch, account, applyDate,
     }
     try {
         var url = '/loan/api/applyInfo';
-        if (currentKey === 'notGuaranteed' || currentKey === 'guaranteed') {
-            url = '/loan/api/collateralDeatil';
+        if (currentKey === 'guaranteed') {
+            url = '/loan/api/collateralDetailSum';
         }
 
         const res = await getA8StpInstance(false).get(url, {

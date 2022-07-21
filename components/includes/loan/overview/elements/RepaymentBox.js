@@ -11,7 +11,8 @@ import qrCode from '../../../../../resources/images/components/loanZone/demo.jpg
 import { fetchRepaymentAccount } from '../../../../../services/components/loznZone/overview/fetchRepaymentAccount';
 import { getToken } from '../../../../../services/user/accessToken';
 import { message } from 'antd';
-const RepaymentBox = ({ style }) => {
+import { formatNum } from '../../../../../services/formatNum';
+const RepaymentBox = ({ style, amount, estimatePayable }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
@@ -134,6 +135,7 @@ const RepaymentBox = ({ style }) => {
             }),
         );
     };
+
     return (
         <div className="loan__container" style={style}>
             <div className="loan__head">
@@ -150,14 +152,14 @@ const RepaymentBox = ({ style }) => {
                     {/* <img className="canLoanIcon" src={info} /> */}
                     <span className="canLoanDesc">(已動用+利息)</span>
                 </div>
-                <p className="loan__money">$1,032,000</p>
+                <p className="loan__money">{'$' + formatNum(amount) || '--'}</p>
                 <div className="loan__contentBottom">
                     <div className="loan__left">
                         {/* <Bar /> */}
                         <div className="loan__text--box">
                             <div>
                                 <span className="loan__money--lable">預估利息</span>
-                                <span className="loan__money--val">$53,000</span>
+                                <span className="loan__money--val">{'$' + formatNum(estimatePayable) || '--'}</span>
                             </div>
                         </div>
                     </div>

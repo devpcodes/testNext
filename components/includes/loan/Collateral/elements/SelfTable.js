@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { InputNumber, Tooltip } from 'antd';
+import { InputNumber, message, Tooltip } from 'antd';
+import moment from 'moment';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ import closeIcon from '../../../../../resources/images/components/loanZone/menu-
 import cricleIcon from '../../../../../resources/images/components/loanZone/basic-help-circle.svg';
 import _ from 'lodash';
 import { setModal } from '../../../../../store/components/layouts/action';
+import { fetchApplyRecord } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandler, reload }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [columns, setColumns] = useState([]);
@@ -331,17 +333,19 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
                 width: 100,
                 align: 'center',
                 render: (text, record) => {
-                    return text != null ? Number(text) : '--';
+                    return text != null ? Number(text) / 1000 : '--';
                 },
             },
             {
                 title: '擔保品市值',
-                dataIndex: 'closePrice',
-                key: 'closePrice',
+                dataIndex: 'close',
+                key: 'close',
                 width: 100,
                 align: 'center',
                 render: (text, record) => {
-                    return text != null ? formatNum(Number(record.collateralQty) * Number(text) * 1000) : '--';
+                    return text != null
+                        ? formatNum(Math.floor((Number(record.collateralQty) / 1000) * Number(text) * 1000))
+                        : '--';
                 },
             },
         ];
@@ -436,6 +440,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
             item.key = index;
             item.expectedCollateralShare = 1;
             item.closePrice = item.prevClose > 0 ? item.prevClose : item.reference;
+            // item.closePrice = item.close;
             item.stockPercent = item.loanRate;
             item.canLoanMoney = canLoanMoneyHandler(item);
             // console.log(Number(item.closePrice), Number(item.stockQty), Number(item.loanRate));
@@ -456,16 +461,40 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
         }
     };
 
+    const getApplyDateHandler = async () => {
+        const token = getToken();
+        const date = new Date();
+        const startDate = moment(date).add(-3, 'Y').format('YYYYMMDD');
+        try {
+            const res = await fetchApplyRecord(token, currentAccount.broker_id, currentAccount.account, startDate);
+            res.sort(function (a, b) {
+                return Number(b.applyDate) - Number(a.applyDate);
+            });
+            console.log('res', res);
+            return res[0].applyDate;
+        } catch (error) {
+            // message.error('伺服器錯誤')
+        }
+    };
+
     const getAccountOverview = async () => {
         console.log('currentAccount', currentAccount);
+        if (currentAccount.account == null) return;
         const token = getToken();
         try {
             setLoading(true);
+            let date = applyDate;
+
+            // if(currentKey === 'guaranteed'){
+            //     const overViewApplyDate = await getApplyDateHandler();
+            //     date = overViewApplyDate;
+            // }
+
             let result = await fetchApplyInfo(
                 token,
                 currentAccount.broker_id,
                 currentAccount.account,
-                applyDate,
+                date,
                 currentKey,
             );
             setLoading(false);
@@ -545,7 +574,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
                         text:
                             currentKey === 'self'
                                 ? '目前還沒加入個股請使用上方搜尋列新增擔保品'
-                                : '此帳號無庫存股票，請選擇其他帳號或自選試算。',
+                                : '此帳號無可擔保庫存股票，請選擇其他帳號或自選試算。',
                         tStyle: {
                             width: '215px',
                             margin: '0 auto 20px auto',
@@ -585,7 +614,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
                         text:
                             currentKey === 'self'
                                 ? '目前還沒加入個股請使用上方搜尋列新增擔保品'
-                                : currentKey === 'guaranteed'
+                                : currentKey === 'guaranteed' || currentKey === 'notGuaranteed'
                                 ? '查無資料'
                                 : '此帳號無庫存股票，請選擇其他帳號或自選試算。',
                         tStyle: {

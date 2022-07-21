@@ -166,7 +166,7 @@ const LoanCalculation = ({
         //判斷是否為內部人
         const notInsider = checkInsider(submitData);
         //判斷授信額度
-        const quota = await checkQuota(submitData[0].totalFinancing, allLoanMoney);
+        const quota = await checkQuota(submitData[0].canFinancing, allLoanMoney);
         console.log('quota', quota);
         if (status && notInsider && quota) {
             goLoanHandler();
@@ -193,8 +193,8 @@ const LoanCalculation = ({
         return loanAccountStatus.length > 0 ? true : false;
     };
 
-    const checkQuota = (totalFinancing, allLoanMoney) => {
-        if (allLoanMoney > totalFinancing) {
+    const checkQuota = (canFinancing, allLoanMoney) => {
+        if (allLoanMoney > canFinancing) {
             dispatch(
                 setModal({
                     visible: true,

@@ -1,7 +1,7 @@
 import { getA8StpInstance } from '../../../myAxios';
 import moment from 'moment';
 import { isArray } from 'lodash';
-export const fetchApplyRecord = async function (token, branch, account) {
+export const fetchApplyRecord = async function (token, branch, account, startDate) {
     try {
         console.log('applyRecord[req]', [branch, account]);
         const url = '/loan/api/applyRecord';
@@ -11,7 +11,7 @@ export const fetchApplyRecord = async function (token, branch, account) {
             params: {
                 branch,
                 account,
-                startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
+                startDate: startDate || moment(date).add(-1, 'Y').format('YYYYMMDD'),
                 endDate: moment(date).format('YYYYMMDD'),
             },
         });

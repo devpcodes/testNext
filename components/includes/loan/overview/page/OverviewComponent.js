@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from 'antd';
 import moment from 'moment';
@@ -18,6 +18,8 @@ import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
 import { useRouter } from 'next/router';
 import { useLoanAccount } from '../../../../../hooks/useLoanAccount';
+import { sign } from '../../../../../services/webCa';
+import { postSign } from '../../../../../services/components/loznZone/overview/postSign';
 const OverviewComponent = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
@@ -35,7 +37,7 @@ const OverviewComponent = () => {
     // const [loanIdno, setLoanIdno] = useState('');
     const router = useRouter();
     const haveLoanAccount = useLoanAccount(getToken());
-
+    const btnClicked = useRef(false);
     useEffect(() => {
         if (!haveLoanAccount && haveLoanAccount != null) {
             router.push('/loan-zone');
@@ -79,6 +81,65 @@ const OverviewComponent = () => {
                 noTitleIcon: true,
                 title: '帳戶詳情',
                 content: renderContent(),
+                okText: accountOverview.status === 'F' && accountOverview.blockReason == '1' ? '我知道了' : '確定',
+                onOk: async () => {
+                    if (accountOverview.status === 'F' && accountOverview.blockReason == '1') {
+                        dispatch(
+                            setModal({
+                                visible: false,
+                            }),
+                        );
+                        if (!btnClicked.current) {
+                            await updateServer();
+                            showNewAccountMsg();
+                        }
+                    } else {
+                        dispatch(
+                            setModal({
+                                visible: false,
+                            }),
+                        );
+                    }
+                },
+            }),
+        );
+    };
+
+    const updateServer = async () => {
+        btnClicked.current = true;
+        const token = getToken();
+        let ca_content = sign(
+            {
+                idno: currentAccount.idno,
+                broker_id: currentAccount.broker_id,
+                account: currentAccount.account,
+            },
+            true,
+            token,
+            true,
+        );
+        if (checkSignCA(ca_content)) {
+            try {
+                const res = await postSign(currentAccount.broker_id, currentAccount.account, token, ca_content);
+                getAccountOverview();
+                btnClicked.current = false;
+            } catch (error) {
+                btnClicked.current = false;
+            }
+        } else {
+            btnClicked.current = false;
+        }
+    };
+
+    const showNewAccountMsg = () => {
+        dispatch(
+            setModal({
+                visible: true,
+                type: 'info',
+                noCloseIcon: true,
+                noTitleIcon: true,
+                title: '帳戶詳情',
+                content: '帳戶額度確認完成後，於次日開始提供借款服務',
             }),
         );
     };
@@ -90,12 +151,17 @@ const OverviewComponent = () => {
                     <div className="account__val">
                         {accountOverview.status === 'A' && '正常'}
                         {accountOverview.status === 'D' && '已銷戶'}
-                        {accountOverview.status === 'F' && '凍結'}
-                        {accountOverview.status === 'F' && accountOverview.blockReason == '1' && '未開通'}
+                        {/* {accountOverview.status === 'F' && '凍結'} */}
+                        {/* {accountOverview.status === 'F' && accountOverview.blockReason == '1' && '未開通'} */}
+                        {accountOverview.status === 'F' && accountOverview.blockReason != '1'
+                            ? '凍結'
+                            : accountOverview.status === 'F' && accountOverview.blockReason == '1' && '未開通'}
                     </div>
                 </div>
                 <div className="account__item">
-                    <div className="account__label">開通日</div>
+                    <div className="account__label">
+                        開通日{accountOverview.status === 'F' && accountOverview.blockReason == '1' && '(開戶)'}
+                    </div>
                     <div className="account__val">{moment(accountOverview.openDate).format('YYYY/MM/DD')}</div>
                 </div>
                 <div className="account__item">
@@ -161,7 +227,11 @@ const OverviewComponent = () => {
                     financing={accountOverview.financing}
                     usedFinancing={accountOverview.usedFinancing}
                 />
-                <RepaymentBox style={{ width: isMobile ? '100%' : '49.3%', marginTop: isMobile ? '16px' : '0' }} />
+                <RepaymentBox
+                    style={{ width: isMobile ? '100%' : '49.3%', marginTop: isMobile ? '16px' : '0' }}
+                    amount={Number(accountOverview.usedFinancing) + (Number(accountOverview.estimatePayable) || 0)}
+                    estimatePayable={accountOverview.estimatePayable}
+                />
             </div>
             <div className="overview__head2">
                 <h2 className="overview__title">擔保品明細</h2>

@@ -11,9 +11,7 @@ function Calculation() {
     return (
         <div className="Calculation__container">
             <PageHead title={'申購試算'} />
-            <div>
-                <CalculationComponents />
-            </div>
+            <div>{/* <CalculationComponents /> */}</div>
             <style jsx>{`
                 .Calculation__container {
                     padding-top: 20px;
