@@ -131,6 +131,9 @@ const RecordComponent = () => {
                     return x;
                 }
             });
+            res2_.map(x => {
+                x.loanRate = x.loanYearRate;
+            });
             console.log('[DataOther]', res2_);
             setDataOther(res2_);
         } catch (error) {

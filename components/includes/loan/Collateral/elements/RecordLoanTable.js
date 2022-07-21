@@ -142,7 +142,11 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 align: 'right',
                 // sorter: true,
                 render(text, record, idx) {
-                    return moment(text).format('YYYY/MM/DD');
+                    if (text) {
+                        return moment(text).format('YYYY/MM/DD');
+                    } else {
+                        return '-';
+                    }
                 },
             },
             {
@@ -153,7 +157,7 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 align: 'right',
                 render(text, record, idx) {
                     if (text) {
-                        return text;
+                        return Number(text) * 100 + '%';
                     } else {
                         return '-';
                     }
