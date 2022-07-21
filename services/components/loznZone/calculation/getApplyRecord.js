@@ -53,9 +53,9 @@ export const repaymentDetail = async function (token, branch, account, date) {
     }
 };
 
-export const collateralDeatil = async function (token, branch, account, date) {
+export const collateralDetail = async function (token, branch, account, date) {
     try {
-        const url = '/loan/api/collateralDeatil';
+        const url = '/loan/api/collateralDetail';
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
             params: {
@@ -111,7 +111,7 @@ export const deleteApply = async function (token, branch, account, date, ca_cont
                 branch,
                 account,
                 applyDate: moment(date).format('YYYYMMDD'),
-                ca_content: ca_content,
+                ca_content,
             },
         });
         if (res.data.success) {

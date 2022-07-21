@@ -5,7 +5,7 @@ import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
 import { setModal } from '../../../../../store/components/layouts/action';
 import {
     repaymentDetail,
-    collateralDeatil,
+    collateralDetail,
     fetchApplyRecord,
     applyStatus,
 } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
@@ -87,7 +87,7 @@ const RecordTable = ({ refresh, payableHandler, rowData, rowDataOther, stockList
     }, [data]);
 
     const getData = () => {
-        repaymentDetail, collateralDeatil, val;
+        repaymentDetail, collateralDetail, val;
     };
 
     const pageChangeHandler = val => {

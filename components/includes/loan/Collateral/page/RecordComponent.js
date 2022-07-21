@@ -12,7 +12,7 @@ import { useUser } from '../../../../../hooks/useUser';
 import { checkSignCA, sign } from '../../../../../services/webCa';
 import {
     repaymentDetail,
-    collateralDeatil,
+    collateralDetail,
     fetchApplyRecord,
     applyStatus,
     deleteApply,
@@ -112,7 +112,7 @@ const RecordComponent = () => {
                     let d2 = await getCollateral(x.applyDate, x.key);
                     x.collateral = d2;
                     st_arr = st_arr.concat(d2);
-                    if ((res.length = i)) {
+                    if ((res.length = i + 1)) {
                         setDetailList(dt_arr);
                         setStockList(st_arr);
                     }
@@ -217,7 +217,7 @@ const RecordComponent = () => {
 
     const getCollateral = async (date, key) => {
         let token = getToken();
-        let dataset = await collateralDeatil(token, currentAccount.broker_id, currentAccount.account, date);
+        let dataset = await collateralDetail(token, currentAccount.broker_id, currentAccount.account, date);
         dataset.map((x, i) => {
             x.group = key;
             x.key = key + i;
@@ -231,6 +231,7 @@ const RecordComponent = () => {
         let TR = 0;
         let arr = [];
         let obj = {};
+
         stockList.map(x => {
             if (x.collateralQty && x.close) {
                 let v = Number(x.collateralQty) * Number(x.close);
@@ -244,16 +245,18 @@ const RecordComponent = () => {
                 obj[x.stockId] = { stockId: x.stockId, stockName: x.stockName, collateralQty: Number(x.collateralQty) };
             }
         });
-        Object.keys(obj).map(x => {
+
+        await Object.keys(obj).map(x => {
             arr.push(obj[x]);
         });
+
         setTotalTR(TR.toFixed(2));
         setStockAll(arr);
     };
 
     const clickHandler = active => {
         let st = stockList;
-        console.log(st);
+        console.log('[stockList]', st);
         if (active !== 'all') {
             st = st.filter(x => x.group === active);
         } else {
