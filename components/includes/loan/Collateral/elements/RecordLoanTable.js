@@ -66,16 +66,13 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                                     nt = '預約已刪除';
                                     break;
                                 case '4':
-                                    nt = '申請成功';
+                                    nt = '申請失敗';
                                     break;
                                 case '7':
                                     nt = '無法刪除';
                                     break;
                                 case '8':
                                     nt = '轉檔中';
-                                    break;
-                                case '3':
-                                    nt = '測試';
                                     break;
                             }
                             return nt;
