@@ -18,7 +18,7 @@ import { setModal } from '../../../../../store/components/layouts/action';
 import { formatNum } from '../../../../../services/formatNum';
 import { useRouter } from 'next/router';
 import { useLoanAccount } from '../../../../../hooks/useLoanAccount';
-import { sign } from '../../../../../services/webCa';
+import { checkSignCA, sign } from '../../../../../services/webCa';
 import { postSign } from '../../../../../services/components/loznZone/overview/postSign';
 const OverviewComponent = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
