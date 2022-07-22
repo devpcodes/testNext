@@ -122,17 +122,18 @@ export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal =
     return a8Ins;
 };
 
-const createA8StpInstance = baseUrl =>
+const createA8StpInstance = (baseUrl, auth = a8Auth) =>
     axios.create({
         baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8_BASE}/`,
         timeout: 90000,
+        auth,
         validateStatus: function (status) {
             return status >= 200 && status < 300;
         },
     });
 
-export const getA8StpInstance = (modal = false, baseUrl = '') => {
-    const a8Ins = createA8StpInstance(baseUrl);
+export const getA8StpInstance = (modal = false, baseUrl = '', auth = a8Auth) => {
+    const a8Ins = createA8StpInstance(baseUrl, auth);
     a8Ins.interceptors.response.use(
         response => response,
         error => {

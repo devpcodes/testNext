@@ -15,3 +15,23 @@ export const getAccountData = async function (token, user_id, broker_id, account
         throw error;
     }
 };
+
+export const getCustomerCredit = async function (branch, account, token) {
+    try {
+        const url = 'btkw/api/customerCredit';
+        const res = await getA8StpInstance(true).get(url, {
+            headers: { token: `${token}` },
+            params: {
+                branch,
+                account,
+            },
+        });
+        if (res.data.success === 'True') {
+            return res.data.result;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        throw error;
+    }
+};

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { setModal } from '../../store/components/layouts/action';
-import { getAccountData } from '../../services/getAccountInfo';
+import { getAccountData, getCustomerCredit } from '../../services/getAccountInfo';
 import { getToken } from '../../services/user/accessToken';
 import { EnvironmentFilled, InfoCircleFilled } from '@ant-design/icons';
 import info from '../../resources/images/pages/Service_ForgetPassword/attention-info-circle.svg';
@@ -14,6 +14,7 @@ const AccountInfo = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({});
+    const [dataMore, setDataMore] = useState({});
     const dispatch = useDispatch();
     useEffect(() => {
         getData();
@@ -22,15 +23,16 @@ const AccountInfo = () => {
     const getData = async () => {
         try {
             //
-            let ds = await getAccountData(
-                getToken(),
-                currentAccount.idno,
-                currentAccount.broker_id,
-                currentAccount.account,
-            );
+            let token = getToken();
+            let ds = await getAccountData(token, currentAccount.idno, currentAccount.broker_id, currentAccount.account);
             console.log(ds);
             if (ds) {
                 setData(ds);
+            }
+            let more = await getCustomerCredit(currentAccount.broker_id, currentAccount.account, token);
+            if (more) {
+                console.log(more);
+                setDataMore(more);
             }
         } catch (err) {
             Modal.error({
@@ -222,8 +224,8 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總電子交易額度</span>
-                                    <span className="red">
-                                        ?????
+                                    <span>
+                                        {dataMore.leaves ? dataMore.leaves : '--'}
                                         {/*<a>申請調整</a> */}
                                     </span>
                                 </p>
@@ -233,10 +235,10 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
-                                    <span className="red">
-                                        ????/
+                                    <span>
+                                        {dataMore.used ? dataMore.used : '--'}/
                                         <br className="forMB" />
-                                        ????
+                                        {dataMore.leaves ? dataMore.leaves : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -283,7 +285,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
-                                    <span>{data.CRAMT ? data.CRAMT : '--'}</span>
+                                    <span>{dataMore.finAmt ? dataMore.finAmt : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -291,15 +293,15 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
-                                    <span className="red">
-                                        ????/
+                                    <span>
+                                        {dataMore.finUsedAmt ? dataMore.finUsedAmt : '--'}/
                                         <br className="forMB" />
-                                        ????
+                                        {dataMore.finLeavesAmt ? dataMore.finLeavesAmt : '--'}
                                     </span>
                                 </p>
                                 <p>
                                     <span>總融券額度</span>
-                                    <span>{data.DBAMT ? data.DBAMT : '--'}</span>
+                                    <span>{dataMore.shortAmt ? dataMore.shortAmt : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -307,10 +309,10 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
-                                    <span className="red">
-                                        ????/
+                                    <span>
+                                        {dataMore.shortUsedAmt ? dataMore.shortUsedAmt : '--'}/
                                         <br className="forMB" />
-                                        ????
+                                        {dataMore.shortLeavesAmt ? dataMore.shortLeavesAmt : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -334,7 +336,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
-                                    <span className="red">?????</span>
+                                    <span>{data.CRAMT ? data.CRAMT : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
