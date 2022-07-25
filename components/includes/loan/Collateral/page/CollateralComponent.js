@@ -1,6 +1,7 @@
 import { Drawer } from 'antd';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import { useUser } from '../../../../../hooks/useUser';
 import { setMaskVisible, setModal, showLoginHandler } from '../../../../../store/components/layouts/action';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
@@ -46,8 +47,15 @@ const CollateralComponent = () => {
     const [stockData, setStockData] = useState({});
     const [reload, setReload] = useState(false);
     const [phone, setPhone] = useState('');
-    useLoanAccount();
+    const router = useRouter();
+    const [applyDate, setApplyDate] = useState(false);
 
+    useLoanAccount();
+    useEffect(() => {
+        if (router.query.applyDate) {
+            setApplyDate(router.query.applyDate);
+        }
+    }, [router]);
     useEffect(() => {
         if (isLogin) {
             setCurrent('inventory');
@@ -442,6 +450,7 @@ const CollateralComponent = () => {
                     goSubmitData={submitData}
                     inventoryReload={inventoryReload}
                     phone={phone}
+                    applyDate={applyDate}
                 />
             </div>
 

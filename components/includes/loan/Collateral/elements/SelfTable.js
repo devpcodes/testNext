@@ -470,7 +470,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
             res.sort(function (a, b) {
                 return Number(b.applyDate) - Number(a.applyDate);
             });
-            console.log('res', res);
+            console.log('res_applydate', res);
             return res[0].applyDate;
         } catch (error) {
             // message.error('伺服器錯誤')
@@ -501,9 +501,15 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
             const selectedKeys = [];
             result.forEach((item, index) => {
                 item.key = index;
-                item.expectedCollateralShare = item.stockQty - item.collateralQty;
+                console.log('[applyDate]', applyDate, item.stockQty, item.collateralQty);
+                if (applyDate !== '') {
+                    item.expectedCollateralShare = item.collateralQty;
+                    item.canCollateralQty = item.stockQty;
+                } else {
+                    item.expectedCollateralShare = item.stockQty - item.collateralQty;
+                    item.canCollateralQty = item.stockQty - item.collateralQty;
+                }
                 item.canLoanMoney = canLoanMoneyHandler(item);
-                item.canCollateralQty = item.stockQty - item.collateralQty;
                 console.log(Number(item.closePrice), Number(item.stockQty), Number(item.stockPercent));
                 selectedKeys.push(item.key);
             });

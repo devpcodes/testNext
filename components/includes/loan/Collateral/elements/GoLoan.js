@@ -10,10 +10,10 @@ import { verifyHandler } from '../../../../../services/validator';
 import { useCheckMobile } from '../../../../../hooks/useCheckMobile';
 import { checkSignCA, sign } from '../../../../../services/webCa';
 import { getToken } from '../../../../../services/user/accessToken';
-import { postApply } from '../../../../../services/components/loznZone/calculation/postApply';
+import { postApply, putApply } from '../../../../../services/components/loznZone/calculation/postApply';
 import icon from '../../../../../resources/images/components/loanZone/basic-help-circle (1).svg';
 import AccountTable from '../../../tradingAccount/vipInventory/AccountTable';
-const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryReload, phone }) => {
+const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryReload, phone, applyDate = false }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { Panel } = Collapse;
@@ -23,6 +23,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
     const [loading, setLoading] = useState(false);
     const [errorMoney, setErrorMoney] = useState('');
     const router = useRouter();
+
     useEffect(() => {
         dispatch(setModal({ visible: false }));
         setTimeout(() => {
@@ -197,15 +198,29 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
             );
             if (checkSignCA(ca_content)) {
                 showNotInsinder(true);
-                const moneyTime = await postApply({
-                    branch: currentAccount.broker_id,
-                    account: currentAccount.account,
-                    applyFinancing: String(submitMoney.current),
-                    purpose: form.getFieldValue('loanSelect'),
-                    collaterals: data,
-                    ca_content,
-                    token,
-                });
+                let moneyTime = {};
+                if (applyDate) {
+                    moneyTime = await putApply({
+                        branch: currentAccount.broker_id,
+                        account: currentAccount.account,
+                        applyFinancing: String(submitMoney.current),
+                        purpose: form.getFieldValue('loanSelect'),
+                        collaterals: data,
+                        ca_content,
+                        token,
+                        applyDate,
+                    });
+                } else {
+                    moneyTime = await postApply({
+                        branch: currentAccount.broker_id,
+                        account: currentAccount.account,
+                        applyFinancing: String(submitMoney.current),
+                        purpose: form.getFieldValue('loanSelect'),
+                        collaterals: data,
+                        ca_content,
+                        token,
+                    });
+                }
                 goLoanClose();
                 dispatch(setModal({ visible: false }));
                 showLoanSuccessModal(moneyTime);
