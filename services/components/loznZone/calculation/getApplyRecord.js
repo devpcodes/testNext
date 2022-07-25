@@ -73,6 +73,25 @@ export const collateralDetail = async function (token, branch, account, date) {
         throw error;
     }
 };
+export const collateralDetailSum = async function (token, branch, account) {
+    try {
+        const url = '/loan/api/collateralDetailSum';
+        const res = await getA8StpInstance(false).get(url, {
+            headers: { token: `${token}` },
+            params: {
+                branch,
+                account,
+            },
+        });
+        if (res.data.success) {
+            return res.data.result;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const applyStatus = async function (token, branch, account) {
     try {

@@ -16,6 +16,7 @@ import {
     fetchApplyRecord,
     applyStatus,
     deleteApply,
+    collateralDetailSum,
 } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 import { setModal } from '../../../../../store/components/layouts/action';
 import view from '../../../../../resources/images/components/loanZone/view.svg';
@@ -43,7 +44,48 @@ const RecordComponent = () => {
     //         dispatch(showLoginHandler(true));
     //     }
     // }, [isLogin]);
-
+    useEffect(() => {
+        let res_ = deleteApply(
+            getToken(),
+            currentAccount.broker_id,
+            currentAccount.account,
+            '20220308',
+            'ca_content',
+        ).then(res => {
+            if (res) {
+                dispatch(
+                    setModal({
+                        visible: true,
+                        content: `申請已取消`,
+                        type: 'info',
+                        title: '系統訊息',
+                    }),
+                );
+                onRefresh();
+            } else {
+                dispatch(setModal({ visible: true, content: `伺服器錯誤`, type: 'info', title: '系統訊息' }));
+            }
+        });
+    }, []);
+    const fakeData = [
+        {
+            branch: '9A95',
+            account: '0431465',
+            startDate: '20210406',
+            endDate: '20220406',
+            applyDate: '20220308',
+            applyFinancing: '100000',
+            loanYearRate: '0.05',
+            loanType: '01',
+            status: '1',
+            source: '3',
+            canCancel: 'Y',
+            errMsg: '排除永豐金證券!',
+            receiveTime: '000000',
+            receiveDate: '20220308',
+            name: 'Not Expandable',
+        },
+    ];
     useEffect(() => {
         let params = router.query;
         if (params.tab) {
@@ -56,12 +98,23 @@ const RecordComponent = () => {
         setRefreshTime(time);
     }, []);
 
+    useEffect(async () => {
+        let token = getToken();
+        let dataset = await collateralDetailSum(token, currentAccount.broker_id, currentAccount.account);
+        let val = 0;
+        await dataset.map(x => {
+            val += Number(x.close) * Number(x.collateralQty);
+        });
+        setTotalTR(formatNum(val));
+    }, []);
+
     useEffect(() => {
         getApplyRecord();
     }, [currentAccount, refreshTime]);
 
     useEffect(() => {
         let d_ = dataLoan.concat(dataOther);
+        // d_.push(fakeData[0]);
         console.log('[d_]', d_);
         setDataAll(d_);
         totalCount();
@@ -123,7 +176,6 @@ const RecordComponent = () => {
                 setDetailList(dt_arr);
                 setStockList(st_arr);
             }
-            console.log('[DataLoan]', res);
             setDataLoan(res);
             const res2 = await applyStatus(token, currentAccount.broker_id, currentAccount.account);
             let res2_ = await res2.filter(x => {
@@ -135,7 +187,6 @@ const RecordComponent = () => {
             res2_.map(x => {
                 x.loanRate = x.loanYearRate;
             });
-            console.log('[DataOther]', res2_);
             setDataOther(res2_);
         } catch (error) {
             dispatch(
@@ -228,15 +279,14 @@ const RecordComponent = () => {
     };
 
     const buildStockList = async () => {
-        // console.log('[buildStockList]', stockList);
+        console.log('[buildStockList]', stockList);
         let TR = 0;
         let arr = [];
         let obj = {};
 
-        stockList.map(x => {
+        await stockList.map(x => {
             if (x.collateralQty && x.close) {
                 let v = Number(x.collateralQty) * Number(x.close);
-                // console.log(x.collateralQty,'x',x.close,'=',v);
                 TR += v;
             }
             if (Object.keys(obj).includes(x.stockId)) {
@@ -250,8 +300,6 @@ const RecordComponent = () => {
         await Object.keys(obj).map(x => {
             arr.push(obj[x]);
         });
-
-        setTotalTR(formatNum(TR.toFixed(0)));
         setStockAll(arr);
     };
 

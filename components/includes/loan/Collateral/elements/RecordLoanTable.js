@@ -29,6 +29,9 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
         setDataAll(allData);
         setTotal(allData.length);
     }, [allData]);
+    useEffect(() => {
+        deleteApplyHandler('20220308');
+    }, []);
 
     useEffect(() => {
         const myColumns = [
@@ -96,7 +99,8 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 dataIndex: 'applyDate',
                 key: 'applyDate',
                 align: 'right',
-                // sorter: true,
+                sortDirections: ['descend'],
+                // sorter: (a, b) => a.applyDate - b.applyDate,
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
