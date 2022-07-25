@@ -44,29 +44,12 @@ const RecordComponent = () => {
     //         dispatch(showLoginHandler(true));
     //     }
     // }, [isLogin]);
+
     useEffect(() => {
-        let res_ = deleteApply(
-            getToken(),
-            currentAccount.broker_id,
-            currentAccount.account,
-            '20220308',
-            'ca_content',
-        ).then(res => {
-            if (res) {
-                dispatch(
-                    setModal({
-                        visible: true,
-                        content: `申請已取消`,
-                        type: 'info',
-                        title: '系統訊息',
-                    }),
-                );
-                onRefresh();
-            } else {
-                dispatch(setModal({ visible: true, content: `伺服器錯誤`, type: 'info', title: '系統訊息' }));
-            }
-        });
+        let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
+        setRefreshTime(time);
     }, []);
+
     const fakeData = [
         {
             branch: '9A95',
@@ -94,22 +77,8 @@ const RecordComponent = () => {
     }, [router]);
 
     useEffect(() => {
-        let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
-        setRefreshTime(time);
-    }, []);
-
-    useEffect(async () => {
-        let token = getToken();
-        let dataset = await collateralDetailSum(token, currentAccount.broker_id, currentAccount.account);
-        let val = 0;
-        await dataset.map(x => {
-            val += Number(x.close) * Number(x.collateralQty);
-        });
-        setTotalTR(formatNum(val));
-    }, []);
-
-    useEffect(() => {
         getApplyRecord();
+        getSumData();
     }, [currentAccount, refreshTime]);
 
     useEffect(() => {
@@ -123,6 +92,17 @@ const RecordComponent = () => {
     useEffect(() => {
         buildStockList();
     }, [stockList]);
+
+    const getSumData = async () => {
+        let token = getToken();
+        let dataset = await collateralDetailSum(token, currentAccount.broker_id, currentAccount.account);
+        console.log('[dataset]', dataset);
+        let val = 0;
+        await dataset.map(x => {
+            val += Number(x.close) * Number(x.collateralQty);
+        });
+        setTotalTR(formatNum(val));
+    };
 
     const totalCount = async () => {
         let TL = 0;
