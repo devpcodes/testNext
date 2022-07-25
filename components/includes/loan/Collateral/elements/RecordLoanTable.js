@@ -29,9 +29,6 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
         setDataAll(allData);
         setTotal(allData.length);
     }, [allData]);
-    useEffect(() => {
-        deleteApplyHandler('20220308');
-    }, []);
 
     useEffect(() => {
         const myColumns = [
@@ -43,6 +40,7 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 render(text, record, idx) {
                     if (record.name == 'Not Expandable') {
                         if (text == '1') {
+                            // && record.canCancel=='Y'
                             return (
                                 <React.Fragment key={idx}>
                                     <SubscriptionBtn
