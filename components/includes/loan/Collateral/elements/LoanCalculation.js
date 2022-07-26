@@ -251,13 +251,18 @@ const LoanCalculation = ({
     };
 
     const checkCanLoan = data => {
+        console.log('[DATA]', data);
         const newData = data.filter(element => {
-            if (element.canCancel === 'Y') {
-                return true;
-            } else if (element.status !== '2' && element.status !== '4') {
+            console.log('[element]', element);
+            if (element.canCancel !== 'Y') {
+                console.log('[element]', element.canCancel);
                 return true;
             }
+            // else if (element.status !== '2' && element.status !== '4') {
+            //     return true;
+            // }
         });
+        console.log('[newData]', newData);
         if (newData.length > 0) {
             return false;
         }
