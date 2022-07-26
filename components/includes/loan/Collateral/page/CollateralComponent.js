@@ -257,7 +257,7 @@ const CollateralComponent = () => {
                             2. 實際借款額度不得超過授信總額。若您借款已達授信總額上限，請洽所屬分公司。
                         </p>
                         <p style={{ marginBottom: 0, color: '#0d1623' }}>3. 線上每筆借款上限300萬元。</p>
-                        <p style={{ marginBottom: 0, color: '#0d1623' }}>4. 線上可擔保股票與借款成數/利率 點我查看</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>4. 線上可擔保股票與借款成數/利率</p>
                         <p style={{ marginBottom: 0, color: '#0d1623' }}>5. 本服務以日計息，自動用日起算</p>
                         <p style={{ marginBottom: 0, color: '#0d1623' }}>6. 線上動用手續費每筆100 元</p>
                         <p style={{ marginBottom: 0, color: '#0d1623' }}>

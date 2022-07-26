@@ -150,7 +150,7 @@ const RepaymentBox = ({ style, amount, estimatePayable }) => {
                 <div>
                     <span className="canLoanMoney">應還款金額</span>
                     {/* <img className="canLoanIcon" src={info} /> */}
-                    <span className="canLoanDesc">(已動用+利息)</span>
+                    <span className="canLoanDesc">(含息)</span>
                 </div>
                 <p className="loan__money">{'$' + formatNum(amount) || '--'}</p>
                 <div className="loan__contentBottom">
