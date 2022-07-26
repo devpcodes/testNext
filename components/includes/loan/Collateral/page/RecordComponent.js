@@ -570,6 +570,12 @@ const RecordComponent = () => {
             </style>
             <style jsx global>
                 {`
+                    .record__container .anticon-caret-down {
+                        display: none;
+                    }
+                    .record__container td.ant-table-column-sort {
+                        background: transparent;
+                    }
                     .record__container .RecordQrcode {
                         width: 6em;
                         background: #f9ecea;

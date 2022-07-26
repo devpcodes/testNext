@@ -31,6 +31,12 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
     }, [allData]);
 
     useEffect(() => {
+        let state = {
+            sortedInfo: {
+                columnKey: 'applyDate',
+                order: 'descend',
+            }, //默认排序
+        };
         const myColumns = [
             {
                 title: '明細/動作',
@@ -97,8 +103,11 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 dataIndex: 'applyDate',
                 key: 'applyDate',
                 align: 'right',
-                sortDirections: ['descend'],
-                // sorter: (a, b) => a.applyDate - b.applyDate,
+                sorter: (a, b) => {
+                    return a.applyDate - b.applyDate;
+                },
+                sortDirections: ['descend', 'descend'],
+                sortOrder: true,
                 render(text, record, idx) {
                     return moment(text).format('YYYY/MM/DD');
                 },
@@ -139,7 +148,6 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 dataIndex: 'moneyDate',
                 key: 'moneyDate',
                 align: 'right',
-                // sorter: true,
                 render(text, record, idx) {
                     if (text) {
                         return moment(text).format('YYYY/MM/DD');
