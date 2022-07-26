@@ -48,7 +48,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             //TODO MOCK
             // signAccs[0].bank_flag = '1';
 
-            setSignAcc(signAccs[0]?.bank_flag === '1' ? true : false);
+            setSignAcc(signAccs[0]?.bank_flag === '0' ? true : false);
         } else {
             setSignAcc(false);
         }
