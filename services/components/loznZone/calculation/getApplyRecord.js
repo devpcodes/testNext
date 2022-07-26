@@ -126,7 +126,7 @@ export const deleteApply = async function (token, branch, account, date, ca_cont
         const url = '/loan/api/apply';
         const res = await getA8StpInstance(false).delete(url, {
             headers: { token: `${token}` },
-            params: {
+            data: {
                 branch,
                 account,
                 applyDate: moment(date).format('YYYYMMDD'),
