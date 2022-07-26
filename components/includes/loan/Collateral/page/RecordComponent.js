@@ -30,6 +30,7 @@ const RecordComponent = () => {
     const [totalTL, setTotalTL] = useState(0);
     const [totalTM, setTotalTM] = useState(0);
     const [totalTR, setTotalTR] = useState(0);
+    const [stockListSum, setStockListSum] = useState([]);
     const [stockList, setStockList] = useState([]);
     const [stockAll, setStockAll] = useState([]);
     const [dataAll, setDataAll] = useState([]);
@@ -98,10 +99,13 @@ const RecordComponent = () => {
         let dataset = await collateralDetailSum(token, currentAccount.broker_id, currentAccount.account);
         console.log('[dataset]', dataset);
         let val = 0;
-        await dataset.map(x => {
-            val += Number(x.close) * Number(x.collateralQty);
-        });
-        setTotalTR(formatNum(val));
+        if (dataset) {
+            setStockListSum(dataset);
+            await dataset.map(x => {
+                val += Number(x.close) * Number(x.collateralQty);
+            });
+            setTotalTR(formatNum(val));
+        }
     };
 
     const totalCount = async () => {
@@ -304,14 +308,14 @@ const RecordComponent = () => {
                 },
                 content: (
                     <div className="item_list">
-                        {st.length > 0 ? (
-                            st.map((x, i) => {
+                        {stockListSum.length > 0 ? (
+                            stockListSum.map((x, i) => {
                                 return (
                                     <p key={i} className="item_list_row">
                                         <span>
                                             {x.stockId} {x.stockName}
                                         </span>
-                                        <span>{x.collateralQty} 張</span>
+                                        <span>{Number(x.collateralQty) / 1000} 張</span>
                                     </p>
                                 );
                             })
@@ -570,6 +574,12 @@ const RecordComponent = () => {
             </style>
             <style jsx global>
                 {`
+                    .record__container .anticon-caret-down {
+                        display: none;
+                    }
+                    .record__container td.ant-table-column-sort {
+                        background: transparent;
+                    }
                     .record__container .RecordQrcode {
                         width: 6em;
                         background: #f9ecea;

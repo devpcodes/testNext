@@ -18,6 +18,7 @@ import cycler from '../../../../../resources/images/components/loanZone/cycle-r.
 import infi from '../../../../../resources/images/components/loanZone/infi.png';
 import QaCollapse from '../elements/QaCollapse';
 import { getClose, getAccountStatus } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
+import { formatNum } from '../../../../../services/formatNum';
 const LoanIndex = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const winWidth = useSelector(store => store.layout.winWidth);
@@ -369,11 +370,11 @@ const LoanIndex = () => {
                             <div className="countBoxRightContent">
                                 <p>可借貸總額</p>
                                 <p className="tob">
-                                    <span>{total}</span> 元
+                                    <span>{formatNum(total)}</span> 元
                                 </p>
                                 <p>預估利息</p>
                                 <p className="tob">
-                                    <span>{paid}</span> 元
+                                    <span>{formatNum(paid)}</span> 元
                                 </p>
                                 <div className="sumBox">
                                     <p>

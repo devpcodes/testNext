@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
 import { Collapse } from 'antd';
 
@@ -9,30 +9,24 @@ const QaCollapse = ({ dataSource }) => {
 
     const { Panel } = Collapse;
 
-    const onChange = key => {
-        console.log(key);
-    };
-
     return (
         <div className="qaBox" id="QaCollapse__content">
             <Collapse
-                onChange={onChange}
                 bordered={false}
                 ghost={true}
                 defaultActiveKey={[0]}
                 expandIcon={({ isActive }) => (
                     <a className={'plusIcon ' + (isActive ? 'active' : '')}>
-                        <i>+</i>
+                        <i className="iitem">+</i>
                     </a>
                 )}
                 className="site-collapse-custom-collapse"
             >
                 {dataSource.map((x, i) => {
                     return (
-                        <>
+                        <React.Fragment key={i}>
                             <Panel
                                 header={(x.type ? x.type : '') + x.title}
-                                key={i}
                                 extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''} //tag往上拉5行距離
                             >
                                 {Array.isArray(x.content)
@@ -41,7 +35,7 @@ const QaCollapse = ({ dataSource }) => {
                                       })
                                     : x.content}
                             </Panel>
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </Collapse>
