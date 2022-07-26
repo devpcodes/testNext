@@ -158,7 +158,7 @@ const RepaymentBox = ({ style, amount, estimatePayable }) => {
                         {/* <Bar /> */}
                         <div className="loan__text--box">
                             <div>
-                                <span className="loan__money--lable">預估利息</span>
+                                <span className="loan__money--lable">利息及其他費用</span>
                                 <span className="loan__money--val">{'$' + formatNum(estimatePayable) || '--'}</span>
                             </div>
                         </div>
