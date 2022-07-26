@@ -1,7 +1,8 @@
 import { getA8StpInstance } from '../../../myAxios';
 import moment from 'moment';
 import { isArray } from 'lodash';
-export const fetchApplyRecord = async function (token, branch, account, startDate) {
+
+export const fetchApplyRecord = async function (token, branch, account) {
     try {
         console.log('applyRecord[req]', [branch, account]);
         const url = '/loan/api/applyRecord';
@@ -11,8 +12,8 @@ export const fetchApplyRecord = async function (token, branch, account, startDat
             params: {
                 branch,
                 account,
-                startDate: startDate || moment(date).add(-1, 'Y').format('YYYYMMDD'),
-                endDate: moment(date).format('YYYYMMDD'),
+                startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
+                endDate: moment(date).add(7, 'D').format('YYYYMMDD'),
             },
         });
         console.log('applyRecord[res]', res);
@@ -52,9 +53,9 @@ export const repaymentDetail = async function (token, branch, account, date) {
     }
 };
 
-export const collateralDeatil = async function (token, branch, account, date) {
+export const collateralDetail = async function (token, branch, account, date) {
     try {
-        const url = '/loan/api/collateralDeatil';
+        const url = '/loan/api/collateralDetail';
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
             params: {
@@ -72,10 +73,29 @@ export const collateralDeatil = async function (token, branch, account, date) {
         throw error;
     }
 };
+export const collateralDetailSum = async function (token, branch, account) {
+    try {
+        const url = '/loan/api/collateralDetailSum';
+        const res = await getA8StpInstance(false).get(url, {
+            headers: { token: `${token}` },
+            params: {
+                branch,
+                account,
+            },
+        });
+        if (res.data.success) {
+            return res.data.result;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const applyStatus = async function (token, branch, account) {
     try {
-        const url = '/loan/api/accountOverview';
+        const url = '/loan/api/applyStatus';
         const date = new Date();
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
@@ -83,10 +103,9 @@ export const applyStatus = async function (token, branch, account) {
                 branch,
                 account,
                 startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
-                endDate: moment(date).format('YYYYMMDD'),
+                endDate: moment(date).add(7, 'd').format('YYYYMMDD'),
             },
         });
-        console.log('[applyStatus]', res);
         if (res.data.success) {
             let d_ = res.data.result;
             d_.map((x, i) => {
@@ -102,15 +121,16 @@ export const applyStatus = async function (token, branch, account) {
     }
 };
 
-export const deleteApply = async function (token, branch, account, date) {
+export const deleteApply = async function (token, branch, account, date, ca_content) {
     try {
         const url = '/loan/api/apply';
         const res = await getA8StpInstance(false).delete(url, {
             headers: { token: `${token}` },
-            params: {
+            data: {
                 branch,
                 account,
                 applyDate: moment(date).format('YYYYMMDD'),
+                ca_content,
             },
         });
         if (res.data.success) {
@@ -124,13 +144,13 @@ export const deleteApply = async function (token, branch, account, date) {
 };
 
 export const getClose = async function (token) {
-    //永豐金 2890
+    //永豐金 2890 台積電 2330
     try {
         const url = '/loan/api/checkGreenChannelStock';
         const res = await getA8StpInstance(false).get(url, {
             headers: { token: `${token}` },
             params: {
-                stockId: '2890',
+                stockId: '2330',
             },
         });
         if (res.data.success) {
@@ -143,7 +163,6 @@ export const getClose = async function (token) {
     }
 };
 export const getAccountStatus = async function (token, branch, account) {
-    //永豐金 2890
     try {
         const url = '/loan/api/accountOverview';
         const res = await getA8StpInstance(false).get(url, {

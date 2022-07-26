@@ -33,7 +33,7 @@ const QaCollapse = ({ dataSource }) => {
                             <Panel
                                 header={(x.type ? x.type : '') + x.title}
                                 key={i}
-                                extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''}
+                                extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''} //tag往上拉5行距離
                             >
                                 {Array.isArray(x.content)
                                     ? x.content.map((y, j) => {

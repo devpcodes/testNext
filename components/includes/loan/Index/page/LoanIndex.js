@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Modal, Button, Radio, Slider } from 'antd';
+import { setModal } from '../../../../../store/components/layouts/action';
 import { useUser } from '../../../../../hooks/useUser';
 import { getToken } from '../../../../../services/user/accessToken';
 import bannerPC from '../../../../../resources/images/components/loanZone/bg-banner-pc.png';
@@ -28,20 +29,20 @@ const LoanIndex = () => {
     const [close, setClose] = useState({});
     const [total, setTotal] = useState(0); //可借款額度
     const [paid, setPaid] = useState(0); //利息
+    const [accPass, setAccPass] = useState(0); //利息
     const dispatch = useDispatch();
     const { isLogin } = useUser();
-    // useEffect(async () => {
-    //     console.log('isLogin', isLogin);
-    //     if (isLogin) {
-    //         let token = getToken();
-    //         let res = await getAccountStatus(token, currentAccount.broker_id, currentAccount.account);
-    //         if (res.status == 'A') {
-    //             window.location.href = `/newweb/loan-zone/Overview`;
-    //         } else if (res.status == 'F' && res.blockReason == '1') {
-    //             window.location.href = `/newweb/loan-zone/Overview`;
-    //         }
-    //     }
-    // }, [isLogin]);
+    useEffect(async () => {
+        if (isLogin) {
+            let token = getToken();
+            let res = await getAccountStatus(token, currentAccount.broker_id, currentAccount.account);
+            if (res.status == 'A' || (res.status == 'F' && res.blockReason == '1')) {
+                setAccPass(1);
+            } else {
+                setAccPass(0);
+            }
+        }
+    }, [isLogin, currentAccount]);
 
     useEffect(async () => {
         let res = await getClose();
@@ -51,7 +52,7 @@ const LoanIndex = () => {
 
     useEffect(async () => {
         toCount();
-    }, [close]);
+    }, [close, radioValue, sliderValue]);
 
     useEffect(() => {
         let data = [
@@ -203,13 +204,51 @@ const LoanIndex = () => {
         // ^*groupRate*(day/365)
     };
 
+    const btnHref = val => {
+        if (val === '/newweb/loan-zone/Overview' && accPass == 0) {
+            noAccPass();
+        } else {
+            window.location.href = val;
+        }
+    };
+
+    const noAccPass = () => {
+        dispatch(
+            setModal({
+                visible: true,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                className: 'loan_index_info',
+                title: '提醒',
+                type: 'confirm',
+                bodyStyle: {
+                    height: 'auto',
+                    overflow: 'auto',
+                },
+                content: <p>歡迎您使用永豐金證券不限用途款項借貸服務，請先申辦借貸戶加入不限用途的行列。</p>,
+                okText: '立即申辦',
+                cancelText: '稍後申辦',
+                width: '320px',
+                okButtonProps: {
+                    style: {
+                        width: 'auto',
+                    },
+                },
+                cancelButtonProps: {
+                    style: {
+                        width: 'auto',
+                    },
+                },
+                onOk: () => {
+                    btnHref('https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001');
+                },
+            }),
+        );
+    };
+
     const onChange2 = val => {
         // console.log(val,'stock')
         setSliderValue(val);
-    };
-
-    const btnHref = val => {
-        window.location.href = val;
     };
 
     const onChange = val => {
@@ -254,7 +293,7 @@ const LoanIndex = () => {
                             type="primary"
                             onClick={btnHref.bind(
                                 null,
-                                'https://strd.sinotrade.com.tw/exopact/ApplyLNA01?strProd=0002&strWeb=0001',
+                                'https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001',
                             )}
                         >
                             立即申辦
@@ -301,7 +340,7 @@ const LoanIndex = () => {
                             <div className="countBoxLeftContent">
                                 <div className="dataRow">
                                     <div className="DataTitle">擔保商品</div>
-                                    <div className="DataInfo">2890 永豐金</div>
+                                    <div className="DataInfo">2330 台積電</div>
                                 </div>
                                 <div className="dataRow">
                                     <div className="DataTitle">擔保張數</div>
@@ -343,10 +382,10 @@ const LoanIndex = () => {
                                     </p>
                                     <p>
                                         <span>撥券費</span>
-                                        <span>25 元</span>
+                                        <span>{sliderValue} 元</span>
                                     </p>
                                 </div>
-                                <Button type="primary" onClick={toCount.bind(null, 'click')}>
+                                <Button type="primary" onClick={btnHref.bind(null, '/newweb/loan-zone/Collateral')}>
                                     體驗試算
                                 </Button>
                                 {/* c43826 */}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Breadcrumb from '../../../breadcrumb/breadcrumb';
@@ -8,15 +8,18 @@ import { AccountDropdown } from '../../../personalArea/accountDropdown/AccountDr
 import IconBtn from '../../../tradingAccount/vipInventory/IconBtn';
 import RecordTable from '../elements/RecordTable';
 import RecordLoanTable from '../elements/RecordLoanTable';
-import { useUser } from '../../../../../hooks/useUser';
+import { formatNum } from '../../../../../services/formatNum';
+import { checkSignCA, sign } from '../../../../../services/webCa';
 import {
     repaymentDetail,
-    collateralDeatil,
+    collateralDetail,
     fetchApplyRecord,
     applyStatus,
     deleteApply,
+    collateralDetailSum,
 } from '../../../../../services/components/loznZone/calculation/getApplyRecord';
 import { setModal } from '../../../../../store/components/layouts/action';
+import view from '../../../../../resources/images/components/loanZone/view.svg';
 import { set } from 'lodash';
 const RecordComponent = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -35,13 +38,37 @@ const RecordComponent = () => {
     const winWidth = useSelector(store => store.layout.winWidth);
     const router = useRouter();
     const dispatch = useDispatch();
-    const { isLogin } = useUser();
-    useEffect(() => {
-        if (!isLogin) {
-            dispatch(showLoginHandler(true));
-        }
-    }, [isLogin]);
+    // const { isLogin } = useUser();
+    // useEffect(() => {
+    //     if (!isLogin) {
+    //         dispatch(showLoginHandler(true));
+    //     }
+    // }, [isLogin]);
 
+    useEffect(() => {
+        let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
+        setRefreshTime(time);
+    }, []);
+
+    const fakeData = [
+        {
+            branch: '9A95',
+            account: '0431465',
+            startDate: '20210406',
+            endDate: '20220406',
+            applyDate: '20220308',
+            applyFinancing: '100000',
+            loanYearRate: '0.05',
+            loanType: '01',
+            status: '1',
+            source: '3',
+            canCancel: 'Y',
+            errMsg: '排除永豐金證券!',
+            receiveTime: '000000',
+            receiveDate: '20220308',
+            name: 'Not Expandable',
+        },
+    ];
     useEffect(() => {
         let params = router.query;
         if (params.tab) {
@@ -50,38 +77,47 @@ const RecordComponent = () => {
     }, [router]);
 
     useEffect(() => {
-        let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
-        setRefreshTime(time);
-    }, []);
-
-    useEffect(() => {
         getApplyRecord();
+        getSumData();
     }, [currentAccount, refreshTime]);
 
     useEffect(() => {
         let d_ = dataLoan.concat(dataOther);
+        // d_.push(fakeData[0]);
+        console.log('[d_]', d_);
         setDataAll(d_);
         totalCount();
-    }, [dataLoan]);
+    }, [dataLoan, dataOther]);
 
     useEffect(() => {
         buildStockList();
     }, [stockList]);
 
+    const getSumData = async () => {
+        let token = getToken();
+        let dataset = await collateralDetailSum(token, currentAccount.broker_id, currentAccount.account);
+        console.log('[dataset]', dataset);
+        let val = 0;
+        await dataset.map(x => {
+            val += Number(x.close) * Number(x.collateralQty);
+        });
+        setTotalTR(formatNum(val));
+    };
+
     const totalCount = async () => {
         let TL = 0;
         let TM = 0;
-        console.log('[dataLoan]', dataLoan);
         await dataLoan.map((x, i) => {
             TL += Number(x.applyFinancing);
             TM +=
                 Number(x.outstanding) +
                 Number(x.outstandingFee) +
                 Number(x.outstandingStkFee) +
-                Number(x.unpaidPledgeFee);
+                Number(x.unpaidPledgeFee) +
+                Number(x.payable);
         });
-        setTotalTL(TL.toFixed(2));
-        setTotalTM(TM.toFixed(2));
+        setTotalTL(formatNum(TL.toFixed(0)));
+        setTotalTM(formatNum(TM.toFixed(0)));
     };
 
     const onRefresh = () => {
@@ -110,7 +146,7 @@ const RecordComponent = () => {
                     let d2 = await getCollateral(x.applyDate, x.key);
                     x.collateral = d2;
                     st_arr = st_arr.concat(d2);
-                    if ((res.length = i)) {
+                    if ((res.length = i + 1)) {
                         setDetailList(dt_arr);
                         setStockList(st_arr);
                     }
@@ -120,7 +156,6 @@ const RecordComponent = () => {
                 setDetailList(dt_arr);
                 setStockList(st_arr);
             }
-
             setDataLoan(res);
             const res2 = await applyStatus(token, currentAccount.broker_id, currentAccount.account);
             let res2_ = await res2.filter(x => {
@@ -128,6 +163,9 @@ const RecordComponent = () => {
                 if (arr.includes(x.status)) {
                     return x;
                 }
+            });
+            res2_.map(x => {
+                x.loanRate = x.loanYearRate;
             });
             setDataOther(res2_);
         } catch (error) {
@@ -211,7 +249,7 @@ const RecordComponent = () => {
 
     const getCollateral = async (date, key) => {
         let token = getToken();
-        let dataset = await collateralDeatil(token, currentAccount.broker_id, currentAccount.account, date);
+        let dataset = await collateralDetail(token, currentAccount.broker_id, currentAccount.account, date);
         dataset.map((x, i) => {
             x.group = key;
             x.key = key + i;
@@ -225,10 +263,10 @@ const RecordComponent = () => {
         let TR = 0;
         let arr = [];
         let obj = {};
-        stockList.map(x => {
+
+        await stockList.map(x => {
             if (x.collateralQty && x.close) {
                 let v = Number(x.collateralQty) * Number(x.close);
-                // console.log(x.collateralQty,'x',x.close,'=',v);
                 TR += v;
             }
             if (Object.keys(obj).includes(x.stockId)) {
@@ -238,16 +276,16 @@ const RecordComponent = () => {
                 obj[x.stockId] = { stockId: x.stockId, stockName: x.stockName, collateralQty: Number(x.collateralQty) };
             }
         });
-        Object.keys(obj).map(x => {
+
+        await Object.keys(obj).map(x => {
             arr.push(obj[x]);
         });
-        setTotalTR(TR.toFixed(2));
         setStockAll(arr);
     };
 
     const clickHandler = active => {
         let st = stockList;
-        console.log(st);
+        console.log('[stockList]', st);
         if (active !== 'all') {
             st = st.filter(x => x.group === active);
         } else {
@@ -292,7 +330,13 @@ const RecordComponent = () => {
         <div className="record__container">
             {winWidth > 530 && <Breadcrumb />}
             <div className="record__content">
-                <h1>借還紀錄</h1>
+                <h1>
+                    借還紀錄
+                    <a href="/newweb/loan-zone/Overview" className="OverviewBtn forMB">
+                        <img src={view} />
+                        <span>借款總覽</span>
+                    </a>
+                </h1>
                 <div className="flexBox topBar">
                     <div className="topBarLeft">
                         <button
@@ -309,8 +353,8 @@ const RecordComponent = () => {
                         </button>
                     </div>
                     <div className="topBarRight flexBox">
-                        <p className="desc__update forPC">更新時間：{refreshTime} </p>
-                        <IconBtn type={'refresh'} onClick={onRefresh.bind(null, 'click')}></IconBtn>
+                        {/* <p className="desc__update forPC">更新時間：{refreshTime} </p> */}
+
                         <div className="AccountDropdownBox">
                             <AccountDropdown
                                 type={'S'}
@@ -320,11 +364,15 @@ const RecordComponent = () => {
                                 tradingContainerWidth={'100%'}
                             />
                         </div>
+                        <a href="/newweb/loan-zone/Overview" className="OverviewBtn forPC">
+                            <img src={view} />
+                            借款總覽
+                        </a>
                     </div>
                 </div>
                 <div className="flexBox sunBox">
                     <div className="sumItem">
-                        <p>已動用總金額</p>
+                        <p>申請動用總金額</p>
                         <div>${totalTL}</div>
                     </div>
                     <div className="sumItem">
@@ -361,79 +409,181 @@ const RecordComponent = () => {
                         />
                     )}
                 </div>
-                <p className="desc__update forM">最後更新時間：{refreshTime} </p>
+                <p className="desc__update">
+                    最後更新時間：{refreshTime}{' '}
+                    <IconBtn type={'refresh'} onClick={onRefresh.bind(null, 'click')}></IconBtn>
+                </p>
             </div>
             <style jsx>
                 {`
-        .record__container {
-            width: 80%;
-            margin: 0 auto;
-            padding-top: 24px;
-        }      
-        .collateral__content {
-            margin-bottom: 32px;
-        }
-        .sunBox{margin-bottom:20px;}
-        .topBar{margin: 10px 0 20px;}
-        .topBarRight>*{align-items:center}
-        .desc__update{
-            color: #3f5372;
-            font-size: 14px;
-            display: inline-block;
-            line-height: 40px;
-            margin: 0 13px 0 0;
-            vertical-align: middle;
-        }
-        .AccountDropdownBox{width:230px;margin-left:13px;}
-        .record__container .flexBox{display:flex;justify-content:space-between;}
-        h1 {
-                color: #0d1623;
-                font-size: 28px;
-                font-weight: bold;
-                display: inline-block;
-                vertical-align: top;
-                margin-right: 35px;
-                white-space: nowrap;}
-        
-        .nav__items:not(:first-child ){margin-left:20px;}
-        .nav__items {
-            width: 116px;
-            height: 40px;
-            background-color: #d7e0ef;
-            color: #3f5372;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.6rem;
-            border-radius: 20px;
-            border:none;
-            display:inline-block;
-        }
-        .nav__items.active {
-            background-color: #0d1623;
-            color: #fff;
-        }
-        .record__container .sumItem > div {font-size:24px;font-weight:800; text-align:center;}
-        .forPC{display:inherite;}
-        .forMB{display:none;}
-        @media screen and (max-width: 768px) {
-            .record__container{width:96%;}
-            .topBarRight {text-align:center;margin-top:20px;}
-            .topBar .topBarLeft {display:block;}
-            .topBarLeft .nav__items {}
-            .record__container .sumItem{width:50%;}
-            .record__container .sumItem>div{font-size:16px;}
-            .record__container .sumItem>p{font-size:14px;color:#3f5372;}
-            .record__container .sumItem:nth-child(3){width:100%;margin-top:20px;}
-            .desc__update{font-size:14px;text-align:center;color:#3f5372;line-height:2;width:100%;}
-            .forPC{display:none;}
-            .forMB{display:inherite;}
-        }
+                    .record__container .OverviewBtn {
+                        padding: 6px 1em;
+                        font-size: 16px;
+                        color: #0d1623;
+                        background: #fff;
+                        border: 1px solid #d7e0ef;
+                        border-radius: 2px;
+                        height: 40px;
+                        box-sizing: border-box;
+                        margin-left: 10px;
+                    }
+                    .record__container .OverviewBtn img {
+                        margin-right: 5px;
+                    }
+                    .record__container .OverviewBtn > * {
+                        vertical-align: middle;
+                    }
+                    .record__container {
+                        width: 80%;
+                        margin: 0 auto;
+                        padding-top: 24px;
+                    }
+                    .collateral__content {
+                        margin-bottom: 32px;
+                    }
+                    .sunBox {
+                        margin-bottom: 20px;
+                    }
+                    .topBar {
+                        margin: 10px 0 20px;
+                    }
+                    .topBarRight > * {
+                        align-items: center;
+                    }
+                    .desc__update {
+                        color: #3f5372;
+                        font-size: 14px;
+                        display: inline-block;
+                        line-height: 40px;
+                        margin: 0 13px 0 0;
+                        vertical-align: middle;
+                    }
+                    .AccountDropdownBox {
+                        width: 230px;
+                        margin-left: 13px;
+                    }
+                    .record__container .flexBox {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    h1 {
+                        color: #0d1623;
+                        font-size: 28px;
+                        font-weight: bold;
+                        display: inline-block;
+                        vertical-align: top;
+                        margin-right: 35px;
+                        white-space: nowrap;
+                    }
 
-            }`}
+                    .nav__items:not(:first-child) {
+                        margin-left: 20px;
+                    }
+                    .nav__items {
+                        width: 116px;
+                        height: 40px;
+                        background-color: #d7e0ef;
+                        color: #3f5372;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 1.6rem;
+                        border-radius: 20px;
+                        border: none;
+                        display: inline-block;
+                    }
+                    .nav__items.active {
+                        background-color: #0d1623;
+                        color: #fff;
+                    }
+                    .record__container .sumItem > div {
+                        font-size: 24px;
+                        font-weight: 800;
+                        text-align: center;
+                    }
+                    .forPC {
+                        display: inherite;
+                    }
+                    .forMB {
+                        display: none;
+                    }
+                    @media screen and (max-width: 768px) {
+                        .record__container {
+                            width: 96%;
+                            overflow: hidden;
+                        }
+                        .record__container h1 {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-right: 0;
+                        }
+                        .topBarRight {
+                            text-align: center;
+                        }
+                        .topBar .topBarLeft {
+                            display: block;
+                            text-align: left;
+                            width: 60%;
+                            margin-bottom: 10px;
+                        }
+                        .topBarLeft .nav__items {
+                        }
+                        .record__container .sumItem {
+                            width: 50%;
+                        }
+                        .record__container .sumItem > div {
+                            font-size: 16px;
+                        }
+                        .record__container .sumItem > p {
+                            font-size: 14px;
+                            color: #3f5372;
+                        }
+                        .record__container .sumItem:nth-child(3) {
+                            width: 100%;
+                            margin-top: 20px;
+                        }
+                        .desc__update {
+                            font-size: 14px;
+                            text-align: center;
+                            color: #3f5372;
+                            line-height: 2;
+                            width: 100%;
+                        }
+                        .forPC {
+                            display: none !important;
+                        }
+                        .forMB {
+                            display: inherit !important;
+                        }
+                    }
+                    @media screen and (max-width: 425px) {
+                        .topBar .topBarLeft {
+                            text-align: center;
+                            width: 100%;
+                        }
+                        .topBarRight {
+                            margin-top: 20px;
+                            width: 100%;
+                        }
+                    }
+                `}
             </style>
             <style jsx global>
                 {`
+                    .record__container .RecordQrcode {
+                        width: 6em;
+                        background: #f9ecea;
+                        color: #c43826;
+                        line-height: 2;
+                        font-size: 14px;
+                        display: inline-block;
+                        text-align: center;
+                        font-weight: 800;
+                    }
+                    .record__container .desc__update button {
+                        border: none;
+                        background: transparent;
+                    }
                     .record__container .checkMore_b {
                         display: block;
                         color: #daa360;
@@ -557,6 +707,12 @@ const RecordComponent = () => {
                     @media screen and (max-width: 768px) {
                         .flexBox {
                             flex-wrap: wrap;
+                        }
+                    }
+                    @media screen and (max-width: 425px) {
+                        .record__container .topBarRight .AccountDropdownBox {
+                            width: 100%;
+                            margin-left: 0;
                         }
                     }
                 `}
