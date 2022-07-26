@@ -24,10 +24,9 @@ const QaCollapse = ({ dataSource }) => {
             >
                 {dataSource.map((x, i) => {
                     return (
-                        <>
+                        <React.Fragment key={i}>
                             <Panel
                                 header={(x.type ? x.type : '') + x.title}
-                                key={i}
                                 extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''} //tag往上拉5行距離
                             >
                                 {Array.isArray(x.content)
@@ -36,7 +35,7 @@ const QaCollapse = ({ dataSource }) => {
                                       })
                                     : x.content}
                             </Panel>
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </Collapse>
