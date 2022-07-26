@@ -1,4 +1,4 @@
-import { getA8StpInstance } from '../../../myAxios';
+import axios, { getA8StpInstance } from '../../../myAxios';
 import moment from 'moment';
 import { isArray } from 'lodash';
 
@@ -123,16 +123,25 @@ export const applyStatus = async function (token, branch, account) {
 
 export const deleteApply = async function (token, branch, account, date, ca_content) {
     try {
-        const url = '/loan/api/apply';
-        const res = await getA8StpInstance(false).delete(url, {
-            headers: { token: `${token}` },
-            data: {
-                branch,
-                account,
-                applyDate: moment(date).format('YYYYMMDD'),
-                ca_content,
-            },
+        // const url = '/loan/api/apply';
+        // const res = await getA8StpInstance(false).delete(url, {
+        //     headers: { token: `${token}` },
+        //     data: {
+        //         branch,
+        //         account,
+        //         applyDate: moment(date).format('YYYYMMDD'),
+        //         ca_content,
+        //     },
+        // });
+        const url = '/loan/api/deleteApply';
+        const res = await getA8StpInstance(false).post(url, {
+            token,
+            branch,
+            account,
+            applyDate: moment(date).format('YYYYMMDD'),
+            ca_content,
         });
+
         if (res.data.success) {
             return true;
         } else {
