@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import React from 'react';
 import { Collapse } from 'antd';
 
-const QaCollapse = ({ dataSource }) => {
+const QaCollapse = ({ dataSource, chartFunc }) => {
     useEffect(() => {
         console.log('rowData', dataSource);
     }, [dataSource]);
@@ -34,6 +34,7 @@ const QaCollapse = ({ dataSource }) => {
                                           return <p key={'p' + i}>{y}</p>;
                                       })
                                     : x.content}
+                                {x.chart ? chartFunc(x.chart) : ''}
                             </Panel>
                         </React.Fragment>
                     );
