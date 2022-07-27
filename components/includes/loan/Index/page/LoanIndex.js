@@ -110,7 +110,7 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '有哪些股票可以申請借款呢？成數利率又是多少？',
-                content: '請至點選上方【體驗試算】輸入股號股名進行查詢',
+                content: '請至上方【體驗試算】輸入股號股名進行查詢',
                 open: false,
                 tag: 'tag2',
                 key: 7,
@@ -126,7 +126,7 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '每筆最少借款金額是多少？',
-                content: '一萬元，並以千元為級距，最高不得超過300萬元',
+                content: '一萬元，並以千元為級距，最高不得超過150萬元',
                 open: false,
                 key: 9,
             },
@@ -288,7 +288,7 @@ const LoanIndex = () => {
                     },
                 },
                 onOk: () => {
-                    btnHref('https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001');
+                    btnHref(process.env.NEXT_PUBLIC_LOANACCOUNT);
                 },
             }),
         );
@@ -337,13 +337,7 @@ const LoanIndex = () => {
                         借款金額無限制，隨借隨還免綁約！
                     </div>
                     <div>
-                        <Button
-                            type="primary"
-                            onClick={btnHref.bind(
-                                null,
-                                'https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001',
-                            )}
-                        >
+                        <Button type="primary" onClick={btnHref.bind(null, process.env.NEXT_PUBLIC_LOANACCOUNT)}>
                             立即申辦
                         </Button>
                         <br></br>
@@ -462,7 +456,7 @@ const LoanIndex = () => {
                                 <Button
                                     onClick={btnHref.bind(
                                         null,
-                                        'https://strd.sinotrade.com.tw/exopact/LNA/ProgQueryLNA01',
+                                        process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
                                     )}
                                     type="primary"
                                 >
