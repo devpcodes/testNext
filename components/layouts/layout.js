@@ -71,6 +71,11 @@ const Layout = memo(({ children }) => {
     const queryStr = useRef('');
     const isRendered = useRef(false);
     useEffect(() => {
+        if (sessionStorage.getItem('nav') === '0') {
+            setShowNav(false);
+        }
+    }, [router.pathname]);
+    useEffect(() => {
         prevIsMobile.current = isMobile;
         prevPlatform.current = platform;
         // 不是第一次 render 才更新資料
@@ -122,10 +127,11 @@ const Layout = memo(({ children }) => {
     useEffect(() => {
         queryStr.current = router.query;
         sessionAddSource();
-        if (router.query.nav != '0') {
+        if (router.query.nav != '0' && sessionStorage.getItem('nav') !== '0') {
             setShowNav(true);
         } else {
             setShowNav(false);
+            sessionStorage.setItem('nav', '0');
         }
     }, [router.query]);
 
@@ -435,14 +441,20 @@ const Layout = memo(({ children }) => {
                 {...modal}
                 title={
                     <>
-                        <img src={getModalIconHandler(modal.type, modal.bs)} />
-                        <span>{modal.title}</span>
+                        {modal.noTitleIcon ? <></> : <img src={getModalIconHandler(modal.type, modal.bs)} />}
+                        <span
+                            style={{
+                                marginLeft: modal.noTitleIcon ? 0 : '5px',
+                            }}
+                        >
+                            {modal.title}
+                        </span>
                     </>
                 }
                 className="confirm__container"
                 okText={modal.okText || '確定'}
-                cancelText="取消"
-                closeIcon={<img src={modalCloseIcon} />}
+                cancelText={modal.cancelText || '取消'}
+                closeIcon={modal.noCloseIcon ? <></> : <img src={modalCloseIcon} />}
                 onCancel={
                     modal.onCancel != null
                         ? modal.onCancel
@@ -454,6 +466,7 @@ const Layout = memo(({ children }) => {
                     modal.footer != null ? modal.footer : getModalFooter(modal.type, modal.okText || '確定', modal.onOk)
                 }
                 destroyOnClose={true}
+                width={modal.width || '382px'}
             >
                 {modal.content}
             </Modal>
@@ -489,13 +502,14 @@ const Layout = memo(({ children }) => {
                 }
 
                 .confirm__container {
-                    width: 382px !important;
+                    width: 382px;
                 }
                 .confirm__container .ant-modal-content {
                     border-radius: 4px;
                 }
                 .confirm__container .ant-modal-header {
-                    background: #f2f5fa;
+                    // background: #f2f5fa;
+                    background: white;
                 }
                 .confirm__container .ant-btn-primary {
                     background: #f45a4c;

@@ -12,7 +12,14 @@ import MyTransition from '../../myTransition';
 import theme from '../../../../resources/styles/theme';
 import checkImg from '../../../../resources/images/components/login/ic-check.png';
 
-export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, type }) => {
+export const AccountDropdown = ({
+    personalAreaVisible,
+    tradingLayout,
+    width,
+    type,
+    style,
+    tradingContainerWidth = 'auto',
+}) => {
     const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
     const currentAccountList = useRef([]);
@@ -103,12 +110,12 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
     if (
         !accounts.length ||
         (groupedAccountTypes.length === 0 && groupedAccount.constructor === Object) ||
-        (currentAccount.accttype !== 'S' && currentAccount.accttype !== 'H' && currentAccount.accttype !== 'F')
+        (currentAccount?.accttype !== 'S' && currentAccount?.accttype !== 'H' && currentAccount?.accttype !== 'F')
     )
         return null;
 
     return (
-        <div className={containerCalssName()}>
+        <div className={containerCalssName()} style={style}>
             {isMobile && tradingLayout !== true ? (
                 <>
                     <div className="account__container--mobile currentAccount__container">
@@ -219,6 +226,7 @@ export const AccountDropdown = ({ personalAreaVisible, tradingLayout, width, typ
                 .trading__container {
                     display: inline-block;
                     margin-right: 12px;
+                    width: ${tradingContainerWidth};
                 }
                 .account__container {
                     position: relative;

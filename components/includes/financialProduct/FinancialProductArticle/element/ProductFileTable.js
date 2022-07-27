@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, ConfigProvider } from 'antd';
 import CustomerButton from '../../../customerSupport/CustomerButton';
+import noDataImg from '../../../../../resources/images/components/productQuestion/empty.png';
 
 const ProductFileTable = function ({ dataSource }) {
     const clientWidth = useSelector(store => store.layout.winWidth);
@@ -57,28 +58,37 @@ const ProductFileTable = function ({ dataSource }) {
         },
     ];
 
+    const customizeRenderEmpty = () => (
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <img src={noDataImg}></img>
+            <p style={{ color: '#6c7b94', marginTop: '12px', fontSize: '16px', fontWeight: 'bold' }}>{'暫無資訊'}</p>
+        </div>
+    );
+
     return (
         <>
-            <Table
-                className="product-file-table"
-                columns={columns}
-                dataSource={dataSource}
-                rowKey="index"
-                total={dataSource?.length}
-                pagination={
-                    clientWidth <= 450
-                        ? false
-                        : {
-                              position: ['bottomRight'],
-                              defaultPageSize: 15,
-                              defaultCurrent: 1,
-                              pageSize: 15,
-                              total: dataSource?.length,
-                              showTotal: (total, range) => `${range[0]}-${range[1]}則檔案（共${total}則檔案）`,
-                              onChange: scrollTop,
-                          }
-                }
-            />
+            <ConfigProvider renderEmpty={customizeRenderEmpty}>
+                <Table
+                    className="product-file-table"
+                    columns={columns}
+                    dataSource={dataSource}
+                    rowKey="index"
+                    total={dataSource?.length}
+                    pagination={
+                        clientWidth <= 450
+                            ? false
+                            : {
+                                  position: ['bottomRight'],
+                                  defaultPageSize: 15,
+                                  defaultCurrent: 1,
+                                  pageSize: 15,
+                                  total: dataSource?.length,
+                                  showTotal: (total, range) => `${range[0]}-${range[1]}則檔案（共${total}則檔案）`,
+                                  onChange: scrollTop,
+                              }
+                    }
+                />
+            </ConfigProvider>
             <div className="file-table-mobile">
                 {dataSource?.length
                     ? dataSource?.map((file, idx) => (

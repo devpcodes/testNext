@@ -38,6 +38,7 @@ const OrderBox = ({
     const platform = usePlatform();
     const dispatch = useDispatch();
     const [submitLoading, setSubmitLoading] = useState(false);
+
     useEffect(() => {
         StockIdC.current = StockId;
         PriceC.current = Price;
@@ -93,6 +94,7 @@ const OrderBox = ({
             });
         }
     };
+
     return (
         <div>
             <div className="trade__info--title">

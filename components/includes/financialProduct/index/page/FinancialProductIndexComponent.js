@@ -71,7 +71,16 @@ const FinancialProductIndexComponent = ({ isTradingPlatform, serverCategories, s
         }
     }, []);
 
+    useEffect(() => {
+        if (router.query.categoryCode) {
+            setTimeout(() => {
+                setActiveKey(router.query.categoryCode);
+            }, 100);
+        }
+    }, [router.query.categoryCode]);
+
     useEffect(async () => {
+        console.log('active=======', activeKey);
         let res;
         if (isTradingPlatform) {
             res = await getTradingAppCategoriesAndProduct(activeKey);

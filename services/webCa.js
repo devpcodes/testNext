@@ -4,7 +4,7 @@ import { getToken } from './user/accessToken';
 import BirthdayChecker from '../components/includes/BirthdayChecker';
 import { caValidator } from '../services/caValidator';
 import { logout } from '../services/user/logoutFetcher';
-export const signCert = async function (userInfo, isNeedSign = true, token) {
+export const signCert = async function (userInfo, isNeedSign = true, token, isWebview = false) {
     if (isNeedSign) {
         let DM;
         let signDict = {};
@@ -57,6 +57,7 @@ export const signCert = async function (userInfo, isNeedSign = true, token) {
             signTxt: userInfo.idno + verifyNo,
             identifyNo: hashKey,
             verifyNo: verifyNo,
+            isWebview: isWebview,
         });
 
         if (ca.getSignature()) {
@@ -176,8 +177,7 @@ export const checkCert = function (userIdNo) {
     return checkData;
 };
 
-// 安裝憑證
-export const applyCert = function (user_idNo, token, callBack) {
+export const clearCert = function () {
     let DM;
     if (process.env.NEXT_PUBLIC_DM === 'false') {
         DM = false;
@@ -190,10 +190,24 @@ export const applyCert = function (user_idNo, token, callBack) {
         getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
         DM: DM,
     });
-    console.log({
-        userID: user_idNo,
-        memberNo: token,
+    ca.clearLS();
+};
+
+// 安裝憑證
+export const applyCert = function (user_idNo, token, isWebview, callBack) {
+    let DM;
+    if (process.env.NEXT_PUBLIC_DM === 'false') {
+        DM = false;
+    } else {
+        DM = true;
+    }
+    const ca = new CA_Component({
+        windowURL: process.env.NEXT_PUBLIC_WEBCAFRM,
+        webcaURL: process.env.NEXT_PUBLIC_WEBCAURL,
+        getIdentifyNoURL: process.env.NEXT_PUBLIC_GETIDENTIfYNOURL,
+        DM: DM,
     });
+
     return new Promise((resolve, reject) => {
         // 清除母憑證
         ca.clearLS();
@@ -202,6 +216,7 @@ export const applyCert = function (user_idNo, token, callBack) {
             {
                 userID: user_idNo,
                 memberNo: token,
+                isWebview: isWebview,
             },
             function (applyCertCode, applyCertMsg, applyCertToken, applyCertData) {
                 console.log('applyCertMsg', applyCertCode, applyCertMsg, applyCertToken, applyCertData);
@@ -356,9 +371,16 @@ export const CAHandler = async function (token, cb) {
 };
 
 //憑證安裝
-export const caResultDataHandler = async function (suggestAction, userIdNo, token, successCallback, failCallback) {
+export const caResultDataHandler = async function (
+    suggestAction,
+    userIdNo,
+    token,
+    successCallback,
+    failCallback,
+    isWebview,
+) {
     if (suggestAction === 'ApplyCert') {
-        const result = await applyCert(userIdNo, token);
+        const result = await applyCert(userIdNo, token, isWebview);
         console.log('result', result);
         // console.log('ApplyCert憑證回傳訊息', msg);
         if (typeof successCallback === 'function' && (result.code == '7000' || result.code == '0000')) {

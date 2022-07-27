@@ -87,6 +87,7 @@ const SymbolSearch = ({ getProductInfo, defaultVal }) => {
                     selectedHandler={selectedHandler}
                     placeholder={'股票代號／名稱'}
                     parentValue={defaultValue}
+                    isOrder={true}
                 />
             </div>
             <div className="searchLabelBox">

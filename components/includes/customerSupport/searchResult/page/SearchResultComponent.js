@@ -85,20 +85,22 @@ const SearchResultComponent = () => {
     };
 
     useEffect(async () => {
-        const params = {
-            keywords: keyword,
-            page: 1,
-            pageSize: 15,
-        };
-        const data = await getCommonQuestions(params);
-        if (data.dataList?.length) {
-            setCurrentPageWeb(1);
-            setCurrentPageMobile(1);
-            setTotalQuestion(data.counts);
-            const allPage = Math.ceil(data.counts / 15);
-            setTotalPage(allPage);
-            setSearchResultDataWeb(data.dataList);
-            setSearchResultDataMobile(data.dataList);
+        if (keyword) {
+            const params = {
+                keywords: keyword,
+                page: 1,
+                pageSize: 15,
+            };
+            const data = await getCommonQuestions(params);
+            if (data.dataList?.length) {
+                setCurrentPageWeb(1);
+                setCurrentPageMobile(1);
+                setTotalQuestion(data.counts);
+                const allPage = Math.ceil(data.counts / 15);
+                setTotalPage(allPage);
+                setSearchResultDataWeb(data.dataList);
+                setSearchResultDataMobile(data.dataList);
+            }
         }
     }, [keyword]);
 

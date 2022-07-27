@@ -73,7 +73,7 @@ export const TradingQuickView = () => {
         } else {
             setIsError(false);
         }
-    }, [currentAccount.accttype, unRealPrtlos, summarisePrtlos, SBunRealPrtlos, SBdeliveryTrial, openProfitLossSum]);
+    }, [currentAccount?.accttype, unRealPrtlos, summarisePrtlos, SBunRealPrtlos, SBdeliveryTrial, openProfitLossSum]);
 
     const handleUpdateDate = useCallback(() => {
         const formatDateToken = 'YYYY/MM/DD HH:mm:ss';

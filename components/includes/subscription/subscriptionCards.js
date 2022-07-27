@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 
-const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => {
-    console.log(stockData);
+const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, footerHidden, settingDate }) => {
+    // console.log(stockData);
 
     const formatDate = date => {
         return `${date.slice(4, 6)}/${date.slice(6, 8)}`;
@@ -14,9 +14,12 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => 
 
     const getDateClassName = date => {
         let dateClassName = '';
-        const today = +new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
+        let today = +new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
         const sdate = +new Date(date.slice(0, 4), date.slice(4, 6), date.slice(6, 8));
-        console.log(today, sdate);
+        if (settingDate) {
+            today = +new Date(settingDate.getFullYear(), settingDate.getMonth() + 1, settingDate.getDate());
+        }
+        // console.log(today, sdate);
         if (today > sdate) {
             dateClassName = 'before';
         } else if (today === sdate) {
@@ -101,28 +104,35 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => 
                         <hr className="time__line" />
                     </div>
                 </div>
-
-                <div className="subscriptionCards__footer">
-                    {stockData.canOrder ? (
-                        <button
-                            className="action__btn buy"
-                            onClick={() => onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
-                        >
-                            立即申購
-                        </button>
-                    ) : stockData.canCancelOrder ? (
-                        <button
-                            className="action__btn buy"
-                            onClick={() => onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount)}
-                        >
-                            立即取消
-                        </button>
-                    ) : (
-                        <button disabled className="action__btn disabled">
-                            {stockData.statusMessage}
-                        </button>
-                    )}
-                </div>
+                {footerHidden ? (
+                    ''
+                ) : (
+                    <div className="subscriptionCards__footer">
+                        {stockData.canOrder ? (
+                            <button
+                                className="action__btn buy"
+                                onClick={() =>
+                                    onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
+                                }
+                            >
+                                立即申購
+                            </button>
+                        ) : stockData.canCancelOrder ? (
+                            <button
+                                className="action__btn buy"
+                                onClick={() =>
+                                    onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
+                                }
+                            >
+                                立即取消
+                            </button>
+                        ) : (
+                            <button disabled className="action__btn disabled">
+                                {stockData.statusMessage}
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
 
             <style jsx>{`
@@ -168,11 +178,55 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => 
                     text-align: center;
                     z-index: 1;
                 }
-                .time__course .point {
+                .dot {
+                    background: #fff;
+                    padding: 0 4px;
+                    width: fit-content;
+                    margin: 0 auto;
+                }
+                .dot::before {
+                    content: '';
+                    display: inline-block;
+                    border: 2px solid #d7e0ef;
                     width: 12px;
                     height: 12px;
-                    border-radius: 50%;
-                    margin: 5px auto;
+                    border-radius: 8px;
+                    background: #3f5372;
+                }
+                .time__course .point {
+                    background: #fff;
+                    padding: 0 3px;
+                    width: fit-content;
+                    margin: 0 auto;
+                }
+                .time__course .point::before {
+                    content: '';
+                    display: inline-block;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 8px;
+                    vertical-align: middle;
+                }
+                .time__course.before > div {
+                    color: #6c7b94;
+                }
+                .time__course.before .point::before {
+                    background: #a9b6cb;
+                    border: solid 2px #d7e0ef;
+                }
+                .time__course.after > div {
+                    color: #0d1623;
+                }
+                .time__course.after .point::before {
+                    background: #3f5372;
+                    border: solid 2px #d7e0ef;
+                }
+                .time__course.now > div {
+                    color: #c43826;
+                }
+                .time__course.now .point::before {
+                    background: #c43826;
+                    border: solid 2px #ebbdb7;
                 }
                 .time__course.before .point {
                     background: #a9b6cb;
@@ -189,7 +243,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick }) => 
                 .time__line {
                     width: 84%;
                     position: absolute;
-                    top: 47%;
+                    top: 44%;
                     border: none;
                     background: #d7e0ef;
                     height: 1px;

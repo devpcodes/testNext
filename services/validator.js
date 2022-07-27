@@ -33,6 +33,49 @@ let verify = {
             return Promise.reject('含有不合法字元');
         }
     },
+    checkHaveLoanMoney: (val, otherVal, msg) => {
+        if (val === '') {
+            return Promise.reject(msg);
+        } else {
+            return Promise.resolve();
+        }
+    },
+    checkLoanMoneyUnit: (val, otherVal, msg) => {
+        const patt = /^[0-9]{0,}$/;
+        if (!patt.test(val)) {
+            return Promise.reject('含有不合法字元');
+        }
+        if (val < 10000) {
+            return Promise.reject(msg);
+        }
+        if (Number(val) % 1000 !== 0) {
+            return Promise.reject(msg);
+        } else {
+            return Promise.resolve();
+        }
+    },
+    checkLoanMoney: (val, otherVal, msg) => {
+        const patt = /^[0-9]{0,}$/;
+        if (!patt.test(val)) {
+            return Promise.reject('含有不合法字元');
+        }
+        if (val < 10000) {
+            return Promise.reject(msg);
+        }
+        if (Number(val) % 1000 !== 0) {
+            return Promise.reject(msg);
+        }
+        if (val > otherVal) {
+            return Promise.reject(msg);
+        }
+        return Promise.resolve();
+    },
+    checkLoanMoneyMax: (val, otherVal, msg) => {
+        if (val < otherVal) {
+            return Promise.reject(msg);
+        }
+        return Promise.resolve();
+    },
 };
 
 const checkLowerEnglish = function (value) {

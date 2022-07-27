@@ -41,6 +41,7 @@ const SymbolInput = () => {
                 marketType={['SB']}
                 className="addSelfSelect"
                 controlFunction={setValueHandler}
+                isOrder={true}
             />
             <style global jsx>{`
                 .addSelfSelect .ant-select.ant-select-auto-complete.ant-select-single.ant-select-show-search {
