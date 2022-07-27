@@ -11,16 +11,18 @@ import { debounce } from '../../../../services/throttle';
 import { fetchAccount } from '../../../../services/components/subscriptionOverview/fetchAccount';
 import { postQueryCrossSelling } from '../../../../services/components/mySubscription/postQueryCrossSelling';
 import { fetchAccountStatus } from '../../../../services/components/subscriptionOverview/fetchAccountStatus';
+import { useCheckSubscriptionAcc } from '../../../../hooks/useCheckSubscriptionAcc';
 const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [balance, setBalance] = useState('--');
     const [bankAccount, setBankAccount] = useState('--');
     const [signAccounts, setSignAccounts] = useState([]);
-    const [signAcc, setSignAcc] = useState(false);
-    const [applyStatus, setApplyStatus] = useState(false);
+    // const [signAcc, setSignAcc] = useState(false);
+    // const [applyStatus, setApplyStatus] = useState(false);
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
+    const [applyStatus, signAcc] = useCheckSubscriptionAcc();
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -40,19 +42,19 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
         }
     };
 
-    useEffect(() => {
-        if (signAccounts.length > 0) {
-            const signAccs = signAccounts.filter(item => {
-                return item.account === currentAccount.account;
-            });
-            //TODO MOCK
-            // signAccs[0].bank_flag = '1';
+    // useEffect(() => {
+    //     if (signAccounts.length > 0) {
+    //         const signAccs = signAccounts.filter(item => {
+    //             return item.account === currentAccount.account;
+    //         });
+    //         //TODO MOCK
+    //         // signAccs[0].bank_flag = '1';
 
-            setSignAcc(signAccs[0]?.bank_flag === '0' ? true : false);
-        } else {
-            setSignAcc(false);
-        }
-    }, [currentAccount, signAccounts]);
+    //         setSignAcc(signAccs[0]?.bank_flag === '0' ? true : false);
+    //     } else {
+    //         setSignAcc(false);
+    //     }
+    // }, [currentAccount, signAccounts]);
 
     useEffect(() => {
         console.log('applyStatus', applyStatus);
@@ -75,37 +77,37 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
         } catch (error) {}
     };
 
-    const getQueryCrossSelling = async account => {
-        const res = await postQueryCrossSelling(getToken());
-        console.log('res', res, account);
-        setSignAccounts(res);
-    };
+    // const getQueryCrossSelling = async account => {
+    //     const res = await postQueryCrossSelling(getToken());
+    //     console.log('res', res, account);
+    //     setSignAccounts(res);
+    // };
 
-    const getDsAndBank = async () => {
-        //TODO mock
-        // setApplyStatus(true);
-        // getQueryCrossSelling(currentAccount.account);
+    // const getDsAndBank = async () => {
+    //     //TODO mock
+    //     // setApplyStatus(true);
+    //     // getQueryCrossSelling(currentAccount.account);
 
-        try {
-            const res = await fetchAccount(getToken());
-            console.log('step1', res);
-            if (res.applyStatus === '1') {
-                setApplyStatus(true);
-                getQueryCrossSelling(currentAccount.account);
-            } else {
-                setApplyStatus(false);
-            }
-        } catch (error) {
-            setApplyStatus(false);
-            message.error(error || '伺服器錯誤');
-        }
-    };
+    //     try {
+    //         const res = await fetchAccount(getToken());
+    //         console.log('step1', res);
+    //         if (res.applyStatus === '1') {
+    //             setApplyStatus(true);
+    //             getQueryCrossSelling(currentAccount.account);
+    //         } else {
+    //             setApplyStatus(false);
+    //         }
+    //     } catch (error) {
+    //         setApplyStatus(false);
+    //         message.error(error || '伺服器錯誤');
+    //     }
+    // };
 
     useEffect(() => {
         setTimeout(() => {
             if (currentAccount.broker_id != null) {
                 debounce(getBalance, 500);
-                debounce(getDsAndBank, 500);
+                // debounce(getDsAndBank, 500);
             }
         }, 700);
     }, [currentAccount]);
