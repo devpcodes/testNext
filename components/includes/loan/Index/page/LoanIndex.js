@@ -288,7 +288,7 @@ const LoanIndex = () => {
                     },
                 },
                 onOk: () => {
-                    btnHref('https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001');
+                    btnHref(process.env.NEXT_PUBLIC_LOANACCOUNT);
                 },
             }),
         );
@@ -337,13 +337,7 @@ const LoanIndex = () => {
                         借款金額無限制，隨借隨還免綁約！
                     </div>
                     <div>
-                        <Button
-                            type="primary"
-                            onClick={btnHref.bind(
-                                null,
-                                'https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001',
-                            )}
-                        >
+                        <Button type="primary" onClick={btnHref.bind(null, process.env.NEXT_PUBLIC_LOANACCOUNT)}>
                             立即申辦
                         </Button>
                         <br></br>
@@ -462,7 +456,7 @@ const LoanIndex = () => {
                                 <Button
                                     onClick={btnHref.bind(
                                         null,
-                                        'https://strd.sinotrade.com.tw/exopact/LNA/ProgQueryLNA01',
+                                        NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
                                     )}
                                     type="primary"
                                 >
