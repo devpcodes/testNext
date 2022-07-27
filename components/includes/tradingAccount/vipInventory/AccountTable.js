@@ -1,22 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Table,ConfigProvider  } from 'antd';
+import { Table, ConfigProvider } from 'antd';
 import theme from '../../../../resources/styles/theme';
 import { SmileOutlined } from '@ant-design/icons';
 import filterIcon from '../../../../resources/images/components/tradingAccount/ic-sort.svg';
 import noDataImg from '../../../../resources/images/components/oauthCancel/img-no-data.svg';
 import filterIconActive from '../../../../resources/images/components/tradingAccount/ic-sort-active.svg';
 
-
 // columns設定filterDropdown 會有自訂的icon產生
 // filterColumns 為現在 active的 filter key，icon會自動產生變化
 const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
     const [columns, setColumns] = useState([]);
-    const [noData, setNoDataSetting] = useState({imgSrc:'',text:'',tStyle:''});
+    const [noData, setNoDataSetting] = useState({ imgSrc: '', text: '', tStyle: '' });
     useEffect(() => {
-      if(noDataSetting!=undefined){
-          setNoDataSetting(noDataSetting)
-      }
-    }, []);
+        if (noDataSetting != undefined) {
+            setNoDataSetting(noDataSetting);
+        }
+    }, [noDataSetting]);
     useEffect(() => {
         let newColumns = [];
         if (props.columns?.length > 0) {
@@ -43,12 +42,15 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
     }, [props.columns, filterColumns]);
 
     //no Data customize
-    const customizeRenderEmpty = () => (
-        <div style={{ textAlign: 'center' }}>
-        <img src={ noData.imgSrc || noDataImg }></img>
-        <p style={ noData.tStyle || {color:"#3f5372", marginTop:'12px'}}>{noData.text || '目前暫無資料'}</p>
-        </div>
-    );
+    const customizeRenderEmpty = () => {
+        // console.log('empty', noData.text);
+        return (
+            <div style={{ textAlign: 'center' }}>
+                <img src={noData.imgSrc || noDataImg}></img>
+                <p style={noData.tStyle || { color: '#3f5372', marginTop: '12px' }}>{noData.text || '目前暫無資料'}</p>
+            </div>
+        );
+    };
 
     const checkActiveHandler = (dataIndex, filterColumns) => {
         let active = false;
@@ -57,17 +59,38 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
                 active = true;
             }
         });
+        // console.log('active', filterColumns);
         return active;
     };
 
     return (
         <div>
-        <ConfigProvider renderEmpty={customizeRenderEmpty}>
-            <div className="sino__table">
-                <Table columns={columns} {...props} />
-            </div>
-        </ConfigProvider>
+            <ConfigProvider renderEmpty={customizeRenderEmpty}>
+                <div className="sino__table">
+                    <Table columns={columns} {...props} />
+                </div>
+            </ConfigProvider>
             <style jsx global>{`
+                .sino__table .ant-table-row-expand-icon {
+                    background: #254a91;
+                    color: white;
+                    border-radius: 2px;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 3px;
+                }
+                .sino__table .ant-table-row-expand-icon:after {
+                    left: 8px;
+                }
+
+                .sino__table .ant-table-row-expand-icon:before {
+                    top: 8px;
+                }
+
+                .ant-table-column-sorters {
+                    padding: 0;
+                }
+
                 .filterBtn {
                     cursor: pointer;
                 }
@@ -169,6 +192,19 @@ const AccountTable = ({ filterColumns, noDataSetting, ...props }) => {
                 .sino__table .ant-pagination-total-text {
                     color: #6c7b94;
                     margin-right: 16px;
+                }
+                .sino__table .ant-table-column-sorters {
+                    padding: 0;
+                }
+                .sino__table .ant-table-column-sorter-down.active {
+                    color: black;
+                }
+                .sino__table .ant-table-column-sorter-up.active {
+                    color: black;
+                }
+                .ant-table-column-sorter-down.active,
+                .ant-table-column-sorter-up.active {
+                    color: #343434;
                 }
                 @media (max-width: ${theme.mobileBreakPoint}px) {
                     .sino__table .ant-table-thead > tr > th:first-child {

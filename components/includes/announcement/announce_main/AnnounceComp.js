@@ -5,79 +5,82 @@ import { CategoryList, GetAllListData } from '../../../../services/components/an
 import _ from 'lodash';
 
 const AnnounceComp = () => {
-// const [data, setData] = useState({}); 
-// const [reload, setReload] = useState(1);
+    // const [data, setData] = useState({});
+    // const [reload, setReload] = useState(1);
 
-const getData = async (idx, size, type, sc1, sc2, kw) => {
-    try{
-        const result = await GetAllListData(idx, size, type, sc1, sc2, kw)
-        return result
-    } catch(err) {
-        console.log('[ERROR]',err)
-        Modal.error({
-            title: '伺服器錯誤',
+    const getData = async (idx, size, type, sc1, sc2, kw) => {
+        try {
+            const result = await GetAllListData(idx, size, type, sc1, sc2, kw);
+            return result;
+        } catch (err) {
+            console.log('[ERROR]', err);
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
+    };
+
+    const getList = async () => {
+        try {
+            const result = await CategoryList();
+            return listMap(result);
+        } catch (err) {
+            console.log('[ERROR]', err);
+            Modal.error({
+                title: '伺服器錯誤2',
+            });
+        }
+    };
+
+    const listMap = l => {
+        let list = { category1List: [], category2List: [], List_lib: l.category2List };
+        l.category1List.map((x, i) => {
+            list.category1List.push({ text: x, value: x, key: 'C1' + i });
         });
-    }
-}
-
-const getList = async () => {
-    try{
-  const result = await CategoryList()
-  return listMap(result)
-    } catch(err) {
-        console.log('[ERROR]',err)
-        Modal.error({
-            title: '伺服器錯誤2',
+        let a = [];
+        l.category1List.map((x, i) => {
+            a = a.concat(l.category2List[x]);
         });
-    }
-}
+        let arr_ = a.filter((item, index, arr) => {
+            return arr.indexOf(item) === index;
+        });
+        arr_.map((x, i) => {
+            list.category2List.push({ text: x, value: x, key: 'C2' + i });
+        });
+        return list;
+    };
 
-const listMap = (l) => {
-    let list = {category1List:[],category2List:[],List_lib:l.category2List}
-    l.category1List.map((x,i) => {
-            list.category1List.push({text:x,value:x,key:'C1'+i})
-        })
-    let a = []
-    l.category1List.map((x,i) => {
-            a = a.concat(l.category2List[x])
-        })
-    let arr_ = a.filter((item, index, arr) => {
-        return arr.indexOf(item) === index;
-    })
-    arr_.map((x,i)=>{
-        list.category2List.push({text:x,value:x,key:'C2'+i})
-    })
- return list 
-}
-
-// const reFreshHandler = () => {
-//     setReload(count => {
-//         return (count += 1);
-//     });
-// };
-const getKeyWord = () => {
-    try{
-        let kw = keyWord.slice()
+    // const reFreshHandler = () => {
+    //     setReload(count => {
+    //         return (count += 1);
+    //     });
+    // };
+    const getKeyWord = () => {
+        try {
+            let kw = keyWord.slice();
             dispatch({
-                type: "CLEAN_ITEM",
-            }); 
-        return kw        
-    } catch (error) {
-        console.log('無關鍵字')
-    }
-
-};
+                type: 'CLEAN_ITEM',
+            });
+            return kw;
+        } catch (error) {
+            console.log('無關鍵字');
+        }
+    };
 
     return (
         <div className="announce__container">
             <div className="control__container">
-                <div className="topLink"><a href="/newweb">首頁 / </a>最新公告</div>
+                <div className="topLink">
+                    <a href="/newweb">首頁 / </a>最新公告
+                </div>
                 <h2 className="title">最新公告</h2>
             </div>
-              <AnnounceTable
-                 listData={getList().then(res=>{return res})}
-                 getList={getList}
-                 getData={getData}
+            <AnnounceTable
+                listData={getList().then(res => {
+                    return res;
+                })}
+                getList={getList}
+                getData={getData}
             />
             <style jsx>
                 {`
@@ -102,7 +105,6 @@ const getKeyWord = () => {
                 }
                 `}
             </style>
-
         </div>
     );
 };

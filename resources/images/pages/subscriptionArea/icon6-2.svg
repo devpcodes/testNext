@@ -1,0 +1,21 @@
+<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="17.241%" y1="0%" x2="89.655%" y2="0%" id="bzrrv0d65a">
+            <stop stop-color="#DAA360" offset="32.292%"/>
+            <stop stop-color="#DAA360" stop-opacity="0" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="17.241%" y1="0%" x2="89.655%" y2="0%" id="o52z3exjwb">
+            <stop stop-color="#DAA360" offset="32.292%"/>
+            <stop stop-color="#DAA360" stop-opacity="0" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M0 0h50v50H0z"/>
+        <g transform="translate(2.885 7.692)">
+            <rect fill="url(#bzrrv0d65a)" fill-rule="nonzero" x="2.885" width="32.692" height="15.385" rx="2"/>
+            <path fill="#172439" d="m42.308 9.538 2.283-1.846-7.211-5.829V6.25H11.538v3.365H37.38v3.906l4.832-3.906h.096z"/>
+            <rect fill="url(#o52z3exjwb)" fill-rule="nonzero" transform="matrix(-1 0 0 1 51.923 0)" x="9.615" y="20.192" width="32.692" height="15.385" rx="2"/>
+            <path fill="#172439" d="M7.212 22.056 0 27.885l7.212 5.829v-3.906h26.442v-3.366H7.212z"/>
+        </g>
+    </g>
+</svg>
