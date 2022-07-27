@@ -128,7 +128,7 @@ const IndexPageComponent = ({ richClubNews }) => {
                 title: '不限用途借貸',
                 description: '隨時借隨時還，撥款超快速',
                 site: 'outer',
-                link: `${process.env.NEXT_PUBLIC_SUBPATH}/Inside_Frame/?URL=https://service.sinotrade.com.tw/loan/accountDetail/`,
+                link: `/newweb/loan-zone/Overview`,
                 icon: `${noLimit}`,
                 target: '_self',
             },

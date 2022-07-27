@@ -53,12 +53,12 @@ function OpeningAccountIndexComponent(props) {
             link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0037&strWeb=0035',
         },
         ,
-        {
-            title: '不限用途款項',
-            image: icon_no_limit_money,
-            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_3?dirtype=99&strProd=0037&strWeb=0035',
-        },
         ,
+        // {
+        //     title: '不限用途款項',
+        //     image: icon_no_limit_money,
+        //     link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_3?dirtype=99&strProd=0037&strWeb=0035',
+        // },
         {
             title: '加開進度查詢',
             image: icon_search,
@@ -94,12 +94,35 @@ function OpeningAccountIndexComponent(props) {
             link: `https://www.sinotrade.com.tw/stfopenact/progress?strProd=0037&strWeb=0035`,
         },
     ]);
+    const [loanZoneTypes] = useState([
+        {
+            title: '不限用途款項',
+            image: icon_no_limit_money,
+            link: process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/Index',
+        },
+        ,
+        {
+            title: '加開進度查詢',
+            image: icon_search,
+            link: process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/PQLogin',
+        },
+    ]);
     return (
         <Layout>
             <OpenAccountHeader />
             <Content className="layoutContent">
                 <h2 className="secondTitle">證券戶加開</h2>
                 <SecuritiesAccountMenu linkData={securitiesAccountTypes} />
+                <div className="flexBox">
+                    <div>
+                        <h2 className="secondTitle">期貨開戶</h2>
+                        <SecuritiesAccountMenu linkData={featureAccountTypes} />
+                    </div>
+                    <div>
+                        <h2 className="secondTitle">不限用途款項借貸申辦</h2>
+                        <SecuritiesAccountMenu linkData={loanZoneTypes} />
+                    </div>
+                </div>
                 <h2 className="secondTitle">期貨開戶</h2>
                 <SecuritiesAccountMenu linkData={featureAccountTypes} />
                 <h2 className="secondTitle">預約臨櫃開戶</h2>
@@ -107,6 +130,9 @@ function OpeningAccountIndexComponent(props) {
             </Content>
             <style jsx>
                 {`
+                    .flexBox {
+                        display: flex;
+                    }
                     .layoutContent {
                         width: calc(944px + 32px);
                         margin: auto;
@@ -131,6 +157,14 @@ function OpeningAccountIndexComponent(props) {
                             margin: 0;
                         }
                     }
+                    @media screen and (max-width: 767px) {
+                        .flexBox {
+                            flex-wrap: wrap;
+                        }
+                        .flexBox * {
+                            width: 100%;
+                        }
+                    }
 
                     @media screen and (max-width: 450px) {
                         .layoutContent {
@@ -144,6 +178,19 @@ function OpeningAccountIndexComponent(props) {
                             font-size: 20px;
                             border-left: 5px solid #daa360;
                         }
+                    }
+                `}
+            </style>
+            <style jsx global>
+                {`
+                    .flexBox .ant-col-lg-6 {
+                        max-width: 50%;
+                    }
+
+                    @media screen and (max-width: 767px) {
+                    }
+
+                    @media screen and (max-width: 450px) {
                     }
                 `}
             </style>
