@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { fetchOrderStatus } from '../../../../services/components/mySubscription/fetchOrderStatus';
@@ -18,6 +18,7 @@ import { postCancel } from '../../../../services/components/mySubscription/postC
 import { openGoOrder } from '../../../../services/openGoOrder';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { postOrder } from '../../../../services/components/mySubscription/postOrder';
+import { setModal } from '../../../../store/components/layouts/action';
 // import { WindowsOutlined } from '@ant-design/icons';
 const mockData = [
     {
@@ -133,6 +134,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     const [total, setTotal] = useState(0);
     const isMobile = useCheckMobile();
     const router = useRouter();
+    const dispatch = useDispatch();
     useEffect(() => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
@@ -330,7 +332,13 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
 
     const clickHandler = (record, type) => {
         console.log(record, type);
-        if (type === 'canCancelOrder') cancelHandler(record);
+        if (type === 'canCancelOrder') {
+            if (record.canCancelAppropriation) {
+                cancelAppropriation(record);
+            } else {
+                cancelHandler(record);
+            }
+        }
         if (type === 'canSellStock') sellHandler(record);
         if (type === 'canMortgage') mortgageHandler(record);
         if (type === 'canAppropriation') appropriationHandler(record);
@@ -338,7 +346,19 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     };
 
     const cancelAppropriation = async record => {
-        cancelHandler(record, true);
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消預約動用',
+                content: `「${record.stockId + ' ' + record.stockName}」，取消動用後，需備足資金於`,
+                noCloseIcon: true,
+                noTitleIcon: true,
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                },
+            }),
+        );
+        // cancelHandler(record, true);
     };
 
     const appropriationHandler = async record => {
@@ -416,12 +436,16 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
 
     const activeHandler = record => {
         //TODO MOCK
-        // record.canAppropriation = true;
+        record.canCancelAppropriation = true;
+        record.canCancelOrder = true;
         const btnsArr = [];
-        if (record.canCancelOrder) {
+        if (record.canCancelOrder && record.canCancelAppropriation) {
             btnsArr.push('canCancelOrder');
         }
-        if (record.canCancelAppropriation) {
+        if (record.canCancelOrder && !record.canCancelAppropriation) {
+            btnsArr.push('canCancelOrder');
+        }
+        if (record.canCancelAppropriation && !record.canCancelOrder) {
             btnsArr.push('canCancelAppropriation');
         }
         if (record.canSellStock) {
