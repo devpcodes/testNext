@@ -24,19 +24,18 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
             >
                 {dataSource.map((x, i) => {
                     return (
-                        <React.Fragment key={i}>
-                            <Panel
-                                header={(x.type ? x.type : '') + x.title}
-                                extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''} //tag往上拉5行距離
-                            >
-                                {Array.isArray(x.content)
-                                    ? x.content.map((y, j) => {
-                                          return <p key={'p' + i}>{y}</p>;
-                                      })
-                                    : x.content}
-                                {x.chart ? chartFunc(x.chart) : ''}
-                            </Panel>
-                        </React.Fragment>
+                        <Panel
+                            header={(x.type ? x.type : '') + x.title}
+                            extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''} //tag往上拉5行距離
+                            key={i}
+                        >
+                            {Array.isArray(x.content)
+                                ? x.content.map((y, j) => {
+                                      return <p key={'p' + i}>{y}</p>;
+                                  })
+                                : x.content}
+                            {x.chart ? chartFunc(x.chart) : ''}
+                        </Panel>
                     );
                 })}
             </Collapse>
