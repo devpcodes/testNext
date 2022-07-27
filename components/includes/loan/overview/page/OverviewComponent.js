@@ -159,9 +159,7 @@ const OverviewComponent = () => {
                     </div>
                 </div>
                 <div className="account__item">
-                    <div className="account__label">
-                        開通日{accountOverview.status === 'F' && accountOverview.blockReason == '1' && '(開戶)'}
-                    </div>
+                    <div className="account__label">開通日(開戶)</div>
                     <div className="account__val">{moment(accountOverview.openDate).format('YYYY/MM/DD')}</div>
                 </div>
                 <div className="account__item">

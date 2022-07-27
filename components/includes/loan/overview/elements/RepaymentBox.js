@@ -150,7 +150,7 @@ const RepaymentBox = ({ style, amount, estimatePayable }) => {
                 <div>
                     <span className="canLoanMoney">應還款金額</span>
                     {/* <img className="canLoanIcon" src={info} /> */}
-                    <span className="canLoanDesc">(已動用+利息)</span>
+                    <span className="canLoanDesc">(含息)</span>
                 </div>
                 <p className="loan__money">{'$' + formatNum(amount) || '--'}</p>
                 <div className="loan__contentBottom">
@@ -158,7 +158,7 @@ const RepaymentBox = ({ style, amount, estimatePayable }) => {
                         {/* <Bar /> */}
                         <div className="loan__text--box">
                             <div>
-                                <span className="loan__money--lable">預估利息</span>
+                                <span className="loan__money--lable">利息及其他費用</span>
                                 <span className="loan__money--val">{'$' + formatNum(estimatePayable) || '--'}</span>
                             </div>
                         </div>

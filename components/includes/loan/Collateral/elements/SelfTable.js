@@ -343,9 +343,7 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
                 width: 100,
                 align: 'center',
                 render: (text, record) => {
-                    return text != null
-                        ? formatNum(Math.ceil((Number(record.collateralQty) / 1000) * Number(text) * 1000))
-                        : '--';
+                    return text != null ? formatNum(Math.ceil(Number(record.collateralQty) * Number(text))) : '--';
                 },
             },
         ];
