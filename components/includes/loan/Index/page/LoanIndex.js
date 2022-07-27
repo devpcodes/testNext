@@ -456,7 +456,7 @@ const LoanIndex = () => {
                                 <Button
                                     onClick={btnHref.bind(
                                         null,
-                                        NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
+                                        process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
                                     )}
                                     type="primary"
                                 >
