@@ -350,7 +350,18 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
             setModal({
                 visible: true,
                 title: '取消預約動用',
-                content: `「${record.stockId + ' ' + record.stockName}」，取消動用後，需備足資金於`,
+                content: (
+                    <>
+                        <p>
+                            「{record.stockId + ' ' + record.stockName}」，取消動用後，需備足資金於
+                            {moment(record.endDate).format('MM/DD')}進行申購價${formatNum(record.orderAmount)}
+                            扣款作業，是否確認取消動用？
+                        </p>
+                        <p style={{ color: 'rgb(203 71 48)' }}>
+                            請於申購截止日確認銀行存款總額應有申購扣款金額，否則為不合格件。
+                        </p>
+                    </>
+                ),
                 noCloseIcon: true,
                 noTitleIcon: true,
                 onCancel: () => {
