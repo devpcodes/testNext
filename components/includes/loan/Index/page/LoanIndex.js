@@ -126,7 +126,7 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '每筆最少借款金額是多少？',
-                content: '一萬元，並以千元為級距，最高不得超過150萬元',
+                content: '一萬元，並以千元為級距，最高不得超過100萬元',
                 open: false,
                 key: 9,
             },
