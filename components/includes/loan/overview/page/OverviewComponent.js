@@ -227,8 +227,17 @@ const OverviewComponent = () => {
                 />
                 <RepaymentBox
                     style={{ width: isMobile ? '100%' : '49.3%', marginTop: isMobile ? '16px' : '0' }}
-                    amount={Number(accountOverview.usedFinancing) + (Number(accountOverview.estimatePayable) || 0)}
-                    estimatePayable={accountOverview.estimatePayable}
+                    amount={
+                        Number(accountOverview.usedFinancing) +
+                        (Number(accountOverview.estimatePayable) +
+                            Number(accountOverview.unpaidCustodyFee) +
+                            Number(accountOverview.unpaidFee) || 0)
+                    }
+                    estimatePayable={
+                        Number(accountOverview.estimatePayable) +
+                        Number(accountOverview.unpaidCustodyFee) +
+                        Number(accountOverview.unpaidFee)
+                    }
                 />
             </div>
             <div className="overview__head2">
