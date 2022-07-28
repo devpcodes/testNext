@@ -1,6 +1,14 @@
 import { getSubscriptionInstance } from '../../myAxios';
 
-export const fetchCancelSubscription = async function (token, branch, account, stockId, ca_content, source) {
+export const fetchCancelSubscription = async function (
+    token,
+    branch,
+    account,
+    stockId,
+    ca_content,
+    source,
+    isAppropriation,
+) {
     try {
         const reqUrl = '/cancel';
         const res = await getSubscriptionInstance().post(reqUrl, {
@@ -10,6 +18,7 @@ export const fetchCancelSubscription = async function (token, branch, account, s
             stockId,
             ca_content,
             source,
+            isAppropriation,
         });
 
         if (res.data.success != null && res.data.success === true) {

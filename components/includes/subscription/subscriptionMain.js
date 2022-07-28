@@ -44,10 +44,11 @@ const SubscriptionMain = memo(({}) => {
         }
     }, [currentAccount, currentBrokerID]);
 
-    const submitSubscription = useCallback(async (name, id, price) => {
+    const submitSubscription = useCallback(async (name, id, price, isAppropriation) => {
         const branch = currentBrokerID;
         const account = currentAccount;
         const token = getToken();
+        const bankChannel = isMobile ? 'MWEB' : 'NETBANK';
         dispatch(
             setModal({
                 visible: true,
@@ -70,7 +71,16 @@ const SubscriptionMain = memo(({}) => {
                     const cert = await signCert({ idno: idno }, true, getToken());
                     console.log(cert);
                     if (cert.signature) {
-                        const response = await fetchApplySubscription(token, branch, account, id, cert, 'h');
+                        const response = await fetchApplySubscription(
+                            token,
+                            branch,
+                            account,
+                            id,
+                            cert,
+                            'h',
+                            isAppropriation,
+                            bankChannel,
+                        );
                         dispatch(
                             setModal({
                                 visible: true,
@@ -89,7 +99,7 @@ const SubscriptionMain = memo(({}) => {
         );
     });
 
-    const cancelSubscription = useCallback(async (name, id, price) => {
+    const cancelSubscription = useCallback(async (name, id, price, isAppropriation) => {
         const branch = currentBrokerID;
         const account = currentAccount;
         const token = getToken();
@@ -114,7 +124,15 @@ const SubscriptionMain = memo(({}) => {
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
                     if (cert.signature) {
-                        const response = await fetchCancelSubscription(token, branch, account, id, cert, 'h');
+                        const response = await fetchCancelSubscription(
+                            token,
+                            branch,
+                            account,
+                            id,
+                            cert,
+                            'h',
+                            isAppropriation,
+                        );
                         dispatch(
                             setModal({
                                 visible: true,
