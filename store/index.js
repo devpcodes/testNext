@@ -32,7 +32,7 @@ const reducers = combineReducers({
     asset,
     accBalance,
     activeReturn,
-    announcement
+    announcement,
 });
 
 export default reducers;

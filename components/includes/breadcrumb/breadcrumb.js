@@ -8,14 +8,13 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { getCommonQuestionCategories } from '../../../services/components/customerSupport/customerSupportService';
 
-function BreadcrumbLayout({ articleTitle, categoryName }) {
+function BreadcrumbLayout({ articleTitle, categoryName, style }) {
     // const routeList = useSelector(state => state.breadcrumb.routeList);
     const levelArr = useRef([]);
     const router = useRouter();
     const elementNameArr = useRef([]);
     const elementPathArr = useRef([]);
     const [firstTabId, setFirstTabId] = useState([]);
-
     const BreadcrumbItemHandler = useCallback(() => {
         elementNameArr.current = [];
         elementPathArr.current = [];
@@ -51,6 +50,26 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
 
     const pathHandler = str => {
         switch (str) {
+            case 'subscriptionArea':
+                elementNameArr.current.push('申購專區');
+                elementPathArr.current.push(`/${levelArr.current[0]}`);
+                break;
+            case 'MySubscription':
+                elementNameArr.current.push('我的申購');
+                elementPathArr.current.push(`/MySubscription`);
+                break;
+            case 'Calculation':
+                elementNameArr.current.push('申購試算');
+                elementPathArr.current.push(`/Calculation`);
+                break;
+            case 'SubscriptionOverview':
+                elementNameArr.current.push('申購信用通總覽');
+                elementPathArr.current.push(`/${levelArr.current[2]}`);
+                break;
+            case 'Subscription':
+                elementNameArr.current.push('新股申購');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
             case 'customer-support':
                 elementNameArr.current.push('客戶支援');
                 elementPathArr.current.push(`/${levelArr.current[0]}`);
@@ -90,6 +109,25 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
                     elementPathArr.current.push(`/${levelArr.current[0]}`);
                 }
                 break;
+            case 'loan':
+                elementNameArr.current.push('首頁');
+                elementPathArr.current.push(`/${levelArr.current[0]}`);
+            case 'loan-zone':
+                elementNameArr.current.push('借貸專區');
+                elementPathArr.current.push(`/${levelArr.current[0]}`);
+                break;
+            case 'Collateral':
+                elementNameArr.current.push('擔保品試算');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
+            case 'Record':
+                elementNameArr.current.push('借還紀錄');
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                break;
+            case 'Overview':
+                elementNameArr.current.push('借款總覽');
+                elementPathArr.current.push(`/${levelArr.current[1]}/Overview`);
+                break;
             default:
                 break;
         }
@@ -97,8 +135,8 @@ function BreadcrumbLayout({ articleTitle, categoryName }) {
 
     return (
         <>
-            <Breadcrumb className="site-breadcrumb">
-                {BreadcrumbItemHandler().map((item, index) => {
+            <Breadcrumb className="site-breadcrumb" style={style}>
+                {_.uniq(BreadcrumbItemHandler()).map((item, index) => {
                     if (index !== BreadcrumbItemHandler().length - 1) {
                         let pathArr = _.clone(elementPathArr.current);
                         pathArr.splice(index + 1);
