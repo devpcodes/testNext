@@ -8,6 +8,9 @@ export default function Custom404() {
         if (router.asPath.indexOf('SinoTrade_login') >= 0) {
             setShowErr(false);
         }
+        if (router.asPath === '/subscriptionArea/') {
+            setShowErr(false);
+        }
         console.log('err', router.asPath);
     }, [router.asPath]);
 

@@ -135,6 +135,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     const isMobile = useCheckMobile();
     const router = useRouter();
     const dispatch = useDispatch();
+
     useEffect(() => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
@@ -548,7 +549,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     isAppropriation: type,
                     token,
                 });
-                message.success(type ? '取消動用已送出' : '取消申購已送出');
+                message.success(type ? '已成功取消預約動用' : '取消申購已送出');
                 setCancelLoading(false);
                 getOrderStatus();
             } catch (error) {

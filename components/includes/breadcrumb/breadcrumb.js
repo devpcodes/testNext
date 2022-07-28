@@ -52,15 +52,15 @@ function BreadcrumbLayout({ articleTitle, categoryName, style }) {
         switch (str) {
             case 'subscriptionArea':
                 elementNameArr.current.push('申購專區');
-                elementPathArr.current.push(`/subscriptionArea/Subscription/`);
+                elementPathArr.current.push(`/subscriptionArea`);
                 break;
             case 'MySubscription':
                 elementNameArr.current.push('我的申購');
-                elementPathArr.current.push(`/subscriptionArea/MySubscription`);
+                elementPathArr.current.push(`/MySubscription`);
                 break;
             case 'Calculation':
                 elementNameArr.current.push('申購試算');
-                elementPathArr.current.push(`/Calculation`);
+                elementPathArr.current.push(`/${levelArr.current[1]}`);
                 break;
             case 'SubscriptionOverview':
                 elementNameArr.current.push('申購信用通總覽');
@@ -68,7 +68,10 @@ function BreadcrumbLayout({ articleTitle, categoryName, style }) {
                 break;
             case 'Subscription':
                 elementNameArr.current.push('新股申購');
-                elementPathArr.current.push(`/${levelArr.current[1]}`);
+                elementPathArr.current = [];
+                elementPathArr.current.push(`/subscriptionArea`);
+                elementPathArr.current.push(`/Subscription`);
+                // elementPathArr.current.push(`/${levelArr.current[1]}`);
                 break;
             case 'customer-support':
                 elementNameArr.current.push('客戶支援');

@@ -91,6 +91,11 @@ const Layout = memo(({ children }) => {
         if (router.asPath.indexOf('/SinoTrade_login') >= 0) {
             setShowBigLogin(true);
         }
+
+        //無頁面轉址
+        if (router.asPath === '/subscriptionArea/') {
+            router.push('/subscriptionArea/Subscription');
+        }
     }, [router.asPath]);
 
     useEffect(() => {

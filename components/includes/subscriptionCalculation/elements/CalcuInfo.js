@@ -1,10 +1,30 @@
+import { useState } from 'react';
 import CalcuItem from './CalcuItem';
 import Line from './Line';
 import icon from '../../../../resources/images/components/subscriptionCalculation/basic-help-circle (4).svg';
 import SinoBtn from '../../loan/Collateral/elements/SinoBtn';
+import { useUser } from '../../../../hooks/useUser';
+import { useDispatch } from 'react-redux';
+import { showLoginHandler } from '../../../../store/components/layouts/action';
+import SubscriptionAccErrModal from './SubscriptionAccErrModal';
 const CalcuInfo = () => {
+    const { isLogin, accounts } = useUser();
+    const [checkAccount, setCheckAccount] = useState(false);
+    const dispatch = useDispatch();
+    const submitHandler = () => {
+        if (!isLogin) {
+            dispatch(showLoginHandler(true));
+        } else {
+            setCheckAccount(true);
+        }
+    };
+    const clickHandler = checkSuccess => {
+        setCheckAccount(false);
+    };
+
     return (
         <div className="info__container">
+            {checkAccount && <SubscriptionAccErrModal onClick={clickHandler} />}
             <p className="info__title">申購便利通合計</p>
             <div>
                 <span className="info__num">20,120</span>
@@ -56,6 +76,7 @@ const CalcuInfo = () => {
                     marginTop: '20px',
                     borderRadius: '2px',
                 }}
+                onClick={submitHandler}
             />
             <p className="description mr">預約成功將於截止日2022/06/06動用</p>
             <div className="footer">

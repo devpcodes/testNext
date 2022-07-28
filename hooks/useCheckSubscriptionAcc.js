@@ -11,6 +11,7 @@ export const useCheckSubscriptionAcc = () => {
     const userSettings = useSelector(store => store.user.userSettings);
     const [applyStatus, setApplyStatus] = useState(false);
     const [signAccounts, setSignAccounts] = useState([]);
+    const [accountInfo, setAccountInfo] = useState({});
     const [signAcc, setSignAcc] = useState(false);
     useEffect(() => {
         if (currentAccount.idno != null && userSettings.confirmAfterStockOrdered != null) {
@@ -39,6 +40,7 @@ export const useCheckSubscriptionAcc = () => {
             if (res.applyStatus === '1') {
                 setApplyStatus(true);
                 getQueryCrossSelling(currentAccount.account);
+                setAccountInfo(res);
             } else {
                 setApplyStatus(false);
             }
@@ -54,6 +56,6 @@ export const useCheckSubscriptionAcc = () => {
         setSignAccounts(res);
     };
 
-    return [applyStatus, signAcc];
+    return [applyStatus, signAcc, accountInfo];
     // return hasMounted;
 };
