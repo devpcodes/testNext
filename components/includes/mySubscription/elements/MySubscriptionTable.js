@@ -139,7 +139,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     useEffect(() => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
-            debounce(getOrderStatus, 500);
+            // debounce(getOrderStatus, 500);
+            getOrderStatus();
             // getOrderStatus();
         }
     }, [currentAccount]);

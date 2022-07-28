@@ -16,15 +16,17 @@ const CalcuInfo = () => {
             dispatch(showLoginHandler(true));
         } else {
             setCheckAccount(true);
+            setTimeout(() => {
+                setCheckAccount(false);
+            }, 500);
         }
     };
-    const clickHandler = checkSuccess => {
-        setCheckAccount(false);
-    };
+
+    const clickHandler = () => {};
 
     return (
         <div className="info__container">
-            {checkAccount && <SubscriptionAccErrModal onClick={clickHandler} />}
+            <SubscriptionAccErrModal onClick={clickHandler} checkAccount={checkAccount} />
             <p className="info__title">申購便利通合計</p>
             <div>
                 <span className="info__num">20,120</span>
