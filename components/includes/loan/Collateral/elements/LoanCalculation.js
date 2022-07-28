@@ -65,7 +65,7 @@ const LoanCalculation = ({
             getPhone(res.phone);
             setRepaymentAcc(res);
         } catch (error) {
-            message.error('伺服器錯誤');
+            // message.error('伺服器錯誤');
         }
     };
 
