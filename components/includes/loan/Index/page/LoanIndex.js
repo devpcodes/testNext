@@ -620,7 +620,7 @@ const LoanIndex = () => {
             .bg-cycle.cyclel{ width: 12%; bottom: -74%; z-index: 0;}
             .bg-cycle.cycler{ width: 10%; top: auto; bottom: -17%;z-index:0;}
         }
-        @media screen and (max-width: 425px) {
+        @media screen and (max-width: 500px) {
             .forPC{display:none;}
             .forMB{display:block!important;}      
             .infiImg{height:1.4em;margin-top:0%;}
