@@ -101,7 +101,7 @@ const LoanIndex = () => {
             },
             {
                 type: '【申辦】',
-                title: '我是聯電的員工，我可以申辦不限用途款項借貸？',
+                title: '我是A股票的(超過10%大股東或內部人)員工，我可以申辦不限用途款項借貸?',
                 content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
                 open: false,
                 key: 6,
@@ -110,7 +110,7 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '有哪些股票可以申請借款呢？成數利率又是多少？',
-                content: '請至點選上方【體驗試算】輸入股號股名進行查詢',
+                content: '請至上方【體驗試算】輸入股號股名進行查詢',
                 open: false,
                 tag: 'tag2',
                 key: 7,
@@ -126,7 +126,7 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '每筆最少借款金額是多少？',
-                content: '一萬元，並以千元為級距，最高不得超過300萬元',
+                content: '一萬元，並以千元為級距，最高不得超過150萬元',
                 open: false,
                 key: 9,
             },
@@ -144,7 +144,6 @@ const LoanIndex = () => {
                     '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
                     '撥券費：每張1元。',
                     '上述費用於還款或借款到期時收取。',
-                    '借貸服務免開辦費。',
                 ],
                 open: false,
                 key: 11,
@@ -166,6 +165,13 @@ const LoanIndex = () => {
                 ],
                 open: false,
                 key: 12,
+            },
+            {
+                type: '【還款與其他】',
+                title: '擔保品如何申請返還？',
+                content: ['你可於現金還款後，申請擔保品返還。擔保品預計於案件結案 T日或T+1日返還。'],
+                open: false,
+                key: 12.5,
             },
             {
                 type: '【還款與其他】',
@@ -288,7 +294,7 @@ const LoanIndex = () => {
                     },
                 },
                 onOk: () => {
-                    btnHref('https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001');
+                    btnHref(process.env.NEXT_PUBLIC_LOANACCOUNT);
                 },
             }),
         );
@@ -337,13 +343,7 @@ const LoanIndex = () => {
                         借款金額無限制，隨借隨還免綁約！
                     </div>
                     <div>
-                        <Button
-                            type="primary"
-                            onClick={btnHref.bind(
-                                null,
-                                'https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001',
-                            )}
-                        >
+                        <Button type="primary" onClick={btnHref.bind(null, process.env.NEXT_PUBLIC_LOANACCOUNT)}>
                             立即申辦
                         </Button>
                         <br></br>
@@ -462,7 +462,7 @@ const LoanIndex = () => {
                                 <Button
                                     onClick={btnHref.bind(
                                         null,
-                                        'https://strd.sinotrade.com.tw/exopact/LNA/ProgQueryLNA01',
+                                        process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
                                     )}
                                     type="primary"
                                 >
