@@ -30,6 +30,105 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
         return `time__course ${dateClassName}`;
     };
 
+    const renderBtn = () => {
+        const btn = (
+            <>
+                {stockData.canOrder ? (
+                    <button
+                        className="action__btn buy"
+                        onClick={() =>
+                            onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount, false)
+                        }
+                    >
+                        立即申購
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {stockData.canAppropriation && !stockData.canOrder ? (
+                    <button
+                        className="action__btn buy"
+                        onClick={() =>
+                            onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
+                        }
+                    >
+                        申請預約動用
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {stockData.canCancelOrder ? (
+                    <button
+                        className="action__btn cancel"
+                        onClick={() =>
+                            onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, false)
+                        }
+                    >
+                        立即取消
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {stockData.canCancelOrder && !stockData.canCancelAppropriation ? (
+                    <button
+                        className="action__btn cancel"
+                        onClick={() =>
+                            onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
+                        }
+                    >
+                        取消預約動用
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {stockData.canSellStock ? (
+                    <button
+                        className="action__btn sell"
+                        onClick={() =>
+                            onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
+                        }
+                    >
+                        立即賣股
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {stockData.canMortgage ? (
+                    <button
+                        className="action__btn mortgage"
+                        onClick={() =>
+                            onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
+                        }
+                    >
+                        抵押借款
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {!stockData.canOrder &&
+                !stockData.canCancelOrder &&
+                !stockData.canAppropriation &&
+                !stockData.canCancelAppropriation &&
+                !stockData.canSellStock &&
+                !stockData.canMortgage ? (
+                    <button disabled className="action__btn disabled">
+                        {stockData.statusMessage}
+                    </button>
+                ) : (
+                    <></>
+                )}
+            </>
+        );
+
+        return btn;
+    };
+
     return (
         <>
             <div>
@@ -108,7 +207,8 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     ''
                 ) : (
                     <div className="subscriptionCards__footer">
-                        {stockData.canOrder ? (
+                        {renderBtn()}
+                        {/* {stockData.canOrder ? (
                             <button
                                 className="action__btn buy"
                                 onClick={() =>
@@ -130,7 +230,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                             <button disabled className="action__btn disabled">
                                 {stockData.statusMessage}
                             </button>
-                        )}
+                        )} */}
                     </div>
                 )}
             </div>
@@ -170,6 +270,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     color: #22a16f;
                 }
                 .time__block {
+                    height: 62px;
                     display: flex;
                     position: relative;
                 }
@@ -228,26 +329,28 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     background: #c43826;
                     border: solid 2px #ebbdb7;
                 }
-                .time__course.before .point {
-                    background: #a9b6cb;
-                    border: solid 2px #d7e0ef;
-                }
-                .time__course.after .point {
-                    background: #3f5372;
-                    border: solid 2px #d7e0ef;
-                }
-                .time__course.now .point {
-                    background: #c43826;
-                    border: solid 2px #ebbdb7;
-                }
+                // .time__course.before .point {
+                //     background: #a9b6cb;
+                //     border: solid 2px #d7e0ef;
+                // }
+                // .time__course.after .point {
+                //     background: #3f5372;
+                //     border: solid 2px #d7e0ef;
+                // }
+                // .time__course.now .point {
+                //     background: #c43826;
+                //     border: solid 2px #ebbdb7;
+                // }
                 .time__line {
                     width: 84%;
                     position: absolute;
-                    top: 44%;
+                    top: 50%;
                     border: none;
                     background: #d7e0ef;
                     height: 1px;
                     left: 8%;
+                    padding: 0;
+                    margin: 0;
                 }
                 .name {
                     font-size: 2.4rem;
@@ -300,6 +403,8 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     justify-content: space-between;
                     margin: 21px 0 0 0;
                 }
+            `}</style>
+            <style jsx global>{`
                 .action__btn {
                     height: 38px;
                     width: 100%;
@@ -316,6 +421,24 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     background: #c43826;
                     color: #fff;
                     border: 1px solid #c43826;
+                }
+                .action__btn.cancel {
+                    background: #254a91;
+                    color: #fff;
+                    border: 1px solid #254a91;
+                }
+                .action__btn.sell {
+                    background: #22a16f;
+                    color: #fff;
+                    border: 1px solid #22a16f;
+                }
+                .action__btn.mortgage {
+                    background: #daa360;
+                    color: #fff;
+                    border: 1px solid #daa360;
+                }
+                .subscriptionCards__footer .action__btn:nth-child(n + 1) {
+                    margin-left: 15px;
                 }
             `}</style>
         </>
