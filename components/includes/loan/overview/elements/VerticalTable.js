@@ -1,9 +1,9 @@
 const VerticalTable = ({ data, style }) => {
     return (
         <div className="verticalTable__container" style={style}>
-            {data?.map(item => {
+            {data?.map((item, index) => {
                 return (
-                    <div className="item">
+                    <div className="item" key={index}>
                         <div className="item__left" style={item.labelStyle}>
                             <span className="label__val">{item.label}</span>
                         </div>

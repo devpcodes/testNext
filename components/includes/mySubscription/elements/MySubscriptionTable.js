@@ -334,15 +334,62 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         console.log(record, type);
         if (type === 'canCancelOrder') {
             if (record.canCancelAppropriation) {
-                cancelAppropriation(record);
+                cancelAll(record);
             } else {
-                cancelHandler(record);
+                cancelOrder(record);
+                // cancelHandler(record);
             }
         }
         if (type === 'canSellStock') sellHandler(record);
         if (type === 'canMortgage') mortgageHandler(record);
         if (type === 'canAppropriation') appropriationHandler(record);
         if (type === 'canCancelAppropriation') cancelAppropriation(record);
+    };
+
+    const cancelOrder = record => {
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消申購',
+                content: (
+                    <>
+                        <p>取消申購「{record.stockId + ' ' + record.stockName}」？</p>
+                    </>
+                ),
+                noCloseIcon: true,
+                noTitleIcon: true,
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                },
+                onOk: () => {
+                    dispatch(setModal({ visible: false }));
+                    cancelHandler(record);
+                },
+            }),
+        );
+    };
+
+    const cancelAll = record => {
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消申購及借款',
+                content: (
+                    <>
+                        <p>「{record.stockId + ' ' + record.stockName}」，並同步取消動用？</p>
+                    </>
+                ),
+                noCloseIcon: true,
+                noTitleIcon: true,
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                },
+                onOk: () => {
+                    dispatch(setModal({ visible: false }));
+                    cancelHandler(record);
+                },
+            }),
+        );
     };
 
     const cancelAppropriation = async record => {
@@ -367,9 +414,13 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 onCancel: () => {
                     dispatch(setModal({ visible: false }));
                 },
+                onOk: () => {
+                    dispatch(setModal({ visible: false }));
+                    cancelHandler(record, true);
+                },
             }),
         );
-        // cancelHandler(record, true);
+        //
     };
 
     const appropriationHandler = async record => {
@@ -447,8 +498,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
 
     const activeHandler = record => {
         //TODO MOCK
-        record.canCancelAppropriation = true;
-        record.canCancelOrder = true;
+        // record.canCancelAppropriation = true;
+        // record.canCancelOrder = true;
         const btnsArr = [];
         if (record.canCancelOrder && record.canCancelAppropriation) {
             btnsArr.push('canCancelOrder');

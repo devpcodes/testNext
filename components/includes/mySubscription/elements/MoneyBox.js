@@ -1,8 +1,16 @@
 import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
 import SinoBtn from '../../../includes/loan/Collateral/elements/SinoBtn';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
-const MoneyBox = ({ title, data, style }) => {
+import { useRouter } from 'next/router';
+const MoneyBox = ({ title, data, style, financing = null }) => {
     const isMobile = useCheckMobile();
+    const router = useRouter();
+    const onClickHandler = () => {
+        if (financing != null) {
+            router.push('/subscriptionArea/MySubscription/SubscriptionOverview/');
+        }
+    };
+    const repaymentHandler = () => {};
     return (
         <div className="money__container" style={style}>
             <div className="money__header">
@@ -13,7 +21,14 @@ const MoneyBox = ({ title, data, style }) => {
                                 {!!element.icon && <img className="title__icon" src={icon} />}
                                 {element.val}
                             </span>
-                            {!isMobile && element.linkText && <a className="money__Alink">{element.linkText} ></a>}
+                            {!isMobile && element.linkText && (
+                                <a
+                                    onClick={repaymentHandler}
+                                    className={'money__Alink ' + (financing <= 0 ? 'disabled' : '')}
+                                >
+                                    {element.linkText} >
+                                </a>
+                            )}
                             {i !== title.length - 1 && <div className="money__line--head"></div>}
                         </React.Fragment>
                     );
@@ -24,8 +39,12 @@ const MoneyBox = ({ title, data, style }) => {
                     return (
                         <React.Fragment key={index}>
                             <div className="money__item" style={element.style}>
-                                <p className="money__label">{element.label}</p>
-                                <p className="money__val">{element.val}</p>
+                                <p style={{ cursor: 'pointer' }} className="money__label" onClick={onClickHandler}>
+                                    {element.label}
+                                </p>
+                                <p style={{ cursor: 'pointer' }} className="money__val" onClick={onClickHandler}>
+                                    {element.val}
+                                </p>
                             </div>
                             {
                                 <div
@@ -80,6 +99,7 @@ const MoneyBox = ({ title, data, style }) => {
                     font-size: 14px;
                     color: #0d1623;
                 }
+
                 .money__content {
                     display: flex;
                     justify-content: space-around;
@@ -107,6 +127,10 @@ const MoneyBox = ({ title, data, style }) => {
                 }
                 .money__item {
                     flex: 1 0 0;
+                }
+                .disabled {
+                    color: #cfcfcf !important;
+                    cursor: not-allowed;
                 }
                 @media (max-width: 900px) {
                     .money__Alink {

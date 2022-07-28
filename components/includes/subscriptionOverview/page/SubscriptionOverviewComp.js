@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import Breadcrumb from '../../breadcrumb/breadcrumb';
 import LoanBox from '../elements/LoanBox';
 import Btn from '../../loan/overview/elements/Btn';
@@ -180,6 +181,7 @@ const SubscriptionOverviewComp = () => {
     // const [arrears, setArrears] = useState('--')
     const [accountData, setAccountData] = useState([]);
     const [updateTime, setUpdateTime] = useState('--');
+    const router = useRouter();
     const menuList = [
         { key: 'amount', title: '額度使用紀錄' },
         // { key: 'interest', title: '利息紀錄' },
@@ -412,8 +414,8 @@ const SubscriptionOverviewComp = () => {
             }),
         );
     };
-    const repaymentClick = () => {
-        alert('123');
+    const subProductClick = () => {
+        router.push('/subscriptionArea/ProductInfo/');
     };
     return (
         <div className="subOverview__container">
@@ -441,6 +443,7 @@ const SubscriptionOverviewComp = () => {
                             marginRight: '16px',
                             display: isMobile ? 'none' : 'inline-block',
                         }}
+                        onClick={subProductClick}
                     />
                     <AccountSelect
                         accText={'帳戶資訊'}

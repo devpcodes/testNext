@@ -112,6 +112,10 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
         }, 700);
     }, [currentAccount]);
 
+    const moneyBoxClick = () => {
+        alert('123');
+    };
+
     return (
         <div className="moneyBox__container">
             {isMobile ? (
@@ -172,6 +176,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
                             title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            financing={Number(financing)}
                             data={[
                                 {
                                     label: '可動用',
@@ -234,6 +239,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                         <MoneyBox
                             style={{ width: '33%' }}
                             title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            financing={Number(financing)}
                             data={[
                                 {
                                     label: '可動用',
