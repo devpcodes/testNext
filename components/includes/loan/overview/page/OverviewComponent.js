@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import { useLoanAccount } from '../../../../../hooks/useLoanAccount';
 import { checkSignCA, sign } from '../../../../../services/webCa';
 import { postSign } from '../../../../../services/components/loznZone/overview/postSign';
+import { useUser } from '../../../../../hooks/useUser';
 const OverviewComponent = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
@@ -33,11 +34,16 @@ const OverviewComponent = () => {
     const [resultAllCanLoan, setResultAllCanLoan] = useState(0);
     const [accountOverview, setAccountOverview] = useState({});
     const [financing, setFinancing] = useState('--');
-    // const { isLogin, accounts } = useUser();
+    const { isLogin, accounts } = useUser();
     // const [loanIdno, setLoanIdno] = useState('');
     const router = useRouter();
     const haveLoanAccount = useLoanAccount(getToken());
     const btnClicked = useRef(false);
+    useEffect(() => {
+        if (!isLogin) {
+            router.push('/loan-zone');
+        }
+    }, [isLogin]);
     useEffect(() => {
         if (!haveLoanAccount && haveLoanAccount != null) {
             router.push('/loan-zone');
