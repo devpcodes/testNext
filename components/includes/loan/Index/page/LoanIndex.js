@@ -60,7 +60,10 @@ const LoanIndex = () => {
             {
                 type: '【申辦】',
                 title: '不限用途款項借貸戶申辦資格是什麼？',
-                content: '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
+                content: [
+                    '只要是已開立台股帳戶的成年且未具他國納稅義務人身分者都可以申請。',
+                    '若您為本國法人、境內之華僑及外國人請臨櫃辦理。',
+                ],
                 tag: 'tag1',
                 open: true,
                 key: 1,
@@ -84,8 +87,8 @@ const LoanIndex = () => {
             },
             {
                 type: '【申辦】',
-                title: '開戶後，多久可以申請借貸？',
-                content: '馬上。',
+                title: '申辦審核完成多久可以申請借貸？',
+                content: '隔天。若您當天有緊急借款需求，請臨櫃辦理。',
                 open: false,
                 key: 4,
             },
@@ -98,7 +101,7 @@ const LoanIndex = () => {
             },
             {
                 type: '【申辦】',
-                title: '我是聯電的員工，我可以申辦不限用途款項借貸？',
+                title: '我是A股票的(超過10%大股東或內部人)員工，我可以申辦不限用途款項借貸?',
                 content: '擔保品公司內部人不提供線上服務，請臨櫃申辦再完成股票設質借貸。',
                 open: false,
                 key: 6,
@@ -107,7 +110,7 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '有哪些股票可以申請借款呢？成數利率又是多少？',
-                content: '點我查看符合本公司規定之上市櫃股票。',
+                content: '請至上方【體驗試算】輸入股號股名進行查詢',
                 open: false,
                 tag: 'tag2',
                 key: 7,
@@ -115,7 +118,8 @@ const LoanIndex = () => {
             {
                 type: '【借貸動用】',
                 title: '申請借貸後，何時會撥款？',
-                content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。',
+                content: '依您借款申請時間，將款項匯入至您分公司交割帳戶中。(實際入帳時間仍須以銀行撥款為主)',
+                chart: 'timeList',
                 open: false,
                 key: 8,
             },
@@ -140,17 +144,23 @@ const LoanIndex = () => {
                     '線上借款手續費：每筆100元；臨櫃借款手續費每筆2000元。',
                     '撥券費：每張1元。',
                     '上述費用於還款或借款到期時收取。',
-                    '借貸服務免開辦費。',
                 ],
                 open: false,
                 key: 11,
+            },
+            {
+                type: '【借貸動用】',
+                title: '借貸期間 6 個月到期是否能申請展延？',
+                content: '目前僅提供人工申請借貸展延，且需於到期日前 5 日提出申請。',
+                open: false,
+                key: 11.5,
             },
 
             {
                 type: '【還款與其他】',
                 title: '我要如何還款呢？',
                 content: [
-                    '現金還款:需於營業日14:30前臨櫃提出申請。',
+                    '現金還款:需於營業日14:00前臨櫃提出申請。(可選擇申請返還擔保品，或擔保品不返還，額度內循環使用)',
                     '賣出還款:客戶自行賣出庫存，Ｔ日計算客戶應付之相關還款金額後,於T+2日收取還款金額並退還剩餘交割款。',
                 ],
                 open: false,
@@ -159,14 +169,24 @@ const LoanIndex = () => {
             {
                 type: '【還款與其他】',
                 title: '擔保品如何申請返還？',
-                content: '你可於現金還款後，申請擔保品返還。',
+                content: ['你可於現金還款後，申請擔保品返還。擔保品預計於案件結案 T日或T+1日返還。'],
+                open: false,
+                key: 12.5,
+            },
+            {
+                type: '【還款與其他】',
+                title: '擔保維持率如何計算？',
+                content: [
+                    '擔保维持率=(已抵押庫存市值+補繳保證金)/已申請借款 *100%。',
+                    '如維持率低於130%，將通知借款人進行補繳作業 。',
+                ],
                 open: false,
                 key: 13,
             },
             {
                 type: '【還款與其他】',
-                title: '我收到整戶維持不足的通知該怎麼辦？',
-                content: '您可選擇償還部分借款或致電分公司增加/變更擔保品。',
+                title: '我收到整戶維持不足的補繳通知該怎麼辦？',
+                content: '您可選擇償還部分借款或致電分公司增加 / 變更擔保品。並請於通知三日內完成。',
                 open: false,
                 key: 14,
             },
@@ -212,7 +232,40 @@ const LoanIndex = () => {
             window.location.href = val;
         }
     };
-
+    const chartFuncHandler = val => {
+        if (val === 'timeList') {
+            return (
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>申請時間</td>
+                            <td>擔保品撥轉</td>
+                            <td>撥款時間</td>
+                        </tr>
+                        <tr>
+                            <td>12:00前</td>
+                            <td>當日下午</td>
+                            <td>當日下午14:30</td>
+                        </tr>
+                        <tr>
+                            <td>12:00至14:00</td>
+                            <td>當日下午</td>
+                            <td>次日上午10:00</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                14:00至
+                                <br />
+                                次日12:00
+                            </td>
+                            <td>次日下午</td>
+                            <td>次日下午14:30</td>
+                        </tr>
+                    </tbody>
+                </table>
+            );
+        }
+    };
     const noAccPass = () => {
         dispatch(
             setModal({
@@ -241,7 +294,7 @@ const LoanIndex = () => {
                     },
                 },
                 onOk: () => {
-                    btnHref('https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001');
+                    btnHref(process.env.NEXT_PUBLIC_LOANACCOUNT);
                 },
             }),
         );
@@ -290,13 +343,7 @@ const LoanIndex = () => {
                         借款金額無限制，隨借隨還免綁約！
                     </div>
                     <div>
-                        <Button
-                            type="primary"
-                            onClick={btnHref.bind(
-                                null,
-                                'https://strd.sinotrade.com.tw/exopact/LNA/Index?strProd=0002&strWeb=0001',
-                            )}
-                        >
+                        <Button type="primary" onClick={btnHref.bind(null, process.env.NEXT_PUBLIC_LOANACCOUNT)}>
                             立即申辦
                         </Button>
                         <br></br>
@@ -415,7 +462,7 @@ const LoanIndex = () => {
                                 <Button
                                     onClick={btnHref.bind(
                                         null,
-                                        'https://strd.sinotrade.com.tw/exopact/LNA/ProgQueryLNA01',
+                                        process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
                                     )}
                                     type="primary"
                                 >
@@ -494,7 +541,7 @@ const LoanIndex = () => {
                         <p></p>
                         <img src={smile}></img>
                     </div>
-                    <QaCollapse dataSource={qaData} />
+                    <QaCollapse dataSource={qaData} chartFunc={chartFuncHandler} />
                 </div>
             </div>
             <style jsx>
@@ -573,7 +620,7 @@ const LoanIndex = () => {
             .bg-cycle.cyclel{ width: 12%; bottom: -74%; z-index: 0;}
             .bg-cycle.cycler{ width: 10%; top: auto; bottom: -17%;z-index:0;}
         }
-        @media screen and (max-width: 425px) {
+        @media screen and (max-width: 500px) {
             .forPC{display:none;}
             .forMB{display:block!important;}      
             .infiImg{height:1.4em;margin-top:0%;}
@@ -675,6 +722,26 @@ const LoanIndex = () => {
                         font-size: 16px;
                         height: 3em;
                     }
+                    .record__container .repayment_table .ant-table-thead th:first-child::after {
+                        content: '明細';
+                    }
+                    #loanIndex__container #QaCollapse__content .ant-collapse-item table {
+                        max-width: 400px;
+                        width: 100%;
+                        margin: 10px 0;
+                    }
+                    #loanIndex__container #QaCollapse__content .ant-collapse-item table td {
+                        width: 33%;
+                        background-color: #fff;
+                        color: #6f7e96;
+                        border: 1px solid #d7e0ef;
+                        padding: 5px 10px;
+                    }
+                    #loanIndex__container #QaCollapse__content .ant-collapse-item table tr:first-child td {
+                        width: 33%;
+                        background: #f2f5fa;
+                        color: #0d1623;
+                    }
                     @media screen and (max-width: 768px) {
                         #loanIndex__container .iconBox .ant-btn {
                             width: 6em;
@@ -682,6 +749,10 @@ const LoanIndex = () => {
                         }
                     }
                     @media screen and (max-width: 425px) {
+                        #loanIndex__container #QaCollapse__content .ant-collapse-item table td {
+                            font-size: 10px;
+                            padding: 3px 5px;
+                        }
                         #loanIndex__container .ant-radio-group {
                             flex-wrap: wrap;
                         }

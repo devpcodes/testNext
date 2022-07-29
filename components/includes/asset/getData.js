@@ -87,9 +87,9 @@ export const getContentData = type => {
             };
         case 'FF':
             return {
-                sum_dlbaln_twd: {
+                sum_dbaln_twd: {
                     title: '權益數',
-                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dlbaln_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dbaln_twd)}`,
                     class: '',
                 },
                 sum_dtunpl_twd: {
@@ -102,9 +102,9 @@ export const getContentData = type => {
                             ? 'loss'
                             : '',
                 },
-                sum_dbaln_twd: {
+                sum_dlbaln_twd: {
                     title: '前日餘額',
-                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dbaln_twd)}`,
+                    amount: `$${formatNum(realTimePrtLosSum?.FF?.sum_dlbaln_twd)}`,
                     class: '',
                 },
                 sum_dtimmrg_twd: {
@@ -555,7 +555,7 @@ export const getTitleData = type => {
             titleData = {
                 title: '國外期權總市值',
                 currency: 'NTD',
-                sum: formatNum(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
+                sum: formatNum(realTimePrtLosSum?.FF?.sum_dbaln_twd),
             };
             break;
         case 'H':
@@ -567,14 +567,14 @@ export const getTitleData = type => {
             break;
         case 'MIP':
             titleData = {
-                title: '豐存美股(定期定股)總市值',
+                title: '豐存美股(定期定額)總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.MIP?.sum_twd),
             };
             break;
         case 'FIP':
             titleData = {
-                title: '豐存美股(定期定額)總市值',
+                title: '豐存美股(定期定股)總市值',
                 currency: 'NTD',
                 sum: formatNum(realTimePrtLosSum?.FIP?.sum_twd),
             };

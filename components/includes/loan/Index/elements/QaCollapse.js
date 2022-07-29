@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import React from 'react';
 import { Collapse } from 'antd';
 
-const QaCollapse = ({ dataSource }) => {
+const QaCollapse = ({ dataSource, chartFunc }) => {
     useEffect(() => {
         console.log('rowData', dataSource);
     }, [dataSource]);
@@ -24,7 +24,6 @@ const QaCollapse = ({ dataSource }) => {
             >
                 {dataSource.map((x, i) => {
                     return (
-                        // <React.Fragment key={i}>
                         <Panel
                             header={(x.type ? x.type : '') + x.title}
                             extra={x.tag ? <a id={x.tag} className="pageTag"></a> : ''} //tag往上拉5行距離
@@ -35,8 +34,8 @@ const QaCollapse = ({ dataSource }) => {
                                       return <p key={'p' + i}>{y}</p>;
                                   })
                                 : x.content}
+                            {x.chart ? chartFunc(x.chart) : ''}
                         </Panel>
-                        // </React.Fragment>
                     );
                 })}
             </Collapse>

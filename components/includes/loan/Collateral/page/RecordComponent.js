@@ -21,6 +21,7 @@ import {
 import { setModal } from '../../../../../store/components/layouts/action';
 import view from '../../../../../resources/images/components/loanZone/view.svg';
 import { set } from 'lodash';
+import { useUser } from '../../../../../hooks/useUser';
 const RecordComponent = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [refreshTime, setRefreshTime] = useState('');
@@ -39,12 +40,12 @@ const RecordComponent = () => {
     const winWidth = useSelector(store => store.layout.winWidth);
     const router = useRouter();
     const dispatch = useDispatch();
-    // const { isLogin } = useUser();
-    // useEffect(() => {
-    //     if (!isLogin) {
-    //         dispatch(showLoginHandler(true));
-    //     }
-    // }, [isLogin]);
+    const { isLogin } = useUser();
+    useEffect(() => {
+        if (!isLogin) {
+            router.push('/loan-zone');
+        }
+    }, [isLogin]);
 
     useEffect(() => {
         let time = moment(new Date()).format('YYYY.MM.DD HH:mm:SS');
