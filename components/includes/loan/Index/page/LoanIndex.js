@@ -398,7 +398,7 @@ const LoanIndex = () => {
                                 </div>
                                 <div className="dataRow">
                                     <div className="DataTitle">貸款天數</div>
-                                    <div className="DataInfo">
+                                    <div className="DataInfo pb-1">
                                         <Radio.Group onChange={onChange} value={radioValue}>
                                             <Radio value={7}>1週</Radio>
                                             <Radio value={30}>1個月</Radio>
@@ -648,6 +648,7 @@ const LoanIndex = () => {
             .mainArea1 {margin:0;}
             .mainArea.mainArea1 .contentBox{width:86%;}
             .mainArea .contentBox{width:100%;}
+            .mainArea .contentBox .pb-1{padding-bottom:1em;}
             .mainArea2 .areaTitle{margin-top:3em!important;}
             .mainArea2 .bottomBox{top:-7px;width: 100%; height: auto; padding: 2.5em 0 2em;line-height:1.2;}
             .mainArea2 .bottomBox .bottomBoxItem p{font-size:16px; text-align:center;}
@@ -659,7 +660,7 @@ const LoanIndex = () => {
             .mainArea .contentBox .countBoxRightContent{padding: 5% 6%;margin: 0 auto;}
             .mainArea .contentBox .iconBox{flex-wrap:wrap;padding: 0 4%;}
             .iconBox>div{width:100%;max-width:100%;display: flex;flex-wrap: nowrap;margin-bottom:6em;}
-            .iconBox .btnBox{justify-content: start;}
+            .iconBox .btnBox{justify-content: flex-start;}
             .iconBox>div .wordy{margin:0;text-align: left; margin-left: 6%;width: calc(88% - 40px);}
             .iconBox::before{left: calc(4% + 30px);height:calc(100% - 40px);width:1px;}
             .iconBg1, .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
@@ -697,10 +698,12 @@ const LoanIndex = () => {
                         width: 16px;
                         height: 16px;
                     }
-                    #loanIndex__container .ant-radio-checked .ant-radio-inner {
-                        border-color: #daa360;
+                    #loanIndex__container .ant-radio-inner {
                         width: 24px;
                         height: 24px;
+                    }
+                    #loanIndex__container .ant-radio-checked .ant-radio-inner {
+                        border-color: #daa360;
                     }
                     #loanIndex__container .ant-radio-group {
                         width: 96%;
@@ -769,6 +772,8 @@ const LoanIndex = () => {
                         }
                         #loanIndex__container .mainArea .contentBox .ant-radio-wrapper {
                             width: 45%;
+                            line-height: 1;
+                            margin-bottom: 0.5em;
                         }
                     }
                 `}
