@@ -334,18 +334,6 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     background: #c43826;
                     border: solid 2px #ebbdb7;
                 }
-                // .time__course.before .point {
-                //     background: #a9b6cb;
-                //     border: solid 2px #d7e0ef;
-                // }
-                // .time__course.after .point {
-                //     background: #3f5372;
-                //     border: solid 2px #d7e0ef;
-                // }
-                // .time__course.now .point {
-                //     background: #c43826;
-                //     border: solid 2px #ebbdb7;
-                // }
                 .time__line {
                     width: 84%;
                     position: absolute;
