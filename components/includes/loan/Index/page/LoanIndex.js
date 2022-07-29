@@ -549,7 +549,9 @@ const LoanIndex = () => {
                         <p></p>
                         <img src={smile}></img>
                     </div>
-                    <QaCollapse dataSource={qaData} chartFunc={chartFuncHandler} />
+                    <div className="qaOuter">
+                        <QaCollapse dataSource={qaData} chartFunc={chartFuncHandler} />
+                    </div>
                 </div>
             </div>
             <style jsx>
@@ -667,7 +669,8 @@ const LoanIndex = () => {
             
             .mainArea2 .bottomBox .line::before,
             .mainArea2 .bottomBox .line::after { height:6em; top:1em; }
-            .mainArea .contentBox .countBoxRight{width:100%;}           
+            .mainArea .contentBox .countBoxRight{width:100%;}    
+            .qaOuter{padding:4%;}       
         }
         `}
             </style>
