@@ -81,14 +81,21 @@ const SubscriptionMain = memo(({}) => {
                             isAppropriation,
                             bankChannel,
                         );
-                        dispatch(
-                            setModal({
-                                visible: true,
-                                content: response.success && response.message === 'OK' ? `申購成功` : `申購失敗`,
-                                type: 'info',
-                                title: '系統訊息',
-                            }),
-                        );
+                        if (!isAppropriation) {
+                            dispatch(
+                                setModal({
+                                    visible: true,
+                                    content: response.success && response.message === 'OK' ? `申購成功` : `申購失敗`,
+                                    type: 'info',
+                                    title: '系統訊息',
+                                }),
+                            );
+                        } else {
+                            if (response.success && response.message === 'OK') {
+                                location.href = response.result.url;
+                            }
+                        }
+
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
                             setSubscriptionData(listResponse.result);

@@ -21,7 +21,7 @@ export const fetchApplySubscription = async function (
             source,
             isAppropriation,
             bankChannel,
-            callbackUrl: `${process.env.NEXT_PUBLIC_SUBPATH}/Subscription`,
+            callbackUrl: `${location.protocol}//${location.host}${process.env.NEXT_PUBLIC_SUBPATH}/Subscription`,
         });
 
         if (res.data.success != null && res.data.success === true) {
