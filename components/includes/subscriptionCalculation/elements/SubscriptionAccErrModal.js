@@ -1,6 +1,7 @@
 import { useEffect, memo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { useCheckSubscriptionAcc } from '../../../../hooks/useCheckSubscriptionAcc';
 import { useUser } from '../../../../hooks/useUser';
 import { setModal } from '../../../../store/components/layouts/action';
@@ -8,17 +9,23 @@ import { setCurrentAccount } from '../../../../store/user/action';
 import { getToken } from '../../../../services/user/accessToken';
 import { fetchAccountStatus } from '../../../../services/components/subscriptionOverview/fetchAccountStatus';
 
-const SubscriptionAccErrModal = memo(({ onClick, checkAccount }) => {
+const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
     const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
     const { isLogin, accounts } = useUser();
     const [accountStatus, setAccountStatus] = useState({});
+
+    const [freezeSucces, setFreezeSuccess] = useState(false);
+    const [bankAccSuccess, setBankAccSuccess] = useState(false);
+    const [signSuccess, setSignSuccess] = useState(false);
+    const [selectAccSuccess, setSelectAccSuccess] = useState(false);
+    const [noAcc, setNoAcc] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
         getLoanAccountStatus();
-    }, []);
+    }, [isLogin]);
 
     useEffect(() => {
         console.log('check', checkAccount);
@@ -77,6 +84,8 @@ const SubscriptionAccErrModal = memo(({ onClick, checkAccount }) => {
                     },
                 }),
             );
+        } else {
+            setSignSuccess(true);
         }
     }, [signAcc, checkAccount]);
 
@@ -85,6 +94,9 @@ const SubscriptionAccErrModal = memo(({ onClick, checkAccount }) => {
         // console.log('231312123', accountInfo.bankAccount, accountStatus.lnMainAccount)
         //交割 不等於 撥款
         if (accountInfo.bankAccount !== accountStatus.lnMainAccount) {
+            //TODO MOCK
+            // setBankAccSuccess(true);
+
             dispatch(
                 setModal({
                     visible: true,
@@ -142,12 +154,47 @@ const SubscriptionAccErrModal = memo(({ onClick, checkAccount }) => {
                     },
                 }),
             );
+            return;
+        } else {
+            setBankAccSuccess(true);
         }
     }, [accountStatus, accountInfo, checkAccount]);
+
+    useEffect(() => {
+        if (!checkAccount) return;
+        if (accountStatus.legalFee !== '0') {
+            freezeHandler();
+            return;
+        }
+
+        if (!(accountStatus.frozenFlag === 'N' || accountStatus.frozenFlag === '')) {
+            freezeHandler();
+            return;
+        }
+
+        if (accountStatus.overDueDays !== '0') {
+            freezeHandler();
+            return;
+        }
+
+        if (accountStatus.availAmount <= '0') {
+            freezeHandler();
+            return;
+        }
+
+        const currentDate = moment().format('YYYYMMDD');
+        if (moment(accountStatus.locExpDate).isBefore(moment(currentDate))) {
+            freezeHandler();
+            return;
+        }
+
+        setFreezeSuccess(true);
+    }, [accountStatus, checkAccount]);
 
     const getLoanAccountStatus = async () => {
         try {
             const res = await fetchAccountStatus(getToken());
+            console.log('----res', res);
             setAccountStatus(res);
         } catch (error) {}
     };
@@ -217,7 +264,38 @@ const SubscriptionAccErrModal = memo(({ onClick, checkAccount }) => {
                     },
                 }),
             );
+        } else {
+            setNoAcc(true);
+            setSelectAccSuccess(true);
         }
+    };
+
+    const onClick = () => {
+        // setCheckSuccess.push([])
+    };
+
+    const freezeHandler = () => {
+        dispatch(
+            setModal({
+                visible: true,
+                type: 'info',
+                noCloseIcon: true,
+                noTitleIcon: true,
+                title: '帳戶凍結',
+                content: (
+                    <>
+                        <p style={{ marginBottom: 0, color: '#0d1623' }}>您的申購便利通帳戶額度無法使用</p>
+                        <p style={{ marginBottom: 0, color: '#0d1623', display: 'inline-block' }}>
+                            請洽銀行客服 <span style={{ color: '#c43826' }}>(02)2505-9999</span>
+                        </p>
+                    </>
+                ),
+                onOk: () => {
+                    onClick(false);
+                    dispatch(setModal({ visible: false }));
+                },
+            }),
+        );
     };
 
     const setAccHandler = (accounts, subAccount) => {
@@ -227,6 +305,14 @@ const SubscriptionAccErrModal = memo(({ onClick, checkAccount }) => {
             }
         });
     };
+
+    useEffect(() => {
+        if (freezeSucces && bankAccSuccess && signSuccess && selectAccSuccess && noAcc) {
+            successHandler(true);
+        } else {
+            successHandler(false);
+        }
+    }, [freezeSucces, bankAccSuccess, signSuccess, selectAccSuccess, noAcc]);
 
     return (
         <>

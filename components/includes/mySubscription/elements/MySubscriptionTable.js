@@ -426,6 +426,24 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     };
 
     const appropriationHandler = async record => {
+        dispatch(
+            setModal({
+                visible: true,
+                okText: '確定',
+                type: 'confirm',
+                title: '提醒',
+                noCloseIcon: true,
+                noTitleIcon: true,
+                content:
+                    '離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選 【確定】，如還捨不得離開請點【取消】。',
+                onOk: async () => {
+                    postOrderHandler(record);
+                },
+            }),
+        );
+    };
+
+    const postOrderHandler = async record => {
         const token = getToken();
         const ca_content = sign(
             {
@@ -442,7 +460,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
             try {
                 const res = await postOrder({
                     isAppropriation: true,
-                    bankChannel: 'NETBANK',
+                    bankChannel: isMobile ? 'MWEB' : 'NETBANK',
                     callbackUrl: location.href,
                     branch: currentAccount.broker_id,
                     account: currentAccount.account,
@@ -451,7 +469,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     ca_content,
                 });
                 setCancelLoading(false);
-                message.success('申請動用已送出');
+                // message.success('申請動用已送出');
+                window.location = res.url;
                 getOrderStatus();
             } catch (error) {
                 setCancelLoading(false);

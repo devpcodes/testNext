@@ -2,21 +2,29 @@ import InfoBox from './InfoBox';
 import TimeLineBox from './TimeLineBox';
 import icon from '../../../../resources/images/components/subscriptionCalculation/basic-help-circle (4).svg';
 import { useSelector } from 'react-redux';
-
-const StockDetail = () => {
+import moment from 'moment';
+const StockDetail = ({ calculationData }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div className="stock__container">
-            <h2 className="stock__title">新潤 6186</h2>
+            <h2 className="stock__title">
+                {(calculationData.stockId || '--') + ' ' + (calculationData.stockName || '--')}
+            </h2>
             <div className="stock__bar">
                 <div className="stock__left">
                     <span className="text mrgh">價差</span>
-                    <span className="text num">7000</span>
-                    <span className="text">元 (+29.87%)</span>
+                    <span className="text num">{calculationData.diffPrice || '--'}</span>
+                    <span className="text">
+                        元 (
+                        {Number(calculationData.diffRatio) > 0
+                            ? '+' + (calculationData.diffRatio || '--') + '%'
+                            : (calculationData.diffRatio || '--') + '%'}
+                        )
+                    </span>
                 </div>
                 <div className="stock__right">
                     <span className="text2">最低只要</span>
-                    <span className="text num">78</span>
+                    <span className="text num">{calculationData.nOrderCost || '--'}</span>
                     <span className="text2">元，買個中籤夢！</span>
                 </div>
             </div>
@@ -37,15 +45,15 @@ const StockDetail = () => {
                     data={[
                         {
                             label: '撥券日',
-                            val: '2022/05/26',
+                            val: calculationData.stkDate ? moment(calculationData.stkDate).format('YYYY/MM/DD') : '--',
                         },
                         {
                             label: '計息天數',
-                            val: '14 天',
+                            val: (calculationData.wInterestDays || '--') + '天',
                         },
                         {
                             label: '申購成本',
-                            val: '143 元',
+                            val: (calculationData.wOrderCost || '--') + '元',
                             valStyle: {
                                 color: '#f45a4c',
                             },
@@ -70,15 +78,17 @@ const StockDetail = () => {
                     data={[
                         {
                             label: '退款日',
-                            val: '2022/05/26',
+                            val: calculationData.moneyDate
+                                ? moment(calculationData.moneyDate).format('YYYY/MM/DD')
+                                : '--',
                         },
                         {
                             label: '計息天數',
-                            val: '5 天',
+                            val: (calculationData.nInterestDays || '--') + '天',
                         },
                         {
                             label: '申購成本',
-                            val: '78 元',
+                            val: (calculationData.nOrderCost || '--') + '元',
                             valStyle: {
                                 color: '#f45a4c',
                             },
@@ -86,7 +96,14 @@ const StockDetail = () => {
                     ]}
                 />
             </div>
-            <TimeLineBox style={{ marginTop: isMobile ? '12px' : '16px' }} />
+            <TimeLineBox
+                style={{ marginTop: isMobile ? '12px' : '16px' }}
+                price={calculationData.price}
+                close={calculationData.close}
+                share={calculationData.share}
+                applyShare={calculationData.applyShare}
+                stockData={calculationData}
+            />
             <style jsx>{`
                 .stock__container {
                     padding: 24px 30px 24px 28px;
