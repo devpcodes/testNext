@@ -1,8 +1,13 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
+import { openGoOrder } from '../../../services/openGoOrder';
+import { useCheckMobile } from '../../../hooks/useCheckMobile';
+import { useRouter } from 'next/router';
 
 const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, footerHidden, settingDate }) => {
     // console.log(stockData);
+    const isMobile = useCheckMobile();
+    const router = useRouter();
 
     const formatDate = date => {
         return `${date.slice(4, 6)}/${date.slice(6, 8)}`;
@@ -28,6 +33,37 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
             dateClassName = 'after';
         }
         return `time__course ${dateClassName}`;
+    };
+
+    const openSellGoOrder = stockid => {
+        openGoOrder(
+            {
+                stockid: stockid,
+                bs: 'S',
+                qty: 1,
+                marketType: 'S',
+            },
+            isMobile,
+            router,
+        );
+    };
+
+    const openCollateral = stockId => {
+        window.open(
+            `${location.protocol}//${location.host}${
+                process.env.NEXT_PUBLIC_SUBPATH
+            }/subscriptionArea/Calculation/?stockId=${stockId}${router.query.nav === '0' ? '&nav=0' : ''}`,
+            '_blank',
+        );
+    };
+
+    const openLoanCollateral = () => {
+        window.open(
+            `${location.protocol}//${location.host}${process.env.NEXT_PUBLIC_SUBPATH}/loan-zone/Collateral/${
+                router.query.nav === '0' ? '?nav=0' : ''
+            }`,
+            '_blank',
+        );
     };
 
     const renderBtn = () => {
@@ -86,12 +122,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 )}
 
                 {stockData.canSellStock ? (
-                    <button
-                        className="action__btn sell"
-                        onClick={() =>
-                            onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
-                        }
-                    >
+                    <button className="action__btn sell" onClick={() => openSellGoOrder(stockData.stockId)}>
                         立即賣股
                     </button>
                 ) : (
@@ -99,13 +130,16 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 )}
 
                 {stockData.canMortgage ? (
-                    <button
-                        className="action__btn mortgage"
-                        onClick={() =>
-                            onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
-                        }
-                    >
+                    <button className="action__btn mortgage" onClick={() => openLoanCollateral()}>
                         抵押借款
+                    </button>
+                ) : (
+                    <></>
+                )}
+
+                {stockData.canAppropriation && stockData.canOrder ? (
+                    <button className="action__btn mortgage" onClick={() => openCollateral(stockData.stockId)}>
+                        借款申購
                     </button>
                 ) : (
                     <></>
@@ -203,36 +237,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                         <hr className="time__line" />
                     </div>
                 </div>
-                {footerHidden ? (
-                    ''
-                ) : (
-                    <div className="subscriptionCards__footer">
-                        {renderBtn()}
-                        {/* {stockData.canOrder ? (
-                            <button
-                                className="action__btn buy"
-                                onClick={() =>
-                                    onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
-                                }
-                            >
-                                立即申購
-                            </button>
-                        ) : stockData.canCancelOrder ? (
-                            <button
-                                className="action__btn buy"
-                                onClick={() =>
-                                    onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
-                                }
-                            >
-                                立即取消
-                            </button>
-                        ) : (
-                            <button disabled className="action__btn disabled">
-                                {stockData.statusMessage}
-                            </button>
-                        )} */}
-                    </div>
-                )}
+                {footerHidden ? '' : <div className="subscriptionCards__footer">{renderBtn()}</div>}
             </div>
 
             <style jsx>{`
