@@ -123,8 +123,6 @@ function OpeningAccountIndexComponent(props) {
                         <SecuritiesAccountMenu linkData={loanZoneTypes} />
                     </div>
                 </div>
-                <h2 className="secondTitle">期貨開戶</h2>
-                <SecuritiesAccountMenu linkData={featureAccountTypes} />
                 <h2 className="secondTitle">預約臨櫃開戶</h2>
                 <AppointmentOpenAccount linkData={closeCounter} />
             </Content>
