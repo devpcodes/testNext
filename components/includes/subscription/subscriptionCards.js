@@ -108,7 +108,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     <></>
                 )}
 
-                {stockData.canCancelOrder && !stockData.canCancelAppropriation ? (
+                {!stockData.canCancelOrder && stockData.canCancelAppropriation ? (
                     <button
                         className="action__btn cancel"
                         onClick={() =>
