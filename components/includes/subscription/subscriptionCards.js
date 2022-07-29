@@ -237,36 +237,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                         <hr className="time__line" />
                     </div>
                 </div>
-                {footerHidden ? (
-                    ''
-                ) : (
-                    <div className="subscriptionCards__footer">
-                        {renderBtn()}
-                        {/* {stockData.canOrder ? (
-                            <button
-                                className="action__btn buy"
-                                onClick={() =>
-                                    onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
-                                }
-                            >
-                                立即申購
-                            </button>
-                        ) : stockData.canCancelOrder ? (
-                            <button
-                                className="action__btn buy"
-                                onClick={() =>
-                                    onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount)
-                                }
-                            >
-                                立即取消
-                            </button>
-                        ) : (
-                            <button disabled className="action__btn disabled">
-                                {stockData.statusMessage}
-                            </button>
-                        )} */}
-                    </div>
-                )}
+                {footerHidden ? '' : <div className="subscriptionCards__footer">{renderBtn()}</div>}
             </div>
 
             <style jsx>{`
