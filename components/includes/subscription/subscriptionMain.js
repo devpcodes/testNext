@@ -52,24 +52,30 @@ const SubscriptionMain = memo(({}) => {
         dispatch(
             setModal({
                 visible: true,
-                title: '申購確認',
+                title: isAppropriation ? '提醒' : '申購確認',
                 content: (
                     <div>
-                        <p>
-                            帳號：{currentBrokerID}-{currentAccount} {userName} <br />
-                            商品：{id} {name} <br />
-                            申購扣款金額： {price} 元 <br />
-                            <br />
-                            <span className="notice">
-                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
-                            </span>
-                        </p>
+                        {isAppropriation ? (
+                            <p>
+                                離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選
+                                【確定】，如還捨不得離開請點【取消】。
+                            </p>
+                        ) : (
+                            <p>
+                                帳號：{currentBrokerID}-{currentAccount} {userName} <br />
+                                商品：{id} {name} <br />
+                                申購扣款金額： {price} 元 <br />
+                                <br />
+                                <span className="notice">
+                                    請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
+                                </span>
+                            </p>
+                        )}
                     </div>
                 ),
                 type: 'confirm',
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
-                    console.log(cert);
                     if (cert.signature) {
                         const response = await fetchApplySubscription(
                             token,
