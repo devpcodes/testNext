@@ -41,6 +41,11 @@ const AccountInfo = () => {
         }
     };
 
+    const dateFormat = val => {
+        let d = val.split('');
+        let d_ = d[0] + d[1] + d[2] + d[3] + '/' + d[4] + d[5] + '/' + d[6] + d[7];
+        return d_;
+    };
     const clickHandler = type => {
         let title = type == 'address' ? '變更戶籍地址' : '開立電子交易';
         let content =
@@ -110,7 +115,7 @@ const AccountInfo = () => {
                                     </p>
                                     <p>
                                         <span>開戶日期</span>
-                                        <span name="OAODATE">{data.OAODATE ? data.OAODATE : '--'}</span>
+                                        <span name="OAODATE">{data.OAODATE ? dateFormat(data.OAODATE) : '--'}</span>
                                     </p>
                                     <p>
                                         <span>帳戶狀態</span>
@@ -183,7 +188,7 @@ const AccountInfo = () => {
                                     <p>
                                         <span>最後交易日</span>
                                         <span name="LAST_TRADE_DATE">
-                                            {data.LAST_TRADE_DATE ? data.LAST_TRADE_DATE : '--'}
+                                            {data.LAST_TRADE_DATE ? dateFormat(data.LAST_TRADE_DATE) : '--'}
                                         </span>
                                     </p>
                                 </div>
@@ -247,7 +252,7 @@ const AccountInfo = () => {
                                 <p>
                                     <span>可現沖方式</span>
                                     <span name="DTFLAG">
-                                        {data.DTFLAG === '正常' ? (
+                                        {data.DTSTATUS === '正常' ? (
                                             data.DTFLAG
                                         ) : (
                                             <a href="https://www.sinotrade.com.tw/newweb/Inside_Frame/?URL=https://service.sinotrade.com.tw/signCenter/index/">
@@ -262,7 +267,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>交易啟用日</span>
-                                    <span name="DTBDT">{data.DTBDT ? data.DTBDT : '--'}</span>
+                                    <span name="DTBDT">{data.DTBDT ? dateFormat(data.DTBDT) : '--'}</span>
                                 </p>
                             </div>
                         </div>
@@ -275,7 +280,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>信用開戶日</span>
-                                    <span name="CTODATE">{data.CTODATE ? data.CTODATE : '--'}</span>
+                                    <span name="CTODATE">{data.CTODATE ? dateFormat(data.CTODATE) : '--'}</span>
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
