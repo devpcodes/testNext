@@ -135,6 +135,11 @@ const CalculationComponents = () => {
                     .calcu__right {
                         margin-top: 12px;
                     }
+                    .calcu__icon {
+                        width: 20px;
+                        height: 20px;
+                        margin-top: 10px;
+                    }
                 }
             `}</style>
             <style global jsx>{`
