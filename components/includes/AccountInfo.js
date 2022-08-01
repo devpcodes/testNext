@@ -42,9 +42,13 @@ const AccountInfo = () => {
     };
 
     const dateFormat = val => {
-        let d = val.split('');
-        let d_ = d[0] + d[1] + d[2] + d[3] + '/' + d[4] + d[5] + '/' + d[6] + d[7];
-        return d_;
+        if (val) {
+            let d = val.split('');
+            let d_ = d[0] + d[1] + d[2] + d[3] + '/' + d[4] + d[5] + '/' + d[6] + d[7];
+            return d_;
+        } else {
+            return '--';
+        }
     };
     const clickHandler = type => {
         let title = type == 'address' ? '變更戶籍地址' : '開立電子交易';
@@ -111,7 +115,7 @@ const AccountInfo = () => {
                                 <div className="dataBox">
                                     <p>
                                         <span>證券帳號</span>
-                                        <span name="ACNT">{data.ACNT ? data.ACNT : '--'}</span>
+                                        <span>{data.ACNT ? data.ACNT : '--'}</span>
                                     </p>
                                     <p>
                                         <span>開戶日期</span>
@@ -119,19 +123,19 @@ const AccountInfo = () => {
                                     </p>
                                     <p>
                                         <span>帳戶狀態</span>
-                                        <span name="OASTATUS">{data.OASTATUS ? data.OASTATUS : '--'}</span>
+                                        <span>{data.OASTATUS ? data.OASTATUS : '--'}</span>
                                     </p>
                                     <p>
                                         <span>台幣交割銀行</span>
-                                        <span name="BANK">{data.BANK ? data.BANK : '--'}</span>
+                                        <span>{data.BANK ? data.BANK : '--'}</span>
                                     </p>
                                     <p>
                                         <span>台幣交割帳號</span>
-                                        <span name="BACNO">{data.BACNO ? data.BACNO : '--'}</span>
+                                        <span>{data.BACNO ? data.BACNO : '--'}</span>
                                     </p>
                                     <p>
                                         <span>戶籍地址</span>
-                                        <span name="NADDR">
+                                        <span>
                                             {data.NADDR ? data.NADDR : '--'}
                                             <br className="forMB" />{' '}
                                             <a onClick={clickHandler.bind(null, 'address')} className="ml-10">
@@ -149,15 +153,15 @@ const AccountInfo = () => {
                                 <div className="dataBox">
                                     <p>
                                         <span>分公司名稱</span>
-                                        <span name="data">{data.BKNO ? data.BKNO : '--'}</span>
+                                        <span>{data.BKNO ? data.BKNO : '--'}</span>
                                     </p>
                                     <p>
                                         <span>分公司電話</span>
-                                        <span name="BKNO_TEL">{data.BKNO_TEL ? data.BKNO_TEL : '--'}</span>
+                                        <span>{data.BKNO_TEL ? data.BKNO_TEL : '--'}</span>
                                     </p>
                                     <p>
                                         <span>分公司地址</span>
-                                        <span name="BKNO_ADDR">
+                                        <span>
                                             {data.BKNO_ADDR ? (
                                                 <a
                                                     href="https://www.sinotrade.com.tw/newweb/Service_Positions/"
@@ -179,11 +183,11 @@ const AccountInfo = () => {
                                     </p>
                                     <p>
                                         <span>營業員</span>
-                                        <span name="BROKER">{data.BROKER ? data.BROKER : '--'}</span>
+                                        <span>{data.BROKER ? data.BROKER : '--'}</span>
                                     </p>
                                     <p>
                                         <span>理專</span>
-                                        <span name="RM">{data.RM ? data.RM : '--'}</span>
+                                        <span>{data.RM ? data.RM : '--'}</span>
                                     </p>
                                     <p>
                                         <span>最後交易日</span>
@@ -199,7 +203,7 @@ const AccountInfo = () => {
                             <div className="dataBox">
                                 <p>
                                     <span>電子交易</span>
-                                    <span name="GASTATUS">
+                                    <span>
                                         {data.GASTATUS === '正常' ? (
                                             data.GASTATUS
                                         ) : (
@@ -220,14 +224,14 @@ const AccountInfo = () => {
                                             <InfoCircleFilled />
                                         </Popover>
                                     </span>
-                                    <span name="TAMT">
+                                    <span>
                                         {data.TAMT ? data.TAMT : '--'}
                                         {/* <a>申請調整</a> */}
                                     </span>
                                 </p>
                                 <p>
                                     <span>總電子交易額度</span>
-                                    <span name="leaves">
+                                    <span>
                                         {dataMore.leaves ? dataMore.leaves : '--'}
                                         {/*<a>申請調整</a> */}
                                     </span>
@@ -238,7 +242,7 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
-                                    <span name="used-used">
+                                    <span>
                                         {dataMore.used ? dataMore.used : '--'}/
                                         <br className="forMB" />
                                         {dataMore.leaves ? dataMore.leaves : '--'}
@@ -263,7 +267,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>現沖額度</span>
-                                    <span name="DTAMT">{data.DTAMT ? data.DTAMT : '--'}</span>
+                                    <span>{data.DTAMT ? data.DTAMT : '--'}</span>
                                 </p>
                                 <p>
                                     <span>交易啟用日</span>
@@ -276,7 +280,7 @@ const AccountInfo = () => {
                             <div className="dataBox">
                                 <p>
                                     <span>帳戶狀態</span>
-                                    <span name="CDATE">{data.CDATE === '正常' ? data.CDATE : <a>立即開信用戶</a>}</span>
+                                    <span>{data.CDATE === '正常' ? data.CDATE : <a>立即開信用戶</a>}</span>
                                 </p>
                                 <p>
                                     <span>信用開戶日</span>
@@ -284,11 +288,11 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
-                                    <span name="SCD21">{data.SCD21 ? data.SCD21 : '--'}</span>
+                                    <span>{data.SCD21 ? data.SCD21 : '--'}</span>
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
-                                    <span name="finAmt">{dataMore.finAmt ? dataMore.finAmt : '--'}</span>
+                                    <span>{dataMore.finAmt ? dataMore.finAmt : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -296,7 +300,7 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
-                                    <span name="finUsedAmt-finLeavesAmt">
+                                    <span>
                                         {dataMore.finUsedAmt ? dataMore.finUsedAmt : '--'}/
                                         <br className="forMB" />
                                         {dataMore.finLeavesAmt ? dataMore.finLeavesAmt : '--'}
@@ -304,7 +308,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總融券額度</span>
-                                    <span name="shortAmt">{dataMore.shortAmt ? dataMore.shortAmt : '--'}</span>
+                                    <span>{dataMore.shortAmt ? dataMore.shortAmt : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -312,7 +316,7 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
-                                    <span name="shortUsedAmt-shortLeavesAmt">
+                                    <span>
                                         {dataMore.shortUsedAmt ? dataMore.shortUsedAmt : '--'}/
                                         <br className="forMB" />
                                         {dataMore.shortLeavesAmt ? dataMore.shortLeavesAmt : '--'}
@@ -322,25 +326,20 @@ const AccountInfo = () => {
                         </div>
                         <div className="contentBox">
                             <div className="title flexBox">
-                                借券交易{' '}
-                                <a className="arrowLink" href="/newweb/loan-zone/Overview">
-                                    前往借貸專區
-                                </a>
+                                借券交易 <a className="arrowLink">前往借貸專區</a>
                             </div>
                             <div className="dataBox">
                                 <p>
                                     <span>帳戶狀態</span>
-                                    <span name="SLSTATUS">
-                                        {data.SLSTATUS === '正常' ? data.SLSTATUS : <a>立即開借券戶</a>}
-                                    </span>
+                                    <span>{data.SLSTATUS === '正常' ? data.SLSTATUS : <a>立即開借券戶</a>}</span>
                                 </p>
                                 <p>
                                     <span>帳戶類型</span>
-                                    <span name="TOL">{data.TOL ? data.TOL : '--'}</span>
+                                    <span>{data.TOL ? data.TOL : '--'}</span>
                                 </p>
                                 <p>
                                     <span>借券額度</span>
-                                    <span name="LAMT">{data.LAMT ? data.LAMT : '--'}</span>
+                                    <span>{data.LAMT ? data.LAMT : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -348,38 +347,33 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         借券可用
                                     </span>
-                                    <span name="LAMTU-LAMTUA">
+                                    <span>
                                         {data.LAMTU ? data.LAMTU : '--'}/<br className="forMB" />
                                         {data.LAMTUA ? data.LAMTUA : '--'}
                                     </span>
                                 </p>
                                 <p>
                                     <span>未還借券金額</span>
-                                    <span name="ULAMT">{data.ULAMT ? data.ULAMT : '--'}</span>
+                                    <span>{data.ULAMT ? data.ULAMT : '--'}</span>
                                 </p>
                             </div>
                         </div>
                         <div className="contentBox">
                             <div className="title flexBox">
-                                不限用途款項借貸{' '}
-                                <a className="arrowLink" href="/newweb/loan-zone/Overview">
-                                    前往借貸專區
-                                </a>
+                                不限用途款項借貸 <a className="arrowLink">前往借貸專區</a>
                             </div>
                             <div className="dataBox">
                                 <p>
                                     <span>帳戶狀態</span>
-                                    <span name="ELSTATUS">
-                                        {data.ELSTATUS === '正常' ? data.ELSTATUS : <a>立即申辦</a>}
-                                    </span>
+                                    <span>{data.ELSTATUS === '正常' ? data.ELSTATUS : <a>立即申辦</a>}</span>
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
-                                    <span name="ELMR">{data.ELMR ? data.ELMR : '--'}</span>
+                                    <span>{data.ELMR ? data.ELMR : '--'}</span>
                                 </p>
                                 <p>
                                     <span>總計可借款金額</span>
-                                    <span name="LOC">{data.LOC ? data.LOC : '--'}</span>
+                                    <span>{data.LOC ? data.LOC : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -387,7 +381,7 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘可借
                                     </span>
-                                    <span name="AA-RAA">
+                                    <span>
                                         {data.AA ? data.AA : '--'}/<br className="forMB" />
                                         {data.RAA ? data.RAA : '--'}
                                     </span>
@@ -398,7 +392,7 @@ const AccountInfo = () => {
                                         <br className="forMB" />
                                         剩餘可動用
                                     </span>
-                                    <span name="AU-RAU">
+                                    <span>
                                         {data.AU ? data.AU : '--'}/<br className="forMB" />
                                         {data.RAU ? data.RAU : '--'}
                                     </span>
@@ -410,17 +404,17 @@ const AccountInfo = () => {
                             <div className="dataBox">
                                 <p>
                                     <span>語音交易</span>
-                                    <span name="VCUSTOMER">{data.VCUSTOMER ? data.VCUSTOMER : '--'}</span>
+                                    <span>{data.VCUSTOMER ? data.VCUSTOMER : '--'}</span>
                                 </p>
                                 <p>
                                     <span>興櫃交易</span>
-                                    <span name="NEWEMERGINGFLAG">
+                                    <span>
                                         {data.NEWEMERGINGFLAG === '已簽署' ? data.NEWEMERGINGFLAG : <a>立即簽署</a>}
                                     </span>
                                 </p>
                                 <p>
                                     <span>券差借貸同意書</span>
-                                    <span name="NEWEMERGINGFLAG">
+                                    <span>
                                         {data.NEWEMERGINGFLAG === '已簽署' ? data.NEWEMERGINGFLAG : <a>立即簽署</a>}
                                     </span>
                                 </p>

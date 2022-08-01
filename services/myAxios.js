@@ -122,7 +122,7 @@ export const getA8Instance = (version = a8DefaultVersion, auth = a8Auth, modal =
     return a8Ins;
 };
 
-const createA8StpInstance = (baseUrl, auth = a8Auth) =>
+const createA8StpInstance = baseUrl =>
     axios.create({
         baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8_BASE}/`,
         timeout: 90000,
@@ -132,8 +132,30 @@ const createA8StpInstance = (baseUrl, auth = a8Auth) =>
         },
     });
 
-export const getA8StpInstance = (modal = false, baseUrl = '', auth = a8Auth) => {
+export const getA8StpInstance = (modal = false, baseUrl = '') => {
     const a8Ins = createA8StpInstance(baseUrl, auth);
+    a8Ins.interceptors.response.use(
+        response => response,
+        error => {
+            return error.response;
+            // return errorHandler(error, modal);
+        },
+    );
+    return a8Ins;
+};
+
+const createA8StpInstanceAuth = (baseUrl, auth = a8Auth) =>
+    axios.create({
+        baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8_BASE}/`,
+        timeout: 90000,
+        auth,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getA8StpInstanceAuth = (modal = false, baseUrl = '', auth = a8Auth) => {
+    const a8Ins = createA8StpInstanceAuth(baseUrl, auth);
     a8Ins.interceptors.response.use(
         response => response,
         error => {
