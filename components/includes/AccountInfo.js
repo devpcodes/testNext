@@ -8,6 +8,7 @@ import { EnvironmentFilled, InfoCircleFilled } from '@ant-design/icons';
 import info from '../../resources/images/pages/Service_ForgetPassword/attention-info-circle.svg';
 import { AccountDropdown } from './personalArea/accountDropdown/AccountDropdown';
 import Breadcrumb from './breadcrumb/breadcrumb';
+import { formatNum } from '../../services/formatNum';
 import { Popover } from 'antd';
 const AccountInfo = () => {
     const winWidth = useSelector(store => store.layout.winWidth);
@@ -225,14 +226,14 @@ const AccountInfo = () => {
                                         </Popover>
                                     </span>
                                     <span>
-                                        {data.TAMT ? data.TAMT : '--'}
+                                        {data.TAMT ? formatNum(data.TAMT) : '--'}
                                         {/* <a>申請調整</a> */}
                                     </span>
                                 </p>
                                 <p>
                                     <span>總電子交易額度</span>
                                     <span>
-                                        {dataMore.leaves ? dataMore.leaves : '--'}
+                                        {dataMore.leaves ? formatNum(dataMore.leaves) : '--'}
                                         {/*<a>申請調整</a> */}
                                     </span>
                                 </p>
@@ -243,9 +244,9 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.used ? dataMore.used : '--'}/
+                                        {dataMore.used ? formatNum(dataMore.used) : '--'}/
                                         <br className="forMB" />
-                                        {dataMore.leaves ? dataMore.leaves : '--'}
+                                        {dataMore.leaves ? formatNum(dataMore.leaves) : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -267,7 +268,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>現沖額度</span>
-                                    <span>{data.DTAMT ? data.DTAMT : '--'}</span>
+                                    <span>{data.DTAMT ? formatNum(data.DTAMT) : '--'}</span>
                                 </p>
                                 <p>
                                     <span>交易啟用日</span>
@@ -292,7 +293,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
-                                    <span>{dataMore.finAmt ? dataMore.finAmt : '--'}</span>
+                                    <span>{dataMore.finAmt ? formatNum(dataMore.finAmt) : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -301,14 +302,14 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.finUsedAmt ? dataMore.finUsedAmt : '--'}/
+                                        {dataMore.finUsedAmt ? formatNum(dataMore.finUsedAmt) : '--'}/
                                         <br className="forMB" />
-                                        {dataMore.finLeavesAmt ? dataMore.finLeavesAmt : '--'}
+                                        {dataMore.finLeavesAmt ? formatNum(dataMore.finLeavesAmt) : '--'}
                                     </span>
                                 </p>
                                 <p>
                                     <span>總融券額度</span>
-                                    <span>{dataMore.shortAmt ? dataMore.shortAmt : '--'}</span>
+                                    <span>{dataMore.shortAmt ? formatNum(dataMore.shortAmt) : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -317,9 +318,9 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.shortUsedAmt ? dataMore.shortUsedAmt : '--'}/
+                                        {dataMore.shortUsedAmt ? formatNum(dataMore.shortUsedAmt) : '--'}/
                                         <br className="forMB" />
-                                        {dataMore.shortLeavesAmt ? dataMore.shortLeavesAmt : '--'}
+                                        {dataMore.shortLeavesAmt ? formatNum(dataMore.shortLeavesAmt) : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -339,7 +340,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>借券額度</span>
-                                    <span>{data.LAMT ? data.LAMT : '--'}</span>
+                                    <span>{data.LAMT ? formatNum(data.LAMT) : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -348,13 +349,13 @@ const AccountInfo = () => {
                                         借券可用
                                     </span>
                                     <span>
-                                        {data.LAMTU ? data.LAMTU : '--'}/<br className="forMB" />
-                                        {data.LAMTUA ? data.LAMTUA : '--'}
+                                        {data.LAMTU ? formatNum(data.LAMTU) : '--'}/<br className="forMB" />
+                                        {data.LAMTUA ? formatNum(data.LAMTUA) : '--'}
                                     </span>
                                 </p>
                                 <p>
                                     <span>未還借券金額</span>
-                                    <span>{data.ULAMT ? data.ULAMT : '--'}</span>
+                                    <span>{data.ULAMT ? formatNum(data.ULAMT) : '--'}</span>
                                 </p>
                             </div>
                         </div>
@@ -373,7 +374,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總計可借款金額</span>
-                                    <span>{data.LOC ? data.LOC : '--'}</span>
+                                    <span>{data.LOC ? formatNum(data.LOC) : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
@@ -382,8 +383,8 @@ const AccountInfo = () => {
                                         剩餘可借
                                     </span>
                                     <span>
-                                        {data.AA ? data.AA : '--'}/<br className="forMB" />
-                                        {data.RAA ? data.RAA : '--'}
+                                        {data.AA ? formatNum(data.AA) : '--'}/<br className="forMB" />
+                                        {data.RAA ? formatNum(data.RAA) : '--'}
                                     </span>
                                 </p>
                                 <p>
@@ -393,8 +394,8 @@ const AccountInfo = () => {
                                         剩餘可動用
                                     </span>
                                     <span>
-                                        {data.AU ? data.AU : '--'}/<br className="forMB" />
-                                        {data.RAU ? data.RAU : '--'}
+                                        {data.AU ? formatNum(data.AU) : '--'}/<br className="forMB" />
+                                        {data.RAU ? formatNum(data.RAU) : '--'}
                                     </span>
                                 </p>
                             </div>
