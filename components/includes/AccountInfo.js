@@ -184,10 +184,6 @@ const AccountInfo = () => {
                                         <span>最後交易日</span>
                                         <span>{data.LAST_TRADE_DATE ? data.LAST_TRADE_DATE : '--'}</span>
                                     </p>
-                                    <p>
-                                        <span>對帳單領取方式 </span>
-                                        <span className="red">???</span>
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -217,8 +213,8 @@ const AccountInfo = () => {
                                             <InfoCircleFilled />
                                         </Popover>
                                     </span>
-                                    <span className="red">
-                                        ????
+                                    <span>
+                                        {data.TAMT ? data.TAMT : '--'}
                                         {/* <a>申請調整</a> */}
                                     </span>
                                 </p>
@@ -333,10 +329,6 @@ const AccountInfo = () => {
                                 <p>
                                     <span>借券額度</span>
                                     <span>{data.LAMT ? data.LAMT : '--'}</span>
-                                </p>
-                                <p>
-                                    <span>總融資額度</span>
-                                    <span>{data.CRAMT ? data.CRAMT : '--'}</span>
                                 </p>
                                 <p>
                                     <span>
