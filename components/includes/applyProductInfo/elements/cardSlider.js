@@ -55,17 +55,8 @@ const CardSlider = ({ rowData, itemNum = 3 }) => {
                     justify-content: space-around;
                 }
                 #cardSlider__container .slick-slide .slideContent .slideCard {
-                    width: 32%;
-                }
-                @media (max-width: 768px) {
-                    #cardSlider__container .slick-slide .slideContent .slideCard {
-                        width: 49%;
-                    }
-                }
-                @media (max-width: 425px) {
-                    #cardSlider__container .slick-slide .slideContent .slideCard {
-                        width: 100%;
-                    }
+                    width: ${100 / itemNum - 1 + '%'};
+                    max-width: 340px;
                 }
             `}</style>
         </div>

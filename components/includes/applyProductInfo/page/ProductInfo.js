@@ -41,13 +41,7 @@ const ProductInfo = () => {
         { title: '中籤還款', key: 'p4' },
         { title: '其他', key: 'p5' },
     ];
-    // const contentStyle = {
-    //     height: '160px',
-    //     color: '#fff',
-    //     lineHeight: '160px',
-    //     textAlign: 'center',
-    //     background: '#364d79',
-    // };
+
     const slideCardData = [
         {
             stockId: '2756',
@@ -395,6 +389,9 @@ const ProductInfo = () => {
             behavior: 'smooth',
         });
     };
+    const btnHref = val => {
+        window.location.href = val;
+    };
 
     return (
         <div id="applyIndex__container">
@@ -431,9 +428,11 @@ const ProductInfo = () => {
                         </div>
                     </div>
                     <div>
-                        <Button type="primary">立即申購</Button>
-                        <br></br>
-                        <a href="#">
+                        <Button type="primary" onClick={btnHref.bind(null, '/newweb/subscriptionArea/Subscription')}>
+                            立即申購
+                        </Button>
+                        <br />
+                        <a href="https://strd.sinotrade.com.tw/dsopac/Login?strProd=0002&strWeb=0002">
                             尚未開通服務，我要申辦
                             <RightOutlined />
                         </a>
@@ -518,7 +517,7 @@ const ProductInfo = () => {
                     <div className="slickBox">
                         <CardSlider
                             rowData={slideCardData}
-                            itemNum={windowWidth > 768 ? 3 : windowWidth > 425 ? 2 : 1}
+                            itemNum={windowWidth > 768 ? 3 : windowWidth > 620 ? 2 : 1}
                         />
                     </div>
                     <div className="info">
@@ -626,12 +625,14 @@ const ProductInfo = () => {
                             })}
                         </Tabs>
                     </div>
-                    <QaCollapse dataSource={qaData} />
+                    <div className="qaOuter">
+                        <QaCollapse dataSource={qaData} />
+                    </div>
                 </div>
             </div>
             <div className="goTo">
-                <a>立即申購</a>
-                <a>我要申辦</a>
+                <a href="/newweb/subscriptionArea/Subscription">立即申購</a>
+                <a href="https://strd.sinotrade.com.tw/dsopac/Login?strProd=0002&strWeb=0002">我要申辦</a>
             </div>
             <style jsx>
                 {`
@@ -737,7 +738,7 @@ const ProductInfo = () => {
                 .goTo > a {line-height:1.3;width:34px;}
                 .bg-cycle{ display:none;}
             }
-            @media screen and (max-width: 425px) {
+            @media screen and (max-width: 500px) {
                 .flexBox{flex-wrap:wrap;}
                 .forPC{display:none;}
                 .forMB{display:block!important;}      
@@ -784,6 +785,7 @@ const ProductInfo = () => {
                 .tabBox { padding-left: 5%; }
                 .goTo{ right:0%; bottom:3%; border-radius:16px 0 0 16px; width:42px; }
                 .goTo > a {line-height:1.1;width:24px;}
+                .qaOuter{padding:4%;}
             }
 
             }`}
@@ -870,7 +872,7 @@ const ProductInfo = () => {
                             margin: 0.2em 0;
                         }
                     }
-                    @media screen and (max-width: 425px) {
+                    @media screen and (max-width: 500px) {
                         #applyIndex__container .ant-radio-group {
                             flex-wrap: wrap;
                         }
@@ -899,6 +901,12 @@ const ProductInfo = () => {
                         }
                         #applyIndex__container .slickBox .ant-carousel .slick-prev {
                             left: -20px;
+                        }
+                        #applyIndex__container .price__difference {
+                            padding: 4%;
+                        }
+                        #applyIndex__container .price__difference .percent {
+                            margin-right: 0;
                         }
                     }
                 `}
