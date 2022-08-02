@@ -160,14 +160,29 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {!applyStatus && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即申辦'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
                     {applyStatus && !signAcc && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即簽署'}
                             contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
                         />
@@ -223,14 +238,29 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {!applyStatus && (
                         <SignBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即申辦'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
                     {applyStatus && !signAcc && (
                         <SignBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即簽署'}
                             contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
                         />
