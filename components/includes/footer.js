@@ -72,15 +72,15 @@ const footerData = [
             },
             {
                 title: '永豐金證券(亞洲)',
-                link: 'http://www.sinopacasia.com/',
+                link: 'https://www.sinopacasia.com/',
             },
             {
                 title: '永豐期貨',
-                link: 'http://www.spf.com.tw/',
+                link: 'https://www.spf.com.tw/',
             },
             {
                 title: '永豐投信',
-                link: 'http://sitc.sinopac.com/',
+                link: 'https://sitc.sinopac.com/',
             },
             {
                 title: '永豐MMA交易網',
