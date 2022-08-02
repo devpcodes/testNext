@@ -166,7 +166,7 @@ const Footer = memo(({ showNav }) => {
                         </li> */}
                         <li>
                             <a
-                                href="http://www.sinopac.com/footer/20170512111026126000000000000863.html"
+                                href="http://www.sinopac.com/footer/2018110216150226800000000000011.html"
                                 target="_blank"
                                 rel="noreferrer noopener"
                             >
