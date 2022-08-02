@@ -54,10 +54,7 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
                     }
                     @media screen and (max-width: 768px) {
                     }
-                    @media screen and (max-width: 425px) {
-                        .qaBox {
-                            padding: 0 4%;
-                        }
+                    @media screen and (max-width: 500px) {
                         .forPC {
                             display: none;
                         }
@@ -85,7 +82,7 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
                     font-weight: 300;line-height:26px!important;}
                 #QaCollapse__content .plusIcon.active{background: #daa360;!important;}
                 #QaCollapse__content .plusIcon.active i{transform:rotate(45deg);}
-                @media screen and (max-width: 425px) {
+                @media screen and (max-width: 500px) {
                     #QaCollapse__content .ant-collapse-item{padding:4%;}
                     #QaCollapse__content .ant-collapse-header{ font-size: 16px;padding-right: 30px!important; line-height: 1.3!important;}
                     #QaCollapse__content .ant-collapse>.ant-collapse-item>.ant-collapse-header .ant-collapse-arrow {top: 16%; transform: translateY(0%);}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from 'antd';
 import moment from 'moment';
@@ -210,178 +210,191 @@ const OverviewComponent = () => {
         );
     };
     return (
-        <div className="overview__container">
-            <Breadcrumb />
-            <div className="overview__head">
-                <h1 className="overview__title">借款總覽</h1>
-                <div className="overview__btns">
-                    <Btn
-                        type="accountInfo"
-                        text="帳戶詳情"
-                        // style={{ marginRight: 16 }}
-                        onClick={accountDetailHandler}
-                    />
-                    {/* <Btn type="money" text="借貸商品" /> */}
-                </div>
-            </div>
-            <LoanBox allCanLoan={resultAllCanLoan} financing={accountOverview.financing} />
-            <div className="overview__useContainer">
-                <UseBox
-                    style={{ width: isMobile ? '100%' : '49.3%', marginRight: isMobile ? 0 : '1.4%' }}
-                    financing={accountOverview.financing}
-                    usedFinancing={accountOverview.usedFinancing}
-                />
-                <RepaymentBox
-                    style={{ width: isMobile ? '100%' : '49.3%', marginTop: isMobile ? '16px' : '0' }}
-                    amount={
-                        Number(accountOverview.usedFinancing) +
-                        (Number(accountOverview.estimatePayable) +
-                            Number(accountOverview.unpaidCustodyFee) +
-                            Number(accountOverview.unpaidFee) || 0)
-                    }
-                    estimatePayable={
-                        Number(accountOverview.estimatePayable) +
-                        Number(accountOverview.unpaidCustodyFee) +
-                        Number(accountOverview.unpaidFee)
-                    }
-                />
-            </div>
-            <div className="overview__head2">
-                <h2 className="overview__title">擔保品明細</h2>
-                <div className="overview__ratio">
-                    <Tooltip title={tooltipHandler} placement="bottom">
-                        <img className="overview__icon" src={info} />
-                    </Tooltip>
-                    <span className="overview__hold--label">整戶維持率：</span>
-                    <span className="overview__hold--val">{(accountOverview.marginRatio || '--') + '%'}</span>
-                </div>
-            </div>
-            <div className="overview__table">
-                <TopTabBar menuList={menuList} current={current} onClick={tabClickHandler} activeKey={current} />
-                <SelfTable currentKey={current} setCurrentData={currentDataHandler} canLoanHandler={canLoanHandler} />
-            </div>
+        <>
+            {isLogin && haveLoanAccount && (
+                <div className="overview__container">
+                    <Breadcrumb />
+                    <div className="overview__head">
+                        <h1 className="overview__title">借款總覽</h1>
+                        <div className="overview__btns">
+                            <Btn
+                                type="accountInfo"
+                                text="帳戶詳情"
+                                // style={{ marginRight: 16 }}
+                                onClick={accountDetailHandler}
+                            />
+                            {/* <Btn type="money" text="借貸商品" /> */}
+                        </div>
+                    </div>
+                    <LoanBox allCanLoan={resultAllCanLoan} financing={accountOverview.financing} />
+                    <div className="overview__useContainer">
+                        <UseBox
+                            style={{ width: isMobile ? '100%' : '49.3%', marginRight: isMobile ? 0 : '1.4%' }}
+                            financing={accountOverview.financing}
+                            usedFinancing={accountOverview.usedFinancing}
+                        />
+                        <RepaymentBox
+                            style={{ width: isMobile ? '100%' : '49.3%', marginTop: isMobile ? '16px' : '0' }}
+                            amount={
+                                Number(accountOverview.usedFinancing) +
+                                (Number(accountOverview.estimatePayable) +
+                                    Number(accountOverview.unpaidCustodyFee) +
+                                    Number(accountOverview.unpaidFee) || 0)
+                            }
+                            estimatePayable={
+                                Number(accountOverview.estimatePayable) +
+                                Number(accountOverview.unpaidCustodyFee) +
+                                Number(accountOverview.unpaidFee)
+                            }
+                        />
+                    </div>
+                    <div className="overview__head2">
+                        <h2 className="overview__title">擔保品明細</h2>
+                        <div className="overview__ratio">
+                            <Tooltip title={tooltipHandler} placement="bottom">
+                                <img className="overview__icon" src={info} />
+                            </Tooltip>
+                            <span className="overview__hold--label">整戶維持率：</span>
+                            <span className="overview__hold--val">{(accountOverview.marginRatio || '--') + '%'}</span>
+                        </div>
+                    </div>
+                    <div className="overview__table">
+                        <TopTabBar
+                            menuList={menuList}
+                            current={current}
+                            onClick={tabClickHandler}
+                            activeKey={current}
+                        />
+                        <SelfTable
+                            currentKey={current}
+                            setCurrentData={currentDataHandler}
+                            canLoanHandler={canLoanHandler}
+                        />
+                    </div>
 
-            <style jsx>{`
-                .overview__container {
-                    width: 80%;
-                    margin: 0 auto;
-                    padding-top: 24px;
-                }
-                .overview__title {
-                    font-size: 28px;
-                    color: #0d1623;
-                    font-weight: bold;
-                }
-                .overview__head {
-                    margin-top: 24px;
-                    display: flex;
-                    justify-content: space-between;
-                }
-                .overview__head2 {
-                    margin-top: 32px;
-                    display: flex;
-                    justify-content: space-between;
-                }
-                .overview__useContainer {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 17px;
-                }
-                .overview__hold--label {
-                    font-size: 16px;
-                    color: #0d1623;
-                }
-                .overview__hold--val {
-                    font-size: 24px;
-                    font-weight: bold;
-                    color: #0d1623;
-                }
-                .overview__icon {
-                    margin-top: -5px;
-                }
-                @media (max-width: 1024px) {
-                    .overview__container {
-                        width: 90%;
-                    }
-                }
-                @media (max-width: 768px) {
-                    .overview__container {
-                        width: 100%;
-                    }
-                    .overview__title {
-                        font-size: 20px;
-                    }
-                    .overview__head {
-                        display: block;
-                        padding: 0 16px;
-                    }
-                    .overview__btns {
-                        display: flex;
-                        justify-content: space-between;
-                        margin-bottom: 16px;
-                    }
-                    .overview__useContainer {
-                        display: block;
-                    }
-                    .overview__head2 {
-                        padding: 0 16px;
-                        margin-top: 16px;
-                    }
-                    .overview__ratio {
-                        margin-top: -7px;
-                    }
-                }
-                @media (max-width: 450px) {
-                    .overview__container {
-                        padding-top: 1px !important;
-                    }
-                }
-            `}</style>
-            <style jsx global>{`
-                .page__container {
-                    background-color: #f9fbff;
-                    padding-bottom: 32px;
-                }
-                .overview__table .sino__table .ant-table-tbody > tr > td:last-child {
-                    padding-right: 12px;
-                }
-                .accountDetail {
-                    width: 100%;
-                    border: solid 1px #d7e0ef;
-                    border-radius: 2px;
-                }
-                .account__item {
-                    border-bottom: solid 1px #d7e0ef;
-                    display: flex;
-                    justify-content: space-between;
-                }
-                .account__label {
-                    font-size: 16px;
-                    color: #3f5372;
-                    background-color: #f2f5fa;
-                    flex: 1 0 0;
-                    padding: 6px 16px;
-                    border-right: solid 1px #d7e0ef;
-                }
-                .account__val {
-                    flex: 1.5 0 0;
-                    padding: 6px 16px;
-                    text-align: right;
-                    font-size: 16px;
-                    font-weight: 500;
-                    color: #0d1623;
-                }
+                    <style jsx>{`
+                        .overview__container {
+                            width: 80%;
+                            margin: 0 auto;
+                            padding-top: 24px;
+                        }
+                        .overview__title {
+                            font-size: 28px;
+                            color: #0d1623;
+                            font-weight: bold;
+                        }
+                        .overview__head {
+                            margin-top: 24px;
+                            display: flex;
+                            justify-content: space-between;
+                        }
+                        .overview__head2 {
+                            margin-top: 32px;
+                            display: flex;
+                            justify-content: space-between;
+                        }
+                        .overview__useContainer {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-top: 17px;
+                        }
+                        .overview__hold--label {
+                            font-size: 16px;
+                            color: #0d1623;
+                        }
+                        .overview__hold--val {
+                            font-size: 24px;
+                            font-weight: bold;
+                            color: #0d1623;
+                        }
+                        .overview__icon {
+                            margin-top: -5px;
+                        }
+                        @media (max-width: 1024px) {
+                            .overview__container {
+                                width: 90%;
+                            }
+                        }
+                        @media (max-width: 768px) {
+                            .overview__container {
+                                width: 100%;
+                            }
+                            .overview__title {
+                                font-size: 20px;
+                            }
+                            .overview__head {
+                                display: block;
+                                padding: 0 16px;
+                            }
+                            .overview__btns {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 16px;
+                            }
+                            .overview__useContainer {
+                                display: block;
+                            }
+                            .overview__head2 {
+                                padding: 0 16px;
+                                margin-top: 16px;
+                            }
+                            .overview__ratio {
+                                margin-top: -7px;
+                            }
+                        }
+                        @media (max-width: 450px) {
+                            .overview__container {
+                                padding-top: 1px !important;
+                            }
+                        }
+                    `}</style>
+                    <style jsx global>{`
+                        .page__container {
+                            background-color: #f9fbff;
+                            padding-bottom: 32px;
+                        }
+                        .overview__table .sino__table .ant-table-tbody > tr > td:last-child {
+                            padding-right: 12px;
+                        }
+                        .accountDetail {
+                            width: 100%;
+                            border: solid 1px #d7e0ef;
+                            border-radius: 2px;
+                        }
+                        .account__item {
+                            border-bottom: solid 1px #d7e0ef;
+                            display: flex;
+                            justify-content: space-between;
+                        }
+                        .account__label {
+                            font-size: 16px;
+                            color: #3f5372;
+                            background-color: #f2f5fa;
+                            flex: 1 0 0;
+                            padding: 6px 16px;
+                            border-right: solid 1px #d7e0ef;
+                        }
+                        .account__val {
+                            flex: 1.5 0 0;
+                            padding: 6px 16px;
+                            text-align: right;
+                            font-size: 16px;
+                            font-weight: 500;
+                            color: #0d1623;
+                        }
 
-                @media (max-width: 768px) {
-                    .subscription__description__btn {
-                        flex: 1 0 0;
-                    }
-                    .site-breadcrumb {
-                        padding-left: 16px;
-                    }
-                }
-            `}</style>
-        </div>
+                        @media (max-width: 768px) {
+                            .subscription__description__btn {
+                                flex: 1 0 0;
+                            }
+                            .site-breadcrumb {
+                                padding-left: 16px;
+                            }
+                        }
+                    `}</style>
+                </div>
+            )}
+        </>
     );
 };
 
