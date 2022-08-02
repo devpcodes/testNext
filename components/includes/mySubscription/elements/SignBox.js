@@ -8,7 +8,7 @@ const SignBox = ({ title, content, style, contentLink, linkUrl }) => {
             window.open(contentLink);
         }
         if (contentLink.indexOf('http') >= 0 && content === '立即簽署') {
-            window.open(`${process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}/Cmarketing/?TOKEN=${getToken()}`);
+            window.location = `${process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}/Cmarketing/?TOKEN=${getToken()}`;
         }
     };
     return (
