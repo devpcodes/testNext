@@ -437,6 +437,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 content:
                     '離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選 【確定】，如還捨不得離開請點【取消】。',
                 onOk: async () => {
+                    dispatch(setModal({ visible: false }));
                     postOrderHandler(record);
                 },
             }),
