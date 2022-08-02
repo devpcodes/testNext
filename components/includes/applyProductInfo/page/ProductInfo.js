@@ -432,7 +432,7 @@ const ProductInfo = () => {
                             立即申購
                         </Button>
                         <br />
-                        <a href="https://strd.sinotrade.com.tw/dsopac/Login?strProd=0002&strWeb=0002">
+                        <a href={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}>
                             尚未開通服務，我要申辦
                             <RightOutlined />
                         </a>
@@ -632,7 +632,7 @@ const ProductInfo = () => {
             </div>
             <div className="goTo">
                 <a href="/newweb/subscriptionArea/Subscription">立即申購</a>
-                <a href="https://strd.sinotrade.com.tw/dsopac/Login?strProd=0002&strWeb=0002">我要申辦</a>
+                <a href={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}>我要申辦</a>
             </div>
             <style jsx>
                 {`
