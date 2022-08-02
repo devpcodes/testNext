@@ -132,7 +132,7 @@ const createA8StpInstance = baseUrl =>
     });
 
 export const getA8StpInstance = (modal = false, baseUrl = '') => {
-    const a8Ins = createA8StpInstance(baseUrl, auth);
+    const a8Ins = createA8StpInstance(baseUrl);
     a8Ins.interceptors.response.use(
         response => response,
         error => {
@@ -281,6 +281,43 @@ export const getZionInstance = (version = zionDefaultVersion, modal = true) => {
     );
 
     return ZionIns;
+};
+
+// subscription instance：設置 call subscription server 的最低配置
+const createSubscriptionInstance = () =>
+    axios.create({
+        baseURL: `${process.env.NEXT_PUBLIC_SUBSCRIPTION}`,
+        timeout: 90000,
+        withCredentials: true,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getSubscriptionInstance = () => {
+    const SubscriptionIns = createSubscriptionInstance();
+
+    SubscriptionIns.interceptors.response.use(
+        response => response,
+        error => {
+            return errorHandler(error, false);
+        },
+    );
+
+    return SubscriptionIns;
+};
+
+export const getSubscriptionInstanceV2 = () => {
+    const SubscriptionIns = createSubscriptionInstance();
+
+    SubscriptionIns.interceptors.response.use(
+        response => response,
+        error => {
+            return error;
+        },
+    );
+
+    return SubscriptionIns;
 };
 
 export default axios;
