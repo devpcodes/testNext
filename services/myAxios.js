@@ -126,7 +126,6 @@ const createA8StpInstance = baseUrl =>
     axios.create({
         baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8_BASE}/`,
         timeout: 90000,
-        auth,
         validateStatus: function (status) {
             return status >= 200 && status < 300;
         },
