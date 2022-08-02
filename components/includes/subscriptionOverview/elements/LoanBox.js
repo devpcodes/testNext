@@ -7,7 +7,8 @@ import Bar from '../../loan/overview/elements/Bar';
 import SinoBtn from '../../loan/Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../services/formatNum';
 import { Tooltip } from 'antd';
-const LoanBox = ({ allCanLoan, financing }) => {
+import moment from 'moment';
+const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const router = useRouter();
     const titleHandler = () => {
@@ -110,7 +111,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
                     <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
                 </span> */}
-                {financing <= 0 || financing == '--' ? (
+                {financing <= 0 || financing == '--' || moment(locExpDate).isBefore(moment()) ? (
                     <a className="footer__link--disabled" disabled>
                         我要還款 >
                     </a>

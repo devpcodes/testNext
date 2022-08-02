@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
 import goIcon from '../../../../resources/images/components/mySubscription/arrow-chevron-down-copy (3).svg';
-import { getToken } from '../../../../services/user/accessToken';
+// import { getToken } from '../../../../services/user/accessToken';
 const SignBox = ({ title, content, style, contentLink, linkUrl }) => {
     const clickHandler = () => {
-        if (contentLink.indexOf('http') >= 0 && content === '立即簽署') {
-            window.location = `${process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}/Cmarketing/?TOKEN=${getToken()}`;
-            return;
-        }
+        // if (contentLink.indexOf('http') >= 0 && content === '立即簽署') {
+        //     window.location = `${process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}/Cmarketing/?TOKEN=${getToken()}`;
+        //     return;
+        // }
         if (contentLink.indexOf('http') >= 0) {
             window.open(contentLink);
             return;

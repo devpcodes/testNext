@@ -2,7 +2,8 @@ import icon from '../../../../resources/images/components/mySubscription/basic-h
 import SinoBtn from '../../../includes/loan/Collateral/elements/SinoBtn';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
-const MoneyBox = ({ title, data, style, financing = null }) => {
+import moment from 'moment';
+const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
     const isMobile = useCheckMobile();
     const router = useRouter();
     const onClickHandler = () => {
@@ -24,7 +25,10 @@ const MoneyBox = ({ title, data, style, financing = null }) => {
                             {!isMobile && element.linkText && (
                                 <a
                                     onClick={repaymentHandler}
-                                    className={'money__Alink ' + (financing <= 0 ? 'disabled' : '')}
+                                    className={
+                                        'money__Alink ' +
+                                        (financing <= 0 || moment(locExpDate).isBefore(moment()) ? 'disabled' : '')
+                                    }
                                 >
                                     {element.linkText} >
                                 </a>
@@ -61,11 +65,13 @@ const MoneyBox = ({ title, data, style, financing = null }) => {
                             text={'我要還款'}
                             style={{
                                 margin: '0 auto',
-                                backgroundColor: '#daa360',
-                                color: 'white',
+                                backgroundColor:
+                                    financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#e6ebf5' : '#daa360',
+                                color: financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#a9b6cb' : 'white',
                                 border: 'none',
                                 marginTop: '4px',
                             }}
+                            disabled={financing <= 0 || moment(locExpDate).isBefore(moment())}
                         />
                     </div>
                 )}

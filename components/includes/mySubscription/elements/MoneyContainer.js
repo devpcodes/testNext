@@ -23,6 +23,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
     const [applyStatus, signAcc] = useCheckSubscriptionAcc();
+    const [locExpDate, setLocExpDate] = useState('');
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -74,6 +75,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             const res = await fetchAccountStatus(getToken());
             setAllCanLoan(res.limitAmount);
             setFinancing(res.totalOs);
+            setLocExpDate(res.locExpDate);
         } catch (error) {}
     };
 
@@ -184,7 +186,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                                 },
                             ]}
                             content={'立即簽署'}
-                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                     {applyStatus && signAcc && (
@@ -192,6 +194,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
                             title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
                             financing={Number(financing)}
+                            locExpDate={locExpDate}
                             data={[
                                 {
                                     label: '可動用',
@@ -262,7 +265,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                                 },
                             ]}
                             content={'立即簽署'}
-                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                     {applyStatus && signAcc && (
@@ -270,6 +273,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '33%' }}
                             title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
                             financing={Number(financing)}
+                            locExpDate={locExpDate}
                             data={[
                                 {
                                     label: '可動用',

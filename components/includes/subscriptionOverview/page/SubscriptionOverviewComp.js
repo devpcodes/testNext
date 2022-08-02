@@ -178,6 +178,7 @@ const SubscriptionOverviewComp = () => {
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
     const [repayAccount, setRepayAccount] = useState('--');
+    const [locExpDate, setLocExpDate] = useState('');
     // const [arrears, setArrears] = useState('--')
     const [accountData, setAccountData] = useState([]);
     const [updateTime, setUpdateTime] = useState('--');
@@ -229,6 +230,7 @@ const SubscriptionOverviewComp = () => {
             setAllCanLoan(res.limitAmount);
             setFinancing(res.totalOs);
             setRepayAccount(res.repayAccount);
+            setLocExpDate(res.locExpDate);
             const newData = sortBaseData(baseData, res);
             setAccountData(newData);
             setUpdateTime(moment().format('YYYY.MM.DD HH:mm'));
@@ -417,6 +419,7 @@ const SubscriptionOverviewComp = () => {
     const subProductClick = () => {
         router.push('/subscriptionArea/ProductInfo/');
     };
+    console.log('accountData.locExpDate', accountData);
     return (
         <div className="subOverview__container">
             <div className="subOverview__bread">
@@ -458,7 +461,7 @@ const SubscriptionOverviewComp = () => {
                     />
                 </div>
             </div>
-            <LoanBox allCanLoan={allCanLoan} financing={financing} />
+            <LoanBox allCanLoan={allCanLoan} financing={financing} locExpDate={locExpDate} />
             <div className="subOverview__down">
                 {isMobile ? (
                     <div className="subOverview__downHead">
