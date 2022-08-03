@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import advImg from '../../../resources/images/pages/subscription/img-ad-subscription@2x.png';
+import advImg from '../../../resources/images/pages/subscription/ic-empty@2x.png';
 const SubscriptionAdv = memo(({}) => {
     return (
         <>

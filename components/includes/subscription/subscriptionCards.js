@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { openGoOrder } from '../../../services/openGoOrder';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
@@ -168,8 +169,23 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
             <div>
                 <div className="subscriptionCards__header">
                     <div className="subscriptionCards__title">
-                        <div className="name">{stockData.stockName}</div>
-                        <div className="code">{stockData.stockId}</div>
+                        {/* `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?mode=0&code=${snapshotData.Code}` */}
+                        <div className="name">
+                            <Link
+                                href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
+                                target="_blank"
+                            >
+                                <a>{stockData.stockName}</a>
+                            </Link>
+                        </div>
+                        <div className="code">
+                            <Link
+                                href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
+                                target="_blank"
+                            >
+                                <a>{stockData.stockId}</a>
+                            </Link>
+                        </div>
                     </div>
                     <div className="action">{stockData.marketStatus}</div>
                     <div className="status">{stockData.statusMessage}</div>
