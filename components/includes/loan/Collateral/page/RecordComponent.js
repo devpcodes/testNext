@@ -52,25 +52,6 @@ const RecordComponent = () => {
         setRefreshTime(time);
     }, []);
 
-    const fakeData = [
-        {
-            branch: '9A95',
-            account: '0431465',
-            startDate: '20210406',
-            endDate: '20220406',
-            applyDate: '20220308',
-            applyFinancing: '100000',
-            loanYearRate: '0.05',
-            loanType: '01',
-            status: '1',
-            source: '3',
-            canCancel: 'Y',
-            errMsg: '排除永豐金證券!',
-            receiveTime: '000000',
-            receiveDate: '20220308',
-            name: 'Not Expandable',
-        },
-    ];
     useEffect(() => {
         let params = router.query;
         if (params.tab) {
@@ -145,6 +126,7 @@ const RecordComponent = () => {
             if (res.length > 0) {
                 await res.map(async (x, i) => {
                     let d1 = await getRepayment(x.applyDate, x.key);
+                    d1 = d1.filter(z => !z.errCode);
                     x.detail = d1;
                     dt_arr = dt_arr.concat(d1);
 
@@ -264,7 +246,6 @@ const RecordComponent = () => {
     };
 
     const buildStockList = async () => {
-        console.log('[buildStockList]', stockList);
         let TR = 0;
         let arr = [];
         let obj = {};
@@ -359,7 +340,6 @@ const RecordComponent = () => {
                     </div>
                     <div className="topBarRight flexBox">
                         {/* <p className="desc__update forPC">更新時間：{refreshTime} </p> */}
-
                         <div className="AccountDropdownBox">
                             <AccountDropdown
                                 type={'S'}
@@ -718,6 +698,9 @@ const RecordComponent = () => {
                     @media screen and (max-width: 768px) {
                         .flexBox {
                             flex-wrap: wrap;
+                        }
+                        .record__container .RecordTable__Content.flexBox {
+                            flex-wrap: nowrap;
                         }
                     }
                     @media screen and (max-width: 425px) {
