@@ -430,7 +430,7 @@ const SubscriptionOverviewComp = () => {
                 {isMobile ? (
                     <div className="subOverview__mobileHead">
                         <h1 className="subOverview__title">申購信用通總覽</h1>
-                        <img className="subOverview__icon" src={icon} />
+                        <img className="subOverview__icon" src={icon} onClick={subProductClick} />
                     </div>
                 ) : (
                     <h1 className="subOverview__title">申購信用通總覽</h1>
@@ -466,7 +466,7 @@ const SubscriptionOverviewComp = () => {
                 {isMobile ? (
                     <div className="subOverview__downHead">
                         <h2 className="subOverview__h2">使用明細</h2>
-                        <img className="subOverview__icon" src={icon} />
+                        <img className="subOverview__icon" src={icon} onClick={infoClickHandler} />
                     </div>
                 ) : (
                     <h2 className="subOverview__h2">使用明細</h2>
