@@ -11,7 +11,9 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
             router.push('/subscriptionArea/MySubscription/SubscriptionOverview/');
         }
     };
-    const repaymentHandler = () => {};
+    const repaymentHandler = () => {
+        window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
+    };
     return (
         <div className="money__container" style={style}>
             <div className="money__header">
@@ -72,6 +74,7 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                                 marginTop: '4px',
                             }}
                             disabled={financing <= 0 || moment(locExpDate).isBefore(moment())}
+                            onClick={repaymentHandler}
                         />
                     </div>
                 )}

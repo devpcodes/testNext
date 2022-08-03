@@ -280,8 +280,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
             {
                 title: '申購張數',
                 width: '100px',
-                dataIndex: 'share',
-                key: 'share',
+                dataIndex: 'applyShare',
+                key: 'applyShare',
                 align: 'right',
                 render(text, record, idx) {
                     return Number(text) / 1000;
