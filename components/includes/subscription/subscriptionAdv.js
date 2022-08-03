@@ -16,9 +16,9 @@ const SubscriptionAdv = memo(({}) => {
                     text-align: center;
                 }
                 .pic {
-                    width: 166px;
-                    height: 120px;
-                    margin-top: 48px;
+                    width: 77px;
+                    height: 92px;
+                    margin-top: 65px;
                 }
                 .title {
                     font-size: 2.4rem;

@@ -168,25 +168,14 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
         <>
             <div>
                 <div className="subscriptionCards__header">
-                    <div className="subscriptionCards__title">
-                        {/* `${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?mode=0&code=${snapshotData.Code}` */}
-                        <div className="name">
-                            <Link
-                                href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
-                                target="_blank"
-                            >
-                                <a>{stockData.stockName}</a>
-                            </Link>
-                        </div>
-                        <div className="code">
-                            <Link
-                                href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
-                                target="_blank"
-                            >
-                                <a>{stockData.stockId}</a>
-                            </Link>
-                        </div>
-                    </div>
+                    <a
+                        className="subscriptionCards__title"
+                        href={`/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
+                        target="_blank"
+                    >
+                        <div className="name">{stockData.stockName}</div>
+                        <div className="code">{stockData.stockId}</div>
+                    </a>
                     <div className="action">{stockData.marketStatus}</div>
                     <div className="status">{stockData.statusMessage}</div>
                 </div>
