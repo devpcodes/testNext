@@ -758,16 +758,23 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     };
 
     useEffect(() => {
+        getOrderStatus(currentPage);
+    }, [currentPage]);
+
+    useEffect(() => {
         // console.log('************', orderAmountSorter)
         // debounce(getOrderStatus, 500);
-        getOrderStatus();
-    }, [statusFilterValue, currentPage, orderAmountSorter, lotDateSorter, methodFilterValue, loanStatusFilterValue]);
+        getOrderStatus(1);
+    }, [statusFilterValue, orderAmountSorter, lotDateSorter, methodFilterValue, loanStatusFilterValue]);
 
-    const getOrderStatus = async () => {
+    const getOrderStatus = async page => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
             //TODO MOCK
             // setData(mockData);
+            if (page === 1) {
+                setCurrentPage(1);
+            }
 
             setLoading(true);
             try {
@@ -775,7 +782,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     token,
                     branch: currentAccount.broker_id,
                     account: currentAccount.account,
-                    page: currentPage,
+                    page,
                     pageSize,
                     methodFilter: methodFilterValue,
                     orderStatusFilter: statusFilterValue,
