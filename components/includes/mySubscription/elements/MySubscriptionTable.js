@@ -140,7 +140,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
             // debounce(getOrderStatus, 500);
-            getOrderStatus();
+            getOrderStatus(1);
             // getOrderStatus();
         }
     }, [currentAccount]);
