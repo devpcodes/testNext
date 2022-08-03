@@ -820,7 +820,7 @@ const ProductInfo = () => {
                         <div>
                             <p>
                                 <span>
-                                    <CountUp start={0} end={42630} separator="," duration={2} />
+                                    <CountUp start={0} end={42700} separator="," duration={2} />
                                 </span>
                                 元
                             </p>
@@ -1168,8 +1168,8 @@ const ProductInfo = () => {
                 .mainArea3 .contentBox{padding:0;}
                 .mainArea3 .contentBox .slickBox{width: 100%; margin: 0 auto 40px;}
                 .mainArea3 .contentBox .info{margin-top:2em;font-size:16px;}
-                .mainArea.mainArea4 {padding:48px;}
-                .mainArea4 .areaContent {flex-wrap:wrap;justify-content: space-between;}
+                .mainArea.mainArea4 {padding: 48px 48px 0;}
+                .mainArea4 .areaContent {flex-wrap:wrap;justify-content: space-between; margin-bottom:0;}
                 .mainArea4 .areaContent .areaItem{width: calc(50% - 24px);margin-bottom:48px;}
                 .mainArea5 .contentBox .areaContent > div:nth-child(1) img:first-child{display:none;}
                 .mainArea5 .contentBox .areaContent > div:nth-child(1) img:last-child{display:block;}
@@ -1179,6 +1179,7 @@ const ProductInfo = () => {
                 .mainArea5 .contentBox .areaContent>div:nth-child(1) {width:35%;}
                 .mainArea5 .contentBox .areaContent>div:nth-child(2) {width: 65%;padding:4em 4em;}
                 .mainArea5 .contentBox .areaContent>div:nth-child(2) p{font-size: 20px;}
+                .mainArea5 .contentBox .areaContent {margin: 40px auto 40px; }
                 .mainArea6 .tabBox{ margin-bottom: 24px;}
 
                 .goTo{ right:0%; bottom:3%; border-radius:16px 0 0 16px; width:50px; }
