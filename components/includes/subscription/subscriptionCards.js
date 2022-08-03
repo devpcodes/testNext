@@ -170,7 +170,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 <div className="subscriptionCards__header">
                     <a
                         className="subscriptionCards__title"
-                        href={`/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
+                        href={`TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
                         target="_blank"
                     >
                         <div className="name">{stockData.stockName}</div>
