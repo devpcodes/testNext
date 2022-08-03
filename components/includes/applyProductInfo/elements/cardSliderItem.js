@@ -81,6 +81,9 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     display: flex;
                     justify-content: space-between;
                 }
+                .slideCardType.TypeB {
+                    box-shadow: 0 2px 16px 6px rgba(132, 143, 165, 0.2), 0 2px 10px 3px rgba(132, 143, 165, 0.1);
+                }
                 .TypeB .Inner > div {
                     font-size: 16px;
                 }
