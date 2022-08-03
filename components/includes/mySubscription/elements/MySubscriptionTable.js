@@ -146,7 +146,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     }, [currentAccount]);
     useEffect(() => {
         if (refresh) {
-            getOrderStatus();
+            getOrderStatus(1);
         }
     }, [refresh]);
     useEffect(() => {
