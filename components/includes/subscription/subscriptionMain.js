@@ -44,6 +44,14 @@ const SubscriptionMain = memo(({}) => {
         }
     }, [currentAccount, currentBrokerID]);
 
+    const renderAdv = () => {
+        return (
+            <div className="subscriptionCards">
+                <SubscriptionAdv />
+            </div>
+        );
+    };
+
     const submitSubscription = useCallback(async (name, id, price, isAppropriation) => {
         const branch = currentBrokerID;
         const account = currentAccount;
@@ -159,7 +167,6 @@ const SubscriptionMain = memo(({}) => {
                             setSubscriptionData(listResponse.result);
                         }
                     }
-                    console.log('test');
                 },
             }),
         );
@@ -173,17 +180,24 @@ const SubscriptionMain = memo(({}) => {
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
-                            <div className="subscriptionCards">
-                                <SubscriptionCards
-                                    stockData={stockData}
-                                    onActionClick={submitSubscription}
-                                    onCancelClick={cancelSubscription}
-                                />
-                            </div>
+                            <>
+                                <div className="subscriptionCards">
+                                    <SubscriptionCards
+                                        stockData={stockData}
+                                        onActionClick={submitSubscription}
+                                        onCancelClick={cancelSubscription}
+                                    />
+                                </div>
+                                {subscriptionData.length >= 3 && stockIndex == 1 ? (
+                                    renderAdv()
+                                ) : subscriptionData.length < 3 && stockIndex == 0 ? (
+                                    renderAdv()
+                                ) : (
+                                    <></>
+                                )}
+                            </>
                         ))}
-                    <div className="subscriptionCards">
-                        <SubscriptionAdv />
-                    </div>
+                    {subscriptionData.length == 0 ? renderAdv() : <></>}
                 </div>
             </div>
 
@@ -197,6 +211,18 @@ const SubscriptionMain = memo(({}) => {
                     display: flex;
                     justify-content: flex-start;
                     flex-wrap: wrap;
+                }
+
+                @media (max-width: 768px) {
+                    .subscriptionMain__container {
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
+            `}</style>
+            <style jsx global>{`
+                .notice {
+                    color: #c43826;
                 }
                 .subscriptionCards {
                     border: solid 1px #d7e0ef;
@@ -239,17 +265,6 @@ const SubscriptionMain = memo(({}) => {
                     .subscriptionCards:nth-child(2n) {
                         margin-right: 0;
                     }
-                }
-                @media (max-width: 768px) {
-                    .subscriptionMain__container {
-                        padding-left: 0;
-                        padding-right: 0;
-                    }
-                }
-            `}</style>
-            <style jsx global>{`
-                .notice {
-                    color: #c43826;
                 }
             `}</style>
         </>
