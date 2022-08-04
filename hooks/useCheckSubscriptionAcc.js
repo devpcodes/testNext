@@ -19,16 +19,16 @@ export const useCheckSubscriptionAcc = () => {
         }
     }, [currentAccount, userSettings]);
 
-    useEffect(() => {
-        if (signAccounts.length > 0) {
-            const signAccs = signAccounts.filter(item => {
-                return item.account === currentAccount.account;
-            });
-            setSignAcc(signAccs[0]?.bank_flag === '0' ? true : false);
-        } else {
-            setSignAcc(false);
-        }
-    }, [currentAccount, signAccounts]);
+    // useEffect(() => {
+    //     if (signAccounts.length > 0) {
+    //         const signAccs = signAccounts.filter(item => {
+    //             return item.account === currentAccount.account;
+    //         });
+    //         setSignAcc(signAccs[0]?.bank_flag === '0' ? true : false);
+    //     } else {
+    //         setSignAcc(false);
+    //     }
+    // }, [currentAccount, signAccounts]);
 
     const getDsAndBank = async () => {
         //TODO mock
@@ -39,8 +39,13 @@ export const useCheckSubscriptionAcc = () => {
             console.log('step1', res);
             if (res.applyStatus === '1') {
                 setApplyStatus(true);
-                getQueryCrossSelling(currentAccount.account);
+                // getQueryCrossSelling(currentAccount.account);
                 setAccountInfo(res);
+                if (res.tSaleStatus === '0') {
+                    setSignAcc(true);
+                } else {
+                    setSignAcc(false);
+                }
             } else {
                 setApplyStatus(false);
             }
@@ -50,11 +55,11 @@ export const useCheckSubscriptionAcc = () => {
         }
     };
 
-    const getQueryCrossSelling = async account => {
-        const res = await postQueryCrossSelling(getToken());
-        console.log('res', res, account);
-        setSignAccounts(res);
-    };
+    // const getQueryCrossSelling = async account => {
+    //     const res = await postQueryCrossSelling(getToken());
+    //     console.log('res', res, account);
+    //     setSignAccounts(res);
+    // };
 
     return [applyStatus, signAcc, accountInfo];
     // return hasMounted;
