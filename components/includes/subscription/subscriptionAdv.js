@@ -8,9 +8,13 @@ const SubscriptionAdv = memo(({}) => {
                 <img className="pic" src={advImg} />
                 <h2 className="title">資金不足也可申購</h2>
                 <p className="desc">存款不足也可借錢申購，僅需少少利息就可享高報酬</p>
-                <p className="more">瞭解更多 ＞</p>
+                <p className="more">
+                    <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/subscriptionArea/ProductInfo/`} target="_blank">
+                        瞭解更多 ＞
+                    </a>
+                </p>
             </div>
-
+            {/* https://webrd.sinotrade.com.tw/newweb/subscriptionArea/ProductInfo/ */}
             <style jsx>{`
                 .subscriptionAdv {
                     text-align: center;
