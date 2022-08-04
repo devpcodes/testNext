@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import icon from '../../../../resources/images/components/mySubscription/attention-error (1).svg';
 import { formatNum } from '../../../../services/formatNum';
-
+import { useRouter } from 'next/router';
 const TimeLine = ({ data, applyStatus }) => {
     const [style, setStyle] = useState({});
     const feeDataItem1Dom = useRef(null);
@@ -36,6 +36,7 @@ const TimeLine = ({ data, applyStatus }) => {
     const [label3TextDown, setLabel3TextDown] = useState('');
     const [label4TextDown, setLabel4TextDown] = useState('');
     const [label4TextUp, setLabel4TextUp] = useState('');
+    const router = useRouter();
     useEffect(() => {
         console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
         resetHandler();
@@ -294,6 +295,28 @@ const TimeLine = ({ data, applyStatus }) => {
             setLink('近期申購GO >');
         }
     };
+
+    const linkClickHandler = link => {
+        console.log('link', link);
+        switch (link) {
+            case '查看明細GO >':
+                router.push('/subscriptionArea/MySubscription/SubscriptionOverview');
+                break;
+            case '近期申購GO >':
+                router.push('/subscriptionArea/Subscription');
+                break;
+            case '【 抵押低利借款方案 】':
+                router.push('/loan-zone');
+                break;
+            case '前往永豐銀行簽署去 >':
+                window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN);
+                break;
+            default:
+                router.push('/subscriptionArea/Subscription');
+                break;
+        }
+    };
+
     return (
         <div style={style}>
             <div className="line1__box">
@@ -404,7 +427,7 @@ const TimeLine = ({ data, applyStatus }) => {
             <p className="time__desc">
                 {text && <img className="time__icon" src={icon} />}
                 <span>{text}</span>
-                <a>{link}</a>
+                <a onClick={linkClickHandler.bind(null, link)}>{link}</a>
             </p>
             <style jsx>{`
                 .line1__item.disabled {
