@@ -57,6 +57,12 @@ const SubscriptionMain = memo(({}) => {
         const account = currentAccount;
         const token = getToken();
         const bankChannel = isMobile ? 'MWEB' : 'NETBANK';
+
+        if (!isLogin) {
+            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+            return false;
+        }
+
         dispatch(
             setModal({
                 visible: true,
