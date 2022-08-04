@@ -70,7 +70,7 @@ const SubscriptionMain = memo(({}) => {
                             </p>
                         ) : (
                             <p>
-                                帳號：{currentBrokerID}-{currentAccount} {userName} <br />
+                                帳號：{currentBrokerID}-{currentAccount} <br />
                                 商品：{id} {name} <br />
                                 申購扣款金額： {price} 元 <br />
                                 <br />
@@ -99,7 +99,7 @@ const SubscriptionMain = memo(({}) => {
                             dispatch(
                                 setModal({
                                     visible: true,
-                                    content: response.success && response.message === 'OK' ? `申購成功` : `申購失敗`,
+                                    content: response.success && response.message === 'OK' ? `委託預約中` : `申購失敗`,
                                     type: 'info',
                                     title: '系統訊息',
                                 }),
@@ -131,7 +131,7 @@ const SubscriptionMain = memo(({}) => {
                 content: (
                     <div>
                         <p>
-                            帳號：{currentBrokerID}-{currentAccount} {userName} <br />
+                            帳號：{currentBrokerID}-{currentAccount} <br />
                             商品：{id} {name} <br />
                             {/* 申購扣款金額： {price} 元 <br />
                             <br />
@@ -157,7 +157,7 @@ const SubscriptionMain = memo(({}) => {
                         dispatch(
                             setModal({
                                 visible: true,
-                                content: response.success && response.message === 'OK' ? `取消成功` : `取消失敗`,
+                                content: response.success && response.message === 'OK' ? `已成功取消申購` : `取消失敗`,
                                 type: 'info',
                                 title: '系統訊息',
                             }),
