@@ -44,9 +44,13 @@ const AccountInfo = () => {
 
     const dateFormat = val => {
         if (val) {
-            let d = val.split('');
-            let d_ = d[0] + d[1] + d[2] + d[3] + '/' + d[4] + d[5] + '/' + d[6] + d[7];
-            return d_;
+            if (val.length == 8) {
+                let d = val.split('');
+                let d_ = d[0] + d[1] + d[2] + d[3] + '/' + d[4] + d[5] + '/' + d[6] + d[7];
+                return d_;
+            } else {
+                return val;
+            }
         } else {
             return '--';
         }
@@ -110,7 +114,7 @@ const AccountInfo = () => {
                         </div>
                     </div>
                     <div className="mainArea mainArea2 flexBox">
-                        <div className="contentBox fullWidth" fullWidth>
+                        <div className="contentBox fullWidth">
                             <div className="title flexBox">開戶資料</div>
                             <div className="firstDatabox flexBox">
                                 <div className="dataBox">
