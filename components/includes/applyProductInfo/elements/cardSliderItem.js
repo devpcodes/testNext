@@ -106,8 +106,7 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     padding-left: 0.5em;
                 }
                 .TypeB .slideCardTypeInner > div:nth-child(2) {
-                    width: 96%;
-                    max-width: 295px;
+                    width: 100%;
                     background-color: #3f5372;
                     color: #a9b6cb;
                     margin: 15px auto;
@@ -120,18 +119,25 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                 .TypeB .slideCardTypeInner > div:nth-child(3) {
                     color: #6c7b94;
                     font-size: 14px;
-                    width: 96%;
-                    max-width: 295px;
+                    width: 100%;
                     margin: 0 auto;
                 }
-                .TypeB .slideCardTypeInner > div:nth-child(3) p {
-                    padding-left: 0.5em;
-                }
+                // .TypeB .slideCardTypeInner > div:nth-child(3) p {
+                //     padding-left: 0.5em;
+                // }
+                // .TypeB .slideCardTypeInner > div:nth-child(4) {
+                //     text-align: center;
+                //     color: #fff;
+                //     font-size: 30px;
+                //     margin-top: 10px;
+                // }
                 .TypeB .slideCardTypeInner > div:nth-child(4) {
-                    text-align: center;
                     color: #fff;
                     font-size: 30px;
-                    margin-top: 10px;
+                    position: absolute;
+                    bottom: 16px;
+                    left: 50%;
+                    transform: translateX(-50%);
                 }
                 .TypeB .slideCardTypeInner > div:nth-child(4) a span {
                 }
@@ -147,10 +153,10 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     position: absolute;
                     border: 1px solid #d7e0ef;
                     border-radius: 2px;
-                    padding: 24px 24px 16px;
+                    padding: 16px;
                     width: 100%;
                     height: 400px;
-                    max-width: 342px;
+                    max-width: 340px;
                     backface-visibility: hidden;
                     transition: 1s;
                 }
@@ -180,8 +186,12 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                 .activeBtnBox {
                     text-align: center;
                     border-top: 1px solid #d7e0ef;
-                    margin-top: 25px;
                     padding-top: 15px;
+                    position: absolute;
+                    width: calc(100% - 32px);
+                    bottom: 16px;
+                    left: 50%;
+                    transform: translateX(-50%);
                 }
                 .activeBtnBox a {
                     font-size: 26px;

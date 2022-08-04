@@ -840,7 +840,6 @@ const ProductInfo = () => {
                         <Button type="primary" onClick={btnHref.bind(null, '/newweb/subscriptionArea/Subscription')}>
                             立即申購
                         </Button>
-                        <br />
                         <a href={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}>
                             尚未開通服務，我要申辦
                             <RightOutlined />
@@ -1191,50 +1190,61 @@ const ProductInfo = () => {
                 .forPC{display:none;}
                 .forMB{display:block!important;}      
                 .mainArea {padding:0;}
-                .mainArea .contentBox .areaTitle{font-size:20px; width: 94%; margin: 0 auto;}
+                .mainArea .contentBox {width: calc(100% - 32px);padding:48px 0;margin:0 auto;}
+                .mainArea .contentBox .areaTitle{font-size:20px; margin: 0 auto;}
                 .mainArea .contentBox .areaTitle p{font-size:16px;}  
-                .mainArea .contentBox {width:100%;padding-top:30px;}
+                
 
                 .mainArea1 {margin:0;}
-                .mainArea.mainArea1 { background-color: #f9fbff; padding: 6% 0 5%; }
-                .mainArea.mainArea1 .contentBox{width:86%;}
+                .mainArea.mainArea1 { background-color: #f9fbff; padding: 48px 0 35px; }
                 .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:90%;height:auto;}
+                .mainArea1 .contentBox {width: calc(100% - 48px);padding: 0;}
                 .mainArea1 .contentBox >div:nth-child(4){width:50%;}
-                .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0.5em;}
-                .mainArea1 .contentBox>div:nth-child(2){font-size:30px; padding-left:0.5em;margin: 1em 0;}
+                .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0;}
+                .mainArea1 .contentBox>div:nth-child(2){font-size: 30px; padding: 4px 0 4px 0.5em;  margin: 16px 0 24px;}
                 .mainArea1 .contentBox>div:nth-child(2) p:first-child{margin-bottom:0.15em}
                 .mainArea1 .contentBox>div:nth-child(3){ margin: 0.5em 0; font-size: 16px; line-height: 1.3;}
                 .mainArea1 .contentBox>div:nth-child(4) { width: 100%;margin-bottom:0;  }
-                .mainArea1 .contentBox>div:nth-child(5) {  width: 100%;margin-bottom:10px; }
                 .mainArea1 .contentBox>div:nth-child(4) p:nth-child(1) span{font-size:24px;}
+                .mainArea1 .contentBox>div:nth-child(5) { width: 100%; margin-bottom:10px; }
+                .mainArea1 .contentBox>div:nth-child(5) a {font-size:16px;  display: inline-block; margin-top:8px;}
                 .mainArea1 .icon-arrow-up::before {  margin-right:0; border-width: 0 8px 13.9px 8px;}
                 #applyIndex__container .mainArea1 .contentBox .ant-btn{margin:0.1em 0;}
 
                 .bg-cycle{display:none}
 
-                .mainArea2 .contentBox{width:92%;;}
-                .mainArea2 .areaContent .areaItem{padding:0;text-align:center;align-content: flex-start;}
+                .mainArea2 .contentBox{width:92%;padding: 48px 0 0;}
+                .mainArea.mainArea2 .contentBox .areaTitle p{margin: 16px auto;}
+                .mainArea2 .areaContent {margin:20px 0 10px;width: 100%;}
+                .mainArea2 .areaContent .areaItem{padding:0;text-align:center;align-content: flex-start;width:44%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1){margin:0 auto 10px;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(1){font-size:16px;}
+                .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){color:#3f5372;}
+                .mainArea.mainArea3 {padding:0;}
+                .mainArea3 .contentBox {width:100%;}
                 .mainArea3 .contentBox .slickBox{margin: 0 auto 20px;}
-                .mainArea3 .contentBox .info{padding-bottom:40px;width:94%;text-align: justify;}
-                .mainArea3 .contentBox .slickBox{width: 85%;}
-                .mainArea4 .contentBox { width:96%}
-                .mainArea4 .areaContent .areaItem{ width: 100%; background-position: 4% top; background-size: 13%; padding-left: 19%; }
+                .mainArea3 .contentBox .info{padding: 0 24px;margin:0 auto;text-align: justify;}
+                .mainArea3 .contentBox .slickBox{width: 100% ;margin-top: 32px;}
+                .mainArea.mainArea4 { padding:0;}
+                .mainArea4 .contentBox { width:100%; padding: 48px 8px 24px;}
+                .mainArea4 .areaContent {margin: 32px auto 0;}
+                .mainArea4 .areaContent .areaItem{ width: 100%; margin-bottom:24px; background-position: 4% top; background-size: 13%; padding-left: 19%; }
                 .mainArea4 .areaContent .areaItem>p:nth-child(1){font-size:16px;}
                 .mainArea4 .areaContent .areaItem>p:nth-child(2){font-size:16px;margin-bottom:0.5em;}
                 .mainArea4 .areaContent .areaItem>div{font-weight:500;}                
-                .mainArea5 .contentBox .areaContent{flex-wrap: wrap;margin: 40px auto 40px;}
+                .mainArea.mainArea5 {padding:0; background:#f9fbff ;}
+                .mainArea5 .contentBox {padding: 48px 0 0;}
+                .mainArea5 .contentBox .areaContent{flex-wrap: wrap;margin: 40px auto 0px;}
                 .mainArea5 .contentBox .areaContent > *{width:100%!important;}
                 .mainArea5 .contentBox .areaContent>div:nth-child(1) img:first-child{display:block;}
                 .mainArea5 .contentBox .areaContent>div:nth-child(1) img:last-child{display:none;}
                 .mainArea5 .contentBox .areaContent>div:nth-child(2) p{font-size:16px;}
                 .mainArea5 .contentBox .areaContent>div:nth-child(2) p::before{width: 18px;background-size: contain; height: 25px;}
-
+                .mainArea6 .contentBox { width: 100%; padding: 48px 0 8px;}
                 .tabBox { padding-left: 5%; }
                 .goTo{ right:0%; bottom:3%; border-radius:16px 0 0 16px; width:42px; }
                 .goTo > a {line-height:1.1;width:24px;}
-                .qaOuter{padding:4%;}
+                .qaOuter{padding:0 16px;}
             }
 
             }`}
@@ -1368,7 +1378,7 @@ const ProductInfo = () => {
                             width: 10px;
                             height: 10px;
                             border: 1px solid #a9b6cb;
-                            border-width: 3px 3px 0 0;
+                            border-width: 2px 2px 0 0;
                             transform: rotate(45deg);
                         }
                         #applyIndex__container .slickBox .slick-prev::before {
@@ -1377,20 +1387,23 @@ const ProductInfo = () => {
                             width: 10px;
                             height: 10px;
                             border: 1px solid #a9b6cb;
-                            border-width: 3px 0 0 3px;
+                            border-width: 2px 0 0 2px;
                             transform: rotate(-45deg);
                         }
                         #applyIndex__container .slickBox .ant-carousel .slick-next {
-                            right: -20px;
+                            right: 5px;
                         }
                         #applyIndex__container .slickBox .ant-carousel .slick-prev {
-                            left: -20px;
+                            left: 5px;
                         }
                         #applyIndex__container .price__difference {
                             padding: 4%;
                         }
                         #applyIndex__container .price__difference .percent {
                             margin-right: 0;
+                        }
+                        #applyIndex__container #QaCollapse__content .ant-collapse-item {
+                            padding: 10px 16px;
                         }
                     }
                 `}

@@ -64,6 +64,13 @@ const CardSlider = ({ rowData, itemNum = 3 }) => {
                     }
                 }
                 @media (max-width: 500px) {
+                    #cardSlider__container .slick-slide .slideContent {
+                        padding: 0;
+                        justify-content: center;
+                    }
+                    #cardSlider__container .slick-slide .slideContent .slideCard {
+                        width: calc(100% - 48px);
+                    }
                 }
             `}</style>
         </div>
