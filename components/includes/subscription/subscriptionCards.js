@@ -153,7 +153,11 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 !stockData.canSellStock &&
                 !stockData.canMortgage ? (
                     <button disabled className="action__btn disabled">
-                        {stockData.statusMessage}
+                        {stockData.status == 'A'
+                            ? '即將開始'
+                            : stockData.status == 'E' && ['S1', 'S2', 'Y', 'N1', 'W1'].includes(stockData.orderStatus)
+                            ? '已申購'
+                            : '申購期間已過'}
                     </button>
                 ) : (
                     <></>
