@@ -12,6 +12,8 @@ import { getToken } from '../../../services/user/accessToken';
 import { setModal } from '../../../store/components/layouts/action';
 import Breadcrumb from '../breadcrumb/breadcrumb';
 import { checkSignCA, sign, signCert } from '../../../services/webCa';
+import { useRouter } from 'next/router';
+import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
 
 const SubscriptionMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -22,6 +24,7 @@ const SubscriptionMain = memo(({}) => {
     const idno = useSelector(store => store.user.currentAccount.idno);
     const userName = useSelector(store => store.user.currentAccount.username);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     useEffect(async () => {
         if (!isLogin) {
@@ -59,7 +62,14 @@ const SubscriptionMain = memo(({}) => {
         const bankChannel = isMobile ? 'MWEB' : 'NETBANK';
 
         if (!isLogin) {
-            window.location = `${process.env.NEXT_PUBLIC_SUBPATH}/SinoTrade_login`;
+            const query = router.query;
+            const queryStr = objectToQueryHandler(query);
+
+            window.location =
+                `${process.env.NEXT_PUBLIC_SUBPATH}` +
+                `/SinoTrade_login${queryStr}` +
+                `${queryStr ? '&' : '?'}` +
+                `redirectUrl=${router.pathname}`;
             return false;
         }
 
