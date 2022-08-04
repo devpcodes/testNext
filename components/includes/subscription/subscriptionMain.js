@@ -44,6 +44,14 @@ const SubscriptionMain = memo(({}) => {
         }
     }, [currentAccount, currentBrokerID]);
 
+    const renderAdv = () => {
+        return (
+            <div className="subscriptionCards">
+                <SubscriptionAdv />
+            </div>
+        );
+    };
+
     const submitSubscription = useCallback(async (name, id, price, isAppropriation) => {
         const branch = currentBrokerID;
         const account = currentAccount;
@@ -52,24 +60,30 @@ const SubscriptionMain = memo(({}) => {
         dispatch(
             setModal({
                 visible: true,
-                title: '申購確認',
+                title: isAppropriation ? '提醒' : '申購確認',
                 content: (
                     <div>
-                        <p>
-                            帳號：{currentBrokerID}-{currentAccount} {userName} <br />
-                            商品：{id} {name} <br />
-                            申購扣款金額： {price} 元 <br />
-                            <br />
-                            <span className="notice">
-                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
-                            </span>
-                        </p>
+                        {isAppropriation ? (
+                            <p>
+                                離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選
+                                【確定】，如還捨不得離開請點【取消】。
+                            </p>
+                        ) : (
+                            <p>
+                                帳號：{currentBrokerID}-{currentAccount} <br />
+                                商品：{id} {name} <br />
+                                申購扣款金額： {price} 元 <br />
+                                <br />
+                                <span className="notice">
+                                    請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
+                                </span>
+                            </p>
+                        )}
                     </div>
                 ),
                 type: 'confirm',
                 onOk: async () => {
                     const cert = await signCert({ idno: idno }, true, getToken());
-                    console.log(cert);
                     if (cert.signature) {
                         const response = await fetchApplySubscription(
                             token,
@@ -81,14 +95,21 @@ const SubscriptionMain = memo(({}) => {
                             isAppropriation,
                             bankChannel,
                         );
-                        dispatch(
-                            setModal({
-                                visible: true,
-                                content: response.success && response.message === 'OK' ? `申購成功` : `申購失敗`,
-                                type: 'info',
-                                title: '系統訊息',
-                            }),
-                        );
+                        if (!isAppropriation) {
+                            dispatch(
+                                setModal({
+                                    visible: true,
+                                    content: response.success && response.message === 'OK' ? `委託預約中` : `申購失敗`,
+                                    type: 'info',
+                                    title: '系統訊息',
+                                }),
+                            );
+                        } else {
+                            if (response.success && response.message === 'OK') {
+                                location.href = response.result.url;
+                            }
+                        }
+
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
                             setSubscriptionData(listResponse.result);
@@ -110,7 +131,7 @@ const SubscriptionMain = memo(({}) => {
                 content: (
                     <div>
                         <p>
-                            帳號：{currentBrokerID}-{currentAccount} {userName} <br />
+                            帳號：{currentBrokerID}-{currentAccount} <br />
                             商品：{id} {name} <br />
                             {/* 申購扣款金額： {price} 元 <br />
                             <br />
@@ -136,7 +157,7 @@ const SubscriptionMain = memo(({}) => {
                         dispatch(
                             setModal({
                                 visible: true,
-                                content: response.success && response.message === 'OK' ? `取消成功` : `取消失敗`,
+                                content: response.success && response.message === 'OK' ? `已成功取消申購` : `取消失敗`,
                                 type: 'info',
                                 title: '系統訊息',
                             }),
@@ -146,7 +167,6 @@ const SubscriptionMain = memo(({}) => {
                             setSubscriptionData(listResponse.result);
                         }
                     }
-                    console.log('test');
                 },
             }),
         );
@@ -160,17 +180,24 @@ const SubscriptionMain = memo(({}) => {
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
-                            <div className="subscriptionCards">
-                                <SubscriptionCards
-                                    stockData={stockData}
-                                    onActionClick={submitSubscription}
-                                    onCancelClick={cancelSubscription}
-                                />
-                            </div>
+                            <>
+                                <div className="subscriptionCards">
+                                    <SubscriptionCards
+                                        stockData={stockData}
+                                        onActionClick={submitSubscription}
+                                        onCancelClick={cancelSubscription}
+                                    />
+                                </div>
+                                {subscriptionData.length >= 3 && stockIndex == 1 ? (
+                                    renderAdv()
+                                ) : subscriptionData.length < 3 && stockIndex == 0 ? (
+                                    renderAdv()
+                                ) : (
+                                    <></>
+                                )}
+                            </>
                         ))}
-                    <div className="subscriptionCards">
-                        <SubscriptionAdv />
-                    </div>
+                    {subscriptionData.length == 0 ? renderAdv() : <></>}
                 </div>
             </div>
 
@@ -184,6 +211,18 @@ const SubscriptionMain = memo(({}) => {
                     display: flex;
                     justify-content: flex-start;
                     flex-wrap: wrap;
+                }
+
+                @media (max-width: 768px) {
+                    .subscriptionMain__container {
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
+            `}</style>
+            <style jsx global>{`
+                .notice {
+                    color: #c43826;
                 }
                 .subscriptionCards {
                     border: solid 1px #d7e0ef;
@@ -226,17 +265,6 @@ const SubscriptionMain = memo(({}) => {
                     .subscriptionCards:nth-child(2n) {
                         margin-right: 0;
                     }
-                }
-                @media (max-width: 768px) {
-                    .subscriptionMain__container {
-                        padding-left: 0;
-                        padding-right: 0;
-                    }
-                }
-            `}</style>
-            <style jsx global>{`
-                .notice {
-                    color: #c43826;
                 }
             `}</style>
         </>

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import advImg from '../../../resources/images/pages/subscription/img-ad-subscription@2x.png';
+import advImg from '../../../resources/images/pages/subscription/ic-empty@2x.png';
 const SubscriptionAdv = memo(({}) => {
     return (
         <>
@@ -16,9 +16,9 @@ const SubscriptionAdv = memo(({}) => {
                     text-align: center;
                 }
                 .pic {
-                    width: 166px;
-                    height: 120px;
-                    margin-top: 48px;
+                    width: 77px;
+                    height: 92px;
+                    margin-top: 65px;
                 }
                 .title {
                     font-size: 2.4rem;

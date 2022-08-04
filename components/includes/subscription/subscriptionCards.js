@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { openGoOrder } from '../../../services/openGoOrder';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
@@ -108,7 +109,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     <></>
                 )}
 
-                {stockData.canCancelOrder && !stockData.canCancelAppropriation ? (
+                {!stockData.canCancelOrder && stockData.canCancelAppropriation ? (
                     <button
                         className="action__btn cancel"
                         onClick={() =>
@@ -167,10 +168,14 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
         <>
             <div>
                 <div className="subscriptionCards__header">
-                    <div className="subscriptionCards__title">
+                    <a
+                        className="subscriptionCards__title"
+                        href={`${process.env.NEXT_PUBLIC_SUBPATH}/TradingCenter_TWStocks_Stock/?code=${stockData.stockId}`}
+                        target="_blank"
+                    >
                         <div className="name">{stockData.stockName}</div>
                         <div className="code">{stockData.stockId}</div>
-                    </div>
+                    </a>
                     <div className="action">{stockData.marketStatus}</div>
                     <div className="status">{stockData.statusMessage}</div>
                 </div>
@@ -334,18 +339,6 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     background: #c43826;
                     border: solid 2px #ebbdb7;
                 }
-                // .time__course.before .point {
-                //     background: #a9b6cb;
-                //     border: solid 2px #d7e0ef;
-                // }
-                // .time__course.after .point {
-                //     background: #3f5372;
-                //     border: solid 2px #d7e0ef;
-                // }
-                // .time__course.now .point {
-                //     background: #c43826;
-                //     border: solid 2px #ebbdb7;
-                // }
                 .time__line {
                     width: 84%;
                     position: absolute;
