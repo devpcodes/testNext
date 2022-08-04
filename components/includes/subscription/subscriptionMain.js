@@ -175,8 +175,10 @@ const SubscriptionMain = memo(({}) => {
     return (
         <>
             <div className="subscriptionMain__container">
-                <Breadcrumb />
-                <SubscriptionHeader />
+                <div className="subscription__head">
+                    <Breadcrumb />
+                    <SubscriptionHeader />
+                </div>
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
@@ -217,6 +219,9 @@ const SubscriptionMain = memo(({}) => {
                     .subscriptionMain__container {
                         padding-left: 0;
                         padding-right: 0;
+                    }
+                    .subscription__head {
+                        margin: 0px 5%;
                     }
                 }
             `}</style>
