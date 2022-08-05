@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CalcuItem from './CalcuItem';
 import Line from './Line';
 import icon from '../../../../resources/images/components/subscriptionCalculation/basic-help-circle (4).svg';
@@ -20,6 +20,7 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount }) => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const dispatch = useDispatch();
     const router = useRouter();
+
     const submitHandler = () => {
         if (!isLogin) {
             dispatch(showLoginHandler(true));

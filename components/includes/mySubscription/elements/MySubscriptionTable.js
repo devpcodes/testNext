@@ -426,22 +426,23 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     };
 
     const appropriationHandler = async record => {
-        dispatch(
-            setModal({
-                visible: true,
-                okText: '確定',
-                type: 'confirm',
-                title: '提醒',
-                noCloseIcon: true,
-                noTitleIcon: true,
-                content:
-                    '離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選 【確定】，如還捨不得離開請點【取消】。',
-                onOk: async () => {
-                    dispatch(setModal({ visible: false }));
-                    postOrderHandler(record);
-                },
-            }),
-        );
+        router.push(`/subscriptionArea/Calculation/?stockId=${record.stockId}`);
+        // dispatch(
+        //     setModal({
+        //         visible: true,
+        //         okText: '確定',
+        //         type: 'confirm',
+        //         title: '提醒',
+        //         noCloseIcon: true,
+        //         noTitleIcon: true,
+        //         content:
+        //             '離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選 【確定】，如還捨不得離開請點【取消】。',
+        //         onOk: async () => {
+        //             dispatch(setModal({ visible: false }));
+        //             postOrderHandler(record);
+        //         },
+        //     }),
+        // );
     };
 
     const postOrderHandler = async record => {

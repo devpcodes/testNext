@@ -96,6 +96,9 @@ const Layout = memo(({ children }) => {
         if (router.asPath === '/subscriptionArea/') {
             router.push('/subscriptionArea/Subscription');
         }
+        if (router.asPath === '/subscriptionArea/Loans/') {
+            router.push('/subscriptionArea/MySubscription/Loans');
+        }
     }, [router.asPath]);
 
     useEffect(() => {

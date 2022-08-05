@@ -275,7 +275,7 @@ const SubscriptionOverviewComp = () => {
                 );
             }
             if (item.label === '撥入與扣款帳號') {
-                item.value = <p style={{ marginTop: '6px' }}>{mockData.lnMainAccount}</p>;
+                item.value = <p style={{ marginTop: '6px' }}>{mockData.repayAccount}</p>;
             }
             if (item.label === '貸款日') {
                 item.value = moment(mockData.origStartDate).format('YYYY/MM/DD');

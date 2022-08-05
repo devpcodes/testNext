@@ -29,6 +29,7 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
 
     useEffect(() => {
         console.log('check', checkAccount);
+
         if (!checkAccount) return;
 
         if (applyStatus && accountInfo.applyStatus != null) {
@@ -93,7 +94,7 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
         if (!checkAccount) return;
         // console.log('231312123', accountInfo.bankAccount, accountStatus.lnMainAccount)
         //交割 不等於 撥款
-        if (accountInfo.bankAccount !== accountStatus.lnMainAccount) {
+        if (accountInfo.bankAccount !== accountStatus.repayAccount) {
             //TODO MOCK
             // setBankAccSuccess(true);
 
@@ -136,7 +137,7 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
                                     marginBottom: '12px',
                                 }}
                             >
-                                {accountStatus.lnMainAccount}
+                                {accountStatus.repayAccount}
                             </div>
                             <p style={{ color: '#0d1623', marginBottom: 12 }}>
                                 請洽服務專員<span style={{ color: '#c43826' }}>(02)2349-5004</span>
@@ -307,12 +308,14 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
     };
 
     useEffect(() => {
-        if (freezeSucces && bankAccSuccess && signSuccess && selectAccSuccess && noAcc) {
-            successHandler(true);
-        } else {
-            successHandler(false);
+        if (checkAccount) {
+            if (freezeSucces && bankAccSuccess && signSuccess && selectAccSuccess && noAcc) {
+                successHandler(true);
+            } else {
+                successHandler(false);
+            }
         }
-    }, [freezeSucces, bankAccSuccess, signSuccess, selectAccSuccess, noAcc]);
+    }, [freezeSucces, bankAccSuccess, signSuccess, selectAccSuccess, noAcc, checkAccount]);
 
     return (
         <>

@@ -13,6 +13,10 @@ export default function Custom404() {
             setShowErr(false);
             return;
         }
+        if (router.asPath === '/subscriptionArea/Loans/') {
+            setShowErr(false);
+            return;
+        }
         setShowErr(true);
         // console.log('err', router.asPath);
     }, [router.asPath]);

@@ -41,13 +41,20 @@ export const useCheckSubscriptionAcc = () => {
                 setApplyStatus(true);
                 // getQueryCrossSelling(currentAccount.account);
                 setAccountInfo(res);
-                if (res.tSaleStatus === '0') {
-                    setSignAcc(true);
-                } else {
-                    setSignAcc(false);
-                }
             } else {
                 setApplyStatus(false);
+            }
+
+            // if (res.dsStatus === '1') {
+            //     setApplyStatus(true);
+            // } else {
+            //     setApplyStatus(false);
+            // }
+
+            if (res.tSaleStatus === '0') {
+                setSignAcc(true);
+            } else {
+                setSignAcc(false);
             }
         } catch (error) {
             setApplyStatus(false);
