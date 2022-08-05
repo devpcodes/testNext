@@ -15,7 +15,8 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
     };
 
     const formatAmount = amount => {
-        return (amount + '').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+        // return (amount + '').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+        return amount;
     };
 
     const getDateClassName = date => {
