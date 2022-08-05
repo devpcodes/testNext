@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { openGoOrder } from '../../../services/openGoOrder';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
-
+import { formatNum } from '../../../services/formatNum';
 const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, footerHidden, settingDate }) => {
     // console.log(stockData);
     const isMobile = useCheckMobile();
@@ -187,7 +187,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">總申購張數</div>
-                            <div className="info__cell__amount">{formatAmount(parseInt(stockData.share / 1000))}</div>
+                            <div className="info__cell__amount">{formatNum(parseInt(stockData.share / 1000))}</div>
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">市價</div>
@@ -195,16 +195,12 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">申購張數</div>
-                            <div className="info__cell__amount">
-                                {formatAmount(parseInt(stockData.applyShare / 1000))}
-                            </div>
+                            <div className="info__cell__amount">{formatNum(parseInt(stockData.applyShare / 1000))}</div>
                         </div>
                     </div>
                     <div className={stockData.diffPrice > 0 ? 'price__difference up' : 'price__difference down'}>
                         <span>價差</span>
-                        <span className="price">
-                            {formatAmount(parseInt(stockData.diffPrice * stockData.applyShare))}
-                        </span>
+                        <span className="price">{formatNum(parseInt(stockData.diffPrice * stockData.applyShare))}</span>
                         <span>元</span>
                         <span className="percent">
                             {stockData.diffRatio > 0 ? `(+${stockData.diffRatio}%)` : `(${stockData.diffRatio})%`}
