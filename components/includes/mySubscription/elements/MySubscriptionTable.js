@@ -759,13 +759,15 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     };
 
     useEffect(() => {
-        getOrderStatus(currentPage);
+        debounce(getOrderStatus.bind(null, currentPage), 500);
+        // getOrderStatus(currentPage);
     }, [currentPage]);
 
     useEffect(() => {
         // console.log('************', orderAmountSorter)
         // debounce(getOrderStatus, 500);
-        getOrderStatus(1);
+        // getOrderStatus(1);
+        debounce(getOrderStatus.bind(null, 1), 500);
     }, [statusFilterValue, orderAmountSorter, lotDateSorter, methodFilterValue, loanStatusFilterValue]);
 
     const getOrderStatus = async page => {
