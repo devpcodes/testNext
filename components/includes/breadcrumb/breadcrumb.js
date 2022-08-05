@@ -62,7 +62,7 @@ function BreadcrumbLayout({ articleTitle, categoryName, style }) {
                 elementNameArr.current.push('申購試算');
                 elementPathArr.current.push(`/${levelArr.current[1]}`);
                 break;
-            case 'SubscriptionOverview':
+            case 'Loans':
                 elementNameArr.current.push('申購信用通總覽');
                 elementPathArr.current.push(`/${levelArr.current[2]}`);
                 break;

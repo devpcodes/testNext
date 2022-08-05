@@ -8,7 +8,7 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
     const router = useRouter();
     const onClickHandler = () => {
         if (financing != null) {
-            router.push('/subscriptionArea/MySubscription/SubscriptionOverview/');
+            router.push('/subscriptionArea/MySubscription/Loans/');
         }
     };
     const repaymentHandler = () => {

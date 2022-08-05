@@ -215,6 +215,10 @@ const SubscriptionOverviewComp = () => {
                         },
                         okText: '確認',
                         cancelText: '取消',
+                        onOk: () => {
+                            dispatch(setModal({ visible: false }));
+                            router.push('/subscriptionArea/ProductInfo');
+                        },
                     }),
                 );
             }
