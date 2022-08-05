@@ -40,9 +40,11 @@ const SubscriptionMain = memo(({}) => {
             const branch = currentBrokerID;
             const account = currentAccount;
             const token = getToken();
-            const response = await fetchLoginSubscriptionList(token, branch, account);
-            if (response.success && response.message === 'OK') {
-                setSubscriptionData(response.result);
+            if (branch && account) {
+                const response = await fetchLoginSubscriptionList(token, branch, account);
+                if (response.success && response.message === 'OK') {
+                    setSubscriptionData(response.result);
+                }
             }
         }
     }, [currentAccount, currentBrokerID]);
