@@ -10,10 +10,12 @@ import SubscriptionAccErrModal from './SubscriptionAccErrModal';
 import { formatNum } from '../../../../services/formatNum';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { postOrder } from '../../../../services/components/mySubscription/postOrder';
+
 import { getToken } from '../../../../services/user/accessToken';
 import { checkSignCA, sign } from '../../../../services/webCa';
-const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount }) => {
+import { postOrder } from '../../../../services/components/mySubscription/postOrder';
+import { message } from 'antd';
+const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount, stockId }) => {
     const { isLogin, accounts } = useUser();
     const isMobile = useSelector(store => store.layout.isMobile);
     const [checkAccount, setCheckAccount] = useState(false);
@@ -52,7 +54,7 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount }) => {
                         '離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選 【確定】，如還捨不得離開請點【取消】。',
                     onOk: async () => {
                         dispatch(setModal({ visible: false }));
-                        postOrderHandler();
+                        await postOrderHandler();
                     },
                 }),
             );
@@ -79,6 +81,21 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount }) => {
                     location.host +
                     `${process.env.NEXT_PUBLIC_SUBPATH}` +
                     '/subscriptionArea/MySubscription';
+                console.log('1111', callbackUrl);
+
+                // console.log('postOrder', postOrder)
+                // const res = await postOrder({
+                //     isAppropriation: true,
+                //     bankChannel: isMobile ? 'MWEB' : 'NETBANK',
+                //     callbackUrl,
+                //     branch: currentAccount.broker_id,
+                //     account: currentAccount.account,
+                //     stockId: stockId,
+                //     token,
+                //     ca_content,
+                // });
+                // window.location = res.url;
+
                 try {
                     const res = await postOrder({
                         isAppropriation: true,
@@ -91,7 +108,10 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount }) => {
                         ca_content,
                     });
                     window.location = res.url;
-                } catch (error) {}
+                } catch (error) {
+                    // console.log('error', error)
+                    message.error(error);
+                }
             }
         }
     };
