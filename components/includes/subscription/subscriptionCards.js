@@ -92,12 +92,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 )}
 
                 {stockData.canAppropriation && !stockData.canOrder ? (
-                    <button
-                        className="action__btn buy"
-                        onClick={() =>
-                            onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
-                        }
-                    >
+                    <button className="action__btn buy" onClick={() => openCollateral(stockData.stockId)}>
                         申請預約動用
                     </button>
                 ) : (
