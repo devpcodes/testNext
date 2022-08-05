@@ -107,7 +107,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                             onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, false)
                         }
                     >
-                        立即取消
+                        取消申購
                     </button>
                 ) : (
                     <></>
