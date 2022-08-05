@@ -473,7 +473,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 setCancelLoading(false);
                 // message.success('申請動用已送出');
                 window.location = res.url;
-                getOrderStatus();
+                getOrderStatus(currentPage);
             } catch (error) {
                 setCancelLoading(false);
                 message.error(error);
@@ -573,7 +573,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 });
                 message.success(type ? '已成功取消預約動用' : '取消申購已送出');
                 setCancelLoading(false);
-                getOrderStatus();
+                getOrderStatus(currentPage);
             } catch (error) {
                 message.error(error);
                 setCancelLoading(false);
