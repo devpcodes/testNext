@@ -28,20 +28,6 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
     }, [isLogin]);
 
     useEffect(() => {
-        console.log('check', checkAccount);
-
-        if (!checkAccount) return;
-
-        if (applyStatus && accountInfo.applyStatus != null) {
-            //有帳號，但帳號使用錯誤
-            checkAccSelectErr();
-        } else {
-            //沒申購帳號
-            noAccHandler();
-        }
-    }, [applyStatus, accountInfo, checkAccount]);
-
-    useEffect(() => {
         if (!checkAccount) return;
         //沒簽署共銷
         if (!signAcc) {
@@ -89,6 +75,20 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
             setSignSuccess(true);
         }
     }, [signAcc, checkAccount]);
+
+    useEffect(() => {
+        console.log('check', checkAccount);
+
+        if (!checkAccount) return;
+
+        if (applyStatus && accountInfo.applyStatus != null) {
+            //有帳號，但帳號使用錯誤
+            checkAccSelectErr();
+        } else {
+            //沒申購帳號
+            noAccHandler();
+        }
+    }, [applyStatus, accountInfo, checkAccount]);
 
     useEffect(() => {
         if (!checkAccount) return;
@@ -163,34 +163,37 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
 
     useEffect(() => {
         if (!checkAccount) return;
-        if (accountStatus.legalFee !== '0') {
-            freezeHandler();
-            return;
-        }
 
-        if (!(accountStatus.frozenFlag === 'N' || accountStatus.frozenFlag === '')) {
-            freezeHandler();
-            return;
-        }
+        if (applyStatus && signAcc) {
+            if (accountStatus.legalFee !== '0') {
+                freezeHandler();
+                return;
+            }
 
-        if (accountStatus.overDueDays !== '0') {
-            freezeHandler();
-            return;
-        }
+            if (!(accountStatus.frozenFlag === 'N' || accountStatus.frozenFlag === '')) {
+                freezeHandler();
+                return;
+            }
 
-        if (accountStatus.availAmount <= '0') {
-            freezeHandler();
-            return;
-        }
+            if (accountStatus.overDueDays !== '0') {
+                freezeHandler();
+                return;
+            }
 
-        const currentDate = moment().format('YYYYMMDD');
-        if (moment(accountStatus.locExpDate).isBefore(moment(currentDate))) {
-            freezeHandler();
-            return;
-        }
+            if (accountStatus.availAmount <= '0') {
+                freezeHandler();
+                return;
+            }
 
-        setFreezeSuccess(true);
-    }, [accountStatus, checkAccount]);
+            const currentDate = moment().format('YYYYMMDD');
+            if (moment(accountStatus.locExpDate).isBefore(moment(currentDate))) {
+                freezeHandler();
+                return;
+            }
+
+            setFreezeSuccess(true);
+        }
+    }, [accountStatus, checkAccount, applyStatus, signAcc]);
 
     const getLoanAccountStatus = async () => {
         try {
