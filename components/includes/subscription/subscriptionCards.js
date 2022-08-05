@@ -206,7 +206,9 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     </div>
                     <div className={stockData.diffPrice > 0 ? 'price__difference up' : 'price__difference down'}>
                         <span>價差</span>
-                        <span className="price">{parseInt(stockData.diffPrice * stockData.applyShare)}</span>
+                        <span className="price">
+                            {formatAmount(parseInt(stockData.diffPrice * stockData.applyShare))}
+                        </span>
                         <span>元</span>
                         <span className="percent">
                             {stockData.diffRatio > 0 ? `(+${stockData.diffRatio}%)` : `(${stockData.diffRatio})%`}
