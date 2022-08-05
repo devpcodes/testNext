@@ -73,11 +73,17 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount }) => {
                 true,
             );
             if (checkSignCA(ca_content)) {
+                const callbackUrl =
+                    location.protocol +
+                    '//' +
+                    location.host +
+                    `${process.env.NEXT_PUBLIC_SUBPATH}` +
+                    '/subscriptionArea/MySubscription';
                 try {
                     const res = await postOrder({
                         isAppropriation: true,
                         bankChannel: isMobile ? 'MWEB' : 'NETBANK',
-                        callbackUrl: location.href,
+                        callbackUrl,
                         branch: currentAccount.broker_id,
                         account: currentAccount.account,
                         stockId: stockId,
