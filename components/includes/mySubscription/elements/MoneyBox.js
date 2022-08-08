@@ -14,6 +14,13 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
     const repaymentHandler = () => {
         window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
     };
+
+    const iconClickHandler = () => {
+        router.push('/subscriptionArea/ProductInfo');
+    };
+    const titleClickHandler = () => {
+        router.push('/subscriptionArea/MySubscription/Loans');
+    };
     return (
         <div className="money__container" style={style}>
             <div className="money__header">
@@ -21,8 +28,12 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                     return (
                         <React.Fragment key={i}>
                             <span style={element.style}>
-                                {!!element.icon && <img className="title__icon" src={icon} />}
-                                {element.val}
+                                {!!element.icon && (
+                                    <img onClick={iconClickHandler} className="title__icon" src={icon} />
+                                )}
+                                <span onClick={titleClickHandler} className="title__val">
+                                    {element.val}
+                                </span>
                             </span>
                             {!isMobile && element.linkText && (
                                 <a
@@ -83,6 +94,11 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                 .title__icon {
                     margin-top: -2px;
                     margin-right: 2px;
+                    cursor: pointer;
+                }
+                .title__val {
+                    text-decoration: underline;
+                    cursor: pointer;
                 }
                 .money__container {
                     height: 130px;

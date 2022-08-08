@@ -3,8 +3,10 @@ import TimeLineBox from './TimeLineBox';
 import icon from '../../../../resources/images/components/subscriptionCalculation/basic-help-circle (4).svg';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { formatNum } from '../../../../services/formatNum';
 const StockDetail = ({ calculationData }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
+
     return (
         <div className="stock__container">
             <h2 className="stock__title">
@@ -13,7 +15,9 @@ const StockDetail = ({ calculationData }) => {
             <div className="stock__bar">
                 <div className="stock__left">
                     <span className="text mrgh">價差</span>
-                    <span className="text num">{calculationData.diffPrice || '--'}</span>
+                    <span className="text num">
+                        {formatNum(Number(calculationData.diffPrice) * Number(calculationData.applyShare)) || '--'}
+                    </span>
                     <span className="text">
                         元 (
                         {Number(calculationData.diffRatio) > 0

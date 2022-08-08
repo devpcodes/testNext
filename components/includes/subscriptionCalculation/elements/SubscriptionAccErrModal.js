@@ -145,7 +145,7 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
                         </>
                     ),
                     onOk: () => {
-                        setAccHandler(accounts, accountInfo.account);
+                        // setAccHandler(accounts, accountInfo.account);
                         onClick(false);
                         dispatch(setModal({ visible: false }));
                     },
