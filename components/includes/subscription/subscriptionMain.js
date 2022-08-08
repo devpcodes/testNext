@@ -138,7 +138,7 @@ const SubscriptionMain = memo(({}) => {
                                     </>
                                 ),
                                 className: 'msg__box',
-                                duration: 1000000,
+                                duration: 4,
                             });
                         } else {
                             if (response.success && response.message === 'OK') {
