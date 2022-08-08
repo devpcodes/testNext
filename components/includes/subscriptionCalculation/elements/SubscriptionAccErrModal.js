@@ -24,11 +24,18 @@ const SubscriptionAccErrModal = memo(
         const [selectAccSuccess, setSelectAccSuccess] = useState(false);
         const [noAcc, setNoAcc] = useState(false);
         const [amountSuccess, setAmountSuccess] = useState(false);
+        const [stockData, setStockData] = useState(false);
         const router = useRouter();
 
         useEffect(() => {
             getLoanAccountStatus();
         }, [isLogin]);
+
+        useEffect(() => {
+            if (stockName && stockName != null) {
+                setStockData(true);
+            }
+        }, [stockName]);
 
         useEffect(() => {
             if (!checkAccount) return;
@@ -392,13 +399,30 @@ const SubscriptionAccErrModal = memo(
 
         useEffect(() => {
             if (checkAccount) {
-                if (freezeSucces && bankAccSuccess && signSuccess && selectAccSuccess && noAcc && amountSuccess) {
+                if (
+                    freezeSucces &&
+                    bankAccSuccess &&
+                    signSuccess &&
+                    selectAccSuccess &&
+                    noAcc &&
+                    amountSuccess &&
+                    stockData
+                ) {
                     successHandler(true);
                 } else {
                     successHandler(false);
                 }
             }
-        }, [freezeSucces, bankAccSuccess, signSuccess, selectAccSuccess, noAcc, amountSuccess, checkAccount]);
+        }, [
+            freezeSucces,
+            bankAccSuccess,
+            signSuccess,
+            selectAccSuccess,
+            noAcc,
+            amountSuccess,
+            stockData,
+            checkAccount,
+        ]);
 
         return (
             <>
