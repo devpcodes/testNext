@@ -141,7 +141,9 @@ const SubscriptionMain = memo(({}) => {
                                     content: (
                                         <>
                                             <h4 className="msg__title">委託失敗</h4>
-                                            <p className="msg__content">委託失敗</p>
+                                            <p className="msg__content">
+                                                {response.message ? response.message : '委託失敗'}
+                                            </p>
                                         </>
                                     ),
                                     className: 'msg__box',
@@ -227,7 +229,9 @@ const SubscriptionMain = memo(({}) => {
                                 content: (
                                     <>
                                         <h4 className="msg__title">委託取消失敗</h4>
-                                        <p className="msg__content">委託取消失敗</p>
+                                        <p className="msg__content">
+                                            {response.message ? response.message : '委託取消失敗'}
+                                        </p>
                                     </>
                                 ),
                                 className: 'msg__box',
