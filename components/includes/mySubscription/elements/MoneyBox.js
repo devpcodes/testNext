@@ -19,7 +19,9 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
         router.push('/subscriptionArea/ProductInfo');
     };
     const titleClickHandler = () => {
-        router.push('/subscriptionArea/MySubscription/Loans');
+        if (element.val === '申購信用通') {
+            router.push('/subscriptionArea/MySubscription/Loans');
+        }
     };
     return (
         <div className="money__container" style={style}>
@@ -31,7 +33,14 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                                 {!!element.icon && (
                                     <img onClick={iconClickHandler} className="title__icon" src={icon} />
                                 )}
-                                <span onClick={titleClickHandler} className="title__val">
+                                <span
+                                    style={{
+                                        textDecoration: element.val === '申購信用通' ? 'underline' : 'none',
+                                        cursor: element.val === '申購信用通' ? 'pointer' : 'auto',
+                                    }}
+                                    onClick={titleClickHandler.bind(null, element.val)}
+                                    className="title__val"
+                                >
                                     {element.val}
                                 </span>
                             </span>
@@ -96,10 +105,7 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                     margin-right: 2px;
                     cursor: pointer;
                 }
-                .title__val {
-                    text-decoration: underline;
-                    cursor: pointer;
-                }
+
                 .money__container {
                     height: 130px;
                     border-radius: 2px;
