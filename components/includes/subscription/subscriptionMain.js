@@ -156,12 +156,13 @@ const SubscriptionMain = memo(({}) => {
                             }
                         }
 
+                        dispatch(setModal({ visible: false }));
+
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
                             setSubscriptionData(listResponse.result);
                         }
                     }
-                    dispatch(setModal({ visible: false }));
                 },
             }),
         );
@@ -239,12 +240,13 @@ const SubscriptionMain = memo(({}) => {
                             });
                         }
 
+                        dispatch(setModal({ visible: false }));
+
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
                             setSubscriptionData(listResponse.result);
                         }
                     }
-                    dispatch(setModal({ visible: false }));
                 },
             }),
         );
