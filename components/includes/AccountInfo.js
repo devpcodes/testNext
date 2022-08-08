@@ -285,7 +285,15 @@ const AccountInfo = () => {
                             <div className="dataBox">
                                 <p>
                                     <span>帳戶狀態</span>
-                                    <span>{data.CDATE === '正常' ? data.CDATE : <a>立即開信用戶</a>}</span>
+                                    <span>
+                                        {data.CDATE === '正常' ? (
+                                            data.CDATE
+                                        ) : (
+                                            <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_1?dirtype=99&strProd=0037&strWeb=0035">
+                                                立即開信用戶
+                                            </a>
+                                        )}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>信用開戶日</span>
