@@ -15,7 +15,7 @@ import { getToken } from '../../../../services/user/accessToken';
 import { checkSignCA, sign } from '../../../../services/webCa';
 import { postOrder } from '../../../../services/components/mySubscription/postOrder';
 import { message } from 'antd';
-const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount, stockId }) => {
+const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount, stockId, stockName }) => {
     const { isLogin, accounts } = useUser();
     const isMobile = useSelector(store => store.layout.isMobile);
     const [checkAccount, setCheckAccount] = useState(false);
@@ -118,7 +118,14 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount, stockId
 
     return (
         <div className="info__container">
-            <SubscriptionAccErrModal successHandler={successHandler} checkAccount={checkAccount} />
+            <SubscriptionAccErrModal
+                successHandler={successHandler}
+                checkAccount={checkAccount}
+                availAmount={availAmount}
+                allOrderAmount={allOrderAmount}
+                stockId={stockId}
+                stockName={stockName}
+            />
             <p className="info__title">申購便利通合計</p>
             <div>
                 <span className="info__num">{formatNum(allOrderAmount)}</span>

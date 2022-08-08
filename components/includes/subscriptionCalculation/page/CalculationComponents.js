@@ -88,6 +88,7 @@ const CalculationComponents = () => {
                         availAmount={calculationData.availAmount}
                         endDate={calculationData.endDate}
                         stockId={stockId}
+                        stockName={calculationData.stockName}
                     />
                 </div>
             </div>

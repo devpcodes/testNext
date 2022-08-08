@@ -12,7 +12,13 @@ const StockDetail = ({ calculationData }) => {
             <h2 className="stock__title">
                 {(calculationData.stockId || '--') + ' ' + (calculationData.stockName || '--')}
             </h2>
-            <div className="stock__bar">
+            <div
+                className="stock__bar"
+                style={{
+                    border: Number(calculationData.diffPrice) >= 0 ? 'solid 1px #ffd0c9' : 'solid 1px #bbe1d3',
+                    backgroundColor: Number(calculationData.diffPrice) >= 0 ? '#feefee' : 'rgb(222, 241, 234)',
+                }}
+            >
                 <div className="stock__left">
                     <span className="text mrgh">價差</span>
                     <span className="text num">
@@ -131,7 +137,9 @@ const StockDetail = ({ calculationData }) => {
                 }
                 .text {
                     font-size: 16px;
-                    color: #f45a4c;
+                    color: ${calculationData.diffPrice != null && Number(calculationData.diffPrice) >= 0
+                        ? '#f45a4c'
+                        : 'rgb(34, 161, 111)'};
                 }
                 .mrgh {
                     margin-right: 10px;

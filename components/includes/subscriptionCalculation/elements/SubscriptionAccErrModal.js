@@ -8,96 +8,219 @@ import { setModal } from '../../../../store/components/layouts/action';
 import { setCurrentAccount } from '../../../../store/user/action';
 import { getToken } from '../../../../services/user/accessToken';
 import { fetchAccountStatus } from '../../../../services/components/subscriptionOverview/fetchAccountStatus';
+import { formatNum } from '../../../../services/formatNum';
 
-const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
-    const currentAccount = useSelector(store => store.user.currentAccount);
-    const dispatch = useDispatch();
-    const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
-    const { isLogin, accounts } = useUser();
-    const [accountStatus, setAccountStatus] = useState({});
+const SubscriptionAccErrModal = memo(
+    ({ checkAccount, successHandler, allOrderAmount, availAmount, stockId, stockName }) => {
+        const currentAccount = useSelector(store => store.user.currentAccount);
+        const dispatch = useDispatch();
+        const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
+        const { isLogin, accounts } = useUser();
+        const [accountStatus, setAccountStatus] = useState({});
 
-    const [freezeSucces, setFreezeSuccess] = useState(false);
-    const [bankAccSuccess, setBankAccSuccess] = useState(false);
-    const [signSuccess, setSignSuccess] = useState(false);
-    const [selectAccSuccess, setSelectAccSuccess] = useState(false);
-    const [noAcc, setNoAcc] = useState(false);
-    const router = useRouter();
+        const [freezeSucces, setFreezeSuccess] = useState(false);
+        const [bankAccSuccess, setBankAccSuccess] = useState(false);
+        const [signSuccess, setSignSuccess] = useState(false);
+        const [selectAccSuccess, setSelectAccSuccess] = useState(false);
+        const [noAcc, setNoAcc] = useState(false);
+        const [amountSuccess, setAmountSuccess] = useState(false);
+        const router = useRouter();
 
-    useEffect(() => {
-        getLoanAccountStatus();
-    }, [isLogin]);
+        useEffect(() => {
+            getLoanAccountStatus();
+        }, [isLogin]);
 
-    useEffect(() => {
-        if (!checkAccount) return;
-        //沒簽署共銷
-        if (!signAcc) {
-            dispatch(
-                setModal({
-                    visible: true,
-                    type: 'confirm',
-                    noCloseIcon: true,
-                    noTitleIcon: true,
-                    title: '提醒',
-                    content: (
-                        <>
-                            <p>
-                                該服務包含【永豐金證券】與【永豐銀行】相關服務資料串接，須簽署共同行銷/合作推廣個人資料同意條款始得啟用。
-                            </p>
-                            <p style={{ color: '#c43826' }}>
-                                請您前往永豐銀行簽署頁，並勾選：同意基本資料與往來交易資料提供予永豐金證券股份有限公司
-                            </p>
-                        </>
-                    ),
-                    bodyStyle: {
-                        padding: '16px 24px',
-                    },
-                    onOk: () => {
-                        onClick(false);
-                        dispatch(setModal({ visible: false }));
-                        window.location = `${
-                            process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN
-                        }/Cmarketing/?TOKEN=${getToken()}`;
-                    },
-                    okText: '前往簽署',
-                    onCancel: () => {
-                        onClick(false);
-                        dispatch(setModal({ visible: false }));
-                    },
-                    okButtonProps: {
-                        style: {
-                            background: '#c43826',
-                            width: '95px',
+        useEffect(() => {
+            if (!checkAccount) return;
+            //沒簽署共銷
+            if (!signAcc) {
+                dispatch(
+                    setModal({
+                        visible: true,
+                        type: 'confirm',
+                        noCloseIcon: true,
+                        noTitleIcon: true,
+                        title: '提醒',
+                        content: (
+                            <>
+                                <p>
+                                    該服務包含【永豐金證券】與【永豐銀行】相關服務資料串接，須簽署共同行銷/合作推廣個人資料同意條款始得啟用。
+                                </p>
+                                <p style={{ color: '#c43826' }}>
+                                    請您前往永豐銀行簽署頁，並勾選：同意基本資料與往來交易資料提供予永豐金證券股份有限公司
+                                </p>
+                            </>
+                        ),
+                        bodyStyle: {
+                            padding: '16px 24px',
                         },
-                    },
-                }),
-            );
-        } else {
-            setSignSuccess(true);
-        }
-    }, [signAcc, checkAccount]);
+                        onOk: () => {
+                            onClick(false);
+                            dispatch(setModal({ visible: false }));
+                            window.location = `${
+                                process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN
+                            }/Cmarketing/?TOKEN=${getToken()}`;
+                        },
+                        okText: '前往簽署',
+                        onCancel: () => {
+                            onClick(false);
+                            dispatch(setModal({ visible: false }));
+                        },
+                        okButtonProps: {
+                            style: {
+                                background: '#c43826',
+                                width: '95px',
+                            },
+                        },
+                    }),
+                );
+            } else {
+                setSignSuccess(true);
+            }
+        }, [signAcc, checkAccount]);
 
-    useEffect(() => {
-        console.log('check', checkAccount);
+        useEffect(() => {
+            console.log('check', checkAccount);
 
-        if (!checkAccount) return;
+            if (!checkAccount) return;
 
-        if (applyStatus && accountInfo.applyStatus != null) {
-            //有帳號，但帳號使用錯誤
-            checkAccSelectErr();
-        } else {
-            //沒申購帳號
-            noAccHandler();
-        }
-    }, [applyStatus, accountInfo, checkAccount]);
+            if (applyStatus && accountInfo.applyStatus != null) {
+                //有帳號，但帳號使用錯誤
+                checkAccSelectErr();
+            } else {
+                //沒申購帳號
+                noAccHandler();
+            }
+        }, [applyStatus, accountInfo, checkAccount]);
 
-    useEffect(() => {
-        if (!checkAccount) return;
-        // console.log('231312123', accountInfo.bankAccount, accountStatus.lnMainAccount)
-        //交割 不等於 撥款
-        if (accountInfo.bankAccount !== accountStatus.repayAccount) {
-            //TODO MOCK
-            // setBankAccSuccess(true);
+        useEffect(() => {
+            if (!checkAccount) return;
+            // console.log('231312123', accountInfo.bankAccount, accountStatus.lnMainAccount)
+            //交割 不等於 撥款
+            if (accountInfo.bankAccount !== accountStatus.repayAccount) {
+                //TODO MOCK
+                // setBankAccSuccess(true);
 
+                dispatch(
+                    setModal({
+                        visible: true,
+                        okText: '確認',
+                        type: 'info',
+                        noCloseIcon: true,
+                        noTitleIcon: true,
+                        title: '帳戶須統整',
+                        content: (
+                            <>
+                                <p style={{ marginBottom: 12, color: '#0d1623' }}>
+                                    您的證券交割帳戶與銀行動用帳戶不
+                                    一致，使用申購便利通須進行帳戶統整，以利相關款項取扣款作業。
+                                </p>
+
+                                <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>證券交割帳戶</p>
+                                <div
+                                    style={{
+                                        border: '1px solid ##d7e0ef',
+                                        borderRadius: '2px',
+                                        backgroundColor: '#e6ebf5',
+                                        padding: '9px 13px',
+                                        color: '#3f5372',
+                                        marginBottom: '12px',
+                                    }}
+                                >
+                                    {accountInfo.bankAccount}
+                                </div>
+                                <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>銀行動用帳戶</p>
+                                <div
+                                    style={{
+                                        border: '1px solid ##d7e0ef',
+                                        borderRadius: '2px',
+                                        backgroundColor: '#e6ebf5',
+                                        padding: '9px 13px',
+                                        color: '#3f5372',
+                                        marginBottom: '12px',
+                                    }}
+                                >
+                                    {accountStatus.repayAccount}
+                                </div>
+                                <p style={{ color: '#0d1623', marginBottom: 12 }}>
+                                    請洽服務專員<span style={{ color: '#c43826' }}>(02)2349-5004</span>
+                                </p>
+                            </>
+                        ),
+                        onOk: () => {
+                            // setAccHandler(accounts, accountInfo.account);
+                            onClick(false);
+                            dispatch(setModal({ visible: false }));
+                        },
+                        onCancel: () => {
+                            onClick(false);
+                            dispatch(setModal({ visible: false }));
+                        },
+                    }),
+                );
+                return;
+            } else {
+                setBankAccSuccess(true);
+            }
+        }, [accountStatus, accountInfo, checkAccount]);
+
+        useEffect(() => {
+            if (!checkAccount) return;
+            if (applyStatus && signAcc) {
+                console.log('00000', availAmount, allOrderAmount);
+                if (Number(availAmount) < Number(allOrderAmount)) {
+                    //動用金額太小
+                    setAmountSuccess(false);
+                    amountErrorHandler(availAmount, allOrderAmount, stockId, stockName);
+                } else {
+                    setAmountSuccess(true);
+                }
+            }
+        }, [availAmount, allOrderAmount, checkAccount, applyStatus, signAcc]);
+
+        useEffect(() => {
+            if (!checkAccount) return;
+
+            if (applyStatus && signAcc) {
+                if (accountStatus.legalFee !== '0') {
+                    freezeHandler();
+                    return;
+                }
+
+                if (!(accountStatus.frozenFlag === 'N' || accountStatus.frozenFlag === '')) {
+                    freezeHandler();
+                    return;
+                }
+
+                if (accountStatus.overDueDays !== '0') {
+                    freezeHandler();
+                    return;
+                }
+
+                if (accountStatus.availAmount <= '0') {
+                    freezeHandler();
+                    return;
+                }
+
+                const currentDate = moment().format('YYYYMMDD');
+                if (moment(accountStatus.locExpDate).isBefore(moment(currentDate))) {
+                    freezeHandler();
+                    return;
+                }
+
+                setFreezeSuccess(true);
+            }
+        }, [accountStatus, checkAccount, applyStatus, signAcc]);
+
+        const getLoanAccountStatus = async () => {
+            try {
+                const res = await fetchAccountStatus(getToken());
+                console.log('----res', res);
+                setAccountStatus(res);
+            } catch (error) {}
+        };
+
+        const amountErrorHandler = (availAmount, allOrderAmount, stockId, stockName) => {
             dispatch(
                 setModal({
                     visible: true,
@@ -105,142 +228,10 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
                     type: 'info',
                     noCloseIcon: true,
                     noTitleIcon: true,
-                    title: '帳戶須統整',
+                    title: '動用額度不足',
                     content: (
                         <>
-                            <p style={{ marginBottom: 12, color: '#0d1623' }}>
-                                您的證券交割帳戶與銀行動用帳戶不
-                                一致，使用申購便利通須進行帳戶統整，以利相關款項取扣款作業。
-                            </p>
-
-                            <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>證券交割帳戶</p>
-                            <div
-                                style={{
-                                    border: '1px solid ##d7e0ef',
-                                    borderRadius: '2px',
-                                    backgroundColor: '#e6ebf5',
-                                    padding: '9px 13px',
-                                    color: '#3f5372',
-                                    marginBottom: '12px',
-                                }}
-                            >
-                                {accountInfo.bankAccount}
-                            </div>
-                            <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>銀行動用帳戶</p>
-                            <div
-                                style={{
-                                    border: '1px solid ##d7e0ef',
-                                    borderRadius: '2px',
-                                    backgroundColor: '#e6ebf5',
-                                    padding: '9px 13px',
-                                    color: '#3f5372',
-                                    marginBottom: '12px',
-                                }}
-                            >
-                                {accountStatus.repayAccount}
-                            </div>
-                            <p style={{ color: '#0d1623', marginBottom: 12 }}>
-                                請洽服務專員<span style={{ color: '#c43826' }}>(02)2349-5004</span>
-                            </p>
-                        </>
-                    ),
-                    onOk: () => {
-                        // setAccHandler(accounts, accountInfo.account);
-                        onClick(false);
-                        dispatch(setModal({ visible: false }));
-                    },
-                    onCancel: () => {
-                        onClick(false);
-                        dispatch(setModal({ visible: false }));
-                    },
-                }),
-            );
-            return;
-        } else {
-            setBankAccSuccess(true);
-        }
-    }, [accountStatus, accountInfo, checkAccount]);
-
-    useEffect(() => {
-        if (!checkAccount) return;
-
-        if (applyStatus && signAcc) {
-            if (accountStatus.legalFee !== '0') {
-                freezeHandler();
-                return;
-            }
-
-            if (!(accountStatus.frozenFlag === 'N' || accountStatus.frozenFlag === '')) {
-                freezeHandler();
-                return;
-            }
-
-            if (accountStatus.overDueDays !== '0') {
-                freezeHandler();
-                return;
-            }
-
-            if (accountStatus.availAmount <= '0') {
-                freezeHandler();
-                return;
-            }
-
-            const currentDate = moment().format('YYYYMMDD');
-            if (moment(accountStatus.locExpDate).isBefore(moment(currentDate))) {
-                freezeHandler();
-                return;
-            }
-
-            setFreezeSuccess(true);
-        }
-    }, [accountStatus, checkAccount, applyStatus, signAcc]);
-
-    const getLoanAccountStatus = async () => {
-        try {
-            const res = await fetchAccountStatus(getToken());
-            console.log('----res', res);
-            setAccountStatus(res);
-        } catch (error) {}
-    };
-
-    const noAccHandler = () => {
-        console.log('applyStatus', applyStatus);
-        dispatch(
-            setModal({
-                visible: true,
-                type: 'confirm',
-                noCloseIcon: true,
-                noTitleIcon: true,
-                title: '無申購便利通帳號',
-                content: '您目前無申購便利通帳戶，是否立即前往了解更多？',
-                onOk: () => {
-                    onClick(false);
-                    dispatch(setModal({ visible: false }));
-                    router.push('/subscriptionArea/ProductInfo');
-                },
-                onCancel: () => {
-                    onClick(false);
-                    dispatch(setModal({ visible: false }));
-                },
-            }),
-        );
-    };
-
-    const checkAccSelectErr = () => {
-        console.log('account', currentAccount.account, accountInfo.account);
-        if (currentAccount.account !== accountInfo.account) {
-            dispatch(
-                setModal({
-                    visible: true,
-                    okText: '切換帳號',
-                    type: 'info',
-                    noCloseIcon: true,
-                    noTitleIcon: true,
-                    title: '非申購便利通帳號',
-                    content: (
-                        <>
-                            <p style={{ marginBottom: 0, color: '#0d1623' }}>申購便利通服務以每人1戶為限</p>
-                            <p style={{ marginBottom: 0, color: '#0d1623' }}>您於本公司申購便利通總覽帳號為</p>
+                            <p style={{ marginBottom: 12, color: '#0d1623', fontWeight: 'bold' }}>商品</p>
                             <div
                                 style={{
                                     border: '1px solid ##d7e0ef',
@@ -249,18 +240,63 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
                                     padding: '9px 13px',
                                     color: '#3f5372',
                                     marginTop: '5px',
-                                    marginBottom: '5px',
+                                    marginBottom: '12px',
                                 }}
                             >
-                                {accountInfo.branch + '-' + accountInfo.account}
+                                {stockName + ' ' + stockId}
                             </div>
-                            <p style={{ marginBottom: 0, color: '#0d1623' }}>請您以此帳號進行申購便利通動用</p>
+                            <p style={{ marginBottom: 12, color: '#0d1623', fontWeight: 'bold' }}>本筆申購便利通動用</p>
+                            <div
+                                style={{
+                                    border: '1px solid ##d7e0ef',
+                                    borderRadius: '2px',
+                                    backgroundColor: '#e6ebf5',
+                                    padding: '9px 13px',
+                                    color: '#3f5372',
+                                    marginTop: '5px',
+                                    marginBottom: '12px',
+                                }}
+                            >
+                                {formatNum(allOrderAmount)}
+                            </div>
+                            <p style={{ marginBottom: 12, color: '#0d1623', fontWeight: 'bold' }}>目前額度</p>
+                            <div
+                                style={{
+                                    border: '1px solid ##d7e0ef',
+                                    borderRadius: '2px',
+                                    backgroundColor: '#e6ebf5',
+                                    padding: '9px 13px',
+                                    color: '#3f5372',
+                                    marginTop: '5px',
+                                    marginBottom: '12px',
+                                }}
+                            >
+                                {formatNum(availAmount)}
+                            </div>
                         </>
                     ),
                     onOk: () => {
-                        setAccHandler(accounts, accountInfo.account);
                         onClick(false);
                         dispatch(setModal({ visible: false }));
+                    },
+                }),
+            );
+        };
+
+        const noAccHandler = () => {
+            console.log('applyStatus', applyStatus);
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'confirm',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                    title: '無申購便利通帳號',
+                    content: '您目前無申購便利通帳戶，是否立即前往了解更多？',
+                    onOk: () => {
+                        onClick(false);
+                        dispatch(setModal({ visible: false }));
+                        router.push('/subscriptionArea/ProductInfo');
                     },
                     onCancel: () => {
                         onClick(false);
@@ -268,67 +304,112 @@ const SubscriptionAccErrModal = memo(({ checkAccount, successHandler }) => {
                     },
                 }),
             );
-        } else {
-            setNoAcc(true);
-            setSelectAccSuccess(true);
-        }
-    };
+        };
 
-    const onClick = () => {
-        // setCheckSuccess.push([])
-    };
-
-    const freezeHandler = () => {
-        dispatch(
-            setModal({
-                visible: true,
-                type: 'info',
-                noCloseIcon: true,
-                noTitleIcon: true,
-                title: '帳戶凍結',
-                content: (
-                    <>
-                        <p style={{ marginBottom: 0, color: '#0d1623' }}>您的申購便利通帳戶額度無法使用</p>
-                        <p style={{ marginBottom: 0, color: '#0d1623', display: 'inline-block' }}>
-                            請洽銀行客服 <span style={{ color: '#c43826' }}>(02)2505-9999</span>
-                        </p>
-                    </>
-                ),
-                onOk: () => {
-                    onClick(false);
-                    dispatch(setModal({ visible: false }));
-                },
-            }),
-        );
-    };
-
-    const setAccHandler = (accounts, subAccount) => {
-        accounts.map(item => {
-            if (item.account === subAccount) {
-                dispatch(setCurrentAccount(item));
-            }
-        });
-    };
-
-    useEffect(() => {
-        if (checkAccount) {
-            if (freezeSucces && bankAccSuccess && signSuccess && selectAccSuccess && noAcc) {
-                successHandler(true);
+        const checkAccSelectErr = () => {
+            console.log('account', currentAccount.account, accountInfo.account);
+            if (currentAccount.account !== accountInfo.account) {
+                dispatch(
+                    setModal({
+                        visible: true,
+                        okText: '切換帳號',
+                        type: 'info',
+                        noCloseIcon: true,
+                        noTitleIcon: true,
+                        title: '非申購便利通帳號',
+                        content: (
+                            <>
+                                <p style={{ marginBottom: 0, color: '#0d1623' }}>申購便利通服務以每人1戶為限</p>
+                                <p style={{ marginBottom: 0, color: '#0d1623' }}>您於本公司申購便利通總覽帳號為</p>
+                                <div
+                                    style={{
+                                        border: '1px solid ##d7e0ef',
+                                        borderRadius: '2px',
+                                        backgroundColor: '#e6ebf5',
+                                        padding: '9px 13px',
+                                        color: '#3f5372',
+                                        marginTop: '5px',
+                                        marginBottom: '5px',
+                                    }}
+                                >
+                                    {accountInfo.branch + '-' + accountInfo.account}
+                                </div>
+                                <p style={{ marginBottom: 0, color: '#0d1623' }}>請您以此帳號進行申購便利通動用</p>
+                            </>
+                        ),
+                        onOk: () => {
+                            setAccHandler(accounts, accountInfo.account);
+                            onClick(false);
+                            dispatch(setModal({ visible: false }));
+                        },
+                        onCancel: () => {
+                            onClick(false);
+                            dispatch(setModal({ visible: false }));
+                        },
+                    }),
+                );
             } else {
-                successHandler(false);
+                setNoAcc(true);
+                setSelectAccSuccess(true);
             }
-        }
-    }, [freezeSucces, bankAccSuccess, signSuccess, selectAccSuccess, noAcc, checkAccount]);
+        };
 
-    return (
-        <>
-            <style global jsx>{`
-                .confirm__container .ant-btn {
-                    width: 95px;
+        const onClick = () => {
+            // setCheckSuccess.push([])
+        };
+
+        const freezeHandler = () => {
+            dispatch(
+                setModal({
+                    visible: true,
+                    type: 'info',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                    title: '帳戶凍結',
+                    content: (
+                        <>
+                            <p style={{ marginBottom: 0, color: '#0d1623' }}>您的申購便利通帳戶額度無法使用</p>
+                            <p style={{ marginBottom: 0, color: '#0d1623', display: 'inline-block' }}>
+                                請洽銀行客服 <span style={{ color: '#c43826' }}>(02)2505-9999</span>
+                            </p>
+                        </>
+                    ),
+                    onOk: () => {
+                        onClick(false);
+                        dispatch(setModal({ visible: false }));
+                    },
+                }),
+            );
+        };
+
+        const setAccHandler = (accounts, subAccount) => {
+            accounts.map(item => {
+                if (item.account === subAccount) {
+                    dispatch(setCurrentAccount(item));
                 }
-            `}</style>
-        </>
-    );
-});
+            });
+        };
+
+        useEffect(() => {
+            if (checkAccount) {
+                if (freezeSucces && bankAccSuccess && signSuccess && selectAccSuccess && noAcc && amountSuccess) {
+                    successHandler(true);
+                } else {
+                    successHandler(false);
+                }
+            }
+        }, [freezeSucces, bankAccSuccess, signSuccess, selectAccSuccess, noAcc, amountSuccess, checkAccount]);
+
+        return (
+            <>
+                <style global jsx>{`
+                    .confirm__container .ant-btn {
+                        width: 95px;
+                    }
+                `}</style>
+            </>
+        );
+    },
+);
 
 export default SubscriptionAccErrModal;
