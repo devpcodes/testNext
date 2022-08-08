@@ -123,23 +123,31 @@ const SubscriptionMain = memo(({}) => {
                             //         title: '系統訊息',
                             //     }),
                             // );
-
-                            message.success({
-                                content: (
-                                    <>
-                                        <h4 className="msg__title">
-                                            {response.success && response.message === 'OK' ? '委託預約中' : '委託失敗'}
-                                        </h4>
-                                        <p className="msg__content">
-                                            {response.success && response.message === 'OK'
-                                                ? '請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。'
-                                                : ''}
-                                        </p>
-                                    </>
-                                ),
-                                className: 'msg__box',
-                                duration: 4,
-                            });
+                            if (response.success && response.message === 'OK') {
+                                message.success({
+                                    content: (
+                                        <>
+                                            <h4 className="msg__title">委託預約中</h4>
+                                            <p className="msg__content">
+                                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
+                                            </p>
+                                        </>
+                                    ),
+                                    className: 'msg__box',
+                                    duration: 4,
+                                });
+                            } else {
+                                message.error({
+                                    content: (
+                                        <>
+                                            <h4 className="msg__title">委託失敗</h4>
+                                            <p className="msg__content">委託失敗</p>
+                                        </>
+                                    ),
+                                    className: 'msg__box',
+                                    duration: 4,
+                                });
+                            }
                         } else {
                             if (response.success && response.message === 'OK') {
                                 location.href = response.result.url;
@@ -170,7 +178,7 @@ const SubscriptionMain = memo(({}) => {
                         <p>
                             {isAppropriation
                                 ? '請確認是否取消以下申購項目並同步取消動用'
-                                : '請確認是否取消以下申購項目'}{' '}
+                                : '請確認是否取消以下申購項目'}
                             <br />
                             <br />
                             帳號：{currentBrokerID}-{currentAccount} <br />
@@ -199,27 +207,33 @@ const SubscriptionMain = memo(({}) => {
                         //         title: '系統訊息',
                         //     }),
                         // );
-
-                        message.success({
-                            content: (
-                                <>
-                                    <h4 className="msg__title">
-                                        {response.success && response.message === 'OK'
-                                            ? isAppropriation
-                                                ? '已成功取消申購及動用'
-                                                : '已成功取消申購'
-                                            : '委託取消失敗'}
-                                    </h4>
-                                    <p className="msg__content">
-                                        {response.success && response.message === 'OK'
-                                            ? `已成功取消申購 「${id} ${name}」${isAppropriation ? '及動用' : ''}`
-                                            : ''}
-                                    </p>
-                                </>
-                            ),
-                            className: 'msg__box',
-                            duration: 1000000,
-                        });
+                        if (response.success && response.message === 'OK') {
+                            message.success({
+                                content: (
+                                    <>
+                                        <h4 className="msg__title">
+                                            {isAppropriation ? '已成功取消申購及動用' : '已成功取消申購'}
+                                        </h4>
+                                        <p className="msg__content">
+                                            {`已成功取消申購 「${id} ${name}」${isAppropriation ? '及動用' : ''}`}
+                                        </p>
+                                    </>
+                                ),
+                                className: 'msg__box',
+                                duration: 4,
+                            });
+                        } else {
+                            message.error({
+                                content: (
+                                    <>
+                                        <h4 className="msg__title">委託取消失敗</h4>
+                                        <p className="msg__content">委託取消失敗</p>
+                                    </>
+                                ),
+                                className: 'msg__box',
+                                duration: 4,
+                            });
+                        }
 
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
