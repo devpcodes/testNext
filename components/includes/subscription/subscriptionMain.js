@@ -151,6 +151,7 @@ const SubscriptionMain = memo(({}) => {
                             setSubscriptionData(listResponse.result);
                         }
                     }
+                    dispatch(setModal({ visible: false }));
                 },
             }),
         );
@@ -225,6 +226,7 @@ const SubscriptionMain = memo(({}) => {
                             setSubscriptionData(listResponse.result);
                         }
                     }
+                    dispatch(setModal({ visible: false }));
                 },
             }),
         );
@@ -300,6 +302,17 @@ const SubscriptionMain = memo(({}) => {
                 }
                 .subscriptionCards:nth-child(3n) {
                     margin-right: 0;
+                }
+                .ant-message-notice-content {
+                    text-align: left;
+                    padding: 20px 20px 15px 20px;
+                }
+                .msg__title {
+                    display: inline;
+                    font-weight: bold;
+                }
+                .msg__content {
+                    margin: 7px 5px 0px 5px;
                 }
                 @media (max-width: 1600px) {
                     .subscriptionCards {
