@@ -80,7 +80,7 @@ const SubscriptionMain = memo(({}) => {
             setModal({
                 visible: true,
                 title: isAppropriation ? '提醒' : '申購確認',
-                icon: false,
+                noTitleIcon: true,
                 content: (
                     <div>
                         {isAppropriation ? (
@@ -177,7 +177,7 @@ const SubscriptionMain = memo(({}) => {
             setModal({
                 visible: true,
                 title: isAppropriation ? '取消申購及動用' : '取消申購',
-                icon: false,
+                noTitleIcon: true,
                 content: (
                     <div>
                         <p>
