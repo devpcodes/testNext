@@ -153,7 +153,7 @@ const TimeLine = ({ data, applyStatus }) => {
             return;
         }
         if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
-            setText(`記得截止日${moment(data.feeDate).format('MM/DD')}前將款項備足待扣喲!`);
+            setText(`記得截止日${moment(data.endDate).format('MM/DD')}前將款項備足待扣喲!`);
             return;
         }
         if (
@@ -168,7 +168,11 @@ const TimeLine = ({ data, applyStatus }) => {
     };
 
     const loanTextHandler = () => {
-        if (moment(data.currentDate).isBefore(moment(data.endDate))) {
+        console.log('tttttttt', data.currentDate, data.endDate);
+        if (
+            moment(data.currentDate).isBefore(moment(data.endDate)) ||
+            moment(data.currentDate).isSame(moment(data.endDate))
+        ) {
             if (data.loanStatus === '1') {
                 setText(`動用完成：於3/7撥入，3/8將進行申購扣款請您留意其他交割收付款項`);
                 return;
