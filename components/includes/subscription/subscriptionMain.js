@@ -312,7 +312,7 @@ const SubscriptionMain = memo(({}) => {
                     font-weight: bold;
                 }
                 .msg__content {
-                    margin: 7px 5px 0px 5px;
+                    margin: 7px 5px 0px 24px;
                 }
                 @media (max-width: 1600px) {
                     .subscriptionCards {
