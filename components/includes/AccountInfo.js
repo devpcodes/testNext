@@ -142,10 +142,10 @@ const AccountInfo = () => {
                                         <span>戶籍地址</span>
                                         <span>
                                             {data.NADDR ? data.NADDR : '--'}
-                                            <br className="forMB" />{' '}
+                                            {/* <br className="forMB" />
                                             <a onClick={clickHandler.bind(null, 'address')} className="ml-10">
                                                 變更
-                                            </a>
+                                            </a> */}
                                         </span>
                                     </p>
                                     {/* <p> 
@@ -331,12 +331,27 @@ const AccountInfo = () => {
                         </div>
                         <div className="contentBox">
                             <div className="title flexBox">
-                                借券交易 <a className="arrowLink">前往借貸專區</a>
+                                借券交易{' '}
+                                <a className="arrowLink" href="https://www.sinotrade.com.tw/SS/Main/LendMenu.aspx">
+                                    前往借券專區
+                                </a>
                             </div>
                             <div className="dataBox">
                                 <p>
                                     <span>帳戶狀態</span>
-                                    <span>{data.SLSTATUS === '正常' ? data.SLSTATUS : <a>立即開借券戶</a>}</span>
+                                    <span>
+                                        {data.SLSTATUS}
+                                        {data.SLSTATUS === '註銷' || data.SLSTATUS === '' ? (
+                                            <a
+                                                className="ml-10"
+                                                href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0002&strWeb=0001"
+                                            >
+                                                立即開借券戶
+                                            </a>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>帳戶類型</span>
@@ -365,12 +380,23 @@ const AccountInfo = () => {
                         </div>
                         <div className="contentBox">
                             <div className="title flexBox">
-                                不限用途款項借貸 <a className="arrowLink">前往借貸專區</a>
+                                不限用途款項借貸{' '}
+                                <a className="arrowLink" href="/newweb/loan-zone/Overview/">
+                                    前往借貸專區
+                                </a>
                             </div>
                             <div className="dataBox">
                                 <p>
                                     <span>帳戶狀態</span>
-                                    <span>{data.ELSTATUS === '正常' ? data.ELSTATUS : <a>立即申辦</a>}</span>
+                                    <span>
+                                        {data.ELSTATUS === '正常' ? (
+                                            data.ELSTATUS
+                                        ) : (
+                                            <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_3?dirtype=99&strProd=0002&strWeb=0001">
+                                                立即申辦
+                                            </a>
+                                        )}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
@@ -414,13 +440,25 @@ const AccountInfo = () => {
                                 <p>
                                     <span>興櫃交易</span>
                                     <span>
-                                        {data.NEWEMERGINGFLAG === '已簽署' ? data.NEWEMERGINGFLAG : <a>立即簽署</a>}
+                                        {data.NEWEMERGINGFLAG === '已簽署' ? (
+                                            data.NEWEMERGINGFLAG
+                                        ) : (
+                                            <a href="https://www.sinotrade.com.tw/newweb/Inside_Frame/?URL=https://service.sinotrade.com.tw/signCenter/index/">
+                                                立即簽署
+                                            </a>
+                                        )}
                                     </span>
                                 </p>
                                 <p>
                                     <span>券差借貸同意書</span>
                                     <span>
-                                        {data.NEWEMERGINGFLAG === '已簽署' ? data.NEWEMERGINGFLAG : <a>立即簽署</a>}
+                                        {data.NEWEMERGINGFLAG === '已簽署' ? (
+                                            data.NEWEMERGINGFLAG
+                                        ) : (
+                                            <a href="https://www.sinotrade.com.tw/newweb/Inside_Frame/?URL=https://service.sinotrade.com.tw/signCenter/index/">
+                                                立即簽署
+                                            </a>
+                                        )}
                                     </span>
                                 </p>
                             </div>
@@ -679,6 +717,9 @@ const AccountInfo = () => {
                 }
                 .mainArea2 .contentBox .dataBox p > span:nth-child(2) {
                     width: 57%;
+                }
+                .ml-10 {
+                    margin-left: 10px;
                 }
                 .textBlack {
                     color: #0d1623 !important;
