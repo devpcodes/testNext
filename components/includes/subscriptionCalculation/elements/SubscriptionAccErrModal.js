@@ -80,7 +80,7 @@ const SubscriptionAccErrModal = memo(
                         onOk: () => {
                             onClick(false);
                             dispatch(setModal({ visible: false }));
-                            window.location = process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT;
+                            window.location = process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN;
                         },
                         okText: '前往簽署',
                         onCancel: () => {
