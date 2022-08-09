@@ -18,8 +18,8 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
     const iconClickHandler = () => {
         router.push('/subscriptionArea/ProductInfo');
     };
-    const titleClickHandler = () => {
-        if (element.val === '申購信用通') {
+    const titleClickHandler = val => {
+        if (val === '申購信用通') {
             router.push('/subscriptionArea/MySubscription/Loans');
         }
     };
