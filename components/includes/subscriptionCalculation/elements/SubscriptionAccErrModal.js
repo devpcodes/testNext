@@ -38,6 +38,22 @@ const SubscriptionAccErrModal = memo(
         }, [stockName]);
 
         useEffect(() => {
+            console.log('check', checkAccount);
+
+            if (!checkAccount) return;
+
+            if (signAcc) {
+                if (applyStatus && accountInfo.applyStatus != null) {
+                    //有帳號，但帳號使用錯誤
+                    checkAccSelectErr();
+                } else {
+                    //沒申購帳號
+                    noAccHandler();
+                }
+            }
+        }, [applyStatus, accountInfo, signAcc, checkAccount]);
+
+        useEffect(() => {
             if (!checkAccount) return;
             //沒簽署共銷
             if (!signAcc) {
@@ -87,89 +103,80 @@ const SubscriptionAccErrModal = memo(
         }, [signAcc, checkAccount]);
 
         useEffect(() => {
-            console.log('check', checkAccount);
-
-            if (!checkAccount) return;
-
-            if (applyStatus && accountInfo.applyStatus != null) {
-                //有帳號，但帳號使用錯誤
-                checkAccSelectErr();
-            } else {
-                //沒申購帳號
-                noAccHandler();
-            }
-        }, [applyStatus, accountInfo, checkAccount]);
-
-        useEffect(() => {
             if (!checkAccount) return;
             // console.log('231312123', accountInfo.bankAccount, accountStatus.lnMainAccount)
             //交割 不等於 撥款
-            if (accountInfo.bankAccount !== accountStatus.repayAccount) {
-                //TODO MOCK
-                // setBankAccSuccess(true);
+            if (applyStatus && signAcc) {
+                if (accountInfo.bankAccount !== accountStatus.repayAccount) {
+                    //TODO MOCK
+                    // setBankAccSuccess(true);
+                    dispatch(
+                        setModal({
+                            visible: true,
+                            okText: '確認',
+                            type: 'info',
+                            noCloseIcon: true,
+                            noTitleIcon: true,
+                            title: '帳戶須統整',
+                            content: (
+                                <>
+                                    <p style={{ marginBottom: 12, color: '#0d1623' }}>
+                                        您的證券交割帳戶與銀行動用帳戶不
+                                        一致，使用申購便利通須進行帳戶統整，以利相關款項取扣款作業。
+                                    </p>
 
-                dispatch(
-                    setModal({
-                        visible: true,
-                        okText: '確認',
-                        type: 'info',
-                        noCloseIcon: true,
-                        noTitleIcon: true,
-                        title: '帳戶須統整',
-                        content: (
-                            <>
-                                <p style={{ marginBottom: 12, color: '#0d1623' }}>
-                                    您的證券交割帳戶與銀行動用帳戶不
-                                    一致，使用申購便利通須進行帳戶統整，以利相關款項取扣款作業。
-                                </p>
-
-                                <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>證券交割帳戶</p>
-                                <div
-                                    style={{
-                                        border: '1px solid ##d7e0ef',
-                                        borderRadius: '2px',
-                                        backgroundColor: '#e6ebf5',
-                                        padding: '9px 13px',
-                                        color: '#3f5372',
-                                        marginBottom: '12px',
-                                    }}
-                                >
-                                    {accountInfo.bankAccount}
-                                </div>
-                                <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>銀行動用帳戶</p>
-                                <div
-                                    style={{
-                                        border: '1px solid ##d7e0ef',
-                                        borderRadius: '2px',
-                                        backgroundColor: '#e6ebf5',
-                                        padding: '9px 13px',
-                                        color: '#3f5372',
-                                        marginBottom: '12px',
-                                    }}
-                                >
-                                    {accountStatus.repayAccount}
-                                </div>
-                                <p style={{ color: '#0d1623', marginBottom: 12 }}>
-                                    請洽服務專員<span style={{ color: '#c43826' }}>(02)2349-5004</span>
-                                </p>
-                            </>
-                        ),
-                        onOk: () => {
-                            // setAccHandler(accounts, accountInfo.account);
-                            onClick(false);
-                            dispatch(setModal({ visible: false }));
-                        },
-                        onCancel: () => {
-                            onClick(false);
-                            dispatch(setModal({ visible: false }));
-                        },
-                    }),
-                );
-                return;
-            } else {
-                setBankAccSuccess(true);
+                                    <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>
+                                        證券交割帳戶
+                                    </p>
+                                    <div
+                                        style={{
+                                            border: '1px solid ##d7e0ef',
+                                            borderRadius: '2px',
+                                            backgroundColor: '#e6ebf5',
+                                            padding: '9px 13px',
+                                            color: '#3f5372',
+                                            marginBottom: '12px',
+                                        }}
+                                    >
+                                        {accountInfo.bankAccount}
+                                    </div>
+                                    <p style={{ fontWeight: 'bold', color: '#0d1623', marginBottom: 12 }}>
+                                        銀行動用帳戶
+                                    </p>
+                                    <div
+                                        style={{
+                                            border: '1px solid ##d7e0ef',
+                                            borderRadius: '2px',
+                                            backgroundColor: '#e6ebf5',
+                                            padding: '9px 13px',
+                                            color: '#3f5372',
+                                            marginBottom: '12px',
+                                        }}
+                                    >
+                                        {accountStatus.repayAccount}
+                                    </div>
+                                    <p style={{ color: '#0d1623', marginBottom: 12 }}>
+                                        請洽服務專員<span style={{ color: '#c43826' }}>(02)2349-5004</span>
+                                    </p>
+                                </>
+                            ),
+                            onOk: () => {
+                                // setAccHandler(accounts, accountInfo.account);
+                                onClick(false);
+                                dispatch(setModal({ visible: false }));
+                            },
+                            onCancel: () => {
+                                onClick(false);
+                                dispatch(setModal({ visible: false }));
+                            },
+                        }),
+                    );
+                    return;
+                } else {
+                    setBankAccSuccess(true);
+                }
             }
-        }, [accountStatus, accountInfo, checkAccount]);
+        }, [accountStatus, accountInfo, checkAccount, applyStatus, signAcc]);
 
         useEffect(() => {
             if (!checkAccount) return;
