@@ -238,7 +238,9 @@ const TimeLine = ({ data, applyStatus }) => {
             if (data.orderStatus === 'N1') {
                 setLabel2Text('未中籤');
                 setLabel3TextUp(`退款 ${moment(data.moneyDate).format('MM/DD')}`);
-                setLabel3TextDown(`退款 ${formatNum(data.orderAmount)}`);
+                setLabel3TextDown(
+                    `退款 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`,
+                );
                 setText(`好可惜未中籤！款項將於${moment(data.moneyDate).format('MM/DD')}退款請您留意！`);
                 if (data.method === '2') {
                     loanTextDownHandler(data.orderStatus);
@@ -271,7 +273,7 @@ const TimeLine = ({ data, applyStatus }) => {
     };
     const loanTextDownHandler = type => {
         if (type === 'N1') {
-            setLabel4TextDown(`待還 ${formatNum(Number(data.orderAmount) - Number(data.tfee))}`);
+            setLabel4TextDown(`待還 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`);
             setText(
                 `於${moment(data.moneyDate).format(
                     'MM/DD',
@@ -286,7 +288,9 @@ const TimeLine = ({ data, applyStatus }) => {
                 return;
             }
             if (data.loanStatus === '4') {
-                setLabel4TextDown(`償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee))}`);
+                setLabel4TextDown(
+                    `償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`,
+                );
                 setText(`還款成功：請您留意是否仍有銀行欠款別忘還款喲！`);
                 setLink('查看明細GO >');
                 setLabel4TextUp(`系統還款 ${moment(data.moneyDate).format('MM/DD')}`);
