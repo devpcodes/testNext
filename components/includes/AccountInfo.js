@@ -309,7 +309,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>
-                                        今日融資已用／
+                                        今日融資已用/
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
@@ -325,7 +325,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>
-                                        今日融券已用／
+                                        今日融券已用/
                                         <br className="forMB" />
                                         剩餘額度
                                     </span>
@@ -371,7 +371,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>
-                                        已用額度／
+                                        已用額度/
                                         <br className="forMB" />
                                         借券可用
                                     </span>
@@ -416,7 +416,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>
-                                        已申請借款／
+                                        已申請借款/
                                         <br className="forMB" />
                                         剩餘可借
                                     </span>
@@ -427,7 +427,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>
-                                        已動用／
+                                        已動用/
                                         <br className="forMB" />
                                         剩餘可動用
                                     </span>
@@ -535,7 +535,7 @@ const AccountInfo = () => {
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
-                                    <span>今日融資已用／剩餘額度</span>
+                                    <span>今日融資已用/剩餘額度</span>
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
@@ -543,7 +543,7 @@ const AccountInfo = () => {
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
-                                    <span>今日融券已用／剩餘額度</span>
+                                    <span>今日融券已用/剩餘額度</span>
                                     <span>正常</span>
                                 </p>
                             </div>
@@ -568,7 +568,7 @@ const AccountInfo = () => {
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
-                                    <span>已用額度／借券可用</span>
+                                    <span>已用額度/借券可用</span>
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
@@ -597,11 +597,11 @@ const AccountInfo = () => {
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
-                                    <span>已申請借款／剩餘可借</span>
+                                    <span>已申請借款/剩餘可借</span>
                                     <span>2015.05.23</span>
                                 </p>
                                 <p>
-                                    <span>已動用／剩餘可動用</span>
+                                    <span>已動用/剩餘可動用</span>
                                     <span>2015.05.23</span>
                                 </p>
                             </div>
@@ -738,7 +738,7 @@ const AccountInfo = () => {
                 .forMB {
                     display: none;
                 }
-                @media screen and (max-width: 425px) {
+                @media screen and (max-width: 499px) {
                     .forPC {
                         display: none;
                     }
@@ -792,7 +792,7 @@ const AccountInfo = () => {
                     color: #fff;
                     background: #000;
                 }
-                @media screen and (max-width: 425px) {
+                @media screen and (max-width: 499px) {
                     #AccInfo__container .AccountDropdownBox {
                         width: 100%;
                     }
