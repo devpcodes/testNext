@@ -4,7 +4,7 @@ import { Collapse } from 'antd';
 
 const QaCollapse = ({ dataSource, chartFunc }) => {
     useEffect(() => {
-        console.log('rowData', dataSource);
+        // console.log('rowData', dataSource);
     }, [dataSource]);
 
     const { Panel } = Collapse;
@@ -31,7 +31,7 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
                         >
                             {Array.isArray(x.content)
                                 ? x.content.map((y, j) => {
-                                      return <p key={'p' + i}>{y}</p>;
+                                      return <p key={'p' + j}>{y}</p>;
                                   })
                                 : x.content}
                             {x.chart ? chartFunc(x.chart) : ''}
@@ -54,10 +54,7 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
                     }
                     @media screen and (max-width: 768px) {
                     }
-                    @media screen and (max-width: 425px) {
-                        .qaBox {
-                            padding: 0 4%;
-                        }
+                    @media screen and (max-width: 500px) {
                         .forPC {
                             display: none;
                         }
@@ -76,7 +73,7 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
                 #QaCollapse__content .site-collapse-custom-collapse .site-collapse-custom-panel {
                     margin-bottom: 24px; overflow: hidden; background: #fff;border: 0px; border-radius: 2px;}
                 #QaCollapse__content .ant-collapse-header{ font-size: 20px;
-                    font-weight: 800; color:#0d1623;padding-left: 0px;padding-left: 0!important;}
+                    font-weight: 800; color:#0d1623;padding-left: 0px;padding-left: 0!important; padding-right: 30px;}
                 #QaCollapse__content .ant-collapse-content-box{background:#f7ecde; font-size:16px; font-weight:500;margin-bottom:7px;}
                 #QaCollapse__content .ant-collapse-content-box p{margin:0;}
                 #QaCollapse__content .plusIcon{ border-radius:2px; right: 0; left:auto!important; background:#a9b6cb; text-align:center; width: 26px;
@@ -85,7 +82,7 @@ const QaCollapse = ({ dataSource, chartFunc }) => {
                     font-weight: 300;line-height:26px!important;}
                 #QaCollapse__content .plusIcon.active{background: #daa360;!important;}
                 #QaCollapse__content .plusIcon.active i{transform:rotate(45deg);}
-                @media screen and (max-width: 425px) {
+                @media screen and (max-width: 500px) {
                     #QaCollapse__content .ant-collapse-item{padding:4%;}
                     #QaCollapse__content .ant-collapse-header{ font-size: 16px;padding-right: 30px!important; line-height: 1.3!important;}
                     #QaCollapse__content .ant-collapse>.ant-collapse-item>.ant-collapse-header .ant-collapse-arrow {top: 16%; transform: translateY(0%);}

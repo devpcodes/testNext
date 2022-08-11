@@ -112,12 +112,12 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '申購便利通',
             image: subscriptionApply,
-            link: 'https://www.sinotrade.com.tw/stfopenact?strProd=0037&strWeb=0035',
+            link: process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT,
         },
         {
             title: '申辦進度查詢',
             image: featureOpenDetail,
-            link: `https://www.sinotrade.com.tw/stfopenact/progress?strProd=0037&strWeb=0035`,
+            link: process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT_SEARCH,
         },
     ]);
     return (
