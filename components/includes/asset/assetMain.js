@@ -15,7 +15,6 @@ const AssetMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
     const [tabType, setTabType] = useState('S');
-    const [dataErrorMsg, setErrorMsg] = useState([]);
 
     const changeTypeHandler = useCallback(t => {
         setTabType(t);
@@ -42,7 +41,6 @@ const AssetMain = memo(({}) => {
                 duration: 0,
             });
         }
-        console.log(errorMsgArr);
 
         if (res?.success != null && res?.success === true) {
             dispatch(setRealTimePrtLosSum(res.result));
