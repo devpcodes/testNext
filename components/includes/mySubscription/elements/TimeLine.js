@@ -255,6 +255,11 @@ const TimeLine = ({ data, applyStatus }) => {
                 data.orderStatus !== 'N1' &&
                 data.orderStatus !== 'W1')
         ) {
+            if (data.loanStatus === '2') {
+                setText(`動用失敗：請確認您的額度狀態，或請洽永豐銀行客服中心02-2505-9999。`);
+                return;
+            }
+
             setText(`祝您中籤`);
             return;
         }
