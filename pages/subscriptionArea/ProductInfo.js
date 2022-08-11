@@ -12,7 +12,7 @@ function ProductInfoPage() {
     return (
         <>
             <PageHead title={'申購專區'} />
-            <ProductInfo />;
+            <ProductInfo />
         </>
     );
 }
