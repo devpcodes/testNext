@@ -57,16 +57,17 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     //     }
     // }, [currentAccount, signAccounts]);
 
-    useEffect(() => {
-        console.log('applyStatus', applyStatus);
-        if (applyStatus) {
-            applyStatusHandler(true);
-        }
-    }, [applyStatus]);
+    // useEffect(() => {
+    //     console.log('applyStatus', applyStatus);
+    //     if (signAcc) {
+    //         applyStatusHandler(true);
+    //     }
+    // }, [signAcc]);
 
     useEffect(() => {
         if (signAcc) {
             getAccountStatus();
+            applyStatusHandler(true);
         }
     }, [signAcc]);
 

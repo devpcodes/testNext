@@ -156,6 +156,10 @@ const TimeLine = ({ data, applyStatus }) => {
             setText(`記得截止日${moment(data.endDate).format('MM/DD')}前將款項備足待扣喲!`);
             return;
         }
+        if (moment(data.currentDate).isSame(moment(data.feeDate))) {
+            setText(`祝您中籤`);
+            return;
+        }
         if (
             data.orderStatus !== 'S1' &&
             data.orderStatus !== 'S2' &&
@@ -163,18 +167,62 @@ const TimeLine = ({ data, applyStatus }) => {
             data.orderStatus !== 'N1' &&
             data.orderStatus !== 'W1'
         ) {
-            setText(data.statusMessage);
+            // setText(data.statusMessage);
+            setText(data.orderStatusMessage);
+            // setText(mappingStatus(data.orderStatus))
+        }
+    };
+
+    const mappingStatus = orderStatus => {
+        switch (orderStatus) {
+            case 'A':
+                return '該帳號已申購';
+            case 'B':
+                return '非自然人無法申購';
+            case 'C':
+                return '當天開戶無法辦理申購';
+            case 'D':
+                return '同意扣款碼不為Y';
+            case 'E':
+                return '已銷戶或凍結或不可買賣';
+            case 'F':
+                return '該股票不在申購期限內';
+            case 'G':
+                return '申購櫃買股票,但未開櫃買戶';
+            case 'K':
+                return '該客戶尚未開戶';
+            case 'L':
+                return '非劃撥戶無法辦理申購';
+            case 'N':
+                return '網路合格件(分公司尚未處理轉入)';
+            case 'X':
+                return '取消';
+            case 'O':
+                return '非本國人不能申購';
+            case 'H':
+                return '存款不足';
+            case 'P':
+                return '申購央債,但未開清算銀行或債券帳號';
+            case 'W':
+                return '分公司整併,禁止申購';
+            default:
+                return '';
         }
     };
 
     const loanTextHandler = () => {
-        console.log('tttttttt', data.currentDate, data.endDate);
+        if (moment(data.currentDate).isSame(moment(data.feeDate)) && data.loanStatus !== '2') {
+            setText(`祝您中籤`);
+            return;
+        }
         if (
-            moment(data.currentDate).isBefore(moment(data.endDate)) ||
-            moment(data.currentDate).isSame(moment(data.endDate))
+            moment(data.currentDate).isBefore(moment(data.feeDate)) ||
+            moment(data.currentDate).isSame(moment(data.feeDate))
         ) {
             if (data.loanStatus === '1') {
-                setText(`動用完成：於3/7撥入，3/8將進行申購扣款請您留意其他交割收付款項`);
+                setText(
+                    `動用完成：於${data.endDate}撥入，${moment(data.feeDate)}將進行申購扣款請您留意其他交割收付款項`,
+                );
                 return;
             }
             if (data.loanStatus === '2') {
@@ -191,6 +239,11 @@ const TimeLine = ({ data, applyStatus }) => {
             );
             return;
         }
+        // if (moment(data.currentDate).isSame(moment(data.feeDate))) {
+        //     setText(`祝您中籤`);
+        //     return;
+        // }
+
         if (
             data.orderStatus !== 'S1' &&
             data.orderStatus !== 'S2' &&
@@ -198,7 +251,8 @@ const TimeLine = ({ data, applyStatus }) => {
             data.orderStatus !== 'N1' &&
             data.orderStatus !== 'W1'
         ) {
-            setText(data.statusMessage);
+            setText(data.orderStatusMessage);
+            // setText(mappingStatus(data.orderStatus))
         }
     };
 
@@ -255,15 +309,15 @@ const TimeLine = ({ data, applyStatus }) => {
                     (moment(data.currentDate).isAfter(moment(data.lotDate)) &&
                         moment(data.currentDate).isBefore(moment(data.stkDate)))
                 ) {
-                    setText('恭喜您中籤啦！若有資金需求除了賣股變現外另提供您股票');
-                    setLink('【 抵押低利借款方案 】');
+                    setText('恭喜您中籤啦！');
+                    // setLink('【 抵押低利借款方案 】');
                 }
                 if (moment(data.currentDate).isSame(moment(data.stkDate))) {
                     setText('今日會將股票匯入您交易帳戶請您留意');
                 }
                 if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
-                    setText('快來看看');
-                    setLink('【 近期申購Go 】');
+                    setText('撥券已完成~~快來看看');
+                    setLink('近期申購Go');
                 }
                 if (data.method === '2') {
                     loanTextDownHandler(data.orderStatus);
@@ -280,7 +334,7 @@ const TimeLine = ({ data, applyStatus }) => {
                 )}退還至您交割帳戶，完成退款後系統將依退款日銀行欠款進行後續償還作業！`,
             );
             if (data.loanStatus === '5' && applyStatus) {
-                setText(`還款失敗：超過利息應繳款日，請盡速繳息才能進行還款。`);
+                setText(`還款失敗：請洽永豐銀行客服中心02-2505-9999。`);
             }
             if (!applyStatus) {
                 setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
@@ -299,8 +353,19 @@ const TimeLine = ({ data, applyStatus }) => {
             }
         }
         if (type === 'W1') {
-            setText('撥券已完成~~快來看看');
-            setLink('近期申購GO >');
+            if (
+                moment(data.currentDate).isSame(moment(data.lotDate)) ||
+                moment(data.currentDate).isBefore(moment(data.stkDate))
+            ) {
+                setText('恭喜您中籤啦！');
+            }
+            if (moment(data.currentDate).isSame(moment(data.stkDate))) {
+                setText('今日會將股票匯入您交易帳戶請您留意');
+            }
+            if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
+                setText('撥券已完成~~快來看看');
+                setLink('近期申購GO >');
+            }
         }
     };
 
