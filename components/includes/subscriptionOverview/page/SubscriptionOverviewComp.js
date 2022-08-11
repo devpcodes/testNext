@@ -270,7 +270,7 @@ const SubscriptionOverviewComp = () => {
                         >
                             {mockData.loanRate}%
                         </p>
-                        <p>機動年利率，依個金放款/房貸指標(月)+10%</p>
+                        <p>{'機動年利率，依個金放款/房貸指標(月)+' + mockData.intSpread + '%'}</p>
                     </>
                 );
             }
