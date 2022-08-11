@@ -239,10 +239,12 @@ const TimeLine = ({ data, applyStatus }) => {
                 );
                 return;
             }
-            setText(
-                `預約動用免備款，於${moment(data.endDate).format('MM/DD')}撥入交割帳戶待扣款，請您留意交割收付款項`,
-            );
-            return;
+            if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
+                setText(
+                    `預約動用免備款，於${moment(data.endDate).format('MM/DD')}撥入交割帳戶待扣款，請您留意交割收付款項`,
+                );
+                return;
+            }
         }
         if (
             moment(data.currentDate).isSame(moment(data.feeDate)) ||
