@@ -219,7 +219,10 @@ const TimeLine = ({ data, applyStatus }) => {
     };
 
     const loanTextHandler = () => {
-        if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
+        if (
+            moment(data.currentDate).isBefore(moment(data.feeDate)) ||
+            moment(data.currentDate).isSame(moment(data.feeDate))
+        ) {
             if (!applyStatus) {
                 setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
                 setLink('前往永豐銀行簽署去 >');
