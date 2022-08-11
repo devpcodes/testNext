@@ -9,7 +9,7 @@ import { getToken } from '../../../services/user/accessToken';
 import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { getTitleData } from './getData';
 import Breadcrumb from '../breadcrumb/breadcrumb';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 
 const AssetDetailMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -18,6 +18,26 @@ const AssetDetailMain = memo(({}) => {
     useEffect(async () => {
         const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
         const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
+
+        const errorMsgArr = [];
+        Object.keys(res.result.data).map(function (objectKey, index) {
+            var responseStatus = res.result.data[objectKey].status;
+            if (!responseStatus.success) {
+                errorMsgArr.push(responseStatus.message);
+            }
+        });
+        if (errorMsgArr.length > 0) {
+            message.destroy();
+            message.error({
+                content: (
+                    <>
+                        <h4 className="msg__title">部分商品結算或系統維護中,會有資產總數減少的情況,請稍候再做查詢。</h4>
+                    </>
+                ),
+                duration: 0,
+            });
+        }
+
         if (res?.success != null && res?.success === true) {
             dispatch(setRealTimePrtLosSum(res.result));
             setReload(true);
@@ -52,6 +72,15 @@ const AssetDetailMain = memo(({}) => {
                         padding-left: 0;
                         padding-right: 0;
                     }
+                }
+            `}</style>
+            <style jsx global>{`
+                .msg__title {
+                    display: inline;
+                    font-weight: bold;
+                }
+                .msg__content {
+                    margin: 7px 5px 0px 0px;
                 }
             `}</style>
         </>
