@@ -9,7 +9,7 @@ import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { useRouter } from 'next/router';
 import { Tooltip } from 'antd';
 import info from '../../../resources/images/pages/asset/ic-ic-info@2x.png';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 
 const AssetHeader = memo(({ title }) => {
     const user = useSelector(store => store.user.currentAccount);
@@ -34,6 +34,28 @@ const AssetHeader = memo(({ title }) => {
             }, 3000);
             const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
             const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
+
+            const errorMsgArr = [];
+            Object.keys(res.result.data).map(function (objectKey, index) {
+                var responseStatus = res.result.data[objectKey].status;
+                if (!responseStatus.success) {
+                    errorMsgArr.push(responseStatus.message);
+                }
+            });
+            if (errorMsgArr.length > 0) {
+                message.destroy();
+                message.error({
+                    content: (
+                        <>
+                            <h4 className="msg__title">
+                                部分商品結算或系統維護中,會有資產總數減少的情況,請稍候再做查詢。
+                            </h4>
+                        </>
+                    ),
+                    duration: 0,
+                });
+            }
+
             if (res?.success != null && res?.success === true) {
                 dispatch(setRealTimePrtLosSum(res.result));
                 setrefreshTime(getTime());

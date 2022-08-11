@@ -143,6 +143,28 @@ export const getA8StpInstance = (modal = false, baseUrl = '') => {
     return a8Ins;
 };
 
+const createA8StpInstanceAuth = (baseUrl, auth = a8Auth) =>
+    axios.create({
+        baseURL: baseUrl || `${process.env.NEXT_PUBLIC_A8_BASE}/`,
+        timeout: 90000,
+        auth,
+        validateStatus: function (status) {
+            return status >= 200 && status < 300;
+        },
+    });
+
+export const getA8StpInstanceAuth = (modal = false, baseUrl = '', auth = a8Auth) => {
+    const a8Ins = createA8StpInstanceAuth(baseUrl, auth);
+    a8Ins.interceptors.response.use(
+        response => response,
+        error => {
+            return error.response;
+            // return errorHandler(error, modal);
+        },
+    );
+    return a8Ins;
+};
+
 // lykan instance：設置 call lykan server 的最低配置
 const createLykanInstance = (version = lykanDefaultVersion) =>
     axios.create({
