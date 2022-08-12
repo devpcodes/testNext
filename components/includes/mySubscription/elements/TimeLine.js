@@ -529,7 +529,7 @@ const TimeLine = ({ data, applyStatus }) => {
                     className={sysDataItem03Dom}
                     style={{
                         display: 'inline-block',
-                        marginLeft: data.loanStatus === '4' ? '8%' : '12%',
+                        marginLeft: data.loanStatus === '4' ? '16%' : '15%',
                         fontSize: '14px',
                     }}
                 >
