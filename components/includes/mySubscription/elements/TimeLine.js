@@ -364,7 +364,7 @@ const TimeLine = ({ data, applyStatus }) => {
     };
     const loanTextDownHandler = type => {
         if (type === 'N1') {
-            setLabel4TextDown(`待退款`);
+            setLabel4TextDown(`待還款`);
             setText(
                 `於${moment(data.moneyDate).format(
                     'MM/DD',
@@ -372,6 +372,7 @@ const TimeLine = ({ data, applyStatus }) => {
             );
             if (data.loanStatus === '5' && applyStatus) {
                 setText(`還款失敗：請洽永豐銀行客服中心02-2505-9999。`);
+                setLabel4TextDown(`失敗`);
             }
             if (!applyStatus) {
                 setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
@@ -379,9 +380,10 @@ const TimeLine = ({ data, applyStatus }) => {
                 return;
             }
             if (data.loanStatus === '4') {
-                setLabel4TextDown(
-                    `償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`,
-                );
+                // setLabel4TextDown(
+                //     `償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`,
+                // );
+                setLabel4TextDown(`成功`);
                 setText(`還款成功：請您留意是否仍有銀行欠款別忘還款喲！`);
                 setLink('查看明細GO >');
                 setLabel4TextUp(`系統還款 ${moment(data.moneyDate).format('MM/DD')}`);
