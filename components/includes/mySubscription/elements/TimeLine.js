@@ -364,7 +364,7 @@ const TimeLine = ({ data, applyStatus }) => {
     };
     const loanTextDownHandler = type => {
         if (type === 'N1') {
-            setLabel4TextDown(`待還 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`);
+            setLabel4TextDown(`待退款`);
             setText(
                 `於${moment(data.moneyDate).format(
                     'MM/DD',
