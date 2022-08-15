@@ -235,7 +235,9 @@ const TimeLine = ({ data, applyStatus }) => {
 
             if (data.loanStatus === '1') {
                 setText(
-                    `動用完成：於${data.endDate}撥入，${moment(data.feeDate)}將進行申購扣款請您留意其他交割收付款項`,
+                    `動用完成：於${moment(data.endDate).format('MM/DD')}撥入，${moment(data.feeDate).format(
+                        'MM/DD',
+                    )}將進行申購扣款請您留意其他交割收付款項`,
                 );
                 return;
             }
