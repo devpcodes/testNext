@@ -28,7 +28,7 @@ const CashCouponRepayment = () => {
 
     return (
         <div className="content">
-            <h1 className="title">現券償還</h1>
+            <h1 className="title">現券償還(融券償還)</h1>
             <AdvanceCollectionTabs data={tabsDataHandler()} activeKeyHandler={activeHandler} />
             <style jsx>{`
                 .content {
@@ -45,6 +45,11 @@ const CashCouponRepayment = () => {
                     font-weight: bold;
                     letter-spacing: 6px;
                     margin-bottom: 0;
+                }
+                @media (max-width: 768px) {
+                    .title {
+                        font-size: 24px;
+                    }
                 }
             `}</style>
         </div>
