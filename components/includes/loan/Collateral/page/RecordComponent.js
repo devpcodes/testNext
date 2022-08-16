@@ -60,8 +60,10 @@ const RecordComponent = () => {
     }, [router]);
 
     useEffect(() => {
-        getApplyRecord();
-        getSumData();
+        if (currentAccount != null && currentAccount.account) {
+            getApplyRecord();
+            getSumData();
+        }
     }, [currentAccount, refreshTime]);
 
     useEffect(() => {
@@ -79,7 +81,6 @@ const RecordComponent = () => {
     const getSumData = async () => {
         let token = getToken();
         let dataset = await collateralDetailSum(token, currentAccount.broker_id, currentAccount.account);
-        console.log('[dataset]', dataset);
         let val = 0;
         if (dataset) {
             setStockListSum(dataset);
