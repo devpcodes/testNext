@@ -412,7 +412,11 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
 
     const submitDataHandler = data => {
         let filterData = data.filter(item => {
-            return item.expectedCollateralShare != 0;
+            return (
+                item.expectedCollateralShare != 0 &&
+                item.expectedCollateralShare != null &&
+                item.expectedCollateralShare != ''
+            );
         });
         const newData = filterData.map(element => {
             return {
