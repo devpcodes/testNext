@@ -38,7 +38,6 @@ const AssetMain = memo(({}) => {
                         <h4 className="msg__title">部分商品結算或系統維護中,會有資產總數減少的情況,請稍候再做查詢。</h4>
                     </>
                 ),
-                duration: 0,
             });
         }
 
