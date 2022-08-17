@@ -42,7 +42,6 @@ export const repaymentDetail = async function (token, branch, account, date) {
                 applyDate: moment(date).format('YYYYMMDD'),
             },
         });
-        console.log('repaymentDetail[req]', res);
         if (res.data.success) {
             return res.data.result;
         } else {
