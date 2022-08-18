@@ -12,6 +12,9 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
         }
     };
     const repaymentHandler = () => {
+        if (financing <= 0 || moment(locExpDate).isBefore(moment())) {
+            return;
+        }
         window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
     };
 
