@@ -52,7 +52,6 @@ const AssetHeader = memo(({ title }) => {
                             </h4>
                         </>
                     ),
-                    duration: 0,
                 });
             }
 

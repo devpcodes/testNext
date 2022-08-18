@@ -259,19 +259,19 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                                 <tbody>
                                     <tr>
                                         <td>應付利息</td>
-                                        <td>{record.detail[record.detail.length - 1].paid}</td>
+                                        <td>{record.detail[0].paid}</td>
                                     </tr>
                                     <tr>
                                         <td>手續費</td>
-                                        <td>{record.detail[record.detail.length - 1].writeOffFee}</td>
+                                        <td>{record.detail[0].writeOffFee}</td>
                                     </tr>
                                     <tr>
                                         <td>撥券費</td>
-                                        <td>{record.detail[record.detail.length - 1].writeOffTransFee}</td>
+                                        <td>{record.detail[0].writeOffTransFee}</td>
                                     </tr>
                                     <tr>
                                         <td>設質費</td>
-                                        <td>{record.detail[record.detail.length - 1].unpaidPledgeFee}</td>
+                                        <td>{record.detail[0].unpaidPledgeFee}</td>
                                     </tr>
                                 </tbody>
                             </table>
