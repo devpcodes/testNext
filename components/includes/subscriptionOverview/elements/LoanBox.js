@@ -7,7 +7,8 @@ import Bar from '../../loan/overview/elements/Bar';
 import SinoBtn from '../../loan/Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../services/formatNum';
 import { Tooltip } from 'antd';
-const LoanBox = ({ allCanLoan, financing }) => {
+import moment from 'moment';
+const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const router = useRouter();
     const titleHandler = () => {
@@ -21,9 +22,8 @@ const LoanBox = ({ allCanLoan, financing }) => {
             </div>
         );
     };
-    const onClick = () => {
-        if (financing > 0) {
-        }
+    const repaymentHandler = () => {
+        window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
     };
     return (
         <div className="loan__container">
@@ -63,6 +63,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                         <SinoBtn
                             parentClass={'search__container'}
                             text={'我要還款'}
+                            disabled={financing <= 0 || financing == '--' || moment(locExpDate).isBefore(moment())}
                             style={{
                                 display: isMobile ? 'inline-block' : 'none',
                                 border: '1px solid #d7e0ef',
@@ -72,15 +73,16 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 fontSize: '16px',
                                 padding: '9px 19px 9px 20px',
                                 borderRadius: '2px',
-                                backgroundColor: 'white',
-                                color: '#0d1623',
+                                backgroundColor:
+                                    financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#e6ebf5' : 'white',
+                                color: financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#a9b6cb' : '#0d1623',
+                                // backgroundColor: 'white',
+                                // color: '#0d1623',
                                 verticalAlign: 'top',
                                 flex: '1 0 0',
                                 marginRight: '16px',
                             }}
-                            onClick={() => {
-                                router.push('/loan-zone/Record/');
-                            }}
+                            onClick={repaymentHandler}
                         />
                         <SinoBtn
                             parentClass={'search__container'}
@@ -110,12 +112,12 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
                     <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
                 </span> */}
-                {financing <= 0 || financing == '--' ? (
+                {financing <= 0 || financing == '--' || moment(locExpDate).isBefore(moment()) ? (
                     <a className="footer__link--disabled" disabled>
                         我要還款 >
                     </a>
                 ) : (
-                    <a className="footer__link" onClick={onClick}>
+                    <a className="footer__link" onClick={repaymentHandler}>
                         我要還款 >
                     </a>
                 )}

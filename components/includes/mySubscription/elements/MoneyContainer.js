@@ -23,6 +23,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
     const [applyStatus, signAcc] = useCheckSubscriptionAcc();
+    const [locExpDate, setLocExpDate] = useState('');
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -56,16 +57,17 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     //     }
     // }, [currentAccount, signAccounts]);
 
-    useEffect(() => {
-        console.log('applyStatus', applyStatus);
-        if (applyStatus) {
-            applyStatusHandler(true);
-        }
-    }, [applyStatus]);
+    // useEffect(() => {
+    //     console.log('applyStatus', applyStatus);
+    //     if (signAcc) {
+    //         applyStatusHandler(true);
+    //     }
+    // }, [signAcc]);
 
     useEffect(() => {
         if (signAcc) {
             getAccountStatus();
+            applyStatusHandler(true);
         }
     }, [signAcc]);
 
@@ -74,6 +76,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             const res = await fetchAccountStatus(getToken());
             setAllCanLoan(res.limitAmount);
             setFinancing(res.totalOs);
+            setLocExpDate(res.locExpDate);
         } catch (error) {}
     };
 
@@ -111,6 +114,10 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             }
         }, 700);
     }, [currentAccount]);
+
+    const moneyBoxClick = () => {
+        alert('123');
+    };
 
     return (
         <div className="moneyBox__container">
@@ -156,22 +163,39 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {!applyStatus && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即申辦'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
-                    {applyStatus && !signAcc && (
+                    {(!signAcc || (!signAcc && !applyStatus)) && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即簽署'}
-                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
                             title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            financing={Number(financing)}
+                            locExpDate={locExpDate}
                             data={[
                                 {
                                     label: '可動用',
@@ -215,25 +239,43 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             },
                         ]}
                     />
-                    {!applyStatus && (
+
+                    {(!signAcc || (!signAcc && !applyStatus)) && (
                         <SignBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
-                            content={'立即申辦'}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            content={'立即簽署'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
-                    {applyStatus && !signAcc && (
+                    {signAcc && !applyStatus && (
                         <SignBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
-                            content={'立即簽署'}
-                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
+                            title={[
+                                {
+                                    val: '申購信用通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            content={'立即申辦'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '33%' }}
                             title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            financing={Number(financing)}
+                            locExpDate={locExpDate}
                             data={[
                                 {
                                     label: '可動用',

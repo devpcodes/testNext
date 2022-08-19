@@ -52,19 +52,24 @@ const CardSlider = ({ rowData, itemNum = 3 }) => {
             <style jsx global>{`
                 #cardSlider__container .slick-slide .slideContent {
                     display: flex;
-                    justify-content: space-around;
+                    justify-content: space-between;
                 }
                 #cardSlider__container .slick-slide .slideContent .slideCard {
-                    width: 32%;
+                    width: ${100 / itemNum - 1 + '%'};
+                    max-width: 340px;
                 }
                 @media (max-width: 768px) {
-                    #cardSlider__container .slick-slide .slideContent .slideCard {
-                        width: 49%;
+                    #cardSlider__container .slick-slide .slideContent {
+                        padding: 0 32px;
                     }
                 }
-                @media (max-width: 425px) {
+                @media (max-width: 500px) {
+                    #cardSlider__container .slick-slide .slideContent {
+                        padding: 0;
+                        justify-content: center;
+                    }
                     #cardSlider__container .slick-slide .slideContent .slideCard {
-                        width: 100%;
+                        width: calc(100% - 48px);
                     }
                 }
             `}</style>

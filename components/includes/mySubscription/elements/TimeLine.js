@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import icon from '../../../../resources/images/components/mySubscription/attention-error (1).svg';
 import { formatNum } from '../../../../services/formatNum';
-
+import { useRouter } from 'next/router';
 const TimeLine = ({ data, applyStatus }) => {
     const [style, setStyle] = useState({});
     const feeDataItem1Dom = useRef(null);
@@ -36,6 +36,7 @@ const TimeLine = ({ data, applyStatus }) => {
     const [label3TextDown, setLabel3TextDown] = useState('');
     const [label4TextDown, setLabel4TextDown] = useState('');
     const [label4TextUp, setLabel4TextUp] = useState('');
+    const router = useRouter();
     useEffect(() => {
         console.log('======', moment(data.currentDate).isSame(moment(data.feeDate)), data.currentDate, data.feeDate);
         resetHandler();
@@ -152,7 +153,19 @@ const TimeLine = ({ data, applyStatus }) => {
             return;
         }
         if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
-            setText(`記得截止日${moment(data.feeDate).format('MM/DD')}前將款項備足待扣喲!`);
+            setText(`記得截止日${moment(data.endDate).format('MM/DD')}前將款項備足待扣喲!`);
+            return;
+        }
+        if (
+            moment(data.currentDate).isSame(moment(data.feeDate)) ||
+            (moment(data.currentDate).isAfter(moment(data.feeDate)) &&
+                moment(data.currentDate).isBefore(
+                    moment(data.lotDate) || moment(data.currentDate).isSame(moment(data.lotDate)),
+                ) &&
+                data.orderStatus !== 'N1' &&
+                data.orderStatus !== 'W1')
+        ) {
+            setText(`祝您中籤`);
             return;
         }
         if (
@@ -162,30 +175,114 @@ const TimeLine = ({ data, applyStatus }) => {
             data.orderStatus !== 'N1' &&
             data.orderStatus !== 'W1'
         ) {
-            setText(data.statusMessage);
+            // setText(data.statusMessage);
+            setText(data.orderStatusMessage);
+            // setText(mappingStatus(data.orderStatus))
+        }
+    };
+
+    const mappingStatus = orderStatus => {
+        switch (orderStatus) {
+            case 'A':
+                return '該帳號已申購';
+            case 'B':
+                return '非自然人無法申購';
+            case 'C':
+                return '當天開戶無法辦理申購';
+            case 'D':
+                return '同意扣款碼不為Y';
+            case 'E':
+                return '已銷戶或凍結或不可買賣';
+            case 'F':
+                return '該股票不在申購期限內';
+            case 'G':
+                return '申購櫃買股票,但未開櫃買戶';
+            case 'K':
+                return '該客戶尚未開戶';
+            case 'L':
+                return '非劃撥戶無法辦理申購';
+            case 'N':
+                return '網路合格件(分公司尚未處理轉入)';
+            case 'X':
+                return '取消';
+            case 'O':
+                return '非本國人不能申購';
+            case 'H':
+                return '存款不足';
+            case 'P':
+                return '申購央債,但未開清算銀行或債券帳號';
+            case 'W':
+                return '分公司整併,禁止申購';
+            default:
+                return '';
         }
     };
 
     const loanTextHandler = () => {
-        if (moment(data.currentDate).isBefore(moment(data.endDate))) {
-            if (data.loanStatus === '1') {
-                setText(`動用完成：於3/7撥入，3/8將進行申購扣款請您留意其他交割收付款項`);
+        if (
+            moment(data.currentDate).isBefore(moment(data.feeDate)) ||
+            moment(data.currentDate).isSame(moment(data.feeDate))
+        ) {
+            if (!applyStatus) {
+                setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
+                setLink('前往永豐銀行簽署去 >');
                 return;
             }
             if (data.loanStatus === '2') {
                 setText(`動用失敗：請確認您的額度狀態，或請洽永豐銀行客服中心02-2505-9999。`);
                 return;
             }
-            if (!applyStatus) {
-                setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
-                setLink('前往永豐銀行簽署去 >');
+
+            if (data.loanStatus === '1') {
+                setText(
+                    `動用完成：於${moment(data.endDate).format('MM/DD')}撥入，${moment(data.feeDate).format(
+                        'MM/DD',
+                    )}將進行申購扣款請您留意其他交割收付款項`,
+                );
                 return;
             }
-            setText(
-                `預約動用免備款，於${moment(data.endDate).format('MM/DD')}撥入交割帳戶待扣款，請您留意交割收付款項`,
-            );
+            if (moment(data.currentDate).isBefore(moment(data.feeDate))) {
+                setText(
+                    `預約動用免備款，於${moment(data.endDate).format('MM/DD')}撥入交割帳戶待扣款，請您留意交割收付款項`,
+                );
+                return;
+            }
+        }
+        if (
+            moment(data.currentDate).isSame(moment(data.feeDate)) ||
+            (moment(data.currentDate).isAfter(moment(data.feeDate)) &&
+                moment(data.currentDate).isBefore(
+                    moment(data.lotDate) || moment(data.currentDate).isSame(moment(data.lotDate)),
+                ) &&
+                data.loanStatus !== '2' &&
+                data.loanStatus !== '1' &&
+                data.orderStatus !== 'N1' &&
+                data.orderStatus !== 'W1')
+        ) {
+            if (data.loanStatus === '2') {
+                setText(`動用失敗：請確認您的額度狀態，或請洽永豐銀行客服中心02-2505-9999。`);
+                return;
+            }
+
+            setText(`祝您中籤`);
             return;
         }
+        // if (
+        //     moment(data.currentDate).isAfter(moment(data.feeDate)) ||
+        //     moment(data.currentDate).isBefore(moment(data.lotDate))
+        // ) {
+        //     if (data.loanStatus === '1') {
+        //         setText(
+        //             `動用完成：於${data.endDate}撥入，${moment(data.feeDate)}將進行申購扣款請您留意其他交割收付款項`,
+        //         );
+        //         return;
+        //     }
+        // }
+        // if (moment(data.currentDate).isSame(moment(data.feeDate))) {
+        //     setText(`祝您中籤`);
+        //     return;
+        // }
+
         if (
             data.orderStatus !== 'S1' &&
             data.orderStatus !== 'S2' &&
@@ -193,7 +290,8 @@ const TimeLine = ({ data, applyStatus }) => {
             data.orderStatus !== 'N1' &&
             data.orderStatus !== 'W1'
         ) {
-            setText(data.statusMessage);
+            setText(data.orderStatusMessage);
+            // setText(mappingStatus(data.orderStatus))
         }
     };
 
@@ -233,7 +331,9 @@ const TimeLine = ({ data, applyStatus }) => {
             if (data.orderStatus === 'N1') {
                 setLabel2Text('未中籤');
                 setLabel3TextUp(`退款 ${moment(data.moneyDate).format('MM/DD')}`);
-                setLabel3TextDown(`退款 ${formatNum(data.orderAmount)}`);
+                setLabel3TextDown(
+                    `退款 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`,
+                );
                 setText(`好可惜未中籤！款項將於${moment(data.moneyDate).format('MM/DD')}退款請您留意！`);
                 if (data.method === '2') {
                     loanTextDownHandler(data.orderStatus);
@@ -248,15 +348,15 @@ const TimeLine = ({ data, applyStatus }) => {
                     (moment(data.currentDate).isAfter(moment(data.lotDate)) &&
                         moment(data.currentDate).isBefore(moment(data.stkDate)))
                 ) {
-                    setText('恭喜您中籤啦！若有資金需求除了賣股變現外另提供您股票');
-                    setLink('【 抵押低利借款方案 】');
+                    setText('恭喜您中籤啦！');
+                    // setLink('【 抵押低利借款方案 】');
                 }
                 if (moment(data.currentDate).isSame(moment(data.stkDate))) {
                     setText('今日會將股票匯入您交易帳戶請您留意');
                 }
                 if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
-                    setText('快來看看');
-                    setLink('【 近期申購Go 】');
+                    setText('撥券已完成~~快來看看');
+                    setLink('近期申購Go');
                 }
                 if (data.method === '2') {
                     loanTextDownHandler(data.orderStatus);
@@ -266,14 +366,15 @@ const TimeLine = ({ data, applyStatus }) => {
     };
     const loanTextDownHandler = type => {
         if (type === 'N1') {
-            setLabel4TextDown(`待還 ${formatNum(Number(data.orderAmount) - Number(data.tfee))}`);
+            setLabel4TextDown(`待還款`);
             setText(
                 `於${moment(data.moneyDate).format(
                     'MM/DD',
                 )}退還至您交割帳戶，完成退款後系統將依退款日銀行欠款進行後續償還作業！`,
             );
             if (data.loanStatus === '5' && applyStatus) {
-                setText(`還款失敗：超過利息應繳款日，請盡速繳息才能進行還款。`);
+                setText(`還款失敗：請洽永豐銀行客服中心02-2505-9999。`);
+                setLabel4TextDown(`失敗`);
             }
             if (!applyStatus) {
                 setText(`很抱歉！您尚未簽署共銷無法揭示撥款結果。`);
@@ -281,7 +382,10 @@ const TimeLine = ({ data, applyStatus }) => {
                 return;
             }
             if (data.loanStatus === '4') {
-                setLabel4TextDown(`償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee))}`);
+                // setLabel4TextDown(
+                //     `償還 ${formatNum(Number(data.orderAmount) - Number(data.tfee) - Number(data.sfee))}`,
+                // );
+                setLabel4TextDown(`成功`);
                 setText(`還款成功：請您留意是否仍有銀行欠款別忘還款喲！`);
                 setLink('查看明細GO >');
                 setLabel4TextUp(`系統還款 ${moment(data.moneyDate).format('MM/DD')}`);
@@ -290,10 +394,43 @@ const TimeLine = ({ data, applyStatus }) => {
             }
         }
         if (type === 'W1') {
-            setText('撥券已完成~~快來看看');
-            setLink('近期申購GO >');
+            if (
+                moment(data.currentDate).isSame(moment(data.lotDate)) ||
+                moment(data.currentDate).isBefore(moment(data.stkDate))
+            ) {
+                setText('恭喜您中籤啦！');
+            }
+            if (moment(data.currentDate).isSame(moment(data.stkDate))) {
+                setText('今日會將股票匯入您交易帳戶請您留意');
+            }
+            if (moment(data.currentDate).isAfter(moment(data.stkDate))) {
+                setText('撥券已完成~~快來看看');
+                setLink('近期申購GO >');
+            }
         }
     };
+
+    const linkClickHandler = link => {
+        console.log('link', link);
+        switch (link) {
+            case '查看明細GO >':
+                router.push('/subscriptionArea/MySubscription/SubscriptionOverview');
+                break;
+            case '近期申購GO >':
+                router.push('/subscriptionArea/Subscription');
+                break;
+            case '【 抵押低利借款方案 】':
+                router.push('/loan-zone');
+                break;
+            case '前往永豐銀行簽署去 >':
+                window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN);
+                break;
+            default:
+                router.push('/subscriptionArea/Subscription');
+                break;
+        }
+    };
+
     return (
         <div style={style}>
             <div className="line1__box">
@@ -394,7 +531,14 @@ const TimeLine = ({ data, applyStatus }) => {
                     className={sysDataItem03Dom}
                     style={{
                         display: 'inline-block',
-                        marginLeft: data.loanStatus === '4' ? '8%' : '12%',
+                        marginLeft:
+                            data.loanStatus === '4'
+                                ? String(data.orderAmount)?.length >= 6
+                                    ? '14%'
+                                    : '16%'
+                                : String(data.orderAmount)?.length >= 6
+                                ? '14%'
+                                : '15%',
                         fontSize: '14px',
                     }}
                 >
@@ -404,7 +548,7 @@ const TimeLine = ({ data, applyStatus }) => {
             <p className="time__desc">
                 {text && <img className="time__icon" src={icon} />}
                 <span>{text}</span>
-                <a>{link}</a>
+                <a onClick={linkClickHandler.bind(null, link)}>{link}</a>
             </p>
             <style jsx>{`
                 .line1__item.disabled {

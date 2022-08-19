@@ -3,12 +3,22 @@ import { useRouter } from 'next/router';
 
 export default function Custom404() {
     const router = useRouter();
-    const [showErr, setShowErr] = useState(true);
+    const [showErr, setShowErr] = useState(false);
     useEffect(() => {
         if (router.asPath.indexOf('SinoTrade_login') >= 0) {
             setShowErr(false);
+            return;
         }
-        console.log('err', router.asPath);
+        if (router.asPath === '/subscriptionArea/') {
+            setShowErr(false);
+            return;
+        }
+        if (router.asPath === '/subscriptionArea/Loans/') {
+            setShowErr(false);
+            return;
+        }
+        setShowErr(true);
+        // console.log('err', router.asPath);
     }, [router.asPath]);
 
     return (

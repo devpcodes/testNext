@@ -95,7 +95,7 @@ const IndexPageComponent = ({ richClubNews }) => {
                 title: '股票申購',
                 description: '申購零門檻，備足資金抽起來',
                 site: 'inner',
-                link: `/Subscription`,
+                link: `/subscriptionArea/Subscription`,
                 icon: `${stockSubs}`,
                 target: '_self',
             },

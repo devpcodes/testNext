@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import Breadcrumb from '../../breadcrumb/breadcrumb';
 import LoanBox from '../elements/LoanBox';
 import Btn from '../../loan/overview/elements/Btn';
@@ -177,9 +178,11 @@ const SubscriptionOverviewComp = () => {
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
     const [repayAccount, setRepayAccount] = useState('--');
+    const [locExpDate, setLocExpDate] = useState('');
     // const [arrears, setArrears] = useState('--')
     const [accountData, setAccountData] = useState([]);
     const [updateTime, setUpdateTime] = useState('--');
+    const router = useRouter();
     const menuList = [
         { key: 'amount', title: '額度使用紀錄' },
         // { key: 'interest', title: '利息紀錄' },
@@ -212,6 +215,10 @@ const SubscriptionOverviewComp = () => {
                         },
                         okText: '確認',
                         cancelText: '取消',
+                        onOk: () => {
+                            dispatch(setModal({ visible: false }));
+                            router.push('/subscriptionArea/ProductInfo');
+                        },
                     }),
                 );
             }
@@ -227,6 +234,7 @@ const SubscriptionOverviewComp = () => {
             setAllCanLoan(res.limitAmount);
             setFinancing(res.totalOs);
             setRepayAccount(res.repayAccount);
+            setLocExpDate(res.locExpDate);
             const newData = sortBaseData(baseData, res);
             setAccountData(newData);
             setUpdateTime(moment().format('YYYY.MM.DD HH:mm'));
@@ -262,12 +270,12 @@ const SubscriptionOverviewComp = () => {
                         >
                             {mockData.loanRate}%
                         </p>
-                        <p>機動年利率，依個金放款/房貸指標(月)+10%</p>
+                        <p>{'機動年利率，依個金放款/房貸指標(月)+' + (mockData.intSpread || '--') + '%'}</p>
                     </>
                 );
             }
             if (item.label === '撥入與扣款帳號') {
-                item.value = <p style={{ marginTop: '6px' }}>{mockData.lnMainAccount}</p>;
+                item.value = <p style={{ marginTop: '6px' }}>{mockData.repayAccount}</p>;
             }
             if (item.label === '貸款日') {
                 item.value = moment(mockData.origStartDate).format('YYYY/MM/DD');
@@ -412,9 +420,10 @@ const SubscriptionOverviewComp = () => {
             }),
         );
     };
-    const repaymentClick = () => {
-        alert('123');
+    const subProductClick = () => {
+        router.push('/subscriptionArea/ProductInfo/');
     };
+    console.log('accountData.locExpDate', accountData);
     return (
         <div className="subOverview__container">
             <div className="subOverview__bread">
@@ -425,7 +434,7 @@ const SubscriptionOverviewComp = () => {
                 {isMobile ? (
                     <div className="subOverview__mobileHead">
                         <h1 className="subOverview__title">申購信用通總覽</h1>
-                        <img className="subOverview__icon" src={icon} />
+                        <img className="subOverview__icon" src={icon} onClick={subProductClick} />
                     </div>
                 ) : (
                     <h1 className="subOverview__title">申購信用通總覽</h1>
@@ -441,6 +450,7 @@ const SubscriptionOverviewComp = () => {
                             marginRight: '16px',
                             display: isMobile ? 'none' : 'inline-block',
                         }}
+                        onClick={subProductClick}
                     />
                     <AccountSelect
                         accText={'帳戶資訊'}
@@ -455,12 +465,12 @@ const SubscriptionOverviewComp = () => {
                     />
                 </div>
             </div>
-            <LoanBox allCanLoan={allCanLoan} financing={financing} />
+            <LoanBox allCanLoan={allCanLoan} financing={financing} locExpDate={locExpDate} />
             <div className="subOverview__down">
                 {isMobile ? (
                     <div className="subOverview__downHead">
                         <h2 className="subOverview__h2">使用明細</h2>
-                        <img className="subOverview__icon" src={icon} />
+                        <img className="subOverview__icon" src={icon} onClick={infoClickHandler} />
                     </div>
                 ) : (
                     <h2 className="subOverview__h2">使用明細</h2>

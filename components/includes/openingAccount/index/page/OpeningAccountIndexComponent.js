@@ -22,7 +22,8 @@ import featureOpenDetail from '../../../../../resources/images/pages/open_accoun
 import icon1 from '../../../../../resources/images/pages/open_account/a41-img-01.jpg';
 import icon2 from '../../../../../resources/images/pages/open_account/a41-img-02.jpg';
 import icon3 from '../../../../../resources/images/pages/open_account/a41-img-03.jpg';
-
+import subscriptionApply from '../../../../../resources/images/pages/open_account/img-subscription-apply.svg';
+// import subscriptionSearch from '../../../../../resources/images/pages/open_account/img-subscription-apply.svg';
 function OpeningAccountIndexComponent(props) {
     const { Content } = Layout;
     const router = useRouter();
@@ -107,6 +108,18 @@ function OpeningAccountIndexComponent(props) {
             link: process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/PQLogin',
         },
     ]);
+    const [subscriptionLinks] = useState([
+        {
+            title: '申購便利通',
+            image: subscriptionApply,
+            link: process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT,
+        },
+        {
+            title: '申辦進度查詢',
+            image: featureOpenDetail,
+            link: process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT_SEARCH,
+        },
+    ]);
     return (
         <Layout>
             <OpenAccountHeader />
@@ -123,8 +136,8 @@ function OpeningAccountIndexComponent(props) {
                         <SecuritiesAccountMenu linkData={loanZoneTypes} />
                     </div>
                 </div>
-                <h2 className="secondTitle">期貨開戶</h2>
-                <SecuritiesAccountMenu linkData={featureAccountTypes} />
+                <h2 className="secondTitle">申購便利通申辦</h2>
+                <SecuritiesAccountMenu linkData={subscriptionLinks} />
                 <h2 className="secondTitle">預約臨櫃開戶</h2>
                 <AppointmentOpenAccount linkData={closeCounter} />
             </Content>

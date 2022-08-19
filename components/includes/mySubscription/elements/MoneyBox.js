@@ -1,8 +1,31 @@
 import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
 import SinoBtn from '../../../includes/loan/Collateral/elements/SinoBtn';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
-const MoneyBox = ({ title, data, style }) => {
+import { useRouter } from 'next/router';
+import moment from 'moment';
+const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
     const isMobile = useCheckMobile();
+    const router = useRouter();
+    const onClickHandler = () => {
+        if (financing != null) {
+            router.push('/subscriptionArea/MySubscription/Loans/');
+        }
+    };
+    const repaymentHandler = () => {
+        if (financing <= 0 || moment(locExpDate).isBefore(moment())) {
+            return;
+        }
+        window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
+    };
+
+    const iconClickHandler = () => {
+        router.push('/subscriptionArea/ProductInfo');
+    };
+    const titleClickHandler = val => {
+        if (val === '申購信用通') {
+            router.push('/subscriptionArea/MySubscription/Loans');
+        }
+    };
     return (
         <div className="money__container" style={style}>
             <div className="money__header">
@@ -10,10 +33,31 @@ const MoneyBox = ({ title, data, style }) => {
                     return (
                         <React.Fragment key={i}>
                             <span style={element.style}>
-                                {!!element.icon && <img className="title__icon" src={icon} />}
-                                {element.val}
+                                {!!element.icon && (
+                                    <img onClick={iconClickHandler} className="title__icon" src={icon} />
+                                )}
+                                <span
+                                    style={{
+                                        textDecoration: element.val === '申購信用通' ? 'underline' : 'none',
+                                        cursor: element.val === '申購信用通' ? 'pointer' : 'auto',
+                                    }}
+                                    onClick={titleClickHandler.bind(null, element.val)}
+                                    className="title__val"
+                                >
+                                    {element.val}
+                                </span>
                             </span>
-                            {!isMobile && element.linkText && <a className="money__Alink">{element.linkText} ></a>}
+                            {!isMobile && element.linkText && (
+                                <a
+                                    onClick={repaymentHandler}
+                                    className={
+                                        'money__Alink ' +
+                                        (financing <= 0 || moment(locExpDate).isBefore(moment()) ? 'disabled' : '')
+                                    }
+                                >
+                                    {element.linkText} >
+                                </a>
+                            )}
                             {i !== title.length - 1 && <div className="money__line--head"></div>}
                         </React.Fragment>
                     );
@@ -24,8 +68,12 @@ const MoneyBox = ({ title, data, style }) => {
                     return (
                         <React.Fragment key={index}>
                             <div className="money__item" style={element.style}>
-                                <p className="money__label">{element.label}</p>
-                                <p className="money__val">{element.val}</p>
+                                <p style={{ cursor: 'pointer' }} className="money__label" onClick={onClickHandler}>
+                                    {element.label}
+                                </p>
+                                <p style={{ cursor: 'pointer' }} className="money__val" onClick={onClickHandler}>
+                                    {element.val}
+                                </p>
                             </div>
                             {
                                 <div
@@ -42,11 +90,14 @@ const MoneyBox = ({ title, data, style }) => {
                             text={'我要還款'}
                             style={{
                                 margin: '0 auto',
-                                backgroundColor: '#daa360',
-                                color: 'white',
+                                backgroundColor:
+                                    financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#e6ebf5' : '#daa360',
+                                color: financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#a9b6cb' : 'white',
                                 border: 'none',
                                 marginTop: '4px',
                             }}
+                            disabled={financing <= 0 || moment(locExpDate).isBefore(moment())}
+                            onClick={repaymentHandler}
                         />
                     </div>
                 )}
@@ -55,7 +106,9 @@ const MoneyBox = ({ title, data, style }) => {
                 .title__icon {
                     margin-top: -2px;
                     margin-right: 2px;
+                    cursor: pointer;
                 }
+
                 .money__container {
                     height: 130px;
                     border-radius: 2px;
@@ -80,6 +133,7 @@ const MoneyBox = ({ title, data, style }) => {
                     font-size: 14px;
                     color: #0d1623;
                 }
+
                 .money__content {
                     display: flex;
                     justify-content: space-around;
@@ -107,6 +161,10 @@ const MoneyBox = ({ title, data, style }) => {
                 }
                 .money__item {
                     flex: 1 0 0;
+                }
+                .disabled {
+                    color: #cfcfcf !important;
+                    cursor: not-allowed;
                 }
                 @media (max-width: 900px) {
                     .money__Alink {
