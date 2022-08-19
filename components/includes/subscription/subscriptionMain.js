@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { message } from 'antd';
 import { useCallback, useState, useEffect, memo } from 'react';
 import SubscriptionHeader from '../subscription/subscriptionHeader';
 import SubscriptionCards from '../subscription/subscriptionCards';
@@ -12,6 +12,9 @@ import { getToken } from '../../../services/user/accessToken';
 import { setModal } from '../../../store/components/layouts/action';
 import Breadcrumb from '../breadcrumb/breadcrumb';
 import { checkSignCA, sign, signCert } from '../../../services/webCa';
+import { useRouter } from 'next/router';
+import { objectToQueryHandler } from '../../../services/objectToQueryHandler';
+import { formatNum } from '../../../services/formatNum';
 
 const SubscriptionMain = memo(({}) => {
     const isMobile = useSelector(store => store.layout.isMobile);
@@ -22,6 +25,7 @@ const SubscriptionMain = memo(({}) => {
     const idno = useSelector(store => store.user.currentAccount.idno);
     const userName = useSelector(store => store.user.currentAccount.username);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     useEffect(async () => {
         if (!isLogin) {
@@ -37,9 +41,11 @@ const SubscriptionMain = memo(({}) => {
             const branch = currentBrokerID;
             const account = currentAccount;
             const token = getToken();
-            const response = await fetchLoginSubscriptionList(token, branch, account);
-            if (response.success && response.message === 'OK') {
-                setSubscriptionData(response.result);
+            if (branch && account) {
+                const response = await fetchLoginSubscriptionList(token, branch, account);
+                if (response.success && response.message === 'OK') {
+                    setSubscriptionData(response.result);
+                }
             }
         }
     }, [currentAccount, currentBrokerID]);
@@ -57,10 +63,24 @@ const SubscriptionMain = memo(({}) => {
         const account = currentAccount;
         const token = getToken();
         const bankChannel = isMobile ? 'MWEB' : 'NETBANK';
+
+        if (!isLogin) {
+            const query = router.query;
+            const queryStr = objectToQueryHandler(query);
+
+            window.location =
+                `${process.env.NEXT_PUBLIC_SUBPATH}` +
+                `/SinoTrade_login${queryStr}` +
+                `${queryStr ? '&' : '?'}` +
+                `redirectUrl=${router.pathname}`;
+            return false;
+        }
+
         dispatch(
             setModal({
                 visible: true,
                 title: isAppropriation ? '提醒' : '申購確認',
+                noTitleIcon: true,
                 content: (
                     <div>
                         {isAppropriation ? (
@@ -72,7 +92,7 @@ const SubscriptionMain = memo(({}) => {
                             <p>
                                 帳號：{currentBrokerID}-{currentAccount} <br />
                                 商品：{id} {name} <br />
-                                申購扣款金額： {price} 元 <br />
+                                申購扣款金額： {formatNum(price)} 元 <br />
                                 <br />
                                 <span className="notice">
                                     請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
@@ -96,19 +116,48 @@ const SubscriptionMain = memo(({}) => {
                             bankChannel,
                         );
                         if (!isAppropriation) {
-                            dispatch(
-                                setModal({
-                                    visible: true,
-                                    content: response.success && response.message === 'OK' ? `委託預約中` : `申購失敗`,
-                                    type: 'info',
-                                    title: '系統訊息',
-                                }),
-                            );
+                            // dispatch(
+                            //     setModal({
+                            //         visible: true,
+                            //         content: response.success && response.message === 'OK' ? `委託預約中` : `申購失敗`,
+                            //         type: 'info',
+                            //         title: '系統訊息',
+                            //     }),
+                            // );
+                            if (response.success && response.message === 'OK') {
+                                message.success({
+                                    content: (
+                                        <>
+                                            <h4 className="msg__title">委託預約中</h4>
+                                            <p className="msg__content">
+                                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
+                                            </p>
+                                        </>
+                                    ),
+                                    className: 'msg__box',
+                                    duration: 4,
+                                });
+                            } else {
+                                message.error({
+                                    content: (
+                                        <>
+                                            <h4 className="msg__title">委託失敗</h4>
+                                            <p className="msg__content">
+                                                {response.message ? response.message : '委託失敗'}
+                                            </p>
+                                        </>
+                                    ),
+                                    className: 'msg__box',
+                                    duration: 4,
+                                });
+                            }
                         } else {
                             if (response.success && response.message === 'OK') {
                                 location.href = response.result.url;
                             }
                         }
+
+                        dispatch(setModal({ visible: false }));
 
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
@@ -127,17 +176,18 @@ const SubscriptionMain = memo(({}) => {
         dispatch(
             setModal({
                 visible: true,
-                title: '取消確認',
+                title: isAppropriation ? '取消申購及動用' : '取消申購',
+                noTitleIcon: true,
                 content: (
                     <div>
                         <p>
+                            {isAppropriation
+                                ? '請確認是否取消以下申購項目並同步取消動用'
+                                : '請確認是否取消以下申購項目'}
+                            <br />
+                            <br />
                             帳號：{currentBrokerID}-{currentAccount} <br />
                             商品：{id} {name} <br />
-                            {/* 申購扣款金額： {price} 元 <br />
-                            <br />
-                            <span className="notice">
-                                請於申購截止日確認銀行存款餘額應有申購扣款金額，否則為不合格件。
-                            </span> */}
                         </p>
                     </div>
                 ),
@@ -154,14 +204,46 @@ const SubscriptionMain = memo(({}) => {
                             'h',
                             isAppropriation,
                         );
-                        dispatch(
-                            setModal({
-                                visible: true,
-                                content: response.success && response.message === 'OK' ? `已成功取消申購` : `取消失敗`,
-                                type: 'info',
-                                title: '系統訊息',
-                            }),
-                        );
+                        // dispatch(
+                        //     setModal({
+                        //         visible: true,
+                        //         content: response.success && response.message === 'OK' ? `已成功取消申購` : `取消失敗`,
+                        //         type: 'info',
+                        //         title: '系統訊息',
+                        //     }),
+                        // );
+                        if (response.success && response.message === 'OK') {
+                            message.success({
+                                content: (
+                                    <>
+                                        <h4 className="msg__title">
+                                            {isAppropriation ? '已成功取消申購及動用' : '已成功取消申購'}
+                                        </h4>
+                                        <p className="msg__content">
+                                            {`已成功取消申購 「${id} ${name}」${isAppropriation ? '及動用' : ''}`}
+                                        </p>
+                                    </>
+                                ),
+                                className: 'msg__box',
+                                duration: 4,
+                            });
+                        } else {
+                            message.error({
+                                content: (
+                                    <>
+                                        <h4 className="msg__title">委託取消失敗</h4>
+                                        <p className="msg__content">
+                                            {response.message ? response.message : '委託取消失敗'}
+                                        </p>
+                                    </>
+                                ),
+                                className: 'msg__box',
+                                duration: 4,
+                            });
+                        }
+
+                        dispatch(setModal({ visible: false }));
+
                         const listResponse = await fetchLoginSubscriptionList(token, branch, account);
                         if (listResponse.success && listResponse.message === 'OK') {
                             setSubscriptionData(listResponse.result);
@@ -175,8 +257,10 @@ const SubscriptionMain = memo(({}) => {
     return (
         <>
             <div className="subscriptionMain__container">
-                <Breadcrumb />
-                <SubscriptionHeader />
+                <div className="subscription__head">
+                    <Breadcrumb />
+                    <SubscriptionHeader />
+                </div>
                 <div className="subscription__cards__block">
                     {!!subscriptionData &&
                         subscriptionData.map((stockData, stockIndex) => (
@@ -218,6 +302,9 @@ const SubscriptionMain = memo(({}) => {
                         padding-left: 0;
                         padding-right: 0;
                     }
+                    .subscription__head {
+                        margin: 0px 5%;
+                    }
                 }
             `}</style>
             <style jsx global>{`
@@ -237,6 +324,17 @@ const SubscriptionMain = memo(({}) => {
                 }
                 .subscriptionCards:nth-child(3n) {
                     margin-right: 0;
+                }
+                .ant-message-notice-content {
+                    text-align: left;
+                    padding: 20px 20px 15px 20px;
+                }
+                .msg__title {
+                    display: inline;
+                    font-weight: bold;
+                }
+                .msg__content {
+                    margin: 7px 5px 0px 24px;
                 }
                 @media (max-width: 1600px) {
                     .subscriptionCards {

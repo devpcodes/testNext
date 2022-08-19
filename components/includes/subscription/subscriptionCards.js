@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { openGoOrder } from '../../../services/openGoOrder';
 import { useCheckMobile } from '../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
-
+import { formatNum } from '../../../services/formatNum';
 const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, footerHidden, settingDate }) => {
     // console.log(stockData);
     const isMobile = useCheckMobile();
@@ -15,7 +15,8 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
     };
 
     const formatAmount = amount => {
-        return (amount + '').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+        const regExp = new RegExp('\\B(?<!\\.\\d*)(?=(\\d{3})+(?!\\d))', 'g');
+        return (amount + '').replace(regExp, ',');
     };
 
     const getDateClassName = date => {
@@ -70,6 +71,14 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
     const renderBtn = () => {
         const btn = (
             <>
+                {stockData.canAppropriation && stockData.canOrder ? (
+                    <button className="action__btn mortgage" onClick={() => openCollateral(stockData.stockId)}>
+                        借款申購
+                    </button>
+                ) : (
+                    <></>
+                )}
+
                 {stockData.canOrder ? (
                     <button
                         className="action__btn buy"
@@ -84,12 +93,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 )}
 
                 {stockData.canAppropriation && !stockData.canOrder ? (
-                    <button
-                        className="action__btn buy"
-                        onClick={() =>
-                            onActionClick(stockData.stockName, stockData.stockId, stockData.orderAmount, true)
-                        }
-                    >
+                    <button className="action__btn buy" onClick={() => openCollateral(stockData.stockId)}>
                         申請預約動用
                     </button>
                 ) : (
@@ -103,7 +107,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                             onCancelClick(stockData.stockName, stockData.stockId, stockData.orderAmount, false)
                         }
                     >
-                        立即取消
+                        取消申購
                     </button>
                 ) : (
                     <></>
@@ -138,14 +142,6 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                     <></>
                 )}
 
-                {stockData.canAppropriation && stockData.canOrder ? (
-                    <button className="action__btn mortgage" onClick={() => openCollateral(stockData.stockId)}>
-                        借款申購
-                    </button>
-                ) : (
-                    <></>
-                )}
-
                 {!stockData.canOrder &&
                 !stockData.canCancelOrder &&
                 !stockData.canAppropriation &&
@@ -153,7 +149,11 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                 !stockData.canSellStock &&
                 !stockData.canMortgage ? (
                     <button disabled className="action__btn disabled">
-                        {stockData.statusMessage}
+                        {stockData.status == 'A'
+                            ? '即將開始'
+                            : stockData.status == 'E' && ['S1', 'S2', 'Y', 'N1', 'W1'].includes(stockData.orderStatus)
+                            ? '已申購'
+                            : '申購期間已過'}
                     </button>
                 ) : (
                     <></>
@@ -187,7 +187,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">總申購張數</div>
-                            <div className="info__cell__amount">{formatAmount(parseInt(stockData.share / 1000))}</div>
+                            <div className="info__cell__amount">{formatNum(parseInt(stockData.share / 1000))}</div>
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">市價</div>
@@ -195,14 +195,12 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
                         </div>
                         <div className="info__cell">
                             <div className="info__cell__title">申購張數</div>
-                            <div className="info__cell__amount">
-                                {formatAmount(parseInt(stockData.applyShare / 1000))}
-                            </div>
+                            <div className="info__cell__amount">{formatNum(parseInt(stockData.applyShare / 1000))}</div>
                         </div>
                     </div>
                     <div className={stockData.diffPrice > 0 ? 'price__difference up' : 'price__difference down'}>
                         <span>價差</span>
-                        <span className="price">{stockData.diffPrice}</span>
+                        <span className="price">{formatNum(parseInt(stockData.diffPrice * stockData.applyShare))}</span>
                         <span>元</span>
                         <span className="percent">
                             {stockData.diffRatio > 0 ? `(+${stockData.diffRatio}%)` : `(${stockData.diffRatio})%`}
