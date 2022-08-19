@@ -41,13 +41,7 @@ const ProductInfo = () => {
         { title: '中籤還款', key: 'p4' },
         { title: '其他', key: 'p5' },
     ];
-    // const contentStyle = {
-    //     height: '160px',
-    //     color: '#fff',
-    //     lineHeight: '160px',
-    //     textAlign: 'center',
-    //     background: '#364d79',
-    // };
+
     const slideCardData = [
         {
             stockId: '2756',
@@ -77,10 +71,10 @@ const ProductInfo = () => {
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.1',
-            lowest: 78,
-            m1: 20,
-            m2: 50,
-            m3: 8,
+            lowest: 108, //最低只需
+            m1: 20, //處理費
+            m2: 50, //服務費
+            m3: 38, //未中還款利息
             settingDate: '2022-01-06',
         },
         {
@@ -111,10 +105,10 @@ const ProductInfo = () => {
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.2',
-            lowest: 79,
+            lowest: 125,
             m1: 20,
             m2: 50,
-            m3: 9,
+            m3: 55,
             settingDate: '2022-06-01',
         },
         {
@@ -145,10 +139,10 @@ const ProductInfo = () => {
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.3',
-            lowest: 79,
+            lowest: 98,
             m1: 20,
             m2: 50,
-            m3: 9,
+            m3: 28,
             settingDate: '2022-05-16',
         },
         {
@@ -179,10 +173,10 @@ const ProductInfo = () => {
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.4',
-            lowest: 78,
+            lowest: 128,
             m1: 20,
             m2: 50,
-            m3: 8,
+            m3: 58,
             settingDate: '2022-04-01',
         },
         {
@@ -213,10 +207,10 @@ const ProductInfo = () => {
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.5',
-            lowest: 79,
+            lowest: 116,
             m1: 20,
             m2: 50,
-            m3: 9,
+            m3: 46,
             settingDate: '2022-02-18',
         },
         {
@@ -247,10 +241,10 @@ const ProductInfo = () => {
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.6',
-            lowest: 110,
+            lowest: 137,
             m1: 20,
             m2: 50,
-            m3: 40,
+            m3: 67,
             settingDate: '2022-05-04',
         },
     ];
