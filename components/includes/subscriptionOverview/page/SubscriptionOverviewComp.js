@@ -182,6 +182,7 @@ const SubscriptionOverviewComp = () => {
     // const [arrears, setArrears] = useState('--')
     const [accountData, setAccountData] = useState([]);
     const [updateTime, setUpdateTime] = useState('--');
+    const [overDueInterest, setOverDueInterest] = useState('--');
     const router = useRouter();
     const menuList = [
         { key: 'amount', title: '額度使用紀錄' },
@@ -235,6 +236,7 @@ const SubscriptionOverviewComp = () => {
             setFinancing(res.totalOs);
             setRepayAccount(res.repayAccount);
             setLocExpDate(res.locExpDate);
+            setOverDueInterest(res.overDueInterest);
             const newData = sortBaseData(baseData, res);
             setAccountData(newData);
             setUpdateTime(moment().format('YYYY.MM.DD HH:mm'));
@@ -465,7 +467,12 @@ const SubscriptionOverviewComp = () => {
                     />
                 </div>
             </div>
-            <LoanBox allCanLoan={allCanLoan} financing={financing} locExpDate={locExpDate} />
+            <LoanBox
+                allCanLoan={allCanLoan}
+                financing={financing}
+                locExpDate={locExpDate}
+                overDueInterest={overDueInterest}
+            />
             <div className="subOverview__down">
                 {isMobile ? (
                     <div className="subOverview__downHead">
