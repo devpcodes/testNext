@@ -182,6 +182,7 @@ const SubscriptionOverviewComp = () => {
     // const [arrears, setArrears] = useState('--')
     const [accountData, setAccountData] = useState([]);
     const [updateTime, setUpdateTime] = useState('--');
+    const [overDueInterest, setOverDueInterest] = useState('--');
     const router = useRouter();
     const menuList = [
         { key: 'amount', title: '額度使用紀錄' },
@@ -204,8 +205,8 @@ const SubscriptionOverviewComp = () => {
                 dispatch(
                     setModal({
                         visible: true,
-                        title: '無申購信用通帳戶',
-                        content: '您目前無申購信用通帳戶，是否立即前往了解更多？',
+                        title: '無申購便利通帳戶',
+                        content: '您目前無申購便利通帳戶，是否立即前往了解更多？',
                         noCloseIcon: true,
                         noTitleIcon: true,
                         okButtonProps: {
@@ -235,6 +236,7 @@ const SubscriptionOverviewComp = () => {
             setFinancing(res.totalOs);
             setRepayAccount(res.repayAccount);
             setLocExpDate(res.locExpDate);
+            setOverDueInterest(res.overDueInterest);
             const newData = sortBaseData(baseData, res);
             setAccountData(newData);
             setUpdateTime(moment().format('YYYY.MM.DD HH:mm'));
@@ -433,15 +435,15 @@ const SubscriptionOverviewComp = () => {
             <div className="subOverview__head">
                 {isMobile ? (
                     <div className="subOverview__mobileHead">
-                        <h1 className="subOverview__title">申購信用通總覽</h1>
+                        <h1 className="subOverview__title">申購便利通總覽</h1>
                         <img className="subOverview__icon" src={icon} onClick={subProductClick} />
                     </div>
                 ) : (
-                    <h1 className="subOverview__title">申購信用通總覽</h1>
+                    <h1 className="subOverview__title">申購便利通總覽</h1>
                 )}
                 <div className="subOverview__control">
                     <Btn
-                        text="申購信用通"
+                        text="申購便利通"
                         type="info"
                         style={{
                             width: '133px',
@@ -465,7 +467,12 @@ const SubscriptionOverviewComp = () => {
                     />
                 </div>
             </div>
-            <LoanBox allCanLoan={allCanLoan} financing={financing} locExpDate={locExpDate} />
+            <LoanBox
+                allCanLoan={allCanLoan}
+                financing={financing}
+                locExpDate={locExpDate}
+                overDueInterest={overDueInterest}
+            />
             <div className="subOverview__down">
                 {isMobile ? (
                     <div className="subOverview__downHead">

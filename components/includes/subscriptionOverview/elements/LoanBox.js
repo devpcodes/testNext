@@ -8,7 +8,8 @@ import SinoBtn from '../../loan/Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../services/formatNum';
 import { Tooltip } from 'antd';
 import moment from 'moment';
-const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
+const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueInterest }) => {
+    console.log('|| Number(overDueInterest) != 0', overDueInterest);
     const isMobile = useSelector(store => store.layout.isMobile);
     const router = useRouter();
     const titleHandler = () => {
@@ -28,7 +29,7 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
     return (
         <div className="loan__container">
             <div className="loan__head">
-                <span className="loan__title">申購信用通</span>
+                <span className="loan__title">申購便利通</span>
                 {/* <a className="loan__gobtn">
                     借款紀錄 <img className="loan__goIcon" src={go} />
                 </a> */}
@@ -63,7 +64,12 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
                         <SinoBtn
                             parentClass={'search__container'}
                             text={'我要還款'}
-                            disabled={financing <= 0 || financing == '--' || moment(locExpDate).isBefore(moment())}
+                            disabled={
+                                financing <= 0 ||
+                                financing == '--' ||
+                                Number(overDueInterest) != 0 ||
+                                moment(locExpDate).isBefore(moment())
+                            }
                             style={{
                                 display: isMobile ? 'inline-block' : 'none',
                                 border: '1px solid #d7e0ef',
@@ -74,8 +80,17 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
                                 padding: '9px 19px 9px 20px',
                                 borderRadius: '2px',
                                 backgroundColor:
-                                    financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#e6ebf5' : 'white',
-                                color: financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#a9b6cb' : '#0d1623',
+                                    financing <= 0 ||
+                                    moment(locExpDate).isBefore(moment()) ||
+                                    Number(overDueInterest) != 0
+                                        ? '#e6ebf5'
+                                        : 'white',
+                                color:
+                                    financing <= 0 ||
+                                    moment(locExpDate).isBefore(moment()) ||
+                                    Number(overDueInterest) != 0
+                                        ? '#a9b6cb'
+                                        : '#0d1623',
                                 // backgroundColor: 'white',
                                 // color: '#0d1623',
                                 verticalAlign: 'top',
@@ -86,7 +101,7 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
                         />
                         <SinoBtn
                             parentClass={'search__container'}
-                            text={'動用申購信用通'}
+                            text={'動用申購便利通'}
                             style={{
                                 border: 'none',
                                 outline: 'none',
@@ -112,7 +127,10 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate }) => {
                     本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
                     <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
                 </span> */}
-                {financing <= 0 || financing == '--' || moment(locExpDate).isBefore(moment()) ? (
+                {financing <= 0 ||
+                financing == '--' ||
+                moment(locExpDate).isBefore(moment()) ||
+                Number(overDueInterest) != 0 ? (
                     <a className="footer__link--disabled" disabled>
                         我要還款 >
                     </a>

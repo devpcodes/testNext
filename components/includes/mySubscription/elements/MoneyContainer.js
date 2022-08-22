@@ -24,6 +24,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const [financing, setFinancing] = useState('--');
     const [applyStatus, signAcc] = useCheckSubscriptionAcc();
     const [locExpDate, setLocExpDate] = useState('');
+    const [overDueInterest, setOverDueInterest] = useState('--');
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -77,6 +78,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             setAllCanLoan(res.limitAmount);
             setFinancing(res.totalOs);
             setLocExpDate(res.locExpDate);
+            setOverDueInterest(res.overDueInterest);
         } catch (error) {}
     };
 
@@ -165,7 +167,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -180,7 +182,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -193,9 +195,10 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
                             financing={Number(financing)}
                             locExpDate={locExpDate}
+                            overDueInterest={overDueInterest}
                             data={[
                                 {
                                     label: '可動用',
@@ -245,7 +248,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '33%' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -260,7 +263,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '33%' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -273,9 +276,10 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
                             financing={Number(financing)}
                             locExpDate={locExpDate}
+                            overDueInterest={overDueInterest}
                             data={[
                                 {
                                     label: '可動用',

@@ -3,7 +3,7 @@ import SinoBtn from '../../../includes/loan/Collateral/elements/SinoBtn';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
 import moment from 'moment';
-const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
+const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing = null }) => {
     const isMobile = useCheckMobile();
     const router = useRouter();
     const onClickHandler = () => {
@@ -12,7 +12,7 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
         }
     };
     const repaymentHandler = () => {
-        if (financing <= 0 || moment(locExpDate).isBefore(moment())) {
+        if (financing <= 0 || moment(locExpDate).isBefore(moment()) || Number(overDueInterest) != 0) {
             return;
         }
         window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
@@ -22,7 +22,7 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
         router.push('/subscriptionArea/ProductInfo');
     };
     const titleClickHandler = val => {
-        if (val === '申購信用通') {
+        if (val === '申購便利通') {
             router.push('/subscriptionArea/MySubscription/Loans');
         }
     };
@@ -38,8 +38,8 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                                 )}
                                 <span
                                     style={{
-                                        textDecoration: element.val === '申購信用通' ? 'underline' : 'none',
-                                        cursor: element.val === '申購信用通' ? 'pointer' : 'auto',
+                                        textDecoration: element.val === '申購便利通' ? 'underline' : 'none',
+                                        cursor: element.val === '申購便利通' ? 'pointer' : 'auto',
                                     }}
                                     onClick={titleClickHandler.bind(null, element.val)}
                                     className="title__val"
@@ -52,7 +52,11 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                                     onClick={repaymentHandler}
                                     className={
                                         'money__Alink ' +
-                                        (financing <= 0 || moment(locExpDate).isBefore(moment()) ? 'disabled' : '')
+                                        (financing <= 0 ||
+                                        moment(locExpDate).isBefore(moment()) ||
+                                        Number(overDueInterest) != 0
+                                            ? 'disabled'
+                                            : '')
                                     }
                                 >
                                     {element.linkText} >
@@ -91,12 +95,23 @@ const MoneyBox = ({ title, data, style, locExpDate, financing = null }) => {
                             style={{
                                 margin: '0 auto',
                                 backgroundColor:
-                                    financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#e6ebf5' : '#daa360',
-                                color: financing <= 0 || moment(locExpDate).isBefore(moment()) ? '#a9b6cb' : 'white',
+                                    financing <= 0 ||
+                                    moment(locExpDate).isBefore(moment()) ||
+                                    Number(overDueInterest) != 0
+                                        ? '#e6ebf5'
+                                        : '#daa360',
+                                color:
+                                    financing <= 0 ||
+                                    moment(locExpDate).isBefore(moment()) ||
+                                    Number(overDueInterest) != 0
+                                        ? '#a9b6cb'
+                                        : 'white',
                                 border: 'none',
                                 marginTop: '4px',
                             }}
-                            disabled={financing <= 0 || moment(locExpDate).isBefore(moment())}
+                            disabled={
+                                financing <= 0 || moment(locExpDate).isBefore(moment()) || Number(overDueInterest) != 0
+                            }
                             onClick={repaymentHandler}
                         />
                     </div>
