@@ -160,7 +160,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             },
                         ]}
                     />
-                    {!applyStatus && (
+                    {(!applyStatus || (!signAcc && !applyStatus)) && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[
@@ -175,7 +175,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
-                    {(!signAcc || (!signAcc && !applyStatus)) && (
+                    {!signAcc && applyStatus && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[
@@ -240,7 +240,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                         ]}
                     />
 
-                    {(!signAcc || (!signAcc && !applyStatus)) && (
+                    {!signAcc && applyStatus && (
                         <SignBox
                             style={{ width: '33%' }}
                             title={[
@@ -255,7 +255,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
-                    {signAcc && !applyStatus && (
+                    {(!applyStatus || (!signAcc && !applyStatus)) && (
                         <SignBox
                             style={{ width: '33%' }}
                             title={[

@@ -42,21 +42,28 @@ const SubscriptionAccErrModal = memo(
 
             if (!checkAccount) return;
 
-            if (signAcc) {
-                if (applyStatus && accountInfo.applyStatus != null) {
-                    //有帳號，但帳號使用錯誤
-                    checkAccSelectErr();
-                } else {
-                    //沒申購帳號
-                    noAccHandler();
-                }
+            // if (signAcc) {
+            //     if (applyStatus && accountInfo.applyStatus != null) {
+            //         //有帳號，但帳號使用錯誤
+            //         checkAccSelectErr();
+            //     } else {
+            //         //沒申購帳號
+            //         noAccHandler();
+            //     }
+            // }
+            if (applyStatus && accountInfo.applyStatus != null) {
+                //有帳號，但帳號使用錯誤
+                checkAccSelectErr();
+            } else {
+                //沒申購帳號
+                noAccHandler();
             }
         }, [applyStatus, accountInfo, signAcc, checkAccount]);
 
         useEffect(() => {
             if (!checkAccount) return;
             //沒簽署共銷
-            if (!signAcc) {
+            if (!signAcc && applyStatus) {
                 dispatch(
                     setModal({
                         visible: true,
@@ -98,7 +105,7 @@ const SubscriptionAccErrModal = memo(
             } else {
                 setSignSuccess(true);
             }
-        }, [signAcc, checkAccount]);
+        }, [signAcc, applyStatus, checkAccount]);
 
         useEffect(() => {
             if (!checkAccount) return;
