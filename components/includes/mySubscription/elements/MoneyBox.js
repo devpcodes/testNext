@@ -3,9 +3,13 @@ import SinoBtn from '../../../includes/loan/Collateral/elements/SinoBtn';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { useRouter } from 'next/router';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../../../store/components/layouts/action';
+
 const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing = null }) => {
     const isMobile = useCheckMobile();
     const router = useRouter();
+    const dispatch = useDispatch();
     const onClickHandler = () => {
         if (financing != null) {
             router.push('/subscriptionArea/MySubscription/Loans/');
@@ -13,6 +17,24 @@ const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing =
     };
     const repaymentHandler = () => {
         if (financing <= 0 || moment(locExpDate).isBefore(moment()) || Number(overDueInterest) != 0) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    content: (
+                        <>
+                            <p>您的申購便利通目前無法還款請洽銀行客服</p>
+                            <p>(02)2505-9999</p>
+                        </>
+                    ),
+                    type: 'info',
+                    icon: false,
+                    noTitleIcon: true,
+                    title: '提醒',
+                    onOk: async () => {
+                        dispatch(setModal({ visible: false }));
+                    },
+                }),
+            );
             return;
         }
         window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);

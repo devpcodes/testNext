@@ -8,10 +8,13 @@ import SinoBtn from '../../loan/Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../services/formatNum';
 import { Tooltip } from 'antd';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../../../store/components/layouts/action';
 const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueInterest }) => {
-    console.log('|| Number(overDueInterest) != 0', overDueInterest);
+    // console.log('|| Number(overDueInterest) != 0', overDueInterest);
     const isMobile = useSelector(store => store.layout.isMobile);
     const router = useRouter();
+    const dispatch = useDispatch();
     const titleHandler = () => {
         return (
             <div>
@@ -24,7 +27,33 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
         );
     };
     const repaymentHandler = () => {
-        window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
+        if (
+            financing <= 0 ||
+            financing == '--' ||
+            Number(overDueInterest) != 0 ||
+            moment(locExpDate).isBefore(moment())
+        ) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    content: (
+                        <>
+                            <p>您的申購便利通目前無法還款請洽銀行客服</p>
+                            <p>(02)2505-9999</p>
+                        </>
+                    ),
+                    type: 'info',
+                    icon: false,
+                    noTitleIcon: true,
+                    title: '提醒',
+                    onOk: async () => {
+                        dispatch(setModal({ visible: false }));
+                    },
+                }),
+            );
+        } else {
+            window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
+        }
     };
     return (
         <div className="loan__container">
@@ -64,12 +93,12 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
                         <SinoBtn
                             parentClass={'search__container'}
                             text={'我要還款'}
-                            disabled={
-                                financing <= 0 ||
-                                financing == '--' ||
-                                Number(overDueInterest) != 0 ||
-                                moment(locExpDate).isBefore(moment())
-                            }
+                            // disabled={
+                            //     financing <= 0 ||
+                            //     financing == '--' ||
+                            //     Number(overDueInterest) != 0 ||
+                            //     moment(locExpDate).isBefore(moment())
+                            // }
                             style={{
                                 display: isMobile ? 'inline-block' : 'none',
                                 border: '1px solid #d7e0ef',
@@ -122,24 +151,27 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
                     </div>
                 </div>
             </div>
-            <div className="loan__footer">
-                {/* <span className="footer__text">
-                    本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
-                    <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
-                </span> */}
-                {financing <= 0 ||
-                financing == '--' ||
-                moment(locExpDate).isBefore(moment()) ||
-                Number(overDueInterest) != 0 ? (
-                    <a className="footer__link--disabled" disabled>
-                        我要還款 >
-                    </a>
-                ) : (
-                    <a className="footer__link" onClick={repaymentHandler}>
-                        我要還款 >
-                    </a>
-                )}
-            </div>
+            {!isMobile && (
+                <div className="loan__footer">
+                    {/* <span className="footer__text">
+                        本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
+                        <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
+                    </span> */}
+                    {financing <= 0 ||
+                    financing == '--' ||
+                    moment(locExpDate).isBefore(moment()) ||
+                    Number(overDueInterest) != 0 ? (
+                        <a className="footer__link--disabled" onClick={repaymentHandler}>
+                            我要還款 >
+                        </a>
+                    ) : (
+                        <a className="footer__link" onClick={repaymentHandler}>
+                            我要還款 >
+                        </a>
+                    )}
+                </div>
+            )}
+
             <style jsx>{`
                 .text__red {
                     color: #c43826;
