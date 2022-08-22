@@ -167,7 +167,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -182,7 +182,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '100%', marginTop: '16px' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -195,7 +195,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
                             financing={Number(financing)}
                             locExpDate={locExpDate}
                             overDueInterest={overDueInterest}
@@ -248,7 +248,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '33%' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -263,7 +263,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             style={{ width: '33%' }}
                             title={[
                                 {
-                                    val: '申購信用通',
+                                    val: '申購便利通',
                                     linkText: '了解更多 >',
                                     icon: false,
                                     linkUrl: '/subscriptionArea/ProductInfo',
@@ -276,7 +276,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                     {applyStatus && signAcc && (
                         <MoneyBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
                             financing={Number(financing)}
                             locExpDate={locExpDate}
                             overDueInterest={overDueInterest}

@@ -984,7 +984,7 @@ const ProductInfo = () => {
                             <p>截止~扣款日 </p>
                             <p>動用扣款</p>
                             <div>
-                                <span>整筆借款酌收金流服務費 50 元</span>
+                                <span>整筆借款酌收申購便利通手續費 50 元</span>
                                 ，於申購截止日動用後隔天扣款，可隨借隨還，依動用金額以日計息於每月 21 日收取。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p3')}>

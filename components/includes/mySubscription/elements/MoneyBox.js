@@ -22,7 +22,7 @@ const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing =
         router.push('/subscriptionArea/ProductInfo');
     };
     const titleClickHandler = val => {
-        if (val === '申購信用通') {
+        if (val === '申購便利通') {
             router.push('/subscriptionArea/MySubscription/Loans');
         }
     };
@@ -38,8 +38,8 @@ const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing =
                                 )}
                                 <span
                                     style={{
-                                        textDecoration: element.val === '申購信用通' ? 'underline' : 'none',
-                                        cursor: element.val === '申購信用通' ? 'pointer' : 'auto',
+                                        textDecoration: element.val === '申購便利通' ? 'underline' : 'none',
+                                        cursor: element.val === '申購便利通' ? 'pointer' : 'auto',
                                     }}
                                     onClick={titleClickHandler.bind(null, element.val)}
                                     className="title__val"

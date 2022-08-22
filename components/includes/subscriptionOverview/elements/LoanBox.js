@@ -29,7 +29,7 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
     return (
         <div className="loan__container">
             <div className="loan__head">
-                <span className="loan__title">申購信用通</span>
+                <span className="loan__title">申購便利通</span>
                 {/* <a className="loan__gobtn">
                     借款紀錄 <img className="loan__goIcon" src={go} />
                 </a> */}
@@ -101,7 +101,7 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
                         />
                         <SinoBtn
                             parentClass={'search__container'}
-                            text={'動用申購信用通'}
+                            text={'動用申購便利通'}
                             style={{
                                 border: 'none',
                                 outline: 'none',
