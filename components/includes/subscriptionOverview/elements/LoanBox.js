@@ -27,12 +27,10 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
         );
     };
     const repaymentHandler = () => {
-        if (
-            financing <= 0 ||
-            financing == '--' ||
-            Number(overDueInterest) != 0 ||
-            moment(locExpDate).isBefore(moment())
-        ) {
+        if (financing <= 0) {
+            return;
+        }
+        if (Number(overDueInterest) != 0 || moment(locExpDate).isBefore(moment())) {
             dispatch(
                 setModal({
                     visible: true,
@@ -93,12 +91,7 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
                         <SinoBtn
                             parentClass={'search__container'}
                             text={'我要還款'}
-                            // disabled={
-                            //     financing <= 0 ||
-                            //     financing == '--' ||
-                            //     Number(overDueInterest) != 0 ||
-                            //     moment(locExpDate).isBefore(moment())
-                            // }
+                            disabled={financing <= 0 || financing == '--'}
                             style={{
                                 display: isMobile ? 'inline-block' : 'none',
                                 border: '1px solid #d7e0ef',
@@ -108,18 +101,8 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
                                 fontSize: '16px',
                                 padding: '9px 19px 9px 20px',
                                 borderRadius: '2px',
-                                backgroundColor:
-                                    financing <= 0 ||
-                                    moment(locExpDate).isBefore(moment()) ||
-                                    Number(overDueInterest) != 0
-                                        ? '#e6ebf5'
-                                        : 'white',
-                                color:
-                                    financing <= 0 ||
-                                    moment(locExpDate).isBefore(moment()) ||
-                                    Number(overDueInterest) != 0
-                                        ? '#a9b6cb'
-                                        : '#0d1623',
+                                backgroundColor: financing <= 0 ? '#e6ebf5' : 'white',
+                                color: financing <= 0 ? '#a9b6cb' : '#0d1623',
                                 // backgroundColor: 'white',
                                 // color: '#0d1623',
                                 verticalAlign: 'top',
@@ -157,10 +140,7 @@ const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueIntere
                         本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
                         <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
                     </span> */}
-                    {financing <= 0 ||
-                    financing == '--' ||
-                    moment(locExpDate).isBefore(moment()) ||
-                    Number(overDueInterest) != 0 ? (
+                    {financing <= 0 || financing == '--' ? (
                         <a className="footer__link--disabled" onClick={repaymentHandler}>
                             我要還款 >
                         </a>

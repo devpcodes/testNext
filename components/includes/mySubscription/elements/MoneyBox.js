@@ -16,7 +16,10 @@ const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing =
         }
     };
     const repaymentHandler = () => {
-        if (financing <= 0 || moment(locExpDate).isBefore(moment()) || Number(overDueInterest) != 0) {
+        if (financing <= 0) {
+            return;
+        }
+        if (moment(locExpDate).isBefore(moment()) || Number(overDueInterest) != 0) {
             dispatch(
                 setModal({
                     visible: true,
@@ -72,14 +75,7 @@ const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing =
                             {!isMobile && element.linkText && (
                                 <a
                                     onClick={repaymentHandler}
-                                    className={
-                                        'money__Alink ' +
-                                        (financing <= 0 ||
-                                        moment(locExpDate).isBefore(moment()) ||
-                                        Number(overDueInterest) != 0
-                                            ? 'disabled'
-                                            : '')
-                                    }
+                                    className={'money__Alink ' + (financing <= 0 ? 'disabled' : '')}
                                 >
                                     {element.linkText} >
                                 </a>
@@ -116,24 +112,12 @@ const MoneyBox = ({ title, data, style, locExpDate, overDueInterest, financing =
                             text={'我要還款'}
                             style={{
                                 margin: '0 auto',
-                                backgroundColor:
-                                    financing <= 0 ||
-                                    moment(locExpDate).isBefore(moment()) ||
-                                    Number(overDueInterest) != 0
-                                        ? '#e6ebf5'
-                                        : '#daa360',
-                                color:
-                                    financing <= 0 ||
-                                    moment(locExpDate).isBefore(moment()) ||
-                                    Number(overDueInterest) != 0
-                                        ? '#a9b6cb'
-                                        : 'white',
+                                backgroundColor: financing <= 0 ? '#e6ebf5' : '#daa360',
+                                color: financing <= 0 ? '#a9b6cb' : 'white',
                                 border: 'none',
                                 marginTop: '4px',
                             }}
-                            disabled={
-                                financing <= 0 || moment(locExpDate).isBefore(moment()) || Number(overDueInterest) != 0
-                            }
+                            disabled={financing <= 0}
                             onClick={repaymentHandler}
                         />
                     </div>
