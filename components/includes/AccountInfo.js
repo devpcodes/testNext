@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { setModal } from '../../store/components/layouts/action';
-import { getAccountData, getCustomerCredit } from '../../services/getAccountInfo';
+import { getAccountData, getCustomerCredit, getOTPUrl } from '../../services/getAccountInfo';
 import { getToken } from '../../services/user/accessToken';
 import { EnvironmentFilled, InfoCircleFilled } from '@ant-design/icons';
 import info from '../../resources/images/pages/Service_ForgetPassword/attention-info-circle.svg';
@@ -10,15 +10,20 @@ import { AccountDropdown } from './personalArea/accountDropdown/AccountDropdown'
 import Breadcrumb from './breadcrumb/breadcrumb';
 import { formatNum } from '../../services/formatNum';
 import { Popover } from 'antd';
+import { useRouter } from 'next/router';
 const AccountInfo = () => {
     const winWidth = useSelector(store => store.layout.winWidth);
     const isMobile = useSelector(store => store.layout.isMobile);
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({});
     const [dataMore, setDataMore] = useState({});
+    const router = useRouter();
     const dispatch = useDispatch();
+
     useEffect(() => {
-        getData();
+        if (currentAccount != null && currentAccount.idno) {
+            getData();
+        }
     }, [currentAccount]);
 
     const getData = async () => {
@@ -55,6 +60,20 @@ const AccountInfo = () => {
             return '--';
         }
     };
+
+    const goLendingOTP = async val => {
+        let token = getToken();
+        let res = await getOTPUrl(token);
+        console.log(res);
+        if (res.url) {
+            router.push(res.url);
+        } else {
+            Modal.error({
+                title: '伺服器錯誤',
+            });
+        }
+    };
+
     const clickHandler = type => {
         let title = type == 'address' ? '變更戶籍地址' : '開立電子交易';
         let content =
@@ -340,7 +359,7 @@ const AccountInfo = () => {
                         <div className="contentBox">
                             <div className="title flexBox">
                                 借券交易{' '}
-                                <a className="arrowLink" href="https://www.sinotrade.com.tw/SS/Main/LendMenu.aspx">
+                                <a className="arrowLink" onClick={goLendingOTP.bind(null, 'click')}>
                                     前往借券專區
                                 </a>
                             </div>
@@ -400,9 +419,7 @@ const AccountInfo = () => {
                                         {data.ELSTATUS === '正常' ? (
                                             data.ELSTATUS
                                         ) : (
-                                            <a href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_3?dirtype=99&strProd=0002&strWeb=0001">
-                                                立即申辦
-                                            </a>
+                                            <a href={process.env.NEXT_PUBLIC_LOANACCOUNT}>立即申辦</a>
                                         )}
                                     </span>
                                 </p>
