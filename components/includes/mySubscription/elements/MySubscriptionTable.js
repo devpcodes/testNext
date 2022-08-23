@@ -838,6 +838,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 defaultPageSize: pageSize,
                 current: currentPage,
                 total,
+                showSizeChanger: false,
             }}
             columns={columns}
             dataSource={data}
