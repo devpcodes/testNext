@@ -66,7 +66,7 @@ const AccountInfo = () => {
         let res = await getOTPUrl(token);
         console.log(res);
         if (res.url) {
-            router.push(res.url);
+            window.open(res.url);
         } else {
             Modal.error({
                 title: '伺服器錯誤',
