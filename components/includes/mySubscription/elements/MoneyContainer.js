@@ -41,6 +41,8 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
         } catch (error) {
             const err = message.error;
             debounce(err.bind(null, error), 500);
+            setBalance('--');
+            setBankAccount('--');
         }
     };
 
