@@ -13,6 +13,7 @@ import { formatNum } from '../../../../services/formatNum';
 const SubscriptionAccErrModal = memo(
     ({ checkAccount, successHandler, allOrderAmount, availAmount, stockId, stockName }) => {
         const currentAccount = useSelector(store => store.user.currentAccount);
+        const userSetting = useSelector(store => store.user.userSettings);
         const dispatch = useDispatch();
         const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
         const { isLogin, accounts } = useUser();
@@ -25,6 +26,7 @@ const SubscriptionAccErrModal = memo(
         const [noAcc, setNoAcc] = useState(false);
         const [amountSuccess, setAmountSuccess] = useState(false);
         const [stockData, setStockData] = useState(false);
+        const [userIdAcc, setUserIdAcc] = useState(false);
         const router = useRouter();
 
         useEffect(() => {
@@ -36,6 +38,11 @@ const SubscriptionAccErrModal = memo(
                 setStockData(true);
             }
         }, [stockName]);
+
+        useEffect(() => {
+            setUserIdAcc(false);
+            setSelectAccSuccess(false);
+        }, [currentAccount]);
 
         useEffect(() => {
             console.log('check', checkAccount);
@@ -54,11 +61,13 @@ const SubscriptionAccErrModal = memo(
             if (applyStatus && accountInfo.applyStatus != null) {
                 //有帳號，但帳號使用錯誤
                 checkAccSelectErr();
+                //授權id
+                checkUserIdAcc();
             } else {
                 //沒申購帳號
                 noAccHandler();
             }
-        }, [applyStatus, accountInfo, signAcc, checkAccount]);
+        }, [applyStatus, accountInfo, signAcc, checkAccount, currentAccount]);
 
         useEffect(() => {
             if (!checkAccount) return;
@@ -373,6 +382,59 @@ const SubscriptionAccErrModal = memo(
             }
         };
 
+        const checkUserIdAcc = () => {
+            if (currentAccount.idno != null && userSetting.confirmAfterStockOrdered != null) {
+                console.log('accountInfo', accountInfo, currentAccount.idno);
+                if (accountInfo.userId !== currentAccount.idno) {
+                    console.log('accountInfo', accountInfo);
+                    dispatch(
+                        setModal({
+                            visible: true,
+                            okText: '切換帳號',
+                            type: 'confirm',
+                            noCloseIcon: true,
+                            noTitleIcon: true,
+                            title: '提醒',
+                            content: (
+                                <>
+                                    <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                                        此功能無法進行授權交易，請以申辦申購便利通本人帳號登入
+                                    </p>
+                                    {/* <p style={{ marginBottom: 0, color: '#0d1623' }}>您於本公司申購便利通總覽帳號為</p>
+                                    <div
+                                        style={{
+                                            border: '1px solid ##d7e0ef',
+                                            borderRadius: '2px',
+                                            backgroundColor: '#e6ebf5',
+                                            padding: '9px 13px',
+                                            color: '#3f5372',
+                                            marginTop: '5px',
+                                            marginBottom: '5px',
+                                        }}
+                                    >
+                                        {accountInfo.branch + '-' + accountInfo.account}
+                                    </div>
+                                    <p style={{ marginBottom: 0, color: '#0d1623' }}>請您以此帳號進行申購便利通動用</p> */}
+                                </>
+                            ),
+                            onOk: () => {
+                                setAccHandler(accounts, accountInfo.account);
+                                onClick(false);
+                                dispatch(setModal({ visible: false }));
+                            },
+                            onCancel: () => {
+                                onClick(false);
+                                dispatch(setModal({ visible: false }));
+                            },
+                        }),
+                    );
+                    setUserIdAcc(false);
+                } else {
+                    setUserIdAcc(true);
+                }
+            }
+        };
+
         const onClick = () => {
             // setCheckSuccess.push([])
         };
@@ -418,7 +480,8 @@ const SubscriptionAccErrModal = memo(
                     selectAccSuccess &&
                     noAcc &&
                     amountSuccess &&
-                    stockData
+                    stockData &&
+                    userIdAcc
                 ) {
                     successHandler(true);
                 } else {
@@ -433,6 +496,7 @@ const SubscriptionAccErrModal = memo(
             noAcc,
             amountSuccess,
             stockData,
+            userIdAcc,
             checkAccount,
         ]);
 
