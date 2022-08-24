@@ -244,7 +244,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 key: 'method',
                 ...getColumnSearchProps('method'),
                 render(text, record, idx) {
-                    return text === '1' ? '一般' : '借款';
+                    return text === '1' ? '一般' : '便利通';
                 },
             },
             {
@@ -375,7 +375,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         dispatch(
             setModal({
                 visible: true,
-                title: '取消申購及借款',
+                title: '取消申購及便利通',
                 content: (
                     <>
                         <p>「{record.stockId + ' ' + record.stockName}」，並同步取消動用？</p>
@@ -621,7 +621,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                         // value={searchStatus}
                         data={[
                             { text: '一般', value: '1' },
-                            { text: '借款', value: '2' },
+                            { text: '便利通', value: '2' },
                         ]}
                     />
                 ),
