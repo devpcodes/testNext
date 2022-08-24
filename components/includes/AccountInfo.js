@@ -324,7 +324,13 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
-                                    <span>{dataMore.finAmt ? formatNum(dataMore.finAmt) : '--'}</span>
+                                    <span>
+                                        {dataMore.finAmt && dataMore.finAmt !== '0'
+                                            ? formatNum(dataMore.finAmt)
+                                            : data.CRAMT
+                                            ? formatNum(data.CRAMT)
+                                            : '--'}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>
@@ -333,14 +339,24 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.finUsedAmt ? formatNum(dataMore.finUsedAmt) : '--'}/
+                                        {dataMore.finUsedAmt ? formatNum(dataMore.finUsedAmt) : '0'}/
                                         <br className="forMB" />
-                                        {dataMore.finLeavesAmt ? formatNum(dataMore.finLeavesAmt) : '--'}
+                                        {dataMore.finLeavesAmt && dataMore.finLeavesAmt !== '0'
+                                            ? formatNum(dataMore.finLeavesAmt)
+                                            : data.CRAMT
+                                            ? formatNum(data.CRAMT)
+                                            : '--'}
                                     </span>
                                 </p>
                                 <p>
                                     <span>總融券額度</span>
-                                    <span>{dataMore.shortAmt ? formatNum(dataMore.shortAmt) : '--'}</span>
+                                    <span>
+                                        {dataMore.shortAmt && dataMore.shortAmt !== '0'
+                                            ? formatNum(dataMore.shortAmt)
+                                            : data.DBAMT
+                                            ? formatNum(data.DBAMT)
+                                            : '--'}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>
@@ -349,9 +365,13 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.shortUsedAmt ? formatNum(dataMore.shortUsedAmt) : '--'}/
+                                        {dataMore.shortUsedAmt ? formatNum(dataMore.shortUsedAmt) : '0'}/
                                         <br className="forMB" />
-                                        {dataMore.shortLeavesAmt ? formatNum(dataMore.shortLeavesAmt) : '--'}
+                                        {dataMore.shortLeavesAmt && dataMore.shortLeavesAmt !== '0'
+                                            ? formatNum(dataMore.shortLeavesAmt)
+                                            : data.DBAMT
+                                            ? formatNum(data.DBAMT)
+                                            : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -371,7 +391,7 @@ const AccountInfo = () => {
                                         {data.SLSTATUS === '註銷' || data.SLSTATUS === '' ? (
                                             <a
                                                 className="ml-10"
-                                                href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0002&strWeb=0001"
+                                                href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0037&strWeb=0035"
                                             >
                                                 立即開借券戶
                                             </a>
