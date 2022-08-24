@@ -52,7 +52,7 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                                 <span>{origin.m1} 元</span>
                             </p>
                             <p className="flexBox">
-                                <span>申購便利通手續費</span>
+                                <span>金流服務費</span>
                                 <span>{origin.m2} 元</span>
                             </p>
                             <p className="flexBox">
