@@ -195,7 +195,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                         )}
                                         {element === 'canAppropriation' && (
                                             <SubscriptionBtn
-                                                text="申請動用"
+                                                text="便利通申購"
                                                 colorType="red"
                                                 width="72px"
                                                 style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
@@ -204,7 +204,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                         )}
                                         {element === 'canCancelAppropriation' && (
                                             <SubscriptionBtn
-                                                text="取消動用"
+                                                text="取消便利通"
                                                 colorType="blue"
                                                 width="72px"
                                                 onClick={clickHandler.bind(null, record, 'canCancelAppropriation')}
