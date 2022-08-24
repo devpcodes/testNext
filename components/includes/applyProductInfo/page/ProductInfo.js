@@ -64,16 +64,16 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '121.5', //市價
-            diffPrice: '42.700',
-            diffRatio: '54',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.1',
-            lowest: 78,
-            m1: 20,
-            m2: 50,
-            m3: 8,
+            lowest: 108, //最低只需
+            m1: 20, //處理費
+            m2: 50, //服務費
+            m3: 38, //未中還款利息
             settingDate: '2022-01-06',
         },
         {
@@ -85,8 +85,8 @@ const ProductInfo = () => {
             brokerName: '台新',
             price: 52,
             share: 850000,
+            beginDate: '20220104',
             currentDate: '20220530',
-            beginDate: '20220530',
             endDate: '20220601',
             feeDate: '20220602',
             lotDate: '20220606',
@@ -98,16 +98,16 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '36.000',
-            diffRatio: '38',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.2',
-            lowest: 79,
+            lowest: 125,
             m1: 20,
             m2: 50,
-            m3: 9,
+            m3: 55,
             settingDate: '2022-06-01',
         },
         {
@@ -120,7 +120,7 @@ const ProductInfo = () => {
             price: 52,
             share: 850000,
             currentDate: '20220225',
-            beginDate: '20220512',
+            beginDate: '202200512',
             endDate: '20220516',
             feeDate: '20220517',
             lotDate: '20220518',
@@ -132,16 +132,16 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '27.000',
-            diffRatio: '28',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.3',
-            lowest: 79,
+            lowest: 98,
             m1: 20,
             m2: 50,
-            m3: 9,
+            m3: 28,
             settingDate: '2022-05-16',
         },
         {
@@ -166,16 +166,16 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '121.5', //市價
-            diffPrice: '17.200',
-            diffRatio: '20',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.4',
-            lowest: 78,
+            lowest: 128,
             m1: 20,
             m2: 50,
-            m3: 8,
+            m3: 58,
             settingDate: '2022-04-01',
         },
         {
@@ -187,8 +187,8 @@ const ProductInfo = () => {
             brokerName: '台新',
             price: 52,
             share: 850000,
+            beginDate: '20220104',
             currentDate: '20220216',
-            beginDate: '20220216',
             endDate: '20220218',
             feeDate: '20220221',
             lotDate: '20220222',
@@ -200,16 +200,16 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '16.500',
-            diffRatio: '17',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.5',
-            lowest: 79,
+            lowest: 116,
             m1: 20,
             m2: 50,
-            m3: 9,
+            m3: 46,
             settingDate: '2022-02-18',
         },
         {
@@ -234,16 +234,16 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '14.000',
-            diffRatio: '10',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
             statusMessage: 'NO.6',
-            lowest: 110,
+            lowest: 137,
             m1: 20,
             m2: 50,
-            m3: 40,
+            m3: 67,
             settingDate: '2022-05-04',
         },
     ];
@@ -789,9 +789,9 @@ const ProductInfo = () => {
             <div className="mainArea mainArea1">
                 <div className="bg"></div>
                 <div className="contentBox">
-                    <div>券商首創申購便利通</div>
+                    <div>券商首創超便利申購</div>
                     <div>
-                        <p>先抽後付</p>
+                        <p>申購便利通</p>
                         <p>用小資金放大機會</p>
                     </div>
                     <div>
@@ -853,7 +853,7 @@ const ProductInfo = () => {
                         什麼是申購便利通
                         <img src={dotLine}></img>
                         <p>
-                            申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享先抽籤後付款的服務，快來抓緊每個申購抽籤的機會吧！
+                            申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享超便利的申購服務，快來抓緊每個申購抽籤的機會吧！
                         </p>
                     </div>
                     <div className="flexBox areaContent">
@@ -862,8 +862,8 @@ const ProductInfo = () => {
                                 <img src={icon61}></img>
                             </div>
                             <div>
-                                <p>免出資，更高效</p>
-                                <p>20 萬內免出資，彈性資金運用更高效</p>
+                                <p>微出資，更高效</p>
+                                <p>20 萬內彈性資金運用更高效</p>
                             </div>
                         </div>
                         <div className="flexBox areaItem">
@@ -971,7 +971,7 @@ const ProductInfo = () => {
                                 申購期間 <span>20 萬內抽籤股票</span>，可自由選擇申購方式。
                                 <ul>
                                     <li>自備款現金申購</li>
-                                    <li>免出資借款申購</li>
+                                    <li>微出資借款申購</li>
                                 </ul>
                             </div>
 
@@ -1035,7 +1035,7 @@ const ProductInfo = () => {
                             <img src={handsS}></img>
                         </div>
                         <div>
-                            <p>年滿 20 歲之本國自然人</p>
+                            <p>成年本國自然人</p>
                             <p>僅具中華民國納稅義務人身分</p>
                             <p>已開立台股證券帳戶且無違約未結案情形</p>
                             <p>交割戶須有永豐銀行帳戶且符合永豐銀行私房錢預審資格</p>
