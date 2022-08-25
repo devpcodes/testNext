@@ -17,6 +17,7 @@ import moment from 'moment';
 import { formatNum } from '../../../../services/formatNum';
 import { fetchAccount } from '../../../../services/components/subscriptionOverview/fetchAccount';
 import { message } from 'antd';
+import { useCheckSubscriptionAcc } from '../../../../hooks/useCheckSubscriptionAcc';
 const baseData = [
     {
         label: '額度',
@@ -184,6 +185,8 @@ const SubscriptionOverviewComp = () => {
     const [updateTime, setUpdateTime] = useState('--');
     const [overDueInterest, setOverDueInterest] = useState('--');
     const router = useRouter();
+    const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
+    const currentAccount = useSelector(store => store.user.currentAccount);
     const menuList = [
         { key: 'amount', title: '額度使用紀錄' },
         // { key: 'interest', title: '利息紀錄' },
@@ -192,9 +195,40 @@ const SubscriptionOverviewComp = () => {
         setCurrent(key);
     };
 
+    // useEffect(() => {
+    //     getAccount();
+    // }, []);
+
     useEffect(() => {
-        getAccount();
-    }, []);
+        if (currentAccount.idno != null && accountInfo.userId != null && currentAccount.idno == accountInfo.userId) {
+            getAccount();
+            return;
+        }
+        if (currentAccount.idno != null && accountInfo.userId != null && currentAccount.idno != accountInfo.userId) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    okText: '確認',
+                    type: 'info',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                    title: '提醒',
+                    content: (
+                        <>
+                            <p style={{ marginBottom: 0, color: '#0d1623' }}>
+                                此功能無法進行授權交易，請以申辦申購便利通本人帳號登入
+                            </p>
+                        </>
+                    ),
+                    onOk: () => {
+                        router.push('/');
+                        dispatch(setModal({ visible: false }));
+                    },
+                }),
+            );
+            return;
+        }
+    }, [currentAccount, accountInfo]);
 
     const getAccount = async () => {
         try {
