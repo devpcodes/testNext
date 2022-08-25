@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useCheckSubscriptionAcc } from '../../../../hooks/useCheckSubscriptionAcc';
-import { useUser } from '../../../../hooks/useUser';
+// import { useUser } from '../../../../hooks/useUser';
 import { setModal } from '../../../../store/components/layouts/action';
 import { setCurrentAccount } from '../../../../store/user/action';
 import { getToken } from '../../../../services/user/accessToken';
@@ -16,7 +16,9 @@ const SubscriptionAccErrModal = memo(
         const userSetting = useSelector(store => store.user.userSettings);
         const dispatch = useDispatch();
         const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
-        const { isLogin, accounts } = useUser();
+        const isLogin = useSelector(store => store.user.isLogin);
+        const accounts = useSelector(store => store.user.accounts);
+        // const { isLogin, accounts } = useUser();
         const [accountStatus, setAccountStatus] = useState({});
 
         const [freezeSucces, setFreezeSuccess] = useState(false);

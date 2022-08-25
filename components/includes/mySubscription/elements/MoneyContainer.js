@@ -22,9 +22,10 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     // const [applyStatus, setApplyStatus] = useState(false);
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
-    const [applyStatus, signAcc] = useCheckSubscriptionAcc();
+    const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
     const [locExpDate, setLocExpDate] = useState('');
     const [overDueInterest, setOverDueInterest] = useState('--');
+    const [accountSuccess, setAccountSuccess] = useState(false);
     const getBalance = async () => {
         const token = getToken();
         try {
@@ -117,7 +118,12 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                 // debounce(getDsAndBank, 500);
             }
         }, 700);
-    }, [currentAccount]);
+        if (currentAccount.idno != null && currentAccount.idno == accountInfo.userId) {
+            setAccountSuccess(true);
+        } else {
+            setAccountSuccess(false);
+        }
+    }, [currentAccount, accountInfo]);
 
     const moneyBoxClick = () => {
         alert('123');
@@ -194,7 +200,8 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
-                    {applyStatus && signAcc && (
+
+                    {applyStatus && signAcc && accountSuccess && (
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
                             title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
@@ -213,6 +220,21 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                                     showLine: false,
                                 },
                             ]}
+                        />
+                    )}
+                    {applyStatus && signAcc && !accountSuccess && (
+                        <SignBox
+                            style={{ width: '100%', marginTop: 16 }}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            errContent={'請以申辦申購便利通本人帳號登入'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                 </>
@@ -275,7 +297,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
-                    {applyStatus && signAcc && (
+                    {applyStatus && signAcc && accountSuccess && (
                         <MoneyBox
                             style={{ width: '33%' }}
                             title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
@@ -294,6 +316,21 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                                     showLine: false,
                                 },
                             ]}
+                        />
+                    )}
+                    {applyStatus && signAcc && !accountSuccess && (
+                        <SignBox
+                            style={{ width: '100%', marginTop: 0, flex: 1 }}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            errContent={'請以申辦申購便利通本人帳號登入'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                 </>

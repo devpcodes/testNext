@@ -2,12 +2,13 @@ import Link from 'next/link';
 import icon from '../../../../resources/images/components/mySubscription/basic-help-circle (3).svg';
 import goIcon from '../../../../resources/images/components/mySubscription/arrow-chevron-down-copy (3).svg';
 // import { getToken } from '../../../../services/user/accessToken';
-const SignBox = ({ title, content, style, contentLink, linkUrl }) => {
+const SignBox = ({ title, content, style, contentLink, errContent, linkUrl }) => {
     const clickHandler = () => {
         // if (contentLink.indexOf('http') >= 0 && content === '立即簽署') {
         //     window.location = `${process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}/Cmarketing/?TOKEN=${getToken()}`;
         //     return;
         // }
+        if (errContent) return;
         if (contentLink.indexOf('http') >= 0) {
             window.open(contentLink);
             return;
@@ -37,19 +38,29 @@ const SignBox = ({ title, content, style, contentLink, linkUrl }) => {
                 <React.Fragment>
                     <div className="money__item" onClick={clickHandler}>
                         {/* <p className="money__label">{element.label}</p> */}
-                        <p className="money__val">{content}</p>
-                        <img
-                            src={goIcon}
-                            className="go__icon"
-                            style={{
-                                marginLeft: '5px',
-                                // marginTop: '-9px',
-                            }}
-                        />
+                        {errContent ? (
+                            <p className="money__errContent">{errContent}</p>
+                        ) : (
+                            <>
+                                <p className="money__val">{content}</p>
+                                <img
+                                    src={goIcon}
+                                    className="go__icon"
+                                    style={{
+                                        marginLeft: '5px',
+                                        // marginTop: '-9px',
+                                    }}
+                                />
+                            </>
+                        )}
                     </div>
                 </React.Fragment>
             </div>
             <style jsx>{`
+                .money__errContent {
+                    font-size: 16px;
+                    color: #3f5372;
+                }
                 .go__icon {
                     margin-top: -9px;
                 }

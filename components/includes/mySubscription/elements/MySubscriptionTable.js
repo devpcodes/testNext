@@ -153,7 +153,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
         const myColumns = [
             {
                 title: '動作',
-                width: '100px',
+                width: '110px',
                 dataIndex: 'action',
                 key: 'action',
                 render(text, record, idx) {
@@ -197,7 +197,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                             <SubscriptionBtn
                                                 text="便利通申購"
                                                 colorType="red"
-                                                width="72px"
+                                                width="80px"
                                                 style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
                                                 onClick={clickHandler.bind(null, record, 'canAppropriation')}
                                             />
@@ -206,7 +206,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                             <SubscriptionBtn
                                                 text="取消便利通"
                                                 colorType="blue"
-                                                width="72px"
+                                                width="80px"
                                                 onClick={clickHandler.bind(null, record, 'canCancelAppropriation')}
                                                 loading={cancelLoading}
                                                 style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
