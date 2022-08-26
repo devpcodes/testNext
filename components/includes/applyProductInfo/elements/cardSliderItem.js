@@ -22,53 +22,58 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
         <div className={'slideCard ' + (side ? 'ASide' : 'BSide')}>
             <div className="flipBox">
                 <div className="slideCardType TypeA">
-                    <SubscriptionCards
-                        stockData={rowData}
-                        activeBtn={true}
-                        footerHidden={true}
-                        clickToFlip={cardFlipFunc}
-                        settingDate={new Date(rowData.settingDate)}
-                    />
-                    <div className="activeBtnBox">
-                        <a onClick={cardFlipFunc.bind(null, 'B')}>
-                            <PlusOutlined />
-                        </a>
+                    <div className="slideCardTypeInner">
+                        <SubscriptionCards
+                            stockData={rowData}
+                            activeBtn={true}
+                            footerHidden={true}
+                            clickToFlip={cardFlipFunc}
+                            settingDate={new Date(rowData.settingDate)}
+                        />
+                        <div className="activeBtnBox">
+                            <a onClick={cardFlipFunc.bind(null, 'B')}>
+                                <PlusOutlined />
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div className="slideCardType TypeB">
-                    <div>
-                        <p>最低只須</p>
-                        <p>
-                            <span>{origin.lowest}</span> 元
-                        </p>
-                        <p>買個中籤夢！</p>
-                    </div>
-                    <div>
-                        <p className="flexBox">
-                            <span>申購處理費</span>
-                            <span>{origin.m1} 元</span>
-                        </p>
-                        <p className="flexBox">
-                            <span>金流服務費</span>
-                            <span>{origin.m2} 元</span>
-                        </p>
-                        <p className="flexBox">
-                            <span>未中籤退款日還款利息</span>
-                            <span>{origin.m3} 元</span>
-                        </p>
-                    </div>
-                    <div className="flexBox">
-                        <a>
-                            <InfoCircleFilled />
-                        </a>
-                        <p>試算說明：借款金額 × 最低利率 × (借款天數 / 365 天)，最低利率依銀行公告為準。</p>
-                    </div>
-                    <div>
-                        <a onClick={cardFlipFunc.bind(null, 'A')} className="closeBtn">
-                            <PlusOutlined />
-                        </a>
+                    <div className="slideCardTypeInner">
+                        <div>
+                            <p>最低只須</p>
+                            <p>
+                                <span>{origin.lowest}</span> 元
+                            </p>
+                            <p>買個中籤夢！</p>
+                        </div>
+                        <div>
+                            <p className="flexBox">
+                                <span>申購處理費</span>
+                                <span>{origin.m1} 元</span>
+                            </p>
+                            <p className="flexBox">
+                                <span>申購便利通手續費</span>
+                                <span>{origin.m2} 元</span>
+                            </p>
+                            <p className="flexBox">
+                                <span>未中籤退款日還款利息</span>
+                                <span>{origin.m3} 元</span>
+                            </p>
+                        </div>
+                        <div className="flexBox">
+                            <a>
+                                <InfoCircleFilled />
+                            </a>
+                            <p>試算說明：借款金額 × 最低利率 × (借款天數 / 365 天)，最低利率依銀行公告為準。</p>
+                        </div>
+                        <div>
+                            <a onClick={cardFlipFunc.bind(null, 'A')} className="closeBtn">
+                                <PlusOutlined />
+                            </a>
+                        </div>
                     </div>
                 </div>
+                <div className="slideCardType BaseType"></div>
             </div>
 
             <style jsx>{`
@@ -76,56 +81,65 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     display: flex;
                     justify-content: space-between;
                 }
-                .TypeB > div {
+                .slideCardType.TypeB {
+                    box-shadow: 0 2px 16px 6px rgba(132, 143, 165, 0.2), 0 2px 10px 3px rgba(132, 143, 165, 0.1);
+                }
+                .TypeB .Inner > div {
                     font-size: 16px;
                 }
-                .TypeB > div > p {
+                .TypeB .slideCardTypeInner > div > p {
                     margin-bottom: 0px;
                 }
-                .TypeB > div:nth-child(1) p {
+                .TypeB .slideCardTypeInner > div:nth-child(1) p {
                     text-align: center;
                     color: #fff;
                     line-height: 1.5;
                 }
-                .TypeB > div:nth-child(1) p:nth-child(2) {
+                .TypeB .slideCardTypeInner > div:nth-child(1) p:nth-child(2) {
                     color: #f45a4c;
                 }
-                .TypeB > div:nth-child(1) p:nth-child(2) span {
+                .TypeB .slideCardTypeInner > div:nth-child(1) p:nth-child(2) span {
                     font-size: 48px;
                     font-weight: bold;
                 }
-                .TypeB > div:nth-child(1) p:nth-child(3) {
+                .TypeB .slideCardTypeInner > div:nth-child(1) p:nth-child(3) {
                     padding-left: 0.5em;
                 }
-                .TypeB > div:nth-child(2) {
-                    width: 96%;
-                    max-width: 295px;
+                .TypeB .slideCardTypeInner > div:nth-child(2) {
+                    width: 100%;
                     background-color: #3f5372;
                     color: #a9b6cb;
                     margin: 15px auto;
                     padding: 0.5em 1em;
                     border-radius: 2px;
                 }
-                .TypeB > div:nth-child(2) p {
+                .TypeB .slideCardTypeInner > div:nth-child(2) p {
                     line-height: 2;
                 }
-                .TypeB > div:nth-child(3) {
+                .TypeB .slideCardTypeInner > div:nth-child(3) {
                     color: #6c7b94;
                     font-size: 14px;
-                    width: 96%;
-                    max-width: 295px;
+                    width: 100%;
                     margin: 0 auto;
                 }
-                .TypeB > div:nth-child(3) p {
-                    padding-left: 0.5em;
-                }
-                .TypeB > div:nth-child(4) {
-                    text-align: center;
+                // .TypeB .slideCardTypeInner > div:nth-child(3) p {
+                //     padding-left: 0.5em;
+                // }
+                // .TypeB .slideCardTypeInner > div:nth-child(4) {
+                //     text-align: center;
+                //     color: #fff;
+                //     font-size: 30px;
+                //     margin-top: 10px;
+                // }
+                .TypeB .slideCardTypeInner > div:nth-child(4) {
                     color: #fff;
                     font-size: 30px;
-                    margin-top: 10px;
+                    position: absolute;
+                    bottom: 16px;
+                    left: 50%;
+                    transform: translateX(-50%);
                 }
-                .TypeB > div:nth-child(4) a span {
+                .TypeB .slideCardTypeInner > div:nth-child(4) a span {
                 }
                 .slideCard {
                     position: relative;
@@ -139,12 +153,18 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     position: absolute;
                     border: 1px solid #d7e0ef;
                     border-radius: 2px;
-                    padding: 24px 24px 16px;
+                    padding: 16px;
                     width: 100%;
                     height: 400px;
-                    max-width: 342px;
+                    max-width: 340px;
                     backface-visibility: hidden;
                     transition: 1s;
+                }
+                .BaseType {
+                    position: relative;
+                    background: tansparent;
+                    pointer-events: none;
+                    border: none;
                 }
                 .TypeA {
                     z-index: 10;
@@ -166,8 +186,12 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                 .activeBtnBox {
                     text-align: center;
                     border-top: 1px solid #d7e0ef;
-                    margin-top: 25px;
                     padding-top: 15px;
+                    position: absolute;
+                    width: calc(100% - 32px);
+                    bottom: 16px;
+                    left: 50%;
+                    transform: translateX(-50%);
                 }
                 .activeBtnBox a {
                     font-size: 26px;
@@ -180,12 +204,17 @@ const CardSliderItem = ({ rowData, itemNum = 3 }) => {
                     .slideCard {
                         min-height: 400px;
                     }
-                    .TypeB > div > p {
+                    .TypeB .slideCardTypeInner > div > p {
                         letter-spacing: -0.05em;
                     }
                 }
-                @media (max-width: 425px) {
+                @media (max-width: 500px) {
                     .slideCard {
+                    }
+                }
+                @media (max-width: 374px) {
+                    .slideCardType .TypeA {
+                        padding: 6%;
                     }
                 }
             `}</style>
