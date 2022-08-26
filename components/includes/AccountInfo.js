@@ -267,9 +267,13 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.used ? formatNum(dataMore.used) : '--'}/
+                                        {dataMore.used ? formatNum(dataMore.used) : '0'}/
                                         <br className="forMB" />
-                                        {dataMore.leaves ? formatNum(dataMore.leaves) : '--'}
+                                        {dataMore.leaves && dataMore.leaves !== '0'
+                                            ? formatNum(dataMore.leaves)
+                                            : data.EAMT
+                                            ? formatNum(data.EAMT)
+                                            : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -388,7 +392,7 @@ const AccountInfo = () => {
                                     <span>帳戶狀態</span>
                                     <span>
                                         {data.SLSTATUS}
-                                        {data.SLSTATUS === '註銷' || data.SLSTATUS === '' ? (
+                                        {data.SLSTATUS === '' ? (
                                             <a
                                                 className="ml-10"
                                                 href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0037&strWeb=0035"
