@@ -35,7 +35,7 @@ const ProductInfo = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const menuList = [
         { title: '申辦啟用', key: 'p1' },
-        { title: '借款申購試算', key: 'p2' },
+        { title: '便利通申購試算', key: 'p2' },
         { title: '動用扣款', key: 'p3' },
         { title: '中籤還款', key: 'p4' },
         { title: '其他', key: 'p5' },
@@ -288,7 +288,7 @@ const ProductInfo = () => {
         {
             type: '',
             title: '已經申辦永豐銀行【私房錢】如何啟用此服務?',
-            content: ['您只須由線上申辦入口進入，系統將判斷您須完成的啟用流程，完成後即可立即啟用先抽後付之申購服務。'],
+            content: ['您只須由線上申辦入口進入，系統將判斷您須完成的啟用流程，完成後即可立即啟用申購服務。'],
             open: false,
             group: 'p1',
             key: '1_4',
@@ -329,7 +329,7 @@ const ProductInfo = () => {
             type: '',
             title: '為什麼有的申購個股可以使用【申購便利通】申購，有的不可以？',
             content:
-                '本服務提供單檔總動用金額（申購款含相關費用）於20萬內之申購檔次，可使用【申購便利通】進行先抽後付的申購服務。',
+                '本服務提供單檔總動用金額（申購款含相關費用）於20萬內之申購檔次，可使用【申購便利通】進行申購服務。',
             open: false,
             group: 'p2',
             key: '2_1',
@@ -553,7 +553,7 @@ const ProductInfo = () => {
         },
         {
             type: '',
-            title: '申辦服務後，可以使用什麼平台進行【申購便利通】先抽後付的申購服務?',
+            title: '申辦服務後，可以使用什麼平台進行【申購便利通】的申購服務?',
             content: '目前【申購便利通】服務提供【大戶投】與【新理財網】平台使用，於其他平台僅可查詢到一般申購資料。',
             open: true,
             group: 'p5',
@@ -899,7 +899,7 @@ const ProductInfo = () => {
                             </div>
                             <div>
                                 <p>提供試算，更清晰</p>
-                                <p>借款申購提供一鍵試算預估報酬供評估</p>
+                                <p>便利通申購提供一鍵試算預估報酬供評估</p>
                             </div>
                         </div>
                         <div className="flexBox areaItem">
@@ -957,7 +957,7 @@ const ProductInfo = () => {
                                 </Popover>
                             </p>
                             <div>
-                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用借款申購功能。
+                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用便利通申購。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p1')}>
                                 了解更多
@@ -966,12 +966,12 @@ const ProductInfo = () => {
                         </div>
                         <div className="areaItem">
                             <p>申購期間 </p>
-                            <p>借款申購試算</p>
+                            <p>便利通申購試算</p>
                             <div>
                                 申購期間 <span>20 萬內抽籤股票</span>，可自由選擇申購方式。
                                 <ul>
                                     <li>自備款現金申購</li>
-                                    <li>微出資借款申購</li>
+                                    <li>微出資便利通申購</li>
                                 </ul>
                             </div>
 
@@ -984,8 +984,8 @@ const ProductInfo = () => {
                             <p>截止~扣款日 </p>
                             <p>動用扣款</p>
                             <div>
-                                <span>整筆借款酌收金流服務費 50 元</span>
-                                ，於申購截止日動用後隔天扣款，可隨借隨還，依動用金額以日計息於每月 21 日收取。
+                                <span>整筆酌收金流服務費 50 元</span>
+                                ，於申購截止日動用後隔天扣款，依動用金額以日計息於每月 21 日收取。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p3')}>
                                 了解更多
