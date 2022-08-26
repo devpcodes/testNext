@@ -107,7 +107,7 @@ const AccountInfo = () => {
                         <div className="topTitle">
                             帳戶基本資料
                             <Popover
-                                content={'以下資訊僅用於描述描述個人資料，你的資料將會安全地被我們保存且不會公開'}
+                                content={'以下資訊僅用於描述個人資料，你的資料將會安全地被我們保存且不會公開'}
                                 trigger={isMobile ? 'click' : 'hover'}
                                 placement="bottomRight"
                                 className="infoPopoverBtn forMB"
@@ -118,9 +118,7 @@ const AccountInfo = () => {
                             </Popover>
                         </div>
                         <div className="subTitle flexBox ">
-                            <p className="forPC">
-                                以下資訊僅用於描述描述個人資料，你的資料將會安全地被我們保存且不會公開
-                            </p>
+                            <p className="forPC">以下資訊僅用於描述個人資料，你的資料將會安全地被我們保存且不會公開</p>
                             <div className="AccountDropdownBox">
                                 <AccountDropdown
                                     type={'S'}
