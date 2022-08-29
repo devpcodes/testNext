@@ -14,6 +14,9 @@ export const useCheckSubscriptionAcc = () => {
     const [accountInfo, setAccountInfo] = useState({});
     const [signAcc, setSignAcc] = useState(false);
     useEffect(() => {
+        getDsAndBank();
+    }, []);
+    useEffect(() => {
         if (currentAccount.idno != null && userSettings.confirmAfterStockOrdered != null) {
             debounce(getDsAndBank, 100);
         }

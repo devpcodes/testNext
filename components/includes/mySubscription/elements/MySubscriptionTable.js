@@ -795,7 +795,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 setLoading(false);
                 setTotal(res.count);
                 payableHandler(res.payable, res.receivable);
-                if (res?.dataList?.length >= 0) {
+                if (res?.dataList?.length > 0) {
                     const newData = res?.dataList?.map((element, index) => {
                         element.key = index;
                         // element.canSellStock = true;
@@ -805,6 +805,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                         return element;
                     });
                     setData(newData);
+                } else {
+                    setData([]);
                 }
             } catch (error) {
                 setLoading(false);

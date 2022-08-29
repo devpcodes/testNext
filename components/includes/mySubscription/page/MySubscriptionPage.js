@@ -9,8 +9,8 @@ import MoneyContainer from '../elements/MoneyContainer';
 import MySubscriptionTable from '../elements/MySubscriptionTable';
 
 const MySubscriptionPage = () => {
-    const { isLogin } = useUser();
-    // const isLogin = useSelector(store => store.user.isLogin);
+    // const { isLogin } = useUser();
+    const isLogin = useSelector(store => store.user.isLogin);
     const dispatch = useDispatch();
     const [refresh, setRefresh] = useState(false);
     const [payable, setPayable] = useState('--');
