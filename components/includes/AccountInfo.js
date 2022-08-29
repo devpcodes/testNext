@@ -28,7 +28,6 @@ const AccountInfo = () => {
 
     const getData = async () => {
         try {
-            //0829
             let token = getToken();
             let ds = await getAccountData(token, currentAccount.idno, currentAccount.broker_id, currentAccount.account);
             console.log(ds);
