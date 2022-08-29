@@ -868,33 +868,6 @@ const ProductInfo = () => {
                         </div>
                         <div className="flexBox areaItem">
                             <div>
-                                <img src={icon62}></img>
-                            </div>
-                            <div>
-                                <p>零閒置，更彈性</p>
-                                <p>隨借隨還零閒置，讓手頭資金運用更彈性</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon63}></img>
-                            </div>
-                            <div>
-                                <p>免切換，更順暢</p>
-                                <p>交易帳務同平台免切換，告別資金撥轉與查詢困擾</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon64}></img>
-                            </div>
-                            <div>
-                                <p>線上申辦，更快速</p>
-                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
                                 <img src={icon65}></img>
                             </div>
                             <div>
@@ -909,6 +882,34 @@ const ProductInfo = () => {
                             <div>
                                 <p>聰明還款，更安心</p>
                                 <p>未中籤提供系統還款免人工轉帳，讓您更安心</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon64}></img>
+                            </div>
+                            <div>
+                                <p>線上申辦，更快速</p>
+                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
+                            </div>
+                        </div>
+
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon62}></img>
+                            </div>
+                            <div>
+                                <p>零閒置，更彈性</p>
+                                <p>隨借隨還零閒置，讓手頭資金運用更彈性</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon63}></img>
+                            </div>
+                            <div>
+                                <p>免切換，更順暢</p>
+                                <p>交易帳務同平台免切換，告別資金撥轉與查詢困擾</p>
                             </div>
                         </div>
                     </div>
@@ -1105,7 +1106,7 @@ const ProductInfo = () => {
                     border-width: 0 10px 17.3px 10px;
                     border-color: transparent transparent #c43826 transparent;}
                 .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
-                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;}
+                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px; justify-content:flex-start;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2){}
