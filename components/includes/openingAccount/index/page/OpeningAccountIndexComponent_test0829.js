@@ -8,7 +8,6 @@ import AppointmentOpenAccount from '../element/AppointmentOpenAccount';
 //securitiesAccountTypes
 import icon_futures from '../../../../../resources/images/pages/open_account/img-service-user-futures.svg';
 import icon_credit from '../../../../../resources/images/pages/open_account/a41-ic-01.svg';
-import icon_renewal from '../../../../../resources/images/pages/open_account/a-41-ic-09.svg';
 import icon_sub_brokerage from '../../../../../resources/images/pages/open_account/a41-ic-03.svg';
 import icon_manager_trust from '../../../../../resources/images/pages/open_account/a41-ic-04.svg';
 import icon_management from '../../../../../resources/images/pages/open_account/img-service-user-management.svg';
@@ -23,20 +22,16 @@ import featureOpenDetail from '../../../../../resources/images/pages/open_accoun
 import icon1 from '../../../../../resources/images/pages/open_account/a41-img-01.jpg';
 import icon2 from '../../../../../resources/images/pages/open_account/a41-img-02.jpg';
 import icon3 from '../../../../../resources/images/pages/open_account/a41-img-03.jpg';
-
+import subscriptionApply from '../../../../../resources/images/pages/open_account/img-subscription-apply.svg';
+// import subscriptionSearch from '../../../../../resources/images/pages/open_account/img-subscription-apply.svg';
 function OpeningAccountIndexComponent(props) {
     const { Content } = Layout;
     const router = useRouter();
     const [securitiesAccountTypes] = useState([
         {
-            title: '信用戶(新開)',
+            title: '信用戶',
             image: icon_credit,
             link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_1?dirtype=99&strProd=0037&strWeb=0035',
-        },
-        {
-            title: '信用戶(續約)',
-            image: icon_renewal,
-            link: process.env.NEXT_PUBLIC_OPENING_ACCOUNT_USER_RENEWAL,
         },
         {
             title: '複委託',
@@ -68,7 +63,7 @@ function OpeningAccountIndexComponent(props) {
         {
             title: '加開進度查詢',
             image: icon_search,
-            link: process.env.NEXT_PUBLIC_OPENING_ACCOUNT_USER_ADDSEARCH,
+            link: 'https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_2?dirtype=99&strProd=0037&strWeb=0035',
         },
     ]);
     const [closeCounter] = useState([
@@ -113,6 +108,18 @@ function OpeningAccountIndexComponent(props) {
             link: process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/PQLogin',
         },
     ]);
+    const [subscriptionLinks] = useState([
+        {
+            title: '申購便利通',
+            image: subscriptionApply,
+            link: process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT,
+        },
+        {
+            title: '申辦進度查詢',
+            image: featureOpenDetail,
+            link: process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT_SEARCH,
+        },
+    ]);
     return (
         <Layout>
             <OpenAccountHeader />
@@ -129,6 +136,8 @@ function OpeningAccountIndexComponent(props) {
                         <SecuritiesAccountMenu linkData={loanZoneTypes} />
                     </div>
                 </div>
+                <h2 className="secondTitle">申購便利通申辦</h2>
+                <SecuritiesAccountMenu linkData={subscriptionLinks} />
                 <h2 className="secondTitle">預約臨櫃開戶</h2>
                 <AppointmentOpenAccount linkData={closeCounter} />
             </Content>

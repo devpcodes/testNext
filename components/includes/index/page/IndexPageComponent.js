@@ -30,8 +30,7 @@ import gov from '../../../../resources/images/pages/homepage/safety_section/a1-i
 import safe from '../../../../resources/images/pages/homepage/safety_section/a1-ic-13.svg';
 import security from '../../../../resources/images/pages/homepage/safety_section/a1-ic-14.svg';
 import RichClub from '../element/RichClub';
-import subInfo from '../../../../resources/images/pages/homepage/safety_section/subInfo.svg';
-import { checkServer } from '../../../../services/checkServer';
+
 const IndexPageComponent = ({ richClubNews }) => {
     const { Content } = Layout;
 
@@ -93,26 +92,12 @@ const IndexPageComponent = ({ richClubNews }) => {
                 target: '_blank',
             },
             {
-                title: '申購專區',
+                title: '股票申購',
                 description: '申購零門檻，備足資金抽起來',
                 site: 'inner',
-                link: `/subscriptionArea/Subscription`,
+                link: `/Subscription`,
                 icon: `${stockSubs}`,
                 target: '_self',
-            },
-            {
-                title: '申購信用通',
-                description: '先抽後付，用小資金放大機會',
-                site: 'outer',
-                link: !checkServer()
-                    ? location.protocol +
-                      '//' +
-                      location.host +
-                      `${process.env.NEXT_PUBLIC_SUBPATH}` +
-                      '/subscriptionArea/ProductInfo/'
-                    : `${process.env.NEXT_PUBLIC_SUBPATH}` + '/subscriptionArea/ProductInfo/',
-                icon: `${subInfo}`,
-                target: '_blank',
             },
             {
                 title: 'Python API',
@@ -130,6 +115,14 @@ const IndexPageComponent = ({ richClubNews }) => {
                 link: 'https://www.sinotrade.com.tw/SS/Main/LendMenu.aspx',
                 icon: `${borrow}`,
                 target: '_blank',
+            },
+            {
+                title: '預收款券',
+                description: '處置股、注意股交易超便利',
+                site: 'inner',
+                link: `/AdvanceCollection`,
+                icon: `${receipt}`,
+                target: '_self',
             },
             {
                 title: '不限用途借貸',
