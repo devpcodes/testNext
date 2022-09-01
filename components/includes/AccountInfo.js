@@ -126,6 +126,7 @@ const AccountInfo = () => {
                                     tradingLayout={true}
                                     width={'100%'}
                                     tradingContainerWidth={'100%'}
+                                    userSelfOnly={true}
                                 />
                             </div>
                         </div>
@@ -254,7 +255,11 @@ const AccountInfo = () => {
                                 <p>
                                     <span>總電子交易額度</span>
                                     <span>
-                                        {dataMore.leaves ? formatNum(dataMore.leaves) : '--'}
+                                        {dataMore.leaves
+                                            ? formatNum(dataMore.leaves)
+                                            : data.EAMT
+                                            ? formatNum(data.EAMT)
+                                            : '--'}
                                         {/*<a>申請調整</a> */}
                                     </span>
                                 </p>
