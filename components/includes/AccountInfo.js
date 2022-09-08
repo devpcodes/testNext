@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { setModal } from '../../store/components/layouts/action';
-import { getAccountData, getCustomerCredit, getOTPUrl } from '../../services/getAccountInfo';
+import { getAccountData, getCustomerCredit, getOTPUrl, queryKeepingrate } from '../../services/getAccountInfo';
 import { getToken } from '../../services/user/accessToken';
 import { EnvironmentFilled, InfoCircleFilled } from '@ant-design/icons';
 import info from '../../resources/images/pages/Service_ForgetPassword/attention-info-circle.svg';
@@ -17,6 +17,7 @@ const AccountInfo = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({});
     const [dataMore, setDataMore] = useState({});
+    const [KRate, setKRate] = useState({});
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -28,7 +29,6 @@ const AccountInfo = () => {
 
     const getData = async () => {
         try {
-            //
             let token = getToken();
             let ds = await getAccountData(token, currentAccount.idno, currentAccount.broker_id, currentAccount.account);
             console.log(ds);
@@ -39,6 +39,11 @@ const AccountInfo = () => {
             if (more) {
                 console.log(more);
                 setDataMore(more);
+            }
+            let keepingRate = await queryKeepingrate(token, currentAccount.broker_id, currentAccount.account);
+            if (keepingRate) {
+                console.log(keepingRate);
+                setKRate(keepingRate);
             }
         } catch (err) {
             Modal.error({
@@ -327,7 +332,7 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
-                                    <span>{data.SCD21 ? data.SCD21 : '--'}</span>
+                                    <span>{KRate.sum_twd ? KRate.sum_twd + '%' : data.SCD21 ? data.SCD21 : '--'}</span>
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
