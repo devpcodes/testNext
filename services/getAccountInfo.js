@@ -49,16 +49,15 @@ export const getCustomerCredit = async function (branch, account, token) {
 
 export const queryKeepingrate = async function (token, branch, account) {
     try {
-        const url = '/assets/queryStructuredNoteSum';
-        // const url = '/equity/queryKeepingratetotal';
+        const url = '/equity/queryKeepingratetotal';
         let data = {
             account: account,
             branch: branch,
             token: token,
         };
-        console.log('[queryKeepingratedata]', data);
+        // console.log('[queryKeepingratedata]', data);
         const res = await getDivoInstance('v1', true).post(url, data);
-        console.log('[RES queryKeepingrate]', res);
+        // console.log('[RES queryKeepingrate]', res);
         if (res.data.success === true) {
             return res.data.result;
         } else {

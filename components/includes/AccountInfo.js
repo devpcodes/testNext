@@ -42,7 +42,7 @@ const AccountInfo = () => {
             }
             let keepingRate = await queryKeepingrate(token, currentAccount.broker_id, currentAccount.account);
             if (keepingRate) {
-                console.log(keepingRate);
+                console.log('keepingRate', keepingRate.accmrate);
                 setKRate(keepingRate);
             }
         } catch (err) {
@@ -332,7 +332,13 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
-                                    <span>{KRate.sum_twd ? KRate.sum_twd + '%' : data.SCD21 ? data.SCD21 : '--'}</span>
+                                    <span>
+                                        {KRate.accmrate && KRate.accmrate !== '0'
+                                            ? KRate.accmrate + '%'
+                                            : data.SCD21
+                                            ? data.SCD21
+                                            : '--'}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
