@@ -31,19 +31,25 @@ const AccountInfo = () => {
         try {
             let token = getToken();
             let ds = await getAccountData(token, currentAccount.idno, currentAccount.broker_id, currentAccount.account);
-            console.log(ds);
             if (ds) {
+                // console.log(ds);
                 setData(ds);
+            } else {
+                setData({});
             }
             let more = await getCustomerCredit(currentAccount.broker_id, currentAccount.account, token);
             if (more) {
-                console.log(more);
+                // console.log(more);
                 setDataMore(more);
+            } else {
+                setDataMore({});
             }
             let keepingRate = await queryKeepingrate(token, currentAccount.broker_id, currentAccount.account);
             if (keepingRate) {
-                console.log('keepingRate', keepingRate.accmrate);
+                // console.log('keepingRate', keepingRate.accmrate);
                 setKRate(keepingRate);
+            } else {
+                setKRate({});
             }
         } catch (err) {
             Modal.error({
