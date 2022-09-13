@@ -1,4 +1,4 @@
-import { useReducer, createContext, useState, useMemo } from 'react';
+import { useReducer, useState, useMemo, useEffect } from 'react';
 import { Select, Radio } from 'antd';
 import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayout';
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
@@ -8,7 +8,7 @@ import DebitDeposit from '../components/includes/debitDeposit/page/DebitDeposit'
 import { ReducerContext } from '../store/advanceCollection/reducerContext';
 const initState = reducers();
 // export const ReducerContext = createContext();
-
+import { useRouter } from 'next/router';
 const { Option } = Select;
 
 const options = [
@@ -18,14 +18,18 @@ const options = [
 ];
 // 有獨立全局狀態不是redux
 const AdvanceCollection = function () {
-    const [selectOption, setSelectOption] = useState('earmarkReserve');
+    const router = useRouter();
+    const [selectOption, setSelectOption] = useState('');
     const reducer = useReducer(reducers, initState);
     const handleChange = value => {
         // setSelectOption(value);
         setSelectOption(value.target.value);
     };
+    useEffect(() => {
+        setSelectOption('earmarkReserve');
+    }, []);
 
-    const componentsFactory = useMemo(() => {
+    const componentsFactory = () => {
         switch (selectOption) {
             case 'earmarkReserve':
                 return <EarmarkReserve />;
@@ -36,7 +40,13 @@ const AdvanceCollection = function () {
             default:
                 break;
         }
-    }, [selectOption]);
+    };
+
+    useEffect(() => {
+        if (router.query.type != null) {
+            setSelectOption(router.query.type);
+        }
+    }, [router.query]);
 
     return (
         <>
@@ -52,7 +62,7 @@ const AdvanceCollection = function () {
                             buttonStyle="solid"
                         />
                     </div>
-                    {componentsFactory}
+                    {componentsFactory()}
                 </AdvanceCollectionLayout>
             </ReducerContext.Provider>
             <style global jsx>{`
