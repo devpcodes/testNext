@@ -1,6 +1,5 @@
-import { getA8StpInstanceAuth, getA8StpInstance } from './myAxios';
+import { getA8StpInstanceAuth, getA8StpInstance, getDivoInstance } from './myAxios';
 import moment from 'moment';
-
 export const getOTPUrl = async function (token) {
     try {
         const url = '/lykan/api/v1/auth/getLendingOTP';
@@ -42,6 +41,27 @@ export const getCustomerCredit = async function (branch, account, token) {
             return res.data.result;
         } else {
             return false;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const queryKeepingrate = async function (token, branch, account) {
+    try {
+        const url = '/equity/queryKeepingratetotal';
+        let data = {
+            account: account,
+            branch: branch,
+            token: token,
+        };
+        // console.log('[queryKeepingratedata]', data);
+        const res = await getDivoInstance('v1', true).post(url, data);
+        // console.log('[RES queryKeepingrate]', res);
+        if (res.data.success === true) {
+            return res.data.result;
+        } else {
+            return true;
         }
     } catch (error) {
         throw error;

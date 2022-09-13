@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { setModal } from '../../store/components/layouts/action';
-import { getAccountData, getCustomerCredit, getOTPUrl } from '../../services/getAccountInfo';
+import { getAccountData, getCustomerCredit, getOTPUrl, queryKeepingrate } from '../../services/getAccountInfo';
 import { getToken } from '../../services/user/accessToken';
 import { EnvironmentFilled, InfoCircleFilled } from '@ant-design/icons';
 import info from '../../resources/images/pages/Service_ForgetPassword/attention-info-circle.svg';
@@ -17,6 +17,7 @@ const AccountInfo = () => {
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [data, setData] = useState({});
     const [dataMore, setDataMore] = useState({});
+    const [KRate, setKRate] = useState({});
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -28,17 +29,27 @@ const AccountInfo = () => {
 
     const getData = async () => {
         try {
-            //
             let token = getToken();
             let ds = await getAccountData(token, currentAccount.idno, currentAccount.broker_id, currentAccount.account);
-            console.log(ds);
             if (ds) {
+                // console.log(ds);
                 setData(ds);
+            } else {
+                setData({});
             }
             let more = await getCustomerCredit(currentAccount.broker_id, currentAccount.account, token);
             if (more) {
-                console.log(more);
+                // console.log(more);
                 setDataMore(more);
+            } else {
+                setDataMore({});
+            }
+            let keepingRate = await queryKeepingrate(token, currentAccount.broker_id, currentAccount.account);
+            if (keepingRate) {
+                // console.log('keepingRate', keepingRate.accmrate);
+                setKRate(keepingRate);
+            } else {
+                setKRate({});
             }
         } catch (err) {
             Modal.error({
@@ -107,7 +118,7 @@ const AccountInfo = () => {
                         <div className="topTitle">
                             帳戶基本資料
                             <Popover
-                                content={'以下資訊僅用於描述描述個人資料，你的資料將會安全地被我們保存且不會公開'}
+                                content={'以下資訊僅用於描述個人資料，你的資料將會安全地被我們保存且不會公開'}
                                 trigger={isMobile ? 'click' : 'hover'}
                                 placement="bottomRight"
                                 className="infoPopoverBtn forMB"
@@ -118,9 +129,7 @@ const AccountInfo = () => {
                             </Popover>
                         </div>
                         <div className="subTitle flexBox ">
-                            <p className="forPC">
-                                以下資訊僅用於描述描述個人資料，你的資料將會安全地被我們保存且不會公開
-                            </p>
+                            <p className="forPC">以下資訊僅用於描述個人資料，你的資料將會安全地被我們保存且不會公開</p>
                             <div className="AccountDropdownBox">
                                 <AccountDropdown
                                     type={'S'}
@@ -128,6 +137,7 @@ const AccountInfo = () => {
                                     tradingLayout={true}
                                     width={'100%'}
                                     tradingContainerWidth={'100%'}
+                                    userSelfOnly={true}
                                 />
                             </div>
                         </div>
@@ -256,7 +266,11 @@ const AccountInfo = () => {
                                 <p>
                                     <span>總電子交易額度</span>
                                     <span>
-                                        {dataMore.leaves ? formatNum(dataMore.leaves) : '--'}
+                                        {dataMore.leaves
+                                            ? formatNum(dataMore.leaves)
+                                            : data.EAMT
+                                            ? formatNum(data.EAMT)
+                                            : '--'}
                                         {/*<a>申請調整</a> */}
                                     </span>
                                 </p>
@@ -267,9 +281,13 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.used ? formatNum(dataMore.used) : '--'}/
+                                        {dataMore.used ? formatNum(dataMore.used) : '0'}/
                                         <br className="forMB" />
-                                        {dataMore.leaves ? formatNum(dataMore.leaves) : '--'}
+                                        {dataMore.leaves && dataMore.leaves !== '0'
+                                            ? formatNum(dataMore.leaves)
+                                            : data.EAMT
+                                            ? formatNum(data.EAMT)
+                                            : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -320,11 +338,23 @@ const AccountInfo = () => {
                                 </p>
                                 <p>
                                     <span>整戶維持率</span>
-                                    <span>{data.SCD21 ? data.SCD21 : '--'}</span>
+                                    <span>
+                                        {KRate.accmrate && KRate.accmrate !== '0'
+                                            ? KRate.accmrate + '%'
+                                            : data.SCD21
+                                            ? data.SCD21
+                                            : '--'}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>總融資額度</span>
-                                    <span>{dataMore.finAmt ? formatNum(dataMore.finAmt) : '--'}</span>
+                                    <span>
+                                        {dataMore.finAmt && dataMore.finAmt !== '0'
+                                            ? formatNum(dataMore.finAmt)
+                                            : data.CRAMT
+                                            ? formatNum(data.CRAMT)
+                                            : '--'}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>
@@ -333,14 +363,24 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.finUsedAmt ? formatNum(dataMore.finUsedAmt) : '--'}/
+                                        {dataMore.finUsedAmt ? formatNum(dataMore.finUsedAmt) : '0'}/
                                         <br className="forMB" />
-                                        {dataMore.finLeavesAmt ? formatNum(dataMore.finLeavesAmt) : '--'}
+                                        {dataMore.finLeavesAmt && dataMore.finLeavesAmt !== '0'
+                                            ? formatNum(dataMore.finLeavesAmt)
+                                            : data.CRAMT
+                                            ? formatNum(data.CRAMT)
+                                            : '--'}
                                     </span>
                                 </p>
                                 <p>
                                     <span>總融券額度</span>
-                                    <span>{dataMore.shortAmt ? formatNum(dataMore.shortAmt) : '--'}</span>
+                                    <span>
+                                        {dataMore.shortAmt && dataMore.shortAmt !== '0'
+                                            ? formatNum(dataMore.shortAmt)
+                                            : data.DBAMT
+                                            ? formatNum(data.DBAMT)
+                                            : '--'}
+                                    </span>
                                 </p>
                                 <p>
                                     <span>
@@ -349,9 +389,13 @@ const AccountInfo = () => {
                                         剩餘額度
                                     </span>
                                     <span>
-                                        {dataMore.shortUsedAmt ? formatNum(dataMore.shortUsedAmt) : '--'}/
+                                        {dataMore.shortUsedAmt ? formatNum(dataMore.shortUsedAmt) : '0'}/
                                         <br className="forMB" />
-                                        {dataMore.shortLeavesAmt ? formatNum(dataMore.shortLeavesAmt) : '--'}
+                                        {dataMore.shortLeavesAmt && dataMore.shortLeavesAmt !== '0'
+                                            ? formatNum(dataMore.shortLeavesAmt)
+                                            : data.DBAMT
+                                            ? formatNum(data.DBAMT)
+                                            : '--'}
                                     </span>
                                 </p>
                             </div>
@@ -368,10 +412,10 @@ const AccountInfo = () => {
                                     <span>帳戶狀態</span>
                                     <span>
                                         {data.SLSTATUS}
-                                        {data.SLSTATUS === '註銷' || data.SLSTATUS === '' ? (
+                                        {data.SLSTATUS === '' ? (
                                             <a
                                                 className="ml-10"
-                                                href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0002&strWeb=0001"
+                                                href="https://www.sinotrade.com.tw/CSCenter/CSCenter_13_9_4_2?dirtype=99&strProd=0037&strWeb=0035"
                                             >
                                                 立即開借券戶
                                             </a>
