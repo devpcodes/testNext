@@ -33,11 +33,14 @@ const Apply = ({ active }) => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
-        dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        if (state.accountsReducer.selected === '') {
+            dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        }
     }, [state.accountsReducer.accounts]);
 
     useEffect(() => {
         if (active) {
+            console.log('test', state.accountsReducer.selected.broker_id, state.accountsReducer.selected.account);
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             getInventory(state.accountsReducer.activeType);
         }
