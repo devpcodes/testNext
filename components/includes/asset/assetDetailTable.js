@@ -879,7 +879,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             sorter: (a, b) => a.amount_twd - b.amount_twd,
                             align: 'right',
                         },
-                        { title: '成本均價', dataIndex: 'cost_twd' },
+                        {
+                            title: '成本均價',
+                            dataIndex: 'cost_twd',
+                            render: cost_twd => formatNum(cost_twd),
+                            align: 'right',
+                        },
                         {
                             title: '付出成本',
                             dataIndex: 'cost',
@@ -1014,7 +1019,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             sorter: (a, b) => a.amount_twd - b.amount_twd,
                             align: 'right',
                         },
-                        { title: '成本均價', dataIndex: 'cost_twd' },
+                        {
+                            title: '成本均價',
+                            dataIndex: 'cost_twd',
+                            render: cost_twd => formatNum(cost_twd),
+                            align: 'right',
+                        },
                         {
                             title: '付出成本',
                             dataIndex: 'cost',
