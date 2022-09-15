@@ -17,9 +17,13 @@ const AssetCarouselOverview = memo(({ changeTypeHandler }) => {
             S: {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
-                        ? parseFloat((realTimePrtLosSum?.S?.sum_namt / realTimePrtLosSumTotal) * 100).toFixed(2)
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.S?.sum_namt) + parseInt(realTimePrtLosSum?.L?.sum_namt)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
                         : '--', // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.S?.sum_namt), // 總額
+                sum_amt: formatNum(parseInt(realTimePrtLosSum?.S?.sum_namt) + parseInt(realTimePrtLosSum?.L?.sum_namt)), // 總額
             },
             // 基金
             OF: {

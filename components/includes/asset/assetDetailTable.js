@@ -67,9 +67,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         { title: '現價', dataIndex: 'mprice', align: 'right' },
                         {
                             title: '參考市值',
-                            dataIndex: 'amt',
-                            render: amt => formatNum(amt),
-                            sorter: (a, b) => a.amt - b.amt,
+                            dataIndex: 'namt',
+                            render: namt => formatNum(namt),
+                            sorter: (a, b) => a.namt - b.namt,
                             align: 'right',
                         },
                         {
@@ -212,7 +212,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         ttypename: data.ttypename,
                         qty: data.qty,
                         mprice: data.mprice,
-                        amt: data.amt,
+                        namt: data.namt,
                         avgprice: parseFloat(data.cost / data.qty).toFixed(2),
                         cost: data.cost,
                         unreal: data.unreal,
@@ -226,7 +226,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         ttypename: data.ttypename,
                         qty: formatNum(data.qty),
                         mprice: data.mprice,
-                        amt: formatNum(data.amt),
+                        namt: formatNum(data.namt),
                         avgprice: parseFloat(data.cost / data.qty).toFixed(2),
                         cost: formatNum(data.cost),
                         unreal: (
@@ -317,7 +317,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         stock: [
                             { title: '類別', dataIndex: 'ttypename', align: 'center', width: 100 },
                             { title: '商品/現價', dataIndex: 'stocknm__mprice', align: 'right' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt', align: 'right' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt', align: 'right' },
                             { title: '損益/報酬率', dataIndex: 'unreal__ur_ratio', align: 'right' },
                         ],
                         unreal: [
@@ -352,11 +352,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
