@@ -866,7 +866,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         { title: '幣別', dataIndex: 'curr' },
                         { title: '庫存', dataIndex: 'last_inv', align: 'right' },
-                        { title: '現價', dataIndex: 'avg_cost', align: 'right' },
                         {
                             title: '市值',
                             dataIndex: 'amount',
@@ -914,7 +913,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        avg_cost: data.avg_cost,
                         amount: data.amount,
                         amount_twd: data.amount_twd,
                         cost_twd: data.cost_twd,
@@ -929,7 +927,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        avg_cost: data.avg_cost,
                         amount: formatNum(data.amount),
                         amount_twd: formatNum(data.amount_twd),
                         cost_twd: data.cost_twd,
@@ -952,7 +949,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setColumnData({
                         FIP: [
                             { title: '市場/幣別', dataIndex: 'market__curr' },
-                            { title: '商品/現價', dataIndex: 'pro_name__avg_cost' },
+                            { title: '商品', dataIndex: 'pro_name' },
                             { title: '庫存/市值', dataIndex: 'last_inv__amount' },
                             { title: '損益/報酬率', dataIndex: 'pl__roi' },
                         ],
@@ -970,13 +967,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.curr}
                                 </div>
                             ),
-                            pro_name__avg_cost: (
-                                <div>
-                                    {data.pro_name}
-                                    <br />
-                                    {data.avg_cost}
-                                </div>
-                            ),
+                            pro_name: <div>{data.pro_name}</div>,
                             last_inv__amount: (
                                 <div>
                                     {formatNum(data.last_inv)}
@@ -1010,7 +1001,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         { title: '幣別', dataIndex: 'curr' },
                         { title: '庫存', dataIndex: 'last_inv', align: 'right' },
-                        { title: '現價', dataIndex: 'avg_cost', align: 'right' },
                         {
                             title: '市值',
                             dataIndex: 'amount',
@@ -1058,7 +1048,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        avg_cost: data.avg_cost,
                         amount: data.amount,
                         amount_twd: data.amount_twd,
                         cost_twd: data.cost_twd,
@@ -1073,7 +1062,6 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         pro_name: data.pro_name,
                         curr: data.curr,
                         last_inv: data.last_inv,
-                        avg_cost: data.avg_cost,
                         amount: formatNum(data.amount),
                         amount_twd: formatNum(data.amount_twd),
                         cost_twd: data.cost_twd,
@@ -1096,7 +1084,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setColumnData({
                         MIP: [
                             { title: '市場/幣別', dataIndex: 'market__curr' },
-                            { title: '商品/現價', dataIndex: 'pro_name__avg_cost' },
+                            { title: '商品', dataIndex: 'pro_name' },
                             { title: '庫存/市值', dataIndex: 'last_inv__amount' },
                             { title: '損益/報酬率', dataIndex: 'pl__roi' },
                         ],
@@ -1114,13 +1102,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.curr}
                                 </div>
                             ),
-                            pro_name__avg_cost: (
-                                <div>
-                                    {data.pro_name}
-                                    <br />
-                                    {data.avg_cost}
-                                </div>
-                            ),
+                            pro_name: <div>{data.pro_name}</div>,
                             last_inv__amount: (
                                 <div>
                                     {formatNum(data.last_inv)}
