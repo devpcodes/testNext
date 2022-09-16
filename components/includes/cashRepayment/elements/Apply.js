@@ -413,20 +413,22 @@ const Apply = ({ active, showSearchBox = true }) => {
                 style={{ marginTop: '30px' }}
                 list={[
                     { txt: '「注意事項」' },
-                    { txt: '1. 線上申請時間為(股票交易日)營業日9:00~14:00，不提供預約' },
+                    { txt: '1. 申請時間為(股票交易日)營業日13:30~14:30，當日有效' },
                     {
                         txt: '2. 申請送出後，請至查詢頁面確認是否成功',
                     },
                     {
-                        txt: '3. 申請成功，如欲取消，請洽所屬分公司',
+                        txt: '3. 申請成功，如欲取消，請洽所屬分公司營業員',
                     },
                     {
                         html: '<span style="margin-top: -10px">4.	申請標的說明</span>',
                     },
                     {
-                        html: '<span>&nbsp;&nbsp;&nbsp;(1) 股票須完成交割才可進行線上申請</span>',
+                        html: '<span>&nbsp;&nbsp;&nbsp;(1) T+2已完成交割之股票</span>',
                     },
                     { html: '<span>&nbsp;&nbsp;&nbsp;(2) 借券庫存優先扣帳</span>' },
+                    { html: '<span>&nbsp;&nbsp;&nbsp;(3) 非本公司轉融通之股票</span>' },
+                    { html: '<span>&nbsp;&nbsp;&nbsp;(4) 非已圈存之標的股票</span>' },
                 ]}
             />
             <Loading loading={loading} step={20} />
