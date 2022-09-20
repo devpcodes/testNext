@@ -19,6 +19,7 @@ export const AccountDropdown = ({
     type,
     style,
     tradingContainerWidth = 'auto',
+    userSelfOnly = false,
 }) => {
     const dropdownWidth = width || 243;
     const { Option, OptGroup } = Select;
@@ -30,8 +31,19 @@ export const AccountDropdown = ({
 
     const [listVisible, setListVisible] = useState(false);
 
-    const groupedAccount = accountGroupByType(accounts);
-    const groupedAccountTypes = Object.keys(groupedAccount);
+    let groupedAccount = accountGroupByType(accounts);
+    let groupedAccountTypes = Object.keys(groupedAccount);
+
+    const selfIdno = currentAccount.idno;
+    if (userSelfOnly) {
+        let groupedAccount_ = {};
+        groupedAccountTypes.map(x => {
+            let item = groupedAccount[x].filter(x => x.idno == selfIdno);
+            groupedAccount_[x] = item;
+        });
+        groupedAccount = groupedAccount_;
+        groupedAccountTypes = Object.keys(groupedAccount);
+    }
 
     useEffect(() => {
         if (!personalAreaVisible || !isMobile) {
@@ -85,6 +97,9 @@ export const AccountDropdown = ({
         }
     };
 
+    const test = val => {
+        console.log('[test]', val);
+    };
     const containerCalssName = () => {
         return tradingLayout ? 'account__container trading__container' : 'account__container';
     };
@@ -144,6 +159,7 @@ export const AccountDropdown = ({
                                     accText = getAccountText(accType);
                                     accountsPerGroup = groupedAccount[accType];
                                 }
+
                                 // const accText = getAccountText(accType);
                                 // const accountsPerGroup = groupedAccount[accType];
                                 return (
