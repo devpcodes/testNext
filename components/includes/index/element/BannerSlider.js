@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Carousel } from 'antd';
 import { getAdSlot } from '../../../../services/components/bannerSlider/AdSlot';
 import AnnouncementMarquee from '../element/AnnouncementMarquee';
 // import { array } from 'prop-types';
+import { useRouter } from 'next/router';
+import { setModal } from '../../../../store/components/layouts/action';
 
 const BannerSlider = () => {
     const clientWidth = useSelector(store => store.layout.winWidth);
@@ -11,9 +13,12 @@ const BannerSlider = () => {
     const [banner, setBanner] = useState(true);
     const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(true);
     const showMask = useSelector(store => store.layout.showMask);
+    const dispatch = useDispatch();
+    const router = useRouter();
     const getAds = async () => {
         const data = await getAdSlot('0104');
         setAds(data.ads);
+        // console.log('data',data)
     };
 
     const onCloseAnnouncement = () => {
@@ -34,6 +39,39 @@ const BannerSlider = () => {
         }
     }, [showMask]);
 
+    const blankConfirm = data => {
+        console.log('data', data);
+        if (data.isBlank) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    content: <div>提醒您，您即將離開永豐金證券理財網，前往其他機構提供之網站!</div>,
+                    type: 'confirm',
+                    title: '提醒',
+                    noCloseIcon: true,
+                    noTitleIcon: true,
+                    bodyStyle: { paddingTop: 20, paddingBottom: 20, borderTop: '1px solid #EEE' },
+                    okButtonProps: {
+                        style: {
+                            width: '100px',
+                        },
+                    },
+                    okText: '確定前往',
+                    onOk: () => {
+                        window.open(data.url);
+                    },
+                    onCancel: () => {
+                        dispatch(setModal({ visible: false }));
+                    },
+                    class: 'adblank_confirm',
+                    maskClosable: false,
+                }),
+            );
+        } else {
+            window.location.href = data.url;
+        }
+    };
+
     return (
         <>
             <div className="banner-slider-container">
@@ -42,7 +80,11 @@ const BannerSlider = () => {
                     {Array.isArray(ads) &&
                         ads.map((e, i) => (
                             <div key={i}>
-                                <a href={e.url} rel="noreferrer noopener" target={e.isBlank ? '_blank' : '_self'}>
+                                <a
+                                    onClick={blankConfirm.bind(null, e)}
+                                    rel="noreferrer noopener"
+                                    target={e.isBlank ? '_blank' : '_self'}
+                                >
                                     {/* <h3
                                         style={
                                             clientWidth > 450
