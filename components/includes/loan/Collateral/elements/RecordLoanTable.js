@@ -44,9 +44,8 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 dataIndex: 'status',
                 key: 'status',
                 render(text, record, idx) {
-                    if (record.name == 'Not Expandable') {
-                        if (text == '1') {
-                            // && record.canCancel=='Y'
+                    if (record.from == 'applyStatus') {
+                        if (record.canCancel == 'Y') {
                             return (
                                 <React.Fragment key={idx}>
                                     <SubscriptionBtn
@@ -68,19 +67,48 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                             );
                         } else {
                             let nt = '';
-                            switch (text) {
-                                case '2':
-                                    nt = '預約已刪除';
-                                    break;
-                                case '4':
-                                    nt = '申請失敗';
-                                    break;
-                                case '7':
-                                    nt = '無法刪除';
-                                    break;
-                                case '8':
-                                    nt = '轉檔中';
-                                    break;
+                            if (text == '1') {
+                                switch (record.flowStatus) {
+                                    case '1':
+                                        nt = '待簽核';
+                                        break;
+                                    case '2':
+                                        nt = '核可結案';
+                                        break;
+                                    case '3':
+                                        nt = '駁回結案';
+                                        break;
+                                    case '4':
+                                        nt = '已取消';
+                                        break;
+                                    case '5':
+                                        nt = '逾時未處理';
+                                        break;
+                                    case '6':
+                                        nt = '無效件';
+                                        break;
+                                    case '7':
+                                        nt = '其他';
+                                        break;
+                                }
+                            } else {
+                                switch (text) {
+                                    case '1':
+                                        nt = '預約中';
+                                        break;
+                                    case '2':
+                                        nt = '預約已刪除';
+                                        break;
+                                    case '4':
+                                        nt = '申請失敗';
+                                        break;
+                                    case '7':
+                                        nt = '無法刪除';
+                                        break;
+                                    case '8':
+                                        nt = '轉檔中';
+                                        break;
+                                }
                             }
                             return nt;
                         }
