@@ -42,7 +42,7 @@ function SubBrokerageNew() {
     }, [hasAccount]);
     return (
         <>
-            <ActiveReturn />
+            {/* <ActiveReturn /> */}
             <PageHead title={'海外股票交易帳務整合'} />
             <div>
                 <SubBrokerageMain />
