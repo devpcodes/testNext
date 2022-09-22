@@ -73,19 +73,19 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                                         nt = '待簽核';
                                         break;
                                     case '2':
-                                        nt = '核可結案';
+                                        nt = '審核中';
                                         break;
                                     case '3':
-                                        nt = '駁回結案';
+                                        nt = '審核失敗';
                                         break;
                                     case '4':
                                         nt = '已取消';
                                         break;
                                     case '5':
-                                        nt = '逾時未處理';
+                                        nt = '申請無效';
                                         break;
                                     case '6':
-                                        nt = '無效件';
+                                        nt = '申請無效';
                                         break;
                                     case '7':
                                         nt = '其他';
@@ -93,17 +93,14 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                                 }
                             } else {
                                 switch (text) {
-                                    case '1':
-                                        nt = '預約中';
-                                        break;
                                     case '2':
-                                        nt = '預約已刪除';
+                                        nt = '已取消';
                                         break;
                                     case '4':
                                         nt = '申請失敗';
                                         break;
                                     case '7':
-                                        nt = '無法刪除';
+                                        nt = '已取消';
                                         break;
                                     case '8':
                                         nt = '轉檔中';
