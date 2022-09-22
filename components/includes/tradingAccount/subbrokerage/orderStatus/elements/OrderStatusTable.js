@@ -49,9 +49,9 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
 
     const { data: fetchData } = useSWR([JSON.stringify(postData), reload, controlReload], postQuickSearchWithSwr, {
         onError: (error, key) => {
-            Modal.error({
-                title: error,
-            });
+            // Modal.error({
+            //     title: error,
+            // });
             // setError('伺服器錯誤');
         },
         errorRetryCount: 3,
@@ -61,9 +61,9 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
 
     const { data: nameData } = useSWR([JSON.stringify(symbolList)], postSbcoCodeWithSwr, {
         onError: (error, key) => {
-            Modal.error({
-                title: error,
-            });
+            // Modal.error({
+            //     title: error,
+            // });
             // setError('伺服器錯誤');
         },
         errorRetryCount: 3,
