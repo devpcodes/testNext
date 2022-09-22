@@ -30,7 +30,8 @@ export const postQuickSearch = async ({ AID, orderID, sort, stockID, token }) =>
             throw 'error';
         }
     } catch (error) {
-        throw '伺服器錯誤';
+        // throw '伺服器錯誤';
+        throw '';
     }
 };
 

@@ -52,7 +52,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
             Modal.error({
                 title: error,
             });
-            setError('伺服器錯誤');
+            // setError('伺服器錯誤');
         },
         errorRetryCount: 3,
         focusThrottleInterval: 10000,
@@ -64,7 +64,7 @@ const OrderStatusTable = ({ touchPriceFilterValue, controlReload, showDelBtn }) 
             Modal.error({
                 title: error,
             });
-            setError('伺服器錯誤');
+            // setError('伺服器錯誤');
         },
         errorRetryCount: 3,
         focusThrottleInterval: 10000,
