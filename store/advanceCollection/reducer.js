@@ -1,9 +1,10 @@
-import { ACCOUNTS, SELECTED, DISABLED } from './actionType';
+import { ACCOUNTS, SELECTED, DISABLED, ACTIVETYPE } from './actionType';
 
 const initialState = {
     accounts: [],
     selected: '',
     disabled: false,
+    activeType: '1',
 };
 
 export function accountsReducer(state = initialState, action) {
@@ -22,6 +23,11 @@ export function accountsReducer(state = initialState, action) {
             return {
                 ...state,
                 disabled: action.payload,
+            };
+        case ACTIVETYPE:
+            return {
+                ...state,
+                activeType: action.payload,
             };
         default:
             return state;

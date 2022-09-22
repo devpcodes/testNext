@@ -1,6 +1,6 @@
 import { getA8StpInstance } from '../../myAxios';
 
-export const fetchStockInventory = async function (token, branch, account, query_load_type) {
+export const fetchStockInventory = async function (token, branch, account, query_load_type, category) {
     try {
         const url = `/stp/api/queryStockInventory`;
         // const baseUrl = 'https://servicerd.sinotrade.com.tw';
@@ -9,6 +9,7 @@ export const fetchStockInventory = async function (token, branch, account, query
             branch,
             account,
             query_load_type,
+            category: category == null ? '' : '1',
         });
         console.log(res.data);
         if (res.data?.success === true) {

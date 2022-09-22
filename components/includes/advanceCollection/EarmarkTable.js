@@ -2,7 +2,8 @@ import { useEffect, useContext, useRef, useState, useCallback } from 'react';
 import jwt_decode from 'jwt-decode';
 import { fetchQueryEarmarkReserveStatus } from '../../../services/components/reservationStock/fetchQueryEarmarkReserveStatus';
 import ApplyContent from './ApplyContent';
-import { ReducerContext } from '../../../pages/AdvanceCollection';
+// import { ReducerContext } from '../../../pages/AdvanceCollection';
+import { ReducerContext } from '../../../store/advanceCollection/reducerContext';
 import { getToken } from '../../../services/user/accessToken';
 import { formatNum } from '../../../services/formatNum';
 

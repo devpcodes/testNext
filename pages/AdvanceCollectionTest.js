@@ -1,14 +1,14 @@
-import { useReducer, useState, useMemo, useEffect } from 'react';
+import { useReducer, createContext, useState, useMemo } from 'react';
 import { Select, Radio } from 'antd';
 import AdvanceCollectionLayout from '../components/layouts/AdvanceCollectionLayout';
 import ReservationStock from '../components/includes/advanceCollection/ReservationStock';
 import { reducers } from '../store/advanceCollection/combineReducer';
 import EarmarkReserve from '../components/includes/advanceCollection/EarmarkReserve';
 import DebitDeposit from '../components/includes/debitDeposit/page/DebitDeposit';
-import { ReducerContext } from '../store/advanceCollection/reducerContext';
 const initState = reducers();
 // export const ReducerContext = createContext();
-import { useRouter } from 'next/router';
+import { ReducerContext } from '../store/advanceCollection/reducerContext';
+
 const { Option } = Select;
 
 const options = [
@@ -17,19 +17,15 @@ const options = [
     { label: '借券圈存', value: 'debitDeposit' },
 ];
 // 有獨立全局狀態不是redux
-const AdvanceCollection = function () {
-    const router = useRouter();
-    const [selectOption, setSelectOption] = useState('');
+const AdvanceCollectionTest = function () {
+    const [selectOption, setSelectOption] = useState('earmarkReserve');
     const reducer = useReducer(reducers, initState);
     const handleChange = value => {
         // setSelectOption(value);
         setSelectOption(value.target.value);
     };
-    useEffect(() => {
-        setSelectOption('earmarkReserve');
-    }, []);
 
-    const componentsFactory = () => {
+    const componentsFactory = useMemo(() => {
         switch (selectOption) {
             case 'earmarkReserve':
                 return <EarmarkReserve />;
@@ -40,13 +36,7 @@ const AdvanceCollection = function () {
             default:
                 break;
         }
-    };
-
-    useEffect(() => {
-        if (router.query.type != null) {
-            setSelectOption(router.query.type);
-        }
-    }, [router.query]);
+    }, [selectOption]);
 
     return (
         <>
@@ -62,7 +52,7 @@ const AdvanceCollection = function () {
                             buttonStyle="solid"
                         />
                     </div>
-                    {componentsFactory()}
+                    {componentsFactory}
                 </AdvanceCollectionLayout>
             </ReducerContext.Provider>
             <style global jsx>{`
@@ -118,4 +108,4 @@ const AdvanceCollection = function () {
 }; */
 }
 
-export default AdvanceCollection;
+export default AdvanceCollectionTest;

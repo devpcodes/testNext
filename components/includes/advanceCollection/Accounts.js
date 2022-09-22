@@ -3,7 +3,8 @@ import icon from '../../../resources/images/reservation/icon.png';
 import mobileIcon from '../../../resources/images/reservation/mobileIcon.png';
 import AccountSelect from './AccountSelect';
 import { useWindowSize } from '../../../hooks/useWindowSize';
-import { ReducerContext } from '../../../pages/AdvanceCollection';
+// import { ReducerContext } from '../../../pages/AdvanceCollection';
+import { ReducerContext } from '../../../store/advanceCollection/reducerContext';
 import { SELECTED } from '../../../store/advanceCollection/actionType';
 const Accounts = ({ style, value, ...props } = { value: '' }) => {
     const [state, dispatch] = useContext(ReducerContext);
