@@ -21,7 +21,10 @@ const DountChart = function () {
         let chart = am4core.create('chartdiv', am4charts.PieChart);
 
         chart.data = [
-            { sector: '國內證券', size: realTimePrtLosSum?.S?.sum_namt },
+            {
+                sector: '國內證券',
+                size: parseInt(realTimePrtLosSum?.S?.sum_namt) + parseInt(realTimePrtLosSum?.L?.sum_namt),
+            },
             {
                 sector: '期貨',
                 size: parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dbaln_twd),
