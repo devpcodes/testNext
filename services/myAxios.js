@@ -48,7 +48,7 @@ const errorHandler = (error, modal = true) => {
     if (error.message.includes('timeout')) {
         // console.log('path', location.pathname)
         if (!isServer) {
-            if (location.pathname.indexOf('SubBrokerageNew') != -1) {
+            if (location.pathname.indexOf('SubBrokerageNew') == -1) {
                 Modal.error({
                     content: '伺服器忙碌中，請稍後再試',
                 });
@@ -88,12 +88,12 @@ const errorHandler = (error, modal = true) => {
         }
     } else if (error.request) {
         if (!isServer) {
-            if (location.pathname.indexOf('SubBrokerageNew') != -1) {
+            if (location.pathname.indexOf('SubBrokerageNew') == -1) {
                 !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
             }
         }
     } else {
-        if (!isServer && location.pathname.indexOf('SubBrokerageNew') != -1) {
+        if (!isServer && location.pathname.indexOf('SubBrokerageNew') == -1) {
             !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
         }
     }
