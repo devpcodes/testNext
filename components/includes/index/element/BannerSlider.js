@@ -41,7 +41,7 @@ const BannerSlider = () => {
 
     const blankConfirm = data => {
         console.log('data', data);
-        if (data.isBlank) {
+        if (data.isExternalLink) {
             dispatch(
                 setModal({
                     visible: true,
