@@ -54,6 +54,7 @@ const BannerSlider = () => {
                     okButtonProps: {
                         style: {
                             width: '100px',
+                            backgroundColor: '#C43826',
                         },
                     },
                     okText: '確定前往',
