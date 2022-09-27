@@ -12,6 +12,7 @@ import { fetchAccount } from '../../../../services/components/subscriptionOvervi
 import { postQueryCrossSelling } from '../../../../services/components/mySubscription/postQueryCrossSelling';
 import { fetchAccountStatus } from '../../../../services/components/subscriptionOverview/fetchAccountStatus';
 import { useCheckSubscriptionAcc } from '../../../../hooks/useCheckSubscriptionAcc';
+import { checkUserIdAcc } from '../../../../services/checkUserIdAcc';
 const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
@@ -26,8 +27,16 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const [locExpDate, setLocExpDate] = useState('');
     const [overDueInterest, setOverDueInterest] = useState('--');
     const [accountSuccess, setAccountSuccess] = useState(false);
+
     const getBalance = async () => {
         const token = getToken();
+        if (!checkUserIdAcc(token, currentAccount.idno)) {
+            message.error('無法查詢，非所屬帳號資料');
+            setBalance('--');
+            setBankAccount('--');
+            return;
+        }
+
         try {
             const res = await postBankAccountBalance({
                 token,
