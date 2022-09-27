@@ -266,8 +266,8 @@ const AccountInfo = () => {
                                 <p>
                                     <span>總電子交易額度</span>
                                     <span>
-                                        {dataMore.leaves
-                                            ? formatNum(dataMore.leaves)
+                                        {dataMore.amt
+                                            ? formatNum(dataMore.amt)
                                             : data.EAMT
                                             ? formatNum(data.EAMT)
                                             : '--'}

@@ -10,16 +10,34 @@ export const getContentData = type => {
             return {
                 sum_cost: {
                     title: '總成本',
-                    amount: `$${success ? formatNum(realTimePrtLosSum?.S?.sum_cost) : '--'}`,
+                    amount: `$${
+                        success
+                            ? formatNum(
+                                  parseInt(realTimePrtLosSum?.S?.sum_cost) +
+                                      parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_cost),
+                              )
+                            : '--'
+                    }`,
                     class: '',
                 },
                 sum_unreal: {
                     title: '損益試算',
-                    amount: `$${success ? formatNum(realTimePrtLosSum?.S?.sum_unreal) : '--'}`,
+                    amount: `$${
+                        success
+                            ? formatNum(
+                                  parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                                      parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal),
+                              )
+                            : '--'
+                    }`,
                     class:
-                        realTimePrtLosSum?.S?.sum_unreal > 0
+                        parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                            parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal) >
+                        0
                             ? 'win'
-                            : realTimePrtLosSum?.S?.sum_unreal < 0
+                            : parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                                  parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal) <
+                              0
                             ? 'loss'
                             : '',
                 },
@@ -28,7 +46,11 @@ export const getContentData = type => {
                     amount:
                         realTimePrtLosSum?.S?.sum_cost != '0'
                             ? `${parseFloat(
-                                  (realTimePrtLosSum?.S?.sum_unreal / realTimePrtLosSum?.S?.sum_cost) * 100,
+                                  ((parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                                      parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal)) /
+                                      (parseInt(realTimePrtLosSum?.S?.sum_cost) +
+                                          parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_cost))) *
+                                      100,
                               ).toFixed(2)}%`
                             : '--',
                     class:
@@ -290,7 +312,7 @@ export const getContentData = type => {
             // 名目本金
             let trade_nonachieve = 0;
             let sum_cost_twd = 0;
-            realTimePrtLosSum?.OF.data.map((data, index) => {
+            realTimePrtLosSum?.OF?.data.map((data, index) => {
                 trade_nonachieve = trade_nonachieve + data.trade_nonachieve;
                 sum_cost_twd = sum_cost_twd + (data.trade_value - data.trade_nonachieve);
             });
@@ -570,7 +592,9 @@ export const getTitleData = type => {
             titleData = {
                 title: '台股庫存總市值',
                 currency: 'NTD',
-                sum: success ? formatNum(realTimePrtLosSum?.S?.sum_namt) : '--',
+                sum: success
+                    ? formatNum(parseInt(realTimePrtLosSum?.S?.sum_namt) + parseInt(realTimePrtLosSum?.L?.sum_namt))
+                    : '--',
             };
             break;
         case 'F':

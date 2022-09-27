@@ -34,12 +34,27 @@ const DountChartContainer = memo(({}) => {
             S: {
                 total_proportion:
                     parseInt(realTimePrtLosSumTotal) != 0
-                        ? parseFloat((realTimePrtLosSum?.S?.sum_namt / realTimePrtLosSumTotal) * 100).toFixed(2)
+                        ? parseFloat(
+                              ((parseInt(realTimePrtLosSum?.S?.sum_namt) + parseInt(realTimePrtLosSum?.L?.sum_namt)) /
+                                  realTimePrtLosSumTotal) *
+                                  100,
+                          ).toFixed(2)
                         : '--', // 總佔比
-                sum_amt: formatNum(realTimePrtLosSum?.S?.sum_namt), // 總額
-                profit_loss: formatNum(realTimePrtLosSum?.S?.sum_unreal),
+                sum_amt: formatNum(parseInt(realTimePrtLosSum?.S?.sum_namt) + parseInt(realTimePrtLosSum?.L?.sum_namt)), // 總額
+                profit_loss: formatNum(
+                    parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                        parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal),
+                ),
                 is_profit:
-                    realTimePrtLosSum?.S?.sum_unreal > 0 ? true : realTimePrtLosSum?.S?.sum_unreal < 0 ? false : null,
+                    parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                        parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal) >
+                    0
+                        ? true
+                        : parseInt(realTimePrtLosSum?.S?.sum_unreal) +
+                              parseInt(realTimePrtLosSum?.L?.unreal_sums?.sum_unreal) <
+                          0
+                        ? false
+                        : null,
             },
             // 基金
             OF: {
@@ -71,11 +86,16 @@ const DountChartContainer = memo(({}) => {
                 sum_amt: formatNum(
                     parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dbaln_twd),
                 ),
-                profit_loss: formatNum(realTimePrtLosSum?.F?.sum_futeamt_twd),
+                profit_loss: formatNum(
+                    parseInt(realTimePrtLosSum?.F?.sum_futeamt_twd) + parseInt(realTimePrtLosSum?.FF?.sum_dtunpl_twd),
+                ),
                 is_profit:
-                    realTimePrtLosSum?.F?.sum_futeamt_twd > 0
+                    parseInt(realTimePrtLosSum?.F?.sum_futeamt_twd) + parseInt(realTimePrtLosSum?.FF?.sum_dtunpl_twd) >
+                    0
                         ? true
-                        : realTimePrtLosSum?.F?.sum_futeamt_twd < 0
+                        : parseInt(realTimePrtLosSum?.F?.sum_futeamt_twd) +
+                              parseInt(realTimePrtLosSum?.FF?.sum_dtunpl_twd) <
+                          0
                         ? false
                         : null,
             },
