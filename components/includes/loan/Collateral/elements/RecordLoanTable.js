@@ -44,9 +44,8 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                 dataIndex: 'status',
                 key: 'status',
                 render(text, record, idx) {
-                    if (record.name == 'Not Expandable') {
-                        if (text == '1') {
-                            // && record.canCancel=='Y'
+                    if (record.from == 'applyStatus') {
+                        if (record.canCancel == 'Y') {
                             return (
                                 <React.Fragment key={idx}>
                                     <SubscriptionBtn
@@ -68,19 +67,45 @@ const RecordLoanTable = ({ rowData, rowDataOther, allData, showMore, deleteApply
                             );
                         } else {
                             let nt = '';
-                            switch (text) {
-                                case '2':
-                                    nt = '預約已刪除';
-                                    break;
-                                case '4':
-                                    nt = '申請失敗';
-                                    break;
-                                case '7':
-                                    nt = '無法刪除';
-                                    break;
-                                case '8':
-                                    nt = '轉檔中';
-                                    break;
+                            if (text == '1') {
+                                switch (record.flowStatus) {
+                                    case '1':
+                                        nt = '待簽核';
+                                        break;
+                                    case '2':
+                                        nt = '審核中';
+                                        break;
+                                    case '3':
+                                        nt = '審核失敗';
+                                        break;
+                                    case '4':
+                                        nt = '已取消';
+                                        break;
+                                    case '5':
+                                        nt = '申請無效';
+                                        break;
+                                    case '6':
+                                        nt = '申請無效';
+                                        break;
+                                    case '7':
+                                        nt = '其他';
+                                        break;
+                                }
+                            } else {
+                                switch (text) {
+                                    case '2':
+                                        nt = '已取消';
+                                        break;
+                                    case '4':
+                                        nt = '申請失敗';
+                                        break;
+                                    case '7':
+                                        nt = '已取消';
+                                        break;
+                                    case '8':
+                                        nt = '轉檔中';
+                                        break;
+                                }
                             }
                             return nt;
                         }
