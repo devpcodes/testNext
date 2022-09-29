@@ -144,6 +144,8 @@ export const mappingWebId = webID => {
         162: 'XQ全球贏家APP',
         163: '股感',
         164: 'cnYES',
+        166: '好神通VIP',
+        167: 'XQ VIP',
         17: 'ＭＩＮＥ ＢＲＯＫＥＲ --- 人工',
         170: 'BTS',
         18: 'NYSE 下單',

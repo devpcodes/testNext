@@ -46,10 +46,15 @@ const errorHandler = (error, modal = true) => {
     const isServer = checkServer();
     const defaultErrorMsg = '伺服器錯誤，請稍後再試';
     if (error.message.includes('timeout')) {
-        Modal.error({
-            content: '伺服器忙碌中，請稍後再試',
-        });
-        return Promise.reject('伺服器忙碌中，請稍後再試');
+        // console.log('path', location.pathname)
+        if (!isServer) {
+            if (location.pathname.indexOf('SubBrokerageNew') == -1) {
+                Modal.error({
+                    content: '伺服器忙碌中，請稍後再試',
+                });
+                return Promise.reject('伺服器忙碌中，請稍後再試');
+            }
+        }
     }
     if (error.response) {
         if (!isServer) {
@@ -82,9 +87,15 @@ const errorHandler = (error, modal = true) => {
             }
         }
     } else if (error.request) {
-        !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
+        if (!isServer) {
+            if (location.pathname.indexOf('SubBrokerageNew') == -1) {
+                !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
+            }
+        }
     } else {
-        !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
+        if (!isServer && location.pathname.indexOf('SubBrokerageNew') == -1) {
+            !isServer && modal && Modal.error({ content: error.message || defaultErrorMsg });
+        }
     }
 
     return Promise.reject(error);

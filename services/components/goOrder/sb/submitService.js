@@ -4,7 +4,7 @@ import { getCookie } from '../../layouts/cookieController';
 import { getWebId } from '../getWebId';
 import { getTT } from './dataMapping';
 import { postOrder } from './postOrder';
-
+import { message } from 'antd';
 export const submitListService = async (currentAccount, data, platform, signgl) => {
     const resList = [];
     for (let record of data) {
@@ -48,6 +48,9 @@ export const submitService = async (
     let gtcDate = '';
     if (GTCDate) {
         gtcDate = [GTCDate.slice(0, 4), GTCDate.slice(5, 7), GTCDate.slice(8)];
+    }
+    if (currentAccount.accttype !== 'H') {
+        message.error('交易帳號錯誤');
     }
     const ca_content = sign(
         {
@@ -94,7 +97,7 @@ export const submitService = async (
             orderData.PriceType = priceType(GTCDate, aon, TouchedPrice);
         }
         console.log(orderData);
-        return await postOrder(orderData, orderList);
+        return await postOrder(orderData, orderList, currentAccount);
     } else {
         throw '憑證驗證失敗';
     }

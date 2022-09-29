@@ -200,7 +200,7 @@ const OrderBoxBS = ({ type, orderData, product }) => {
             setSubmitLoading(false);
         } catch (error) {
             setSubmitLoading(false);
-            message.error({
+            message?.error({
                 content: error,
             });
         }

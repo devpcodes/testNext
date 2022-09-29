@@ -138,6 +138,7 @@ const RecordComponent = () => {
                         setDetailList(dt_arr);
                         setStockList(st_arr);
                     }
+                    x.from = 'applyRecord';
                     return x;
                 });
             } else {
@@ -147,8 +148,12 @@ const RecordComponent = () => {
             setDataLoan(res);
             const res2 = await applyStatus(token, currentAccount.broker_id, currentAccount.account);
             let res2_ = await res2.filter(x => {
-                let arr = ['1', '2', '4', '7', '8'];
+                let arr = ['1', '2', '4', '7', '8']; //1.預約中 2.預約已刪除 4.失敗 7.無法刪除 8.轉檔中
                 if (arr.includes(x.status)) {
+                    // if(x.status!='4' && x.status!='8' ){  //4&8 不可取消
+                    //     x.canCancel = 'Y';
+                    // }
+                    x.from = 'applyStatus';
                     return x;
                 }
             });
