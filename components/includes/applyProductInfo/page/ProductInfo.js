@@ -483,7 +483,7 @@ const ProductInfo = () => {
                 '有短期資金需求使用【申購便利通】申購且成功動用後，於公告抽籤結果前已無資金需求想先行償還銀行款項可以嗎?',
             content: [
                 '可以，',
-                '本服務資金運用彈性可隨借隨還，若使用【申購便利通】申購且公告為未中籤，',
+                '本服務銀行資金運用彈性，若使用【申購便利通】申購且公告為未中籤，',
                 '系統將發動聰明還款指示檢視您的私房錢欠款狀態：',
                 '若銀行私房錢欠款＞０：將依您私房錢欠款進行還款，其上限為未中籤退款，完成還款後請您留意是否仍有欠款，若無資金需求請您記得得償還，若未全數償還者將依您的利率並依實際動用天數於每月21日收取。',
                 '若銀行私房錢欠款＝０：完成退款匯入您的交割帳戶將不進行償還。',
@@ -496,8 +496,8 @@ const ProductInfo = () => {
             type: '',
             title: '有短期資金需求使用【申購便利通】申購且成功動用後，可以隨時還款嗎?',
             content: [
-                '可以，本服務資金運用彈性可隨借隨還',
-                '本服務資金運用彈性可隨借隨還，若使用【申購便利通】申購且公告為未中籤，',
+                '可以，本服務銀行資金運用彈性',
+                '本服務銀行資金運用彈性，若使用【申購便利通】申購且公告為未中籤，',
                 '系統將發動聰明還款指示檢視您的私房錢欠款狀態：',
                 '若銀行私房錢欠款＞０：將依您私房錢欠款進行還款，其上限為未中籤退款，完成還款後請您留意是否仍有欠款，若無資金需求請您記得得償還，若未全數償還者將依您的利率並依實際動用天數於每月21日收取。',
                 '若銀行私房錢欠款＝０：完成退款匯入您的交割帳戶將不進行償還。',
@@ -1085,9 +1085,9 @@ const ProductInfo = () => {
                 .mainArea .contentBox .areaTitle p{font-size:16px;color:#3f5372;text-align:center;font-weight:500;margin:0;line-height:1.8;}
                 .mainArea .contentBox .areaTitle img{display: block;margin: 0.3em auto 1em;}
 
-                .mainArea.mainArea1{background-color:#FFF;overflow:visible;background-color:#f9fbff; position:relative;}
-                .mainArea1 .bg{position:absolute;width:100%;background:url(${bannerPC}) no-repeat center top/1600px; height:625px; z-index:0;top:0;}
-                .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: relative;}
+                .mainArea.mainArea1{background-color:#FFF;overflow:visible; position:relative;padding:0 0 20px;}
+                .mainArea1 .bg{position:relative; width:100%;background:url(${bannerPC}) no-repeat center top/cover; z-index:0;top:0; padding-top:45%;}
+                .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: absolute;    top: 90px; transform: translateX(-50%);left: 50%;}
                 .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
                 .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
                 .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
@@ -1104,6 +1104,7 @@ const ProductInfo = () => {
                     border-style: solid;
                     border-width: 0 10px 17.3px 10px;
                     border-color: transparent transparent #c43826 transparent;}
+                .mainArea2  {padding-top:0;}
                 .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
                 .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
@@ -1150,13 +1151,16 @@ const ProductInfo = () => {
                 .forPC{display:inherite;}
                 .forMB{display:none;}
 
+            @media screen and (max-width: 1680px) {
+                .mainArea1 .bg{position:relative; width:100%;background:url(${bannerPC}) no-repeat center top/1680px; z-index:0;top:0; padding-top:760px; }
+            }
             @media screen and (max-width: 768px) {
                 .mainArea {width:100vw;padding:48px 32px;}
                 .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
                 .mainArea::before{content:'';display:block;width:100vw;}
-                .mainArea.mainArea1 {background-color:#FFF; padding:6% 0;}
-                .mainArea1 .contentBox{margin: 0 6%;position: relative;}
-                .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:68%;height:auto;}
+                .mainArea.mainArea1 {background-color:#FFF; padding:0;}
+                .mainArea1 .contentBox{margin: 0 6%;position: absolute; top:0; padding-top:8%;}
+                .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:87%;height:auto;position:relative;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size:40px;padding-left:0.4em;}
                 .mainArea1 .contentBox>div:nth-child(4){width:55%;}
                 .mainArea2 {padding: 60px 32px 16px;}
@@ -1195,10 +1199,10 @@ const ProductInfo = () => {
                 .mainArea .contentBox .areaTitle p{font-size:16px;}  
                 
 
-                .mainArea1 {margin:0;}
-                .mainArea.mainArea1 { background-color: #f9fbff; padding: 48px 0 35px; }
-                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:90%;height:auto;}
-                .mainArea1 .contentBox {width: calc(100% - 48px);padding: 0;}
+                .mainArea1 {margin:0; }
+                .mainArea.mainArea1 { background-color: #f9fbff; padding: 0 0 35px; }
+                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
+                .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative;}
                 .mainArea1 .contentBox >div:nth-child(4){width:50%;}
                 .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size: 30px; padding: 4px 0 4px 0.5em;  margin: 16px 0 24px;}
