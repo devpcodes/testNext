@@ -78,7 +78,7 @@ const RepaymentBox = ({ style, amount, estimatePayable }) => {
                 visible: true,
                 noCloseIcon: true,
                 noTitleIcon: true,
-                title: '如何申請動用',
+                title: '如何申請還款',
                 type: 'info',
                 bodyStyle: {
                     height: 350,
