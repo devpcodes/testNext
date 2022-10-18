@@ -428,7 +428,7 @@ export const getContentData = type => {
             success = realTimePrtLosSum?.SN?.status.success;
             return {
                 sum_total_amt_twd: {
-                    title: '總成本',
+                    title: '名目本金',
                     amount: `$${success ? formatNum(realTimePrtLosSum?.SN?.sum_total_amt_twd) : '--'}`,
                     class: '',
                 },

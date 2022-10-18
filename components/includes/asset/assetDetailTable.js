@@ -1493,7 +1493,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '付出成本',
+                            title: '名目本金',
                             dataIndex: 'invest_cost',
                             render: invest_cost => formatNum(invest_cost),
                             sorter: (a, b) => a.invest_cost.length - b.invest_cost.length,
@@ -1677,7 +1677,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '付出成本',
+                            title: '名目本金',
                             dataIndex: 'total_amt',
                             render: total_amt => formatNum(total_amt),
                             align: 'right',
