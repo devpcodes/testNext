@@ -31,7 +31,7 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const getBalance = async () => {
         const token = getToken();
         if (!checkUserIdAcc(token, currentAccount.idno)) {
-            message.error('無法查詢，非所屬帳號資料');
+            message.error('銀行餘額僅能查詢本人帳號，此為委任帳號無法查詢，謝謝。');
             setBalance('--');
             setBankAccount('--');
             return;
