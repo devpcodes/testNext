@@ -153,10 +153,12 @@ const CalcuInfo = ({ amount, sfee, availAmount, endDate, allOrderAmount, stockId
             />
             <CalcuItem
                 style={{ marginTop: '12px' }}
-                label="申購便利通手續費"
+                label="便利通手續費活動期間"
                 val={sfee}
                 icon={icon}
-                tooltip={'提供申購便利通相關金流服務與平台使用 ，以次計費完成銀行動用即收取不予退回。'}
+                tooltip={
+                    '申購便利通手續費：牌告50元，提供申購動用相關金流服務與平台使用，以次計費完成銀行動用即收取不予退回。'
+                }
             />
             <Line style={{ marginTop: '20px' }} />
             <CalcuItem style={{ marginTop: '20px' }} label="可動用金額" val={formatNum(availAmount)} />
