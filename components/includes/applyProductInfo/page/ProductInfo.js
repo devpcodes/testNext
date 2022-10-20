@@ -35,7 +35,7 @@ const ProductInfo = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const menuList = [
         { title: '申辦啟用', key: 'p1' },
-        { title: '借款申購試算', key: 'p2' },
+        { title: '便利通申購試算', key: 'p2' },
         { title: '動用扣款', key: 'p3' },
         { title: '中籤還款', key: 'p4' },
         { title: '其他', key: 'p5' },
@@ -64,8 +64,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '121.5', //市價
-            diffPrice: '42.700',
-            diffRatio: '54',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -85,8 +85,8 @@ const ProductInfo = () => {
             brokerName: '台新',
             price: 52,
             share: 850000,
+            beginDate: '20220104',
             currentDate: '20220530',
-            beginDate: '20220530',
             endDate: '20220601',
             feeDate: '20220602',
             lotDate: '20220606',
@@ -98,8 +98,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '36.000',
-            diffRatio: '38',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -120,7 +120,7 @@ const ProductInfo = () => {
             price: 52,
             share: 850000,
             currentDate: '20220225',
-            beginDate: '20220512',
+            beginDate: '202200512',
             endDate: '20220516',
             feeDate: '20220517',
             lotDate: '20220518',
@@ -132,8 +132,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '27.000',
-            diffRatio: '28',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -166,8 +166,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '121.5', //市價
-            diffPrice: '17.200',
-            diffRatio: '20',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -187,8 +187,8 @@ const ProductInfo = () => {
             brokerName: '台新',
             price: 52,
             share: 850000,
+            beginDate: '20220104',
             currentDate: '20220216',
-            beginDate: '20220216',
             endDate: '20220218',
             feeDate: '20220221',
             lotDate: '20220222',
@@ -200,8 +200,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '16.500',
-            diffRatio: '17',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -234,8 +234,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '14.000',
-            diffRatio: '10',
+            diffPrice: '16.7',
+            diffRatio: '25.30',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -253,7 +253,7 @@ const ProductInfo = () => {
             title: '申辦資格為何?',
             content: [
                 '已開立台股證券帳戶之客戶，符合下列條件：',
-                '一、年滿20歲之本國自然人並僅具中華民國納稅義務人身分。',
+                '一、成年之本國自然人並僅具中華民國納稅義務人身分。',
                 '二、有價證券買賣受託帳戶須無未結案違約情形。',
                 '三、交割銀行帳戶限使用永豐銀行，且符合其【私房錢】貸款服務資格。',
                 '線上完成簽署永豐金證券【申購便利通】與永豐銀行【私房錢】貸款服務契約，始得啟用本服務。',
@@ -288,7 +288,7 @@ const ProductInfo = () => {
         {
             type: '',
             title: '已經申辦永豐銀行【私房錢】如何啟用此服務?',
-            content: ['您只須由線上申辦入口進入，系統將判斷您須完成的啟用流程，完成後即可立即啟用先抽後付之申購服務。'],
+            content: ['您只須由線上申辦入口進入，系統將判斷您須完成的啟用流程，完成後即可立即啟用申購服務。'],
             open: false,
             group: 'p1',
             key: '1_4',
@@ -329,7 +329,7 @@ const ProductInfo = () => {
             type: '',
             title: '為什麼有的申購個股可以使用【申購便利通】申購，有的不可以？',
             content:
-                '本服務提供單檔總動用金額（申購款含相關費用）於20萬內之申購檔次，可使用【申購便利通】進行先抽後付的申購服務。',
+                '本服務提供單檔總動用金額（申購款含相關費用）於20萬內之申購檔次，可使用【申購便利通】進行申購服務。',
             open: false,
             group: 'p2',
             key: '2_1',
@@ -483,7 +483,7 @@ const ProductInfo = () => {
                 '有短期資金需求使用【申購便利通】申購且成功動用後，於公告抽籤結果前已無資金需求想先行償還銀行款項可以嗎?',
             content: [
                 '可以，',
-                '本服務資金運用彈性可隨借隨還，若使用【申購便利通】申購且公告為未中籤，',
+                '本服務銀行資金運用彈性，若使用【申購便利通】申購且公告為未中籤，',
                 '系統將發動聰明還款指示檢視您的私房錢欠款狀態：',
                 '若銀行私房錢欠款＞０：將依您私房錢欠款進行還款，其上限為未中籤退款，完成還款後請您留意是否仍有欠款，若無資金需求請您記得得償還，若未全數償還者將依您的利率並依實際動用天數於每月21日收取。',
                 '若銀行私房錢欠款＝０：完成退款匯入您的交割帳戶將不進行償還。',
@@ -496,8 +496,8 @@ const ProductInfo = () => {
             type: '',
             title: '有短期資金需求使用【申購便利通】申購且成功動用後，可以隨時還款嗎?',
             content: [
-                '可以，本服務資金運用彈性可隨借隨還',
-                '本服務資金運用彈性可隨借隨還，若使用【申購便利通】申購且公告為未中籤，',
+                '可以，本服務銀行資金運用彈性',
+                '本服務銀行資金運用彈性，若使用【申購便利通】申購且公告為未中籤，',
                 '系統將發動聰明還款指示檢視您的私房錢欠款狀態：',
                 '若銀行私房錢欠款＞０：將依您私房錢欠款進行還款，其上限為未中籤退款，完成還款後請您留意是否仍有欠款，若無資金需求請您記得得償還，若未全數償還者將依您的利率並依實際動用天數於每月21日收取。',
                 '若銀行私房錢欠款＝０：完成退款匯入您的交割帳戶將不進行償還。',
@@ -553,7 +553,7 @@ const ProductInfo = () => {
         },
         {
             type: '',
-            title: '申辦服務後，可以使用什麼平台進行【申購便利通】先抽後付的申購服務?',
+            title: '申辦服務後，可以使用什麼平台進行【申購便利通】的申購服務?',
             content: '目前【申購便利通】服務提供【大戶投】與【新理財網】平台使用，於其他平台僅可查詢到一般申購資料。',
             open: true,
             group: 'p5',
@@ -789,9 +789,9 @@ const ProductInfo = () => {
             <div className="mainArea mainArea1">
                 <div className="bg"></div>
                 <div className="contentBox">
-                    <div>券商首創申購便利通</div>
+                    <div>券商首創超便利申購</div>
                     <div>
-                        <p>先抽後付</p>
+                        <p>申購便利通</p>
                         <p>用小資金放大機會</p>
                     </div>
                     <div>
@@ -853,7 +853,7 @@ const ProductInfo = () => {
                         什麼是申購便利通
                         <img src={dotLine}></img>
                         <p>
-                            申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享先抽籤後付款的服務，快來抓緊每個申購抽籤的機會吧！
+                            申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享超便利的申購服務，快來抓緊每個申購抽籤的機會吧！
                         </p>
                     </div>
                     <div className="flexBox areaContent">
@@ -862,10 +862,38 @@ const ProductInfo = () => {
                                 <img src={icon61}></img>
                             </div>
                             <div>
-                                <p>免出資，更高效</p>
-                                <p>20 萬內免出資，彈性資金運用更高效</p>
+                                <p>微出資，更高效</p>
+                                <p>20 萬內彈性資金運用更高效</p>
                             </div>
                         </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon65}></img>
+                            </div>
+                            <div>
+                                <p>提供試算，更清晰</p>
+                                <p>便利通申購提供一鍵試算預估報酬供評估</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon66}></img>
+                            </div>
+                            <div>
+                                <p>聰明還款，更安心</p>
+                                <p>未中籤提供系統還款免人工轉帳，讓您更安心</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon64}></img>
+                            </div>
+                            <div>
+                                <p>線上申辦，更快速</p>
+                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
+                            </div>
+                        </div>
+
                         <div className="flexBox areaItem">
                             <div>
                                 <img src={icon62}></img>
@@ -882,33 +910,6 @@ const ProductInfo = () => {
                             <div>
                                 <p>免切換，更順暢</p>
                                 <p>交易帳務同平台免切換，告別資金撥轉與查詢困擾</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon64}></img>
-                            </div>
-                            <div>
-                                <p>線上申辦，更快速</p>
-                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon65}></img>
-                            </div>
-                            <div>
-                                <p>提供試算，更清晰</p>
-                                <p>借款申購提供一鍵試算預估報酬供評估</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon66}></img>
-                            </div>
-                            <div>
-                                <p>聰明還款，更安心</p>
-                                <p>未中籤提供系統還款免人工轉帳，讓您更安心</p>
                             </div>
                         </div>
                     </div>
@@ -957,7 +958,7 @@ const ProductInfo = () => {
                                 </Popover>
                             </p>
                             <div>
-                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用借款申購功能。
+                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用便利通申購。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p1')}>
                                 了解更多
@@ -966,12 +967,12 @@ const ProductInfo = () => {
                         </div>
                         <div className="areaItem">
                             <p>申購期間 </p>
-                            <p>借款申購試算</p>
+                            <p>便利通申購試算</p>
                             <div>
                                 申購期間 <span>20 萬內抽籤股票</span>，可自由選擇申購方式。
                                 <ul>
                                     <li>自備款現金申購</li>
-                                    <li>免出資借款申購</li>
+                                    <li>微出資便利通申購</li>
                                 </ul>
                             </div>
 
@@ -984,8 +985,8 @@ const ProductInfo = () => {
                             <p>截止~扣款日 </p>
                             <p>動用扣款</p>
                             <div>
-                                <span>整筆借款酌收申購便利通手續費 50 元</span>
-                                ，於申購截止日動用後隔天扣款，可隨借隨還，依動用金額以日計息於每月 21 日收取。
+                                <span>整筆酌收金流服務費 50 元</span>
+                                ，於申購截止日動用後隔天扣款，依動用金額以日計息於每月 21 日收取。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p3')}>
                                 了解更多
@@ -1035,7 +1036,7 @@ const ProductInfo = () => {
                             <img src={handsS}></img>
                         </div>
                         <div>
-                            <p>年滿 20 歲之本國自然人</p>
+                            <p>成年本國自然人</p>
                             <p>僅具中華民國納稅義務人身分</p>
                             <p>已開立台股證券帳戶且無違約未結案情形</p>
                             <p>交割戶須有永豐銀行帳戶且符合永豐銀行私房錢預審資格</p>
@@ -1085,9 +1086,9 @@ const ProductInfo = () => {
                 .mainArea .contentBox .areaTitle p{font-size:16px;color:#3f5372;text-align:center;font-weight:500;margin:0;line-height:1.8;}
                 .mainArea .contentBox .areaTitle img{display: block;margin: 0.3em auto 1em;}
 
-                .mainArea.mainArea1{background-color:#FFF;overflow:visible;background-color:#f9fbff; position:relative;}
-                .mainArea1 .bg{position:absolute;width:100%;background:url(${bannerPC}) no-repeat center top/1600px; height:625px; z-index:0;top:0;}
-                .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: relative;}
+                .mainArea.mainArea1{background-color:#FFF;overflow:visible; position:relative;padding:0 0 20px;}
+                .mainArea1 .bg{position:relative; width:100%;background:url(${bannerPC}) no-repeat center top/cover; z-index:0;top:0; padding-top:45%;}
+                .mainArea1 .contentBox { max-width:1080px;font-size: 16px;z-index: 1; position: absolute;    top: 90px; transform: translateX(-50%);left: 50%;}
                 .mainArea1 .contentBox > div:nth-child(1){color:#d28a34; font-size:20px; font-weight:800;margin-bottom:20px;}
                 .mainArea1 .contentBox > div:nth-child(2){color:#0d1623; font-size:48px; font-weight:800;padding-left:28px; border-left:8px solid #d28a34;line-height:1;}
                 .mainArea1 .contentBox > div:nth-child(2) p{margin:0px;}
@@ -1104,8 +1105,9 @@ const ProductInfo = () => {
                     border-style: solid;
                     border-width: 0 10px 17.3px 10px;
                     border-color: transparent transparent #c43826 transparent;}
+                .mainArea2  {padding-top:0;}
                 .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
-                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;}
+                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px; justify-content:flex-start;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2){}
@@ -1150,13 +1152,16 @@ const ProductInfo = () => {
                 .forPC{display:inherite;}
                 .forMB{display:none;}
 
+            @media screen and (max-width: 1680px) {
+                .mainArea1 .bg{position:relative; width:100%;background:url(${bannerPC}) no-repeat center top/1680px; z-index:0;top:0; padding-top:760px; }
+            }
             @media screen and (max-width: 768px) {
                 .mainArea {width:100vw;padding:48px 32px;}
                 .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
                 .mainArea::before{content:'';display:block;width:100vw;}
-                .mainArea.mainArea1 {background-color:#FFF; padding:6% 0;}
-                .mainArea1 .contentBox{margin: 0 6%;position: relative;}
-                .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:68%;height:auto;}
+                .mainArea.mainArea1 {background-color:#FFF; padding:0;}
+                .mainArea1 .contentBox{margin: 0 6%;position: absolute; top:0; padding-top:8%; }
+                .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:87%;height:auto;position:relative;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size:40px;padding-left:0.4em;}
                 .mainArea1 .contentBox>div:nth-child(4){width:55%;}
                 .mainArea2 {padding: 60px 32px 16px;}
@@ -1195,10 +1200,10 @@ const ProductInfo = () => {
                 .mainArea .contentBox .areaTitle p{font-size:16px;}  
                 
 
-                .mainArea1 {margin:0;}
-                .mainArea.mainArea1 { background-color: #f9fbff; padding: 48px 0 35px; }
-                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:90%;height:auto;}
-                .mainArea1 .contentBox {width: calc(100% - 48px);padding: 0;}
+                .mainArea1 {margin:0; }
+                .mainArea.mainArea1 { background-color: #f9fbff; padding: 0 0 35px; }
+                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
+                .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative;transform:translateX(0%);left: 0;}
                 .mainArea1 .contentBox >div:nth-child(4){width:50%;}
                 .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size: 30px; padding: 4px 0 4px 0.5em;  margin: 16px 0 24px;}
