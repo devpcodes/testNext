@@ -853,7 +853,7 @@ const ProductInfo = () => {
                         什麼是申購便利通
                         <img src={dotLine}></img>
                         <p>
-                            申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享超便利的申購服務，快來抓緊每個申購抽籤的機會吧！
+                            申購便利通是透過向銀行動用私房錢，讓投資人不再受限資金門檻，即可享超便利的申購服務，快來抓緊每個申購抽籤的機會吧！
                         </p>
                     </div>
                     <div className="flexBox areaContent">
@@ -864,33 +864,6 @@ const ProductInfo = () => {
                             <div>
                                 <p>微出資，更高效</p>
                                 <p>20 萬內彈性資金運用更高效</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon62}></img>
-                            </div>
-                            <div>
-                                <p>零閒置，更彈性</p>
-                                <p>隨借隨還零閒置，讓手頭資金運用更彈性</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon63}></img>
-                            </div>
-                            <div>
-                                <p>免切換，更順暢</p>
-                                <p>交易帳務同平台免切換，告別資金撥轉與查詢困擾</p>
-                            </div>
-                        </div>
-                        <div className="flexBox areaItem">
-                            <div>
-                                <img src={icon64}></img>
-                            </div>
-                            <div>
-                                <p>線上申辦，更快速</p>
-                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
                             </div>
                         </div>
                         <div className="flexBox areaItem">
@@ -909,6 +882,33 @@ const ProductInfo = () => {
                             <div>
                                 <p>聰明還款，更安心</p>
                                 <p>未中籤提供系統還款免人工轉帳，讓您更安心</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon64}></img>
+                            </div>
+                            <div>
+                                <p>線上申辦，更快速</p>
+                                <p>線上快速申辦，立即啟用免等待</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon62}></img>
+                            </div>
+                            <div>
+                                <p>零閒置，更彈性</p>
+                                <p>隨借隨還零閒置，讓手頭資金運用更彈性</p>
+                            </div>
+                        </div>
+                        <div className="flexBox areaItem">
+                            <div>
+                                <img src={icon63}></img>
+                            </div>
+                            <div>
+                                <p>免切換，更順暢</p>
+                                <p>交易帳務同平台免切換，告別資金撥轉與查詢困擾</p>
                             </div>
                         </div>
                     </div>
@@ -957,7 +957,7 @@ const ProductInfo = () => {
                                 </Popover>
                             </p>
                             <div>
-                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用便利通申購。
+                                持有台股帳戶，<span>線上快速申辦，專人聯繫</span>立即啟用便利通申購。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p1')}>
                                 了解更多
@@ -984,7 +984,7 @@ const ProductInfo = () => {
                             <p>截止~扣款日 </p>
                             <p>動用扣款</p>
                             <div>
-                                <span>整筆酌收金流服務費 50 元</span>
+                                <span>整筆酌收申購便利通手續費活動期間20元</span>
                                 ，於申購截止日動用後隔天扣款，依動用金額以日計息於每月 21 日收取。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p3')}>
@@ -1038,7 +1038,7 @@ const ProductInfo = () => {
                             <p>成年本國自然人</p>
                             <p>僅具中華民國納稅義務人身分</p>
                             <p>已開立台股證券帳戶且無違約未結案情形</p>
-                            <p>交割戶須有永豐銀行帳戶且符合永豐銀行私房錢預審資格</p>
+                            <p>交割戶須有永豐銀行帳戶且符合永豐銀行私房錢預選資格</p>
                         </div>
                     </div>
                 </div>
@@ -1165,7 +1165,7 @@ const ProductInfo = () => {
                 .mainArea1 .contentBox>div:nth-child(4){width:55%;}
                 .mainArea2 {padding: 60px 32px 16px;}
                 .mainArea2 .areaContent {width:90%;}
-                .mainArea2 .areaContent .areaItem{width:50%;}
+                .mainArea2 .areaContent .areaItem{width:50%;justify-content: flex-start;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){font-size:16px;}
                 .mainArea.mainArea3{ padding: 48px 0;}
                 .mainArea3 .contentBox{padding:0;}
@@ -1200,9 +1200,9 @@ const ProductInfo = () => {
                 
 
                 .mainArea1 {margin:0; }
-                .mainArea.mainArea1 { background-color: #f9fbff; padding: 0 0 35px; }
+                .mainArea.mainArea1 { background-color: #F5F6FB; padding: 0 0 35px; }
                 .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
-                .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative;}
+                .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative; margin: 0;}
                 .mainArea1 .contentBox >div:nth-child(4){width:50%;}
                 .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size: 30px; padding: 4px 0 4px 0.5em;  margin: 16px 0 24px;}
