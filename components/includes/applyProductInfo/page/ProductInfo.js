@@ -984,7 +984,9 @@ const ProductInfo = () => {
                             <p>截止~扣款日 </p>
                             <p>動用扣款</p>
                             <div>
-                                <span>整筆酌收申購便利通手續費活動期間20元</span>
+                                <span>
+                                    整筆酌收申購便利通手續費<span className="textDelete">50元(牌告)</span>活動期間20元
+                                </span>
                                 ，於申購截止日動用後隔天扣款，依動用金額以日計息於每月 21 日收取。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p3')}>
@@ -1106,7 +1108,7 @@ const ProductInfo = () => {
                     border-color: transparent transparent #c43826 transparent;}
                 .mainArea2  {padding-top:0;}
                 .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
-                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;}
+                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;justify-content: flex-start;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2){}
@@ -1147,7 +1149,7 @@ const ProductInfo = () => {
                 .bg-cycle{position:absolute;}
                 .bg-cycle.cyclel{left:0;top:-80px;}
                 .bg-cycle.cycler{right:0;bottom:-85px;}
-
+                .textDelete{text-decoration: line-through;}
                 .forPC{display:inherite;}
                 .forMB{display:none;}
 
@@ -1165,7 +1167,7 @@ const ProductInfo = () => {
                 .mainArea1 .contentBox>div:nth-child(4){width:55%;}
                 .mainArea2 {padding: 60px 32px 16px;}
                 .mainArea2 .areaContent {width:90%;}
-                .mainArea2 .areaContent .areaItem{width:50%;justify-content: flex-start;}
+                .mainArea2 .areaContent .areaItem{width:50%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2) p:nth-child(2){font-size:16px;}
                 .mainArea.mainArea3{ padding: 48px 0;}
                 .mainArea3 .contentBox{padding:0;}
