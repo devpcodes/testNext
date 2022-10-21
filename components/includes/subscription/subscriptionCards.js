@@ -73,7 +73,7 @@ const SubscriptionCards = memo(({ stockData, onActionClick, onCancelClick, foote
             <>
                 {stockData.canAppropriation && stockData.canOrder ? (
                     <button className="action__btn mortgage" onClick={() => openCollateral(stockData.stockId)}>
-                        借款申購
+                        便利通申購
                     </button>
                 ) : (
                     <></>
