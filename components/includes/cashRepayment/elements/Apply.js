@@ -27,6 +27,7 @@ const Apply = ({ active, showSearchBox = true }) => {
     const [loading, setLoading] = useState(null);
     const stockInventoryData = useRef([]);
     const isWebView = useRef(true);
+    const init = useRef(false);
     useEffect(() => {
         if (state.accountsReducer.disabled) {
             notification.warning({
@@ -42,14 +43,22 @@ const Apply = ({ active, showSearchBox = true }) => {
         // }
         if (state.accountsReducer.accounts.length > 0) {
             dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
-            setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
         }
     }, [state.accountsReducer.accounts]);
 
     useEffect(() => {
+        if (defaultValue && !init.current) {
+            getInventory(state.accountsReducer.activeType);
+        }
+    }, [defaultValue]);
+
+    useEffect(() => {
         if (active && state.accountsReducer.selected.broker_id) {
             // setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
-            getInventory(state.accountsReducer.activeType);
+            setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
+            if (init.current) {
+                getInventory(state.accountsReducer.activeType);
+            }
         }
     }, [state.accountsReducer.selected.account, state.accountsReducer.activeType, active]);
 
@@ -115,6 +124,7 @@ const Apply = ({ active, showSearchBox = true }) => {
             });
             setDataLoading(false);
         }
+        init.current = true;
     };
 
     const submitHandler = (text, record) => {
