@@ -1,18 +1,22 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import { Button, Input, notification, Modal } from 'antd';
+import moment from 'moment';
 import jwt_decode from 'jwt-decode';
 // import { ReducerContext } from '../../../../pages/AdvanceCollection';
+import { SELECTED } from '../../../../store/advanceCollection/actionType';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
 import Accounts from '../../advanceCollection/Accounts';
 import ApplyContent from '../../advanceCollection/ApplyContent';
-import SearchBox from './SearchBox';
+import SearchBox from '../../debitDeposit/elements/SearchBox';
 import Msg from '../../advanceCollection/Msg';
-import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
+// import { fetchStockInventory } from '../../../../services/components/reservationStock/fetchStockInventory';
 import { getToken } from '../../../../services/user/accessToken';
 import { sign, signCert, checkSignCA } from '../../../../services/webCa';
 import { postApplyEarmark } from '../../../../services/components/reservationStock/postApplyEarmark';
-import Loading from './Loading';
-import { SELECTED } from '../../../../store/advanceCollection/actionType';
+import Loading from '../../debitDeposit/elements/Loading';
+import { fetchShortSellingInventory } from '../../../../services/components/cashRepayment/fetchStockInventory';
+import { formatNum } from '../../../../services/formatNum';
+import { postSecuritiesRedemptions } from '../../../../services/components/cashRepayment/postSecuritiesRedemptions';
 const Apply = ({ active, showSearchBox = true }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -33,22 +37,25 @@ const Apply = ({ active, showSearchBox = true }) => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
-        if (state.accountsReducer.selected === '') {
+        // if (state.accountsReducer.accounts.length > 0) {
+        //     dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        // }
+        if (state.accountsReducer.accounts.length > 0) {
             dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+            setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
         }
     }, [state.accountsReducer.accounts]);
 
     useEffect(() => {
-        if (active) {
-            console.log('test', state.accountsReducer.selected.broker_id, state.accountsReducer.selected.account);
-            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+        if (active && state.accountsReducer.selected.broker_id) {
+            // setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             getInventory(state.accountsReducer.activeType);
         }
     }, [state.accountsReducer.selected.account, state.accountsReducer.activeType, active]);
 
     const getInventory = activeType => {
-        let data = getAccountsDetail(getToken());
-        if (getToken() && data.broker_id != null) {
+        if (getToken()) {
+            let data = getAccountsDetail(getToken());
             fetchInventory(getToken(), data.broker_id, data.account, activeType);
         }
     };
@@ -67,7 +74,7 @@ const Apply = ({ active, showSearchBox = true }) => {
     const fetchInventory = async (token, brokerId, account, activeType) => {
         setDataLoading(true);
         try {
-            let resData = await fetchStockInventory(token, brokerId, account, activeType, '1');
+            let resData = await fetchShortSellingInventory(token, brokerId, account, activeType, '1');
             if (Array.isArray(resData)) {
                 resData = resData.map((item, index) => {
                     item.key = String(index);
@@ -111,7 +118,7 @@ const Apply = ({ active, showSearchBox = true }) => {
     };
 
     const submitHandler = (text, record) => {
-        if (validateQty(record.qty, record.load_qty, record.stock_amount_t1)) {
+        if (validateQty(record.qty, record.open_position_qty)) {
             console.log(text, record);
             // console.log(jwt_decode(getToken()));
             submitData(record);
@@ -122,17 +129,6 @@ const Apply = ({ active, showSearchBox = true }) => {
         //token, branch, account, symbol, qty, category
         const token = getToken();
         let data = getAccountsDetail(token);
-        //驗憑證(1)
-        // let caContent = await signCert(
-        //     {
-        //         idno: data.idno,
-        //         broker_id: data.broker_id,
-        //         account: data.account,
-        //     },
-        //     true,
-        //     token,
-        // );
-
         //驗憑證(2)
         let caContent = sign(
             {
@@ -144,22 +140,22 @@ const Apply = ({ active, showSearchBox = true }) => {
             token,
             isWebView.current,
         );
-        // console.log('newCaContent', caContent);
-        if (checkSignCA(caContent)) {
-            //checkSignCA(caContent)
+        // console.log('newCaContent', caContent); //checkSignCA(caContent)
+        if (true) {
             setLoading(true);
             // percentHandler();
-            const resData = await postApplyEarmark(
+            const resData = await postSecuritiesRedemptions({
+                branch: data.broker_id,
+                account: data.account,
+                symbol: record.code,
+                qty: String(record.qty),
+                match_date: record.match_date,
+                order_no: record.order_no,
+                match_price: record.match_price,
                 token,
-                data.broker_id,
-                data.account,
-                record.code,
-                String(record.qty),
-                '1',
-                caContent,
-            );
+                ca_content: caContent,
+            });
             setLoading(false);
-            // submitSuccess();
             if (resData) {
                 Modal.success({
                     content: resData,
@@ -171,22 +167,35 @@ const Apply = ({ active, showSearchBox = true }) => {
         }
     };
 
-    const validateQty = (value, loadQty, stockAmount) => {
-        const regex = /^[0-9]{1,20}$/;
-        if (!isNaN(value) && regex.test(value)) {
-            // if (value % 1000 !== 0) {
-            //     Modal.error({
-            //         content: '請輸入1000的倍數',
-            //     });
-            //     return false;
-            // }
+    const checkNum = (value, loadQty) => {
+        if (Number(value) <= Number(loadQty)) {
+            return true;
+        } else {
+            Modal.error({
+                content: '超過可申請股數',
+            });
+            return false;
+        }
+    };
 
-            if (Number(value) <= Number(stockAmount)) {
+    const checkUnit = value => {
+        if (Number(value) % 1000 === 0) {
+            return true;
+        } else {
+            Modal.error({
+                content: '申請股數須以1000為單位',
+            });
+            return false;
+        }
+    };
+
+    const validateQty = (value, loadQty) => {
+        const regex = /^[0-9]{1,20}$/;
+        console.log(value, loadQty);
+        if (!isNaN(value) && regex.test(value)) {
+            if (checkNum(value, loadQty) && checkUnit(value)) {
                 return true;
             } else {
-                Modal.error({
-                    content: '超過可申請股數',
-                });
                 return false;
             }
         }
@@ -199,6 +208,7 @@ const Apply = ({ active, showSearchBox = true }) => {
                 content: '只能輸入數字',
             });
         }
+
         return false;
     };
 
@@ -208,7 +218,8 @@ const Apply = ({ active, showSearchBox = true }) => {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                index: 6,
+                index: 10,
+                width: '30px',
                 render: (text, record, index) => {
                     return (
                         <Button
@@ -222,71 +233,91 @@ const Apply = ({ active, showSearchBox = true }) => {
                 },
             },
             {
-                title: '股票類別',
-                dataIndex: 'load_type',
-                key: 'load_type',
-                index: 2,
-                sorter: (a, b) => {
-                    const aTypeStr = typeString(a.load_type);
-                    const bTypeStr = typeString(b.load_type);
-                    return sortString(aTypeStr, bTypeStr);
-                },
-                render: (text, record, index) => {
-                    switch (text) {
-                        case '':
-                            return '一般';
-                        case '1':
-                            return '全額管理';
-                        case '2':
-                            return '收足款券';
-                        case '3':
-                            return '處置一二';
-                        default:
-                            break;
-                    }
-                },
-            },
-            {
                 title: '股票代號',
                 dataIndex: 'code',
                 key: 'code',
-                sorter: (a, b) => {
-                    if (String(a.code).trim().length < String(b.code).trim().length) {
-                        return -1;
-                    } else if (String(a.code).trim().length > String(b.code).trim().length) {
-                        return 1;
-                    } else {
-                        return Number(a.code) - Number(b.code);
-                    }
-                },
+                width: '50px',
+                // sorter: (a, b) => {
+                //     if (String(a.code).trim().length < String(b.code).trim().length) {
+                //         return -1;
+                //     } else if (String(a.code).trim().length > String(b.code).trim().length) {
+                //         return 1;
+                //     } else {
+                //         return Number(a.code) - Number(b.code);
+                //     }
+                // },
                 index: 1,
             },
             {
                 title: '股票名稱',
                 dataIndex: 'code_name',
                 key: 'code_name',
-                sorter: (a, b) => {
-                    return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
-                },
+                width: '100px',
+                // sorter: (a, b) => {
+                //     return sortString(a.code_name.replace(/ /g, ''), b.code_name.replace(/ /g, ''));
+                // },
                 index: 2,
             },
             {
-                title: '可圈存股數',
-                dataIndex: 'stock_amount_t1',
-                key: 'stock_amount_t1',
+                title: '成交日',
+                dataIndex: 'match_date',
+                key: 'match_date',
+                width: '70px',
                 index: 3,
+                render: text => {
+                    return moment(text).format('yyyy/MM/DD');
+                },
             },
             {
-                title: '已圈存股數',
-                dataIndex: 'load_qty',
-                key: 'load_qty',
+                title: '成交單價',
+                dataIndex: 'match_price',
+                key: 'match_price',
+                width: '70px',
                 index: 4,
             },
             {
-                title: '申請圈存股數',
+                title: '未沖擔保品',
+                dataIndex: 'open_collateral_price',
+                key: 'open_collateral_price',
+                width: '70px',
+                index: 5,
+                render: text => {
+                    return formatNum(text);
+                },
+            },
+            {
+                title: '未沖保證金',
+                dataIndex: 'open_selling_margin_price',
+                key: 'open_selling_margin_price',
+                width: '70px',
+                index: 6,
+                render: text => {
+                    return formatNum(text);
+                },
+            },
+            {
+                title: '維持率',
+                dataIndex: 'margin_ratio',
+                key: 'margin_ratio',
+                width: '50px',
+                index: 7,
+                render: (text, record, index) => {
+                    return `${text}%`;
+                },
+            },
+            {
+                title: '可申請股數',
+                dataIndex: 'open_position_qty',
+                key: 'open_position_qty',
+                width: '70px',
+                index: 8,
+            },
+            {
+                title: '申請股數',
                 dataIndex: 'qty',
                 key: 'qty',
-                index: 5,
+                width: '120px',
+                index: 9,
                 render: (text, record, index) => {
                     return <Input value={text} onChange={inpChangeHandler.bind(null, record, stockInventory)} />;
                 },
@@ -361,7 +392,7 @@ const Apply = ({ active, showSearchBox = true }) => {
             {showSearchBox && <SearchBox showFilter={true} searchClickHandler={searchClickHandler} />}
             <ApplyContent
                 scroll={{ x: 860 }}
-                contenterTitle={'借券圈存申請'}
+                contenterTitle={'現券償還申請'}
                 columns={columns}
                 dataSource={stockInventory}
                 pagination={false}
@@ -386,34 +417,36 @@ const Apply = ({ active, showSearchBox = true }) => {
                 style={{ marginTop: '30px' }}
                 list={[
                     { txt: '「注意事項」' },
-                    { txt: '1. 借券圈存時間為台股交易日8:00~14:30' },
+                    { txt: '1. 申請時間為(股票交易日)營業日13:30~14:30，當日有效' },
                     {
-                        txt: '2. 必須簽署「保管劃撥帳戶契約書」後，才可顯示庫存與進行申請',
-                        color: '#e46262',
+                        txt: '2. 申請送出後，請至查詢頁面確認是否成功',
                     },
                     {
-                        txt:
-                            '3. 逐筆申請：點選[申請]後，請至[借券圈存查詢]點選[查詢]確認已完成此筆股票圈存後，再進行下一筆申請',
-                        color: '#e46262',
+                        txt: '3. 申請成功，如欲取消，請洽所屬分公司營業員',
                     },
                     {
-                        html:
-                            '<span>4. 可圈存股數：昨日<span style="color: #e46262; margin-bottom: 12px; display: inline-block">借券</span>庫存股數 + 今日匯撥/<span style="color: #e46262; margin-bottom: 12px; display: inline-block">借券</span>股數 - 已圈存股數</span>',
+                        html: '<span style="margin-top: -10px">4.	申請標的說明</span>',
                     },
                     {
-                        txt: '5. 網路不提供解圈服務與人工解圈之查詢資訊，請洽所屬分公司辦理及查詢',
+                        html: '<span>&nbsp;&nbsp;&nbsp;(1) T+2已完成交割之股票</span>',
                     },
-                    { txt: '6. 當日圈存之委託未成交，當日晚上自動將未成交股數解除(依集保公司解除圈存作業時間為主)' },
+                    { html: '<span>&nbsp;&nbsp;&nbsp;(2) 借券庫存優先扣帳</span>' },
+                    { html: '<span>&nbsp;&nbsp;&nbsp;(3) 非本公司轉融通之股票</span>' },
+                    { html: '<span>&nbsp;&nbsp;&nbsp;(4) 非已圈存之標的股票</span>' },
                 ]}
             />
             <Loading loading={loading} step={20} />
             <style global jsx>{`
-                .applyBtn.ant-btn {
+                .applyTable__container .ant-table-cell {
                     font-size: 16px;
+                    white-space: nowrap;
+                }
+                .applyBtn.ant-btn {
+                    font-size: 14px;
                     border: none;
                     color: #ffffff;
                     background: #d23749;
-                    line-height: 26px;
+                    line-height: 24px;
                     font-weight: bold;
                     transition: 0.3s;
                     border-radius: 3px;
