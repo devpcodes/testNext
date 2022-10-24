@@ -12,6 +12,7 @@ import { getToken } from '../../../../services/user/accessToken';
 import { sign, signCert, checkSignCA } from '../../../../services/webCa';
 import { postApplyEarmark } from '../../../../services/components/reservationStock/postApplyEarmark';
 import Loading from './Loading';
+import { SELECTED } from '../../../../store/advanceCollection/actionType';
 const Apply = ({ active, showSearchBox = true }) => {
     const [state, dispatch] = useContext(ReducerContext);
     const [defaultValue, setDefaultValue] = useState('');
@@ -32,15 +33,22 @@ const Apply = ({ active, showSearchBox = true }) => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
+        if (state.accountsReducer.selected === '') {
+            dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        }
+    }, [state.accountsReducer.accounts]);
+
+    useEffect(() => {
         if (active) {
+            console.log('test', state.accountsReducer.selected.broker_id, state.accountsReducer.selected.account);
             setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             getInventory(state.accountsReducer.activeType);
         }
     }, [state.accountsReducer.selected.account, state.accountsReducer.activeType, active]);
 
     const getInventory = activeType => {
-        if (getToken()) {
-            let data = getAccountsDetail(getToken());
+        let data = getAccountsDetail(getToken());
+        if (getToken() && data.broker_id != null) {
             fetchInventory(getToken(), data.broker_id, data.account, activeType);
         }
     };
@@ -166,6 +174,13 @@ const Apply = ({ active, showSearchBox = true }) => {
     const validateQty = (value, loadQty, stockAmount) => {
         const regex = /^[0-9]{1,20}$/;
         if (!isNaN(value) && regex.test(value)) {
+            // if (value % 1000 !== 0) {
+            //     Modal.error({
+            //         content: '請輸入1000的倍數',
+            //     });
+            //     return false;
+            // }
+
             if (Number(value) <= Number(stockAmount)) {
                 return true;
             } else {
@@ -184,7 +199,6 @@ const Apply = ({ active, showSearchBox = true }) => {
                 content: '只能輸入數字',
             });
         }
-
         return false;
     };
 

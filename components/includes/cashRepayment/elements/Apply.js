@@ -37,14 +37,18 @@ const Apply = ({ active, showSearchBox = true }) => {
     }, [state.accountsReducer.disabled]);
 
     useEffect(() => {
+        // if (state.accountsReducer.accounts.length > 0) {
+        //     dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+        // }
         if (state.accountsReducer.accounts.length > 0) {
             dispatch({ type: SELECTED, payload: state.accountsReducer.accounts[0] });
+            setDefaultValue(state.accountsReducer.accounts[0].broker_id + state.accountsReducer.accounts[0].account);
         }
     }, [state.accountsReducer.accounts]);
 
     useEffect(() => {
         if (active && state.accountsReducer.selected.broker_id) {
-            setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
+            // setDefaultValue(state.accountsReducer.selected.broker_id + state.accountsReducer.selected.account);
             getInventory(state.accountsReducer.activeType);
         }
     }, [state.accountsReducer.selected.account, state.accountsReducer.activeType, active]);

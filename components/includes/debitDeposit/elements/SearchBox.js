@@ -162,8 +162,8 @@ const SearchBox = ({ showFilter, searchClickHandler }) => {
         </div>
     );
 };
-SearchBox.PropTypes = {
-    showFilter: PropTypes.bool,
-};
+// SearchBox.PropTypes = {
+//     showFilter: PropTypes.bool,
+// };
 
 export default SearchBox;
