@@ -136,6 +136,7 @@ const AssetDetailOverview = memo(({ type }) => {
                     }
                     .asset__detail__summary__item {
                         width: 26%;
+                        margin-top: 20px;
                     }
                     .line {
                         margin: 18px 5% 0 5%;

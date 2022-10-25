@@ -405,23 +405,35 @@ export const getContentData = type => {
             });
 
             return {
-                total_amt: {
+                sum_total_amt_twd: {
                     title: '名目本金',
-                    amount: `$${formatNum(total_amt_sn)}`,
+                    amount: `$${success ? formatNum(realTimePrtLosSum?.SN?.sum_total_amt_twd) : '--'}`,
                     class: '',
                 },
-                sum_unreal: {
-                    title: '損益試算',
-                    amount: `$${formatNum(parseFloat(market_amt_sn - trade_amt_sn).toFixed(2))}`,
-                    class: market_amt_sn - trade_amt_sn > 0 ? 'win' : market_amt_sn - trade_amt_sn < 0 ? 'loss' : '',
+                sum_dividend_amt_twd: {
+                    title: '累計配息',
+                    amount: `$${success ? formatNum(realTimePrtLosSum?.SN?.sum_dividend_amt_twd) : '--'}`,
+                    class: '',
                 },
-                rate_of_return: {
-                    title: '報酬率(%)',
-                    amount:
-                        trade_amt_sn != 0
-                            ? `${parseFloat(((market_amt_sn - trade_amt_sn) / trade_amt_sn) * 100).toFixed(2)}%`
-                            : '--',
-                    class: market_amt_sn - trade_amt_sn > 0 ? 'win' : market_amt_sn - trade_amt_sn < 0 ? 'loss' : '',
+                sum_ref_value_amt_twd: {
+                    title: '損益試算',
+                    amount: `$${success ? formatNum(realTimePrtLosSum?.SN?.sum_ref_value_amt_twd) : '--'}`,
+                    class:
+                        realTimePrtLosSum?.SN?.sum_ref_value_amt_twd > 0
+                            ? 'win'
+                            : realTimePrtLosSum?.SN?.sum_ref_value_amt_twd < 0
+                            ? 'loss'
+                            : '',
+                },
+                sum_ref_value_prc_twd: {
+                    title: '含息報酬率',
+                    amount: `${success ? formatNum(realTimePrtLosSum?.SN?.sum_ref_value_prc_twd) : '--'}%`,
+                    class:
+                        realTimePrtLosSum?.SN?.sum_ref_value_prc_twd > 0
+                            ? 'win'
+                            : realTimePrtLosSum?.SN?.sum_ref_value_prc_twd < 0
+                            ? 'loss'
+                            : '',
                 },
                 // QQ15 找不到累積配息欄位
                 // sum_prtlos_dividend: {

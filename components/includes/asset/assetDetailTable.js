@@ -874,16 +874,16 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '成本均價',
-                            dataIndex: 'cost_twd',
-                            render: cost_twd => formatNum(cost_twd),
+                            title: '成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
                             align: 'right',
                         },
                         {
                             title: '付出成本',
-                            dataIndex: 'cost',
-                            render: cost => formatNum(cost),
-                            sorter: (a, b) => a.cost - b.cost,
+                            dataIndex: 'cost_twd',
+                            render: cost_twd => formatNum(cost_twd),
                             align: 'right',
                         },
                         {
@@ -914,8 +914,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         last_inv: data.last_inv,
                         amount: data.amount,
                         amount_twd: data.amount_twd,
-                        cost_twd: data.cost_twd,
                         cost: data.cost,
+                        cost_twd: data.cost_twd,
                         pl: data.pl,
                         roi: data.roi,
                     });
@@ -927,8 +927,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         last_inv: data.last_inv,
                         amount: formatNum(data.amount),
                         amount_twd: formatNum(data.amount_twd),
-                        cost_twd: data.cost_twd,
                         cost: formatNum(data.cost),
+                        cost_twd: formatNum(data.cost_twd),
                         pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
                     });
@@ -1012,16 +1012,16 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '成本均價',
-                            dataIndex: 'cost_twd',
-                            render: cost_twd => formatNum(cost_twd),
+                            title: '成本',
+                            dataIndex: 'cost',
+                            render: cost => formatNum(cost),
+                            sorter: (a, b) => a.cost - b.cost,
                             align: 'right',
                         },
                         {
                             title: '付出成本',
-                            dataIndex: 'cost',
-                            render: cost => formatNum(cost),
-                            sorter: (a, b) => a.cost - b.cost,
+                            dataIndex: 'cost_twd',
+                            render: cost_twd => formatNum(cost_twd),
                             align: 'right',
                         },
                         {
@@ -1065,7 +1065,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         last_inv: data.last_inv,
                         amount: formatNum(data.amount),
                         amount_twd: formatNum(data.amount_twd),
-                        cost_twd: data.cost_twd,
+                        cost_twd: formatNum(data.cost_twd),
                         cost: formatNum(data.cost),
                         pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
@@ -1479,7 +1479,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '付出成本',
+                            title: '名目本金',
                             dataIndex: 'invest_cost',
                             render: invest_cost => formatNum(invest_cost),
                             sorter: (a, b) => a.invest_cost.length - b.invest_cost.length,
@@ -1655,9 +1655,21 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '付出成本',
+                            title: '申購價格',
+                            dataIndex: 'trade_level',
+                            render: trade_level => formatNum(trade_level),
+                            align: 'right',
+                        },
+                        {
+                            title: '名目本金',
                             dataIndex: 'total_amt',
                             render: total_amt => formatNum(total_amt),
+                            align: 'right',
+                        },
+                        {
+                            title: '累計配息',
+                            dataIndex: 'dividend_amt',
+                            render: dividend_amt => formatNum(dividend_amt),
                             align: 'right',
                         },
                         {
@@ -1672,7 +1684,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             align: 'right',
                         },
                         {
-                            title: '報酬率(%)',
+                            title: '含息報酬率(%)',
                             dataIndex: 'ref_value_prc',
                             render: ref_value_prc => (
                                 <div class={ref_value_prc > 0 ? 'win' : ref_value_prc < 0 ? 'loss' : ''}>
@@ -1695,7 +1707,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         currency: data.currency,
                         price: data.price,
                         market_amt: data.market_amt,
+                        trade_level: data.trade_level,
                         total_amt: data.total_amt,
+                        dividend_amt: data.dividend_amt,
                         ref_value_amt: data.ref_value_amt,
                         ref_value_prc: data.ref_value_prc,
                     });
@@ -1706,7 +1720,9 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         currency: data.currency,
                         price: data.price,
                         market_amt: formatNum(data.market_amt),
+                        trade_level: formatNum(data.trade_level),
                         total_amt: formatNum(data.total_amt),
+                        dividend_amt: formatNum(data.dividend_amt),
                         ref_value_amt: (
                             <div class={data.ref_value_amt > 0 ? 'win' : data.ref_value_amt < 0 ? 'loss' : ''}>
                                 {formatNum(data.ref_value_amt)}
@@ -1734,7 +1750,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             { title: '商品/幣別', dataIndex: 'prod_name__currency' },
                             { title: '參考價/成本', dataIndex: 'price__total_amt' },
                             { title: '損益/市值', dataIndex: 'ref_value_amt__market_amt' },
-                            { title: '報酬率', dataIndex: 'ref_value_prc' },
+                            { title: '含息報酬率(%)', dataIndex: 'ref_value_prc' },
                         ],
                     });
 
