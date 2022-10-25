@@ -5,7 +5,7 @@ import AccountInfo from '../components/includes/AccountInfo';
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
     await store.dispatch(setNavItems());
 });
-
+//0826
 function AccountInfomation() {
     return (
         <>

@@ -64,8 +64,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '121.5', //市價
-            diffPrice: '16.7',
-            diffRatio: '25.30',
+            diffPrice: '42.7', //價差
+            diffRatio: '54', //%
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -98,8 +98,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '16.7',
-            diffRatio: '25.30',
+            diffPrice: '36',
+            diffRatio: '38',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -120,11 +120,11 @@ const ProductInfo = () => {
             price: 52,
             share: 850000,
             currentDate: '20220225',
-            beginDate: '202200512',
+            beginDate: '20220512',
             endDate: '20220516',
             feeDate: '20220517',
             lotDate: '20220518',
-            moneyDate: '2022519',
+            moneyDate: '20220519',
             stkDate: '20220524',
             applyShare: '1000',
             tfee: '20',
@@ -132,8 +132,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '16.7',
-            diffRatio: '25.30',
+            diffPrice: '27',
+            diffRatio: '28',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -166,8 +166,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '121.5', //市價
-            diffPrice: '16.7',
-            diffRatio: '25.30',
+            diffPrice: '17.2',
+            diffRatio: '20',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -200,8 +200,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '16.7',
-            diffRatio: '25.30',
+            diffPrice: '16.5',
+            diffRatio: '17',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -234,8 +234,8 @@ const ProductInfo = () => {
             exShare: '1599000',
             exPrice: '66',
             close: '82.7',
-            diffPrice: '16.7',
-            diffRatio: '25.30',
+            diffPrice: '14',
+            diffRatio: '10',
             orderAmount: '66070',
             canOrder: 'false',
             status: '申購尚未開始',
@@ -268,7 +268,7 @@ const ProductInfo = () => {
             title: '申辦需要臨櫃嗎?會不會很麻煩？時間會很長嗎?',
             content: [
                 '不需臨櫃辦理，',
-                '本服務為邀請制已進行系統預審免備文件且採線上申辧，流程簡便只要短短3分鐘４步驟，便可完成相關驗證立即啟用：同意條款-->選分公司-->契約簽署-->銀行設定。',
+                '本服務為邀請制已進行系統預選免備文件且採線上申辧，流程簡便４步驟完成驗證：同意條款-->選分公司-->契約簽署-->銀行設定，專人聯繫後立即啟用。',
             ],
             open: false,
             group: 'p1',
@@ -454,7 +454,7 @@ const ProductInfo = () => {
             type: '',
             title: '預約動用失敗還可以申購嗎?',
             content:
-                '可以，預約動用結果決定是否得以【申購便利通】服務先抽籤後付款，若客戶動用失敗該申購委託仍有效仍可以自備資金進行申購。',
+                '可以，預約動用結果決定是否得以動用銀行私房錢進行申購，若客戶動用失敗該申購委託仍有效，仍可以自備資金進行申購。',
             open: false,
             group: 'p3',
             key: '3_3',
@@ -472,7 +472,7 @@ const ProductInfo = () => {
             type: '',
             title: '點選使用【申購便利通】申購試算當下的利率可能會變動嗎?',
             content:
-                '會，點選使用【申購便利通】申購進行預約動用時，是以您當下實際利率進行試算，若您於截止日當日或借款期間利率有變動仍依您實際利率計息。',
+                '會，點選使用【申購便利通】申購進行預約動用時，是以您當下實際利率進行試算，若您於截止日當日或申購期間利率有變動仍依您實際利率計息。',
             open: false,
             group: 'p3',
             key: '3_5',
@@ -853,7 +853,7 @@ const ProductInfo = () => {
                         什麼是申購便利通
                         <img src={dotLine}></img>
                         <p>
-                            申購便利通是透過向銀行動用額度，讓投資人不再受限資金門檻，即可享超便利的申購服務，快來抓緊每個申購抽籤的機會吧！
+                            申購便利通是透過向銀行動用私房錢，讓投資人不再受限資金門檻，即可享超便利的申購服務，快來抓緊每個申購抽籤的機會吧！
                         </p>
                     </div>
                     <div className="flexBox areaContent">
@@ -890,7 +890,7 @@ const ProductInfo = () => {
                             </div>
                             <div>
                                 <p>線上申辦，更快速</p>
-                                <p>線上申辦 3 分鐘，立即啟用免等待</p>
+                                <p>線上快速申辦，立即啟用免等待</p>
                             </div>
                         </div>
 
@@ -958,7 +958,7 @@ const ProductInfo = () => {
                                 </Popover>
                             </p>
                             <div>
-                                持有台股帳戶，<span>線上 3 分鐘</span>立即啟用便利通申購。
+                                持有台股帳戶，<span>線上快速申辦，專人聯繫</span>立即啟用便利通申購。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p1')}>
                                 了解更多
@@ -985,7 +985,9 @@ const ProductInfo = () => {
                             <p>截止~扣款日 </p>
                             <p>動用扣款</p>
                             <div>
-                                <span>整筆酌收金流服務費 50 元</span>
+                                <span>
+                                    整筆酌收申購便利通手續費<span className="textDelete">50元(牌告)</span>活動期間20元
+                                </span>
                                 ，於申購截止日動用後隔天扣款，依動用金額以日計息於每月 21 日收取。
                             </div>
                             <a onClick={handleScroll.bind(null, 'p3')}>
@@ -1039,7 +1041,7 @@ const ProductInfo = () => {
                             <p>成年本國自然人</p>
                             <p>僅具中華民國納稅義務人身分</p>
                             <p>已開立台股證券帳戶且無違約未結案情形</p>
-                            <p>交割戶須有永豐銀行帳戶且符合永豐銀行私房錢預審資格</p>
+                            <p>交割戶須有永豐銀行帳戶且符合永豐銀行私房錢預選資格</p>
                         </div>
                     </div>
                 </div>
@@ -1107,7 +1109,11 @@ const ProductInfo = () => {
                     border-color: transparent transparent #c43826 transparent;}
                 .mainArea2  {padding-top:0;}
                 .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
+<<<<<<< HEAD
                 .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px; justify-content:flex-start;}
+=======
+                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;justify-content: flex-start;}
+>>>>>>> feature/yanru/applyProductInfo0826
                 .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2){}
@@ -1148,7 +1154,7 @@ const ProductInfo = () => {
                 .bg-cycle{position:absolute;}
                 .bg-cycle.cyclel{left:0;top:-80px;}
                 .bg-cycle.cycler{right:0;bottom:-85px;}
-
+                .textDelete{text-decoration: line-through;}
                 .forPC{display:inherite;}
                 .forMB{display:none;}
 
@@ -1160,7 +1166,11 @@ const ProductInfo = () => {
                 .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
                 .mainArea::before{content:'';display:block;width:100vw;}
                 .mainArea.mainArea1 {background-color:#FFF; padding:0;}
+<<<<<<< HEAD
                 .mainArea1 .contentBox{margin: 0 6%;position: absolute; top:0; padding-top:8%; }
+=======
+                .mainArea1 .contentBox{margin: 0 6%;position: absolute; top:0; padding-top:8%;}
+>>>>>>> feature/yanru/applyProductInfo0826
                 .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:87%;height:auto;position:relative;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size:40px;padding-left:0.4em;}
                 .mainArea1 .contentBox>div:nth-child(4){width:55%;}
@@ -1201,9 +1211,15 @@ const ProductInfo = () => {
                 
 
                 .mainArea1 {margin:0; }
+<<<<<<< HEAD
                 .mainArea.mainArea1 { background-color: #f9fbff; padding: 0 0 35px; }
                 .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
                 .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative;transform:translateX(0%);left: 0;}
+=======
+                .mainArea.mainArea1 { background-color: #F5F6FB; padding: 0 0 35px; }
+                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
+                .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative; margin: 0;}
+>>>>>>> feature/yanru/applyProductInfo0826
                 .mainArea1 .contentBox >div:nth-child(4){width:50%;}
                 .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size: 30px; padding: 4px 0 4px 0.5em;  margin: 16px 0 24px;}
