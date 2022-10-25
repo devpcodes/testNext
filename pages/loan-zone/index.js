@@ -11,7 +11,7 @@ const Index = () => {
     return (
         <>
             <PageHead title={'借貸專區'} />
-            <LoanIndex />
+            <LoanIndex />;
         </>
     );
 };

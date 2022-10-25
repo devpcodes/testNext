@@ -412,11 +412,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
 
     const submitDataHandler = data => {
         let filterData = data.filter(item => {
-            return (
-                item.expectedCollateralShare != 0 &&
-                item.expectedCollateralShare != null &&
-                item.expectedCollateralShare != ''
-            );
+            return item.expectedCollateralShare != 0;
         });
         const newData = filterData.map(element => {
             return {
@@ -465,10 +461,7 @@ const GoLoan = ({ visible, goLoanClose, allLoanMoney, goSubmitData, inventoryRel
                             content: (
                                 <>
                                     <p>{error}</p>
-                                    <p>
-                                        本次借款送出後，若有餘額動用需求，請臨櫃辦理或洽您的所屬業務員。
-                                        {phone ? phone + '。' : ''}
-                                    </p>
+                                    <p>本次借款送出後，若有餘額動用需求，請臨櫃辦理或洽您的所屬業務員。{phone}。</p>
                                 </>
                             ),
                             noCloseIcon: true,

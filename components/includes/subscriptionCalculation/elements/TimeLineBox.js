@@ -1,15 +1,15 @@
 import { useSelector } from 'react-redux';
 import TimeLine from '../../subscription/timeLine';
-const stockData = {
-    currentDate: '20220715',
-    beginDate: '20220714',
-    endDate: '20220722',
-    feeDate: '20220723',
-    lotDate: '20220724',
-    moneyDate: '20220725',
-    stkDate: '20220725',
-};
-const TimeLineBox = ({ style }) => {
+// const stockData = {
+//     currentDate: '20220715',
+//     beginDate: '20220714',
+//     endDate: '20220722',
+//     feeDate: '20220723',
+//     lotDate: '20220724',
+//     moneyDate: '20220725',
+//     stkDate: '20220725',
+// };
+const TimeLineBox = ({ style, price, close, share, applyShare, stockData }) => {
     const isMobile = useSelector(store => store.layout.isMobile);
     return (
         <div className="timeLine__container" style={style}>
@@ -17,21 +17,21 @@ const TimeLineBox = ({ style }) => {
                 <div className="timeLine__left">
                     <div className="timeLine__item">
                         <span className="label">申購價</span>
-                        <span className="val">760</span>
+                        <span className="val">{price || '--'}</span>
                     </div>
                     <div className="timeLine__item">
                         <span className="label">市價</span>
-                        <span className="val">942</span>
+                        <span className="val">{close || '--'}</span>
                     </div>
                 </div>
                 <div className="timeLine__right">
                     <div className="timeLine__item">
                         <span className="label">總申購張數</span>
-                        <span className="val">663</span>
+                        <span className="val">{Number(share) / 1000 || '--'}</span>
                     </div>
                     <div className="timeLine__item">
                         <span className="label">申購張數</span>
-                        <span className="val">1</span>
+                        <span className="val">{Number(applyShare) / 1000 || '--'}</span>
                     </div>
                 </div>
             </div>

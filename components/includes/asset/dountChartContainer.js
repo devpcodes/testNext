@@ -78,13 +78,13 @@ const DountChartContainer = memo(({}) => {
                     parseInt(realTimePrtLosSumTotal) != 0
                         ? parseFloat(
                               ((parseInt(realTimePrtLosSum?.F?.sum_balv) +
-                                  parseInt(realTimePrtLosSum?.FF?.sum_dbaln_twd)) /
+                                  parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd)) /
                                   realTimePrtLosSumTotal) *
                                   100,
                           ).toFixed(2)
                         : '--',
                 sum_amt: formatNum(
-                    parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dbaln_twd),
+                    parseInt(realTimePrtLosSum?.F?.sum_balv) + parseInt(realTimePrtLosSum?.FF?.sum_dlbaln_twd),
                 ),
                 profit_loss: formatNum(
                     parseInt(realTimePrtLosSum?.F?.sum_futeamt_twd) + parseInt(realTimePrtLosSum?.FF?.sum_dtunpl_twd),

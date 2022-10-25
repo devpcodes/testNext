@@ -7,9 +7,14 @@ import Bar from '../../loan/overview/elements/Bar';
 import SinoBtn from '../../loan/Collateral/elements/SinoBtn';
 import { formatNum } from '../../../../services/formatNum';
 import { Tooltip } from 'antd';
-const LoanBox = ({ allCanLoan, financing }) => {
+import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../../../store/components/layouts/action';
+const LoanBox = ({ allCanLoan, financing, locExpDate, currentDate, overDueInterest }) => {
+    // console.log('|| Number(overDueInterest) != 0', overDueInterest);
     const isMobile = useSelector(store => store.layout.isMobile);
     const router = useRouter();
+    const dispatch = useDispatch();
     const titleHandler = () => {
         return (
             <div>
@@ -21,14 +26,37 @@ const LoanBox = ({ allCanLoan, financing }) => {
             </div>
         );
     };
-    const onClick = () => {
-        if (financing > 0) {
+    const repaymentHandler = () => {
+        if (financing <= 0) {
+            return;
+        }
+        if (Number(overDueInterest) != 0 || moment(locExpDate).isBefore(moment())) {
+            dispatch(
+                setModal({
+                    visible: true,
+                    content: (
+                        <>
+                            <p>您的申購便利通目前無法還款請洽銀行客服</p>
+                            <p>(02)2505-9999</p>
+                        </>
+                    ),
+                    type: 'info',
+                    icon: false,
+                    noTitleIcon: true,
+                    title: '提醒',
+                    onOk: async () => {
+                        dispatch(setModal({ visible: false }));
+                    },
+                }),
+            );
+        } else {
+            window.open(process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKREPAYMENT);
         }
     };
     return (
         <div className="loan__container">
             <div className="loan__head">
-                <span className="loan__title">申購信用通</span>
+                <span className="loan__title">申購便利通</span>
                 {/* <a className="loan__gobtn">
                     借款紀錄 <img className="loan__goIcon" src={go} />
                 </a> */}
@@ -63,6 +91,7 @@ const LoanBox = ({ allCanLoan, financing }) => {
                         <SinoBtn
                             parentClass={'search__container'}
                             text={'我要還款'}
+                            disabled={financing <= 0 || financing == '--'}
                             style={{
                                 display: isMobile ? 'inline-block' : 'none',
                                 border: '1px solid #d7e0ef',
@@ -72,19 +101,19 @@ const LoanBox = ({ allCanLoan, financing }) => {
                                 fontSize: '16px',
                                 padding: '9px 19px 9px 20px',
                                 borderRadius: '2px',
-                                backgroundColor: 'white',
-                                color: '#0d1623',
+                                backgroundColor: financing <= 0 ? '#e6ebf5' : 'white',
+                                color: financing <= 0 ? '#a9b6cb' : '#0d1623',
+                                // backgroundColor: 'white',
+                                // color: '#0d1623',
                                 verticalAlign: 'top',
                                 flex: '1 0 0',
                                 marginRight: '16px',
                             }}
-                            onClick={() => {
-                                router.push('/loan-zone/Record/');
-                            }}
+                            onClick={repaymentHandler}
                         />
                         <SinoBtn
                             parentClass={'search__container'}
-                            text={'動用申購信用通'}
+                            text={'動用申購便利通'}
                             style={{
                                 border: 'none',
                                 outline: 'none',
@@ -105,21 +134,24 @@ const LoanBox = ({ allCanLoan, financing }) => {
                     </div>
                 </div>
             </div>
-            <div className="loan__footer">
-                {/* <span className="footer__text">
-                    本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
-                    <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
-                </span> */}
-                {financing <= 0 || financing == '--' ? (
-                    <a className="footer__link--disabled" disabled>
-                        我要還款 >
-                    </a>
-                ) : (
-                    <a className="footer__link" onClick={onClick}>
-                        我要還款 >
-                    </a>
-                )}
-            </div>
+            {!isMobile && (
+                <div className="loan__footer">
+                    {/* <span className="footer__text">
+                        本月應繳利息 <span className="text__red">35</span> 元，將於{' '}
+                        <span className="text__red">2022/05/12</span> 自動扣款(遇假日遞延至下一營業日)
+                    </span> */}
+                    {financing <= 0 || financing == '--' ? (
+                        <a className="footer__link--disabled" onClick={repaymentHandler}>
+                            我要還款 >
+                        </a>
+                    ) : (
+                        <a className="footer__link" onClick={repaymentHandler}>
+                            我要還款 >
+                        </a>
+                    )}
+                </div>
+            )}
+
             <style jsx>{`
                 .text__red {
                     color: #c43826;

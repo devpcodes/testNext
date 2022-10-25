@@ -398,7 +398,7 @@ const LoanIndex = () => {
                                 </div>
                                 <div className="dataRow">
                                     <div className="DataTitle">貸款天數</div>
-                                    <div className="DataInfo pb-1">
+                                    <div className="DataInfo">
                                         <Radio.Group onChange={onChange} value={radioValue}>
                                             <Radio value={7}>1週</Radio>
                                             <Radio value={30}>1個月</Radio>
@@ -462,7 +462,7 @@ const LoanIndex = () => {
                                 <Button
                                     onClick={btnHref.bind(
                                         null,
-                                        process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/PQLogin',
+                                        process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/ProgQueryLNA01',
                                     )}
                                     type="primary"
                                 >
@@ -502,16 +502,8 @@ const LoanIndex = () => {
                                 1. 線上申辦
                                 <p>上傳雙證並簽署契約</p>
                                 <div className="btnBox">
-                                    <Button onClick={btnHref.bind(null, '#tag1')}>了解更多</Button>
-                                    <Button
-                                        onClick={btnHref.bind(
-                                            null,
-                                            process.env.NEXT_PUBLIC_LOAN_SERVICE + '/exopact/LNA/PQLogin',
-                                        )}
-                                        type="primary"
-                                    >
-                                        申辦進度
-                                    </Button>
+                                    <Button>了解更多</Button>
+                                    <Button type="primary">申辦進度</Button>
                                 </div>
                             </div>
                         </div>
@@ -528,7 +520,7 @@ const LoanIndex = () => {
                                 3. 借款動用
                                 <p>於可借款金額內動用申請</p>
                                 <div className="singleBtn">
-                                    <Button onClick={btnHref.bind(null, '#tag2')}>了解更多</Button>
+                                    <Button>了解更多</Button>
                                 </div>
                             </div>
                         </div>
@@ -549,9 +541,7 @@ const LoanIndex = () => {
                         <p></p>
                         <img src={smile}></img>
                     </div>
-                    <div className="qaOuter">
-                        <QaCollapse dataSource={qaData} chartFunc={chartFuncHandler} />
-                    </div>
+                    <QaCollapse dataSource={qaData} chartFunc={chartFuncHandler} />
                 </div>
             </div>
             <style jsx>
@@ -650,7 +640,6 @@ const LoanIndex = () => {
             .mainArea1 {margin:0;}
             .mainArea.mainArea1 .contentBox{width:86%;}
             .mainArea .contentBox{width:100%;}
-            .mainArea .contentBox .pb-1{padding-bottom:1em;}
             .mainArea2 .areaTitle{margin-top:3em!important;}
             .mainArea2 .bottomBox{top:-7px;width: 100%; height: auto; padding: 2.5em 0 2em;line-height:1.2;}
             .mainArea2 .bottomBox .bottomBoxItem p{font-size:16px; text-align:center;}
@@ -662,15 +651,12 @@ const LoanIndex = () => {
             .mainArea .contentBox .countBoxRightContent{padding: 5% 6%;margin: 0 auto;}
             .mainArea .contentBox .iconBox{flex-wrap:wrap;padding: 0 4%;}
             .iconBox>div{width:100%;max-width:100%;display: flex;flex-wrap: nowrap;margin-bottom:6em;}
-            .iconBox .btnBox{justify-content: flex-start;}
             .iconBox>div .wordy{margin:0;text-align: left; margin-left: 6%;width: calc(88% - 40px);}
             .iconBox::before{left: calc(4% + 30px);height:calc(100% - 40px);width:1px;}
-            .iconBg1, .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
-            
+            .iconBg1,  .iconBg2, .iconBg3, .iconBg4{background-size:80%;width:60px;height:60px;margin:0;}
             .mainArea2 .bottomBox .line::before,
             .mainArea2 .bottomBox .line::after { height:6em; top:1em; }
-            .mainArea .contentBox .countBoxRight{width:100%;}    
-            .qaOuter{padding:4%;}       
+            .mainArea .contentBox .countBoxRight{width:100%;}           
         }
         `}
             </style>
@@ -701,12 +687,10 @@ const LoanIndex = () => {
                         width: 16px;
                         height: 16px;
                     }
-                    #loanIndex__container .ant-radio-inner {
-                        width: 24px;
-                        height: 24px;
-                    }
                     #loanIndex__container .ant-radio-checked .ant-radio-inner {
                         border-color: #daa360;
+                        width: 24px;
+                        height: 24px;
                     }
                     #loanIndex__container .ant-radio-group {
                         width: 96%;
@@ -761,22 +745,16 @@ const LoanIndex = () => {
                     @media screen and (max-width: 768px) {
                         #loanIndex__container .iconBox .ant-btn {
                             width: 6em;
-                            margin: 0.2em;
+                            margin: 0.2em 0;
                         }
                     }
-                    @media screen and (max-width: 500px) {
+                    @media screen and (max-width: 425px) {
                         #loanIndex__container #QaCollapse__content .ant-collapse-item table td {
                             font-size: 10px;
                             padding: 3px 5px;
                         }
                         #loanIndex__container .ant-radio-group {
                             flex-wrap: wrap;
-                            justify-content: flex-start;
-                        }
-                        #loanIndex__container .mainArea .contentBox .ant-radio-wrapper {
-                            width: 45%;
-                            line-height: 1;
-                            margin-bottom: 0.5em;
                         }
                     }
                 `}

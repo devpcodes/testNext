@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Breadcrumb from '../../breadcrumb/breadcrumb';
 import Btn from '../../loan/overview/elements/Btn';
@@ -5,9 +6,41 @@ import CalcuInfo from '../elements/CalcuInfo';
 import StockDetail from '../elements/StockDetail';
 import { setModal } from '../../../../store/components/layouts/action';
 import icon from '../../../../resources/images/components/subscriptionOverview/ic-circle (2).svg';
+import { useUser } from '../../../../hooks/useUser';
+import { fetchCalculation } from '../../../../services/components/subscirptionCalcuInfo/fetchCalculation';
+import { getToken } from '../../../../services/user/accessToken';
+import { useRouter } from 'next/router';
 const CalculationComponents = () => {
     const isMobile = useSelector(store => store.layout.isMobile);
     const dispatch = useDispatch();
+    const [calculationData, setCalculationData] = useState({});
+    const [stockId, setStockId] = useState('');
+    const { isLogin } = useUser();
+    const router = useRouter();
+
+    useEffect(() => {
+        getCalculationData();
+    }, [isLogin, stockId]);
+
+    useEffect(() => {
+        if (router.query.stockId != null && router.query.stockId !== '') {
+            setStockId(router.query.stockId);
+        }
+    }, [router.query]);
+
+    const getCalculationData = async () => {
+        let token = '';
+        if (isLogin) {
+            token = getToken();
+        }
+        if (stockId) {
+            try {
+                const res = await fetchCalculation(stockId, token);
+                setCalculationData(res);
+            } catch (error) {}
+        }
+    };
+
     const clickHandler = () => {
         dispatch(
             setModal({
@@ -45,10 +78,18 @@ const CalculationComponents = () => {
             </div>
             <div className="calcu__content">
                 <div className="calcu__left">
-                    <StockDetail />
+                    <StockDetail calculationData={calculationData} />
                 </div>
                 <div className="calcu__right">
-                    <CalcuInfo />
+                    <CalcuInfo
+                        allOrderAmount={Number(calculationData.orderAmount) + Number(calculationData.sfee)}
+                        amount={Number(calculationData.orderAmount)}
+                        sfee={calculationData.sfee}
+                        availAmount={calculationData.availAmount}
+                        endDate={calculationData.endDate}
+                        stockId={stockId}
+                        stockName={calculationData.stockName}
+                    />
                 </div>
             </div>
             <style jsx>{`
@@ -95,6 +136,11 @@ const CalculationComponents = () => {
                     }
                     .calcu__right {
                         margin-top: 12px;
+                    }
+                    .calcu__icon {
+                        width: 20px;
+                        height: 20px;
+                        margin-top: 10px;
                     }
                 }
             `}</style>

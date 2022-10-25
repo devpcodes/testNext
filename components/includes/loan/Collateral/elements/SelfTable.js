@@ -504,10 +504,9 @@ const SelfTable = ({ currentKey, setCurrentData, reset, stockData, canLoanHandle
                     item.expectedCollateralShare = item.collateralQty;
                     item.canCollateralQty = item.stockQty;
                 } else {
-                    item.expectedCollateralShare = item.stockQty;
-                    item.canCollateralQty = item.stockQty;
+                    item.expectedCollateralShare = item.stockQty - item.collateralQty;
+                    item.canCollateralQty = item.stockQty - item.collateralQty;
                 }
-
                 item.canLoanMoney = canLoanMoneyHandler(item);
                 console.log(Number(item.closePrice), Number(item.stockQty), Number(item.stockPercent));
                 selectedKeys.push(item.key);

@@ -11,6 +11,7 @@ export const postOrder = async function ({
     token,
     ca_content,
 }) {
+    // console.log('................123123133333')
     try {
         const reqUrl = '/order';
         const res = await getSubscriptionInstance().post(
