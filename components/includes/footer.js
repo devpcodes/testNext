@@ -72,15 +72,15 @@ const footerData = [
             },
             {
                 title: '永豐金證券(亞洲)',
-                link: 'https://www.sinopacasia.com/',
+                link: 'http://www.sinopacasia.com/',
             },
             {
                 title: '永豐期貨',
-                link: 'https://www.spf.com.tw/',
+                link: 'http://www.spf.com.tw/',
             },
             {
                 title: '永豐投信',
-                link: 'https://sitc.sinopac.com/',
+                link: 'http://sitc.sinopac.com/',
             },
             {
                 title: '永豐MMA交易網',
@@ -125,8 +125,8 @@ const Footer = memo(({ showNav }) => {
             <div className="mobile__box3">
                 <p>永豐金證券股份有限公司</p>
                 <p>台北市重慶南路一段二號7、18、20樓</p>
-                <p>107年金管證總字第0006號(永豐金證券)</p>
-                <p>111年金管期總字第007號(委任期貨商永豐期貨)</p>
+                <p>107年金管證總字第0006號</p>
+                <p>111年金管期總字第002號(委任期貨商永豐期貨)</p>
             </div>
             <div className="footer__middle">
                 <div className="middle__box">
@@ -155,8 +155,8 @@ const Footer = memo(({ showNav }) => {
                     <ul className="block1">
                         <li>永豐金證券股份有限公司</li>
                         <li>台北市重慶南路一段二號7、18、20樓</li>
-                        <li>107年金管證總字第0006號(永豐金證券)</li>
-                        <li>111年金管期總字第007號(委任期貨商永豐期貨)</li>
+                        <li>107年金管證總字第0006號</li>
+                        <li>111年金管期總字第002號(委任期貨商永豐期貨)</li>
                     </ul>
                     <ul>
                         {/* <li>
@@ -166,7 +166,7 @@ const Footer = memo(({ showNav }) => {
                         </li> */}
                         <li>
                             <a
-                                href="http://www.sinopac.com/footer/2018110216150226800000000000011.html"
+                                href="http://www.sinopac.com/footer/20170512111026126000000000000863.html"
                                 target="_blank"
                                 rel="noreferrer noopener"
                             >

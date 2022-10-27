@@ -11,18 +11,32 @@ import { debounce } from '../../../../services/throttle';
 import { fetchAccount } from '../../../../services/components/subscriptionOverview/fetchAccount';
 import { postQueryCrossSelling } from '../../../../services/components/mySubscription/postQueryCrossSelling';
 import { fetchAccountStatus } from '../../../../services/components/subscriptionOverview/fetchAccountStatus';
+import { useCheckSubscriptionAcc } from '../../../../hooks/useCheckSubscriptionAcc';
+import { checkUserIdAcc } from '../../../../services/checkUserIdAcc';
 const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
     const isMobile = useCheckMobile();
     const currentAccount = useSelector(store => store.user.currentAccount);
     const [balance, setBalance] = useState('--');
     const [bankAccount, setBankAccount] = useState('--');
     const [signAccounts, setSignAccounts] = useState([]);
-    const [signAcc, setSignAcc] = useState(false);
-    const [applyStatus, setApplyStatus] = useState(false);
+    // const [signAcc, setSignAcc] = useState(false);
+    // const [applyStatus, setApplyStatus] = useState(false);
     const [allCanLoan, setAllCanLoan] = useState('--');
     const [financing, setFinancing] = useState('--');
+    const [applyStatus, signAcc, accountInfo] = useCheckSubscriptionAcc();
+    const [locExpDate, setLocExpDate] = useState('');
+    const [overDueInterest, setOverDueInterest] = useState('--');
+    const [accountSuccess, setAccountSuccess] = useState(false);
+
     const getBalance = async () => {
         const token = getToken();
+        if (!checkUserIdAcc(token, currentAccount.idno)) {
+            message.error('銀行餘額僅能查詢本人帳號，此為委任帳號無法查詢，謝謝。');
+            setBalance('--');
+            setBankAccount('--');
+            return;
+        }
+
         try {
             const res = await postBankAccountBalance({
                 token,
@@ -37,33 +51,36 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
         } catch (error) {
             const err = message.error;
             debounce(err.bind(null, error), 500);
+            setBalance('--');
+            setBankAccount('--');
         }
     };
 
-    useEffect(() => {
-        if (signAccounts.length > 0) {
-            const signAccs = signAccounts.filter(item => {
-                return item.account === currentAccount.account;
-            });
-            //TODO MOCK
-            // signAccs[0].bank_flag = '1';
+    // useEffect(() => {
+    //     if (signAccounts.length > 0) {
+    //         const signAccs = signAccounts.filter(item => {
+    //             return item.account === currentAccount.account;
+    //         });
+    //         //TODO MOCK
+    //         // signAccs[0].bank_flag = '1';
 
-            setSignAcc(signAccs[0]?.bank_flag === '1' ? true : false);
-        } else {
-            setSignAcc(false);
-        }
-    }, [currentAccount, signAccounts]);
+    //         setSignAcc(signAccs[0]?.bank_flag === '0' ? true : false);
+    //     } else {
+    //         setSignAcc(false);
+    //     }
+    // }, [currentAccount, signAccounts]);
 
-    useEffect(() => {
-        console.log('applyStatus', applyStatus);
-        if (applyStatus) {
-            applyStatusHandler(true);
-        }
-    }, [applyStatus]);
+    // useEffect(() => {
+    //     console.log('applyStatus', applyStatus);
+    //     if (signAcc) {
+    //         applyStatusHandler(true);
+    //     }
+    // }, [signAcc]);
 
     useEffect(() => {
         if (signAcc) {
             getAccountStatus();
+            applyStatusHandler(true);
         }
     }, [signAcc]);
 
@@ -72,43 +89,54 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
             const res = await fetchAccountStatus(getToken());
             setAllCanLoan(res.limitAmount);
             setFinancing(res.totalOs);
+            setLocExpDate(res.locExpDate);
+            setOverDueInterest(res.overDueInterest);
         } catch (error) {}
     };
 
-    const getQueryCrossSelling = async account => {
-        const res = await postQueryCrossSelling(getToken());
-        console.log('res', res, account);
-        setSignAccounts(res);
-    };
+    // const getQueryCrossSelling = async account => {
+    //     const res = await postQueryCrossSelling(getToken());
+    //     console.log('res', res, account);
+    //     setSignAccounts(res);
+    // };
 
-    const getDsAndBank = async () => {
-        //TODO mock
-        // setApplyStatus(true);
-        // getQueryCrossSelling(currentAccount.account);
+    // const getDsAndBank = async () => {
+    //     //TODO mock
+    //     // setApplyStatus(true);
+    //     // getQueryCrossSelling(currentAccount.account);
 
-        try {
-            const res = await fetchAccount(getToken());
-            console.log('step1', res);
-            if (res.applyStatus === '1') {
-                setApplyStatus(true);
-                getQueryCrossSelling(currentAccount.account);
-            } else {
-                setApplyStatus(false);
-            }
-        } catch (error) {
-            setApplyStatus(false);
-            message.error(error || '伺服器錯誤');
-        }
-    };
+    //     try {
+    //         const res = await fetchAccount(getToken());
+    //         console.log('step1', res);
+    //         if (res.applyStatus === '1') {
+    //             setApplyStatus(true);
+    //             getQueryCrossSelling(currentAccount.account);
+    //         } else {
+    //             setApplyStatus(false);
+    //         }
+    //     } catch (error) {
+    //         setApplyStatus(false);
+    //         message.error(error || '伺服器錯誤');
+    //     }
+    // };
 
     useEffect(() => {
         setTimeout(() => {
             if (currentAccount.broker_id != null) {
                 debounce(getBalance, 500);
-                debounce(getDsAndBank, 500);
+                // debounce(getDsAndBank, 500);
             }
         }, 700);
-    }, [currentAccount]);
+        if (currentAccount.idno != null && currentAccount.idno == accountInfo.userId) {
+            setAccountSuccess(true);
+        } else {
+            setAccountSuccess(false);
+        }
+    }, [currentAccount, accountInfo]);
+
+    const moneyBoxClick = () => {
+        alert('123');
+    };
 
     return (
         <div className="moneyBox__container">
@@ -151,25 +179,44 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             },
                         ]}
                     />
-                    {!applyStatus && (
+                    {(!applyStatus || (!signAcc && !applyStatus)) && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即申辦'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
                         />
                     )}
-                    {applyStatus && !signAcc && (
+                    {!signAcc && applyStatus && (
                         <SignBox
                             style={{ width: '100%', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即簽署'}
-                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
-                    {applyStatus && signAcc && (
+
+                    {applyStatus && signAcc && accountSuccess && (
                         <MoneyBox
                             style={{ width: '100%', display: 'block', marginTop: '16px' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
+                            financing={Number(financing)}
+                            locExpDate={locExpDate}
+                            overDueInterest={overDueInterest}
                             data={[
                                 {
                                     label: '可動用',
@@ -182,6 +229,21 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                                     showLine: false,
                                 },
                             ]}
+                        />
+                    )}
+                    {applyStatus && signAcc && !accountSuccess && (
+                        <SignBox
+                            style={{ width: '100%', marginTop: 16 }}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            errContent={'請以申辦申購便利通本人帳號登入'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                 </>
@@ -213,25 +275,44 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                             },
                         ]}
                     />
-                    {!applyStatus && (
+
+                    {!signAcc && applyStatus && (
                         <SignBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
-                            content={'立即申辦'}
-                        />
-                    )}
-                    {applyStatus && !signAcc && (
-                        <SignBox
-                            style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '了解更多 >', icon: false }]}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
                             content={'立即簽署'}
-                            contentLink={process.env.NEXT_PUBLIC_SIGNCENTER_DOMAIN}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
-                    {applyStatus && signAcc && (
+                    {(!applyStatus || (!signAcc && !applyStatus)) && (
+                        <SignBox
+                            style={{ width: '33%' }}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '了解更多 >',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            content={'立即申辦'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_ACCOUNT}
+                        />
+                    )}
+                    {applyStatus && signAcc && accountSuccess && (
                         <MoneyBox
                             style={{ width: '33%' }}
-                            title={[{ val: '申購信用通', linkText: '我要還款', icon: true }]}
+                            title={[{ val: '申購便利通', linkText: '我要還款', icon: true }]}
+                            financing={Number(financing)}
+                            locExpDate={locExpDate}
+                            overDueInterest={overDueInterest}
                             data={[
                                 {
                                     label: '可動用',
@@ -244,6 +325,21 @@ const MoneyContainer = memo(({ payable, receivable, applyStatusHandler }) => {
                                     showLine: false,
                                 },
                             ]}
+                        />
+                    )}
+                    {applyStatus && signAcc && !accountSuccess && (
+                        <SignBox
+                            style={{ width: '100%', marginTop: 0, flex: 1 }}
+                            title={[
+                                {
+                                    val: '申購便利通',
+                                    linkText: '',
+                                    icon: false,
+                                    linkUrl: '/subscriptionArea/ProductInfo',
+                                },
+                            ]}
+                            errContent={'請以申辦申購便利通本人帳號登入'}
+                            contentLink={process.env.NEXT_PUBLIC_SUBSCRIPTION_BANKSIGN}
                         />
                     )}
                 </>

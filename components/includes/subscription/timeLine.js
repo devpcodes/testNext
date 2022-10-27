@@ -15,17 +15,18 @@ const TimeLine = memo(({ stockData, style, blockStyle }) => {
      */
     const formatDate = date => {
         if (date) {
-            return `${date.slice(4, 6)}/${date.slice(6, 8)}`;
+            return `${date?.slice(4, 6)}/${date?.slice(6, 8)}`;
         } else {
             return '';
         }
     };
 
     const getDateClassName = date => {
+        if (date == null) return;
         let dateClassName = '';
         let today = +new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
         const sdate = +new Date(date.slice(0, 4), date.slice(4, 6), date.slice(6, 8));
-        if (stockData.currentDate) {
+        if (stockData?.currentDate) {
             let sd = stockData.currentDate;
             let sd_ = new Date(sd.slice(0, 4), sd.slice(4, 6), sd.slice(6, 8));
             today = +new Date(sd_.getFullYear(), sd_.getMonth(), sd_.getDate());
@@ -42,41 +43,43 @@ const TimeLine = memo(({ stockData, style, blockStyle }) => {
 
     return (
         <>
-            <div style={style}>
-                <div className="time__block" style={blockStyle}>
-                    <div className={getDateClassName(stockData.beginDate)}>
-                        <div className="step"> 開始 </div>
-                        <div className="point"></div>
-                        <div className="date"> {formatDate(stockData.beginDate)} </div>
+            {stockData.currentDate != null && (
+                <div style={style}>
+                    <div className="time__block" style={blockStyle}>
+                        <div className={getDateClassName(stockData.beginDate)}>
+                            <div className="step"> 開始 </div>
+                            <div className="point"></div>
+                            <div className="date"> {formatDate(stockData.beginDate)} </div>
+                        </div>
+                        <div className={getDateClassName(stockData.endDate)}>
+                            <div className="step"> 截止 </div>
+                            <div className="point"></div>
+                            <div className="date"> {formatDate(stockData.endDate)} </div>
+                        </div>
+                        <div className={getDateClassName(stockData.feeDate)}>
+                            <div className="step"> 扣款 </div>
+                            <div className="point"></div>
+                            <div className="date"> {formatDate(stockData.feeDate)} </div>
+                        </div>
+                        <div className={getDateClassName(stockData.lotDate)}>
+                            <div className="step"> 抽籤 </div>
+                            <div className="point"></div>
+                            <div className="date"> {formatDate(stockData.lotDate)} </div>
+                        </div>
+                        <div className={getDateClassName(stockData.moneyDate)}>
+                            <div className="step"> 退款 </div>
+                            <div className="point"></div>
+                            <div className="date"> {formatDate(stockData.moneyDate)} </div>
+                        </div>
+                        <div className={getDateClassName(stockData.stkDate)}>
+                            <div className="step"> 撥券 </div>
+                            <div className="point"></div>
+                            <div className="date"> {formatDate(stockData.stkDate)} </div>
+                        </div>
+                        <hr className="time__line" />
                     </div>
-                    <div className={getDateClassName(stockData.endDate)}>
-                        <div className="step"> 截止 </div>
-                        <div className="point"></div>
-                        <div className="date"> {formatDate(stockData.endDate)} </div>
-                    </div>
-                    <div className={getDateClassName(stockData.feeDate)}>
-                        <div className="step"> 扣款 </div>
-                        <div className="point"></div>
-                        <div className="date"> {formatDate(stockData.feeDate)} </div>
-                    </div>
-                    <div className={getDateClassName(stockData.lotDate)}>
-                        <div className="step"> 抽籤 </div>
-                        <div className="point"></div>
-                        <div className="date"> {formatDate(stockData.lotDate)} </div>
-                    </div>
-                    <div className={getDateClassName(stockData.moneyDate)}>
-                        <div className="step"> 退款 </div>
-                        <div className="point"></div>
-                        <div className="date"> {formatDate(stockData.moneyDate)} </div>
-                    </div>
-                    <div className={getDateClassName(stockData.stkDate)}>
-                        <div className="step"> 撥券 </div>
-                        <div className="point"></div>
-                        <div className="date"> {formatDate(stockData.stkDate)} </div>
-                    </div>
-                    <hr className="time__line" />
                 </div>
-            </div>
+            )}
 
             <style jsx>{`
                 .time__block {

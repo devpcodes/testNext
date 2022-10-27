@@ -12,7 +12,7 @@ export const fetchApplyRecord = async function (token, branch, account) {
             params: {
                 branch,
                 account,
-                startDate: moment(date).add(-18, 'M').format('YYYYMMDD'),
+                startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
                 endDate: moment(date).add(7, 'D').format('YYYYMMDD'),
             },
         });
@@ -42,6 +42,7 @@ export const repaymentDetail = async function (token, branch, account, date) {
                 applyDate: moment(date).format('YYYYMMDD'),
             },
         });
+        console.log('repaymentDetail[req]', res);
         if (res.data.success) {
             return res.data.result;
         } else {
@@ -101,7 +102,7 @@ export const applyStatus = async function (token, branch, account) {
             params: {
                 branch,
                 account,
-                startDate: moment(date).add(-18, 'M').format('YYYYMMDD'),
+                startDate: moment(date).add(-1, 'Y').format('YYYYMMDD'),
                 endDate: moment(date).add(7, 'd').format('YYYYMMDD'),
             },
         });

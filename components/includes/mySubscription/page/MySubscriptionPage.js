@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, memo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useUser } from '../../../../hooks/useUser';
 import { showLoginHandler } from '../../../../store/components/layouts/action';
 import Breadcrumb from '../../breadcrumb/breadcrumb';
@@ -9,12 +9,15 @@ import MoneyContainer from '../elements/MoneyContainer';
 import MySubscriptionTable from '../elements/MySubscriptionTable';
 
 const MySubscriptionPage = () => {
-    const { isLogin } = useUser();
+    // const { isLogin } = useUser();
+    const isLogin = useSelector(store => store.user.isLogin);
     const dispatch = useDispatch();
     const [refresh, setRefresh] = useState(false);
     const [payable, setPayable] = useState('--');
     const [receivable, setReceivable] = useState('--');
     const [applyStatus, setApplyStatus] = useState(false);
+    const [init, setInit] = useState(false);
+
     useEffect(() => {
         if (!isLogin) {
             dispatch(showLoginHandler(true));

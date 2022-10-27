@@ -9,7 +9,7 @@ const AssetDetailModal = memo(({ isVisible, data, closeHandler }) => {
     return (
         <>
             <Modal
-                title={`${data.content?.modalTitle ? data.content?.modalTitle : ''}`}
+                title={`${data.content?.modalTitle}`}
                 visible={isVisible}
                 destroyOnClose={true}
                 maskClosable={true}

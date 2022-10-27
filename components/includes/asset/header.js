@@ -9,7 +9,6 @@ import { setRealTimePrtLosSum } from '../../../store/asset/action';
 import { useRouter } from 'next/router';
 import { Tooltip } from 'antd';
 import info from '../../../resources/images/pages/asset/ic-ic-info@2x.png';
-import { Modal, message } from 'antd';
 
 const AssetHeader = memo(({ title }) => {
     const user = useSelector(store => store.user.currentAccount);
@@ -24,46 +23,12 @@ const AssetHeader = memo(({ title }) => {
     };
 
     const [refreshTime, setrefreshTime] = useState(getTime());
-    const [canRefresh, setCanRefresh] = useState(true);
 
     const refreshAction = async () => {
-        if (canRefresh) {
-            setCanRefresh(false);
-            setTimeout(function () {
-                setCanRefresh(true);
-            }, 3000);
-            const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
-            const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
-
-            const errorMsgArr = [];
-            Object.keys(res.result.data).map(function (objectKey, index) {
-                var responseStatus = res.result.data[objectKey].status;
-                if (!responseStatus.success) {
-                    errorMsgArr.push(responseStatus.message);
-                }
-            });
-            if (errorMsgArr.length > 0) {
-                message.destroy();
-                message.error({
-                    content: (
-                        <>
-                            <h4 className="msg__title">
-                                部分商品結算或系統維護中,會有資產總數減少的情況,請稍候再做查詢。
-                            </h4>
-                        </>
-                    ),
-                });
-            }
-
-            if (res?.success != null && res?.success === true) {
-                dispatch(setRealTimePrtLosSum(res.result));
-                setrefreshTime(getTime());
-            } else {
-                Modal.error({
-                    content: res === '伺服器錯誤' ? res : res.message,
-                });
-            }
-        }
+        const type = router.query.type ? (router.query.type == 'S' ? ['S', 'L'] : [router.query.type]) : null;
+        const res = await fetchQueryRealTimePrtLosSum(getToken(), type);
+        dispatch(setRealTimePrtLosSum(res));
+        setrefreshTime(getTime());
     };
     return (
         <>
@@ -80,14 +45,12 @@ const AssetHeader = memo(({ title }) => {
                         {/* <Button className="btn refresh__btn">
                             <img src={hide} />
                         </Button> */}
-                        {/* <span className="account__info">
+                        <span className="account__info">
                             {user.idno} ｜ {user.username}
-                        </span> */}
-                        <Tooltip title="資產總覽僅彙總登入ID所擁有的資產，不適用於群組帳號。">
-                            <Button className="btn">
+                            <Tooltip title="資產總覽僅彙總登入ID所擁有的資產，不適用於群組帳號。">
                                 <img src={info} className="info_png" />
-                            </Button>
-                        </Tooltip>
+                            </Tooltip>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -125,9 +88,10 @@ const AssetHeader = memo(({ title }) => {
                 }
 
                 .info_png {
-                    width: 20px;
-                    height: 20px;
+                    width: 16px;
+                    height: 16px;
                     cursor: pointer;
+                    margin: 0 0px 0 10px;
                 }
 
                 @media (max-width: 900px) {

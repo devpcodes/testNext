@@ -5,7 +5,7 @@ export const getStockType = function (stockCode) {
 
     var regExpWarrant = /^[0]{1}[3-8]{1}[0-9]{3}[0-9A-Z]{1}$/;
     var regExpStock = /^[1-9]{1}[0-9]{3}$/;
-    var regExpETF = /^[0]{1}[0-2]{1}[0-9]{3}[0-9A-Z]{0,1}$/;
+    var regExpETF = /^[0]{1}[0-1]{1}[0-9]{3}[A-Z]{0,1}$/;
     var regExpETF4Code = /^[0]{2}[5-6]{1}[0-9]{1}$/; // 0050 - 0061 第一批ETF
 
     if (stockCode.search(regExpWarrant) === 0) {

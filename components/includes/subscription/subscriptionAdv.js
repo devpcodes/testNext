@@ -1,33 +1,28 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import advImg from '../../../resources/images/pages/subscription/img-ad-subscription@2x.png';
+import advImg from '../../../resources/images/pages/subscription/ic-empty@2x.png';
 const SubscriptionAdv = memo(({}) => {
     return (
         <>
             <div className="subscriptionAdv">
                 <img className="pic" src={advImg} />
                 <h2 className="title">資金不足也可申購</h2>
-                <p className="desc">存款不足也可借錢申購，僅需少少利息就可享高報酬</p>
-                <p className="more">瞭解更多 ＞</p>
+                <p className="desc">存款不足也可申購，用小資金放大機會</p>
+                <p className="more">
+                    <a href={`${process.env.NEXT_PUBLIC_SUBPATH}/subscriptionArea/ProductInfo/`} target="_blank">
+                        瞭解更多 ＞
+                    </a>
+                </p>
             </div>
-
+            {/* https://webrd.sinotrade.com.tw/newweb/subscriptionArea/ProductInfo/ */}
             <style jsx>{`
                 .subscriptionAdv {
-                    border: solid 1px #d7e0ef;
-                    padding: 24px 70px;
-                    width: 30%;
-                    margin-top: 24px;
-                    height: 400px;
-                    max-height: 400px;
-                    min-height: 400px;
-                    margin-bottom: 20px;
-                    margin-right: 5%;
                     text-align: center;
                 }
                 .pic {
-                    width: 166px;
-                    height: 120px;
-                    margin-top: 48px;
+                    width: 77px;
+                    height: 92px;
+                    margin-top: 65px;
                 }
                 .title {
                     font-size: 2.4rem;

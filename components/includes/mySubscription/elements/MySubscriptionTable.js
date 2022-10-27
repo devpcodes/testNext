@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { fetchOrderStatus } from '../../../../services/components/mySubscription/fetchOrderStatus';
@@ -18,6 +18,7 @@ import { postCancel } from '../../../../services/components/mySubscription/postC
 import { openGoOrder } from '../../../../services/openGoOrder';
 import { useCheckMobile } from '../../../../hooks/useCheckMobile';
 import { postOrder } from '../../../../services/components/mySubscription/postOrder';
+import { setModal } from '../../../../store/components/layouts/action';
 // import { WindowsOutlined } from '@ant-design/icons';
 const mockData = [
     {
@@ -133,23 +134,26 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     const [total, setTotal] = useState(0);
     const isMobile = useCheckMobile();
     const router = useRouter();
+    const dispatch = useDispatch();
+
     useEffect(() => {
         if (currentAccount.broker_id != null && currentAccount.broker_id !== '') {
             // alert('0')
-            debounce(getOrderStatus, 500);
+            // debounce(getOrderStatus, 500);
+            getOrderStatus(1);
             // getOrderStatus();
         }
     }, [currentAccount]);
     useEffect(() => {
         if (refresh) {
-            getOrderStatus();
+            getOrderStatus(1);
         }
     }, [refresh]);
     useEffect(() => {
         const myColumns = [
             {
                 title: '動作',
-                width: '100px',
+                width: '110px',
                 dataIndex: 'action',
                 key: 'action',
                 render(text, record, idx) {
@@ -191,18 +195,18 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                                         )}
                                         {element === 'canAppropriation' && (
                                             <SubscriptionBtn
-                                                text="申請動用"
+                                                text="便利通申購"
                                                 colorType="red"
-                                                width="72px"
+                                                width="80px"
                                                 style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
                                                 onClick={clickHandler.bind(null, record, 'canAppropriation')}
                                             />
                                         )}
                                         {element === 'canCancelAppropriation' && (
                                             <SubscriptionBtn
-                                                text="取消動用"
+                                                text="取消便利通"
                                                 colorType="blue"
-                                                width="72px"
+                                                width="80px"
                                                 onClick={clickHandler.bind(null, record, 'canCancelAppropriation')}
                                                 loading={cancelLoading}
                                                 style={{ marginRight: 5, padding: '3px 5px 3px 5px' }}
@@ -240,7 +244,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 key: 'method',
                 ...getColumnSearchProps('method'),
                 render(text, record, idx) {
-                    return text === '1' ? '一般' : '借款';
+                    return text === '1' ? '一般' : '便利通';
                 },
             },
             {
@@ -276,8 +280,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
             {
                 title: '申購張數',
                 width: '100px',
-                dataIndex: 'share',
-                key: 'share',
+                dataIndex: 'applyShare',
+                key: 'applyShare',
                 align: 'right',
                 render(text, record, idx) {
                     return Number(text) / 1000;
@@ -330,18 +334,117 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
 
     const clickHandler = (record, type) => {
         console.log(record, type);
-        if (type === 'canCancelOrder') cancelHandler(record);
+        if (type === 'canCancelOrder') {
+            if (record.canCancelAppropriation) {
+                cancelAll(record);
+            } else {
+                cancelOrder(record);
+                // cancelHandler(record);
+            }
+        }
         if (type === 'canSellStock') sellHandler(record);
         if (type === 'canMortgage') mortgageHandler(record);
         if (type === 'canAppropriation') appropriationHandler(record);
         if (type === 'canCancelAppropriation') cancelAppropriation(record);
     };
 
+    const cancelOrder = record => {
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消申購',
+                content: (
+                    <>
+                        <p>取消申購「{record.stockId + ' ' + record.stockName}」？</p>
+                    </>
+                ),
+                noCloseIcon: true,
+                noTitleIcon: true,
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                },
+                onOk: () => {
+                    dispatch(setModal({ visible: false }));
+                    cancelHandler(record);
+                },
+            }),
+        );
+    };
+
+    const cancelAll = record => {
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消申購及便利通',
+                content: (
+                    <>
+                        <p>「{record.stockId + ' ' + record.stockName}」，並同步取消動用？</p>
+                    </>
+                ),
+                noCloseIcon: true,
+                noTitleIcon: true,
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                },
+                onOk: () => {
+                    dispatch(setModal({ visible: false }));
+                    cancelHandler(record);
+                },
+            }),
+        );
+    };
+
     const cancelAppropriation = async record => {
-        cancelHandler(record, true);
+        dispatch(
+            setModal({
+                visible: true,
+                title: '取消預約動用',
+                content: (
+                    <>
+                        <p>
+                            「{record.stockId + ' ' + record.stockName}」，取消動用後，需備足資金於
+                            {moment(record.endDate).format('MM/DD')}進行申購扣款作業，是否確認取消動用？
+                        </p>
+                        <p style={{ color: 'rgb(203 71 48)' }}>
+                            請於申購截止日確認銀行存款總額應有申購扣款金額，否則為不合格件。
+                        </p>
+                    </>
+                ),
+                noCloseIcon: true,
+                noTitleIcon: true,
+                onCancel: () => {
+                    dispatch(setModal({ visible: false }));
+                },
+                onOk: () => {
+                    dispatch(setModal({ visible: false }));
+                    cancelHandler(record, true);
+                },
+            }),
+        );
+        //
     };
 
     const appropriationHandler = async record => {
+        router.push(`/subscriptionArea/Calculation/?stockId=${record.stockId}`);
+        // dispatch(
+        //     setModal({
+        //         visible: true,
+        //         okText: '確定',
+        //         type: 'confirm',
+        //         title: '提醒',
+        //         noCloseIcon: true,
+        //         noTitleIcon: true,
+        //         content:
+        //             '離開永豐金證券理財網前往永豐銀MMA的列車即將出發，如確定上車請點選 【確定】，如還捨不得離開請點【取消】。',
+        //         onOk: async () => {
+        //             dispatch(setModal({ visible: false }));
+        //             postOrderHandler(record);
+        //         },
+        //     }),
+        // );
+    };
+
+    const postOrderHandler = async record => {
         const token = getToken();
         const ca_content = sign(
             {
@@ -358,7 +461,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
             try {
                 const res = await postOrder({
                     isAppropriation: true,
-                    bankChannel: 'NETBANK',
+                    bankChannel: isMobile ? 'MWEB' : 'NETBANK',
                     callbackUrl: location.href,
                     branch: currentAccount.broker_id,
                     account: currentAccount.account,
@@ -367,8 +470,9 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     ca_content,
                 });
                 setCancelLoading(false);
-                message.success('申請動用已送出');
-                getOrderStatus();
+                // message.success('申請動用已送出');
+                window.location = res.url;
+                getOrderStatus(currentPage);
             } catch (error) {
                 setCancelLoading(false);
                 message.error(error);
@@ -416,12 +520,16 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
 
     const activeHandler = record => {
         //TODO MOCK
-        // record.canAppropriation = true;
+        // record.canCancelAppropriation = true;
+        // record.canCancelOrder = true;
         const btnsArr = [];
-        if (record.canCancelOrder) {
+        if (record.canCancelOrder && record.canCancelAppropriation) {
             btnsArr.push('canCancelOrder');
         }
-        if (record.canCancelAppropriation) {
+        if (record.canCancelOrder && !record.canCancelAppropriation) {
+            btnsArr.push('canCancelOrder');
+        }
+        if (record.canCancelAppropriation && !record.canCancelOrder) {
             btnsArr.push('canCancelAppropriation');
         }
         if (record.canSellStock) {
@@ -462,9 +570,9 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     isAppropriation: type,
                     token,
                 });
-                message.success(type ? '取消動用已送出' : '取消申購已送出');
+                message.success(type ? '已成功取消預約動用' : '取消申購已送出');
                 setCancelLoading(false);
-                getOrderStatus();
+                getOrderStatus(currentPage);
             } catch (error) {
                 message.error(error);
                 setCancelLoading(false);
@@ -513,7 +621,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                         // value={searchStatus}
                         data={[
                             { text: '一般', value: '1' },
-                            { text: '借款', value: '2' },
+                            { text: '便利通', value: '2' },
                         ]}
                     />
                 ),
@@ -650,16 +758,25 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
     };
 
     useEffect(() => {
+        debounce(getOrderStatus.bind(null, currentPage), 500);
+        // getOrderStatus(currentPage);
+    }, [currentPage]);
+
+    useEffect(() => {
         // console.log('************', orderAmountSorter)
         // debounce(getOrderStatus, 500);
-        getOrderStatus();
-    }, [statusFilterValue, currentPage, orderAmountSorter, lotDateSorter, methodFilterValue, loanStatusFilterValue]);
+        // getOrderStatus(1);
+        debounce(getOrderStatus.bind(null, 1), 500);
+    }, [statusFilterValue, orderAmountSorter, lotDateSorter, methodFilterValue, loanStatusFilterValue]);
 
-    const getOrderStatus = async () => {
+    const getOrderStatus = async page => {
         const token = getToken();
         if (token && currentAccount.broker_id) {
             //TODO MOCK
             // setData(mockData);
+            if (page === 1) {
+                setCurrentPage(1);
+            }
 
             setLoading(true);
             try {
@@ -667,7 +784,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                     token,
                     branch: currentAccount.broker_id,
                     account: currentAccount.account,
-                    page: currentPage,
+                    page,
                     pageSize,
                     methodFilter: methodFilterValue,
                     orderStatusFilter: statusFilterValue,
@@ -678,7 +795,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 setLoading(false);
                 setTotal(res.count);
                 payableHandler(res.payable, res.receivable);
-                if (res?.dataList?.length >= 0) {
+                if (res?.dataList?.length > 0) {
                     const newData = res?.dataList?.map((element, index) => {
                         element.key = index;
                         // element.canSellStock = true;
@@ -688,6 +805,8 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                         return element;
                     });
                     setData(newData);
+                } else {
+                    setData([]);
                 }
             } catch (error) {
                 setLoading(false);
@@ -720,6 +839,7 @@ const MySubscriptionTable = ({ refresh, payableHandler, applyStatus }) => {
                 defaultPageSize: pageSize,
                 current: currentPage,
                 total,
+                showSizeChanger: false,
             }}
             columns={columns}
             dataSource={data}

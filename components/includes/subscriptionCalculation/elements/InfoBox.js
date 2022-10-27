@@ -12,9 +12,9 @@ const InfoBox = ({ title, style, data, icon, titleTooltip }) => {
                 </h3>
             </div>
             <div className="content">
-                {data.map(item => {
+                {data.map((item, key) => {
                     return (
-                        <div className="item">
+                        <div className="item" key={key}>
                             <span className="item__label">{item.label}</span>
                             <span className="item__val" style={item?.valStyle || {}}>
                                 {item.val}
