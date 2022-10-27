@@ -8,11 +8,7 @@ export const fetchQueryRealTimePrtLosSum = async function (token, asset_type, mo
             asset_type: asset_type ? asset_type : null,
             isR6: true,
         });
-        if (res.data.success != null && res.data.success === true) {
-            return res.data.result;
-        } else {
-            return [];
-        }
+        return res.data;
     } catch (error) {
         return '伺服器錯誤';
     }
