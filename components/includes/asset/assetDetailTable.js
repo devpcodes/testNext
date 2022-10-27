@@ -157,11 +157,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         },
                         {
                             title: '報酬率',
-                            dataIndex: 'ur_ratio',
+                            dataIndex: 'urratio',
                             align: 'right',
-                            render: ur_ratio => (
-                                <div class={parseFloat(ur_ratio) > 0 ? 'win' : parseFloat(ur_ratio) < 0 ? 'loss' : ''}>
-                                    {ur_ratio}
+                            render: urratio => (
+                                <div class={parseFloat(urratio) > 0 ? 'win' : parseFloat(urratio) < 0 ? 'loss' : ''}>
+                                    {urratio}
                                 </div>
                             ),
                             sorter: (a, b) => parseFloat(a.ur_ratio.slice(0, -1)) - parseFloat(b.ur_ratio.slice(0, -1)),
@@ -251,7 +251,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         avgprice: data.avgprice,
                         cost: data.cost,
                         unreal: data.unreal,
-                        ur_ratio: data.urratio,
+                        urratio: data.urratio,
+                        modalTitle: data.stocknm,
                     });
 
                     unrealModalData.push({
@@ -265,13 +266,12 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         unreal: (
                             <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
                                 {formatNum(data.unreal)}
-                                <br />
-                                {data.ur_ratio}
                             </div>
                         ),
-                        ur_ratio: (
-                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.ur_ratio}</div>
+                        urratio: (
+                            <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>{data.urratio}</div>
                         ),
+                        modalTitle: data.stocknm,
                     });
                 });
 
@@ -282,6 +282,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         qty: data.qty,
                         lastprice: data.lastprice,
                         namt: data.namt,
+                        modalTitle: data.stocknm,
                     });
                 });
 
@@ -292,6 +293,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         qty: data.qty,
                         lastprice: data.lastprice,
                         namt: data.namt,
+                        modalTitle: data.stocknm,
                     });
                 });
 
@@ -321,16 +323,16 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         unreal: [
                             // { title : '類別' , dataIndex : 'ttypename'},
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt' },
-                            { title: '損益/報酬率', dataIndex: 'unreal__ur_ratio' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt' },
+                            { title: '損益/報酬率', dataIndex: 'unreal__urratio' },
                         ],
                         creditdn: [
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt' },
                         ],
                         lenddn: [
                             { title: '商品/現價', dataIndex: 'stocknm__mprice' },
-                            { title: '庫存/市值', dataIndex: 'qty__amt' },
+                            { title: '庫存/市值', dataIndex: 'qty__namt' },
                         ],
                     });
 
@@ -376,18 +378,18 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
-                            unreal__ur_ratio: (
+                            unreal__urratio: (
                                 <div class={data.unreal > 0 ? 'win' : data.unreal < 0 ? 'loss' : ''}>
                                     {formatNum(data.unreal)}
                                     <br />
-                                    {data.ur_ratio}
+                                    {data.urratio}
                                 </div>
                             ),
                         });
@@ -402,11 +404,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
@@ -428,11 +430,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.mprice}
                                 </div>
                             ),
-                            qty__amt: (
+                            qty__namt: (
                                 <div>
                                     {formatNum(data.qty)}
                                     <br />
-                                    {formatNum(data.amt)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             unreal__ur_ratio: (
@@ -507,7 +509,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
 
                 realTimePrtLosSum?.F?.data.map((data, index) => {
                     futureWebTableData.push({
-                        stockName: data.stockName,
+                        stockName: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                         bs: data.bs === 'B' ? '買' : '賣',
                         currency: data.currency,
                         openq: data.openq,
@@ -516,10 +518,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         futeamt: data.futeamt,
                         otamt: formatNum(data.otamt),
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        modalTitle: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                     });
 
                     futureModaleData.push({
-                        stockName: data.stockName,
+                        stockName: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                         bs: data.bs === 'B' ? '買' : '賣',
                         currency: data.currency,
                         openq: data.openq,
@@ -532,6 +535,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         ),
                         otamt: formatNum(data.otamt),
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        modalTitle: `${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`,
                     });
                 });
 
@@ -567,7 +571,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             ),
                             stockName__mprice: (
                                 <div>
-                                    {data.stockName}
+                                    {`${data.stockName} ${data.sprice} ${data.poc} ${data.smonth}`}
                                     <br />
                                     {data.mprice}
                                 </div>
@@ -774,6 +778,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost: data.cost,
                         pl: data.pl,
                         roi: data.roi,
+                        modalTitle: data.name,
                     });
 
                     subBrokerageModalData.push({
@@ -788,6 +793,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost: formatNum(data.cost),
                         pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        modalTitle: data.name,
                     });
                 });
 
@@ -918,6 +924,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost_twd: data.cost_twd,
                         pl: data.pl,
                         roi: data.roi,
+                        modalTitle: data.pro_name,
                     });
 
                     FIPModalData.push({
@@ -931,6 +938,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost_twd: formatNum(data.cost_twd),
                         pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        modalTitle: data.pro_name,
                     });
                 });
 
@@ -1056,6 +1064,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost: data.cost,
                         pl: data.pl,
                         roi: data.roi,
+                        modalTitle: data.pro_name,
                     });
 
                     MIPModalData.push({
@@ -1069,6 +1078,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         cost: formatNum(data.cost),
                         pl: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{formatNum(data.pl)}</div>,
                         roi: <div class={data.roi > 0 ? 'win' : data.roi < 0 ? 'loss' : ''}>{data.roi}%</div>,
+                        modalTitle: data.pro_name,
                     });
                 });
 
@@ -1231,6 +1241,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         roi: data.roi,
                         acc_dividend: data.acc_dividend,
                         roi_dividend: data.roi_dividend,
+                        modalTitle: data.fund_name,
                     });
 
                     WM_FUNDModalData.push({
@@ -1253,6 +1264,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                 {data.roi_dividend}%
                             </div>
                         ),
+                        modalTitle: data.fund_name,
                     });
                 });
 
@@ -1267,7 +1279,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setColumnData({
                         WM_FUND: [
                             { title: '商品/幣別', dataIndex: 'fund_name__purchase_cur' },
-                            { title: '淨值/市值', dataIndex: 'nav__nav_cost' },
+                            { title: '淨值/市值', dataIndex: 'nav__namt' },
                             { title: '損益/台幣市值', dataIndex: 'prtlos__amount_twd' },
                             { title: '累計配息/含息報酬率', dataIndex: 'acc_dividend__roi_dividend' },
                         ],
@@ -1285,11 +1297,11 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                     {data.purchase_cur}
                                 </div>
                             ),
-                            nav__nav_cost: (
+                            nav__namt: (
                                 <div>
                                     {formatNum(data.nav)}
                                     <br />
-                                    {formatNum(data.nav_cost)}
+                                    {formatNum(data.namt)}
                                 </div>
                             ),
                             prtlos__amount_twd: (
@@ -1366,6 +1378,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         trade_nonachieve: data.trade_nonachieve,
                         trade_profit_rate: data.trade_profit_rate,
                         trade_value: data.trade_value,
+                        modalTitle: data.fund_cn,
                     });
 
                     OFModalData.push({
@@ -1381,6 +1394,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                             </span>
                         ),
                         trade_value: formatNum(data.trade_value),
+                        modalTitle: data.fund_cn,
                     });
                 });
 
@@ -1529,6 +1543,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         prtlos: parseFloat(data.prtlos),
                         acc_dividend: parseFloat(data.acc_dividend),
                         roi_dividend: parseFloat(data.roi_dividend),
+                        modalTitle: data.fund_name,
                     });
 
                     WM_SNModalData.push({
@@ -1550,6 +1565,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                 {data.roi_dividend}%
                             </span>
                         ),
+                        modalTitle: data.fund_name,
                     });
                 });
 
@@ -1712,6 +1728,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         dividend_amt: data.dividend_amt,
                         ref_value_amt: data.ref_value_amt,
                         ref_value_prc: data.ref_value_prc,
+                        modalTitle: data.prod_name,
                     });
 
                     SNModalData.push({
@@ -1733,6 +1750,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                                 {data.ref_value_prc}
                             </div>
                         ),
+                        modalTitle: data.prod_name,
                     });
                 });
 
@@ -1857,6 +1875,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         total_value: data.total_value,
                         total_value_twd: data.total_value_twd,
                         trade_cur: data.trade_cur,
+                        modalTitle: data.name,
                     });
 
                     BONDModalData.push({
@@ -1865,7 +1884,8 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         total_pv: data.total_pv,
                         total_value: formatNum(data.total_value),
                         total_value_twd: formatNum(data.total_value_twd),
-                        trade_cur: formatNum(data.trade_cur),
+                        trade_cur: data.trade_cur,
+                        modalTitle: data.name,
                     });
                 });
 
@@ -1883,7 +1903,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     setColumnData({
                         BOND: [
                             { title: '商品名稱', dataIndex: 'symbol' },
-                            { title: '幣別', dataIndex: 'total_pv' },
+                            { title: '幣別', dataIndex: 'trade_cur' },
                             { title: '持有面額', dataIndex: 'total_pv' },
                             { title: '參考市值', dataIndex: 'total_value' },
                             { title: '參考市值(台幣)', dataIndex: 'total_value_twd' },
@@ -1896,10 +1916,10 @@ const AssetDetailTable = memo(({ type, reload }) => {
                     realTimePrtLosSum?.BOND?.data.map((data, index) => {
                         BONDMobileTableData.push({
                             symbol: data.symbol,
-                            total_pv: data.total_pv,
+                            trade_cur: data.trade_cur,
+                            total_pv: formatNum(data.total_pv),
                             total_value: formatNum(data.total_value),
                             total_value_twd: formatNum(data.total_value_twd),
-                            trade_cur: formatNum(data.trade_cur),
                         });
                     });
 
@@ -1956,6 +1976,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         unit: data.unit,
                         management_fee: data.management_fee,
                         amount_twd: data.amount_twd,
+                        modalTitle: data.fund_name,
                     });
                 });
 
@@ -2056,6 +2077,7 @@ const AssetDetailTable = memo(({ type, reload }) => {
                         fund_type: data.fund_type,
                         cur: data.cur,
                         invest_cost: formatNum(invest_cost),
+                        modalTitle: data.fund_name,
                     });
                 });
 
