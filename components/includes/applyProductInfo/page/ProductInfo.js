@@ -1109,11 +1109,7 @@ const ProductInfo = () => {
                     border-color: transparent transparent #c43826 transparent;}
                 .mainArea2  {padding-top:0;}
                 .mainArea2 .areaContent {flex-wrap: wrap;justify-content:space-between;margin:55px auto 0;max-width:1080px;}
-<<<<<<< HEAD
-                .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px; justify-content:flex-start;}
-=======
                 .mainArea2 .areaContent .areaItem {width:30%;padding:0 20px 0;margin-bottom: 38px;justify-content: flex-start;}
->>>>>>> feature/yanru/applyProductInfo0826
                 .mainArea2 .areaContent .areaItem div:nth-child(1){width:50px;margin-right:20px;flex-shrink:0;}
                 .mainArea2 .areaContent .areaItem div:nth-child(1) img{width:100%;}
                 .mainArea2 .areaContent .areaItem div:nth-child(2){}
@@ -1166,11 +1162,7 @@ const ProductInfo = () => {
                 .mainArea .contentBox .countBoxLeft{padding: 4em 0 4em;}
                 .mainArea::before{content:'';display:block;width:100vw;}
                 .mainArea.mainArea1 {background-color:#FFF; padding:0;}
-<<<<<<< HEAD
-                .mainArea1 .contentBox{margin: 0 6%;position: absolute; top:0; padding-top:8%; }
-=======
                 .mainArea1 .contentBox{margin: 0 6%;position: absolute; top:0; padding-top:8%;}
->>>>>>> feature/yanru/applyProductInfo0826
                 .mainArea1 .bg{background:url(${bannerPAD}) no-repeat center top/100%;padding-top:87%;height:auto;position:relative;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size:40px;padding-left:0.4em;}
                 .mainArea1 .contentBox>div:nth-child(4){width:55%;}
@@ -1211,15 +1203,9 @@ const ProductInfo = () => {
                 
 
                 .mainArea1 {margin:0; }
-<<<<<<< HEAD
-                .mainArea.mainArea1 { background-color: #f9fbff; padding: 0 0 35px; }
-                .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
-                .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative;transform:translateX(0%);left: 0;}
-=======
                 .mainArea.mainArea1 { background-color: #F5F6FB; padding: 0 0 35px; }
                 .mainArea1 .bg{background:url(${bannerMB}) no-repeat center top/100%;padding-top:57%; height:auto;position: relative;}
                 .mainArea1 .contentBox {width: calc(100% - 48px);padding:10px 0 0;position:relative; margin: 0;}
->>>>>>> feature/yanru/applyProductInfo0826
                 .mainArea1 .contentBox >div:nth-child(4){width:50%;}
                 .mainArea1 .contentBox>div:nth-child(1){font-size:16px;margin-bottom:0;}
                 .mainArea1 .contentBox>div:nth-child(2){font-size: 30px; padding: 4px 0 4px 0.5em;  margin: 16px 0 24px;}
