@@ -1,4 +1,4 @@
-import { useState, useMemo, useContext } from 'react';
+import { useState, useMemo, useContext, useEffect } from 'react';
 import { Button, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { ReducerContext } from '../../../../store/advanceCollection/reducerContext';
@@ -8,6 +8,9 @@ const SearchBox = ({ showFilter, searchClickHandler }) => {
     const [state, dispatch] = useContext(ReducerContext);
     // const [activeType, setActiveType] = useState('1');
     const [searchVal, setSearchVal] = useState('');
+    useEffect(() => {
+        dispatch({ type: ACTIVETYPE, payload: '2' });
+    }, []);
     const searchHandler = () => {
         searchClickHandler(searchVal);
     };

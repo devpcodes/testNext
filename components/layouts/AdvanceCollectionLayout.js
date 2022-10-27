@@ -12,7 +12,7 @@ import { ReducerContext } from '../../store/advanceCollection/reducerContext';
 import { ACCOUNTS, DISABLED } from '../../store/advanceCollection/actionType';
 import { SELECTED } from '../../store/advanceCollection/actionType';
 import { fetchCheckTradingDate } from '../../services/components/goOrder/fetchCheckTradingDate';
-const AdvanceCollectionLayout = function ({ children, startTime, endTime, type }) {
+const AdvanceCollectionLayout = function ({ children, startTime, endTime, type, dateType = '' }) {
     const [verifySuccess, setVerifySuccess] = useState(false);
     const [state, dispatch] = useContext(ReducerContext);
 
@@ -39,7 +39,7 @@ const AdvanceCollectionLayout = function ({ children, startTime, endTime, type }
         // const afterTime = moment(endTime, formatTime);
         try {
             const currentDate = moment().format('YYYYMMDD');
-            const res = await fetchCheckTradingDate(currentDate, 'reserve');
+            const res = await fetchCheckTradingDate(currentDate, dateType || 'reserve');
             if (res?.result?.hasTrading) {
                 return true;
             } else {
